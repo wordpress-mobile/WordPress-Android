@@ -165,7 +165,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 holder.txtTitle.setText(blog.getTitle());
                 holder.txtDescription.setText(blog.getReason());
                 holder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogUrl));
-                holder.imgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.AVATAR);
+                holder.imgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.SITE_AVATAR);
                 break;
 
             case FOLLOWED:
@@ -180,7 +180,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                     holder.txtTitle.setText(domain);
                 }
                 holder.txtUrl.setText(domain);
-                holder.imgBlog.setImageUrl(blogInfo.getImageUrl(), WPNetworkImageView.ImageType.AVATAR);
+                holder.imgBlog.setImageUrl(blogInfo.getImageUrl(), WPNetworkImageView.ImageType.SITE_AVATAR);
                 break;
 
             default:
