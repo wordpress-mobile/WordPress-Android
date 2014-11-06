@@ -69,6 +69,7 @@ import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaSelectActivity;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -171,7 +172,12 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         Button linkButton = (Button) rootView.findViewById(R.id.link);
         Button moreButton = (Button) rootView.findViewById(R.id.more);
 
-        registerForContextMenu(mAddPictureButton);
+        mAddPictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startMediaSelection();
+            }
+        });
         mContentEditText.setOnSelectionChangedListener(this);
         mContentEditText.setOnTouchListener(this);
         mContentEditText.addTextChangedListener(this);
@@ -186,7 +192,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 }
             }
         });
-        mAddPictureButton.setOnClickListener(mFormatBarButtonClickListener);
         mBoldToggleButton.setOnClickListener(mFormatBarButtonClickListener);
         linkButton.setOnClickListener(mFormatBarButtonClickListener);
         mEmToggleButton.setOnClickListener(mFormatBarButtonClickListener);
@@ -939,6 +944,12 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
 
+    private void startMediaSelection() {
+        Intent intent = new Intent(mActivity, MediaSelectActivity.class);
+        startActivityForResult(intent, MediaSelectActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
+        mActivity.overridePendingTransition(R.anim.reader_activity_slide_in, R.anim.fade_out);
+    }
+
     private void startMediaGalleryAddActivity() {
         Intent intent = new Intent(getActivity(), MediaGalleryPickerActivity.class);
         intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
@@ -1158,8 +1169,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     }
                 }
                 startActivityForResult(i, ACTIVITY_REQUEST_CODE_CREATE_LINK);
-            } else if (id == R.id.addPictureButton) {
-                mAddPictureButton.performLongClick();
             }
         }
     };

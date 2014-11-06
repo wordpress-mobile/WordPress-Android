@@ -144,6 +144,10 @@
         </activity>
 
         <!-- Media Activities -->
+        <activity
+            android:name=".ui.media.MediaSelectActivity"
+            android:theme="@style/CalypsoTheme" >
+        </activity>
         <activity android:name=".ui.media.MediaBrowserActivity"
                   android:theme="@style/CalypsoTheme" >
         </activity>
