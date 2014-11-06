@@ -32,7 +32,7 @@ public class AppPrefs {
         MIXPANEL_EMAIL_ADDRESS_RETRIEVED,
     }
 
-    private static SharedPreferences prefs() {
+    public static SharedPreferences prefs() {
         return PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
     }
 

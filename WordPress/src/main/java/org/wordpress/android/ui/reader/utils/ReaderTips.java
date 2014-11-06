@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.utils;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -9,6 +10,8 @@ import com.cocosw.undobar.UndoBarController;
 import com.cocosw.undobar.UndoBarStyle;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.AppLog;
 
 /**
  * shows one-shot "tips" related to reader activities - relies on a styled undo bar
@@ -62,14 +65,28 @@ public class ReaderTips {
     }
 
     public static void reset() {
-
+        SharedPreferences.Editor editor = AppPrefs.prefs().edit();
+        for (ReaderTipType tipType: ReaderTipType.values()) {
+            editor.remove(getTipPrefKey(tipType));
+        }
+        editor.apply();
     }
 
     private static boolean isTipShown(ReaderTipType tipType) {
-        return false;
+        return AppPrefs.prefs().getBoolean(getTipPrefKey(tipType), false);
     }
 
     private static void setTipShown(ReaderTipType tipType) {
+        AppPrefs.prefs().edit().putBoolean(getTipPrefKey(tipType), true).apply();
+    }
 
+    private static String getTipPrefKey(ReaderTipType tipType) {
+        switch (tipType) {
+            case SWIPE_POSTS:
+                return "reader-tip-swipe-posts";
+            default :
+                AppLog.w(AppLog.T.READER, "unknown reader tip type");
+                return "";
+        }
     }
 }
