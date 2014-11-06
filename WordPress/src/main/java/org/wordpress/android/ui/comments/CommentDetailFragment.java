@@ -268,9 +268,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void setupSuggestionsServiceAndAdapter() {
         if (!isAdded()) return;
 
-        final Context context = getActivity();
-
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mRemoteBlogId, context);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mRemoteBlogId, getActivity());
         if (mSuggestionAdapter != null) {
             mEditReply.setAdapter(mSuggestionAdapter);
         }

@@ -2,10 +2,14 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -15,7 +19,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -23,16 +26,24 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
+import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
+import org.wordpress.android.ui.suggestion.service.SuggestionService;
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPWebViewClient;
+import org.wordpress.android.widgets.SuggestionAutoCompleteText;
+
+import java.util.List;
 
 public class ViewPostFragment extends Fragment {
     /** Called when the activity is first created. */
@@ -41,10 +52,12 @@ public class ViewPostFragment extends Fragment {
     PostsActivity parentActivity;
 
     private ViewGroup mLayoutCommentBox;
-    private EditText mEditComment;
+    private SuggestionAutoCompleteText mEditComment;
     private ImageButton mAddCommentButton, mShareUrlButton, mViewPostButton;
     private TextView mTitleTextView, mContentTextView;
     private boolean mShouldLoadPost = true;
+
+    private SuggestionAdapter mSuggestionAdapter;
 
     @Override
     public void onActivityCreated(Bundle bundle) {
@@ -63,6 +76,28 @@ public class ViewPostFragment extends Fragment {
         }
 
         parentActivity = (PostsActivity) getActivity();
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
+                .registerReceiver(mReceiver, new IntentFilter(SuggestionService.ACTION_SUGGESTIONS_LIST_UPDATED));
+    }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int updatedBlogId = intent.getIntExtra(SuggestionService.SUGGESTIONS_LIST_UPDATED_EXTRA, 0);
+            int remoteBlogId = WordPress.getCurrentRemoteBlogId();
+            if (updatedBlogId != 0 && remoteBlogId == updatedBlogId) {
+                List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(remoteBlogId);
+                mSuggestionAdapter.setSuggestionList(suggestions);
+            }
+        }
+    };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
+                .unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -83,7 +118,7 @@ public class ViewPostFragment extends Fragment {
 
         // comment views
         mLayoutCommentBox = (ViewGroup) v.findViewById(R.id.layout_comment_box);
-        mEditComment = (EditText) mLayoutCommentBox.findViewById(R.id.edit_comment);
+        mEditComment = (SuggestionAutoCompleteText) mLayoutCommentBox.findViewById(R.id.edit_comment);
         mEditComment.setHint(R.string.reader_hint_comment_on_post);
 
         // button listeners here
@@ -138,8 +173,20 @@ public class ViewPostFragment extends Fragment {
             }
         });
 
+        setupSuggestionsServiceAndAdapter();
+
         return v;
 
+    }
+
+    private void setupSuggestionsServiceAndAdapter() {
+        if (!isAdded()) return;
+
+        int remoteBlogId = WordPress.getCurrentRemoteBlogId();
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions(remoteBlogId, getActivity());
+        if (mSuggestionAdapter != null) {
+            mEditComment.setAdapter(mSuggestionAdapter);
+        }
     }
 
     /**
