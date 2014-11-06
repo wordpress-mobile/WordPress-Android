@@ -55,6 +55,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionService;
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -86,7 +87,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private Note mNote;
 
     private SuggestionAdapter mSuggestionAdapter;
-    private ServiceConnection mSuggestionServiceConnection;
+    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     private TextView mTxtStatus;
     private TextView mTxtContent;
@@ -189,7 +190,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public void onDestroy() {
         super.onDestroy();
 
-        getActivity().unbindService(mSuggestionServiceConnection);
+        mSuggestionServiceConnectionManager.unbindFromService();
     }
 
     @Override
@@ -277,8 +278,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void setupSuggestionsServiceAndAdapter() {
         if (!isAdded()) return;
 
-        mSuggestionServiceConnection = SuggestionUtils.suggestionServiceConnection(mRemoteBlogId);
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mRemoteBlogId, getActivity(), mSuggestionServiceConnection);
+        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mRemoteBlogId);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mRemoteBlogId, getActivity(), mSuggestionServiceConnectionManager);
         if (mSuggestionAdapter != null) {
             mEditReply.setAdapter(mSuggestionAdapter);
         }

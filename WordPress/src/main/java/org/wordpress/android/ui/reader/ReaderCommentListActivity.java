@@ -33,6 +33,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionService;
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -58,7 +59,7 @@ public class ReaderCommentListActivity extends Activity {
     private ReaderPost mPost;
     private ReaderCommentAdapter mCommentAdapter;
     private SuggestionAdapter mSuggestionAdapter;
-    private ServiceConnection mSuggestionServiceConnection;
+    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     private WPListView mListView;
     private SuggestionAutoCompleteText mEditComment;
@@ -117,8 +118,8 @@ public class ReaderCommentListActivity extends Activity {
 
         refreshComments();
 
-        mSuggestionServiceConnection = SuggestionUtils.suggestionServiceConnection((int)mBlogId);
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions((int)mBlogId, this, mSuggestionServiceConnection, mPost.isWP());
+        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, (int)mBlogId);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions((int)mBlogId, this, mSuggestionServiceConnectionManager, mPost.isWP());
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
         }
@@ -246,7 +247,7 @@ public class ReaderCommentListActivity extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        this.unbindService(mSuggestionServiceConnection);
+        mSuggestionServiceConnectionManager.unbindFromService();
     }
 
     private boolean hasCommentAdapter() {

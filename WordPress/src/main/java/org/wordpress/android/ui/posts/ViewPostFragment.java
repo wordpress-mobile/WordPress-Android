@@ -35,6 +35,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionService;
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -59,7 +60,7 @@ public class ViewPostFragment extends Fragment {
     private boolean mShouldLoadPost = true;
 
     private SuggestionAdapter mSuggestionAdapter;
-    private ServiceConnection mSuggestionServiceConnection;
+    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     @Override
     public void onActivityCreated(Bundle bundle) {
@@ -106,7 +107,7 @@ public class ViewPostFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
 
-        getActivity().unbindService(mSuggestionServiceConnection);
+        mSuggestionServiceConnectionManager.unbindFromService();
     }
 
     @Override
@@ -192,8 +193,8 @@ public class ViewPostFragment extends Fragment {
         if (!isAdded()) return;
 
         int remoteBlogId = WordPress.getCurrentRemoteBlogId();
-        mSuggestionServiceConnection = SuggestionUtils.suggestionServiceConnection(remoteBlogId);
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions(remoteBlogId, getActivity(), mSuggestionServiceConnection);
+        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), remoteBlogId);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions(remoteBlogId, getActivity(), mSuggestionServiceConnectionManager);
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
         }
