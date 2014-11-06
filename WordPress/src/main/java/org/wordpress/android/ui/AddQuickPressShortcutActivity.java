@@ -5,7 +5,6 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +26,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.StringUtils;
 
@@ -116,7 +115,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
 
         } else {
             // no account, load new account view
-            Intent i = new Intent(AddQuickPressShortcutActivity.this, WelcomeActivity.class);
+            Intent i = new Intent(AddQuickPressShortcutActivity.this, SignInActivity.class);
             startActivityForResult(i, ADD_ACCOUNT_REQUEST);
         }
     }

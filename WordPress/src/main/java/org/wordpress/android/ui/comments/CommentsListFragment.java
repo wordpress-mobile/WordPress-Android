@@ -24,12 +24,9 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.comments.CommentActions.ChangeType;
-import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
-import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
@@ -452,7 +449,7 @@ public class CommentsListFragment extends Fragment {
                                 blog.getPassword(),
                                 hPost };
             try {
-                return ApiHelper.refreshComments(getActivity(), blog, params);
+                return ApiHelper.refreshComments(blog, params);
             } catch (XMLRPCFault xmlrpcFault) {
                 mErrorType = ErrorType.UNKNOWN_ERROR;
                 if (xmlrpcFault.getFaultCode() == 401) {

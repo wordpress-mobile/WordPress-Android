@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/reader_transparent_selector"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:background="@drawable/reader_transparent_selector"
     android:padding="@dimen/margin_large">
 
     <org.wordpress.android.widgets.WPNetworkImageView
@@ -25,11 +25,11 @@
             android:id="@+id/text_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="1"
             android:ellipsize="end"
-            tools:text="text_name"
+            android:maxLines="1"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_medium" />
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="text_name" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_url"
@@ -38,13 +38,9 @@
             android:layout_below="@+id/text_name"
             android:ellipsize="end"
             android:maxLines="1"
-            tools:text="text_url"
             android:textColor="@color/reader_hyperlink"
-            android:textSize="@dimen/text_sz_small" />
+            android:textSize="@dimen/text_sz_small"
+            tools:text="text_url" />
 
     </RelativeLayout>
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_follow"
-        style="@style/ReaderTextView.Follow" />
 </LinearLayout>

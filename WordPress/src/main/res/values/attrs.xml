@@ -12,11 +12,12 @@
     <!--
         WPTextView attribute to enable switching between regular and light Open Sans typeface (see widgets/WPTextView)
     -->
-    <declare-styleable name="WPTypeface">
+    <declare-styleable name="WPTextView">
         <attr name="fontVariation" format="enum">
             <enum name="normal" value="0" />
             <enum name="light" value="1" />
         </attr>
+        <attr name="fixWidowWords" format="boolean"/>
     </declare-styleable>
 
     <!--
