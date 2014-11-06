@@ -72,7 +72,7 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
             int avatarSz = mContext.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
             String avatarUrl = PhotonUtils.fixAvatar(suggestion.getImageUrl(), avatarSz);
             holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-            holder.txtUserLogin.setText(suggestion.getUserLogin());
+            holder.txtUserLogin.setText("@" + suggestion.getUserLogin());
             holder.txtDisplayName.setText(suggestion.getDisplayName());
         }
 

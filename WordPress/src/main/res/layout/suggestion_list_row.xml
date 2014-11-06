@@ -22,7 +22,7 @@
         android:gravity="center_vertical"
         android:maxLines="1"
         android:ellipsize="end"
-        android:textColor="@color/grey_dark"
+        android:textColor="@color/calypso_blue_dark"
         android:textSize="@dimen/text_sz_medium" />
 
     <org.wordpress.android.widgets.WPTextView
@@ -34,7 +34,7 @@
         android:gravity="center_vertical"
         android:maxLines="1"
         android:ellipsize="start"
-        android:textColor="@color/grey_dark"
+        android:textColor="@color/calypso_blue"
         android:textSize="@dimen/text_sz_medium" />
 
 </LinearLayout>
