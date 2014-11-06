@@ -34,7 +34,6 @@ public class MediaSelectActivity extends Activity implements MediaSelectFragment
 
     @Override
     public void onMediaPageChanged(int position) {
-        // TODO: update adapter content
         // TODO: update action bar items
     }
 
@@ -46,6 +45,8 @@ public class MediaSelectActivity extends Activity implements MediaSelectFragment
     private void setupTabs() {
         mMediaSelectFragment = new MediaSelectFragmentPagerAdapter(this, mViewPager, this);
 
+        // TODO: Check arguments onCreate for filters to add tabs instead of hard-coded here.
+        // This will allow users of this Activity to customize the content being displayed.
         int imageFilter = MediaSelectFragmentPagerAdapter.MediaSelectTabFragment.CAPTURE_IMAGE;
         int videoFilter = MediaSelectFragmentPagerAdapter.MediaSelectTabFragment.CAPTURE_VIDEO;
         mMediaSelectFragment.addTab(imageFilter, "Images");

@@ -5,10 +5,16 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+
+import org.wordpress.android.ui.media.content.CaptureMediaContent;
+import org.wordpress.android.ui.media.content.MediaContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,20 +32,54 @@ public class MediaSelectFragmentPagerAdapter extends FragmentPagerAdapter
      */
     public static class MediaSelectTabFragment extends Fragment {
         // Bit flags for fragment filters
-        public static final int CAPTURE_IMAGE = 0x1;
-        public static final int CAPTURE_VIDEO = 0x2;
-        public static final int DEVICE_IMAGES = 0x4;
-        public static final int DEVICE_VIDEOS = 0x8;
+        public static final String FILTER_ARG = "";
+        public static final int CAPTURE_NONE  = 0x00;
+        public static final int CAPTURE_IMAGE = 0x01;
+        public static final int CAPTURE_VIDEO = 0x02;
+        public static final int DEVICE_IMAGES = 0x04;
+        public static final int DEVICE_VIDEOS = 0x08;
         public static final int WP_IMAGES     = 0x10;
         public static final int WP_VIDEOS     = 0x20;
 
         private int mFilter;
+        private MediaSelectGridView mGridView;
 
         public MediaSelectTabFragment() {
             super();
         }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            Bundle args = getArguments();
+
+            if (args != null) {
+                mFilter = args.getInt(FILTER_ARG);
+            } else {
+                mFilter = CAPTURE_NONE;
+            }
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            super.onCreateView(inflater, container, savedInstanceState);
+
+            mGridView = new MediaSelectGridView(getActivity());
+
+            if ((mFilter & CAPTURE_IMAGE) != 0) {
+                mGridView.addContent(new CaptureMediaContent(CaptureMediaContent.CAPTURE_TYPE_IMAGE));
+            }
+
+            if((mFilter & CAPTURE_VIDEO) != 0) {
+                mGridView.addContent(new CaptureMediaContent(CaptureMediaContent.CAPTURE_TYPE_VIDEO));
+            }
+
+            return mGridView;
+        }
     }
 
+    /** Callback for various media selection events. */
     public interface MediaSelectCallback {
         public void onMediaSelected(Object content, boolean selected);
 
@@ -48,16 +88,26 @@ public class MediaSelectFragmentPagerAdapter extends FragmentPagerAdapter
         public void onSelectedCleared();
     }
 
+    private class TabInfo {
+        public Class<?> classType;
+        public Bundle args;
+
+        public TabInfo(Class<?> classType, Bundle args) {
+            this.classType = classType;
+            this.args = args;
+        }
+    }
+
     private Activity mActivity;
     private ViewPager mViewPager;
     private ActionBar mActionBar;
-    private List<Class<?>> mTabs;
+    private List<TabInfo> mTabs;
     private MediaSelectCallback mListener;
 
-    public MediaSelectFragmentPagerAdapter(FragmentManager fragmentManager) {
+    private MediaSelectFragmentPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
 
-        mTabs = new ArrayList<Class<?>>();
+        mTabs = new ArrayList<TabInfo>();
     }
 
     public MediaSelectFragmentPagerAdapter(Activity activity, ViewPager viewPager, MediaSelectCallback listener) {
@@ -74,38 +124,15 @@ public class MediaSelectFragmentPagerAdapter extends FragmentPagerAdapter
         mViewPager = viewPager;
         mViewPager.setAdapter(this);
         mViewPager.setOnPageChangeListener(this);
-    }
 
-    /** Used to add filtered {@link org.wordpress.android.ui.media.MediaSelectFragmentPagerAdapter.MediaSelectTabFragment}'s. */
-    public void addTab(int filter, String name) {
-        if (filter > 0) {
-            ActionBar.Tab newTab = mActionBar.newTab();
-            newTab.setText(name);
-            newTab.setTag(name);
-            newTab.setTabListener(this);
-            mTabs.add(MediaSelectTabFragment.class);
-            mActionBar.addTab(newTab);
-            notifyDataSetChanged();
-        }
-    }
-
-    /** Used to add custom fragments as tabs. */
-    public void addTab(Fragment fragment, String name) {
-        if (fragment != null) {
-            ActionBar.Tab newTab = mActionBar.newTab();
-            newTab.setText(name);
-            newTab.setTag(name);
-            newTab.setTabListener(this);
-            mTabs.add(fragment.getClass());
-            mActionBar.addTab(newTab);
-            notifyDataSetChanged();
-        }
+        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
     }
 
     @Override
     public Fragment getItem(int position) {
         if (position < mTabs.size()) {
-            return Fragment.instantiate(mActivity, mTabs.get(position).getName(), null);
+            TabInfo tab = mTabs.get(position);
+            return Fragment.instantiate(mActivity, tab.classType.getName(), tab.args);
         }
 
         return null;
@@ -125,7 +152,6 @@ public class MediaSelectFragmentPagerAdapter extends FragmentPagerAdapter
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        if (position < mTabs.size()) mActionBar.setSelectedNavigationItem(position);
     }
 
     @Override
@@ -153,5 +179,27 @@ public class MediaSelectFragmentPagerAdapter extends FragmentPagerAdapter
 
     public void setListener(MediaSelectCallback listener) {
         mListener = listener;
+    }
+
+    /** Used to add filtered {@link org.wordpress.android.ui.media.MediaSelectFragmentPagerAdapter.MediaSelectTabFragment}'s. */
+    public void addTab(int filter, String tabName) {
+        if (filter > 0) {
+            Bundle tabArguments = new Bundle();
+            tabArguments.putInt(MediaSelectTabFragment.FILTER_ARG, filter);
+            addTab(MediaSelectTabFragment.class, tabName, tabArguments);
+        }
+    }
+
+    /** Used to add custom fragments as tabs. */
+    public void addTab(Class<?> fragmentClass, String tabName, Bundle args) {
+        if (fragmentClass != null) {
+            ActionBar.Tab newTab = mActionBar.newTab();
+            newTab.setText(tabName);
+            newTab.setTag(args);
+            newTab.setTabListener(this);
+            mTabs.add(new TabInfo(fragmentClass, args));
+            mActionBar.addTab(newTab);
+            notifyDataSetChanged();
+        }
     }
 }
