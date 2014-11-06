@@ -19,7 +19,8 @@ import java.util.ArrayList;
  * multi-select isn't supported pre-API 11.
  *
  */
-public class MultiSelectGridView extends GridView implements  AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
+public class MultiSelectGridView extends GridView
+        implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
     private OnItemClickListener mOnItemClickListener;
     private MultiSelectListener mMultiSelectListener;
     private MediaGridAdapter mAdapter;
