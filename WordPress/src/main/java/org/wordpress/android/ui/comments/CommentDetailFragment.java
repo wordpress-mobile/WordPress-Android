@@ -5,13 +5,10 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.TextUtils;
@@ -39,7 +36,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
@@ -58,6 +54,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionService;
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -67,7 +64,6 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
@@ -272,37 +268,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void setupSuggestionsServiceAndAdapter() {
         if (!isAdded()) return;
 
-        Blog blog = WordPress.wpDB.getBlogForDotComBlogId(Integer.toString(mRemoteBlogId));
-        if (!blog.isDotcomFlag()) {
-            return;
-        }
-
         final Context context = getActivity();
 
-        mSuggestionAdapter = new SuggestionAdapter(context);
-        mEditReply.setAdapter(mSuggestionAdapter);
-        mEditReply.setTokenizer(new SuggestionTokenizer());
-        mEditReply.setThreshold(1);
-
-        List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(mRemoteBlogId);
-        // if the suggestions are not stored yet, we want to trigger an update for it
-        if (suggestions.isEmpty()) {
-            Intent intent = new Intent(context, SuggestionService.class);
-            ServiceConnection connection = new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName className, IBinder binder) {
-                    SuggestionService.SuggestionBinder b = (SuggestionService.SuggestionBinder) binder;
-                    SuggestionService suggestionService = b.getService();
-
-                    suggestionService.updateSuggestions(mRemoteBlogId);
-                }
-
-                @Override
-                public void onServiceDisconnected(ComponentName componentName) { }
-            };
-            context.bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mRemoteBlogId, context);
+        if (mSuggestionAdapter != null) {
+            mEditReply.setAdapter(mSuggestionAdapter);
         }
-        mSuggestionAdapter.setSuggestionList(suggestions);
     }
 
     void setComment(int localBlogId, long commentId) {
