@@ -21,8 +21,6 @@ public class ReaderTips {
         SWIPE_POSTS
     }
 
-    private static final int TIP_DURATION = (UndoBarStyle.DEFAULT_DURATION * 2);
-
     public static void showTip(Activity activity, final ReaderTipType tipType) {
         if (tipType == null || isTipShown(tipType)) {
             return;
@@ -43,8 +41,8 @@ public class ReaderTips {
         UndoBarStyle style = new UndoBarStyle(
                 R.drawable.ic_action_accept,
                 R.string.reader_btn_got_it,
-                R.drawable.button_blue,
-                TIP_DURATION);
+                R.drawable.reader_tip_bg,
+                UndoBarStyle.DEFAULT_DURATION);
         Animation animIn = AnimationUtils.loadAnimation(activity, R.anim.fade_in);
         Animation animOut = AnimationUtils.loadAnimation(activity, R.anim.fade_out);
         style.setAnim(animIn, animOut);
@@ -52,7 +50,7 @@ public class ReaderTips {
         UndoBarController.UndoListener listener = new UndoBarController.UndoListener() {
             @Override
             public void onUndo(Parcelable parcelable) {
-                setTipShown(tipType);
+                //setTipShown(tipType);
             }
         };
 
