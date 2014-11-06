@@ -403,8 +403,6 @@ public class ReaderPostListFragment extends Fragment
 
         getPostAdapter().setOnTagSelectedListener(mOnTagSelectedListener);
         getPostAdapter().setOnPostPopupListener(mOnPostPopupListener);
-
-        ReaderUtils.showTip(getActivity(), R.string.reader_tip_swipe_posts);
     }
 
     @Override

@@ -34,6 +34,8 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
+import org.wordpress.android.ui.reader.utils.ReaderTips;
+import org.wordpress.android.ui.reader.utils.ReaderTips.ReaderTipType;
 import org.wordpress.android.ui.reader.views.ReaderViewPager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -252,6 +254,10 @@ public class ReaderPostPagerActivity extends Activity
                             mViewPager.setCurrentItem(newPosition);
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
+                        }
+                        // let user know they can swipe through posts
+                        if (idList.size() > 1) {
+                            ReaderTips.showTip(ReaderPostPagerActivity.this, ReaderTipType.SWIPE_POSTS);
                         }
                     }
                 });
