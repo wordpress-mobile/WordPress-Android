@@ -270,12 +270,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
-        setupSuggestionsServiceAndAdapter();
+        setupSuggestionServiceAndAdapter();
 
         return view;
     }
 
-    private void setupSuggestionsServiceAndAdapter() {
+    private void setupSuggestionServiceAndAdapter() {
         if (!isAdded()) return;
 
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mRemoteBlogId);

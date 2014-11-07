@@ -183,13 +183,13 @@ public class ViewPostFragment extends Fragment {
             }
         });
 
-        setupSuggestionsServiceAndAdapter();
+        setupSuggestionServiceAndAdapter();
 
         return v;
 
     }
 
-    private void setupSuggestionsServiceAndAdapter() {
+    private void setupSuggestionServiceAndAdapter() {
         if (!isAdded()) return;
 
         int remoteBlogId = WordPress.getCurrentRemoteBlogId();
