@@ -56,7 +56,7 @@ public class MediaGalleryPickerActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ArrayList<String> checkedItems = new ArrayList<String>();
+        Set<String> checkedItems = new HashSet<String>();
         mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
         mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
 
@@ -101,7 +101,7 @@ public class MediaGalleryPickerActivity extends Activity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putStringArrayList(STATE_SELECTED_ITEMS, mGridAdapter.getCheckedItems());
+        outState.putSerializable(STATE_SELECTED_ITEMS, (Serializable) mGridAdapter.getCheckedItems());
         outState.putStringArrayList(STATE_FILTERED_ITEMS, mFilteredItems);
         outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
     }
@@ -127,18 +127,15 @@ public class MediaGalleryPickerActivity extends Activity
     }
 
     @Override
-    public void onMultiSelectChange(int count) {
-        mActionMode.setTitle(count + " selected");
-        // stay always in multi-select mode, even when count reaches 0
-        if (count == 0 && !mIsSelectOneItem)
-            mGridView.setMultiSelectModeActive(true);
+    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         // Single select, just finish the activity once an item is selected
         Intent intent = new Intent();
-        intent.putExtra(RESULT_IDS, mGridAdapter.getCheckedItems());
+        intent.putExtra(RESULT_IDS, (Serializable) mGridAdapter.getCheckedItems());
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -161,7 +158,7 @@ public class MediaGalleryPickerActivity extends Activity
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         Intent intent = new Intent();
-        intent.putExtra(RESULT_IDS, mGridAdapter.getCheckedItems());
+        intent.putExtra(RESULT_IDS, (Serializable) mGridAdapter.getCheckedItems());
         setResult(RESULT_OK, intent);
         finish();
     }

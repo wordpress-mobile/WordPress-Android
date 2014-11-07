@@ -48,8 +48,11 @@ import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The main activity in which the user can browse their media.
@@ -430,7 +433,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 .setPositiveButton(R.string.delete, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ArrayList<String> ids = new ArrayList<String>(1);
+                        Set<String> ids = new HashSet<String>(1);
                         ids.add(mediaId);
                         onDeleteMedia(ids);
                     }
@@ -520,7 +523,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     }
 
     @Override
-    public void onDeleteMedia(final List<String> ids) {
+    public void onDeleteMedia(final Set<String> ids) {
         final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         List<String> sanitizedIds = new ArrayList<String>(ids.size());
 
@@ -700,14 +703,13 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     }
 
     private void handleNewPost() {
-        if (mMediaGridFragment == null)
+        if (mMediaGridFragment == null) {
             return;
-
-        ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
-
+        }
+        Set<String> ids = mMediaGridFragment.getCheckedItems();
         Intent i = new Intent(this, EditPostActivity.class);
         i.setAction(EditPostContentFragment.NEW_MEDIA_POST);
-        i.putExtra(EditPostContentFragment.NEW_MEDIA_POST_EXTRA, ids.get(0));
+        i.putExtra(EditPostContentFragment.NEW_MEDIA_POST_EXTRA, ids.iterator().next());
         startActivity(i);
     }
 
@@ -718,7 +720,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 .setPositiveButton(R.string.delete, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
+                        Set<String> ids = mMediaGridFragment.getCheckedItems();
                         onDeleteMedia(ids);
                         mMediaGridFragment.refreshSpinnerAdapter();
                     }
@@ -729,14 +731,13 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     }
 
     private void handleMultiSelectPost() {
-        if (mMediaGridFragment == null)
+        if (mMediaGridFragment == null) {
             return;
-
-        ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
-
+        }
+        Set<String> ids = mMediaGridFragment.getCheckedItems();
         Intent i = new Intent(this, EditPostActivity.class);
         i.setAction(EditPostContentFragment.NEW_MEDIA_GALLERY);
-        i.putExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS, ids);
+        i.putExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS, (Serializable) ids);
         startActivity(i);
     }
 }

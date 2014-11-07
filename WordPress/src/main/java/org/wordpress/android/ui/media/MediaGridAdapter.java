@@ -37,13 +37,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * An adapter for the media gallery listViews.
  */
 public class MediaGridAdapter extends CursorAdapter {
     private MediaGridAdapterCallback mCallback;
-    private final ArrayList<String> mCheckedItems;
+    private final Set<String> mCheckedItems;
     private boolean mHasRetrievedAll;
     private boolean mIsRefreshing;
     private int mCursorDataCount;
@@ -70,7 +71,7 @@ public class MediaGridAdapter extends CursorAdapter {
         LOCAL, NETWORK, PROGRESS, SPACER
     }
 
-    public MediaGridAdapter(Context context, Cursor c, int flags, ArrayList<String> checkedItems,
+    public MediaGridAdapter(Context context, Cursor c, int flags, Set<String> checkedItems,
                             ImageLoader imageLoader) {
         super(context, c, flags);
         mContext = context;
@@ -97,7 +98,7 @@ public class MediaGridAdapter extends CursorAdapter {
                 (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable());
     }
 
-    public ArrayList<String> getCheckedItems() {
+    public Set<String> getCheckedItems() {
         return mCheckedItems;
     }
 
@@ -225,13 +226,10 @@ public class MediaGridAdapter extends CursorAdapter {
             public void onCheckedChanged(CheckableFrameLayout view, boolean isChecked) {
                 String mediaId = (String) view.getTag();
                 if (isChecked) {
-                    if (!mCheckedItems.contains(mediaId)) {
-                        mCheckedItems.add(mediaId);
-                    }
+                    mCheckedItems.add(mediaId);
                 } else {
                     mCheckedItems.remove(mediaId);
                 }
-
             }
         });
         holder.frameLayout.setChecked(mCheckedItems.contains(mediaId));

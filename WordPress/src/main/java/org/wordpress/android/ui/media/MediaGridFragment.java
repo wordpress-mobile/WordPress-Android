@@ -41,10 +41,13 @@ import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
@@ -75,7 +78,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     private MediaGridAdapter mGridAdapter;
     private MediaGridListener mListener;
 
-    private ArrayList<String> mCheckedItems;
+    private Set<String> mCheckedItems;
 
     private boolean mIsRefreshing = false;
     private boolean mHasRetrievedAllMedia = false;
@@ -137,7 +140,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mCheckedItems = new ArrayList<String>();
+        mCheckedItems = new HashSet<String>();
         mFiltersText = new String[Filter.values().length];
 
         mGridAdapter = new MediaGridAdapter(getActivity(), null, 0, mCheckedItems, MediaImageLoader.getInstance());
@@ -199,13 +202,12 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
 
         if (savedInstanceState.containsKey(BUNDLE_CHECKED_STATES)) {
-            mCheckedItems.addAll(savedInstanceState.getStringArrayList(BUNDLE_CHECKED_STATES));
+            mCheckedItems = (HashSet<String>) savedInstanceState.getSerializable(BUNDLE_CHECKED_STATES);
             if (isInMultiSelectMode) {
                 mListener.onMultiSelectChange(mCheckedItems.size());
                 onMultiSelectChange(mCheckedItems.size());
                 mPullToRefreshHelper.setEnabled(false);
             }
-            mGridView.setMultiSelectModeActive(isInMultiSelectMode);
         }
 
         mGridView.setSelection(savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0));
@@ -232,7 +234,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     }
 
     private void saveState(Bundle outState) {
-        outState.putStringArrayList(BUNDLE_CHECKED_STATES, mCheckedItems);
+        outState.putSerializable(BUNDLE_CHECKED_STATES, (Serializable) mCheckedItems);
         outState.putInt(BUNDLE_SCROLL_POSITION, mGridView.getFirstVisiblePosition());
         outState.putBoolean(BUNDLE_HAS_RETREIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, isInMultiSelect());
@@ -631,12 +633,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         mListener.onMultiSelectChange(count);
     }
 
-    @Override
-    public boolean isInMultiSelect() {
-        return mGridView.isInMultiSelectMode();
-    }
-
-    public ArrayList<String> getCheckedItems() {
+    public Set<String> getCheckedItems() {
         return mCheckedItems;
     }
 
