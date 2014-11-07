@@ -27,8 +27,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
+import android.support.v7.widget.SearchView;
 import android.widget.Toast;
 
 import org.wordpress.android.Constants;
@@ -57,7 +56,7 @@ import java.util.List;
  */
 
 public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener,
-        MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback,
+        MediaItemFragmentCallback, SearchView.OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback,
         MediaAddFragmentCallback,
         ActionMode.Callback {
     private static final String SAVED_QUERY = "SAVED_QUERY";

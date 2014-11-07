@@ -145,7 +145,7 @@
 
         <!-- Media Activities -->
         <activity android:name=".ui.media.MediaBrowserActivity"
-                  android:theme="@style/CalypsoTheme" >
+                  android:theme="@style/Calypso.NoActionBar" >
         </activity>
 
         <activity android:name=".ui.media.MediaGalleryActivity">
@@ -157,7 +157,7 @@
         <!-- Theme Activities -->
         <activity
             android:name=".ui.themes.ThemeBrowserActivity"
-            android:theme="@style/CalypsoTheme" >
+            android:theme="@style/Calypso.NoActionBar" >
         </activity>
 
         <!-- Deep Linking Activity -->
