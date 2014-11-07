@@ -75,6 +75,12 @@ public class ReaderTips {
                 .show();
     }
 
+    public static void hideTip(Activity activity) {
+        if (activity != null && !activity.isFinishing()) {
+            UndoBarController.clear(activity);
+        }
+    }
+
     public static void reset() {
         SharedPreferences.Editor editor = AppPrefs.prefs().edit();
         for (ReaderTipType tipType: ReaderTipType.values()) {

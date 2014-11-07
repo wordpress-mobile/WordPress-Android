@@ -140,6 +140,7 @@ public class ReaderPostPagerActivity extends Activity
                     if (fragment != null) {
                         fragment.pauseWebView();
                     }
+                    ReaderTips.hideTip(ReaderPostPagerActivity.this);
                 }
             }
         });
