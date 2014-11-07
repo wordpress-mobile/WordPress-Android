@@ -97,7 +97,8 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
     private boolean mReauthCanceled;
     private boolean mNewBlogActivityRunning;
 
-    private Toolbar mToolbar;
+    protected Toolbar mToolbar;
+    private DrawerLayout mDrawerLayout;
     protected ActionBarDrawerToggle mDrawerToggle;
     private MenuAdapter mAdapter;
     protected List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
@@ -239,7 +240,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
     private void initMenuDrawer(int blogSelection) {
 
         // Set up the menu drawer
-        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);
         mAdapter = new MenuAdapter(this);
 
@@ -253,7 +254,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // close the menu drawer
-                drawerLayout.closeDrawer(Gravity.LEFT);
+                mDrawerLayout.closeDrawer(Gravity.START);
 
                 // account for header views
                 int menuPosition = position - mDrawerListView.getHeaderViewsCount();
@@ -278,7 +279,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
 
 
         mDrawerToggle = new ActionBarDrawerToggle(
-                this, drawerLayout, mToolbar, R.string.open_drawer,
+                this, mDrawerLayout, mToolbar, R.string.open_drawer,
                 R.string.close_drawer
         ) {
             public void onDrawerClosed(View view) {
@@ -289,13 +290,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
                 invalidateOptionsMenu();
             }
         };
-
-        drawerLayout.setDrawerListener(mDrawerToggle);
-
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+        mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
 
         if (blogSelection != -1 && mBlogSpinner != null) {
             mBlogSpinner.setSelection(blogSelection);
@@ -605,12 +600,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            //if (mMenuDrawer != null) {
-                //mMenuDrawer.toggleMenu();
-                //return true;
-            //} else {
-                onBackPressed();
-            //}
+            mDrawerLayout.openDrawer(Gravity.START);
         } else if (item.getItemId() == R.id.menu_settings) {
             Intent i = new Intent(this, PreferencesActivity.class);
             startActivityForResult(i, SETTINGS_REQUEST);

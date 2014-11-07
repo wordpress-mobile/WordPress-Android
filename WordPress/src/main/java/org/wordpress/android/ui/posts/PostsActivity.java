@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -93,7 +94,8 @@ public class PostsActivity extends WPActionBarActivity
 
         createMenuDrawer(R.layout.posts);
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
         }
@@ -161,8 +163,11 @@ public class PostsActivity extends WPActionBarActivity
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
-            if (getFragmentManager().getBackStackEntryCount() == 0)
+            if (getFragmentManager().getBackStackEntryCount() == 0) {
                 mDrawerToggle.setDrawerIndicatorEnabled(true);
+            } else {
+                mDrawerToggle.setDrawerIndicatorEnabled(false);
+            }
         }
     };
 
@@ -304,7 +309,6 @@ public class PostsActivity extends WPActionBarActivity
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
-                mDrawerToggle.setDrawerIndicatorEnabled(false);
             } else {
                 viewPostFragment.loadPost(post);
             }
