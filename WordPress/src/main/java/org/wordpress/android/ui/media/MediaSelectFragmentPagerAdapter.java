@@ -5,16 +5,22 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.res.Resources;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import org.wordpress.android.R;
 import org.wordpress.android.ui.media.content.CaptureMediaContent;
-import org.wordpress.android.ui.media.content.MediaContent;
+import org.wordpress.android.ui.media.content.DeviceImageMediaContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +48,7 @@ public class MediaSelectFragmentPagerAdapter extends FragmentPagerAdapter
         public static final int WP_VIDEOS     = 0x20;
 
         private int mFilter;
-        private MediaSelectGridView mGridView;
+        private MediaContentGridView mGridView;
 
         public MediaSelectTabFragment() {
             super();
@@ -65,17 +71,67 @@ public class MediaSelectFragmentPagerAdapter extends FragmentPagerAdapter
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             super.onCreateView(inflater, container, savedInstanceState);
 
-            mGridView = new MediaSelectGridView(getActivity());
+            layoutGridView();
 
             if ((mFilter & CAPTURE_IMAGE) != 0) {
                 mGridView.addContent(new CaptureMediaContent(CaptureMediaContent.CAPTURE_TYPE_IMAGE));
             }
 
-            if((mFilter & CAPTURE_VIDEO) != 0) {
+            if ((mFilter & CAPTURE_VIDEO) != 0) {
                 mGridView.addContent(new CaptureMediaContent(CaptureMediaContent.CAPTURE_TYPE_VIDEO));
             }
 
+            if ((mFilter & DEVICE_IMAGES) != 0) {
+                addMediaStoreImages();
+            }
+
             return mGridView;
+        }
+
+        private void layoutGridView() {
+            Resources resources = getActivity().getResources();
+            int numColumns = resources.getInteger(R.integer.media_grid_num_columns);
+            int gridPadding = Math.round(resources.getDimension(R.dimen.media_grid_padding));
+            int columnSpacingY = Math.round(resources.getDimension(R.dimen.media_grid_column_spacing_vertical));
+            int columnSpacingX = Math.round(resources.getDimension(R.dimen.media_grid_column_spacing_horizontal));
+
+            mGridView = new MediaContentGridView(getActivity());
+            mGridView.setNumColumns(numColumns);
+            mGridView.setVerticalSpacing(columnSpacingY);
+            mGridView.setHorizontalSpacing(columnSpacingX);
+            mGridView.setPadding(gridPadding, gridPadding, gridPadding, gridPadding);
+        }
+
+        private void addMediaStoreImages() {
+            // Add device images to the gridview
+            Uri thumbUri = MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI;
+            String[] thumbColumns = { MediaStore.Images.Thumbnails._ID, MediaStore.Images.Thumbnails.DATA };
+            Cursor thumbCursor = MediaStore.Images.Thumbnails.query(getActivity().getContentResolver(), thumbUri, thumbColumns);
+
+            Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            String[] imageColumns= { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA, MediaStore.Images.Media.TITLE };
+            Cursor imageCursor = MediaStore.Images.Media.query(getActivity().getContentResolver(), imageUri, imageColumns);
+
+            if (imageCursor.moveToFirst() && thumbCursor.moveToFirst()) {
+                List<String> images = new ArrayList<String>();
+                do {
+                    String id = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.MediaColumns._ID));
+                    String data = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
+                    String name = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.MediaColumns.TITLE));
+                    String thumbnail = thumbCursor.getString(thumbCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
+
+                    if(!images.contains(name)) {
+                        DeviceImageMediaContent newContent = new DeviceImageMediaContent(data);
+                        newContent.setName(name);
+
+                        Log.i("TEST", "thumbnail:" + thumbnail);
+                        newContent.setThumbUri(thumbnail);
+
+                        mGridView.addContent(newContent);
+                        images.add(name);
+                    }
+                } while(imageCursor.moveToNext() && thumbCursor.moveToNext());
+            }
         }
     }
 

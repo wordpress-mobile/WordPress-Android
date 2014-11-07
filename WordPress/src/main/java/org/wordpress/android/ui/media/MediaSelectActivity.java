@@ -47,7 +47,8 @@ public class MediaSelectActivity extends Activity implements MediaSelectFragment
 
         // TODO: Check arguments onCreate for filters to add tabs instead of hard-coded here.
         // This will allow users of this Activity to customize the content being displayed.
-        int imageFilter = MediaSelectFragmentPagerAdapter.MediaSelectTabFragment.CAPTURE_IMAGE;
+        int imageFilter = MediaSelectFragmentPagerAdapter.MediaSelectTabFragment.CAPTURE_IMAGE |
+                          MediaSelectFragmentPagerAdapter.MediaSelectTabFragment.DEVICE_IMAGES;
         int videoFilter = MediaSelectFragmentPagerAdapter.MediaSelectTabFragment.CAPTURE_VIDEO;
         mMediaSelectFragment.addTab(imageFilter, "Images");
         mMediaSelectFragment.addTab(videoFilter, "Videos");
