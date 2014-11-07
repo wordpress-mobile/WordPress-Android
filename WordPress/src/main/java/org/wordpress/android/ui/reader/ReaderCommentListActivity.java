@@ -136,6 +136,7 @@ public class ReaderCommentListActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             int updatedBlogId = intent.getIntExtra(SuggestionService.SUGGESTIONS_LIST_UPDATED_EXTRA, 0);
+            // check if the updated suggestions are for the current blog and update the suggestions
             if (updatedBlogId != 0 && mBlogId == updatedBlogId) {
                 List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite((int)mBlogId);
                 mSuggestionAdapter.setSuggestionList(suggestions);

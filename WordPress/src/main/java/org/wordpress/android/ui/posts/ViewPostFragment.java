@@ -88,6 +88,7 @@ public class ViewPostFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             int updatedBlogId = intent.getIntExtra(SuggestionService.SUGGESTIONS_LIST_UPDATED_EXTRA, 0);
             int remoteBlogId = WordPress.getCurrentRemoteBlogId();
+            // check if the updated suggestions are for the current blog and update the suggestions
             if (updatedBlogId != 0 && remoteBlogId == updatedBlogId) {
                 List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(remoteBlogId);
                 mSuggestionAdapter.setSuggestionList(suggestions);
