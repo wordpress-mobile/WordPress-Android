@@ -56,6 +56,8 @@ public class ReaderTips {
                 TIP_DURATION);
         Animation animIn = AnimationUtils.loadAnimation(activity, R.anim.fade_in);
         Animation animOut = AnimationUtils.loadAnimation(activity, R.anim.fade_out);
+        animIn.setFillAfter(false);
+        animOut.setFillAfter(false);
         style.setAnim(animIn, animOut);
 
         UndoBarController.UndoListener listener = new UndoBarController.UndoListener() {
