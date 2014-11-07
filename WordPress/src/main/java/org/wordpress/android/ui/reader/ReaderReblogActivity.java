@@ -3,12 +3,12 @@ package org.wordpress.android.ui.reader;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,7 +36,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 /*
  * displayed when user taps to reblog a post in the Reader
  */
-public class ReaderReblogActivity extends Activity {
+public class ReaderReblogActivity extends ActionBarActivity {
     private long mBlogId;
     private long mPostId;
     private ReaderPost mPost;
@@ -57,7 +57,7 @@ public class ReaderReblogActivity extends Activity {
 
         setContentView(R.layout.reader_activity_reblog);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -209,7 +209,7 @@ public class ReaderReblogActivity extends Activity {
     }
 
     private void selectBlogInActionbar(long blogId) {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (!hasReblogAdapter() || actionBar == null) {
             return;
         }

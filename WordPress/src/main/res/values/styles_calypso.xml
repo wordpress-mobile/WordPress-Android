@@ -9,6 +9,10 @@
         <item name="android:textAppearanceLargePopupMenu">@style/Calypso.TextAppearance</item>
     </style>
 
+    <style name="Calypso.NoActionBar" parent="CalypsoTheme">
+        <item name="windowActionBar">false</item>
+    </style>
+
     <style name="Calypso.PopupMenu" parent="@android:style/Widget.Holo.Light.PopupMenu">
         <item name="android:textAppearance">@style/Calypso.TextAppearance</item>
     </style>

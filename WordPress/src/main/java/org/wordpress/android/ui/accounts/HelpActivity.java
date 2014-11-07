@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -17,14 +17,14 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.widgets.WPTextView;
 
-public class HelpActivity extends Activity {
+public class HelpActivity extends ActionBarActivity {
     final private static String FAQ_URL = "http://android.wordpress.org/faq/";
     final private static String FORUM_URL = "http://android.forums.wordpress.org/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
             initHelpshiftLayout();
         } else {

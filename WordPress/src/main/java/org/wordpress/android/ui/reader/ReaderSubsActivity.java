@@ -15,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -62,7 +63,7 @@ import javax.annotation.Nonnull;
  * activity which shows the user's subscriptions and recommended subscriptions - includes
  * followed tags, popular tags, followed blogs, and recommended blogs
  */
-public class ReaderSubsActivity extends Activity
+public class ReaderSubsActivity extends ActionBarActivity
                                 implements ReaderTagAdapter.TagActionListener,
                                            ReaderBlogAdapter.BlogFollowChangeListener,
                                            ActionBar.TabListener {

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="WordPress" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="WordPress" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Material theme -->
         <item name="colorPrimary">@color/blue_medium</item>
         <item name="colorPrimaryDark">@color/blue_dark</item>
         <item name="colorAccent">@color/blue_light</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
 
         <item name="ptrHeaderStyle">@style/Widget.Custom.PtrHeader</item>
 
@@ -15,9 +14,6 @@
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Dark.WordPress</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
-        <item name="android:actionBarStyle">@style/ActionBar.Solid.WordPress</item>
-        <item name="android:actionModeBackground">@drawable/cab_background_top_wordpress</item>
-        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_wordpress</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
@@ -26,21 +22,8 @@
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
     </style>
 
-    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="spinBars">false</item>
-        <item name="color">@color/white</item>
-    </style>
-
     <style name="WordPress.DropDownListView.Light" parent="WordPress">
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
-    </style>
-
-    <style name="ActionBar.Solid.WordPress" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:icon">@drawable/dashicon_wordpress_alt</item>
-        <item name="android:background">@color/blue_new_kid</item>
-        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
-        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
-        <item name="android:progressBarStyle">@style/ProgressBar.WordPress</item>
     </style>
 
     <style name="ActionBar.Transparent.WordPress" parent="android:Widget.Holo.ActionBar">
@@ -49,7 +32,7 @@
     </style>
 
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
-    <style name="Theme.WordPress.Widget" parent="android:Theme.Holo">
+    <style name="Theme.WordPress.Widget" parent="Theme.AppCompat">
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
@@ -343,5 +326,5 @@
     </style>
 
     <!-- Dialog -->
-    <style name="WordPress.Dialog" parent="android:Theme.Holo.Light.Dialog"/>
+    <style name="WordPress.Dialog" parent="Theme.AppCompat.Light.Dialog"/>
 </resources>

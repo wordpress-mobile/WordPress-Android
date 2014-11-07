@@ -1,11 +1,11 @@
 
 package org.wordpress.android.ui;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,7 +31,7 @@ import java.net.URLEncoder;
 /**
  * Basic activity for displaying a WebView.
  */
-public class DashboardActivity extends Activity {
+public class DashboardActivity extends ActionBarActivity {
     /** Primary webview used to display content. */
     protected WebView mWebView;
 
@@ -48,7 +48,7 @@ public class DashboardActivity extends Activity {
 
         setContentView(R.layout.webview);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         setTitle(R.string.view_admin);
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);

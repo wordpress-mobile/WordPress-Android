@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.media;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +27,7 @@ import java.util.List;
  * An activity where the user can add new images to their media gallery or where the user
  * can choose a single image to embed into their post.
  */
-public class MediaGalleryPickerActivity extends Activity
+public class MediaGalleryPickerActivity extends ActionBarActivity
         implements MultiSelectListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
                    AdapterView.OnItemClickListener {
     private MultiSelectGridView mGridView;
@@ -78,7 +78,7 @@ public class MediaGalleryPickerActivity extends Activity
             setTitle(R.string.select_from_media_library);
             mGridView.setHighlightSelectModeEnabled(false);
             mGridView.setMultiSelectModeEnabled(false);
-            ActionBar actionBar = getActionBar();
+            ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }

@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +41,7 @@ import java.util.Map;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
-public class SelectCategoriesActivity extends ListActivity {
+public class SelectCategoriesActivity extends ActionBarActivity {
     String finalResult = "";
     private final Handler mHandler = new Handler();
     private Blog blog;
@@ -61,13 +61,13 @@ public class SelectCategoriesActivity extends ListActivity {
         setContentView(R.layout.select_categories);
         setTitle(getResources().getString(R.string.select_categories));
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mListView = getListView();
+        mListView = (ListView)findViewById(android.R.id.list);
         mListScrollPositionManager = new ListScrollPositionManager(mListView, false);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setItemsCanFocus(false);
@@ -133,12 +133,11 @@ public class SelectCategoriesActivity extends ListActivity {
         }
 
         CategoryArrayAdapter categoryAdapter = new CategoryArrayAdapter(this, R.layout.categories_row, mCategoryLevels);
-        this.setListAdapter(categoryAdapter);
+        mListView.setAdapter(categoryAdapter);
         if (mSelectedCategories != null) {
-            ListView lv = getListView();
             for (String selectedCategory : mSelectedCategories) {
                 if (mCategoryNames.keySet().contains(selectedCategory)) {
-                    lv.setItemChecked(mCategoryNames.get(selectedCategory), true);
+                    mListView.setItemChecked(mCategoryNames.get(selectedCategory), true);
                 }
             }
         }
@@ -208,14 +207,6 @@ public class SelectCategoriesActivity extends ListActivity {
         return returnMessage;
     }
 
-    /**
-     * function addCategory
-     *
-     * @param String
-     *            category_name
-     * @return
-     * @description Adds a new category
-     */
     public String addCategory(final String category_name, String category_slug, String category_desc, int parent_id) {
         // Return string
         String returnString = "addCategory_failed";

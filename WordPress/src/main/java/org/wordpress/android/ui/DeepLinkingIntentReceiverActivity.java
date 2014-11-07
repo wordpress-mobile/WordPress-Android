@@ -1,9 +1,9 @@
 package org.wordpress.android.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -21,7 +21,7 @@ import org.wordpress.android.util.ToastUtils;
  *
  * Redirects users to the reader activity along with IDs passed in the intent
  */
-public class DeepLinkingIntentReceiverActivity extends Activity {
+public class DeepLinkingIntentReceiverActivity extends ActionBarActivity {
     private static final int INTENT_WELCOME = 0;
 
     private String mBlogId;
