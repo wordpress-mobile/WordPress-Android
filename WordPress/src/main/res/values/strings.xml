@@ -86,6 +86,10 @@
     <string name="media_add_popup_capture_video">Capture video</string>
     <string name="media_add_new_media_gallery">Create gallery</string>
 
+    <!-- Media Library CAB -->
+    <string name="one_item_selected">1 item selected</string>
+    <string name="items_selected" comment="[3 ]items selected">items selected</string>
+
     <!-- Media Gallery -->
     <string name="media_gallery_settings_title">Gallery settings</string>
     <string name="media_gallery_image_order">Image order</string>

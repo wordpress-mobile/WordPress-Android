@@ -10,27 +10,30 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.MultiSelectGridView;
-import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * An activity where the user can add new images to their media gallery or where the user
  * can choose a single image to embed into their post.
  */
 public class MediaGalleryPickerActivity extends Activity
-        implements MultiSelectListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
+        implements MultiChoiceModeListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
                    AdapterView.OnItemClickListener {
-    private MultiSelectGridView mGridView;
+    private GridView mGridView;
     private MediaGridAdapter mGridAdapter;
     private ActionMode mActionMode;
 
@@ -71,13 +74,11 @@ public class MediaGalleryPickerActivity extends Activity
         }
 
         setContentView(R.layout.media_gallery_picker_layout);
-        mGridView = (MultiSelectGridView) findViewById(R.id.media_gallery_picker_gridview);
-        mGridView.setMultiSelectListener(this);
+        mGridView = (GridView) findViewById(R.id.media_gallery_picker_gridview);
+        mGridView.setMultiChoiceModeListener(this);
         if (mIsSelectOneItem) {
             mGridView.setOnItemClickListener(this);
             setTitle(R.string.select_from_media_library);
-            mGridView.setHighlightSelectModeEnabled(false);
-            mGridView.setMultiSelectModeEnabled(false);
             ActionBar actionBar = getActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
@@ -85,7 +86,6 @@ public class MediaGalleryPickerActivity extends Activity
         } else {
             mActionMode = startActionMode(this);
             mActionMode.setTitle(checkedItems.size() + " selected");
-            mGridView.setMultiSelectModeActive(true);
         }
         mGridAdapter = new MediaGridAdapter(this, null, 0, checkedItems, MediaImageLoader.getInstance());
         mGridAdapter.setCallback(this);

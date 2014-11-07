@@ -525,4 +525,19 @@ public class MediaGridAdapter extends CursorAdapter {
             mGridItemWidth = (maxWidth - padding) / columnCount;
         }
     }
+
+    public void clearSelection() {
+        mCheckedItems.clear();
+    }
+
+    public void setItemSelected(int position, boolean selected) {
+        Cursor cursor = (Cursor) getItem(position);
+        String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
+        if (selected) {
+            mCheckedItems.add(mediaId);
+        } else {
+            mCheckedItems.remove(mediaId);
+        }
+        notifyDataSetChanged();
+    }
 }

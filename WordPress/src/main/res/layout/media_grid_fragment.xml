@@ -38,7 +38,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/media_filter_result_text">
 
-        <org.wordpress.android.ui.MultiSelectGridView
+        <GridView
             android:id="@+id/media_gridview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

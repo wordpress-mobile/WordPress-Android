@@ -8,7 +8,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -18,6 +22,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,12 +33,10 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
-import org.wordpress.android.ui.MultiSelectGridView;
-import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
@@ -56,7 +59,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
  * It appears as 2 columns on phone and 1 column on tablet (essentially a listview)
  */
 public class MediaGridFragment extends Fragment implements OnItemClickListener,
-        MediaGridAdapterCallback, RecyclerListener, MultiSelectListener {
+        MediaGridAdapterCallback, RecyclerListener  {
     private static final String BUNDLE_CHECKED_STATES = "BUNDLE_CHECKED_STATES";
     private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
@@ -74,7 +77,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
-    private MultiSelectGridView mGridView;
+    private GridView mGridView;
     private MediaGridAdapter mGridAdapter;
     private MediaGridListener mListener;
 
@@ -148,10 +151,11 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
         View view = inflater.inflate(R.layout.media_grid_fragment, container);
 
-        mGridView = (MultiSelectGridView) view.findViewById(R.id.media_gridview);
+        mGridView = (GridView) view.findViewById(R.id.media_gridview);
         mGridView.setOnItemClickListener(this);
         mGridView.setRecyclerListener(this);
-        mGridView.setMultiSelectListener(this);
+        mGridView.setMultiChoiceModeListener(new MultiChoiceModeListener());
+        mGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         mGridView.setAdapter(mGridAdapter);
 
         mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
@@ -616,7 +620,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     }
 
-    @Override
     public void onMultiSelectChange(int count) {
         if (count == 0) {
             // enable filtering when not in multiselect
@@ -638,7 +641,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     }
 
     public void clearCheckedItems() {
-        mGridView.cancelSelection();
+        mGridAdapter.clearSelection();
     }
 
     @Override
@@ -682,5 +685,65 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     public void setPullToRefreshEnabled(boolean enabled) {
         mPullToRefreshHelper.setEnabled(enabled);
+    }
+
+    @Override
+    public boolean isInMultiSelect() {
+        return false;
+    }
+
+    public class MultiChoiceModeListener implements GridView.MultiChoiceModeListener {
+        private MenuItem mNewPostButton;
+        private MenuItem mNewGalleryButton;
+
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.setTitle(getString(R.string.one_item_selected));
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.media_multiselect, menu);
+            mNewPostButton = menu.findItem(R.id.media_multiselect_actionbar_post);
+            mNewGalleryButton = menu.findItem(R.id.media_multiselect_actionbar_gallery);
+            return true;
+        }
+
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.media_multiselect_actionbar_post:
+                    handleNewPost();
+                    return true;
+                case R.id.media_multiselect_actionbar_gallery:
+                    handleMultiSelectPost();
+                    return true;
+                case R.id.media_multiselect_actionbar_trash:
+                    handleMultiSelectDelete();
+                    return true;
+            }
+            return true;
+        }
+
+        public void onDestroyActionMode(ActionMode mode) {
+            clearCheckedItems();
+            setPullToRefreshEnabled(true);
+        }
+
+        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+            int selectCount = mGridView.getCheckedItemCount();
+            mGridAdapter.setItemSelected(position, checked);
+            switch (selectCount) {
+                case 1:
+                    mNewPostButton.setVisible(true);
+                    mNewGalleryButton.setVisible(false);
+                    mode.setTitle(getString(R.string.one_item_selected));
+                    break;
+                default:
+                    mNewPostButton.setVisible(false);
+                    mNewGalleryButton.setVisible(true);
+                    mode.setTitle(selectCount + " " + getString(R.string.items_selected));
+                    break;
+            }
+        }
     }
 }
