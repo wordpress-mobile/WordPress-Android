@@ -97,7 +97,7 @@ public class ReaderTips {
         }
     }
 
-    private static void setTipShown(ReaderTipType tipType) {
+    public static void setTipShown(ReaderTipType tipType) {
         if (tipType != null) {
             AppPrefs.prefs().edit().putBoolean(getTipPrefKey(tipType), true).apply();
         }

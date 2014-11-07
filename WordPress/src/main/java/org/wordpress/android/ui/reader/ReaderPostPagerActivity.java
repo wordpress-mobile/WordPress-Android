@@ -140,6 +140,8 @@ public class ReaderPostPagerActivity extends Activity
                     if (fragment != null) {
                         fragment.pauseWebView();
                     }
+                    // don't show swipe tip in the future since user obviously knows how to swipe
+                    ReaderTips.setTipShown(ReaderTipType.READER_SWIPE_POSTS);
                     ReaderTips.hideTip(ReaderPostPagerActivity.this);
                 }
             }
