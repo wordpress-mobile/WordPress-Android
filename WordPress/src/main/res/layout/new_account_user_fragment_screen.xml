@@ -44,7 +44,8 @@
                 android:id="@+id/create_account_label"
                 android:text="@string/create_account_wpcom"
                 style="@style/WordPress.NUXTitle"
-                app:fontVariation="light"/>
+                app:fontVariation="light"
+                app:fixWidowWords="true"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -239,7 +240,8 @@
                 android:text="@string/agree_terms_of_service"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                style="@style/WordPress.NUXGreyButtonNoBg"/>
+                style="@style/WordPress.NUXGreyButtonNoBg"
+                app:fixWidowWords="true"/>
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
     </LinearLayout>
