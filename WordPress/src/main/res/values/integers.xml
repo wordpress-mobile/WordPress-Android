@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="media_grid_num_columns">2</integer>
+
     <integer name="themes_grid_num_columns">2</integer>
     <integer name="visible">0</integer>
     <integer name="gone">2</integer>

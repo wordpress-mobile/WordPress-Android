@@ -123,7 +123,7 @@ public class MediaContentGridView extends GridView {
             }
 
             if (convertView != null) {
-                final ImageView contentImage = (ImageView) convertView.findViewById(R.id.deviceImageContentImage);
+                ImageView contentImage = (ImageView) convertView.findViewById(R.id.deviceImageContentImage);
                 TextView contentTitle = (TextView) convertView.findViewById(R.id.deviceImageContentTitle);
 
                 if (contentTitle != null) {
@@ -172,10 +172,10 @@ public class MediaContentGridView extends GridView {
         }
 
         private class BackgroundDownload extends AsyncTask<String, String, Bitmap> {
-            WeakReference<ImageView> mResultStore;
+            WeakReference<ImageView> mReference;
 
             public BackgroundDownload(ImageView resultStore) {
-                mResultStore = new WeakReference<ImageView>(resultStore);
+                mReference = new WeakReference<ImageView>(resultStore);
             }
 
             @Override
@@ -185,7 +185,7 @@ public class MediaContentGridView extends GridView {
 
             @Override
             protected void onPostExecute(Bitmap result) {
-                ImageView imageView = mResultStore.get();
+                ImageView imageView = mReference.get();
 
                 if (imageView != null) {
                     imageView.setImageBitmap(result);

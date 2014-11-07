@@ -4,20 +4,23 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/media_grid_item_content_inset"
-    android:background="@drawable/pressed_background_wordpress">
+    android:padding="8dp"
+    android:background="@drawable/calypso_bordered_bg">
 
     <ImageView
         android:id="@+id/deviceImageContentImage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:layout_gravity="center_horizontal" />
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerCrop" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/deviceImageContentTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:singleLine="true"
+        android:textColor="@color/calypso_blue_dark" />
 
 </LinearLayout>
