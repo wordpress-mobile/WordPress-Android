@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
-            android:layout_toLeftOf="@+id/image_dropdown"
+            android:layout_toLeftOf="@+id/image_more"
             android:layout_toRightOf="@+id/image_avatar"
             android:ellipsize="end"
             android:maxLines="1"
