@@ -60,11 +60,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/margin_small"
-            android:layout_marginRight="@dimen/margin_small"
             android:background="@drawable/reader_transparent_selector"
             android:paddingBottom="@dimen/margin_large"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_large"
             android:paddingTop="@dimen/margin_large"
             android:src="@drawable/ic_action_more" />
 
