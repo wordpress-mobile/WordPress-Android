@@ -406,11 +406,10 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnReblog.setOnClickListener(null);
         }
 
-        // dropdown arrow which displays "block this blog" menu only shows for public
-        // wp posts in followed tags
+        // more menu with "block this blog" only shows for public wp posts in followed tags
         if (post.isWP() && !post.isPrivate && postListType == ReaderPostListType.TAG_FOLLOWED) {
-            holder.imgDropDown.setVisibility(View.VISIBLE);
-            holder.imgDropDown.setOnClickListener(new View.OnClickListener() {
+            holder.imgMore.setVisibility(View.VISIBLE);
+            holder.imgMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mOnPostPopupListener != null) {
@@ -419,8 +418,8 @@ public class ReaderPostAdapter extends BaseAdapter {
                 }
             });
         } else {
-            holder.imgDropDown.setVisibility(View.GONE);
-            holder.imgDropDown.setOnClickListener(null);
+            holder.imgMore.setVisibility(View.GONE);
+            holder.imgMore.setOnClickListener(null);
         }
 
         // if we're nearing the end of the posts, fire request to load more
@@ -462,7 +461,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         private final ReaderIconCountView likeCount;
 
         private final ImageView imgBtnReblog;
-        private final ImageView imgDropDown;
+        private final ImageView imgMore;
 
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatar;
@@ -485,7 +484,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
 
             imgBtnReblog = (ImageView) view.findViewById(R.id.image_reblog_btn);
-            imgDropDown = (ImageView) view.findViewById(R.id.image_dropdown);
+            imgMore = (ImageView) view.findViewById(R.id.image_more);
 
             layoutBottom = (ViewGroup) view.findViewById(R.id.layout_bottom);
             layoutPostHeader = (ViewGroup) view.findViewById(R.id.layout_post_header);

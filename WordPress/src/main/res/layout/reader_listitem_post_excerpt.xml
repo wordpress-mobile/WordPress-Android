@@ -48,7 +48,7 @@
             android:layout_toRightOf="@+id/image_avatar" />
 
         <ImageView
-            android:id="@+id/image_dropdown"
+            android:id="@+id/image_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -60,7 +60,7 @@
             android:paddingLeft="@dimen/margin_large"
             android:paddingRight="@dimen/margin_large"
             android:paddingTop="@dimen/margin_large"
-            android:src="@drawable/reader_arrow_dropdown" />
+            android:src="@drawable/ic_action_more" />
 
     </RelativeLayout>
 
