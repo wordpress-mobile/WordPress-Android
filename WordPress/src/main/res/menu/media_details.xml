@@ -8,7 +8,8 @@
         android:title="@string/new_media"/>
     <item
         android:id="@+id/menu_delete"
-        android:showAsAction="never"
+        android:icon="@drawable/ic_action_trash"
+        android:showAsAction="ifRoom"
         android:title="@string/delete"/>
 
 </menu>

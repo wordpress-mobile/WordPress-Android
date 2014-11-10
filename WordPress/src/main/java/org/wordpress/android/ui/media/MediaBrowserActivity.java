@@ -41,7 +41,9 @@ import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The main activity in which the user can browse their media.
@@ -530,5 +532,37 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onRetryUpload(String mediaId) {
         mMediaAddFragment.addToQueue(mediaId);
+    }
+
+    public void deleteMedia(final Set<String> ids) {
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        Set<String> sanitizedIds = new HashSet<String>(ids.size());
+
+        // phone layout: pop the item fragment if it's visible
+        getFragmentManager().popBackStack();
+
+        // Make sure there are no media in "uploading"
+        for (String currentID : ids) {
+            if (MediaUtils.canDeleteMedia(blogId, currentID)) {
+                sanitizedIds.add(currentID);
+            }
+        }
+
+        if (sanitizedIds.size() != ids.size()) {
+            if (ids.size() == 1) {
+                Toast.makeText(this, R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, R.string.cannot_delete_multi_media_items, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        // mark items for delete without actually deleting items yet,
+        // and then refresh the grid
+        WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, sanitizedIds);
+        startService(new Intent(this, MediaDeleteService.class));
+        if (mMediaGridFragment != null) {
+            mMediaGridFragment.clearCheckedItems();
+            mMediaGridFragment.refreshMediaFromDB();
+        }
     }
 }

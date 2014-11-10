@@ -27,7 +27,6 @@ import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
@@ -39,7 +38,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
-import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.util.NetworkUtils;
@@ -775,8 +773,9 @@ public class MediaGridFragment extends Fragment
                             R.string.delete, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Set<String> ids = getCheckedItems();
-                                    onDeleteMedia(ids);
+                                    if (getActivity() instanceof MediaBrowserActivity) {
+                                        ((MediaBrowserActivity) getActivity()).deleteMedia(getCheckedItems());
+                                    }
                                     refreshSpinnerAdapter();
                                 }
                             }).setNegativeButton(R.string.cancel, null);
@@ -793,39 +792,6 @@ public class MediaGridFragment extends Fragment
             i.setAction(EditPostContentFragment.NEW_MEDIA_GALLERY);
             i.putExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS, (Serializable) ids);
             startActivity(i);
-        }
-    }
-
-    public void onDeleteMedia(final Set<String> ids) {
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        List<String> sanitizedIds = new ArrayList<String>(ids.size());
-
-        // phone layout: pop the item fragment if it's visible
-        getFragmentManager().popBackStack();
-
-        // Make sure there are no media in "uploading"
-        for (String currentID : ids) {
-            if (MediaUtils.canDeleteMedia(blogId, currentID))
-                sanitizedIds.add(currentID);
-        }
-
-        if (isAdded() && sanitizedIds.size() != ids.size()) {
-            if (ids.size() == 1) {
-                Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getActivity(), R.string.cannot_delete_multi_media_items, Toast.LENGTH_LONG).show();
-            }
-        }
-
-        // mark items for delete without actually deleting items yet,
-        // and then refresh the grid
-        WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, sanitizedIds);
-
-        clearCheckedItems();
-        refreshMediaFromDB();
-
-        if (isAdded()) {
-            getActivity().startService(new Intent(getActivity(), MediaDeleteService.class));
         }
     }
 }
