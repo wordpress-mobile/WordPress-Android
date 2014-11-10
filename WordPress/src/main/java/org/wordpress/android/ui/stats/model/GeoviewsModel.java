@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.model;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,23 +35,22 @@ public class GeoviewsModel implements Serializable {
         this.totalViews = firstDayObject.getInt("total_views");
 
         JSONObject countryInfoJSON = response.optJSONObject("country-info");
-        JSONObject viewsJSON = firstDayObject.optJSONObject("views");
+        JSONArray viewsJSON = firstDayObject.optJSONArray("views");
 
         if (viewsJSON != null && countryInfoJSON != null) {
             countries = new ArrayList<GeoviewModel>(viewsJSON.length());
-            Iterator<String> countryKeys = viewsJSON.keys();
-
-            while (countryKeys.hasNext()) {
-                String currentCountryKey = countryKeys.next();
-                int views = viewsJSON.getInt(currentCountryKey);
+            for (int i = 0; i < viewsJSON.length(); i++) {
+                JSONObject currentCountryJSON = viewsJSON.getJSONObject(i);
+                String currentCountryCode = currentCountryJSON.getString("country_code");
+                int currentCountryViews = currentCountryJSON.getInt("views");
                 String flagIcon = null;
                 String countryFullName = null;
-                JSONObject currentCountryDetails = countryInfoJSON.optJSONObject(currentCountryKey);
+                JSONObject currentCountryDetails = countryInfoJSON.optJSONObject(currentCountryCode);
                 if (currentCountryDetails != null) {
                     flagIcon = currentCountryDetails.optString("flag_icon");
                     countryFullName = currentCountryDetails.optString("country_full");
                 }
-                GeoviewModel m = new GeoviewModel(currentCountryKey, countryFullName, views, flagIcon);
+                GeoviewModel m = new GeoviewModel(currentCountryCode, countryFullName, currentCountryViews, flagIcon);
                 countries.add(m);
             }
 
