@@ -64,8 +64,8 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
  * The grid displaying the media items.
  * It appears as 2 columns on phone and 1 column on tablet (essentially a listview)
  */
-public class MediaGridFragment extends Fragment implements OnItemClickListener,
-        MediaGridAdapterCallback, RecyclerListener  {
+public class MediaGridFragment extends Fragment
+        implements OnItemClickListener, MediaGridAdapterCallback, RecyclerListener {
     private static final String BUNDLE_CHECKED_STATES = "BUNDLE_CHECKED_STATES";
     private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
@@ -89,8 +89,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     private Set<String> mCheckedItems;
 
-    private boolean mIsRefreshing = false;
-    private boolean mHasRetrievedAllMedia = false;
+    private boolean mIsRefreshing;
+    private boolean mHasRetrievedAllMedia;
+    private boolean mIsMultiSelect;
     private String mSearchTerm;
 
     private View mSpinnerContainer;
@@ -102,8 +103,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     private int mOldMediaSyncOffset = 0;
 
-    private boolean mIsDateFilterSet = false;
-    private boolean mSpinnerHasLaunched = false;
+    private boolean mIsDateFilterSet;
+    private boolean mSpinnerHasLaunched;
 
     private int mStartYear, mStartMonth, mStartDay, mEndYear, mEndMonth, mEndDay;
     private AlertDialog mDatePickerDialog;
@@ -213,7 +214,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         if (savedInstanceState.containsKey(BUNDLE_CHECKED_STATES)) {
             mCheckedItems = (HashSet<String>) savedInstanceState.getSerializable(BUNDLE_CHECKED_STATES);
             if (isInMultiSelectMode) {
-                onMultiSelectChange(mCheckedItems.size());
+                multiSelectChange(mCheckedItems.size());
                 mPullToRefreshHelper.setEnabled(false);
             }
         }
@@ -458,8 +459,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     }
 
     public void setFilterVisibility(int visibility) {
-        if (mSpinner != null)
+        if (mSpinner != null) {
             mSpinner.setVisibility(visibility);
+        }
     }
 
     private void setEmptyViewVisible(boolean visible) {
@@ -591,8 +593,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     @Override
     public void fetchMoreData(int offset) {
-        if (!mHasRetrievedAllMedia)
+        if (!mHasRetrievedAllMedia) {
             refreshMediaFromServer(offset, true);
+        }
     }
 
     @Override
@@ -621,10 +624,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         if (layout != null) {
             layout.setOnCheckedChangeListener(null);
         }
-
     }
 
-    public void onMultiSelectChange(int count) {
+    public void multiSelectChange(int count) {
         if (count == 0) {
             // enable filtering when not in multiselect
             mSpinner.setEnabled(true);
@@ -676,7 +678,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     public void removeFromMultiSelect(String mediaId) {
         if (isInMultiSelect()) {
             mCheckedItems.remove(mediaId);
-            onMultiSelectChange(mCheckedItems.size());
+            multiSelectChange(mCheckedItems.size());
         }
     }
 
@@ -690,7 +692,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     @Override
     public boolean isInMultiSelect() {
-        return false;
+        return mIsMultiSelect;
     }
 
     public class MultiChoiceModeListener implements GridView.MultiChoiceModeListener {
@@ -705,6 +707,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             mNewGalleryButton = menu.findItem(R.id.media_multiselect_actionbar_gallery);
             mNewGalleryButton.setVisible(false);
             setPullToRefreshEnabled(false);
+            mIsMultiSelect = true;
             return true;
         }
 
@@ -730,11 +733,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         public void onDestroyActionMode(ActionMode mode) {
             clearCheckedItems();
             setPullToRefreshEnabled(true);
+            mIsMultiSelect = false;
+            multiSelectChange(mCheckedItems.size());
         }
 
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
             int selectCount = mGridView.getCheckedItemCount();
             mGridAdapter.setItemSelected(position, checked);
+            multiSelectChange(mCheckedItems.size());
             switch (selectCount) {
                 case 1:
                     mNewPostButton.setVisible(true);
