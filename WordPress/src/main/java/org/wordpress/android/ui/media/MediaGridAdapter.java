@@ -434,12 +434,9 @@ public class MediaGridAdapter extends CursorAdapter {
 
         if (columnCount > 1) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mGridItemWidth, mGridItemWidth);
-            int margins = DisplayUtils.dpToPx(context, 8);
-            params.setMargins(0, margins, 0, margins);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
             view.setLayoutParams(params);
         }
-
     }
 
     @Override
