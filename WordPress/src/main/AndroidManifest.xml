@@ -114,7 +114,8 @@
         </activity>
         <activity
             android:name=".ui.posts.PostsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/CalypsoTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -124,14 +125,16 @@
         </activity>
         <activity
             android:name=".ui.posts.PagesActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.posts.ViewPostActivity" />
 
         <!-- Stats Activities -->
-        <activity android:name=".ui.stats.StatsActivity" >
+        <activity android:name=".ui.stats.StatsActivity"
+                  android:theme="@style/CalypsoTheme" >
         </activity>
 
         <activity android:name=".ui.stats.StatsSinglePostDetailsActivity" >
@@ -141,7 +144,8 @@
         </activity>
 
         <!-- Media Activities -->
-        <activity android:name=".ui.media.MediaBrowserActivity" >
+        <activity android:name=".ui.media.MediaBrowserActivity"
+                  android:theme="@style/CalypsoTheme" >
         </activity>
 
         <activity android:name=".ui.media.MediaGalleryActivity">
@@ -151,7 +155,9 @@
         </activity>
 
         <!-- Theme Activities -->
-        <activity android:name=".ui.themes.ThemeBrowserActivity" >
+        <activity
+            android:name=".ui.themes.ThemeBrowserActivity"
+            android:theme="@style/CalypsoTheme" >
         </activity>
 
         <!-- Deep Linking Activity -->
@@ -174,7 +180,7 @@
         <!-- Reader Activities -->
         <activity
             android:name=".ui.reader.ReaderPostListActivity"
-            android:theme="@style/ReaderTheme"
+            android:theme="@style/CalypsoTheme"
             android:label="@string/reader" />
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
@@ -233,7 +239,9 @@
         <activity
             android:name=".ui.DashboardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name=".ui.ViewSiteActivity"
+        <activity
+            android:name=".ui.ViewSiteActivity"
+            android:theme="@style/CalypsoTheme"
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
 
