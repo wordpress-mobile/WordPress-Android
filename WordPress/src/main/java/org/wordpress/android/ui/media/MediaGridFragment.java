@@ -3,9 +3,11 @@ package org.wordpress.android.ui.media;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ActionMode;
@@ -25,6 +27,7 @@ import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
@@ -36,6 +39,9 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
+import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -106,7 +112,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         public void onMediaItemListDownloadStart();
         public void onMediaItemListDownloaded();
         public void onMediaItemSelected(String mediaId);
-        public void onMultiSelectChange(int count);
         public void onRetryUpload(String mediaId);
     }
 
@@ -208,7 +213,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         if (savedInstanceState.containsKey(BUNDLE_CHECKED_STATES)) {
             mCheckedItems = (HashSet<String>) savedInstanceState.getSerializable(BUNDLE_CHECKED_STATES);
             if (isInMultiSelectMode) {
-                mListener.onMultiSelectChange(mCheckedItems.size());
                 onMultiSelectChange(mCheckedItems.size());
                 mPullToRefreshHelper.setEnabled(false);
             }
@@ -632,8 +636,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             mSpinnerContainer.setEnabled(false);
             mSpinnerContainer.setVisibility(View.GONE);
         }
-
-        mListener.onMultiSelectChange(count);
     }
 
     public Set<String> getCheckedItems() {
@@ -674,7 +676,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     public void removeFromMultiSelect(String mediaId) {
         if (isInMultiSelect()) {
             mCheckedItems.remove(mediaId);
-            mListener.onMultiSelectChange(mCheckedItems.size());
             onMultiSelectChange(mCheckedItems.size());
         }
     }
@@ -702,6 +703,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             inflater.inflate(R.menu.media_multiselect, menu);
             mNewPostButton = menu.findItem(R.id.media_multiselect_actionbar_post);
             mNewGalleryButton = menu.findItem(R.id.media_multiselect_actionbar_gallery);
+            mNewGalleryButton.setVisible(false);
+            setPullToRefreshEnabled(false);
             return true;
         }
 
@@ -744,6 +747,79 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                     mode.setTitle(selectCount + " " + getString(R.string.items_selected));
                     break;
             }
+        }
+
+        private void handleNewPost() {
+            if (!isAdded()) {
+                return;
+            }
+            Set<String> ids = getCheckedItems();
+            Intent i = new Intent(getActivity(), EditPostActivity.class);
+            i.setAction(EditPostContentFragment.NEW_MEDIA_POST);
+            i.putExtra(EditPostContentFragment.NEW_MEDIA_POST_EXTRA, ids.iterator().next());
+            startActivity(i);
+        }
+
+        private void handleMultiSelectDelete() {
+            if (!isAdded()) {
+                return;
+            }
+            Builder builder = new AlertDialog.Builder(getActivity()).setMessage(R.string.confirm_delete_multi_media)
+                                                                    .setCancelable(true).setPositiveButton(
+                            R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Set<String> ids = getCheckedItems();
+                                    onDeleteMedia(ids);
+                                    refreshSpinnerAdapter();
+                                }
+                            }).setNegativeButton(R.string.cancel, null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+
+        private void handleMultiSelectPost() {
+            if (!isAdded()) {
+                return;
+            }
+            Set<String> ids = getCheckedItems();
+            Intent i = new Intent(getActivity(), EditPostActivity.class);
+            i.setAction(EditPostContentFragment.NEW_MEDIA_GALLERY);
+            i.putExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS, (Serializable) ids);
+            startActivity(i);
+        }
+    }
+
+    public void onDeleteMedia(final Set<String> ids) {
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        List<String> sanitizedIds = new ArrayList<String>(ids.size());
+
+        // phone layout: pop the item fragment if it's visible
+        getFragmentManager().popBackStack();
+
+        // Make sure there are no media in "uploading"
+        for (String currentID : ids) {
+            if (MediaUtils.canDeleteMedia(blogId, currentID))
+                sanitizedIds.add(currentID);
+        }
+
+        if (isAdded() && sanitizedIds.size() != ids.size()) {
+            if (ids.size() == 1) {
+                Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), R.string.cannot_delete_multi_media_items, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        // mark items for delete without actually deleting items yet,
+        // and then refresh the grid
+        WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, sanitizedIds);
+
+        clearCheckedItems();
+        refreshMediaFromDB();
+
+        if (isAdded()) {
+            getActivity().startService(new Intent(getActivity(), MediaDeleteService.class));
         }
     }
 }

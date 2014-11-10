@@ -27,7 +27,6 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.CheckableFrameLayout;
-import org.wordpress.android.ui.CheckableFrameLayout.OnCheckedChangeListener;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
@@ -219,19 +218,7 @@ public class MediaGridAdapter extends CursorAdapter {
             }
         }
 
-        // multi-select highlighting
         holder.frameLayout.setTag(mediaId);
-        holder.frameLayout.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CheckableFrameLayout view, boolean isChecked) {
-                String mediaId = (String) view.getTag();
-                if (isChecked) {
-                    mCheckedItems.add(mediaId);
-                } else {
-                    mCheckedItems.remove(mediaId);
-                }
-            }
-        });
         holder.frameLayout.setChecked(mCheckedItems.contains(mediaId));
 
         // resizing layout to fit nicely into grid view
@@ -532,12 +519,15 @@ public class MediaGridAdapter extends CursorAdapter {
 
     public void setItemSelected(int position, boolean selected) {
         Cursor cursor = (Cursor) getItem(position);
-        String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
-        if (selected) {
-            mCheckedItems.add(mediaId);
-        } else {
-            mCheckedItems.remove(mediaId);
+        int columnIndex = cursor.getColumnIndex("mediaId");
+        if (columnIndex != -1) {
+            String mediaId = cursor.getString(columnIndex);
+            if (selected) {
+                mCheckedItems.add(mediaId);
+            } else {
+                mCheckedItems.remove(mediaId);
+            }
+            notifyDataSetChanged();
         }
-        notifyDataSetChanged();
     }
 }

@@ -1,23 +1,17 @@
 package org.wordpress.android.ui.media;
 
 import android.app.ActionBar;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
@@ -42,27 +36,20 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
-import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The main activity in which the user can browse their media.
  * Accessible via the menu drawer as "Media"
  */
-
 public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback,
-        MediaAddFragmentCallback,
-        ActionMode.Callback {
+        MediaAddFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
 
     private MediaGridFragment mMediaGridFragment;
@@ -75,9 +62,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private MenuItem mSearchMenuItem;
     private Menu mMenu;
     private FeatureSet mFeatureSet;
-    private ActionMode mActionMode;
-
-    private int mMultiSelectCount;
     private String mQuery;
 
     @Override
@@ -174,10 +158,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private void setupAddMenuPopup() {
         String capturePhoto = getResources().getString(R.string.media_add_popup_capture_photo);
         String captureVideo = getResources().getString(R.string.media_add_popup_capture_video);
-        String pickPhotoFromGallery = getResources().getString(
-                R.string.select_photo);
-        String pickVideoFromGallery = getResources().getString(
-                R.string.select_video);
+        String pickPhotoFromGallery = getResources().getString(R.string.select_photo);
+        String pickVideoFromGallery = getResources().getString(R.string.select_video);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(MediaBrowserActivity.this,
                 R.layout.actionbar_add_media_cell,
                 new String[] {
@@ -261,20 +243,19 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
         task.execute(apiArgs);
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        if (mSearchMenuItem != null)
+        if (mSearchMenuItem != null) {
             mSearchMenuItem.collapseActionView();
+        }
     }
 
     @Override
     public void onBlogChanged() {
-
         // clear edit fragment
         if (mMediaEditFragment != null) {
             mMediaEditFragment.loadMedia(null);
@@ -318,26 +299,18 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         }
 
         FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() == 0) {
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.hide(mMediaGridFragment);
+            mMediaGridFragment.clearCheckedItems();
+            setupBaseLayout();
 
-        if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
-            // phone: hide the grid and show the item details
-            if (fm.getBackStackEntryCount() == 0) {
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.hide(mMediaGridFragment);
-                mMediaGridFragment.clearCheckedItems();
-                setupBaseLayout();
-
-                mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
-                ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
-                ft.addToBackStack(null);
-                ft.commit();
-                mMenuDrawer.setDrawerIndicatorEnabled(false);
-            }
-        } else {
-            // tablet: update the edit fragment with the new item
-            mMediaEditFragment.loadMedia(mediaId);
+            mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
+            ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
+            ft.addToBackStack(null);
+            ft.commit();
+            mMenuDrawer.setDrawerIndicatorEnabled(false);
         }
-
     }
 
     @Override
@@ -410,37 +383,12 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 mMediaEditFragment.loadMedia(mediaId);
             }
 
-            if (mSearchView != null)
+            if (mSearchView != null) {
                 mSearchView.clearFocus();
-
-        } else if (itemId == R.id.menu_delete) {
-            if (mMediaEditFragment != null && mMediaEditFragment.isInLayout()) {
-                String mediaId = mMediaEditFragment.getMediaId();
-                launchConfirmDeleteDialog(mediaId);
             }
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void launchConfirmDeleteDialog(final String mediaId) {
-        if (mediaId == null)
-            return;
-
-        Builder builder = new AlertDialog.Builder(this)
-                .setMessage(R.string.confirm_delete_media)
-                .setCancelable(true)
-                .setPositiveButton(R.string.delete, new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Set<String> ids = new HashSet<String>(1);
-                        ids.add(mediaId);
-                        onDeleteMedia(ids);
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     @Override
@@ -522,48 +470,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         return true;
     }
 
-    @Override
-    public void onDeleteMedia(final Set<String> ids) {
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        List<String> sanitizedIds = new ArrayList<String>(ids.size());
-
-        if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
-            // phone layout: pop the item fragment if it's visible
-            getFragmentManager().popBackStack();
-        }
-
-        //Make sure there are no media in "uploading"
-        for (String currentID : ids) {
-            if (MediaUtils.canDeleteMedia(blogId, currentID))
-                sanitizedIds.add(currentID);
-        }
-
-        if( sanitizedIds.size() != ids.size()) {
-            if ( ids.size() == 1  )
-                Toast.makeText(this, R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
-            else
-                Toast.makeText(this, R.string.cannot_delete_multi_media_items, Toast.LENGTH_LONG).show();
-        }
-
-        // mark items for delete without actually deleting items yet,
-        // and then refresh the grid
-        WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, sanitizedIds);
-
-        if (mMediaEditFragment != null) {
-            String mediaId = mMediaEditFragment.getMediaId();
-            for (String id : sanitizedIds) {
-                if (id.equals(mediaId)) {
-                    mMediaEditFragment.loadMedia(null);
-                    break;
-                }
-            }
-        }
-        mMediaGridFragment.clearCheckedItems();
-        mMediaGridFragment.refreshMediaFromDB();
-
-        startMediaDeleteService();
-    }
-
     public void onSavedEdit(String mediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
             FragmentManager fm = getFragmentManager();
@@ -580,27 +486,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     private void startMediaDeleteService() {
         startService(new Intent(this, MediaDeleteService.class));
-    }
-
-    @Override
-    public void onMultiSelectChange(int count) {
-        mMultiSelectCount = count;
-
-        if (count > 0 && mActionMode == null) {
-            mActionMode = startActionMode(this);
-        } else if (count == 0 && mActionMode != null) {
-            mActionMode.finish();
-        }
-
-        // update contextual action bar title
-        if (count > 0 && mActionMode != null)
-            mActionMode.setTitle(count + " selected");
-
-        // update contextual action bar menu items
-        if (mActionMode != null)
-            mActionMode.invalidate();
-
-        invalidateOptionsMenu();
     }
 
     @Override
@@ -645,99 +530,5 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onRetryUpload(String mediaId) {
         mMediaAddFragment.addToQueue(mediaId);
-    }
-
-    @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        MenuInflater inflater = mode.getMenuInflater();
-        inflater.inflate(R.menu.media_multiselect, menu);
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.setPullToRefreshEnabled(false);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        if (mActionMode != null) {
-            if (mMultiSelectCount == 1) {
-                menu.findItem(R.id.media_multiselect_actionbar_post).setVisible(true);
-                menu.findItem(R.id.media_multiselect_actionbar_gallery).setVisible(false);
-            } else if (mMultiSelectCount > 1) {
-                menu.findItem(R.id.media_multiselect_actionbar_post).setVisible(false);
-                menu.findItem(R.id.media_multiselect_actionbar_gallery).setVisible(true);
-            } else {
-                menu.findItem(R.id.media_multiselect_actionbar_post).setVisible(false);
-                menu.findItem(R.id.media_multiselect_actionbar_gallery).setVisible(false);
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.media_multiselect_actionbar_post:
-                handleNewPost();
-                return true;
-            case R.id.media_multiselect_actionbar_gallery:
-                handleMultiSelectPost();
-                return true;
-            case R.id.media_multiselect_actionbar_trash:
-                handleMultiSelectDelete();
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-        mActionMode = null;
-        mMediaGridFragment.setPullToRefreshEnabled(true);
-        cancelMultiSelect();
-    }
-
-    private void cancelMultiSelect() {
-        mMediaGridFragment.clearCheckedItems();
-    }
-
-    private void handleNewPost() {
-        if (mMediaGridFragment == null) {
-            return;
-        }
-        Set<String> ids = mMediaGridFragment.getCheckedItems();
-        Intent i = new Intent(this, EditPostActivity.class);
-        i.setAction(EditPostContentFragment.NEW_MEDIA_POST);
-        i.putExtra(EditPostContentFragment.NEW_MEDIA_POST_EXTRA, ids.iterator().next());
-        startActivity(i);
-    }
-
-    private void handleMultiSelectDelete() {
-        Builder builder = new AlertDialog.Builder(this)
-                .setMessage(R.string.confirm_delete_multi_media)
-                .setCancelable(true)
-                .setPositiveButton(R.string.delete, new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Set<String> ids = mMediaGridFragment.getCheckedItems();
-                        onDeleteMedia(ids);
-                        mMediaGridFragment.refreshSpinnerAdapter();
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void handleMultiSelectPost() {
-        if (mMediaGridFragment == null) {
-            return;
-        }
-        Set<String> ids = mMediaGridFragment.getCheckedItems();
-        Intent i = new Intent(this, EditPostActivity.class);
-        i.setAction(EditPostContentFragment.NEW_MEDIA_GALLERY);
-        i.putExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS, (Serializable) ids);
-        startActivity(i);
     }
 }

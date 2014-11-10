@@ -1,11 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Fragment;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -13,7 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -21,7 +16,6 @@ import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -32,9 +26,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.StringUtils;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A fragment display a media item's details.
@@ -63,7 +54,6 @@ public class MediaItemFragment extends Fragment {
     public interface MediaItemFragmentCallback {
         public void onResume(Fragment fragment);
         public void onPause(Fragment fragment);
-        public void onDeleteMedia(final Set<String> ids);
     }
 
     public static MediaItemFragment newInstance(String mediaId) {
@@ -318,38 +308,5 @@ public class MediaItemFragment extends Fragment {
 
         if (mIsLocal || ! MediaUtils.isWordPressVersionWithMediaEditingCapabilities() )
             menu.findItem(R.id.menu_edit_media).setVisible(false);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-
-        if (itemId == R.id.menu_delete) {
-            String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-            boolean canDeleteMedia = MediaUtils.canDeleteMedia(blogId, getMediaId());
-            if (!canDeleteMedia) {
-                Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
-                return true;
-            }
-
-            Builder builder = new AlertDialog.Builder(getActivity())
-                    .setMessage(R.string.confirm_delete_media)
-                    .setCancelable(true)
-                    .setPositiveButton(R.string.delete, new OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                                Set<String> ids = new HashSet<String>(1);
-                                ids.add(getMediaId());
-                                mCallback.onDeleteMedia(ids);
-                        }
-                    })
-                    .setNegativeButton(R.string.cancel, null);
-            AlertDialog dialog = builder.create();
-            dialog.show();
-            return true;
-
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }
