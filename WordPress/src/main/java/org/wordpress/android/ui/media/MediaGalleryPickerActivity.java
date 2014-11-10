@@ -127,6 +127,7 @@ public class MediaGalleryPickerActivity extends Activity
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (mIsSelectOneItem) {
             // Single select, just finish the activity once an item is selected
+            mGridAdapter.setItemSelected(position, true);
             Intent intent = new Intent();
             intent.putStringArrayListExtra(RESULT_IDS, mGridAdapter.getCheckedItems());
             setResult(RESULT_OK, intent);
