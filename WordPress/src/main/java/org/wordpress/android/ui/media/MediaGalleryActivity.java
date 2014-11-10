@@ -78,7 +78,6 @@ public class MediaGalleryActivity extends Activity implements MediaGallerySettin
             mMediaGallerySettingsFragment.setRandom(mMediaGallery.isRandom());
             mMediaGallerySettingsFragment.setNumColumns(mMediaGallery.getNumColumns());
             mMediaGallerySettingsFragment.setType(mMediaGallery.getType());
-
             mMediaGalleryEditFragment.setMediaIds(mMediaGallery.getIds());
         }
 

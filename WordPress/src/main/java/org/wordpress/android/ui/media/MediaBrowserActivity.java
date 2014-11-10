@@ -534,7 +534,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         mMediaAddFragment.addToQueue(mediaId);
     }
 
-    public void deleteMedia(final Set<String> ids) {
+    public void deleteMedia(final ArrayList<String> ids) {
         final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         Set<String> sanitizedIds = new HashSet<String>(ids.size());
 

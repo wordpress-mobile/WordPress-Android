@@ -33,8 +33,7 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.StringUtils;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * A fragment display a media item's details.
@@ -337,7 +336,7 @@ public class MediaItemFragment extends Fragment {
                             R.string.delete, new OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Set<String> ids = new HashSet<String>(1);
+                                    ArrayList<String> ids = new ArrayList<String>(1);
                                     ids.add(getMediaId());
                                     if (getActivity() instanceof MediaBrowserActivity) {
                                         ((MediaBrowserActivity) getActivity()).deleteMedia(ids);

@@ -22,9 +22,7 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * An activity where the user can add new images to their media gallery or where the user
@@ -59,7 +57,7 @@ public class MediaGalleryPickerActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Set<String> checkedItems = new HashSet<String>();
+        ArrayList<String> checkedItems = new ArrayList<String>();
         mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
         mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
 

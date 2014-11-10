@@ -36,14 +36,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * An adapter for the media gallery listViews.
  */
 public class MediaGridAdapter extends CursorAdapter {
     private MediaGridAdapterCallback mCallback;
-    private final Set<String> mCheckedItems;
+    private final ArrayList<String> mCheckedItems;
     private boolean mHasRetrievedAll;
     private boolean mIsRefreshing;
     private int mCursorDataCount;
@@ -70,7 +69,7 @@ public class MediaGridAdapter extends CursorAdapter {
         LOCAL, NETWORK, PROGRESS, SPACER
     }
 
-    public MediaGridAdapter(Context context, Cursor c, int flags, Set<String> checkedItems,
+    public MediaGridAdapter(Context context, Cursor c, int flags, ArrayList<String> checkedItems,
                             ImageLoader imageLoader) {
         super(context, c, flags);
         mContext = context;
@@ -97,7 +96,7 @@ public class MediaGridAdapter extends CursorAdapter {
                 (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable());
     }
 
-    public Set<String> getCheckedItems() {
+    public ArrayList<String> getCheckedItems() {
         return mCheckedItems;
     }
 

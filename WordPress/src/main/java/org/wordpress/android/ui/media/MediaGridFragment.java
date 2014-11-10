@@ -85,7 +85,8 @@ public class MediaGridFragment extends Fragment
     private MediaGridAdapter mGridAdapter;
     private MediaGridListener mListener;
 
-    private Set<String> mCheckedItems;
+    // Must be an ArrayList (order is important for galleries)
+    private ArrayList<String> mCheckedItems;
 
     private boolean mIsRefreshing;
     private boolean mHasRetrievedAllMedia;
@@ -147,7 +148,7 @@ public class MediaGridFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mCheckedItems = new HashSet<String>();
+        mCheckedItems = new ArrayList<String>();
         mFiltersText = new String[Filter.values().length];
 
         mGridAdapter = new MediaGridAdapter(getActivity(), null, 0, mCheckedItems, MediaImageLoader.getInstance());
@@ -210,7 +211,7 @@ public class MediaGridFragment extends Fragment
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
 
         if (savedInstanceState.containsKey(BUNDLE_CHECKED_STATES)) {
-            mCheckedItems = (HashSet<String>) savedInstanceState.getSerializable(BUNDLE_CHECKED_STATES);
+            mCheckedItems = savedInstanceState.getStringArrayList(BUNDLE_CHECKED_STATES);
             if (isInMultiSelectMode) {
                 multiSelectChange(mCheckedItems.size());
                 mPullToRefreshHelper.setEnabled(false);
@@ -638,7 +639,7 @@ public class MediaGridFragment extends Fragment
         }
     }
 
-    public Set<String> getCheckedItems() {
+    public ArrayList<String> getCheckedItems() {
         return mCheckedItems;
     }
 
@@ -757,7 +758,7 @@ public class MediaGridFragment extends Fragment
             if (!isAdded()) {
                 return;
             }
-            Set<String> ids = getCheckedItems();
+            ArrayList<String> ids = getCheckedItems();
             Intent i = new Intent(getActivity(), EditPostActivity.class);
             i.setAction(EditPostContentFragment.NEW_MEDIA_POST);
             i.putExtra(EditPostContentFragment.NEW_MEDIA_POST_EXTRA, ids.iterator().next());
@@ -787,10 +788,9 @@ public class MediaGridFragment extends Fragment
             if (!isAdded()) {
                 return;
             }
-            Set<String> ids = getCheckedItems();
             Intent i = new Intent(getActivity(), EditPostActivity.class);
             i.setAction(EditPostContentFragment.NEW_MEDIA_GALLERY);
-            i.putExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS, (Serializable) ids);
+            i.putStringArrayListExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS, getCheckedItems());
             startActivity(i);
         }
     }
