@@ -442,6 +442,7 @@
     <string name="stats_empty_top_authors">No posts viewed.</string>
     <string name="stats_empty_top_authors_desc">Track the views on each contributor\'s posts, and zoom in to discover the most popular content by each author.</string>
     <string name="stats_empty_tags_and_categories">No tagged posts or pages have been viewed yet.</string>
+    <string name="stats_empty_tags_and_categories_desc">Get an overview of the most popular topics on your site, as reflected in your top posts from the past week.</string>
     <string name="stats_empty_video">No videos have been played yet.</string>
     <string name="stats_empty_video_desc">If you\'ve uploaded videos using VideoPress, find out how many times they’ve been watched.</string>
     <string name="stats_empty_comments">No comments yet.</string>

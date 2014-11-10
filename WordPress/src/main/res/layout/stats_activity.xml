@@ -116,6 +116,15 @@
                 />
 
             <FrameLayout
+                android:id="@+id/stats_tags_and_categories_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                />
+
+            <FrameLayout
                 android:id="@+id/stats_totals_followers_shares_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

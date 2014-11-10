@@ -13,5 +13,6 @@ public enum StatsViewType {
     GEOVIEWS,
     AUTHORS,
     VIDEO_PLAYS,
-    COMMENTS
+    COMMENTS,
+    TAGS_AND_CATEGORIES,
 }
