@@ -93,8 +93,8 @@ public class PostsActivity extends WPActionBarActivity
         }
 
         createMenuDrawer(R.layout.posts);
+        setSupportActionBar(getToolbar());
 
-        setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);

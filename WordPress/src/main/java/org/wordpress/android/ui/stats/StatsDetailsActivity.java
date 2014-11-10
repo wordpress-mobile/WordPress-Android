@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.text.Html;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
@@ -108,7 +108,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
 
         mAltRowColor = getResources().getColor(R.color.stats_alt_row);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }

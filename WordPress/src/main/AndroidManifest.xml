@@ -140,7 +140,8 @@
         <activity android:name=".ui.WPWebViewActivity" >
         </activity>
 
-        <activity android:name=".ui.stats.StatsDetailsActivity" >
+        <activity android:name=".ui.stats.StatsDetailsActivity"
+                  android:theme="@style/Calypso.NoActionBar">
         </activity>
 
         <!-- Media Activities -->

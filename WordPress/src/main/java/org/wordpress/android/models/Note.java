@@ -404,7 +404,7 @@ public class Note extends Syncable {
      */
     public static class Schema extends BucketSchema<Note> {
 
-        static public final String NAME = "note20";
+        static public final String NAME = "note20-testing";
         static public final String TIMESTAMP_INDEX = "timestamp";
         static public final String SUBJECT_INDEX = "subject";
         static public final String SNIPPET_INDEX = "snippet";

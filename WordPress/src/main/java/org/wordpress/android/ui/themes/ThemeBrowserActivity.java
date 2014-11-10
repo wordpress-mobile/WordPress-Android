@@ -79,6 +79,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         setTitle(R.string.themes);
 
         createMenuDrawer(R.layout.theme_browser_activity);
+        setSupportActionBar(getToolbar());
 
         mThemePagerAdapter = new ThemePagerAdapter(getFragmentManager());
 
