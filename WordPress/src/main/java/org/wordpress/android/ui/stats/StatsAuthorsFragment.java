@@ -9,7 +9,7 @@ import android.widget.BaseExpandableListAdapter;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.AuthorModel;
 import org.wordpress.android.ui.stats.model.AuthorsModel;
-import org.wordpress.android.ui.stats.model.TopPostModel;
+import org.wordpress.android.ui.stats.model.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 
@@ -70,8 +70,8 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         @Override
         public Object getChild(int groupPosition, int childPosition) {
             AuthorModel currentGroup = authors.get(groupPosition);
-            List<TopPostModel> posts = currentGroup.getPosts();
-            TopPostModel currentRes = posts.get(childPosition);
+            List<SingleItemModel> posts = currentGroup.getPosts();
+            SingleItemModel currentRes = posts.get(childPosition);
             return currentRes;
         }
 
@@ -84,7 +84,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
 
-            final TopPostModel children = (TopPostModel) getChild(groupPosition, childPosition);
+            final SingleItemModel children = (SingleItemModel) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
@@ -96,7 +96,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
             String name = children.getTitle();
-            int total = children.getViews();
+            int total = children.getTotals();
             String url = children.getUrl();
 
             // name, url
@@ -114,7 +114,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         @Override
         public int getChildrenCount(int groupPosition) {
             AuthorModel currentGroup = authors.get(groupPosition);
-            List<TopPostModel> posts = currentGroup.getPosts();
+            List<SingleItemModel> posts = currentGroup.getPosts();
             if (posts == null) {
                 return 0;
             } else {

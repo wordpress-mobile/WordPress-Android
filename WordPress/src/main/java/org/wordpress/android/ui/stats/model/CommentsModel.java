@@ -16,9 +16,9 @@ public class CommentsModel implements Serializable {
     private int totalComments;
     private String mostActiveDay;
     private String mostActiveTime;
-    private TopPostModel mostCommentedPost;
+    private SingleItemModel mostCommentedPost;
 
-    private List<TopPostModel> mPosts;
+    private List<SingleItemModel> mPosts;
     private List<AuthorModel> mAuthors;
 
     public CommentsModel(String blogID, JSONObject response) throws JSONException {
@@ -33,14 +33,14 @@ public class CommentsModel implements Serializable {
 
         JSONArray postsJSONArray = response.optJSONArray("posts");
         if (postsJSONArray != null) {
-            mPosts = new ArrayList<TopPostModel>(postsJSONArray.length());
+            mPosts = new ArrayList<SingleItemModel>(postsJSONArray.length());
             for (int i = 0; i < postsJSONArray.length(); i++) {
                 JSONObject currentPostJSON = postsJSONArray.getJSONObject(i);
-                String postId = String.valueOf(currentPostJSON.getInt("id"));
-                String title = currentPostJSON.getString("name");
-                int views = currentPostJSON.getInt("comments");
-                String url = currentPostJSON.getString("link");
-                TopPostModel currentPost = new TopPostModel(blogID, postId, title, views, url);
+                String itemID = String.valueOf(currentPostJSON.getInt("id"));
+                String name = currentPostJSON.getString("name");
+                int totals = currentPostJSON.getInt("comments");
+                String link = currentPostJSON.getString("link");
+                SingleItemModel currentPost = new SingleItemModel(blogID, mDate, itemID, name, totals, link, null);
                 mPosts.add(currentPost);
             }
         }
@@ -76,7 +76,7 @@ public class CommentsModel implements Serializable {
         this.mDate = date;
     }
 
-    public List<TopPostModel> getPosts() {
+    public List<SingleItemModel> getPosts() {
         return this.mPosts;
     }
     public List<AuthorModel> getAuthors() {

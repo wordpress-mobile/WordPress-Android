@@ -8,8 +8,8 @@ import android.widget.BaseExpandableListAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.ClickGroupModel;
-import org.wordpress.android.ui.stats.model.ClickModel;
 import org.wordpress.android.ui.stats.model.ClicksModel;
+import org.wordpress.android.ui.stats.model.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 
@@ -70,9 +70,8 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
         @Override
         public Object getChild(int groupPosition, int childPosition) {
             ClickGroupModel currentGroup = clickGroups.get(groupPosition);
-            List<ClickModel> results = currentGroup.getClicks();
-            ClickModel currentRes = results.get(childPosition);
-            return currentRes;
+            List<SingleItemModel> results = currentGroup.getClicks();
+            return results.get(childPosition);
         }
 
         @Override
@@ -84,7 +83,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
 
-            final ClickModel children = (ClickModel) getChild(groupPosition, childPosition);
+            final SingleItemModel children = (SingleItemModel) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
@@ -95,8 +94,8 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
-            String name = children.getName();
-            int total = children.getTotal();
+            String name = children.getTitle();
+            int total = children.getTotals();
 
             // name, url
             holder.setEntryTextOrLink(name, name);
@@ -113,7 +112,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
         @Override
         public int getChildrenCount(int groupPosition) {
             ClickGroupModel currentGroup = clickGroups.get(groupPosition);
-            List<ClickModel> clicks = currentGroup.getClicks();
+            List<SingleItemModel> clicks = currentGroup.getClicks();
             if (clicks == null) {
                 return 0;
             } else {

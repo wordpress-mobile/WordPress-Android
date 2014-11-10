@@ -14,7 +14,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.AuthorModel;
 import org.wordpress.android.ui.stats.model.CommentsModel;
-import org.wordpress.android.ui.stats.model.TopPostModel;
+import org.wordpress.android.ui.stats.model.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -121,7 +121,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
                 adapter = new AuthorsAdapter(getActivity(), authors);
             }
         } else {
-            List<TopPostModel> posts = commentsModel.getPosts();
+            List<SingleItemModel> posts = commentsModel.getPosts();
             if (posts != null && posts.size() > 0) {
                 adapter = new TopPostsAndPagesAdapter(getActivity(), posts);
             }
@@ -140,13 +140,13 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         return false;
     }
 
-    private class TopPostsAndPagesAdapter extends ArrayAdapter<TopPostModel> {
+    private class TopPostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
 
-        private final List<TopPostModel> list;
+        private final List<SingleItemModel> list;
         private final Activity context;
         private final LayoutInflater inflater;
 
-        public TopPostsAndPagesAdapter(Activity context, List<TopPostModel> list) {
+        public TopPostsAndPagesAdapter(Activity context, List<SingleItemModel> list) {
             super(context, R.layout.stats_list_cell, list);
             this.context = context;
             this.list = list;
@@ -164,13 +164,13 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
                 rowView.setTag(viewHolder);
             }
 
-            final TopPostModel currentRowData = list.get(position);
+            final SingleItemModel currentRowData = list.get(position);
             StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
             // fill data
             // entries
             holder.setEntryTextOrLink(currentRowData.getUrl(), currentRowData.getTitle());
             // totals
-            holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));
 
             // no icon
             holder.networkImageView.setVisibility(View.GONE);

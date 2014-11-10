@@ -21,7 +21,7 @@ public class ReferrerGroupModel implements Serializable {
     private String mIcon;
     private int mTotal;
     private String mUrl;
-    private List<ReferrerResultModel> mResults;
+    private List<SingleItemModel> mResults;
 
     public ReferrerGroupModel(String blogId, String date, JSONObject groupJSON) throws JSONException {
         setBlogId(blogId);
@@ -39,10 +39,13 @@ public class ReferrerGroupModel implements Serializable {
             setUrl(groupJSON.getString("url"));
         } else {
             JSONArray resultsJSON = groupJSON.getJSONArray("results");
-            mResults = new ArrayList<ReferrerResultModel>(resultsJSON.length());
+            mResults = new ArrayList<SingleItemModel>(resultsJSON.length());
             for (int i = 0; i < resultsJSON.length(); i++) {
                 JSONObject currentResultJSON = resultsJSON.getJSONObject(i);
-                ReferrerResultModel rm = new ReferrerResultModel(blogId, date, currentResultJSON);
+                String name = currentResultJSON.getString("name");
+                int totals = currentResultJSON.getInt("views");
+                String icon = currentResultJSON.optString("icon");
+                SingleItemModel rm = new SingleItemModel(blogId, date, null, name, totals, null, icon );
                 mResults.add(rm);
             }
         }
@@ -104,5 +107,5 @@ public class ReferrerGroupModel implements Serializable {
         this.mIcon = icon;
     }
 
-    public List<ReferrerResultModel> getResults() { return mResults; }
+    public List<SingleItemModel> getResults() { return mResults; }
 }

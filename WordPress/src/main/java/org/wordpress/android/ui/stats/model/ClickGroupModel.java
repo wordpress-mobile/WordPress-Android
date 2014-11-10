@@ -21,7 +21,7 @@ public class ClickGroupModel implements Serializable {
     private String mIcon;
     private int mViews;
     private String mUrl;
-    private List<ClickModel> mClicks;
+    private List<SingleItemModel> mClicks;
 
     public ClickGroupModel(String blogId, String date, JSONObject clickGroupJSON) throws JSONException {
         setBlogId(blogId);
@@ -39,10 +39,14 @@ public class ClickGroupModel implements Serializable {
             setUrl(clickGroupJSON.getString("url"));
         } else {
             JSONArray childrenJSON = clickGroupJSON.getJSONArray("children");
-            mClicks = new ArrayList<ClickModel>(childrenJSON.length());
+            mClicks = new ArrayList<SingleItemModel>(childrenJSON.length());
             for (int i = 0; i < childrenJSON.length(); i++) {
                 JSONObject currentResultJSON = childrenJSON.getJSONObject(i);
-                ClickModel rm = new ClickModel(blogId, date, currentResultJSON);
+                String name = currentResultJSON.getString("name");
+                int totals = currentResultJSON.getInt("views");
+                String icon = currentResultJSON.optString("icon");
+                String url = currentResultJSON.optString("url");
+                SingleItemModel rm = new SingleItemModel(blogId, date, null, name, totals, url, icon);
                 mClicks.add(rm);
             }
         }
@@ -104,5 +108,5 @@ public class ClickGroupModel implements Serializable {
         this.mIcon = icon;
     }
 
-    public List<ClickModel> getClicks() { return mClicks; }
+    public List<SingleItemModel> getClicks() { return mClicks; }
 }

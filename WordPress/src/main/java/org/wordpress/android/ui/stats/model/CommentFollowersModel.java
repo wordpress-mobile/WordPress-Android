@@ -14,7 +14,7 @@ public class CommentFollowersModel implements Serializable {
     private int mPage;
     private int mPages;
     private int mTotal;
-    private List<TopPostModel> mPosts;
+    private List<SingleItemModel> mPosts;
 
     public CommentFollowersModel(String blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
@@ -24,14 +24,14 @@ public class CommentFollowersModel implements Serializable {
 
         JSONArray postsJSONArray = response.optJSONArray("posts");
         if (postsJSONArray != null) {
-            mPosts = new ArrayList<TopPostModel>(postsJSONArray.length());
+            mPosts = new ArrayList<SingleItemModel>(postsJSONArray.length());
             for (int i = 0; i < postsJSONArray.length(); i++) {
                 JSONObject currentPostJSON = postsJSONArray.getJSONObject(i);
                 String postId = String.valueOf(currentPostJSON.getInt("id"));
                 String title = currentPostJSON.getString("title");
                 int followers = currentPostJSON.getInt("followers");
                 String url = currentPostJSON.getString("url");
-                TopPostModel currentPost = new TopPostModel(blogID, postId, title, followers, url);
+                SingleItemModel currentPost = new SingleItemModel(blogID, null, postId, title, followers, url, null);
                 mPosts.add(currentPost);
             }
         }
@@ -45,7 +45,7 @@ public class CommentFollowersModel implements Serializable {
         this.mBlogID = blogID;
     }
 
-    public List<TopPostModel> getPosts() {
+    public List<SingleItemModel> getPosts() {
         return this.mPosts;
     }
 }

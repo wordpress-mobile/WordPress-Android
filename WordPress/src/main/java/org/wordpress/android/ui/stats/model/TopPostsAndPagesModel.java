@@ -4,7 +4,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ public class TopPostsAndPagesModel implements Serializable {
     private String mPeriod;
     private String mDate;
     private String mBlogID;
-    private List<TopPostModel> mTopPostsAndPages;
+    private List<SingleItemModel> mTopPostsAndPages;
 
     public TopPostsAndPagesModel(String blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
@@ -39,12 +38,17 @@ public class TopPostsAndPagesModel implements Serializable {
             postViewsArray = new JSONArray();
         }
 
-        ArrayList<TopPostModel> list = new ArrayList<TopPostModel>(postViewsArray.length());
+        ArrayList<SingleItemModel> list = new ArrayList<SingleItemModel>(postViewsArray.length());
 
         for (int i=0; i < postViewsArray.length(); i++) {
             try {
                 JSONObject postObject = postViewsArray.getJSONObject(i);
-                TopPostModel currentModel = new TopPostModel(blogID, postObject);
+                String itemID = postObject.getString("id");
+                String itemTitle = postObject.getString("title");
+                int itemTotal = postObject.getInt("views");
+                String itemURL = postObject.getString("href");
+                SingleItemModel currentModel = new SingleItemModel(blogID, mDate, itemID, itemTitle,
+                        itemTotal, itemURL, null);
                 list.add(currentModel);
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.STATS, "Unexpected TopPostModel object in top posts and pages array" +
@@ -78,7 +82,7 @@ public class TopPostsAndPagesModel implements Serializable {
         this.mPeriod = period;
     }
 
-    public List<TopPostModel> getTopPostsAndPages() {
+    public List<SingleItemModel> getTopPostsAndPages() {
         return mTopPostsAndPages;
     }
 }

@@ -20,7 +20,7 @@ public class AuthorModel implements Serializable {
     private String mAvatar;
     private int mViews;
     private String mFollowData;
-    private List<TopPostModel> mPosts;
+    private List<SingleItemModel> mPosts;
 
     public AuthorModel(String mBlogId, String date, String mGroupId, String mName, String mAvatar, int mViews, String mFollowData) {
         this.mBlogId = mBlogId;
@@ -48,14 +48,14 @@ public class AuthorModel implements Serializable {
         setFollowData((followData != null) ? followData.toString() : null);
 
         JSONArray postsJSON = authorJSON.getJSONArray("posts");
-        mPosts = new ArrayList<TopPostModel>(authorJSON.length());
+        mPosts = new ArrayList<SingleItemModel>(authorJSON.length());
         for (int i = 0; i < postsJSON.length(); i++) {
             JSONObject currentPostJSON = postsJSON.getJSONObject(i);
             String postId = String.valueOf(currentPostJSON.getInt("id"));
             String title = currentPostJSON.getString("title");
             int views = currentPostJSON.getInt("views");
             String url = currentPostJSON.getString("url");
-            TopPostModel currentPost = new TopPostModel(mBlogId, postId, title, views, url);
+            SingleItemModel currentPost = new SingleItemModel(mBlogId, mDate, postId, title, views, url, null);
             mPosts.add(currentPost);
         }
     }
@@ -116,5 +116,5 @@ public class AuthorModel implements Serializable {
         this.mAvatar = icon;
     }
 
-    public List<TopPostModel> getPosts() { return mPosts; }
+    public List<SingleItemModel> getPosts() { return mPosts; }
 }

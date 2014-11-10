@@ -16,7 +16,7 @@ public class VideoPlaysModel implements Serializable {
     private String mBlogID;
     private int mOtherPlays;
     private int mTotalPlays;
-    private List<TopPostModel> mPlays;
+    private List<SingleItemModel> mPlays;
 
     public VideoPlaysModel(String blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
@@ -37,14 +37,14 @@ public class VideoPlaysModel implements Serializable {
         JSONArray playsJSONArray = firstDayObject.optJSONArray("plays");
 
         if (playsJSONArray != null) {
-            mPlays = new ArrayList<TopPostModel>(playsJSONArray.length());
+            mPlays = new ArrayList<SingleItemModel>(playsJSONArray.length());
             for (int i = 0; i < playsJSONArray.length(); i++) {
                 JSONObject currentVideoplaysJSON = playsJSONArray.getJSONObject(i);
                 String postId = String.valueOf(currentVideoplaysJSON.getInt("post_id"));
                 String title = currentVideoplaysJSON.getString("title");
                 int views = currentVideoplaysJSON.getInt("plays");
                 String url = currentVideoplaysJSON.getString("url");
-                TopPostModel currentPost = new TopPostModel(blogID, postId, title, views, url);
+                SingleItemModel currentPost = new SingleItemModel(blogID, mDate, postId, title, views, url, null);
                 mPlays.add(currentPost);
             }
         }
@@ -74,7 +74,7 @@ public class VideoPlaysModel implements Serializable {
         this.mPeriod = period;
     }
 
-    public List<TopPostModel> getPlays() {
+    public List<SingleItemModel> getPlays() {
         return this.mPlays;
     }
 }
