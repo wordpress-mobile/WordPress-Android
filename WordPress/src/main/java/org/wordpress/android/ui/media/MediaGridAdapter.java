@@ -526,4 +526,18 @@ public class MediaGridAdapter extends CursorAdapter {
             notifyDataSetChanged();
         }
     }
+
+    public void toggleItemSelected(int position) {
+        Cursor cursor = (Cursor) getItem(position);
+        int columnIndex = cursor.getColumnIndex("mediaId");
+        if (columnIndex != -1) {
+            String mediaId = cursor.getString(columnIndex);
+            if (mCheckedItems.contains(mediaId)) {
+                mCheckedItems.remove(mediaId);
+            } else {
+                mCheckedItems.add(mediaId);
+            }
+            notifyDataSetChanged();
+        }
+    }
 }

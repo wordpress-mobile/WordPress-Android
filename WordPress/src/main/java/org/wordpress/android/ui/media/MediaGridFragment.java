@@ -739,7 +739,7 @@ public class MediaGridFragment extends Fragment
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
             int selectCount = mGridView.getCheckedItemCount();
             mGridAdapter.setItemSelected(position, checked);
-            multiSelectChange(mCheckedItems.size());
+            multiSelectChange(selectCount);
             switch (selectCount) {
                 case 1:
                     mNewPostButton.setVisible(true);
