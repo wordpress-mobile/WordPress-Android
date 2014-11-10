@@ -36,7 +36,6 @@ public class MediaGalleryActivity extends Activity implements MediaGallerySettin
     // result of the gallery
     public static final String RESULT_MEDIA_GALLERY = "RESULT_MEDIA_GALLERY";
 
-
     private MediaGalleryEditFragment mMediaGalleryEditFragment;
     private MediaGallerySettingsFragment mMediaGallerySettingsFragment;
 
@@ -72,7 +71,8 @@ public class MediaGalleryActivity extends Activity implements MediaGallerySettin
         }
 
         mMediaGalleryEditFragment = (MediaGalleryEditFragment) fm.findFragmentById(R.id.mediaGalleryEditFragment);
-        mMediaGallerySettingsFragment = (MediaGallerySettingsFragment) fm.findFragmentById(R.id.mediaGallerySettingsFragment);
+        mMediaGallerySettingsFragment = (MediaGallerySettingsFragment) fm.findFragmentById(
+                R.id.mediaGallerySettingsFragment);
         if (savedInstanceState == null) {
             // if not null, the fragments will remember its state
             mMediaGallerySettingsFragment.setRandom(mMediaGallery.isRandom());
@@ -152,7 +152,6 @@ public class MediaGalleryActivity extends Activity implements MediaGallerySettin
         Intent intent = new Intent(this, MediaGalleryPickerActivity.class);
         intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, mediaIds);
         startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
-
     }
 
     private void handleSaveMedia() {
