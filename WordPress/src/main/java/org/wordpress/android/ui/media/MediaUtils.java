@@ -3,6 +3,7 @@ package org.wordpress.android.ui.media;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -501,5 +502,25 @@ public class MediaUtils {
         }
 
         return fileExtensionFromMimeType.toLowerCase();
+    }
+
+    public static Cursor getDeviceMediaStoreImageThumbnails(ContentResolver contentResolver, String[] columns) {
+        Uri thumbnailUri = MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI;
+        return MediaStore.Images.Thumbnails.query(contentResolver, thumbnailUri, columns);
+    }
+
+    public static Cursor getDeviceMediaStoreImages(ContentResolver contentResolver, String[] columns) {
+        Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        return MediaStore.Images.Media.query(contentResolver, imageUri, columns);
+    }
+
+    public static Cursor getDeviceMediaStoreVideoThumbnails(ContentResolver contentResolver, String[] columns) {
+        Uri videoThumbnailUri = MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI;
+        return MediaStore.Video.query(contentResolver, videoThumbnailUri, columns);
+    }
+
+    public static Cursor getDeviceMediaStoreVideos(ContentResolver contentResolver, String[] columns) {
+        Uri videoUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        return MediaStore.Video.query(contentResolver, videoUri, columns);
     }
 }
