@@ -3,20 +3,14 @@
     android:id="@+id/captureContentContainer"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="148dp"
     android:padding="@dimen/media_grid_item_content_inset"
-    android:background="@drawable/pressed_background_wordpress">
+    android:background="@drawable/media_grid_item_checkstate_selector">
 
     <ImageView
         android:id="@+id/contentImage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"/>
-
-    <TextView
-        android:id="@+id/contentTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>

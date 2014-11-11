@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/deviceImageContentContainer"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:background="@drawable/calypso_bordered_bg">
+    android:layout_height="148dp"
+    android:orientation="vertical"
+    android:background="@drawable/media_grid_item_checkstate_selector">
 
     <ImageView
         android:id="@+id/deviceImageContentImage"
+        android:contentDescription="@string/content_description_preview_image"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
+        android:paddingTop="8dp"
         android:layout_gravity="center_horizontal"
-        android:scaleType="centerCrop" />
+        android:scaleType="fitCenter" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/deviceImageContentTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="2dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="2dp"
+        android:background="@color/media_gallery_grid_label_bg"
         android:singleLine="true"
-        android:textColor="@color/calypso_blue_dark" />
+        android:ellipsize="end"
+        android:textSize="@dimen/text_sz_small"
+        android:textColor="@color/media_gallery_grid_label" />
 
 </LinearLayout>

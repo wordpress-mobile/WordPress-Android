@@ -88,6 +88,7 @@
     <string name="media_add_new_media_gallery">Create gallery</string>
 
     <!-- Media Gallery -->
+    <string name="content_description_preview_image">Preview Image</string>
     <string name="media_gallery_settings_title">Gallery settings</string>
     <string name="media_gallery_image_order">Image order</string>
     <string name="media_gallery_image_order_random">Random</string>
