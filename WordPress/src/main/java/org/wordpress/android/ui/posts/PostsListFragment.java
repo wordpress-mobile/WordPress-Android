@@ -7,6 +7,7 @@ import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +35,6 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import java.util.List;
 import java.util.Vector;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class PostsListFragment extends ListFragment implements WordPress.OnPostUploadedListener {
     public static final int POSTS_REQUEST_COUNT = 20;
@@ -79,10 +78,10 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     private void initPullToRefreshHelper() {
         mPullToRefreshHelper = new PullToRefreshHelper(
                 getActivity(),
-                (PullToRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
+                (SwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
                             mPullToRefreshHelper.setRefreshing(false);
                             return;

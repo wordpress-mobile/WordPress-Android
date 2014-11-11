@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * A fragment display the themes on a grid view.
@@ -103,10 +102,10 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
 
         // pull to refresh setup but not for the search view
         if (!(this instanceof ThemeSearchFragment)) {
-            mPullToRefreshHelper = new PullToRefreshHelper(getActivity(), (PullToRefreshLayout) view.findViewById(
+            mPullToRefreshHelper = new PullToRefreshHelper(getActivity(), (SwipeRefreshLayout) view.findViewById(
                     R.id.ptr_layout), new RefreshListener() {
                 @Override
-                public void onRefreshStarted(View view) {
+                public void onRefreshStarted() {
                     if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
                         mPullToRefreshHelper.setRefreshing(false);
                         return;

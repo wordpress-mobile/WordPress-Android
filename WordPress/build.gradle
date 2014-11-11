@@ -76,7 +76,7 @@ dependencies {
     compile 'com.helpshift:android-aar:3.5.0'
     compile 'commons-lang:commons-lang:2.6'
     compile 'com.cocosw:undobar:1.+@aar'
-    compile "com.android.support:appcompat-v7:21.0.+"
+    compile 'com.android.support:appcompat-v7:21.0.+'
 
     compile('org.apache.httpcomponents:httpmime:4.1.+') {
         exclude group: 'commons-logging', module: 'commons-logging'

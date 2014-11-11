@@ -3,6 +3,7 @@ package org.wordpress.android.ui.notifications;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
 import javax.annotation.Nonnull;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
     private PullToRefreshHelper mFauxPullToRefreshHelper;
@@ -111,10 +110,10 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     private void initPullToRefreshHelper() {
         mFauxPullToRefreshHelper = new PullToRefreshHelper(
                 getActivity(),
-                (PullToRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
+                (SwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
                 new PullToRefreshHelper.RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         // Show a fake refresh animation for a few seconds
                         new Handler().postDelayed(new Runnable() {
                             @Override

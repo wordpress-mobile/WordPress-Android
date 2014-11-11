@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.SparseBooleanArray;
@@ -38,8 +39,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class SelectCategoriesActivity extends ActionBarActivity {
     String finalResult = "";
@@ -105,10 +104,10 @@ public class SelectCategoriesActivity extends ActionBarActivity {
         }
 
         // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
+        mPullToRefreshHelper = new PullToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
                             mPullToRefreshHelper.setRefreshing(false);
                             return;

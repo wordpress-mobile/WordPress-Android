@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,11 +29,8 @@ import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
 import java.util.List;
 import java.util.Map;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-
 public class ManageBlogsActivity extends ListActivity {
     private List<Map<String, Object>> mAccounts;
-    private static boolean mIsRefreshing;
     private ListScrollPositionManager mListScrollPositionManager;
     private PullToRefreshHelper mPullToRefreshHelper;
 
@@ -49,10 +47,10 @@ public class ManageBlogsActivity extends ListActivity {
         }
 
         // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
+        mPullToRefreshHelper = new PullToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
                             mPullToRefreshHelper.setRefreshing(false);
                             return;

@@ -31,7 +31,7 @@
         android:padding="8dp"
         android:visibility="gone" />
 
-    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
@@ -71,5 +71,5 @@
 
         </LinearLayout>
 
-    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

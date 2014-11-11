@@ -5,8 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v13.app.FragmentCompat;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.text.TextUtils;
@@ -62,8 +61,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class ReaderPostListFragment extends Fragment
         implements AbsListView.OnScrollListener,
@@ -325,10 +322,10 @@ public class ReaderPostListFragment extends Fragment
 
         // pull to refresh setup
         mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
-                (PullToRefreshLayout) rootView.findViewById(R.id.ptr_layout),
+                (SwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
                             mPullToRefreshHelper.setRefreshing(false);
                             return;

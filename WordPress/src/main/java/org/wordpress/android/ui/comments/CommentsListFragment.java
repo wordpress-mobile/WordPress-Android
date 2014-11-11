@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,8 +37,6 @@ import org.xmlrpc.android.XMLRPCFault;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class CommentsListFragment extends Fragment {
     private boolean mIsUpdatingComments = false;
@@ -184,10 +183,10 @@ public class CommentsListFragment extends Fragment {
 
         // pull to refresh setup
         mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
-                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+                (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
                             mPullToRefreshHelper.setRefreshing(false);
                             return;

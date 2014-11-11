@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
@@ -49,8 +50,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * The native stats details activity, accessible when the user taps on a bar in the main chart.
@@ -114,10 +113,10 @@ public class StatsDetailsActivity extends WPActionBarActivity {
         }
 
         // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
+        mPullToRefreshHelper = new PullToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new PullToRefreshHelper.RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
                             mPullToRefreshHelper.setRefreshing(false);
                             return;

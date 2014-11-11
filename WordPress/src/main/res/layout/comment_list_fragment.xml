@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:scrollingCache="true"
             style="@style/WordPress.BorderedBackground"
             tools:listitem="@layout/comment_listitem"/>
-    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@id/android:empty"
