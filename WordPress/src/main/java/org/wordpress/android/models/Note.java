@@ -70,7 +70,7 @@ public class Note extends Syncable {
      */
     @Override
     synchronized public JSONObject getDiffableValue() {
-        return mNoteJSON;
+        return JSONUtil.copyJSONObject(mNoteJSON);
     }
 
     /**
