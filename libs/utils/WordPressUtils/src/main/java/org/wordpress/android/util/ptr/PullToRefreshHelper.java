@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.TypedArray;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.util.TypedValue;
 
 import org.wordpress.android.util.R;
 import org.wordpress.android.util.ToastUtils;
@@ -20,87 +23,58 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh.SetupWizard;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
-
 public class PullToRefreshHelper implements OnRefreshListener {
     public static final String BROADCAST_ACTION_REFRESH_MENU_PRESSED = "REFRESH_MENU_PRESSED";
     private static final String REFRESH_BUTTON_HIT_COUNT = "REFRESH_BUTTON_HIT_COUNT";
     private static final Set<Integer> TOAST_FREQUENCY = new HashSet<Integer>(Arrays.asList(1, 5, 10, 20, 40, 80, 160,
             320, 640));
-    private PullToRefreshHeaderTransformer mHeaderTransformer;
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RefreshListener mRefreshListener;
     private WeakReference<Activity> mActivityRef;
 
-    public PullToRefreshHelper(Activity activity, PullToRefreshLayout pullToRefreshLayout, RefreshListener listener) {
-        init(activity, pullToRefreshLayout, listener, null);
+    public PullToRefreshHelper(Activity activity, SwipeRefreshLayout swipeRefreshLayout, RefreshListener listener) {
+        init(activity, swipeRefreshLayout, listener, null);
     }
 
-    public PullToRefreshHelper(Activity activity, PullToRefreshLayout pullToRefreshLayout, RefreshListener listener,
+    public PullToRefreshHelper(Activity activity, SwipeRefreshLayout swipeRefreshLayout, RefreshListener listener,
                                java.lang.Class<?> viewClass) {
-        init(activity, pullToRefreshLayout, listener, viewClass);
+        init(activity, swipeRefreshLayout, listener, viewClass);
     }
 
-    public void init(Activity activity, PullToRefreshLayout pullToRefreshLayout, RefreshListener listener,
+    public void init(Activity activity, SwipeRefreshLayout swipeRefreshLayout, RefreshListener listener,
                      java.lang.Class<?> viewClass) {
         mActivityRef = new WeakReference<Activity>(activity);
         mRefreshListener = listener;
-        mPullToRefreshLayout = pullToRefreshLayout;
-        mHeaderTransformer = new PullToRefreshHeaderTransformer();
-        SetupWizard setupWizard = ActionBarPullToRefresh.from(activity).options(Options.create().headerTransformer(
-                mHeaderTransformer).build()).allChildrenArePullable().listener(this);
-        if (viewClass != null) {
-            setupWizard.useViewDelegate(viewClass, new ViewDelegate() {
-                        @Override
-                        public boolean isReadyForPull(View view, float v, float v2) {
-                            return true;
-                        }
-                    }
-            );
-        }
-        setupWizard.setup(mPullToRefreshLayout);
-        // set network refresh mode as default
-        setNetworkRefreshMode(true);
-        mHeaderTransformer.setPullToRefreshAttacher(mPullToRefreshLayout.getAttacher());
-    }
-
-    /**
-     * Once set, each PTR action will check for network connectivity. If there is thes network is not available
-     * (airplane mode for instance), the message will be changed from "Pull to refresh..." to "Can't refresh..."
-     */
-    public void setNetworkRefreshMode(boolean refreshing) {
-        mHeaderTransformer.setNetworkRefreshMode(refreshing);
+        mSwipeRefreshLayout = swipeRefreshLayout;
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        final TypedArray styleAttrs = obtainStyledAttrsFromThemeAttr(activity, R.attr.refreshIndicatorColor,
+                R.styleable.RefreshIndicator);
+        int color = styleAttrs.getColor(R.styleable.RefreshIndicator_refreshIndicatorColor,
+                android.R.color.holo_blue_dark);
+        mSwipeRefreshLayout.setProgressBackgroundColor(color);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.white, android.R.color.white, android.R.color.white,
+                android.R.color.white);
     }
 
     public void setRefreshing(boolean refreshing) {
-        mHeaderTransformer.setShowProgressBarOnly(refreshing);
-        mPullToRefreshLayout.setRefreshing(refreshing);
+        mSwipeRefreshLayout.setRefreshing(refreshing);
     }
 
     public boolean isRefreshing() {
-        return mPullToRefreshLayout.isRefreshing();
+        return mSwipeRefreshLayout.isRefreshing();
     }
 
     @Override
-    public void onRefreshStarted(View view) {
-        if (mHeaderTransformer.isNetworkAvailableOrNotChecked()) {
-            mRefreshListener.onRefreshStarted(view);
-        } else {
-            setRefreshing(false);
-        }
+    public void onRefresh() {
+        mRefreshListener.onRefreshStarted();
     }
 
     public interface RefreshListener {
-        public void onRefreshStarted(View view);
+        public void onRefreshStarted();
     }
 
     public void setEnabled(boolean enabled) {
-        mPullToRefreshLayout.setEnabled(enabled);
+        mSwipeRefreshLayout.setEnabled(enabled);
     }
 
     public void refreshAction() {
@@ -109,7 +83,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
             return;
         }
         setRefreshing(true);
-        mRefreshListener.onRefreshStarted(mPullToRefreshLayout);
+        mRefreshListener.onRefreshStarted();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
         int refreshHits = preferences.getInt(REFRESH_BUTTON_HIT_COUNT, 0);
         refreshHits += 1;
@@ -141,6 +115,13 @@ public class PullToRefreshHelper implements OnRefreshListener {
         } catch (IllegalArgumentException e) {
             // exception occurs if receiver already unregistered (safe to ignore)
         }
+    }
+
+    public static TypedArray obtainStyledAttrsFromThemeAttr(Context context, int themeAttr, int[] styleAttrs) {
+        TypedValue outValue = new TypedValue();
+        context.getTheme().resolveAttribute(themeAttr, outValue, true);
+        int styleResId = outValue.resourceId;
+        return context.obtainStyledAttributes(styleResId, styleAttrs);
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
