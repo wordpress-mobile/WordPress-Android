@@ -45,8 +45,8 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
-import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.util.AniUtils;
@@ -65,8 +65,7 @@ import java.util.Map;
 import java.util.Stack;
 
 public class ReaderPostListFragment extends Fragment
-        implements AbsListView.OnScrollListener,
-                   ActionBar.OnNavigationListener {
+                                    implements AbsListView.OnScrollListener {
 
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
     private ReaderPostAdapter mPostAdapter;
@@ -562,6 +561,30 @@ public class ReaderPostListFragment extends Fragment
                 spinner.setTag(spinnerTag);
                 toolbar.addView(spinner);
                 spinner.setAdapter(getSpinnerAdapter());
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        final ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(position);
+                        if (tag == null) {
+                            return;
+                        }
+                        if (!isCurrentTag(tag)) {
+                            Map<String, String> properties = new HashMap<String, String>();
+                            properties.put("tag", tag.getTagName());
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
+                            if (tag.getTagName().equals(ReaderTag.TAG_NAME_FRESHLY_PRESSED)) {
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
+                            }
+                        }
+                        setCurrentTag(tag);
+                        AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // nop
+                    }
+                });
             }
         } else {
             actionBar.setDisplayShowTitleEnabled(true);
@@ -1073,7 +1096,7 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
         checkCurrentTag();
-        if (hasActionBarAdapter()) {
+        if (hasSpinnerAdapter()) {
             getSpinnerAdapter().refreshTags();
         }
     }
@@ -1145,7 +1168,7 @@ public class ReaderPostListFragment extends Fragment
         return mSpinnerAdapter;
     }
 
-    private boolean hasActionBarAdapter() {
+    private boolean hasSpinnerAdapter() {
         return (mSpinnerAdapter != null);
     }
 
@@ -1186,31 +1209,6 @@ public class ReaderPostListFragment extends Fragment
         }
 
         actionBar.setSelectedNavigationItem(position);
-    }
-
-    /*
-     * called when user selects a tag from the ActionBar dropdown
-     */
-    @Override
-    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-        final ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(itemPosition);
-        if (tag == null) {
-            return false;
-        }
-
-        if (!isCurrentTag(tag)) {
-            Map<String, String> properties = new HashMap<String, String>();
-            properties.put("tag", tag.getTagName());
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
-            if (tag.getTagName().equals(ReaderTag.TAG_NAME_FRESHLY_PRESSED)) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
-            }
-        }
-
-        setCurrentTag(tag);
-        AppLog.d(T.READER, String.format("reader post list > tag %s chosen from actionbar", tag.getTagNameForLog()));
-
-        return true;
     }
 
     /*
