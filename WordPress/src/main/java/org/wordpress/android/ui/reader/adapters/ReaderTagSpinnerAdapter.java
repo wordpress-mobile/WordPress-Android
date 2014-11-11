@@ -19,16 +19,16 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 
 /**
- * populates ActionBar dropdown with reader tags
+ * populates spinner with reader tags
  */
-public class ReaderActionBarTagAdapter extends BaseAdapter {
+public class ReaderTagSpinnerAdapter extends BaseAdapter {
     private ReaderTagList mTags = new ReaderTagList();
     private final LayoutInflater mInflater;
     private final ReaderInterfaces.DataLoadedListener mDataListener;
     private final int mPaddingForStaticDrawer;
     private final boolean mIsStaticMenuDrawer;
 
-    public ReaderActionBarTagAdapter(Context context, boolean isStaticMenuDrawer, ReaderInterfaces.DataLoadedListener dataListener) {
+    public ReaderTagSpinnerAdapter(Context context, boolean isStaticMenuDrawer, ReaderInterfaces.DataLoadedListener dataListener) {
         mDataListener = dataListener;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

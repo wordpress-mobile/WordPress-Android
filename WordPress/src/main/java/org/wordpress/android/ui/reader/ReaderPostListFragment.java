@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cocosw.undobar.UndoBarController;
@@ -43,7 +45,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
-import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
@@ -66,7 +68,7 @@ public class ReaderPostListFragment extends Fragment
         implements AbsListView.OnScrollListener,
                    ActionBar.OnNavigationListener {
 
-    private ReaderActionBarTagAdapter mActionBarAdapter;
+    private ReaderTagSpinnerAdapter mSpinnerAdapter;
     private ReaderPostAdapter mPostAdapter;
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
@@ -375,7 +377,7 @@ public class ReaderPostListFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
 
         setHasOptionsMenu(true);
-        checkActionBar();
+        checkToolbar();
 
         // assign the post list adapter
         boolean adapterAlreadyExists = hasPostAdapter();
@@ -411,7 +413,7 @@ public class ReaderPostListFragment extends Fragment
         // only followed tag list has a menu
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             inflater.inflate(R.menu.reader_native, menu);
-            checkActionBar();
+            checkToolbar();
         }
     }
 
@@ -539,14 +541,31 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * ensures that the ActionBar is correctly configured based on the type of list
+     * ensures that the toolbar is correctly configured based on the type of list
      */
-    private void checkActionBar() {
+    private void checkToolbar() {
         if (!isAdded()) return;
 
         final android.support.v7.app.ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-        if (actionBar == null) {
+        final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        if (actionBar == null || toolbar == null) {
             return;
+        }
+
+        if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            Object spinnerTag = "reader-spinner";
+            Spinner spinner = (Spinner) toolbar.findViewWithTag(spinnerTag);
+            if (spinner == null) {
+                spinner = new Spinner(getActivity());
+                spinner.setTag(spinnerTag);
+                toolbar.addView(spinner);
+                spinner.setAdapter(getSpinnerAdapter());
+            }
+        } else {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         /*if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
@@ -587,7 +606,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setEmptyTitleAndDescriptionForCurrentTag() {
-        if (!isAdded() || getActionBarAdapter() == null) {
+        if (!isAdded() || getSpinnerAdapter() == null) {
             return;
         }
 
@@ -596,11 +615,11 @@ public class ReaderPostListFragment extends Fragment
         if (isUpdating()) {
             title = R.string.reader_empty_posts_in_tag_updating;
         } else {
-            int tagIndex = getActionBarAdapter().getIndexOfTag(mCurrentTag);
+            int tagIndex = getSpinnerAdapter().getIndexOfTag(mCurrentTag);
 
             final String tagId;
             if (tagIndex > -1) {
-                ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(tagIndex);
+                ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(tagIndex);
                 tagId = tag.getStringIdFromEndpoint();
             } else {
                 tagId = "";
@@ -1055,7 +1074,7 @@ public class ReaderPostListFragment extends Fragment
         }
         checkCurrentTag();
         if (hasActionBarAdapter()) {
-            getActionBarAdapter().refreshTags();
+            getSpinnerAdapter().refreshTags();
         }
     }
 
@@ -1064,7 +1083,7 @@ public class ReaderPostListFragment extends Fragment
      */
     void doTagsChanged(final String newCurrentTag) {
         checkCurrentTag();
-        getActionBarAdapter().reloadTags();
+        getSpinnerAdapter().reloadTags();
         if (!TextUtils.isEmpty(newCurrentTag)) {
             setCurrentTagName(newCurrentTag);
         }
@@ -1103,10 +1122,10 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * ActionBar tag dropdown adapter
+     * toolbar spinner adapter which shows list of tags
      */
-    private ReaderActionBarTagAdapter getActionBarAdapter() {
-        if (mActionBarAdapter == null) {
+    private ReaderTagSpinnerAdapter getSpinnerAdapter() {
+        if (mSpinnerAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating ActionBar adapter");
             ReaderInterfaces.DataLoadedListener dataListener = new ReaderInterfaces.DataLoadedListener() {
                 @Override
@@ -1117,17 +1136,17 @@ public class ReaderPostListFragment extends Fragment
                     selectTagInActionBar(getCurrentTag());
                 }
             };
-            mActionBarAdapter = new ReaderActionBarTagAdapter(
+            mSpinnerAdapter = new ReaderTagSpinnerAdapter(
                     getActivity(),
                     hasStaticMenuDrawer(),
                     dataListener);
         }
 
-        return mActionBarAdapter;
+        return mSpinnerAdapter;
     }
 
     private boolean hasActionBarAdapter() {
-        return (mActionBarAdapter != null);
+        return (mSpinnerAdapter != null);
     }
 
     /*
@@ -1156,7 +1175,7 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        int position = getActionBarAdapter().getIndexOfTag(tag);
+        int position = getSpinnerAdapter().getIndexOfTag(tag);
         if (position == -1 || position == actionBar.getSelectedNavigationIndex()) {
             return;
         }
@@ -1174,7 +1193,7 @@ public class ReaderPostListFragment extends Fragment
      */
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-        final ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(itemPosition);
+        final ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(itemPosition);
         if (tag == null) {
             return false;
         }
