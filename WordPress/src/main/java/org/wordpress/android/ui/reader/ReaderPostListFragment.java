@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -36,7 +35,6 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -67,6 +65,7 @@ import java.util.Stack;
 public class ReaderPostListFragment extends Fragment
                                     implements AbsListView.OnScrollListener {
 
+    private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
     private ReaderPostAdapter mPostAdapter;
 
@@ -554,14 +553,11 @@ public class ReaderPostListFragment extends Fragment
         if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(false);
-            Object spinnerTag = "reader-spinner";
-            Spinner spinner = (Spinner) toolbar.findViewWithTag(spinnerTag);
-            if (spinner == null) {
-                spinner = new Spinner(getActivity());
-                spinner.setTag(spinnerTag);
-                toolbar.addView(spinner);
-                spinner.setAdapter(getSpinnerAdapter());
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            if (mSpinner == null) {
+                mSpinner = new Spinner(getActivity());
+                toolbar.addView(mSpinner);
+                mSpinner.setAdapter(getSpinnerAdapter());
+                mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         final ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(position);
@@ -590,21 +586,6 @@ public class ReaderPostListFragment extends Fragment
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        /*if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
-            // only change if we're not in list navigation mode, since that means the actionBar
-            // is already correctly configured
-            if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
-                actionBar.setDisplayShowTitleEnabled(false);
-                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-                actionBar.setListNavigationCallbacks(getActionBarAdapter(), this);
-                selectTagInActionBar(getCurrentTag());
-            }
-        } else {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        }*/
     }
 
     private void startBoxAndPagesAnimation() {
@@ -797,7 +778,7 @@ public class ReaderPostListFragment extends Fragment
 
         // skip if this is already the current tag and the post adapter is already showing it - this
         // will happen when the list fragment is restored and the current tag is re-selected in the
-        // actionBar dropdown
+        // toolbar dropdown
         if (isCurrentTag(tag)
                 && hasPostAdapter()
                 && getPostAdapter().isCurrentTag(tag)) {
@@ -1089,7 +1070,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * refresh the list of tags shown in the ActionBar
+     * refresh the list of tags shown in the toolbar spinner
      */
     void refreshTags() {
         if (!isAdded()) {
@@ -1149,20 +1130,8 @@ public class ReaderPostListFragment extends Fragment
      */
     private ReaderTagSpinnerAdapter getSpinnerAdapter() {
         if (mSpinnerAdapter == null) {
-            AppLog.d(T.READER, "reader post list > creating ActionBar adapter");
-            ReaderInterfaces.DataLoadedListener dataListener = new ReaderInterfaces.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    if (!isAdded())
-                        return;
-                    AppLog.d(T.READER, "reader post list > ActionBar adapter loaded");
-                    selectTagInActionBar(getCurrentTag());
-                }
-            };
-            mSpinnerAdapter = new ReaderTagSpinnerAdapter(
-                    getActivity(),
-                    hasStaticMenuDrawer(),
-                    dataListener);
+            AppLog.d(T.READER, "reader post list > creating spinner adapter");
+            mSpinnerAdapter = new ReaderTagSpinnerAdapter(getActivity());
         }
 
         return mSpinnerAdapter;
@@ -1170,45 +1139,6 @@ public class ReaderPostListFragment extends Fragment
 
     private boolean hasSpinnerAdapter() {
         return (mSpinnerAdapter != null);
-    }
-
-    /*
-     * does the host activity have a static menu drawer?
-     */
-    private boolean hasStaticMenuDrawer() {
-        return (getActivity() instanceof WPActionBarActivity)
-                && ((WPActionBarActivity) getActivity()).isStaticMenuDrawer();
-    }
-
-    private ActionBar getActionBar() {
-        if (isAdded()) {
-            return getActivity().getActionBar();
-        } else {
-            AppLog.w(T.READER, "reader post list > null ActionBar");
-            return null;
-        }
-    }
-
-    /*
-     * make sure the passed tag is the one selected in the actionbar
-     */
-    private void selectTagInActionBar(final ReaderTag tag) {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return;
-        }
-
-        int position = getSpinnerAdapter().getIndexOfTag(tag);
-        if (position == -1 || position == actionBar.getSelectedNavigationIndex()) {
-            return;
-        }
-
-        if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
-            AppLog.w(T.READER, "reader post list > unexpected ActionBar navigation mode");
-            return;
-        }
-
-        actionBar.setSelectedNavigationItem(position);
     }
 
     /*
