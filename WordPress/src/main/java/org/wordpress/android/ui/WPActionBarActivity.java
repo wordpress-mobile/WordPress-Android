@@ -97,7 +97,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
     private boolean mReauthCanceled;
     private boolean mNewBlogActivityRunning;
 
-    protected Toolbar mToolbar;
+    private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     protected ActionBarDrawerToggle mDrawerToggle;
     private MenuAdapter mAdapter;
@@ -111,8 +111,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_action_bar);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(getToolbar());
 
         // configure all the available menu items
         mMenuItems.add(new ReaderMenuItem());
@@ -206,6 +205,14 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         layoutContainer.addView(contentView);
 
         initMenuDrawer();
+    }
+
+    protected Toolbar getToolbar() {
+        if (mToolbar == null) {
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        }
+
+        return mToolbar;
     }
 
     /**

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.notifications;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -8,6 +7,7 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,6 +65,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         super.onCreate(null);
         AppLog.i(T.NOTIFS, "Creating NotificationsActivity");
         createMenuDrawer(R.layout.notifications_activity);
+        setSupportActionBar(getToolbar());
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
@@ -76,7 +77,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
             mNotesListFragment = (NotificationsListFragment)fragmentManager.findFragmentByTag(TAG_LIST_VIEW);
         }
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
         }

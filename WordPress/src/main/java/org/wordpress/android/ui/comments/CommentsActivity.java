@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.comments;
 
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -8,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,8 +42,11 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
+
         createMenuDrawer(R.layout.comment_activity);
-        ActionBar actionBar = getActionBar();
+        setSupportActionBar(getToolbar());
+
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
         }
