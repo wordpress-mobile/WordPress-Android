@@ -2,9 +2,9 @@ package org.wordpress.android.ui.media;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 
 import org.wordpress.android.R;
+import org.wordpress.android.widgets.WPViewPager;
 
 /**
  * Allows users to select a variety of media content, videos and images.
@@ -13,14 +13,15 @@ import org.wordpress.android.R;
 public class MediaSelectActivity extends Activity implements MediaSelectFragmentPagerAdapter.MediaSelectCallback {
     public static final int ACTIVITY_REQUEST_CODE_MEDIA_SELECTION = 6000;
 
-    private ViewPager mViewPager;
-    private MediaSelectFragmentPagerAdapter mMediaSelectFragment;
+    private WPViewPager                      mViewPager;
+    private MediaContentFragmentPagerAdapter mMediaSelectFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mViewPager = new ViewPager(this);
+        mViewPager = new WPViewPager(this, null);
+        mViewPager.setPagingEnabled(true);
         mViewPager.setId(R.id.pager);
         setContentView(mViewPager);
 
@@ -42,6 +43,7 @@ public class MediaSelectActivity extends Activity implements MediaSelectFragment
         // TODO: update action bar items
     }
 
+    /** Helper method to add tabs for Images and Videos. */
     private void setupTabs() {
         mMediaSelectFragment = new MediaSelectFragmentPagerAdapter(this, mViewPager, this);
 
@@ -52,5 +54,11 @@ public class MediaSelectActivity extends Activity implements MediaSelectFragment
         int videoFilter = MediaSelectFragmentPagerAdapter.MediaSelectTabFragment.CAPTURE_VIDEO;
         mMediaSelectFragment.addTab(imageFilter, "Images");
         mMediaSelectFragment.addTab(videoFilter, "Videos");
+    }
+
+    /** Helper method to end the activity with a result code but no data. */
+    private void finishWithNoResults() {
+        setResult(ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
+        finish();
     }
 }
