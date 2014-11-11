@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_media_content_selection_gallery"
+        android:title="@string/media_add_new_media_gallery"
+        android:icon="@drawable/action_gallery_icon_circles"
+        android:enabled="true"
+        android:visible="true"
+        android:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_media_content_selection_cancel"
+        android:title="@string/cancel"
+        android:icon="@drawable/hs__action_cancel"
+        android:enabled="true"
+        android:visible="true"
+        android:showAsAction="ifRoom" />
+
+</menu>
