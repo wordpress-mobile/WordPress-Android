@@ -52,15 +52,12 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * The grid displaying the media items.
- * It appears as 2 columns on phone and 1 column on tablet (essentially a listview)
  */
 public class MediaGridFragment extends Fragment
         implements OnItemClickListener, MediaGridAdapterCallback, RecyclerListener {
