@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.media.content;
 
+import android.os.Parcelable;
+
 /**
  * Data model for media content.
  *
  * Media content requires an ID, name (display name), and data (source).
  */
 
-public abstract class MediaContent {
+public abstract class MediaContent implements Parcelable {
     public enum MEDIA_TYPE {
         INVALID(0), CAPTURE(1), DEVICE_IMAGE(2), DEVICE_VIDEO(3), WEB_IMAGE(4), WEB_VIDEO(5), COUNT(6);
 
@@ -21,15 +23,11 @@ public abstract class MediaContent {
         }
     }
 
-    public MEDIA_TYPE getType() {
-        return MEDIA_TYPE.INVALID;
-    }
+    public abstract MEDIA_TYPE getType();
 
-    public String getName() {
-        return null;
-    }
+    public abstract String getId();
 
-    public String getData() {
-        return null;
-    }
+    public abstract String getName();
+
+    public abstract String getData();
 }

@@ -71,6 +71,7 @@ import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.MediaSelectActivity;
 import org.wordpress.android.ui.media.MediaUtils;
+import org.wordpress.android.ui.media.content.MediaContent;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -334,13 +335,30 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         menu.add(0, 5, 0, getResources().getText(R.string.select_from_media_library));
     }
 
+    private void handleMediaSelection(Intent data) {
+        if (data != null) {
+            List<MediaContent> selectedContent = data.getParcelableArrayListExtra(MediaSelectActivity.SELECTED_CONTENT_RESULTS_KEY);
+
+            for (MediaContent selectedItem : selectedContent) {
+                if (!addMedia(Uri.parse(selectedItem.getData()), null, getActivity())) {
+                    Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
+                         .show();
+                }
+            }
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
+        if (data != null || ((requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
+                              requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
             Bundle extras;
             switch (requestCode) {
+                case MediaSelectActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
+                    handleMediaSelection(data);
+                    break;
                 case MediaGalleryActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
                         handleMediaGalleryResult(data);
