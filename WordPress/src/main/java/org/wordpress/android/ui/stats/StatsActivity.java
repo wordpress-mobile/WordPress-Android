@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
@@ -68,7 +69,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
  * </p>
  */
 public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.ScrollViewListener,
-        ActionBar.OnNavigationListener {
+        ActionBar.OnNavigationListener, StatsAuthorsFragment.OnAuthorsSectionChangeListener {
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
@@ -293,6 +294,14 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         }
 
         ft.commit();
+    }
+
+    // AuthorsFragment should be dismissed when 0 or 1 author.
+    public void onAuthorsVisibilityChange(boolean isEmpty) {
+        View authorsContainer = this.findViewById(R.id.stats_top_authors_container);
+        if (authorsContainer != null) {
+            authorsContainer.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        }
     }
 
     private void startWPComLoginActivity() {

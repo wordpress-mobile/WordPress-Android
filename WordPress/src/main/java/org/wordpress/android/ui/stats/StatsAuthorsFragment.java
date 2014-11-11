@@ -17,17 +17,43 @@ import java.util.List;
 
 public class StatsAuthorsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsAuthorsFragment.class.getSimpleName();
+    private OnAuthorsSectionChangeListener mListener;
+
+    // Container Activity must implement this interface
+    public interface OnAuthorsSectionChangeListener {
+        public void onAuthorsVisibilityChange(boolean isEmpty);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnAuthorsSectionChangeListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnAuthorsSectionChangeListener");
+        }
+    }
 
     @Override
     protected void updateUI() {
-        if (mDatamodel != null && ((AuthorsModel)mDatamodel).getAuthors() != null &&
-                ((AuthorsModel)mDatamodel).getAuthors().size() > 0) {
-            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((AuthorsModel)mDatamodel).getAuthors());
-            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList);
-            showEmptyUI(false);
-        } else {
+        if (mDatamodel == null) {
             showEmptyUI(true);
+            mListener.onAuthorsVisibilityChange(true); // Hide the authors section if completely empty
+            return;
         }
+
+        List<AuthorModel> authors = ((AuthorsModel) mDatamodel).getAuthors();
+        // Do not show the authors section if there is one author only
+        if (authors == null || authors.size() <= 1) {
+            showEmptyUI(true);
+            mListener.onAuthorsVisibilityChange(true);
+            return;
+        }
+
+        BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), authors);
+        StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList);
+        showEmptyUI(false);
+        mListener.onAuthorsVisibilityChange(false);
     }
 
     @Override
