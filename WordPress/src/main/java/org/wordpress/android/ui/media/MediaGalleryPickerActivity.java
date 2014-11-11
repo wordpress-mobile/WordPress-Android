@@ -56,16 +56,17 @@ public class MediaGalleryPickerActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ArrayList<String> checkedItems = new ArrayList<String>();
+        ArrayList<String> selectedItems = new ArrayList<String>();
         mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
         mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
 
         ArrayList<String> prevSelectedItems = getIntent().getStringArrayListExtra(PARAM_SELECTED_IDS);
-        if( prevSelectedItems != null )
-            checkedItems.addAll(prevSelectedItems);
+        if (prevSelectedItems != null) {
+            selectedItems.addAll(prevSelectedItems);
+        }
 
         if (savedInstanceState != null) {
-            checkedItems.addAll(savedInstanceState.getStringArrayList(STATE_SELECTED_ITEMS));
+            selectedItems.addAll(savedInstanceState.getStringArrayList(STATE_SELECTED_ITEMS));
             mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
             mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
         }
@@ -82,9 +83,11 @@ public class MediaGalleryPickerActivity extends Activity
             }
         } else {
             mActionMode = startActionMode(this);
-            mActionMode.setTitle(checkedItems.size() + " " + getString(R.string.items_selected));
+            mActionMode.setTitle(String.format(getString(R.string.cab_selected),
+                    mGridAdapter.getSelectedItems().size()));
         }
-        mGridAdapter = new MediaGridAdapter(this, null, 0, checkedItems, MediaImageLoader.getInstance());
+        mGridAdapter = new MediaGridAdapter(this, null, 0, MediaImageLoader.getInstance());
+        mGridAdapter.setSelectedItems(selectedItems);
         mGridAdapter.setCallback(this);
         mGridView.setAdapter(mGridAdapter);
     }
@@ -98,7 +101,7 @@ public class MediaGalleryPickerActivity extends Activity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putStringArrayList(STATE_SELECTED_ITEMS, mGridAdapter.getCheckedItems());
+        outState.putStringArrayList(STATE_SELECTED_ITEMS, mGridAdapter.getSelectedItems());
         outState.putStringArrayList(STATE_FILTERED_ITEMS, mFilteredItems);
         outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
     }
@@ -129,12 +132,13 @@ public class MediaGalleryPickerActivity extends Activity
             // Single select, just finish the activity once an item is selected
             mGridAdapter.setItemSelected(position, true);
             Intent intent = new Intent();
-            intent.putStringArrayListExtra(RESULT_IDS, mGridAdapter.getCheckedItems());
+            intent.putStringArrayListExtra(RESULT_IDS, mGridAdapter.getSelectedItems());
             setResult(RESULT_OK, intent);
             finish();
         } else {
             mGridAdapter.toggleItemSelected(position);
-            updateMenuTitle(mGridAdapter.getCheckedItems().size());
+            mActionMode.setTitle(String.format(getString(R.string.cab_selected),
+                    mGridAdapter.getSelectedItems().size()));
         }
     }
 
@@ -161,7 +165,7 @@ public class MediaGalleryPickerActivity extends Activity
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         Intent intent = new Intent();
-        intent.putStringArrayListExtra(RESULT_IDS, mGridAdapter.getCheckedItems());
+        intent.putStringArrayListExtra(RESULT_IDS, mGridAdapter.getSelectedItems());
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -266,17 +270,6 @@ public class MediaGalleryPickerActivity extends Activity
 
             ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, MediaGridFragment.Filter.ALL, callback);
             getMediaTask.execute(apiArgs);
-        }
-    }
-
-    private void updateMenuTitle(int selectCount) {
-        switch (selectCount) {
-            case 1:
-                mActionMode.setTitle(getString(R.string.one_item_selected));
-                break;
-            default:
-                mActionMode.setTitle(selectCount + " " + getString(R.string.items_selected));
-                break;
         }
     }
 }

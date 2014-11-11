@@ -304,7 +304,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (fm.getBackStackEntryCount() == 0) {
             FragmentTransaction ft = fm.beginTransaction();
             ft.hide(mMediaGridFragment);
-            mMediaGridFragment.clearCheckedItems();
+            mMediaGridFragment.clearSelectedItems();
             setupBaseLayout();
 
             mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
@@ -561,7 +561,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, sanitizedIds);
         startService(new Intent(this, MediaDeleteService.class));
         if (mMediaGridFragment != null) {
-            mMediaGridFragment.clearCheckedItems();
+            mMediaGridFragment.clearSelectedItems();
             mMediaGridFragment.refreshMediaFromDB();
         }
     }

@@ -42,7 +42,6 @@ import java.util.Map;
  */
 public class MediaGridAdapter extends CursorAdapter {
     private MediaGridAdapterCallback mCallback;
-    private final ArrayList<String> mCheckedItems;
     private boolean mHasRetrievedAll;
     private boolean mIsRefreshing;
     private int mCursorDataCount;
@@ -54,6 +53,8 @@ public class MediaGridAdapter extends CursorAdapter {
     private boolean mIsCurrentBlogPhotonCapable;
     private ImageLoader mImageLoader;
     private Context mContext;
+    // Must be an ArrayList (order is important for galleries)
+    private ArrayList<String> mSelectedItems;
 
     public interface MediaGridAdapterCallback {
         public void fetchMoreData(int offset);
@@ -69,17 +70,15 @@ public class MediaGridAdapter extends CursorAdapter {
         LOCAL, NETWORK, PROGRESS, SPACER
     }
 
-    public MediaGridAdapter(Context context, Cursor c, int flags, ArrayList<String> checkedItems,
-                            ImageLoader imageLoader) {
+    public MediaGridAdapter(Context context, Cursor c, int flags, ImageLoader imageLoader) {
         super(context, c, flags);
         mContext = context;
-        mCheckedItems = checkedItems;
+        mSelectedItems = new ArrayList<String>();
         mLocalImageWidth = context.getResources().getDimensionPixelSize(R.dimen.media_grid_local_image_width);
         mInflater = LayoutInflater.from(context);
         mFilePathToCallbackMap = new HashMap<String, List<BitmapReadyCallback>>();
         mHandler = new Handler();
         setImageLoader(imageLoader);
-
         checkPhotonCapable();
     }
 
@@ -96,8 +95,8 @@ public class MediaGridAdapter extends CursorAdapter {
                 (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable());
     }
 
-    public ArrayList<String> getCheckedItems() {
-        return mCheckedItems;
+    public ArrayList<String> getSelectedItems() {
+        return mSelectedItems;
     }
 
     private static class GridViewHolder {
@@ -218,7 +217,7 @@ public class MediaGridAdapter extends CursorAdapter {
         }
 
         holder.frameLayout.setTag(mediaId);
-        holder.frameLayout.setChecked(mCheckedItems.contains(mediaId));
+        holder.frameLayout.setChecked(mSelectedItems.contains(mediaId));
 
         // resizing layout to fit nicely into grid view
         updateGridWidth(context, holder.frameLayout);
@@ -510,7 +509,11 @@ public class MediaGridAdapter extends CursorAdapter {
     }
 
     public void clearSelection() {
-        mCheckedItems.clear();
+        mSelectedItems.clear();
+    }
+
+    public boolean isItemSelected(String mediaId) {
+        return mSelectedItems.contains(mediaId);
     }
 
     public void setItemSelected(int position, boolean selected) {
@@ -518,13 +521,17 @@ public class MediaGridAdapter extends CursorAdapter {
         int columnIndex = cursor.getColumnIndex("mediaId");
         if (columnIndex != -1) {
             String mediaId = cursor.getString(columnIndex);
-            if (selected) {
-                mCheckedItems.add(mediaId);
-            } else {
-                mCheckedItems.remove(mediaId);
-            }
-            notifyDataSetChanged();
+            setItemSelected(mediaId, selected);
         }
+    }
+
+    public void setItemSelected(String mediaId, boolean selected) {
+        if (selected) {
+            mSelectedItems.add(mediaId);
+        } else {
+            mSelectedItems.remove(mediaId);
+        }
+        notifyDataSetChanged();
     }
 
     public void toggleItemSelected(int position) {
@@ -532,12 +539,17 @@ public class MediaGridAdapter extends CursorAdapter {
         int columnIndex = cursor.getColumnIndex("mediaId");
         if (columnIndex != -1) {
             String mediaId = cursor.getString(columnIndex);
-            if (mCheckedItems.contains(mediaId)) {
-                mCheckedItems.remove(mediaId);
+            if (mSelectedItems.contains(mediaId)) {
+                mSelectedItems.remove(mediaId);
             } else {
-                mCheckedItems.add(mediaId);
+                mSelectedItems.add(mediaId);
             }
             notifyDataSetChanged();
         }
+    }
+
+    public void setSelectedItems(ArrayList<String> selectedItems) {
+        mSelectedItems = selectedItems;
+        notifyDataSetChanged();
     }
 }
