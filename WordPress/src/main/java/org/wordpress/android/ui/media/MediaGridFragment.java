@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,6 +53,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
@@ -505,14 +507,13 @@ public class MediaGridFragment extends Fragment
         if (cursor != null && cursor.moveToFirst()) {
             mResultView.setVisibility(View.VISIBLE);
             setEmptyViewVisible(false);
-
-            SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM-yyyy");
+            SimpleDateFormat fmt = new SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(),
+                    "yyyy/MM/dd"));
             fmt.setCalendar(startDate);
             String formattedStart = fmt.format(startDate.getTime());
             String formattedEnd = fmt.format(endDate.getTime());
-
-            // TODO: replace hard-coded text with string resource
-            mResultView.setText("Displaying media from " + formattedStart + " to " + formattedEnd);
+            mResultView.setText(String.format(getString(R.string.media_gallery_date_range), formattedStart,
+                    formattedEnd));
             return cursor;
         } else {
             setEmptyViewVisible(true, R.string.media_empty_list_custom_date);
