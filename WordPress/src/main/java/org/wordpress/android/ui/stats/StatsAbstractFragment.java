@@ -47,6 +47,9 @@ public abstract class StatsAbstractFragment extends Fragment {
             case TAGS_AND_CATEGORIES:
                 fragment = new StatsTagsAndCategoriesFragment();
                 break;
+            case PUBLICIZE:
+                fragment = new StatsPublicizeFragment();
+                break;
         }
 
         Bundle args = new Bundle();

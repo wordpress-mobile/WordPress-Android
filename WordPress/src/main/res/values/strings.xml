@@ -375,6 +375,7 @@
     <string name="stats_view_video_plays">Video plays</string>
     <string name="stats_view_comments">Comments</string>
     <string name="stats_view_search_engine_terms">Search engine terms</string>
+    <string name="stats_view_publicize">Publicize</string>
 
     <!-- stats: label for the entries -->
     <string name="stats_entry_country">Country</string>
@@ -387,6 +388,7 @@
     <string name="stats_entry_top_commenter">Commenter</string>
     <string name="stats_entry_most_commented">Posts</string>
     <string name="stats_entry_search_engine_terms">Search</string>
+    <string name="stats_entry_publicize">Followers</string>
 
     <!-- stats: label for the totals -->
     <string name="stats_totals_views">Views</string>
@@ -394,23 +396,16 @@
     <string name="stats_totals_plays">Plays</string>
     <string name="stats_totals_comments">Comments</string>
     <string name="stats_totals_visitors">Visitors</string>
+    <string name="stats_totals_publicize">Followers</string>
 
     <!-- stats: views and visitors -->
     <string name="stats_visitors_and_views_header_today">Today</string>
     <string name="stats_visitors_and_views_header_best_ever">Best ever</string>
     <string name="stats_visitors_and_views_header_all_time">All time</string>
 
-    <!-- stats: totals, followers, and shares -->
-    <string name="stats_totals_followers_shares_header_content">Content</string>
-    <string name="stats_totals_followers_shares_header_followers">Followers</string>
-    <string name="stats_totals_followers_shares_header_includes_publicize" comment="part of the full string: _123 Followers (includes &lt;a href=..>Publicize&lt;a>)_ the %s replaced by &lt;a href=...>">includes %sPublicize</string>
-    <string name="stats_totals_followers_shares_header_shares">Shares</string>
-    <string name="stats_totals_followers_shares_label_posts">Posts</string>
-    <string name="stats_totals_followers_shares_label_categories">Categories</string>
-    <string name="stats_totals_followers_shares_label_tags">Tags</string>
-    <string name="stats_totals_followers_shares_label_blog">Blog</string>
-    <string name="stats_totals_followers_shares_label_comments">Comments</string>
-    <string name="stats_totals_followers_shares_label_shares">Shares</string>
+    <!-- stats: Publicize -->
+
+
 
     <!-- stats: comments summary -->
     <string name="stats_comments_summary_header_comments">COMMENTS</string>
@@ -448,6 +443,9 @@
     <string name="stats_empty_comments">No comments yet.</string>
     <string name="stats_empty_comments_desc">If you allow comments on your site, track your top commenters and discover what content sparks the liveliest conversations, based on the most recent 1,000 comments.</string>
     <string name="stats_bar_graph_empty">No stats available</string>
+    <string name="stats_empty_publicize">No posts followed.</string>
+    <string name="stats_empty_publicize_desc">Keep track of your followers from various social networking services using publicize.</string>
+
 
     <!-- invalid_url -->
     <string name="invalid_url_message">Check that the blog URL entered is valid</string>

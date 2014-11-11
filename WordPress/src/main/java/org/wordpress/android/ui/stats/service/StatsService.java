@@ -26,6 +26,7 @@ import org.wordpress.android.ui.stats.model.CommentsModel;
 import org.wordpress.android.ui.stats.model.FollowersModel;
 import org.wordpress.android.ui.stats.model.GeoviewsModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
+import org.wordpress.android.ui.stats.model.SingleItemModel;
 import org.wordpress.android.ui.stats.model.TagsModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.model.VideoPlaysModel;
@@ -51,7 +52,7 @@ public class StatsService extends Service {
     public static final String ARG_DATE = "stats_date";
     public static final String ARG_UPDATE_GRAPH = "stats_update_graph";
     public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS,
-        VIDEO_PLAYS, COMMENTS, FOLLOWERS, COMMENT_FOLLOWERS, TAGS_AND_CATEGORIES}
+        VIDEO_PLAYS, COMMENTS, FOLLOWERS, COMMENT_FOLLOWERS, TAGS_AND_CATEGORIES, PUBLICIZE}
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
@@ -246,6 +247,13 @@ public class StatsService extends Service {
                 statsNetworkRequests.add(restClientUtils.get(tagsPath, tagsListener, tagsListener));
                 broadcastSectionUpdating(StatsEndpointsEnum.TAGS_AND_CATEGORIES);
 
+                // Publicize
+                RestListener publicizeListener = new RestListener(StatsEndpointsEnum.PUBLICIZE, mServiceBlogId, mServiceRequestedTimeframe);
+                final String publicizePath = String.format("/sites/%s/stats/publicize", mServiceBlogId);
+                statsNetworkRequests.add(restClientUtils.get(publicizePath, publicizeListener, publicizeListener));
+                broadcastSectionUpdating(StatsEndpointsEnum.PUBLICIZE);
+
+
                 numberOfNetworkCalls = statsNetworkRequests.size();
             } // end run
         } .start();
@@ -364,12 +372,31 @@ public class StatsService extends Service {
                     break;
                 case TAGS_AND_CATEGORIES:
                     JSONArray outerTags = response.getJSONArray("tags");
+                    if (outerTags == null) {
+                        break;
+                    }
                     ArrayList<TagsModel> tagsParsed = new ArrayList<TagsModel>(outerTags.length());
                     for (int i = 0; i < outerTags.length(); i++) {
                         JSONObject current = outerTags.getJSONObject(i);
                         tagsParsed.add(new TagsModel(mRequestBlogId, current));
                     }
                     model = tagsParsed;
+                    break;
+                case PUBLICIZE:
+                    JSONArray services = response.getJSONArray("services");
+                    if (services == null || services.length() == 0) {
+                        break;
+                    }
+                    ArrayList<SingleItemModel> servicesParsed = new ArrayList<SingleItemModel>(services.length());
+                    for (int i = 0; i < services.length(); i++) {
+                        JSONObject current = services.getJSONObject(i);
+                        String serviceName = current.getString("service");
+                        int followers = current.getInt("followers");
+                        SingleItemModel currentItem = new SingleItemModel(mRequestBlogId, mServiceRequestedDate,
+                                null, serviceName, followers, null, null);
+                        servicesParsed.add(currentItem);
+                    }
+                    model = servicesParsed;
                     break;
             }
             return model;

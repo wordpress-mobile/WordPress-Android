@@ -15,4 +15,5 @@ public enum StatsViewType {
     VIDEO_PLAYS,
     COMMENTS,
     TAGS_AND_CATEGORIES,
+    PUBLICIZE,
 }
