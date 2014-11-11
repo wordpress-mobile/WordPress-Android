@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.ui.media.CheckableFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/deviceImageContentContainer"
     android:layout_width="fill_parent"
     android:layout_height="148dp"
@@ -19,7 +20,7 @@
         android:id="@+id/deviceImageContentTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="start|bottom"
         android:layout_marginBottom="8dp"
         android:paddingLeft="8dp"
         android:paddingTop="2dp"
@@ -31,4 +32,4 @@
         android:textSize="@dimen/text_sz_small"
         android:textColor="@color/media_gallery_grid_label" />
 
-</LinearLayout>
+</org.wordpress.android.ui.media.CheckableFrameLayout>
