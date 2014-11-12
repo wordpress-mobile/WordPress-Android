@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -16,7 +15,6 @@ import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
@@ -52,6 +50,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         implements ReaderInterfaces.FullScreenListener,
                    ReaderInterfaces.OnPostPopupListener {
 
+    private Toolbar mToolbar;
     private ReaderViewPager mViewPager;
     private ProgressBar mProgress;
 
@@ -69,14 +68,16 @@ public class ReaderPostPagerActivity extends ActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (isFullScreenSupported()) {
-            getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+            // TODO: this is broken in API 21 appcompat - revisit then investigate
+            // using setHideOnContentScrollEnabled
+            //supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -289,14 +290,15 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             return false;
         }
 
-        ActionBar actionBar = getSupportActionBar();
+        // TODO: toggle toolbar (currently broken in appcompat)
+        /*ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             if (enableFullScreen) {
                 actionBar.hide();
             } else {
                 actionBar.show();
             }
-        }
+        }*/
 
         mIsFullScreen = enableFullScreen;
         return true;
