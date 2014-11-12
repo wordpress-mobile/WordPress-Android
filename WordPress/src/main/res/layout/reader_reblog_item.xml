@@ -12,6 +12,7 @@
         android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_small"
+        android:layout_marginRight="@dimen/margin_medium"
         android:textStyle="bold" />
 
     <org.wordpress.android.widgets.WPTextView

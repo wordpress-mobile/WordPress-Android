@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:background="@color/grey_extra_light"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_extra_light">
+
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </android.support.v7.widget.Toolbar>
 
     <!-- content is wrapped in a scrollView so it will scroll up when the soft keyboard is shown -->
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
         android:fillViewport="true">
 
         <LinearLayout
@@ -19,19 +37,19 @@
             android:orientation="vertical">
 
             <include
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/layout_post_excerpt"
-                layout="@layout/reader_reblog_post_excerpt" />
+                layout="@layout/reader_reblog_post_excerpt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <org.wordpress.android.widgets.OpenSansEditText
                 android:id="@+id/edit_comment"
                 style="@style/ReaderEditText"
-                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_medium"
+                android:background="@color/white"
                 android:gravity="top"
                 android:hint="@string/reader_hint_reblog_comment"
                 android:inputType="textCapSentences|textMultiLine"
@@ -59,14 +77,14 @@
         android:id="@+id/text_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/grey_medium_dark"
-        android:padding="@dimen/margin_extra_large"
         android:layout_marginLeft="@dimen/margin_extra_large"
         android:layout_marginRight="@dimen/margin_extra_large"
         android:gravity="center"
-        android:visibility="gone"
+        android:padding="@dimen/margin_extra_large"
         android:text="@string/reader_label_reblog_empty"
-        app:fixWidowWords="true"/>
+        android:textColor="@color/grey_medium_dark"
+        android:textSize="@dimen/text_sz_large"
+        android:visibility="gone"
+        app:fixWidowWords="true" />
 
 </RelativeLayout>

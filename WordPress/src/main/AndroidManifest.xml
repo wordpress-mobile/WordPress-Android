@@ -206,6 +206,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderReblogActivity"
+            android:theme="@style/Calypso.NoActionBar"
             android:label="@string/reader_title_reblog"
             android:windowSoftInputMode="stateHidden" />
         <activity

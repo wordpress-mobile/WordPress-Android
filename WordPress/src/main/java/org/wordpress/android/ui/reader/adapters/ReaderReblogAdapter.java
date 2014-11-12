@@ -119,7 +119,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
         final TextView text;
         ReblogHolder(View view, boolean isLandscape) {
             text = (TextView) view.findViewById(R.id.text);
-            if (isLandscape) {
+            if (isLandscape && view instanceof LinearLayout) {
                 ((LinearLayout) view).setOrientation(LinearLayout.HORIZONTAL);
             }
         }
