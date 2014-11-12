@@ -14,10 +14,6 @@
         app:showAsAction="ifRoom"
         android:title="@string/menu_search"/>
     <item
-        android:id="@+id/menu_delete"
-        app:showAsAction="never"
-        android:title="@string/delete"/>
-    <item
         android:id="@+id/menu_refresh"
         app:showAsAction="never"
         android:title="@string/refresh"/>
