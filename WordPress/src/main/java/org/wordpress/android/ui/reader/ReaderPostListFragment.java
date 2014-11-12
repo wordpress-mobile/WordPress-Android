@@ -375,7 +375,7 @@ public class ReaderPostListFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
 
         setHasOptionsMenu(true);
-        checkToolbar();
+        setupToolbar();
 
         // assign the post list adapter
         boolean adapterAlreadyExists = hasPostAdapter();
@@ -411,7 +411,7 @@ public class ReaderPostListFragment extends Fragment
         // only followed tag list has a menu
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             inflater.inflate(R.menu.reader_native, menu);
-            checkToolbar();
+            setupToolbar();
         }
     }
 
@@ -541,12 +541,12 @@ public class ReaderPostListFragment extends Fragment
     /*
      * ensures that the toolbar is correctly configured based on the type of list
      */
-    private void checkToolbar() {
-        if (!isAdded()) return;
-
+    private void setupToolbar() {
+        if (!isAdded() || !(getActivity() instanceof ActionBarActivity)) {
+            return;
+        }
         final android.support.v7.app.ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-        final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        if (actionBar == null || toolbar == null) {
+        if (actionBar == null) {
             return;
         }
 
@@ -554,38 +554,49 @@ public class ReaderPostListFragment extends Fragment
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(false);
             if (mSpinner == null) {
-                mSpinner = new Spinner(getActivity());
-                toolbar.addView(mSpinner);
-                mSpinner.setAdapter(getSpinnerAdapter());
-                mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        final ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(position);
-                        if (tag == null) {
-                            return;
-                        }
-                        if (!isCurrentTag(tag)) {
-                            Map<String, String> properties = new HashMap<String, String>();
-                            properties.put("tag", tag.getTagName());
-                            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
-                            if (tag.getTagName().equals(ReaderTag.TAG_NAME_FRESHLY_PRESSED)) {
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
-                            }
-                        }
-                        setCurrentTag(tag);
-                        AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        // nop
-                    }
-                });
+                setupSpinner();
             }
         } else {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private void setupSpinner() {
+        if (!isAdded()) return;
+
+        final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        if (toolbar == null) {
+            return;
+        }
+
+        mSpinner = new Spinner(getActivity());
+        toolbar.addView(mSpinner);
+        mSpinner.setAdapter(getSpinnerAdapter());
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                final ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(position);
+                if (tag == null) {
+                    return;
+                }
+                if (!isCurrentTag(tag)) {
+                    Map<String, String> properties = new HashMap<String, String>();
+                    properties.put("tag", tag.getTagName());
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
+                    if (tag.getTagName().equals(ReaderTag.TAG_NAME_FRESHLY_PRESSED)) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
+                    }
+                }
+                setCurrentTag(tag);
+                AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // nop
+            }
+        });
     }
 
     private void startBoxAndPagesAnimation() {
