@@ -375,7 +375,7 @@ public class ReaderPostListFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
 
         setHasOptionsMenu(true);
-        setupToolbar();
+        setupActionBar();
 
         // assign the post list adapter
         boolean adapterAlreadyExists = hasPostAdapter();
@@ -411,18 +411,7 @@ public class ReaderPostListFragment extends Fragment
         // only followed tag list has a menu
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             inflater.inflate(R.menu.reader_native, menu);
-            setupToolbar();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_tags:
-                ReaderActivityLauncher.showReaderSubsForResult(getActivity());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            setupActionBar();
         }
     }
 
@@ -541,7 +530,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * ensures that the toolbar is correctly configured based on the type of list
      */
-    private void setupToolbar() {
+    private void setupActionBar() {
         if (!isAdded() || !(getActivity() instanceof ActionBarActivity)) {
             return;
         }

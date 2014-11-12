@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.MenuItem;
+import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -51,6 +53,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createMenuDrawer(R.layout.reader_activity_post_list);
         readIntent(getIntent(), savedInstanceState);
     }
 
@@ -65,11 +68,15 @@ public class ReaderPostListActivity extends WPDrawerActivity
             mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
         }
 
-        // no menu drawer if this is blog preview or tag preview
-        if (mPostListType.isPreviewType()) {
-            setContentView(R.layout.reader_activity_post_list);
-        } else {
-            createMenuDrawer(R.layout.reader_activity_post_list);
+        // hide drawer toggle and enable back arrow click if this is blog preview or tag preview
+        if (mPostListType.isPreviewType() && mDrawerToggle != null) {
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
+            mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
         }
 
         switch (mPostListType) {
@@ -155,6 +162,20 @@ public class ReaderPostListActivity extends WPDrawerActivity
                 super.onBackPressed();
             }
         //}
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_tags:
+                ReaderActivityLauncher.showReaderSubsForResult(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
