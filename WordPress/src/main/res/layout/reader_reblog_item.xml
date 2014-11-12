@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -7,15 +8,17 @@
     <org.wordpress.android.widgets.WPTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/margin_medium"
-        android:textSize="@dimen/text_sz_small"
+        android:text="@string/reader_label_reblog_to"
         android:textAllCaps="true"
-        android:textStyle="bold"
-        android:text="@string/reader_label_reblog_to" />
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_small"
+        android:textStyle="bold" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_sz_medium" />
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="blog name" />
 </LinearLayout>
