@@ -32,17 +32,15 @@ public class PullToRefreshHelper implements OnRefreshListener {
     private RefreshListener mRefreshListener;
     private WeakReference<Activity> mActivityRef;
 
+    public interface RefreshListener {
+        public void onRefreshStarted();
+    }
+
     public PullToRefreshHelper(Activity activity, SwipeRefreshLayout swipeRefreshLayout, RefreshListener listener) {
-        init(activity, swipeRefreshLayout, listener, null);
+        init(activity, swipeRefreshLayout, listener);
     }
 
-    public PullToRefreshHelper(Activity activity, SwipeRefreshLayout swipeRefreshLayout, RefreshListener listener,
-                               java.lang.Class<?> viewClass) {
-        init(activity, swipeRefreshLayout, listener, viewClass);
-    }
-
-    public void init(Activity activity, SwipeRefreshLayout swipeRefreshLayout, RefreshListener listener,
-                     java.lang.Class<?> viewClass) {
+    public void init(Activity activity, SwipeRefreshLayout swipeRefreshLayout, RefreshListener listener) {
         mActivityRef = new WeakReference<Activity>(activity);
         mRefreshListener = listener;
         mSwipeRefreshLayout = swipeRefreshLayout;
@@ -65,10 +63,6 @@ public class PullToRefreshHelper implements OnRefreshListener {
     @Override
     public void onRefresh() {
         mRefreshListener.onRefreshStarted();
-    }
-
-    public interface RefreshListener {
-        public void onRefreshStarted();
     }
 
     public void setEnabled(boolean enabled) {
