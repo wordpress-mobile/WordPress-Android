@@ -5,8 +5,13 @@
     android:layout_height="wrap_content"
     android:background="@color/white">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
+        android:layout_below="@+id/toolbar"
         android:layout_above="@+id/divider_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

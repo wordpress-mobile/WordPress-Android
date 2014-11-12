@@ -14,10 +14,6 @@
         <item name="android:windowIsTranslucent">false</item>
     </style>
 
-    <style name="ReaderTheme.TranslucentActivity" parent="ReaderTheme">
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
-
     <!-- window animations -->
     <style name="ReaderAnimation" />
     <style name="ReaderAnimation.ReaderPopup">

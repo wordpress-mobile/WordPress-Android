@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
@@ -16,6 +15,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -97,11 +97,10 @@ public class ReaderSubsActivity extends ActionBarActivity
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(getPageAdapter());
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pager_tabs);
         tabStrip.setTabIndicatorColorResource(R.color.blue_medium);
