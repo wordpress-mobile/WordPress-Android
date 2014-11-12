@@ -24,7 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -40,7 +40,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
 
-public class NotificationsActivity extends WPActionBarActivity implements CommentActions.OnNoteCommentActionListener,
+public class NotificationsActivity extends WPDrawerActivity implements CommentActions.OnNoteCommentActionListener,
         CommentActions.OnCommentChangeListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";

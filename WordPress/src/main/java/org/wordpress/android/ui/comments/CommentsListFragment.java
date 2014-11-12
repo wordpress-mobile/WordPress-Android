@@ -25,7 +25,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -334,8 +334,8 @@ public class CommentsListFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // enable CAB if it's not already enabled
                 if (mActionMode == null) {
-                    if (getActivity() instanceof WPActionBarActivity) {
-                        ((WPActionBarActivity) getActivity()).startActionMode(new ActionModeCallback());
+                    if (getActivity() instanceof WPDrawerActivity) {
+                        ((WPDrawerActivity) getActivity()).startActionMode(new ActionModeCallback());
                         getCommentAdapter().setEnableSelection(true);
                         getCommentAdapter().setItemSelected(position, true, view);
                     }

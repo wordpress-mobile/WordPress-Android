@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.wordpress.android.R;
@@ -17,7 +16,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostSelectedListener;
@@ -40,7 +39,7 @@ import javax.annotation.Nonnull;
  * this activity serves as the host for ReaderPostListFragment
  */
 
-public class ReaderPostListActivity extends WPActionBarActivity
+public class ReaderPostListActivity extends WPDrawerActivity
                                     implements OnPostSelectedListener,
                                                OnTagSelectedListener {
 

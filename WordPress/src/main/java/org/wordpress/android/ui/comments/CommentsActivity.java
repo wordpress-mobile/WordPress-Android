@@ -20,7 +20,7 @@ import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
@@ -29,7 +29,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
 
-public class CommentsActivity extends WPActionBarActivity
+public class CommentsActivity extends WPDrawerActivity
         implements OnCommentSelectedListener,
                    NotificationFragment.OnPostClickListener,
                    CommentActions.OnCommentActionListener,

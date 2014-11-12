@@ -72,7 +72,7 @@ import java.util.Map;
 /**
  * Base class for Activities that include a standard action bar and menu drawer.
  */
-public abstract class WPActionBarActivity extends ActionBarActivity {
+public abstract class WPDrawerActivity extends ActionBarActivity {
     public static final int NEW_BLOG_CANCELED = 10;
 
     /**
@@ -261,7 +261,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
 
                 // if the item has an id, remember it for launch
                 if (item.hasItemId()) {
-                    ActivityId.trackLastActivity(WPActionBarActivity.this, item.getItemId());
+                    ActivityId.trackLastActivity(WPDrawerActivity.this, item.getItemId());
                 }
 
                 // only perform selection if the item isn't already selected
@@ -484,7 +484,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
     }
 
     private boolean askToSignInIfNot() {
-        if (!WordPress.isSignedIn(WPActionBarActivity.this)) {
+        if (!WordPress.isSignedIn(WPDrawerActivity.this)) {
             AppLog.d(T.NUX, "No accounts configured.  Sending user to set up an account");
             mShouldFinish = false;
             Intent intent = new Intent(this, SignInActivity.class);
@@ -506,7 +506,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
 
     private void showReader() {
         Intent intent;
-        intent = new Intent(WPActionBarActivity.this, ReaderPostListActivity.class);
+        intent = new Intent(WPDrawerActivity.this, ReaderPostListActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
@@ -607,7 +607,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {
                             AnalyticsTracker.refreshMetadata();
-                            WordPress.signOutAsyncWithProgressBar(WPActionBarActivity.this, new SignOutCallback() {
+                            WordPress.signOutAsyncWithProgressBar(WPDrawerActivity.this, new SignOutCallback() {
                                 @Override
                                 public void onSignOut() {
                                     refreshMenuDrawer();
@@ -673,7 +673,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
                 }
                 // if it has an item id save it to the preferences
                 if (item.hasItemId()) {
-                    ActivityId.trackLastActivity(WPActionBarActivity.this, item.getItemId());
+                    ActivityId.trackLastActivity(WPDrawerActivity.this, item.getItemId());
                 }
                 break;
             }
@@ -719,19 +719,19 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
 
         @Override
         public Boolean isVisible(){
-            return WordPress.hasValidWPComCredentials(WPActionBarActivity.this);
+            return WordPress.hasValidWPComCredentials(WPDrawerActivity.this);
         }
 
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof ReaderPostListActivity;
+            return WPDrawerActivity.this instanceof ReaderPostListActivity;
         }
         @Override
         public void onSelectItem(){
             if (!isSelected())
                 mShouldFinish = true;
             Intent intent;
-            intent = new Intent(WPActionBarActivity.this, ReaderPostListActivity.class);
+            intent = new Intent(WPDrawerActivity.this, ReaderPostListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
@@ -744,18 +744,18 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
 
         @Override
         public Boolean isSelected() {
-            WPActionBarActivity activity = WPActionBarActivity.this;
+            WPDrawerActivity activity = WPDrawerActivity.this;
             return (activity instanceof PostsActivity) && !(activity instanceof PagesActivity);
         }
 
         @Override
         public void onSelectItem() {
-            if (!(WPActionBarActivity.this instanceof PostsActivity)
-                    || (WPActionBarActivity.this instanceof PagesActivity)) {
+            if (!(WPDrawerActivity.this instanceof PostsActivity)
+                    || (WPDrawerActivity.this instanceof PagesActivity)) {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_POSTS);
             }
-            Intent intent = new Intent(WPActionBarActivity.this, PostsActivity.class);
+            Intent intent = new Intent(WPDrawerActivity.this, PostsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
@@ -771,15 +771,15 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         }
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof MediaBrowserActivity;
+            return WPDrawerActivity.this instanceof MediaBrowserActivity;
         }
         @Override
         public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof MediaBrowserActivity)) {
+            if (!(WPDrawerActivity.this instanceof MediaBrowserActivity)) {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
             }
-            Intent intent = new Intent(WPActionBarActivity.this, MediaBrowserActivity.class);
+            Intent intent = new Intent(WPDrawerActivity.this, MediaBrowserActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
@@ -795,17 +795,17 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         }
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof PagesActivity;
+            return WPDrawerActivity.this instanceof PagesActivity;
         }
         @Override
         public void onSelectItem(){
             if (WordPress.getCurrentBlog() == null)
                 return;
-            if (!(WPActionBarActivity.this instanceof PagesActivity)) {
+            if (!(WPDrawerActivity.this instanceof PagesActivity)) {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_PAGES);
             }
-            Intent intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
+            Intent intent = new Intent(WPDrawerActivity.this, PagesActivity.class);
             intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
@@ -824,17 +824,17 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         }
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof CommentsActivity;
+            return WPDrawerActivity.this instanceof CommentsActivity;
         }
         @Override
         public void onSelectItem(){
             if (WordPress.getCurrentBlog() == null)
                 return;
-            if (!(WPActionBarActivity.this instanceof CommentsActivity)) {
+            if (!(WPDrawerActivity.this instanceof CommentsActivity)) {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_COMMENTS);
             }
-            Intent intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
+            Intent intent = new Intent(WPDrawerActivity.this, CommentsActivity.class);
             intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -866,13 +866,13 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         }
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof ThemeBrowserActivity;
+            return WPDrawerActivity.this instanceof ThemeBrowserActivity;
         }
         @Override
         public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof ThemeBrowserActivity))
+            if (!(WPDrawerActivity.this instanceof ThemeBrowserActivity))
                 mShouldFinish = true;
-            Intent intent = new Intent(WPActionBarActivity.this, ThemeBrowserActivity.class);
+            Intent intent = new Intent(WPDrawerActivity.this, ThemeBrowserActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
@@ -892,7 +892,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         }
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof StatsActivity;
+            return WPDrawerActivity.this instanceof StatsActivity;
         }
         @Override
         public void onSelectItem(){
@@ -901,7 +901,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
             if (!isSelected())
                 mShouldFinish = true;
 
-            Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
+            Intent intent = new Intent(WPDrawerActivity.this, StatsActivity.class);
             intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
@@ -919,7 +919,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         @Override
         public void onSelectItem(){
             mShouldFinish = false;
-            Intent intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
+            Intent intent = new Intent(WPDrawerActivity.this, EditPostActivity.class);
             intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
                     ? Constants.QUICK_POST_PHOTO_CAMERA
                     : Constants.QUICK_POST_PHOTO_LIBRARY);
@@ -939,7 +939,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         @Override
         public void onSelectItem(){
             mShouldFinish = false;
-            Intent intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
+            Intent intent = new Intent(WPDrawerActivity.this, EditPostActivity.class);
             intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
                     ? Constants.QUICK_POST_VIDEO_CAMERA
                     : Constants.QUICK_POST_VIDEO_LIBRARY);
@@ -958,15 +958,15 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         }
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof ViewSiteActivity;
+            return WPDrawerActivity.this instanceof ViewSiteActivity;
         }
         @Override
         public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof ViewSiteActivity)) {
+            if (!(WPDrawerActivity.this instanceof ViewSiteActivity)) {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
             }
-            Intent intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
+            Intent intent = new Intent(WPDrawerActivity.this, ViewSiteActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
@@ -982,17 +982,17 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         }
         @Override
         public Boolean isVisible(){
-            return WordPress.hasValidWPComCredentials(WPActionBarActivity.this);
+            return WordPress.hasValidWPComCredentials(WPDrawerActivity.this);
         }
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof NotificationsActivity;
+            return WPDrawerActivity.this instanceof NotificationsActivity;
         }
         @Override
         public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof NotificationsActivity))
+            if (!(WPDrawerActivity.this instanceof NotificationsActivity))
                 mShouldFinish = true;
-            Intent intent = new Intent(WPActionBarActivity.this, NotificationsActivity.class);
+            Intent intent = new Intent(WPDrawerActivity.this, NotificationsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
@@ -1032,19 +1032,19 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
                 onSignout();
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS)) {
-                AuthenticationDialogUtils.showAuthErrorDialog(WPActionBarActivity.this);
+                AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this);
             }
             if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)
-                    && WPActionBarActivity.this instanceof NotificationsActivity) {
-                AuthenticationDialogUtils.showAuthErrorDialog(WPActionBarActivity.this, R.string.sign_in_again,
+                    && WPDrawerActivity.this instanceof NotificationsActivity) {
+                AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this, R.string.sign_in_again,
                         R.string.simperium_connection_error);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
                 // TODO: add a specific message like "you must use a specific app password"
-                AuthenticationDialogUtils.showAuthErrorDialog(WPActionBarActivity.this);
+                AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE)) {
-                SelfSignedSSLCertsManager.askForSslTrust(WPActionBarActivity.this);
+                SelfSignedSSLCertsManager.askForSslTrust(WPDrawerActivity.this);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT)) {
                 ToastUtils.showToast(context, R.string.limit_reached, Duration.LONG);

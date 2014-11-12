@@ -536,7 +536,7 @@ public class WordPress extends Application {
             appLock.setPassword(null);
         }
 
-        // send broadcast that user is signing out - this is received by WPActionBarActivity
+        // send broadcast that user is signing out - this is received by WPDrawerActivity
         // descendants
         sendLocalBroadcast(context, BROADCAST_ACTION_SIGNOUT);
     }

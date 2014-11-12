@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Activity to view the WordPress blog in a WebView
  */
-public class ViewSiteActivity extends WPActionBarActivity {
+public class ViewSiteActivity extends WPDrawerActivity {
     /**
      * Blog for which this activity is loading content.
      */

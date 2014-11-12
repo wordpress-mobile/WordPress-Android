@@ -28,7 +28,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.HorizontalTabView;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragmentCallback;
 import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragmentCallback;
@@ -47,7 +47,7 @@ import java.util.ArrayList;
 /**
  * The theme browser. Accessible via side menu drawer.
  */
-public class ThemeBrowserActivity extends WPActionBarActivity implements
+public class ThemeBrowserActivity extends WPDrawerActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback,
         TabListener {
     private HorizontalTabView mTabView;

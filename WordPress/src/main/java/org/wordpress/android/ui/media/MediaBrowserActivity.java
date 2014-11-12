@@ -34,7 +34,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
@@ -55,7 +55,7 @@ import java.util.List;
  * Accessible via the menu drawer as "Media"
  */
 
-public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener,
+public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridListener,
         MediaItemFragmentCallback, SearchView.OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback,
         MediaAddFragmentCallback,
         ActionMode.Callback {

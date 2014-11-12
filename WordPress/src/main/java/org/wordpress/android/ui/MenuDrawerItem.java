@@ -1,5 +1,5 @@
 /**
- * Represents a single item in the WPActionBarActivity's menu drawer. A MenuDrawerItem determines
+ * Represents a single item in the WPDrawerActivity's menu drawer. A MenuDrawerItem determines
  * the label and icon to use in the menu, its presence in the menu, its selection state, and the
  * action that happens when the item is selected.
  */
