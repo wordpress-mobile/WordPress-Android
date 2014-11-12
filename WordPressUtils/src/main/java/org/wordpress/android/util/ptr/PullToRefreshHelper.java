@@ -47,13 +47,11 @@ public class PullToRefreshHelper implements OnRefreshListener {
         mRefreshListener = listener;
         mSwipeRefreshLayout = swipeRefreshLayout;
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        final TypedArray styleAttrs = obtainStyledAttrsFromThemeAttr(activity, R.attr.refreshIndicatorColor,
+        final TypedArray styleAttrs = obtainStyledAttrsFromThemeAttr(activity, R.attr.swipeToRefreshStyle,
                 R.styleable.RefreshIndicator);
         int color = styleAttrs.getColor(R.styleable.RefreshIndicator_refreshIndicatorColor,
                 android.R.color.holo_blue_dark);
-        mSwipeRefreshLayout.setProgressBackgroundColor(color);
-        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.white, android.R.color.white, android.R.color.white,
-                android.R.color.white);
+        mSwipeRefreshLayout.setColorSchemeColors(color, color, color, color);
     }
 
     public void setRefreshing(boolean refreshing) {
