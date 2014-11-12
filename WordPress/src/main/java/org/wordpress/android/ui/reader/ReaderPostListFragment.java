@@ -556,6 +556,7 @@ public class ReaderPostListFragment extends Fragment
             if (mSpinner == null) {
                 setupSpinner();
             }
+            selectTagInSpinner(getCurrentTag());
         } else {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -1142,7 +1143,16 @@ public class ReaderPostListFragment extends Fragment
     private ReaderTagSpinnerAdapter getSpinnerAdapter() {
         if (mSpinnerAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating spinner adapter");
-            mSpinnerAdapter = new ReaderTagSpinnerAdapter(getActivity());
+            ReaderInterfaces.DataLoadedListener dataListener = new ReaderInterfaces.DataLoadedListener() {
+                @Override
+                public void onDataLoaded(boolean isEmpty) {
+                    if (isAdded()) {
+                        AppLog.d(T.READER, "reader post list > spinner adapter loaded");
+                        selectTagInSpinner(getCurrentTag());
+                    }
+                }
+            };
+            mSpinnerAdapter = new ReaderTagSpinnerAdapter(getActivity(), dataListener);
         }
 
         return mSpinnerAdapter;
@@ -1150,6 +1160,19 @@ public class ReaderPostListFragment extends Fragment
 
     private boolean hasSpinnerAdapter() {
         return (mSpinnerAdapter != null);
+    }
+
+    /*
+     * make sure the passed tag is the one selected in the spinner
+     */
+    private void selectTagInSpinner(final ReaderTag tag) {
+        if (mSpinner == null || !hasSpinnerAdapter()) {
+            return;
+        }
+        int position = getSpinnerAdapter().getIndexOfTag(tag);
+        if (position > -1 && position != mSpinner.getSelectedItemPosition()) {
+            mSpinner.setSelection(position);
+        }
     }
 
     /*

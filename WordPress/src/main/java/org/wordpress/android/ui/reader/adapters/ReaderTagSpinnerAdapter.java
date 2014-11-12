@@ -24,9 +24,6 @@ public class ReaderTagSpinnerAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private final ReaderInterfaces.DataLoadedListener mDataListener;
 
-    public ReaderTagSpinnerAdapter(Context context) {
-        this(context, null);
-    }
     public ReaderTagSpinnerAdapter(Context context, ReaderInterfaces.DataLoadedListener dataListener) {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDataListener = dataListener;
