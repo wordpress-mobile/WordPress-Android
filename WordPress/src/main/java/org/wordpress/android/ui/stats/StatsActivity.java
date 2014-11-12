@@ -48,8 +48,8 @@ import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
-import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -88,7 +88,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     private boolean mNoMenuDrawer = false;
     private int mLocalBlogID = -1;
     private boolean mIsUpdatingStats;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     private LinearLayout mFragmentContainer;
 
@@ -119,13 +119,13 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
+        // swipe to refresh setup
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
-                            mPullToRefreshHelper.setRefreshing(false);
+                            mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
                         refreshStats();
@@ -160,7 +160,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         // Refresh stats at startup if network and not on configuration changed
         if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
             refreshStats();
-            mPullToRefreshHelper.setRefreshing(true);
+            mSwipeToRefreshHelper.setRefreshing(true);
         }
 
         ScrollViewExt scrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
@@ -178,7 +178,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     @Override
     protected void onResume() {
         super.onResume();
-        mPullToRefreshHelper.registerReceiver(this);
+        mSwipeToRefreshHelper.registerReceiver(this);
         mIsInFront = true;
         // register to receive broadcasts when StatsService starts/stops updating
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
@@ -192,8 +192,8 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         mIsUpdatingStats = false;
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
-        mPullToRefreshHelper.setRefreshing(false);
-        mPullToRefreshHelper.unregisterReceiver(this);
+        mSwipeToRefreshHelper.setRefreshing(false);
+        mSwipeToRefreshHelper.unregisterReceiver(this);
     }
 
     @Override
@@ -271,7 +271,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                                 AnalyticsTracker.track(
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
-                                    mPullToRefreshHelper.setRefreshing(true);
+                                    mSwipeToRefreshHelper.setRefreshing(true);
                                     refreshStats();
                                 }
                             }
@@ -285,7 +285,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mPullToRefreshHelper.setRefreshing(false);
+                                    mSwipeToRefreshHelper.setRefreshing(false);
                                     ToastUtils.showToast(StatsActivity.this,
                                             StatsActivity.this.getString(R.string.error_refresh_stats),
                                             Duration.LONG);
@@ -296,7 +296,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                 } else {
                     refreshStats();
                 }
-                mPullToRefreshHelper.setRefreshing(true);
+                mSwipeToRefreshHelper.setRefreshing(true);
             }
         }
     }
@@ -439,14 +439,14 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             if (StatsUtils.getBlogId(mLocalBlogID) == null) {
                 // Blog has not returned a jetpack_client_id
                 stopStatsService();
-                mPullToRefreshHelper.setRefreshing(false);
+                mSwipeToRefreshHelper.setRefreshing(false);
                 showJetpackMissingAlert(this.mStatsActivityWeakRef.get());
             }
         }
 
         @Override
         public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             if (mStatsActivityWeakRef.get() == null || mStatsActivityWeakRef.get().isFinishing()
                     || !mStatsActivityWeakRef.get().mIsInFront) {
                 return;
@@ -579,7 +579,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         ft.commit();
 
-        mPullToRefreshHelper.setRefreshing(true);
+        mSwipeToRefreshHelper.setRefreshing(true);
         refreshStats();
     }
 
@@ -597,17 +597,17 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         if (currentBlog == null) {
             AppLog.w(T.STATS, "Current blog is null. This should never happen here.");
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             return;
         }
 
         if (!NetworkUtils.isNetworkAvailable(this)) {
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             return;
         }
 
         if (mIsUpdatingStats) {
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
             return;
         }
@@ -629,7 +629,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                     currentBlog.setDotcom_username(username);
                     currentBlog.setDotcom_password(password);
                     WordPress.wpDB.saveBlog(currentBlog);
-                    mPullToRefreshHelper.setRefreshing(true);
+                    mSwipeToRefreshHelper.setRefreshing(true);
                 } else {
                     startWPComLoginActivity();
                     return;
@@ -653,7 +653,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         if (!currentBlog.isDotcomFlag()
                 && !currentBlog.hasValidJetpackCredentials()
                 && !WordPress.hasValidWPComCredentials(this)) {
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
             return;
         }
@@ -668,7 +668,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         stopService(new Intent(this, StatsService.class));
         if (mIsUpdatingStats) {
             mIsUpdatingStats = false;
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
         }
     }
 
@@ -682,7 +682,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
                 mIsUpdatingStats = intent.getBooleanExtra(StatsService.EXTRA_IS_UPDATING, false);
                 if (!mIsUpdatingStats) {
-                    mPullToRefreshHelper.setRefreshing(false);
+                    mSwipeToRefreshHelper.setRefreshing(false);
                 }
 
                 // Check if there were errors

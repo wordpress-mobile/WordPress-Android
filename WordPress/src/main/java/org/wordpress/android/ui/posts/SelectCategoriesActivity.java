@@ -27,8 +27,8 @@ import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
-import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -46,7 +46,7 @@ public class SelectCategoriesActivity extends ActionBarActivity {
     private Blog blog;
     private ListView mListView;
     private ListScrollPositionManager mListScrollPositionManager;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private HashSet<String> mSelectedCategories;
     private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
@@ -103,13 +103,13 @@ public class SelectCategoriesActivity extends ActionBarActivity {
             mSelectedCategories = new HashSet<String>();
         }
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
+        // swipe to refresh setup
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
-                            mPullToRefreshHelper.setRefreshing(false);
+                            mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
                         refreshCategories();
@@ -145,7 +145,7 @@ public class SelectCategoriesActivity extends ActionBarActivity {
 
     final Runnable mUpdateResults = new Runnable() {
         public void run() {
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             if (finalResult.equals("addCategory_success")) {
                 populateCategoryList();
                 if (!isFinishing()) {
@@ -285,7 +285,7 @@ public class SelectCategoriesActivity extends ActionBarActivity {
 
                     // Check if the category name already exists
                     if (!mCategoryNames.keySet().contains(category_name)) {
-                        mPullToRefreshHelper.setRefreshing(true);
+                        mSwipeToRefreshHelper.setRefreshing(true);
                         Thread th = new Thread() {
                             public void run() {
                                 finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
@@ -322,8 +322,8 @@ public class SelectCategoriesActivity extends ActionBarActivity {
             saveAndFinish();
             return true;
         } else if (item.getItemId()  == R.id.menu_refresh) {
-            // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
-            WordPress.sendLocalBroadcast(this, PullToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
+            // Broadcast a refresh action, SwipeToRefreshHelper should trigger the default swipe to refresh action
+            WordPress.sendLocalBroadcast(this, SwipeToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
             return true;
         }
 
@@ -354,7 +354,7 @@ public class SelectCategoriesActivity extends ActionBarActivity {
     }
 
     private void refreshCategories() {
-        mPullToRefreshHelper.setRefreshing(true);
+        mSwipeToRefreshHelper.setRefreshing(true);
         mListScrollPositionManager.saveScrollOffset();
         updateSelectedCategoryList();
         Thread th = new Thread() {
@@ -381,13 +381,13 @@ public class SelectCategoriesActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mPullToRefreshHelper.unregisterReceiver(this);
+        mSwipeToRefreshHelper.unregisterReceiver(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mPullToRefreshHelper.registerReceiver(this);
+        mSwipeToRefreshHelper.registerReceiver(this);
     }
 
     private void updateSelectedCategoryList() {

@@ -12,7 +12,6 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -61,7 +60,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
@@ -397,7 +396,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
             }
 
             final TextView text = (TextView) view.findViewById(R.id.menu_text_dropdown);
-            text.setText((String)getItem(position));
+            text.setText((String) getItem(position));
 
             return view;
         }
@@ -639,8 +638,8 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
             if (!isFinishing())
                 dialogBuilder.create().show();
         } else if (item.getItemId()  == R.id.menu_refresh) {
-            // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
-            WordPress.sendLocalBroadcast(this, PullToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
+            // Broadcast a refresh action, SwipeToRefreshHelper should trigger the default swipe to refresh action
+            WordPress.sendLocalBroadcast(this, SwipeToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
         }
         return super.onOptionsItemSelected(item);
     }

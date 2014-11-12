@@ -53,8 +53,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
-import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.widgets.WPListView;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
 
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private WPListView mListView;
     private TextView mNewPostsBar;
     private View mEmptyView;
@@ -320,14 +320,14 @@ public class ReaderPostListFragment extends Fragment
         mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+        // swipe to refresh setup
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
                 (SwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
                         if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                            mPullToRefreshHelper.setRefreshing(false);
+                            mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
                         switch (getPostListType()) {
@@ -349,13 +349,13 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPullToRefreshHelper.registerReceiver(getActivity());
+        mSwipeToRefreshHelper.registerReceiver(getActivity());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mPullToRefreshHelper.unregisterReceiver(getActivity());
+        mSwipeToRefreshHelper.unregisterReceiver(getActivity());
     }
 
     @Override
@@ -994,8 +994,8 @@ public class ReaderPostListFragment extends Fragment
         return mIsUpdating;
     }
 
-    private boolean hasPullToRefresh() {
-        return (mPullToRefreshHelper != null);
+    private boolean hasSwipeToRefresh() {
+        return (mSwipeToRefreshHelper != null);
     }
 
     void setIsUpdating(boolean isUpdating, RequestDataAction updateAction) {
@@ -1012,8 +1012,8 @@ public class ReaderPostListFragment extends Fragment
                 }
                 break;
             default:
-                if (hasPullToRefresh()) {
-                    mPullToRefreshHelper.setRefreshing(isUpdating);
+                if (hasSwipeToRefresh()) {
+                    mSwipeToRefreshHelper.setRefreshing(isUpdating);
                 }
                 break;
         }

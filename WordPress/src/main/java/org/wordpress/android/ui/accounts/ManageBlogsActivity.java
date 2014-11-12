@@ -23,8 +23,8 @@ import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
-import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +32,7 @@ import java.util.Map;
 public class ManageBlogsActivity extends ListActivity {
     private List<Map<String, Object>> mAccounts;
     private ListScrollPositionManager mListScrollPositionManager;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,13 +46,13 @@ public class ManageBlogsActivity extends ListActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
+        // swipe to refresh setup
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
-                            mPullToRefreshHelper.setRefreshing(false);
+                            mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
                         new UpdateBlogTask(getApplicationContext()).execute();
@@ -98,7 +98,7 @@ public class ManageBlogsActivity extends ListActivity {
                 finish();
                 return true;
             case R.id.menu_refresh:
-                WordPress.sendLocalBroadcast(this, PullToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
+                WordPress.sendLocalBroadcast(this, SwipeToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -121,7 +121,7 @@ public class ManageBlogsActivity extends ListActivity {
     }
 
     private void refreshBlogs() {
-        mPullToRefreshHelper.setRefreshing(true);
+        mSwipeToRefreshHelper.setRefreshing(true);
         new UpdateBlogTask(getApplicationContext()).execute();
     }
 
@@ -170,19 +170,19 @@ public class ManageBlogsActivity extends ListActivity {
             mListScrollPositionManager.saveScrollOffset();
             loadAccounts();
             mListScrollPositionManager.restoreScrollOffset();
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mPullToRefreshHelper.unregisterReceiver(this);
+        mSwipeToRefreshHelper.unregisterReceiver(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mPullToRefreshHelper.registerReceiver(this);
+        mSwipeToRefreshHelper.registerReceiver(this);
     }
 }

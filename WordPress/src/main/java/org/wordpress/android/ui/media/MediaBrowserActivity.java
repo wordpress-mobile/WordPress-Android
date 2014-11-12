@@ -648,7 +648,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         MenuInflater inflater = mode.getMenuInflater();
         inflater.inflate(R.menu.media_multiselect, menu);
         if (mMediaGridFragment != null) {
-            mMediaGridFragment.setPullToRefreshEnabled(false);
+            mMediaGridFragment.setSwipeToRefreshEnabled(false);
         }
         return true;
     }
@@ -690,7 +690,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         mActionMode = null;
-        mMediaGridFragment.setPullToRefreshEnabled(true);
+        mMediaGridFragment.setSwipeToRefreshEnabled(true);
         cancelMultiSelect();
     }
 

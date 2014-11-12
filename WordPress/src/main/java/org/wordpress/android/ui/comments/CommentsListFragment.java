@@ -29,8 +29,8 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
-import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
@@ -45,7 +45,7 @@ public class CommentsListFragment extends Fragment {
     boolean mHasCheckedDeletedComments = false;
 
     private ProgressBar mProgressLoadMore;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ListView mListView;
     private View mEmptyView;
     private CommentAdapter mCommentAdapter;
@@ -146,7 +146,7 @@ public class CommentsListFragment extends Fragment {
 
         if (!mHasAutoRefreshedComments) {
             updateComments(false);
-            mPullToRefreshHelper.setRefreshing(true);
+            mSwipeToRefreshHelper.setRefreshing(true);
             mHasAutoRefreshedComments = true;
         }
     }
@@ -181,14 +181,14 @@ public class CommentsListFragment extends Fragment {
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress_loading);
         mProgressLoadMore.setVisibility(View.GONE);
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+        // swipe to refresh setup
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
                 (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
                         if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                            mPullToRefreshHelper.setRefreshing(false);
+                            mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
                         updateComments(false);
@@ -198,7 +198,7 @@ public class CommentsListFragment extends Fragment {
     }
 
     public void setRefreshing(boolean refreshing) {
-        mPullToRefreshHelper.setRefreshing(refreshing);
+        mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
     private void dismissDialog(int id) {
@@ -412,7 +412,7 @@ public class CommentsListFragment extends Fragment {
                 mRetryOnCancelled = false;
                 updateComments(false);
             } else {
-                mPullToRefreshHelper.setRefreshing(false);
+                mSwipeToRefreshHelper.setRefreshing(false);
             }
         }
 
@@ -469,7 +469,7 @@ public class CommentsListFragment extends Fragment {
             if (mIsLoadingMore) {
                 hideLoadingProgress();
             }
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
 
             if (isCancelled()) {
                 return;
@@ -557,7 +557,7 @@ public class CommentsListFragment extends Fragment {
             mActionMode = actionMode;
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.menu_comments_cab, menu);
-            mPullToRefreshHelper.setEnabled(false);
+            mSwipeToRefreshHelper.setEnabled(false);
             return true;
         }
 
@@ -620,7 +620,7 @@ public class CommentsListFragment extends Fragment {
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             getCommentAdapter().setEnableSelection(false);
-            mPullToRefreshHelper.setEnabled(true);
+            mSwipeToRefreshHelper.setEnabled(true);
             mActionMode = null;
         }
     }
@@ -628,12 +628,12 @@ public class CommentsListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPullToRefreshHelper.registerReceiver(getActivity());
+        mSwipeToRefreshHelper.registerReceiver(getActivity());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mPullToRefreshHelper.unregisterReceiver(getActivity());
+        mSwipeToRefreshHelper.unregisterReceiver(getActivity());
     }
 }

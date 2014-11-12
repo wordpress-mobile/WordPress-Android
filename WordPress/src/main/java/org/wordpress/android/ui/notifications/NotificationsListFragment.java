@@ -19,12 +19,12 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 
 import javax.annotation.Nonnull;
 
 public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
-    private PullToRefreshHelper mFauxPullToRefreshHelper;
+    private SwipeToRefreshHelper mFauxSwipeToRefreshHelper;
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
 
@@ -48,8 +48,8 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initPullToRefreshHelper();
-        mFauxPullToRefreshHelper.registerReceiver(getActivity());
+        initSwipeToRefreshHelper();
+        mFauxSwipeToRefreshHelper.registerReceiver(getActivity());
 
         // setup the initial notes adapter, starts listening to the bucket
         mBucket = SimperiumUtils.getNotesBucket();
@@ -102,15 +102,15 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             mNotesAdapter.closeCursor();
         }
 
-        mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
+        mFauxSwipeToRefreshHelper.unregisterReceiver(getActivity());
         super.onDestroy();
     }
 
-    private void initPullToRefreshHelper() {
-        mFauxPullToRefreshHelper = new PullToRefreshHelper(
+    private void initSwipeToRefreshHelper() {
+        mFauxSwipeToRefreshHelper = new SwipeToRefreshHelper(
                 getActivity(),
                 (SwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
-                new PullToRefreshHelper.RefreshListener() {
+                new SwipeToRefreshHelper.RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
                         // Show a fake refresh animation for a few seconds
@@ -118,7 +118,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                             @Override
                             public void run() {
                                 if (isAdded()) {
-                                    mFauxPullToRefreshHelper.setRefreshing(false);
+                                    mFauxSwipeToRefreshHelper.setRefreshing(false);
                                 }
                             }
                         }, 2000);

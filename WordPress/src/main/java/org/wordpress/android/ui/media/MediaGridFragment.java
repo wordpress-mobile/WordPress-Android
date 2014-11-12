@@ -37,8 +37,8 @@ import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
-import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 
@@ -85,7 +85,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     private LinearLayout mEmptyView;
     private TextView mEmptyViewTitle;
     private CustomSpinner mSpinner;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     private int mOldMediaSyncOffset = 0;
 
@@ -171,14 +171,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
         });
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+        // swipe to refresh setup
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
                 (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
                         if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                            mPullToRefreshHelper.setRefreshing(false);
+                            mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
                         refreshMediaFromServer(0, false);
@@ -201,7 +201,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             if (isInMultiSelectMode) {
                 mListener.onMultiSelectChange(mCheckedItems.size());
                 onMultiSelectChange(mCheckedItems.size());
-                mPullToRefreshHelper.setEnabled(false);
+                mSwipeToRefreshHelper.setEnabled(false);
             }
             mGridView.setMultiSelectModeActive(isInMultiSelectMode);
         }
@@ -317,13 +317,13 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPullToRefreshHelper.registerReceiver(getActivity());
+        mSwipeToRefreshHelper.registerReceiver(getActivity());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mPullToRefreshHelper.unregisterReceiver(getActivity());
+        mSwipeToRefreshHelper.unregisterReceiver(getActivity());
     }
 
     @Override
@@ -389,7 +389,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                                     mGridView.setSelection(0);
                                 mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
-                                mPullToRefreshHelper.setRefreshing(false);
+                                mSwipeToRefreshHelper.setRefreshing(false);
                             }
                         });
                     }
@@ -416,7 +416,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                                 mIsRefreshing = false;
                                 mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
-                                mPullToRefreshHelper.setRefreshing(false);
+                                mSwipeToRefreshHelper.setRefreshing(false);
                             }
                         });
                     }
@@ -678,10 +678,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     }
 
     public void setRefreshing(boolean refreshing) {
-        mPullToRefreshHelper.setRefreshing(refreshing);
+        mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
-    public void setPullToRefreshEnabled(boolean enabled) {
-        mPullToRefreshHelper.setEnabled(enabled);
+    public void setSwipeToRefreshEnabled(boolean enabled) {
+        mSwipeToRefreshHelper.setEnabled(enabled);
     }
 }

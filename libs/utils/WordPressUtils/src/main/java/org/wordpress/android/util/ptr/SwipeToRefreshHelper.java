@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class PullToRefreshHelper implements OnRefreshListener {
+public class SwipeToRefreshHelper implements OnRefreshListener {
     public static final String BROADCAST_ACTION_REFRESH_MENU_PRESSED = "REFRESH_MENU_PRESSED";
     private static final String REFRESH_BUTTON_HIT_COUNT = "REFRESH_BUTTON_HIT_COUNT";
     private static final Set<Integer> TOAST_FREQUENCY = new HashSet<Integer>(Arrays.asList(1, 5, 10, 20, 40, 80, 160,
@@ -36,7 +36,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
         public void onRefreshStarted();
     }
 
-    public PullToRefreshHelper(Activity activity, SwipeRefreshLayout swipeRefreshLayout, RefreshListener listener) {
+    public SwipeToRefreshHelper(Activity activity, SwipeRefreshLayout swipeRefreshLayout, RefreshListener listener) {
         init(activity, swipeRefreshLayout, listener);
     }
 

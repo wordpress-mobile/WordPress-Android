@@ -42,7 +42,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -57,7 +57,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class StatsDetailsActivity extends WPActionBarActivity {
     private boolean mIsInFront;
     private boolean mIsUpdatingStats;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private String mStatsDate = null;
     private final Handler mHandler = new Handler();
     private int mAltRowColor;
@@ -112,13 +112,13 @@ public class StatsDetailsActivity extends WPActionBarActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
-                new PullToRefreshHelper.RefreshListener() {
+        // swipe to refresh setup
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
-                            mPullToRefreshHelper.setRefreshing(false);
+                            mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
                         refreshStats();
@@ -170,7 +170,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mPullToRefreshHelper.registerReceiver(this);
+        mSwipeToRefreshHelper.registerReceiver(this);
         mIsInFront = true;
         refreshStats();
     }
@@ -179,7 +179,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
     protected void onPause() {
         super.onPause();
         mIsInFront = false;
-        mPullToRefreshHelper.unregisterReceiver(this);
+        mSwipeToRefreshHelper.unregisterReceiver(this);
     }
 
     @Override
@@ -200,7 +200,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
         if (mStatsDate == null || currentBlog == null || !NetworkUtils.isNetworkAvailable(this)) {
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             int errorMessageId = (mStatsDate == null || currentBlog == null) ? R.string.error_refresh_stats
                     : R.string.connection_error;
             ToastUtils.showToast(this, this.getString(errorMessageId), ToastUtils.Duration.LONG);
@@ -244,7 +244,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
                 topPostsAndPagesPath, referrersPath, clicksPath, searchEngineTermsPath);
         restClientUtils.get(path, listener, listener);
         mIsUpdatingStats = true;
-        mPullToRefreshHelper.setRefreshing(true);
+        mSwipeToRefreshHelper.setRefreshing(true);
     }
 
     private class RestBatchCallListener implements RestRequest.Listener, RestRequest.ErrorListener {
@@ -273,7 +273,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
                 return;
             }
             mIsUpdatingStats = false;
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.d(AppLog.T.STATS, "The REST response: " + response.toString());
             // single background thread used to parse the response.
             ThreadPoolExecutor parseResponseExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
@@ -588,7 +588,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
                     mActivityRef.get().getString(R.string.error_refresh_stats),
                     ToastUtils.Duration.LONG);
             mIsUpdatingStats = false;
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
         }
     }
 
