@@ -10,13 +10,13 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.MultiSelectGridView;
-import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 
@@ -28,9 +28,9 @@ import java.util.List;
  * can choose a single image to embed into their post.
  */
 public class MediaGalleryPickerActivity extends Activity
-        implements MultiSelectListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
+        implements MultiChoiceModeListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
                    AdapterView.OnItemClickListener {
-    private MultiSelectGridView mGridView;
+    private GridView mGridView;
     private MediaGridAdapter mGridAdapter;
     private ActionMode mActionMode;
 
@@ -56,38 +56,38 @@ public class MediaGalleryPickerActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ArrayList<String> checkedItems = new ArrayList<String>();
+        ArrayList<String> selectedItems = new ArrayList<String>();
         mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
         mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
 
         ArrayList<String> prevSelectedItems = getIntent().getStringArrayListExtra(PARAM_SELECTED_IDS);
-        if( prevSelectedItems != null )
-            checkedItems.addAll(prevSelectedItems);
+        if (prevSelectedItems != null) {
+            selectedItems.addAll(prevSelectedItems);
+        }
 
         if (savedInstanceState != null) {
-            checkedItems.addAll(savedInstanceState.getStringArrayList(STATE_SELECTED_ITEMS));
+            selectedItems.addAll(savedInstanceState.getStringArrayList(STATE_SELECTED_ITEMS));
             mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
             mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
         }
 
         setContentView(R.layout.media_gallery_picker_layout);
-        mGridView = (MultiSelectGridView) findViewById(R.id.media_gallery_picker_gridview);
-        mGridView.setMultiSelectListener(this);
+        mGridView = (GridView) findViewById(R.id.media_gallery_picker_gridview);
+        mGridView.setMultiChoiceModeListener(this);
+        mGridView.setOnItemClickListener(this);
         if (mIsSelectOneItem) {
-            mGridView.setOnItemClickListener(this);
             setTitle(R.string.select_from_media_library);
-            mGridView.setHighlightSelectModeEnabled(false);
-            mGridView.setMultiSelectModeEnabled(false);
             ActionBar actionBar = getActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
         } else {
             mActionMode = startActionMode(this);
-            mActionMode.setTitle(checkedItems.size() + " selected");
-            mGridView.setMultiSelectModeActive(true);
+            mActionMode.setTitle(String.format(getString(R.string.cab_selected),
+                    mGridAdapter.getSelectedItems().size()));
         }
-        mGridAdapter = new MediaGridAdapter(this, null, 0, checkedItems, MediaImageLoader.getInstance());
+        mGridAdapter = new MediaGridAdapter(this, null, 0, MediaImageLoader.getInstance());
+        mGridAdapter.setSelectedItems(selectedItems);
         mGridAdapter.setCallback(this);
         mGridView.setAdapter(mGridAdapter);
     }
@@ -101,7 +101,7 @@ public class MediaGalleryPickerActivity extends Activity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putStringArrayList(STATE_SELECTED_ITEMS, mGridAdapter.getCheckedItems());
+        outState.putStringArrayList(STATE_SELECTED_ITEMS, mGridAdapter.getSelectedItems());
         outState.putStringArrayList(STATE_FILTERED_ITEMS, mFilteredItems);
         outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
     }
@@ -127,20 +127,24 @@ public class MediaGalleryPickerActivity extends Activity
     }
 
     @Override
-    public void onMultiSelectChange(int count) {
-        mActionMode.setTitle(count + " selected");
-        // stay always in multi-select mode, even when count reaches 0
-        if (count == 0 && !mIsSelectOneItem)
-            mGridView.setMultiSelectModeActive(true);
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (mIsSelectOneItem) {
+            // Single select, just finish the activity once an item is selected
+            mGridAdapter.setItemSelected(position, true);
+            Intent intent = new Intent();
+            intent.putStringArrayListExtra(RESULT_IDS, mGridAdapter.getSelectedItems());
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            mGridAdapter.toggleItemSelected(position);
+            mActionMode.setTitle(String.format(getString(R.string.cab_selected),
+                    mGridAdapter.getSelectedItems().size()));
+        }
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // Single select, just finish the activity once an item is selected
-        Intent intent = new Intent();
-        intent.putExtra(RESULT_IDS, mGridAdapter.getCheckedItems());
-        setResult(RESULT_OK, intent);
-        finish();
+    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+        mGridAdapter.setItemSelected(position, checked);
     }
 
     @Override
@@ -161,15 +165,16 @@ public class MediaGalleryPickerActivity extends Activity
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         Intent intent = new Intent();
-        intent.putExtra(RESULT_IDS, mGridAdapter.getCheckedItems());
+        intent.putStringArrayListExtra(RESULT_IDS, mGridAdapter.getSelectedItems());
         setResult(RESULT_OK, intent);
         finish();
     }
 
     @Override
     public void fetchMoreData(int offset) {
-        if (!mHasRetrievedAllMedia)
+        if (!mHasRetrievedAllMedia) {
             refreshMediaFromServer(offset);
+        }
     }
 
     @Override

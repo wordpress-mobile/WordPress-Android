@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.crypto.Cipher;
@@ -1547,10 +1548,11 @@ public class WordPressDB {
     }
 
     /** Mark media files for deletion without actually deleting them. **/
-    public void setMediaFilesMarkedForDelete(String blogId, List<String> ids) {
+    public void setMediaFilesMarkedForDelete(String blogId, Set<String> ids) {
         // This is for queueing up files to delete on the server
-        for (String id : ids)
+        for (String id : ids) {
             updateMediaUploadState(blogId, id, "delete");
+        }
     }
 
     /** Mark media files as deleted without actually deleting them **/
