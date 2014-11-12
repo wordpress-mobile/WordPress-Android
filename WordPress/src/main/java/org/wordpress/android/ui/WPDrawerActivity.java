@@ -45,6 +45,7 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
@@ -57,7 +58,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
@@ -90,17 +90,15 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private static final int AUTHENTICATE_REQUEST = 300;
 
     private static int[] blogIDs;
-    protected boolean isAnimatingRefreshButton;
-    protected boolean mShouldFinish;
+    private boolean isAnimatingRefreshButton;
+    private boolean mShouldFinish;
     private boolean mBlogSpinnerInitialized;
-    private boolean mReauthCanceled;
-    private boolean mNewBlogActivityRunning;
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     protected ActionBarDrawerToggle mDrawerToggle;
     private MenuAdapter mAdapter;
-    protected List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
+    protected final List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
     protected boolean mFirstLaunch = false;
@@ -163,7 +161,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed());
     }
 
-    protected void refreshMenuDrawer() {
+    void refreshMenuDrawer() {
         if (mAdapter == null) return;
         // the current blog may have changed while we were away
         setupCurrentBlog();
@@ -205,19 +203,13 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     /**
      * returns true if this is an extra-large device in landscape mode
      */
-    protected boolean isXLargeLandscape() {
+    boolean isXLargeLandscape() {
         return isXLarge() && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
 
-    protected boolean isXLarge() {
+    boolean isXLarge() {
         return ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) ==
                 Configuration.SCREENLAYOUT_SIZE_XLARGE);
-    }
-
-    protected boolean isLargeOrXLarge() {
-        int mask = (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK);
-        return (mask == Configuration.SCREENLAYOUT_SIZE_LARGE
-             || mask == Configuration.SCREENLAYOUT_SIZE_XLARGE);
     }
 
     public boolean isStaticMenuDrawer() {
@@ -330,7 +322,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     /*
      * update the blog names shown by the blog spinner
      */
-    protected void refreshBlogSpinner(String[] blogNames) {
+    void refreshBlogSpinner(String[] blogNames) {
         // spinner will be null if it's not supposed to be shown
         if (mBlogSpinner == null || mBlogSpinner.getAdapter() == null) {
             return;
@@ -344,7 +336,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      */
     private class BlogSpinnerAdapter extends BaseAdapter {
         private String[] mBlogNames;
-        private LayoutInflater mInflater;
+        private final LayoutInflater mInflater;
 
         BlogSpinnerAdapter(Context context, String[] blogNames) {
             super();
@@ -352,7 +344,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             mBlogNames = blogNames;
         }
 
-        protected void setBlogNames(String[] blogNames) {
+        void setBlogNames(String[] blogNames) {
             mBlogNames = blogNames;
             notifyDataSetChanged();
         }
@@ -467,7 +459,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      *
      * @return array of blog names
      */
-    protected static String[] getBlogNames() {
+    private static String[] getBlogNames() {
         List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
 
         int blogCount = accounts.size();
@@ -529,7 +521,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case ADD_ACCOUNT_REQUEST:
-                mNewBlogActivityRunning = false;
                 if (resultCode == RESULT_OK) {
                     // new blog has been added, so rebuild cache of blogs and setup current blog
                     getBlogNames();
@@ -564,7 +555,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 break;
             case AUTHENTICATE_REQUEST:
                 if (resultCode == RESULT_CANCELED) {
-                    mReauthCanceled = true;
                     Intent i = new Intent(this, SignInActivity.class);
                     startActivityForResult(i, ADD_ACCOUNT_REQUEST);
                 } else {
@@ -574,7 +564,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
     }
 
-    private OnItemSelectedListener mItemSelectedListener = new OnItemSelectedListener() {
+    private final OnItemSelectedListener mItemSelectedListener = new OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             // http://stackoverflow.com/questions/5624825/spinner-onitemselected-executes-when-it-is-not-suppose-to/5918177#5918177
@@ -843,15 +833,15 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         @Override
         public void configureView(View view){
             if (WordPress.getCurrentBlog() != null) {
-            TextView bagdeTextView = (TextView) view.findViewById(R.id.menu_row_badge);
+            TextView badgeTextView = (TextView) view.findViewById(R.id.menu_row_badge);
                 int commentCount = WordPress.getCurrentBlog().getUnmoderatedCommentCount();
                 if (commentCount > 0) {
-                    bagdeTextView.setVisibility(View.VISIBLE);
+                    badgeTextView.setVisibility(View.VISIBLE);
                 } else
                 {
-                    bagdeTextView.setVisibility(View.GONE);
+                    badgeTextView.setVisibility(View.GONE);
                 }
-                bagdeTextView.setText(String.valueOf(commentCount));
+                badgeTextView.setText(String.valueOf(commentCount));
             }
         }
         @Override
