@@ -140,15 +140,11 @@
 
         <!-- Stats Activities -->
         <activity android:name=".ui.stats.StatsActivity"
-                  android:theme="@style/Calypso.NoActionBar" >
-        </activity>
+                  android:theme="@style/Calypso.NoActionBar"/>
 
-        <activity android:name=".ui.WPWebViewActivity" >
-        </activity>
+        <activity android:name=".ui.WPWebViewActivity"/>
 
-        <activity android:name=".ui.stats.StatsDetailsActivity"
-                  android:theme="@style/Calypso.NoActionBar">
-        </activity>
+        <activity android:name=".ui.stats.StatsDetailsActivity"/>
 
         <!-- Media Activities -->
         <activity android:name=".ui.media.MediaBrowserActivity"

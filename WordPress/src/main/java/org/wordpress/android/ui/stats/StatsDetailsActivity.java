@@ -7,12 +7,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -36,11 +35,10 @@ import org.wordpress.android.models.StatsReferrer;
 import org.wordpress.android.models.StatsReferrerGroup;
 import org.wordpress.android.models.StatsSearchEngineTerm;
 import org.wordpress.android.models.StatsTopPostsAndPages;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 
@@ -54,7 +52,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * The native stats details activity, accessible when the user taps on a bar in the main chart.
  */
-public class StatsDetailsActivity extends WPActionBarActivity {
+public class StatsDetailsActivity extends ActionBarActivity {
     private boolean mIsInFront;
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -180,14 +178,6 @@ public class StatsDetailsActivity extends WPActionBarActivity {
         super.onPause();
         mIsInFront = false;
         mSwipeToRefreshHelper.unregisterReceiver(this);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.stats_details, menu);
-        return true;
     }
 
     private void refreshStats() {
