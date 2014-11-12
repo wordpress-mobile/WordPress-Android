@@ -700,7 +700,7 @@ public class PreferencesActivity extends PreferenceActivity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PreferencesActivity.this);
-            dialogBuilder.setTitle(getString(R.string.sign_out_confirm));
+            dialogBuilder.setMessage(getString(R.string.sign_out_confirm));
             dialogBuilder.setPositiveButton(R.string.yes,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,

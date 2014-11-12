@@ -651,7 +651,7 @@ public abstract class WPActionBarActivity extends Activity {
             startActivityForResult(i, SETTINGS_REQUEST);
         } else if (item.getItemId() == R.id.menu_signout) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            dialogBuilder.setTitle(getString(R.string.sign_out_confirm));
+            dialogBuilder.setMessage(getString(R.string.sign_out_confirm));
             dialogBuilder.setPositiveButton(R.string.yes,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
