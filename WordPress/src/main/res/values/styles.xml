@@ -322,6 +322,6 @@
     <style name="WordPress.Dialog" parent="Theme.AppCompat.Light.Dialog"/>
 
     <style name="WordPress.SwipeToRefresh">
-        <item name="refreshIndicatorColor">@color/blue_dark</item>
+        <item name="refreshIndicatorColor">@color/blue_new_kid</item>
     </style>
 </resources>
