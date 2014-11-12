@@ -188,20 +188,8 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
      * @param contentViewId {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(int contentViewId) {
-        ViewGroup layoutContainer = (ViewGroup)findViewById(R.id.activity_container);
+        ViewGroup layoutContainer = (ViewGroup) findViewById(R.id.activity_container);
         layoutContainer.addView(getLayoutInflater().inflate(contentViewId, null));
-
-        initMenuDrawer();
-    }
-
-    /**
-     * Create a menu drawer and attach it to the activity.
-     *
-     * @param contentView {@link View} of the main content for the activity.
-     */
-    protected void createMenuDrawer(View contentView) {
-        ViewGroup layoutContainer = (ViewGroup)findViewById(R.id.activity_container);
-        layoutContainer.addView(contentView);
 
         initMenuDrawer();
     }
