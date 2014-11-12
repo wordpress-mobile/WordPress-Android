@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -24,7 +23,6 @@ public class HelpActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
             initHelpshiftLayout();
         } else {

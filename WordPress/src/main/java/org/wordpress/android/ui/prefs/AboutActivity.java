@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -23,7 +21,6 @@ public class AboutActivity extends ActionBarActivity implements OnClickListener 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.about);
 
         WPTextView version = (WPTextView) findViewById(R.id.about_version);

@@ -63,23 +63,28 @@
             android:name=".ui.accounts.NewBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.accounts.HelpActivity"/>
+        <activity
+            android:name=".ui.accounts.HelpActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <!-- Preferences activities -->
-        <activity android:name=".ui.prefs.AboutActivity" />
+        <activity
+            android:name=".ui.prefs.AboutActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@android:style/Theme.Holo.Light" />
-        <activity android:name=".ui.prefs.LicensesActivity" />
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".ui.prefs.LicensesActivity"/>
         <activity
             android:name=".ui.prefs.PreferencesActivity"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@android:style/Theme.Holo.Light" />
-        <activity android:name=".ui.accounts.ManageBlogsActivity" />
+            android:theme="@android:style/Theme.Holo.Light"/>
+        <activity
+            android:name=".ui.accounts.ManageBlogsActivity"/>
 
-	<activity android:name=".networking.SSLCertsViewActivity" />
+        <activity android:name=".networking.SSLCertsViewActivity"/>
 
         <!-- Comments activities -->
         <activity
