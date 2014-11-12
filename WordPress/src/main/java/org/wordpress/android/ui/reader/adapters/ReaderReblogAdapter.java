@@ -105,7 +105,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         final ReblogHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.reader_actionbar_dropdown_item, parent, false);
+            convertView = mInflater.inflate(R.layout.reader_spinner_dropdown_item, parent, false);
             holder = new ReblogHolder(convertView, mIsLandscape);
             convertView.setTag(holder);
         } else {

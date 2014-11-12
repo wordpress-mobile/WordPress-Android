@@ -83,7 +83,6 @@
     <color name="reader_divider_grey">@color/grey_extra_light</color>
     <color name="reader_divider_blue">@color/blue_light</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
-    <color name="reader_actionbar_text">@color/grey_extra_light</color>
     <color name="reader_message_bar_blue">@color/semi_transparent_blue_medium</color>     <!-- blue_medium with alpha -->
     <color name="reader_message_bar_orange">#ccf1831e</color>       <!-- orange_medium with alpha -->
     <color name="reader_list_selector">#77c8eefc</color>            <!-- blue_extra_light with alpha -->

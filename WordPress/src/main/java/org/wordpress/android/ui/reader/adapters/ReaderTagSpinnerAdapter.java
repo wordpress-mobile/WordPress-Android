@@ -84,14 +84,14 @@ public class ReaderTagSpinnerAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ReaderTag tag = mTags.get(position);
-        final TagHolder holder;
+        final TagViewHolder holder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.reader_actionbar_item, parent, false);
-            holder = new TagHolder(convertView);
+            convertView = mInflater.inflate(R.layout.reader_spinner_item, parent, false);
+            holder = new TagViewHolder(convertView);
             convertView.setTag(holder);
         } else {
-            holder = (TagHolder) convertView.getTag();
+            holder = (TagViewHolder) convertView.getTag();
         }
 
         holder.textView.setText(tag.getCapitalizedTagName());
@@ -101,23 +101,23 @@ public class ReaderTagSpinnerAdapter extends BaseAdapter {
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         final ReaderTag tag = mTags.get(position);
-        final TagHolder holder;
+        final TagViewHolder holder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.reader_actionbar_dropdown_item, parent, false);
-            holder = new TagHolder(convertView);
+            convertView = mInflater.inflate(R.layout.reader_spinner_dropdown_item, parent, false);
+            holder = new TagViewHolder(convertView);
             convertView.setTag(holder);
         } else {
-            holder = (TagHolder) convertView.getTag();
+            holder = (TagViewHolder) convertView.getTag();
         }
 
         holder.textView.setText(tag.getCapitalizedTagName());
         return convertView;
     }
 
-    private class TagHolder {
+    private class TagViewHolder {
         private final TextView textView;
-        TagHolder(View view) {
+        TagViewHolder(View view) {
             textView = (TextView) view.findViewById(R.id.text);
         }
     }
