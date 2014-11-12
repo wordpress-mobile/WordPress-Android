@@ -183,8 +183,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                         }
                         refreshMediaFromServer(0, false);
                     }
-                }, LinearLayout.class);
-
+                });
         restoreState(savedInstanceState);
         setupSpinnerAdapter();
 
