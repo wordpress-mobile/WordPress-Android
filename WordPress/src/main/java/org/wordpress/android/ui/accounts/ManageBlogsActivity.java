@@ -1,16 +1,18 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.ActionBar;
-import android.app.ListActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
@@ -18,10 +20,10 @@ import android.widget.ListView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
@@ -29,10 +31,18 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import java.util.List;
 import java.util.Map;
 
-public class ManageBlogsActivity extends ListActivity {
+public class ManageBlogsActivity extends ActionBarActivity implements OnItemClickListener {
     private List<Map<String, Object>> mAccounts;
     private ListScrollPositionManager mListScrollPositionManager;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private ListView mListView;
+
+    protected ListView getListView() {
+        if (mListView == null) {
+            mListView = (ListView) findViewById(android.R.id.list);
+        }
+        return mListView;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +50,7 @@ public class ManageBlogsActivity extends ListActivity {
         setContentView(R.layout.empty_listview);
         mListScrollPositionManager = new ListScrollPositionManager(getListView(), false);
         setTitle(getString(R.string.blogs_visibility));
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -66,12 +76,12 @@ public class ManageBlogsActivity extends ListActivity {
         if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
             refreshBlogs();
         }
+        getListView().setOnItemClickListener(this);
     }
 
     @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        CheckedTextView checkedView = (CheckedTextView) v;
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        CheckedTextView checkedView = (CheckedTextView) view;
         checkedView.setChecked(!checkedView.isChecked());
         setItemChecked(position, checkedView.isChecked());
     }
