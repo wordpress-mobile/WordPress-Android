@@ -66,8 +66,8 @@ public class ReaderReblogActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mSpinner = new Spinner(this);
-        toolbar.addView(mSpinner);
+        View view = View.inflate(this, R.layout.reader_spinner, toolbar);
+        mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
         mSpinner.setAdapter(getReblogAdapter());
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

@@ -570,8 +570,8 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        mSpinner = new Spinner(getActivity());
-        toolbar.addView(mSpinner);
+        View view = View.inflate(getActivity(), R.layout.reader_spinner, toolbar);
+        mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
         mSpinner.setAdapter(getSpinnerAdapter());
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
