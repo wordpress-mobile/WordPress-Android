@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -40,7 +41,6 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
-import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
@@ -60,7 +60,7 @@ public class ReaderCommentListActivity extends Activity {
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
-    private WPListView mListView;
+    private ListView mListView;
     private SuggestionAutoCompleteText mEditComment;
     private ImageView mImgSubmitComment;
     private ViewGroup mCommentBox;
@@ -98,7 +98,7 @@ public class ReaderCommentListActivity extends Activity {
             }
         }
 
-        mListView = (WPListView) findViewById(android.R.id.list);
+        mListView = (ListView) findViewById(android.R.id.list);
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
