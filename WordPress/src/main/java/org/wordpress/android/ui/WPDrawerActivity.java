@@ -103,6 +103,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     protected final List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
+    private View mDrawerHeaderView;
     protected boolean mFirstLaunch = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -232,6 +233,11 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);
         mAdapter = new MenuAdapter(this);
 
+        // Remove header view if it exists already
+        if (mDrawerHeaderView != null) {
+            mDrawerListView.removeHeaderView(mDrawerHeaderView);
+        }
+
         String[] blogNames = getBlogNames();
         if (blogNames.length > 1) {
             addBlogSpinner(blogNames);
@@ -265,7 +271,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             }
         });
 
-
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.open_drawer,
                 R.string.close_drawer
@@ -291,6 +296,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout spinnerWrapper = (LinearLayout) layoutInflater.inflate(R.layout.blog_spinner, null);
         if (spinnerWrapper != null) {
+            mDrawerHeaderView = spinnerWrapper;
             spinnerWrapper.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -528,10 +534,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                     // new blog has been added, so rebuild cache of blogs and setup current blog
                     getBlogNames();
                     setupCurrentBlog();
-                    /*if (mMenuDrawer != null) {
+                    if (mDrawerListView != null) {
                         initMenuDrawer();
-                        mMenuDrawer.openMenu(false);
-                    }*/
+                    }
                     WordPress.registerForCloudMessaging(this);
                     // If logged in without blog, redirect to the Reader view
                     showReaderIfNoBlog();
@@ -541,7 +546,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 break;
             case SETTINGS_REQUEST:
                 // user returned from settings - skip if user signed out
-                if (/*mMenuDrawer != null && */resultCode != PreferencesActivity.RESULT_SIGNED_OUT) {
+                if (mDrawerListView != null && resultCode != PreferencesActivity.RESULT_SIGNED_OUT) {
                     // If we need to add or remove the blog spinner, init the drawer again
                     initMenuDrawer();
 
