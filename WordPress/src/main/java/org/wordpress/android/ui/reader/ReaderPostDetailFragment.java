@@ -681,7 +681,7 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtFollow;
 
         ImageView imgBtnReblog;
-        ImageView imgDropDown;
+        ImageView imgMore;
 
         WPNetworkImageView imgAvatar;
         ViewGroup layoutDetailHeader;
@@ -714,7 +714,7 @@ public class ReaderPostDetailFragment extends Fragment
             txtDateAndAuthor = (TextView) container.findViewById(R.id.text_date_and_author);
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
-            imgDropDown = (ImageView) container.findViewById(R.id.image_dropdown);
+            imgMore = (ImageView) container.findViewById(R.id.image_more);
 
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
 
@@ -829,8 +829,8 @@ public class ReaderPostDetailFragment extends Fragment
 
             // enable blocking the associated blog
             if (canBlockBlog()) {
-                imgDropDown.setVisibility(View.VISIBLE);
-                imgDropDown.setOnClickListener(new View.OnClickListener() {
+                imgMore.setVisibility(View.VISIBLE);
+                imgMore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (mOnPopupListener != null) {
@@ -839,7 +839,7 @@ public class ReaderPostDetailFragment extends Fragment
                     }
                 });
             } else {
-                imgDropDown.setVisibility(View.GONE);
+                imgMore.setVisibility(View.GONE);
             }
 
             // only show action buttons for WP posts

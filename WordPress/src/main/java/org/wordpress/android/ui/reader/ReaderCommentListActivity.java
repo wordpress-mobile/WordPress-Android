@@ -1,15 +1,20 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,23 +23,32 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
+import org.wordpress.android.ui.suggestion.service.SuggestionService;
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
-public class ReaderCommentListActivity extends ActionBarActivity {
+public class ReaderCommentListActivity extends Activity {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_TOPMOST_COMMENT_ID = "topmost_comment_id";
@@ -44,9 +58,11 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     private long mBlogId;
     private ReaderPost mPost;
     private ReaderCommentAdapter mCommentAdapter;
+    private SuggestionAdapter mSuggestionAdapter;
+    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     private WPListView mListView;
-    private EditText mEditComment;
+    private SuggestionAutoCompleteText mEditComment;
     private ImageView mImgSubmitComment;
     private ViewGroup mCommentBox;
 
@@ -62,7 +78,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_comment_list);
 
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -85,7 +101,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
 
         mListView = (WPListView) findViewById(android.R.id.list);
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
-        mEditComment = (EditText) mCommentBox.findViewById(R.id.edit_comment);
+        mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
 
         loadPost();
@@ -101,6 +117,38 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         }
 
         refreshComments();
+
+        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, (int)mBlogId);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions((int)mBlogId, this, mSuggestionServiceConnectionManager, mPost.isWP());
+        if (mSuggestionAdapter != null) {
+            mEditComment.setAdapter(mSuggestionAdapter);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(mReceiver, new IntentFilter(SuggestionService.ACTION_SUGGESTIONS_LIST_UPDATED));
+    }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int updatedBlogId = intent.getIntExtra(SuggestionService.SUGGESTIONS_LIST_UPDATED_EXTRA, 0);
+            // check if the updated suggestions are for the current blog and update the suggestions
+            if (updatedBlogId != 0 && mBlogId == updatedBlogId) {
+                List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite((int)mBlogId);
+                mSuggestionAdapter.setSuggestionList(suggestions);
+            }
+        }
+    };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
     private void setReplyToCommentId(long commentId) {
@@ -194,6 +242,13 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mSuggestionServiceConnectionManager.unbindFromService();
     }
 
     private boolean hasCommentAdapter() {
