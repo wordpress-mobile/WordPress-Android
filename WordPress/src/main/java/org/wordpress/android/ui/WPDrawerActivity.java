@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -443,14 +444,11 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      */
     @Override
     public void onBackPressed() {
-        /*if (mMenuDrawer != null) {
-            final int drawerState = mMenuDrawer.getDrawerState();
-            if (drawerState == MenuDrawer.STATE_OPEN || drawerState == MenuDrawer.STATE_OPENING) {
-                mMenuDrawer.closeMenu();
-                return;
-            }
-        }*/
-        super.onBackPressed();
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawers();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     /**
