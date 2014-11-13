@@ -406,30 +406,44 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = super.getView(position, convertView, parent);
+            final DrawerItemViewHolder holder;
+            if (convertView == null || !(convertView.getTag() instanceof DrawerItemViewHolder)) {
+                convertView = super.getView(position, convertView, parent);
+                holder = new DrawerItemViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (DrawerItemViewHolder) convertView.getTag();
+            }
+
             MenuDrawerItem item = getItem(position);
             boolean isSelected = item.isSelected();
 
-            TextView titleTextView = (TextView) view.findViewById(R.id.menu_row_title);
-            titleTextView.setText(item.getTitleRes());
-            titleTextView.setSelected(isSelected);
-
-            ImageView iconImageView = (ImageView) view.findViewById(R.id.menu_row_icon);
-            iconImageView.setImageResource(item.getIconRes());
-
-            // Hide the badge always
-            view.findViewById(R.id.menu_row_badge).setVisibility(View.GONE);
+            holder.txtTitle.setText(item.getTitleRes());
+            holder.txtTitle.setSelected(isSelected);
+            holder.imgIcon.setImageResource(item.getIconRes());
+            holder.txtBadge.setVisibility(View.GONE);
 
             if (isSelected) {
-                view.setBackgroundResource(R.color.md__itemBackground);
+                convertView.setBackgroundResource(R.color.md__itemBackground);
             } else {
-                view.setBackgroundResource(R.drawable.md_list_selector);
+                convertView.setBackgroundResource(R.drawable.md_list_selector);
             }
 
             // allow the drawer item to configure the view
-            item.configureView(view);
+            item.configureView(convertView);
 
-            return view;
+            return convertView;
+        }
+
+        private class DrawerItemViewHolder {
+            final TextView txtTitle;
+            final TextView txtBadge;
+            final ImageView imgIcon;
+            DrawerItemViewHolder(View view) {
+                txtTitle = (TextView) view.findViewById(R.id.menu_row_title);
+                imgIcon = (ImageView) view.findViewById(R.id.menu_row_icon);
+                txtBadge = (TextView) view.findViewById(R.id.menu_row_badge);
+            }
         }
     }
 
