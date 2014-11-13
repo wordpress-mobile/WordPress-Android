@@ -16,7 +16,7 @@
 
     <!-- Colors for menu drawer. -->
     <color name="md__background">@color/grey_extra_light</color>
-    <color name="md__background_selected">#CC2EA2CC</color>
+    <color name="md__background_selected">@color/blue_new_kid</color>
     <color name="md__shadowColor">#99000000</color>
     <color name="md__icon_tint">@color/grey_medium_dark</color>
     <color name="md__icon_tint_selected">@color/grey_extra_light</color>
