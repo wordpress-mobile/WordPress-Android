@@ -132,8 +132,8 @@
     <style name="MenuDrawerButton.Text">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
-        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/menu_drawer_text</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="MenuDrawerCommentBadge">

@@ -408,27 +408,25 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = super.getView(position, convertView, parent);
             MenuDrawerItem item = getItem(position);
+            boolean isSelected = item.isSelected();
 
             TextView titleTextView = (TextView) view.findViewById(R.id.menu_row_title);
             titleTextView.setText(item.getTitleRes());
+            titleTextView.setSelected(isSelected);
 
             ImageView iconImageView = (ImageView) view.findViewById(R.id.menu_row_icon);
             iconImageView.setImageResource(item.getIconRes());
+
             // Hide the badge always
             view.findViewById(R.id.menu_row_badge).setVisibility(View.GONE);
 
-            if (item.isSelected()) {
-                // http://stackoverflow.com/questions/5890379/setbackgroundresource-discards-my-xml-layout-attributes
-                int bottom = view.getPaddingBottom();
-                int top = view.getPaddingTop();
-                int right = view.getPaddingRight();
-                int left = view.getPaddingLeft();
-                view.setBackgroundResource(R.color.blue_dark);
-                view.setPadding(left, top, right, bottom);
+            if (isSelected) {
+                view.setBackgroundResource(R.color.md__itemBackground);
             } else {
                 view.setBackgroundResource(R.drawable.md_list_selector);
             }
-            // allow the menudrawer item to configure the view
+
+            // allow the drawer item to configure the view
             item.configureView(view);
 
             return view;
@@ -830,12 +828,11 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         @Override
         public void configureView(View view){
             if (WordPress.getCurrentBlog() != null) {
-            TextView badgeTextView = (TextView) view.findViewById(R.id.menu_row_badge);
+                TextView badgeTextView = (TextView) view.findViewById(R.id.menu_row_badge);
                 int commentCount = WordPress.getCurrentBlog().getUnmoderatedCommentCount();
                 if (commentCount > 0) {
                     badgeTextView.setVisibility(View.VISIBLE);
-                } else
-                {
+                } else {
                     badgeTextView.setVisibility(View.GONE);
                 }
                 badgeTextView.setText(String.valueOf(commentCount));

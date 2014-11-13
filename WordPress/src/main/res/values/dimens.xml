@@ -12,8 +12,12 @@
     <dimen name="refresh_icon_padding">12dp</dimen>
     <dimen name="category_row_height">60dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
-	<dimen name="menu_drawer_width">250dp</dimen>
     <dimen name="toolbar_height">48dp</dimen>
+
+    <dimen name="menu_drawer_width">250dp</dimen>
+    <dimen name="menu_drawer_row_height">48dp</dimen>
+    <dimen name="menu_drawer_icon_size">28dp</dimen>
+    <dimen name="menu_drawer_badge_size">24dp</dimen>
 
 	<dimen name="media_grid_local_image_width">160dp</dimen>
 	<dimen name="media_grid_progress_height">50dp</dimen>

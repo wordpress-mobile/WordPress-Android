@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/menu_posts_btn"
     style="@style/MenuDrawerButton"
     android:layout_width="match_parent"
-    android:layout_height="52dp"
+    android:layout_height="@dimen/menu_drawer_row_height"
     android:orientation="horizontal"
-    android:paddingLeft="10dp"
-    android:gravity="center_vertical">
+    android:paddingLeft="@dimen/margin_large">
 
     <ImageView
         android:id="@+id/menu_row_icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/menu_drawer_icon_size"
+        android:layout_height="@dimen/menu_drawer_icon_size"
         android:clickable="false"
         android:contentDescription="@string/posts"
         android:scaleType="centerInside"
-        android:src="@drawable/dashicon_admin_post_black"
-        android:tint="@color/md__iconTintColor" />
+        android:tint="@color/md__iconTintColor"
+        tools:src="@drawable/dashicon_admin_post_black" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/menu_row_title"
         style="@style/MenuDrawerButton.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_medium"
         android:clickable="false"
-        android:text="@string/posts"
-        android:layout_marginLeft="10dp"/>
+        tools:text="@string/posts" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/menu_row_badge"
         style="@style/MenuDrawerCommentBadge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="24dp"
-        android:minHeight="24dp"
-        android:visibility="gone" />
+        android:minHeight="@dimen/menu_drawer_badge_size"
+        android:minWidth="@dimen/menu_drawer_badge_size"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </LinearLayout>
