@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
@@ -9,9 +10,9 @@
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/suggest_list_row_avatar"
-        android:gravity="center_vertical"
         android:layout_width="@dimen/avatar_sz_small"
-        android:layout_height="@dimen/avatar_sz_small" />
+        android:layout_height="@dimen/avatar_sz_small"
+        android:gravity="center_vertical" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/suggestion_list_row_user_login_label"
@@ -19,22 +20,24 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_weight="1"
+        android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:ellipsize="end"
         android:textColor="@color/calypso_blue_dark"
-        android:textSize="@dimen/text_sz_medium" />
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="user_login" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/suggestion_list_row_display_name_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_gravity="right|center_vertical"
-        android:gravity="center_vertical"
+        android:layout_weight="2"
+        android:ellipsize="end"
+        android:gravity="center_vertical|right"
         android:maxLines="1"
-        android:ellipsize="start"
         android:textColor="@color/calypso_blue"
-        android:textSize="@dimen/text_sz_medium" />
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="display_name" />
 
 </LinearLayout>
