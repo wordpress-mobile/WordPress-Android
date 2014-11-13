@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/MenuDrawerButton"
     android:layout_width="match_parent"
     android:layout_height="@dimen/menu_drawer_row_height"
     android:orientation="horizontal"
+    android:gravity="center_vertical"
     android:paddingLeft="@dimen/margin_large">
 
     <ImageView
@@ -19,7 +19,6 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/menu_row_title"
-        style="@style/MenuDrawerButton.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_medium"

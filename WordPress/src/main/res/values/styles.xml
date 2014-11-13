@@ -134,7 +134,7 @@
         <item name="android:background">@android:color/transparent</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
         <item name="android:textColor">@color/menu_drawer_text</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
     <style name="MenuDrawerCommentBadge">

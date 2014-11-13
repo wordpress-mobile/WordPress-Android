@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -18,8 +19,10 @@
         android:layout_width="@dimen/menu_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:choiceMode="singleChoice"
         android:background="@color/md__background"
+        android:choiceMode="singleChoice"
         android:divider="@null"
-        android:dividerHeight="0dp" />
+        android:dividerHeight="0dp"
+        tools:listheader="@layout/menu_drawer_header"
+        tools:listitem="@layout/menu_drawer_row" />
 </android.support.v4.widget.DrawerLayout>
