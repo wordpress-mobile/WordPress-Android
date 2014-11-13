@@ -75,6 +75,15 @@ public class CommentsActivity extends WPDrawerActivity
     }
 
     @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onBlogChanged() {
         // clear the backstack
         FragmentManager fm = getFragmentManager();

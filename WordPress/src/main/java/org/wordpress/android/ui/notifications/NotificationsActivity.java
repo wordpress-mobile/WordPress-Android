@@ -203,6 +203,15 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            popNoteDetail();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     void popNoteDetail() {
         FragmentManager fm = getFragmentManager();
         fm.popBackStack();

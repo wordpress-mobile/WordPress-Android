@@ -187,6 +187,15 @@ public class PostsActivity extends WPDrawerActivity
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            popPostDetail();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     protected void popPostDetail() {
         if (isFinishing()) {
             return;
