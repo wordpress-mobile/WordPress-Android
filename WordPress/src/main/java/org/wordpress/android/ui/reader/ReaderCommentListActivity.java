@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -47,7 +47,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class ReaderCommentListActivity extends Activity {
+public class ReaderCommentListActivity extends ActionBarActivity {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_TOPMOST_COMMENT_ID = "topmost_comment_id";
@@ -77,11 +77,10 @@ public class ReaderCommentListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_comment_list);
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
