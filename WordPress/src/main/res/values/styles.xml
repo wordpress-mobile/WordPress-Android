@@ -125,7 +125,7 @@
     </style>
 
     <style name="MenuDrawerButton">
-        <item name="android:background">@drawable/md_list_selector</item>
+        <item name="android:background">@color/md__background</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 

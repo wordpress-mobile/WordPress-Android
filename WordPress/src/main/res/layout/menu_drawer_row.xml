@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/menu_posts_btn"
     style="@style/MenuDrawerButton"
     android:layout_width="match_parent"
     android:layout_height="@dimen/menu_drawer_row_height"
@@ -15,7 +14,7 @@
         android:clickable="false"
         android:contentDescription="@string/posts"
         android:scaleType="centerInside"
-        android:tint="@color/md__iconTintColor"
+        android:tint="@color/md__icon_tint"
         tools:src="@drawable/dashicon_admin_post_black" />
 
     <org.wordpress.android.widgets.WPTextView

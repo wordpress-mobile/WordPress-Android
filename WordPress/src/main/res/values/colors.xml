@@ -15,10 +15,11 @@
     <color name="background_grey">@color/grey_extra_light</color>
 
     <!-- Colors for menu drawer. -->
-    <color name="md__defaultBackground">@color/grey_extra_light</color>
-    <color name="md__itemBackground">#CC2EA2CC</color>
-    <color name="md__iconTintColor">#DDFFFFFF</color>
+    <color name="md__background">@color/grey_extra_light</color>
+    <color name="md__background_selected">#CC2EA2CC</color>
     <color name="md__shadowColor">#99000000</color>
+    <color name="md__icon_tint">@color/grey_medium_dark</color>
+    <color name="md__icon_tint_selected">@color/grey_extra_light</color>
 
     <color name="wordpress_blue">#21759B</color>
 

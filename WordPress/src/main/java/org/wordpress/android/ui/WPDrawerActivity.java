@@ -400,50 +400,42 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     public static class MenuAdapter extends ArrayAdapter<MenuDrawerItem> {
+        final int iconTint;
+        final int iconTintSelected;
+
         MenuAdapter(Context context) {
             super(context, R.layout.menu_drawer_row, R.id.menu_row_title, new ArrayList<MenuDrawerItem>());
+            iconTint = context.getResources().getColor(R.color.md__icon_tint);
+            iconTintSelected = context.getResources().getColor(R.color.md__icon_tint_selected);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            final DrawerItemViewHolder holder;
-            if (convertView == null || !(convertView.getTag() instanceof DrawerItemViewHolder)) {
-                convertView = super.getView(position, convertView, parent);
-                holder = new DrawerItemViewHolder(convertView);
-                convertView.setTag(holder);
-            } else {
-                holder = (DrawerItemViewHolder) convertView.getTag();
-            }
+            final View view = super.getView(position, convertView, parent);
+            final TextView txtTitle = (TextView) view.findViewById(R.id.menu_row_title);
+            final TextView txtBadge = (TextView) view.findViewById(R.id.menu_row_badge);
+            final ImageView imgIcon = (ImageView) view.findViewById(R.id.menu_row_icon);
 
-            MenuDrawerItem item = getItem(position);
+            final MenuDrawerItem item = getItem(position);
             boolean isSelected = item.isSelected();
 
-            holder.txtTitle.setText(item.getTitleRes());
-            holder.txtTitle.setSelected(isSelected);
-            holder.imgIcon.setImageResource(item.getIconRes());
-            holder.txtBadge.setVisibility(View.GONE);
+            txtTitle.setText(item.getTitleRes());
+            txtTitle.setSelected(isSelected);
+            imgIcon.setImageResource(item.getIconRes());
+            txtBadge.setVisibility(View.GONE);
 
             if (isSelected) {
-                convertView.setBackgroundResource(R.color.md__itemBackground);
+                view.setBackgroundResource(R.color.md__background_selected);
+                imgIcon.setColorFilter(iconTintSelected);
             } else {
-                convertView.setBackgroundResource(R.drawable.md_list_selector);
+                view.setBackgroundResource(R.color.md__background);
+                imgIcon.setColorFilter(iconTint);
             }
 
             // allow the drawer item to configure the view
-            item.configureView(convertView);
+            item.configureView(view);
 
-            return convertView;
-        }
-
-        private class DrawerItemViewHolder {
-            final TextView txtTitle;
-            final TextView txtBadge;
-            final ImageView imgIcon;
-            DrawerItemViewHolder(View view) {
-                txtTitle = (TextView) view.findViewById(R.id.menu_row_title);
-                imgIcon = (ImageView) view.findViewById(R.id.menu_row_icon);
-                txtBadge = (TextView) view.findViewById(R.id.menu_row_badge);
-            }
+            return view;
         }
     }
 
