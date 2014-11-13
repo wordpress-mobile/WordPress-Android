@@ -51,7 +51,7 @@ public class ApiHelperTest extends InstrumentationTestCase {
         XMLRPCFactoryTest.setPrefixAllInstances("malformed-software-version");
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         Blog dummyBlog = new Blog("", "", "");
-        new ApiHelper.RefreshBlogContentTask(mTargetContext, dummyBlog, new GenericCallback() {
+        new ApiHelper.RefreshBlogContentTask(dummyBlog, new GenericCallback() {
             @Override
             public void onSuccess() {
                 assertTrue(true);
@@ -72,7 +72,7 @@ public class ApiHelperTest extends InstrumentationTestCase {
         XMLRPCFactoryTest.setPrefixAllInstances("empty");
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         Blog dummyBlog = new Blog("", "", "");
-        new ApiHelper.RefreshBlogContentTask(mTargetContext, dummyBlog, new GenericCallback() {
+        new ApiHelper.RefreshBlogContentTask(dummyBlog, new GenericCallback() {
             @Override
             public void onSuccess() {
                 assertTrue(false);
