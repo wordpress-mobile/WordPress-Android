@@ -80,8 +80,8 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(getResources().getString(R.string.notifications));
         }
-        setTitle(getResources().getString(R.string.notifications));
 
         fragmentManager.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mNotesListFragment.setOnNoteClickListener(new NoteClickListener());
