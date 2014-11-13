@@ -19,13 +19,13 @@ import java.util.List;
 
 public class SuggestionAdapter extends BaseAdapter implements Filterable {
     private final LayoutInflater mInflater;
-    private final Context mContext;
     private Filter mSuggestionFilter;
     private List<Suggestion> mSuggestionList;
     private List<Suggestion> mOrigSuggestionList;
+    private int mAvatarSz;
 
     public SuggestionAdapter(Context context) {
-        mContext = context;
+        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mInflater = LayoutInflater.from(context);
     }
 
@@ -51,7 +51,7 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -69,8 +69,7 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
         Suggestion suggestion = getItem(position);
 
         if (suggestion != null) {
-            int avatarSz = mContext.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
-            String avatarUrl = PhotonUtils.fixAvatar(suggestion.getImageUrl(), avatarSz);
+            String avatarUrl = PhotonUtils.fixAvatar(suggestion.getImageUrl(), mAvatarSz);
             holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             holder.txtUserLogin.setText("@" + suggestion.getUserLogin());
             holder.txtDisplayName.setText(suggestion.getDisplayName());
@@ -117,7 +116,9 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
                 List<Suggestion> nSuggestionList = new ArrayList<Suggestion>();
 
                 for (Suggestion suggestion : mOrigSuggestionList) {
-                    if (suggestion.getUserLogin().toLowerCase().startsWith(constraint.toString().toLowerCase()))
+                    String lowerCaseConstraint = constraint.toString().toLowerCase();
+                    if (suggestion.getUserLogin().toLowerCase().startsWith(lowerCaseConstraint)
+                            || suggestion.getDisplayName().toLowerCase().startsWith(lowerCaseConstraint))
                         nSuggestionList.add(suggestion);
                 }
 
