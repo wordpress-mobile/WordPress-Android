@@ -69,8 +69,8 @@ public class Note extends Syncable {
      * Simperium method @see Diffable
      */
     @Override
-    public JSONObject getDiffableValue() {
-        return mNoteJSON;
+    synchronized public JSONObject getDiffableValue() {
+        return JSONUtil.copyJSONObject(mNoteJSON);
     }
 
     /**
