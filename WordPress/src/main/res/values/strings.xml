@@ -634,6 +634,7 @@
     <string name="reader_btn_reblog">Reblog</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
+    <string name="reader_btn_got_it">Got it</string>
 
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Add your comment</string>
@@ -694,6 +695,9 @@
     <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
     <string name="reader_toast_err_block_blog">Unable to block this blog</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
+
+    <!-- tip messages -->
+    <string name="reader_tip_swipe_posts">Tip: swipe between posts</string>
 
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>

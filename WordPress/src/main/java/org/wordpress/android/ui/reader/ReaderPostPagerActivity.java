@@ -34,6 +34,8 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
+import org.wordpress.android.ui.reader.utils.ReaderTips;
+import org.wordpress.android.ui.reader.utils.ReaderTips.ReaderTipType;
 import org.wordpress.android.ui.reader.views.ReaderViewPager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -61,8 +63,10 @@ public class ReaderPostPagerActivity extends Activity
     private boolean mIsFullScreen;
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
+    private boolean mHasAlreadyLoaded;
 
     private static final String ARG_IS_SINGLE_POST = "is_single_post";
+    private static final String ARG_HAS_ALREADY_LOADED = "has_loaded";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,7 @@ public class ReaderPostPagerActivity extends Activity
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mIsSinglePostView = savedInstanceState.getBoolean(ARG_IS_SINGLE_POST);
+            mHasAlreadyLoaded = savedInstanceState.getBoolean(ARG_HAS_ALREADY_LOADED);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -135,6 +140,9 @@ public class ReaderPostPagerActivity extends Activity
                     if (fragment != null) {
                         fragment.pauseWebView();
                     }
+                    // don't show swipe tip in the future since user obviously knows how to swipe
+                    ReaderTips.setTipShown(ReaderTipType.READER_SWIPE_POSTS);
+                    ReaderTips.hideTip(ReaderPostPagerActivity.this);
                 }
             }
         });
@@ -167,6 +175,7 @@ public class ReaderPostPagerActivity extends Activity
     protected void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putString(ReaderConstants.ARG_TITLE, (String) this.getTitle());
         outState.putBoolean(ARG_IS_SINGLE_POST, mIsSinglePostView);
+        outState.putBoolean(ARG_HAS_ALREADY_LOADED, mHasAlreadyLoaded);
 
         if (hasCurrentTag()) {
             outState.putSerializable(ReaderConstants.ARG_TAG, getCurrentTag());
@@ -253,6 +262,11 @@ public class ReaderPostPagerActivity extends Activity
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
                         }
+                        // let user know they can swipe through posts the first time around
+                        if (!mHasAlreadyLoaded && idList.size() > 1) {
+                            ReaderTips.showTipDelayed(ReaderPostPagerActivity.this, ReaderTipType.READER_SWIPE_POSTS);
+                        }
+                        mHasAlreadyLoaded = true;
                     }
                 });
             }
@@ -592,7 +606,6 @@ public class ReaderPostPagerActivity extends Activity
                     break;
 
                 case BLOG_PREVIEW:
-
                     ReaderPostActions.requestPostsForBlog(
                             mBlogId,
                             null,

@@ -3,7 +3,7 @@
     android:fillAfter="true" >
     
     <alpha 
-        android:fromAlpha="1"
-        android:toAlpha="0"
+        android:fromAlpha="0"
+        android:toAlpha="1"
         android:duration="@android:integer/config_longAnimTime" />
 </set>
