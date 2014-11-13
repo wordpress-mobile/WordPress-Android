@@ -209,7 +209,8 @@
             android:label="@string/reader_title_reblog"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.reader.ReaderPhotoViewerActivity" />
+            android:name=".ui.reader.ReaderPhotoViewerActivity"
+            android:theme="@style/Calypso.NoActionBar" />
 
         <!-- Other activities -->
 
