@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -257,12 +256,6 @@ public class MediaGridFragment extends Fragment
         updateFilterText();
 
         Context context = getActivity();
-        ActionBar actionBar = getActivity().getActionBar();
-        if (actionBar != null) {
-            if (actionBar.getThemedContext() != null) {
-                context = getActivity().getActionBar().getThemedContext();
-            }
-        }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_menu_dropdown_item, mFiltersText);
         mSpinner.setAdapter(adapter);
         mSpinner.setSelection(mFilter.ordinal());
