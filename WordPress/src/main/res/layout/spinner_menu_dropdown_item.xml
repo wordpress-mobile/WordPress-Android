@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.wordpress.android.widgets.WPTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/menu_text_dropdown"
     style="?android:attr/spinnerDropDownItemStyle"
-    android:textColor="@color/white"
-    android:singleLine="true"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:ellipsize="marquee" />
+    android:layout_height="@dimen/toolbar_height"
+    android:ellipsize="marquee"
+    android:singleLine="true"
+    android:textColor="@color/menu_drawer_text"
+    tools:text="menu_text_dropdown" />

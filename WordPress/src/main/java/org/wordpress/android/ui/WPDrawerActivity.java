@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -107,7 +108,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_action_bar);
+        setContentView(R.layout.activity_drawer);
 
         setSupportActionBar(getToolbar());
 
@@ -400,35 +401,39 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     public static class MenuAdapter extends ArrayAdapter<MenuDrawerItem> {
+        final int iconTint;
+        final int iconTintSelected;
+
         MenuAdapter(Context context) {
             super(context, R.layout.menu_drawer_row, R.id.menu_row_title, new ArrayList<MenuDrawerItem>());
+            iconTint = context.getResources().getColor(R.color.md__icon_tint);
+            iconTintSelected = context.getResources().getColor(R.color.md__icon_tint_selected);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = super.getView(position, convertView, parent);
-            MenuDrawerItem item = getItem(position);
+            final View view = super.getView(position, convertView, parent);
+            final TextView txtTitle = (TextView) view.findViewById(R.id.menu_row_title);
+            final TextView txtBadge = (TextView) view.findViewById(R.id.menu_row_badge);
+            final ImageView imgIcon = (ImageView) view.findViewById(R.id.menu_row_icon);
 
-            TextView titleTextView = (TextView) view.findViewById(R.id.menu_row_title);
-            titleTextView.setText(item.getTitleRes());
+            final MenuDrawerItem item = getItem(position);
+            boolean isSelected = item.isSelected();
 
-            ImageView iconImageView = (ImageView) view.findViewById(R.id.menu_row_icon);
-            iconImageView.setImageResource(item.getIconRes());
-            // Hide the badge always
-            view.findViewById(R.id.menu_row_badge).setVisibility(View.GONE);
+            txtTitle.setText(item.getTitleRes());
+            txtTitle.setSelected(isSelected);
+            imgIcon.setImageResource(item.getIconRes());
+            txtBadge.setVisibility(View.GONE);
 
-            if (item.isSelected()) {
-                // http://stackoverflow.com/questions/5890379/setbackgroundresource-discards-my-xml-layout-attributes
-                int bottom = view.getPaddingBottom();
-                int top = view.getPaddingTop();
-                int right = view.getPaddingRight();
-                int left = view.getPaddingLeft();
-                view.setBackgroundResource(R.color.blue_dark);
-                view.setPadding(left, top, right, bottom);
+            if (isSelected) {
+                view.setBackgroundResource(R.color.md__background_selected);
+                imgIcon.setColorFilter(iconTintSelected);
             } else {
-                view.setBackgroundResource(R.drawable.md_list_selector);
+                view.setBackgroundResource(R.color.md__background);
+                imgIcon.setColorFilter(iconTint);
             }
-            // allow the menudrawer item to configure the view
+
+            // allow the drawer item to configure the view
             item.configureView(view);
 
             return view;
@@ -830,12 +835,11 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         @Override
         public void configureView(View view){
             if (WordPress.getCurrentBlog() != null) {
-            TextView badgeTextView = (TextView) view.findViewById(R.id.menu_row_badge);
+                TextView badgeTextView = (TextView) view.findViewById(R.id.menu_row_badge);
                 int commentCount = WordPress.getCurrentBlog().getUnmoderatedCommentCount();
                 if (commentCount > 0) {
                     badgeTextView.setVisibility(View.VISIBLE);
-                } else
-                {
+                } else {
                     badgeTextView.setVisibility(View.GONE);
                 }
                 badgeTextView.setText(String.valueOf(commentCount));

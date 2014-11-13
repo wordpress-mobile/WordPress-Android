@@ -126,15 +126,15 @@
     </style>
 
     <style name="MenuDrawerButton">
-        <item name="android:background">@drawable/md_list_selector</item>
+        <item name="android:background">@color/md__background</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="MenuDrawerButton.Text">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
-        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/menu_drawer_text</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="MenuDrawerCommentBadge">
