@@ -197,7 +197,7 @@
             android:label="@string/reader_title_applog" />
         <activity
             android:name=".ui.reader.ReaderUserListActivity"
-            android:theme="@style/ReaderPopup" />
+            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
             android:label="@string/reader_title_subs"

@@ -3,9 +3,9 @@ package org.wordpress.android.ui.reader;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
-import android.view.ViewGroup;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
@@ -14,7 +14,6 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.util.DisplayUtils;
 
 /*
  * displays a list of users who like a specific reader post
@@ -58,6 +57,12 @@ public class ReaderUserListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reader_activity_userlist);
+        setTitle(null);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
         long postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
@@ -67,22 +72,8 @@ public class ReaderUserListActivity extends ActionBarActivity {
             mListState = savedInstanceState.getParcelable(LIST_STATE);
         }
 
-        // use a fixed size for the root view so the activity won't change
-        // size as users are loaded
-        final ViewGroup rootView = (ViewGroup) findViewById(R.id.layout_container);
-        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
-        boolean isLandscape = DisplayUtils.isLandscape(this);
-        int maxHeight = displayHeight - (displayHeight / (isLandscape ? 5 : 3));
-        rootView.getLayoutParams().height = maxHeight;
-
         getListView().setAdapter(getAdapter());
         loadUsers(blogId, postId, commentId);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -93,6 +84,17 @@ public class ReaderUserListActivity extends ActionBarActivity {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void loadUsers(final long blogId,
                            final long postId,
                            final long commentId) {
@@ -100,7 +102,6 @@ public class ReaderUserListActivity extends ActionBarActivity {
             @Override
             public void run() {
                 final String title = getTitleString(blogId, postId, commentId);
-                final TextView txtTitle = (TextView) findViewById(R.id.text_title);
 
                 final ReaderUserList users;
                 if (commentId == 0) {
@@ -121,7 +122,7 @@ public class ReaderUserListActivity extends ActionBarActivity {
                     @Override
                     public void run() {
                         if (!isFinishing()) {
-                            txtTitle.setText(title);
+                            setTitle(title);
                             getAdapter().setUsers(users);
                         }
                     }
