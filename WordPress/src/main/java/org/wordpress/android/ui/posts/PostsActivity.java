@@ -111,9 +111,9 @@ public class PostsActivity extends WPDrawerActivity
         }
 
         if (mIsPage) {
-            setTitle(getString(R.string.pages));
+            getSupportActionBar().setTitle(getString(R.string.pages));
         } else {
-            setTitle(getString(R.string.posts));
+            getSupportActionBar().setTitle(getString(R.string.posts));
         }
 
         WordPress.currentPost = null;

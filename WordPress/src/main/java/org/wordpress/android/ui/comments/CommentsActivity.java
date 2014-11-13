@@ -49,11 +49,11 @@ public class CommentsActivity extends WPDrawerActivity
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(getString(R.string.tab_comments));
         }
 
         getFragmentManager().addOnBackStackChangedListener(mOnBackStackChangedListener);
 
-        setTitle(getString(R.string.tab_comments));
         restoreSavedInstance(savedInstanceState);
     }
 
