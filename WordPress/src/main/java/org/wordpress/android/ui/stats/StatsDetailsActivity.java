@@ -12,6 +12,7 @@ import android.text.Html;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -178,6 +179,17 @@ public class StatsDetailsActivity extends ActionBarActivity {
         super.onPause();
         mIsInFront = false;
         mSwipeToRefreshHelper.unregisterReceiver(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void refreshStats() {
