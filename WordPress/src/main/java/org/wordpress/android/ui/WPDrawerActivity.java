@@ -429,7 +429,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 view.setBackgroundResource(R.color.md__background_selected);
                 imgIcon.setColorFilter(iconTintSelected);
             } else {
-                view.setBackgroundResource(R.color.md__background);
+                view.setBackgroundResource(R.drawable.md_list_selector);
                 imgIcon.setColorFilter(iconTint);
             }
 
