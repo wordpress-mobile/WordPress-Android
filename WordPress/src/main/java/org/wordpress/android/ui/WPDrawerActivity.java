@@ -231,20 +231,23 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         // Set up the menu drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);
-        mAdapter = new MenuAdapter(this);
 
-        // Remove header view if it exists already
-        if (mDrawerHeaderView != null) {
-            mDrawerListView.removeHeaderView(mDrawerHeaderView);
-        }
+        // add header image
+        View header = getLayoutInflater().inflate(R.layout.menu_drawer_header, mDrawerListView, false);
+        mDrawerListView.addHeaderView(header, null, false);
 
+        mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
         String[] blogNames = getBlogNames();
         if (blogNames.length > 1) {
-            addBlogSpinner(blogNames);
+            mBlogSpinner.setVisibility(View.VISIBLE);
+            mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
+            populateBlogSpinner(blogNames);
+        } else {
+            mBlogSpinner.setVisibility(View.GONE);
         }
 
+        mAdapter = new MenuAdapter(this);
         mDrawerListView.setAdapter(mAdapter);
-        // Set the list's click listener
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // close the menu drawer
@@ -271,6 +274,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             }
         });
 
+
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.open_drawer,
                 R.string.close_drawer
@@ -290,26 +294,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         updateMenuDrawer();
-    }
-
-    private void addBlogSpinner(String[] blogNames) {
-        LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout spinnerWrapper = (LinearLayout) layoutInflater.inflate(R.layout.blog_spinner, null);
-        if (spinnerWrapper != null) {
-            mDrawerHeaderView = spinnerWrapper;
-            spinnerWrapper.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mBlogSpinner != null) {
-                        mBlogSpinner.performClick();
-                    }
-                }
-            });
-        }
-        mBlogSpinner = (Spinner) spinnerWrapper.findViewById(R.id.blog_spinner);
-        mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
-        populateBlogSpinner(blogNames);
-        mDrawerListView.addHeaderView(spinnerWrapper);
     }
 
     /*
@@ -407,13 +391,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     public static class MenuAdapter extends ArrayAdapter<MenuDrawerItem> {
-        final int iconTint;
-        final int iconTintSelected;
 
         MenuAdapter(Context context) {
             super(context, R.layout.menu_drawer_row, R.id.menu_row_title, new ArrayList<MenuDrawerItem>());
-            iconTint = context.getResources().getColor(R.color.md__icon_tint);
-            iconTintSelected = context.getResources().getColor(R.color.md__icon_tint_selected);
         }
 
         @Override
@@ -433,10 +413,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
             if (isSelected) {
                 view.setBackgroundResource(R.color.md__background_selected);
-                imgIcon.setColorFilter(iconTintSelected);
             } else {
                 view.setBackgroundResource(R.drawable.md_list_selector);
-                imgIcon.setColorFilter(iconTint);
             }
 
             // allow the drawer item to configure the view
