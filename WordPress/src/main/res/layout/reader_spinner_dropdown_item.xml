@@ -4,9 +4,8 @@
     android:id="@+id/text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:padding="@dimen/margin_large"
-    android:textColor="@color/grey_medium_dark"
+    android:textColor="@color/grey_dark"
     android:textSize="@dimen/text_sz_large"
     tools:text="spinner dropdown item" />
 
