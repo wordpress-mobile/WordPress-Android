@@ -73,21 +73,19 @@ public class PreferencesActivity extends PreferenceActivity {
     private boolean mNotificationSettingsChanged;
 
     private PreferenceGroup mNotificationsGroup;
-    WPEditTextPreference mTaglineTextPreference;
+    private WPEditTextPreference mTaglineTextPreference;
     private Blog mCurrentBlogOnCreate;
 
     public static final int RESULT_SIGNED_OUT = RESULT_FIRST_USER;
     public static final String CURRENT_BLOG_CHANGED = "CURRENT_BLOG_CHANGED";
 
-    private Toolbar mActionBar;
-
     @Override
     public void setContentView(int layoutResID) {
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.preference_activity,
                 new LinearLayout(this), false);
-        mActionBar = (Toolbar) contentView.findViewById(R.id.toolbar);
-        mActionBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        mActionBar.setNavigationOnClickListener(new View.OnClickListener() {
+        Toolbar toolbar = (Toolbar) contentView.findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -96,7 +94,7 @@ public class PreferencesActivity extends PreferenceActivity {
         ViewGroup wrapper = (ViewGroup) contentView.findViewById(R.id.wrapper);
         LayoutInflater.from(this).inflate(layoutResID, wrapper, true);
         getWindow().setContentView(contentView);
-        mActionBar.setTitle(R.string.settings);
+        toolbar.setTitle(R.string.settings);
     }
 
     @Override
@@ -273,17 +271,14 @@ public class PreferencesActivity extends PreferenceActivity {
     {
         super.onPreferenceTreeClick(preferenceScreen, preference);
         // Workaround for Action Bar Home Button not functional with nested PreferenceScreen
-        if (preference!=null && preference instanceof PreferenceScreen) {
-            // If the user has clicked on a preference screen, set up the action bar
-            if (preference instanceof PreferenceScreen) {
-                initializeActionBar((PreferenceScreen) preference);
-            }
+        if (preference instanceof PreferenceScreen) {
+            initializeActionBar((PreferenceScreen) preference);
         }
         return false;
     }
 
     /** Sets up the action bar for an {@link PreferenceScreen} */
-    public static void initializeActionBar(PreferenceScreen preferenceScreen) {
+    private static void initializeActionBar(PreferenceScreen preferenceScreen) {
         final Dialog dialog = preferenceScreen.getDialog();
 
         if (dialog != null) {
@@ -314,7 +309,7 @@ public class PreferencesActivity extends PreferenceActivity {
 
                     if (containerParent instanceof LinearLayout) {
                         // This view also contains the title text, set the whole view as clickable
-                        ((LinearLayout) containerParent).setOnClickListener(dismissDialogClickListener);
+                        containerParent.setOnClickListener(dismissDialogClickListener);
                     } else {
                         // Just set it on the home button
                         ((FrameLayout) homeBtnContainer).setOnClickListener(dismissDialogClickListener);
@@ -331,7 +326,7 @@ public class PreferencesActivity extends PreferenceActivity {
      * Update the "wpcom blogs" preference category to contain a preference for each blog to configure
      * blog-specific settings.
      */
-    protected void updateSelfHostedBlogsPreferenceCategory() {
+    void updateSelfHostedBlogsPreferenceCategory() {
         PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_self_hosted_blogs");
         blogsCategory.removeAll();
         int order = 0;
@@ -351,18 +346,7 @@ public class PreferencesActivity extends PreferenceActivity {
         addAccounts(blogsCategory, accounts, order);
     }
 
-    protected int getEnabledBlogsCount() {
-        PreferenceScreen selectBlogsCategory = (PreferenceScreen) findPreference("wp_pref_notification_blogs");
-        int enabledBlogCtr = 0;
-        for (int i = 0; i < selectBlogsCategory.getPreferenceCount(); i++) {
-            CheckBoxPreference blogPreference = (CheckBoxPreference) selectBlogsCategory.getPreference(i);
-            if (blogPreference.isChecked())
-                enabledBlogCtr++;
-        }
-        return enabledBlogCtr;
-    }
-
-    public void displayPreferences() {
+    void displayPreferences() {
         // Post signature
         if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
             hidePostSignatureCategory();
@@ -380,7 +364,7 @@ public class PreferencesActivity extends PreferenceActivity {
     /**
      * Listens for changes to notification type settings
      */
-    private OnPreferenceChangeListener mTypeChangeListener = new OnPreferenceChangeListener() {
+    private final OnPreferenceChangeListener mTypeChangeListener = new OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             // Update the mNoteSettings map with the new value
@@ -401,14 +385,14 @@ public class PreferencesActivity extends PreferenceActivity {
     /**
      * Listens for changes to notification blogs settings
      */
-    private OnPreferenceChangeListener mMuteBlogChangeListener = new OnPreferenceChangeListener() {
+    private final OnPreferenceChangeListener mMuteBlogChangeListener = new OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             if (preference instanceof CheckBoxPreference) {
                 CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
                 boolean isChecked = (Boolean) newValue;
                 int id = checkBoxPreference.getOrder();
-                StringMap<Double> blogMap = (StringMap<Double>) mMutedBlogsList.get(id);
+                StringMap<Double> blogMap = mMutedBlogsList.get(id);
                 blogMap.put("value", (!isChecked) ? 1.0 : 0.0);
                 mMutedBlogsList.set(id, blogMap);
                 StringMap<ArrayList> mutedBlogsMap = (StringMap<ArrayList>) mNotificationSettings.get("muted_blogs");
@@ -424,7 +408,7 @@ public class PreferencesActivity extends PreferenceActivity {
     /**
      * Listens for changes to notification enabled toggle
      */
-    private OnPreferenceChangeListener mNotificationsEnabledChangeListener = new OnPreferenceChangeListener() {
+    private final OnPreferenceChangeListener mNotificationsEnabledChangeListener = new OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             if (preference instanceof CheckBoxPreference) {
@@ -598,10 +582,10 @@ public class PreferencesActivity extends PreferenceActivity {
         addAccounts(wpComCategory, accounts, 10);
     }
 
-    private static Comparator<StringMap<?>> BlogNameComparatorForMutedBlogsList = new Comparator<StringMap<?>>() {
+    private static final Comparator<StringMap<?>> BlogNameComparatorForMutedBlogsList = new Comparator<StringMap<?>>() {
         public int compare(StringMap<?> blog1, StringMap<?> blog2) {
-            StringMap<?> blogMap1 = (StringMap<?>)blog1;
-            StringMap<?> blogMap2 = (StringMap<?>)blog2;
+            StringMap<?> blogMap1 = blog1;
+            StringMap<?> blogMap2 = blog2;
 
             String blogName1 = blogMap1.get("blog_name").toString();
             if (blogName1.length() == 0) {
@@ -633,61 +617,59 @@ public class PreferencesActivity extends PreferenceActivity {
         if (settingsJson == null) {
             rootScreen.removePreference(mNotificationsGroup);
             return;
-        } else {
-            try {
-                Gson gson = new Gson();
-                mNotificationSettings = gson.fromJson(settingsJson, HashMap.class);
-                StringMap<?> mutedBlogsMap = (StringMap<?>) mNotificationSettings.get("muted_blogs");
-                mMutedBlogsList = (ArrayList<StringMap<Double>>) mutedBlogsMap.get("value");
-                Collections.sort(mMutedBlogsList, this.BlogNameComparatorForMutedBlogsList);
+        }
+        try {
+            Gson gson = new Gson();
+            mNotificationSettings = gson.fromJson(settingsJson, HashMap.class);
+            StringMap<?> mutedBlogsMap = (StringMap<?>) mNotificationSettings.get("muted_blogs");
+            mMutedBlogsList = (ArrayList<StringMap<Double>>) mutedBlogsMap.get("value");
+            Collections.sort(mMutedBlogsList, BlogNameComparatorForMutedBlogsList);
 
-                Object[] mTypeList = mNotificationSettings.keySet().toArray();
+            Object[] mTypeList = mNotificationSettings.keySet().toArray();
 
-                for (int i = 0; i < mTypeList.length; i++) {
-                    if (!mTypeList[i].equals("muted_blogs") && !mTypeList[i].equals("mute_until")) {
-                        StringMap<?> typeMap = (StringMap<?>) mNotificationSettings
-                                .get(mTypeList[i].toString());
-                        CheckBoxPreference typePreference = new CheckBoxPreference(this);
-                        typePreference.setKey(mTypeList[i].toString());
-                        typePreference.setChecked(MapUtils.getMapBool(typeMap, "value"));
-                        typePreference.setTitle(typeMap.get("desc").toString());
-                        typePreference.setOnPreferenceChangeListener(mTypeChangeListener);
-                        notificationTypesCategory.addPreference(typePreference);
-                    }
+            for (Object aMTypeList : mTypeList) {
+                if (!aMTypeList.equals("muted_blogs") && !aMTypeList.equals("mute_until")) {
+                    StringMap<?> typeMap = (StringMap<?>) mNotificationSettings
+                            .get(aMTypeList.toString());
+                    CheckBoxPreference typePreference = new CheckBoxPreference(this);
+                    typePreference.setKey(aMTypeList.toString());
+                    typePreference.setChecked(MapUtils.getMapBool(typeMap, "value"));
+                    typePreference.setTitle(typeMap.get("desc").toString());
+                    typePreference.setOnPreferenceChangeListener(mTypeChangeListener);
+                    notificationTypesCategory.addPreference(typePreference);
                 }
-
-                PreferenceCategory selectBlogsCategory = (PreferenceCategory) findPreference("wp_pref_notification_blogs");
-                selectBlogsCategory.removeAll();
-                for (int i = 0; i < mMutedBlogsList.size(); i++) {
-                    StringMap<?> blogMap = (StringMap<?>) mMutedBlogsList.get(i);
-                    String blogName = (String) blogMap.get("blog_name");
-                    if (blogName == null || blogName.trim().equals(""))
-                        blogName = (String) blogMap.get("url");
-                    CheckBoxPreference blogPreference = new CheckBoxPreference(this);
-                    blogPreference.setChecked(!MapUtils.getMapBool(blogMap, "value"));
-                    blogPreference.setTitle(StringUtils.unescapeHTML(blogName));
-                    blogPreference.setOnPreferenceChangeListener(mMuteBlogChangeListener);
-                    // set the order here so it matches the key in mMutedBlogsList since
-                    // mMuteBlogChangeListener uses the order to locate the clicked blog
-                    blogPreference.setOrder(i);
-                    selectBlogsCategory.addPreference(blogPreference);
-                }
-
-            } catch (JsonSyntaxException e) {
-                AppLog.v(T.NOTIFS, "Notification Settings Json could not be parsed.");
-                return;
-            } catch (Exception e) {
-                AppLog.v(T.NOTIFS, "Failed to load notification settings.");
-                return;
             }
 
-            CheckBoxPreference notificationsEnabledCheckBox = (CheckBoxPreference) findPreference("wp_pref_notifications_enabled");
-            notificationsEnabledCheckBox.setOnPreferenceChangeListener(mNotificationsEnabledChangeListener);
+            PreferenceCategory selectBlogsCategory = (PreferenceCategory) findPreference("wp_pref_notification_blogs");
+            selectBlogsCategory.removeAll();
+            for (int i = 0; i < mMutedBlogsList.size(); i++) {
+                StringMap<?> blogMap = mMutedBlogsList.get(i);
+                String blogName = (String) blogMap.get("blog_name");
+                if (blogName == null || blogName.trim().equals(""))
+                    blogName = (String) blogMap.get("url");
+                CheckBoxPreference blogPreference = new CheckBoxPreference(this);
+                blogPreference.setChecked(!MapUtils.getMapBool(blogMap, "value"));
+                blogPreference.setTitle(StringUtils.unescapeHTML(blogName));
+                blogPreference.setOnPreferenceChangeListener(mMuteBlogChangeListener);
+                // set the order here so it matches the key in mMutedBlogsList since
+                // mMuteBlogChangeListener uses the order to locate the clicked blog
+                blogPreference.setOrder(i);
+                selectBlogsCategory.addPreference(blogPreference);
+            }
 
+        } catch (JsonSyntaxException e) {
+            AppLog.v(T.NOTIFS, "Notification Settings Json could not be parsed.");
+            return;
+        } catch (Exception e) {
+            AppLog.v(T.NOTIFS, "Failed to load notification settings.");
+            return;
         }
+
+        CheckBoxPreference notificationsEnabledCheckBox = (CheckBoxPreference) findPreference("wp_pref_notifications_enabled");
+        notificationsEnabledCheckBox.setOnPreferenceChangeListener(mNotificationsEnabledChangeListener);
     }
 
-    private OnPreferenceClickListener signInPreferenceClickListener = new OnPreferenceClickListener() {
+    private final OnPreferenceClickListener signInPreferenceClickListener = new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             Intent i = new Intent(PreferencesActivity.this, SignInActivity.class);
@@ -698,7 +680,7 @@ public class PreferencesActivity extends PreferenceActivity {
         }
     };
 
-    private OnPreferenceClickListener resetAUtoSharePreferenceClickListener =
+    private final OnPreferenceClickListener resetAUtoSharePreferenceClickListener =
             new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
@@ -713,7 +695,7 @@ public class PreferencesActivity extends PreferenceActivity {
         }
     };
 
-    private OnPreferenceClickListener signOutPreferenceClickListener = new OnPreferenceClickListener() {
+    private final OnPreferenceClickListener signOutPreferenceClickListener = new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PreferencesActivity.this);
