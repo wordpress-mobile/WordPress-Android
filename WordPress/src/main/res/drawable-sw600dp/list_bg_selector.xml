@@ -11,5 +11,9 @@
     android:drawable="@color/reader_list_selector" />
 
 <item
+    android:state_activated="true"
+    android:drawable="@color/reader_list_selector" />
+
+<item
     android:drawable="@android:color/transparent" />
 </selector>

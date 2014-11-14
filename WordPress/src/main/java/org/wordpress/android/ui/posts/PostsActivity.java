@@ -111,9 +111,9 @@ public class PostsActivity extends WPDrawerActivity
         }
 
         if (mIsPage) {
-            setTitle(getString(R.string.pages));
+            getSupportActionBar().setTitle(getString(R.string.pages));
         } else {
-            setTitle(getString(R.string.posts));
+            getSupportActionBar().setTitle(getString(R.string.posts));
         }
 
         WordPress.currentPost = null;
@@ -184,6 +184,15 @@ public class PostsActivity extends WPDrawerActivity
             popPostDetail();
             mPostList.requestPosts(false);
             mPostList.setRefreshing(true);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            popPostDetail();
+        } else {
+            super.onBackPressed();
         }
     }
 

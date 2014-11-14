@@ -49,11 +49,11 @@ public class CommentsActivity extends WPDrawerActivity
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(getString(R.string.tab_comments));
         }
 
         getFragmentManager().addOnBackStackChangedListener(mOnBackStackChangedListener);
 
-        setTitle(getString(R.string.tab_comments));
         restoreSavedInstance(savedInstanceState);
     }
 
@@ -71,6 +71,15 @@ public class CommentsActivity extends WPDrawerActivity
             if (selectedPostId != null) {
                 showReaderFragment(selectedPostId.getRemoteBlogId(), selectedPostId.getId());
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
     }
 

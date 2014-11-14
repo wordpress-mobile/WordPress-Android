@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.ActionMode;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -335,7 +335,7 @@ public class CommentsListFragment extends Fragment {
                 // enable CAB if it's not already enabled
                 if (mActionMode == null) {
                     if (getActivity() instanceof WPDrawerActivity) {
-                        ((WPDrawerActivity) getActivity()).startActionMode(new ActionModeCallback());
+                        ((WPDrawerActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
                         getCommentAdapter().setEnableSelection(true);
                         getCommentAdapter().setItemSelected(position, true, view);
                     }

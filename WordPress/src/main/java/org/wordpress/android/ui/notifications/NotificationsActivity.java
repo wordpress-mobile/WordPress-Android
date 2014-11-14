@@ -80,8 +80,8 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(getResources().getString(R.string.notifications));
         }
-        setTitle(getResources().getString(R.string.notifications));
 
         fragmentManager.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mNotesListFragment.setOnNoteClickListener(new NoteClickListener());
@@ -200,6 +200,15 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
             }
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, "Could not load notification from bucket.");
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            popNoteDetail();
+        } else {
+            super.onBackPressed();
         }
     }
 

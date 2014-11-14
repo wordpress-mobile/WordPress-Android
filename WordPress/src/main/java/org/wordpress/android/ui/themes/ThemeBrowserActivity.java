@@ -291,9 +291,7 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
     @Override
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
-        /*if (mMenuDrawer.isMenuVisible()) {
-            super.onBackPressed();
-        } else*/ if (fm.getBackStackEntryCount() > 0) {
+        if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
             setupBaseLayout();
         } else {

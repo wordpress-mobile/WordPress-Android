@@ -1,22 +1,19 @@
 package org.wordpress.android.ui.media;
 
-import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
@@ -39,7 +36,6 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
@@ -80,13 +76,13 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
             return;
         }
 
-        setTitle(R.string.media);
-
         createMenuDrawer(R.layout.media_browser_activity);
+        setSupportActionBar(getToolbar());
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(R.string.media);
         }
 
         FragmentManager fm = getFragmentManager();
@@ -495,9 +491,7 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
     @Override
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
-        /*if (mMenuDrawer.isMenuVisible()) {
-            super.onBackPressed();
-        } else*/ if (fm.getBackStackEntryCount() > 0) {
+        if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
             setupBaseLayout();
         } else {
