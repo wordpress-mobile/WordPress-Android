@@ -2,7 +2,6 @@ package org.wordpress.android.ui.prefs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,22 +12,15 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -42,12 +34,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
@@ -66,36 +58,14 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
-public class PreferencesActivity extends PreferenceActivity {
+public class SettingsFragment extends PreferenceFragment {
     private ArrayList<StringMap<Double>> mMutedBlogsList;
     private Map<String, Object> mNotificationSettings;
     private SharedPreferences mSettings;
     private boolean mNotificationSettingsChanged;
 
     private PreferenceGroup mNotificationsGroup;
-    private WPEditTextPreference mTaglineTextPreference;
-    private Blog mCurrentBlogOnCreate;
-
-    public static final int RESULT_SIGNED_OUT = RESULT_FIRST_USER;
-    public static final String CURRENT_BLOG_CHANGED = "CURRENT_BLOG_CHANGED";
-
-    @Override
-    public void setContentView(int layoutResID) {
-        ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.preference_activity,
-                new LinearLayout(this), false);
-        Toolbar toolbar = (Toolbar) contentView.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        ViewGroup wrapper = (ViewGroup) contentView.findViewById(R.id.wrapper);
-        LayoutInflater.from(this).inflate(layoutResID, wrapper, true);
-        getWindow().setContentView(contentView);
-        toolbar.setTitle(R.string.settings);
-    }
+    WPEditTextPreference mTaglineTextPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,14 +75,9 @@ public class PreferencesActivity extends PreferenceActivity {
             AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_SETTINGS);
         }
 
-        overridePendingTransition(R.anim.slide_up, R.anim.do_nothing);
-
-        setTitle(getResources().getText(R.string.settings));
-        mCurrentBlogOnCreate = WordPress.getCurrentBlog();
-
         addPreferencesFromResource(R.xml.preferences);
 
-        mNotificationsGroup = (PreferenceGroup)findPreference("wp_pref_notifications_category");
+        mNotificationsGroup = (PreferenceGroup) findPreference("wp_pref_notifications_category");
 
         OnPreferenceChangeListener preferenceChangeListener = new OnPreferenceChangeListener() {
             @Override
@@ -120,8 +85,7 @@ public class PreferencesActivity extends PreferenceActivity {
                 if (newValue != null) { // cancelled dismiss keyboard
                     preference.setSummary(newValue.toString());
                 }
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getListView().getWindowToken(), 0);
+                ActivityUtils.hideKeyboard(getActivity());
                 return true;
             }
         };
@@ -136,35 +100,9 @@ public class PreferencesActivity extends PreferenceActivity {
         Preference resetAutoShare = findPreference("wp_reset_share_pref");
         resetAutoShare.setOnPreferenceClickListener(resetAUtoSharePreferenceClickListener);
 
-        mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+        mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        // AuthenticatorRequest notification settings if needed
-        if (WordPress.hasValidWPComCredentials(PreferencesActivity.this)) {
-            String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
-            if (settingsJson == null) {
-                com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        AppLog.d(T.NOTIFS, "Get settings action succeeded");
-                        Editor editor = mSettings.edit();
-                        try {
-                            JSONObject settingsJSON = jsonObject.getJSONObject("settings");
-                            editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJSON.toString());
-                            editor.commit();
-                        } catch (JSONException e) {
-                            AppLog.e(T.NOTIFS, "Can't parse the JSON object returned from the server that contains PN settings.", e);
-                        }
-                        refreshWPComAuthCategory();
-                    }
-                };
-                RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        AppLog.e(T.NOTIFS, "Get settings action failed", volleyError);                    }
-                };
-                NotificationsUtils.getPushNotificationSettings(PreferencesActivity.this, listener, errorListener);
-            }
-        }
+        initNotifications();
 
         // Passcode Lock not supported
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
@@ -185,6 +123,40 @@ public class PreferencesActivity extends PreferenceActivity {
             rootScreen.removePreference(passcodeGroup);
         }
         displayPreferences();
+    }
+
+    private void initNotifications() {
+        // AuthenticatorRequest notification settings if needed
+        if (WordPress.hasValidWPComCredentials(getActivity())) {
+            String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
+            if (settingsJson == null) {
+                com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        AppLog.d(T.NOTIFS, "Get settings action succeeded");
+                        Editor editor = mSettings.edit();
+                        try {
+                            JSONObject settingsJSON = jsonObject.getJSONObject("settings");
+                            editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS,
+                                    settingsJSON.toString());
+                            editor.commit();
+                        } catch (JSONException e) {
+                            AppLog.e(T.NOTIFS,
+                                    "Can't parse the JSON object returned from the server that contains PN settings.",
+                                    e);
+                        }
+                        refreshWPComAuthCategory();
+                    }
+                };
+                RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        AppLog.e(T.NOTIFS, "Get settings action failed", volleyError);
+                    }
+                };
+                NotificationsUtils.getPushNotificationSettings(getActivity(), listener, errorListener);
+            }
+        }
     }
 
     private void hidePostSignatureCategory() {
@@ -223,103 +195,21 @@ public class PreferencesActivity extends PreferenceActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        overridePendingTransition(R.anim.do_nothing, R.anim.slide_down);
-        super.onPause();
-    }
-
-    @Override
-    public void finish() {
-        Intent data = new Intent();
-        boolean currentBlogChanged = false;
-        if (mCurrentBlogOnCreate != null) {
-            if (mCurrentBlogOnCreate.isDotcomFlag()) {
-                if (!WordPress.wpDB.isDotComAccountVisible(mCurrentBlogOnCreate.getRemoteBlogId())) {
-                    // dotcom blog has been hidden or removed
-                    currentBlogChanged = true;
-                }
-            } else {
-                if (!WordPress.wpDB.isBlogInDatabase(mCurrentBlogOnCreate.getRemoteBlogId(), mCurrentBlogOnCreate.getUrl())) {
-                    // self hosted blog has been removed
-                    currentBlogChanged = true;
-                }
-            }
-        } else {
-            // no visible blogs when preferences opened
-            if (WordPress.wpDB.getNumVisibleAccounts() != 0) {
-                // now at least one blog could be selected
-                currentBlogChanged = true;
-            }
-        }
-        data.putExtra(CURRENT_BLOG_CHANGED, currentBlogChanged);
-        setResult(RESULT_OK, data);
-        AnalyticsTracker.loadPrefHasUserOptedOut(true);
-        super.finish();
-    }
-
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                getActivity().finish();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference)
-    {
-        super.onPreferenceTreeClick(preferenceScreen, preference);
-        // Workaround for Action Bar Home Button not functional with nested PreferenceScreen
-        if (preference instanceof PreferenceScreen) {
-            initializeActionBar((PreferenceScreen) preference);
-        }
-        return false;
-    }
-
-    /** Sets up the action bar for an {@link PreferenceScreen} */
-    private static void initializeActionBar(PreferenceScreen preferenceScreen) {
-        final Dialog dialog = preferenceScreen.getDialog();
-
-        if (dialog != null) {
-            // Initialize the action bar
-            if (dialog.getActionBar() != null) {
-                dialog.getActionBar().setDisplayHomeAsUpEnabled(true);
-            }
-
-            // Apply custom home button area click listener to close the PreferenceScreen because PreferenceScreens are dialogs which swallow
-            // events instead of passing to the activity
-            // Related Issue: https://code.google.com/p/android/issues/detail?id=4611
-            View homeBtn = dialog.findViewById(android.R.id.home);
-
-            if (homeBtn != null) {
-                OnClickListener dismissDialogClickListener = new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                };
-
-                // Prepare yourselves for some hacky programming
-                ViewParent homeBtnContainer = homeBtn.getParent();
-
-                // The home button is an ImageView inside a FrameLayout
-                if (homeBtnContainer instanceof FrameLayout) {
-                    ViewGroup containerParent = (ViewGroup) homeBtnContainer.getParent();
-
-                    if (containerParent instanceof LinearLayout) {
-                        // This view also contains the title text, set the whole view as clickable
-                        containerParent.setOnClickListener(dismissDialogClickListener);
-                    } else {
-                        // Just set it on the home button
-                        ((FrameLayout) homeBtnContainer).setOnClickListener(dismissDialogClickListener);
-                    }
-                } else {
-                    // The 'If all else fails' default case
-                    homeBtn.setOnClickListener(dismissDialogClickListener);
-                }
-            }
-        }
+    public void refreshWPComAuthCategory() {
+        PreferenceCategory wpComCategory = (PreferenceCategory) findPreference("wp_pref_wpcom");
+        wpComCategory.removeAll();
+        addWpComSignIn(wpComCategory, 0);
+        addWpComShowHideButton(wpComCategory, 5);
+        List<Map<String, Object>> accounts = WordPress.wpDB.getAccountsBy("dotcomFlag = 1 AND isHidden = 0", null);
+        addAccounts(wpComCategory, accounts, 10);
     }
 
     /**
@@ -332,11 +222,10 @@ public class PreferencesActivity extends PreferenceActivity {
         int order = 0;
 
         // Add self-hosted blog button
-        Preference addBlogPreference = new Preference(this);
+        Preference addBlogPreference = new Preference(getActivity());
         addBlogPreference.setTitle(R.string.add_self_hosted_blog);
-        Intent intentWelcome = new Intent(this, SignInActivity.class);
-        intentWelcome.putExtra(SignInActivity.START_FRAGMENT_KEY,
-                SignInActivity.ADD_SELF_HOSTED_BLOG);
+        Intent intentWelcome = new Intent(getActivity(), SignInActivity.class);
+        intentWelcome.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.ADD_SELF_HOSTED_BLOG);
         addBlogPreference.setIntent(intentWelcome);
         addBlogPreference.setOrder(order++);
         blogsCategory.addPreference(addBlogPreference);
@@ -420,7 +309,7 @@ public class PreferencesActivity extends PreferenceActivity {
                     mNotificationSettingsChanged = true;
                     return true;
                 } else {
-                    final Dialog dialog = new Dialog(PreferencesActivity.this);
+                    final Dialog dialog = new Dialog(getActivity());
                     dialog.setContentView(R.layout.notifications_enabled_dialog);
                     dialog.setTitle(R.string.notifications);
                     dialog.setCancelable(true);
@@ -451,26 +340,23 @@ public class PreferencesActivity extends PreferenceActivity {
                     });
                     dialog.show();
                 }
-
             }
             return false;
         }
     };
 
     private void enabledButtonClick(View v) {
-        StringMap<String> muteUntilMap = (StringMap<String>) mNotificationSettings
-                .get("mute_until");
+        StringMap<String> muteUntilMap = (StringMap<String>) mNotificationSettings.get("mute_until");
         if (muteUntilMap != null) {
             if (v.getId() == R.id.notificationsOff) {
                 muteUntilMap.put("value", "forever");
             } else if (v.getId() == R.id.notifications1Hour) {
-                muteUntilMap.put("value",
-                        String.valueOf((System.currentTimeMillis() / 1000) + 3600));
+                muteUntilMap.put("value", String.valueOf((System.currentTimeMillis() / 1000) + 3600));
             } else if (v.getId() == R.id.notifications8Hours) {
-                muteUntilMap.put("value",
-                        String.valueOf((System.currentTimeMillis() / 1000) + (3600 * 8)));
+                muteUntilMap.put("value", String.valueOf((System.currentTimeMillis() / 1000) + (3600 * 8)));
             }
-            CheckBoxPreference enabledCheckBoxPreference = (CheckBoxPreference) findPreference("wp_pref_notifications_enabled");
+            CheckBoxPreference enabledCheckBoxPreference = (CheckBoxPreference) findPreference(
+                    "wp_pref_notifications_enabled");
             enabledCheckBoxPreference.setChecked(false);
             mNotificationSettings.put("mute_until", muteUntilMap);
             mNotificationSettingsChanged = true;
@@ -490,13 +376,13 @@ public class PreferencesActivity extends PreferenceActivity {
         @Override
         protected Void doInBackground(Void... params) {
             if (mNotificationSettings != null) {
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(PreferencesActivity.this);
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = settings.edit();
                 Gson gson = new Gson();
                 String settingsJson = gson.toJson(mNotificationSettings);
                 editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJson);
                 editor.commit();
-                NotificationsUtils.setPushNotificationSettings(PreferencesActivity.this);
+                NotificationsUtils.setPushNotificationSettings(getActivity());
             }
             return null;
         }
@@ -508,39 +394,39 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     private void addWpComSignIn(PreferenceCategory wpComCategory, int order) {
-        if (WordPress.hasValidWPComCredentials(PreferencesActivity.this)) {
+        if (WordPress.hasValidWPComCredentials(getActivity())) {
             String username = mSettings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-            Preference usernamePref = new Preference(this);
+            Preference usernamePref = new Preference(getActivity());
             usernamePref.setTitle(getString(R.string.username));
             usernamePref.setSummary(username);
             usernamePref.setSelectable(false);
             usernamePref.setOrder(order);
             wpComCategory.addPreference(usernamePref);
 
-            Preference createWPComBlogPref = new Preference(this);
+            Preference createWPComBlogPref = new Preference(getActivity());
             createWPComBlogPref.setTitle(getString(R.string.create_new_blog_wpcom));
-            Intent intent = new Intent(this, NewBlogActivity.class);
+            Intent intent = new Intent(getActivity(), NewBlogActivity.class);
             createWPComBlogPref.setIntent(intent);
             createWPComBlogPref.setOrder(order + 1);
             wpComCategory.addPreference(createWPComBlogPref);
 
             loadNotifications();
         } else {
-            Preference signInPref = new Preference(this);
+            Preference signInPref = new Preference(getActivity());
             signInPref.setTitle(getString(R.string.sign_in));
             signInPref.setOnPreferenceClickListener(signInPreferenceClickListener);
             wpComCategory.addPreference(signInPref);
 
-            PreferenceScreen rootScreen = (PreferenceScreen)findPreference("wp_pref_root");
+            PreferenceScreen rootScreen = (PreferenceScreen) findPreference("wp_pref_root");
             rootScreen.removePreference(mNotificationsGroup);
         }
     }
 
     private void addWpComShowHideButton(PreferenceCategory wpComCategory, int order) {
         if (WordPress.wpDB.getNumDotComAccounts() > 0) {
-            Preference manageBlogPreference = new Preference(this);
+            Preference manageBlogPreference = new Preference(getActivity());
             manageBlogPreference.setTitle(R.string.show_and_hide_blogs);
-            Intent intentManage = new Intent(this, ManageBlogsActivity.class);
+            Intent intentManage = new Intent(getActivity(), ManageBlogsActivity.class);
             manageBlogPreference.setIntent(intentManage);
             manageBlogPreference.setOrder(order);
             wpComCategory.addPreference(manageBlogPreference);
@@ -552,7 +438,7 @@ public class PreferencesActivity extends PreferenceActivity {
             String blogName = StringUtils.unescapeHTML(account.get("blogName").toString());
             int accountId = (Integer) account.get("id");
 
-            Preference blogSettingsPreference = new Preference(this);
+            Preference blogSettingsPreference = new Preference(getActivity());
             blogSettingsPreference.setTitle(blogName);
 
             try {
@@ -565,7 +451,7 @@ public class PreferencesActivity extends PreferenceActivity {
                 // do nothing
             }
 
-            Intent intent = new Intent(this, BlogPreferencesActivity.class);
+            Intent intent = new Intent(getActivity(), BlogPreferencesActivity.class);
             intent.putExtra("id", accountId);
             blogSettingsPreference.setIntent(intent);
             blogSettingsPreference.setOrder(order++);
@@ -573,45 +459,32 @@ public class PreferencesActivity extends PreferenceActivity {
         }
     }
 
-    private void refreshWPComAuthCategory() {
-        PreferenceCategory wpComCategory = (PreferenceCategory) findPreference("wp_pref_wpcom");
-        wpComCategory.removeAll();
-        addWpComSignIn(wpComCategory, 0);
-        addWpComShowHideButton(wpComCategory, 5);
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccountsBy("dotcomFlag = 1 AND isHidden = 0", null);
-        addAccounts(wpComCategory, accounts, 10);
-    }
-
     private static final Comparator<StringMap<?>> BlogNameComparatorForMutedBlogsList = new Comparator<StringMap<?>>() {
         public int compare(StringMap<?> blog1, StringMap<?> blog2) {
-            StringMap<?> blogMap1 = blog1;
-            StringMap<?> blogMap2 = blog2;
-
-            String blogName1 = blogMap1.get("blog_name").toString();
+            String blogName1 = blog1.get("blog_name").toString();
             if (blogName1.length() == 0) {
-                blogName1 = blogMap1.get("url").toString();
+                blogName1 = blog1.get("url").toString();
             }
 
-            String blogName2 = blogMap2.get("blog_name").toString();
+            String blogName2 = blog2.get("blog_name").toString();
             if (blogName2.length() == 0) {
-                blogName2 = blogMap2.get("url").toString();
+                blogName2 = blog2.get("url").toString();
             }
 
-          return blogName1.compareToIgnoreCase(blogName2);
-
+            return blogName1.compareToIgnoreCase(blogName2);
         }
-
     };
 
     private void loadNotifications() {
         AppLog.d(T.NOTIFS, "Preferences > loading notification settings");
 
         // Add notifications group back in case it was previously removed from being logged out
-        PreferenceScreen rootScreen = (PreferenceScreen)findPreference("wp_pref_root");
+        PreferenceScreen rootScreen = (PreferenceScreen) findPreference("wp_pref_root");
         rootScreen.addPreference(mNotificationsGroup);
-        PreferenceCategory notificationTypesCategory = (PreferenceCategory) findPreference("wp_pref_notification_types");
+        PreferenceCategory notificationTypesCategory = (PreferenceCategory) findPreference(
+                "wp_pref_notification_types");
         notificationTypesCategory.removeAll();
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         String settingsJson = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
         if (settingsJson == null) {
@@ -631,7 +504,7 @@ public class PreferencesActivity extends PreferenceActivity {
                 if (!aMTypeList.equals("muted_blogs") && !aMTypeList.equals("mute_until")) {
                     StringMap<?> typeMap = (StringMap<?>) mNotificationSettings
                             .get(aMTypeList.toString());
-                    CheckBoxPreference typePreference = new CheckBoxPreference(this);
+                    CheckBoxPreference typePreference = new CheckBoxPreference(getActivity());
                     typePreference.setKey(aMTypeList.toString());
                     typePreference.setChecked(MapUtils.getMapBool(typeMap, "value"));
                     typePreference.setTitle(typeMap.get("desc").toString());
@@ -647,7 +520,7 @@ public class PreferencesActivity extends PreferenceActivity {
                 String blogName = (String) blogMap.get("blog_name");
                 if (blogName == null || blogName.trim().equals(""))
                     blogName = (String) blogMap.get("url");
-                CheckBoxPreference blogPreference = new CheckBoxPreference(this);
+                CheckBoxPreference blogPreference = new CheckBoxPreference(getActivity());
                 blogPreference.setChecked(!MapUtils.getMapBool(blogMap, "value"));
                 blogPreference.setTitle(StringUtils.unescapeHTML(blogName));
                 blogPreference.setOnPreferenceChangeListener(mMuteBlogChangeListener);
@@ -656,7 +529,6 @@ public class PreferencesActivity extends PreferenceActivity {
                 blogPreference.setOrder(i);
                 selectBlogsCategory.addPreference(blogPreference);
             }
-
         } catch (JsonSyntaxException e) {
             AppLog.v(T.NOTIFS, "Notification Settings Json could not be parsed.");
             return;
@@ -672,7 +544,7 @@ public class PreferencesActivity extends PreferenceActivity {
     private final OnPreferenceClickListener signInPreferenceClickListener = new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Intent i = new Intent(PreferencesActivity.this, SignInActivity.class);
+            Intent i = new Intent(getActivity(), SignInActivity.class);
             i.putExtra("wpcom", true);
             i.putExtra("auth-only", true);
             startActivityForResult(i, 0);
@@ -680,8 +552,7 @@ public class PreferencesActivity extends PreferenceActivity {
         }
     };
 
-    private final OnPreferenceClickListener resetAUtoSharePreferenceClickListener =
-            new OnPreferenceClickListener() {
+    private final OnPreferenceClickListener resetAUtoSharePreferenceClickListener = new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             Editor editor = mSettings.edit();
@@ -689,8 +560,7 @@ public class PreferencesActivity extends PreferenceActivity {
             editor.remove(ShareIntentReceiverActivity.SHARE_IMAGE_ADDTO_KEY);
             editor.remove(ShareIntentReceiverActivity.SHARE_TEXT_BLOG_ID_KEY);
             editor.commit();
-            ToastUtils.showToast(getBaseContext(), R.string.auto_sharing_preference_reset,
-                    ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(getActivity(), R.string.auto_sharing_preference_reset, ToastUtils.Duration.SHORT);
             return true;
         }
     };
@@ -698,41 +568,30 @@ public class PreferencesActivity extends PreferenceActivity {
     private final OnPreferenceClickListener signOutPreferenceClickListener = new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PreferencesActivity.this);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
             dialogBuilder.setMessage(getString(R.string.sign_out_confirm));
-            dialogBuilder.setPositiveButton(R.string.yes,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,
-                                            int whichButton) {
+            dialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
                             // set the result code so caller knows the user signed out
-                            setResult(RESULT_SIGNED_OUT);
-                            WordPress.signOutAsyncWithProgressBar(PreferencesActivity.this, new SignOutCallback() {
+                            getActivity().setResult(SettingsActivity.RESULT_SIGNED_OUT);
+                            WordPress.signOutAsyncWithProgressBar(getActivity(), new SignOutCallback() {
                                 @Override
                                 public void onSignOut() {
-                                    finish();
+                                    getActivity().finish();
                                 }
                             });
                         }
                     });
-            dialogBuilder.setNegativeButton(R.string.cancel,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,
-                                            int whichButton) {
+            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
                             // Just close the window.
                         }
                     });
             dialogBuilder.setCancelable(true);
-            if (!isFinishing())
-                dialogBuilder.create().show();
+            dialogBuilder.create().show();
             return true;
         }
     };
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        refreshWPComAuthCategory();
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     public void onStop() {
         super.onStop();

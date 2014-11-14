@@ -48,7 +48,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
-import org.wordpress.android.ui.prefs.PreferencesActivity;
+import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -522,7 +522,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 break;
             case SETTINGS_REQUEST:
                 // user returned from settings - skip if user signed out
-                if (mDrawerListView != null && resultCode != PreferencesActivity.RESULT_SIGNED_OUT) {
+                if (mDrawerListView != null && resultCode != SettingsActivity.RESULT_SIGNED_OUT) {
                     // If we need to add or remove the blog spinner, init the drawer again
                     initMenuDrawer();
 
@@ -530,7 +530,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                     if (blogNames.length >= 1) {
                         setupCurrentBlog();
                     }
-                    if (data != null && data.getBooleanExtra(PreferencesActivity.CURRENT_BLOG_CHANGED, true)) {
+                    if (data != null && data.getBooleanExtra(SettingsActivity.CURRENT_BLOG_CHANGED, true)) {
                         blogChanged();
                     }
                     WordPress.registerForCloudMessaging(this);
@@ -570,7 +570,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         if (item.getItemId() == android.R.id.home) {
             mDrawerLayout.openDrawer(Gravity.START);
         } else if (item.getItemId() == R.id.menu_settings) {
-            Intent i = new Intent(this, PreferencesActivity.class);
+            Intent i = new Intent(this, SettingsActivity.class);
             startActivityForResult(i, SETTINGS_REQUEST);
         } else if (item.getItemId() == R.id.menu_signout) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);

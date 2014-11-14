@@ -8,6 +8,7 @@
     <color name="gray">#CCC</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="default_background">@color/grey_extra_light</color>
 
     <color name="image_options_label">#CCCCCC</color>
     <color name="pressed_wordpress">#CC78C8E6</color>
@@ -78,7 +79,6 @@
     <color name="translucent_grey_extra_dark">#80222222</color>
 
     <!-- native reader colors -->
-    <color name="reader_background">@color/grey_extra_light</color>
     <color name="reader_divider_grey">@color/grey_extra_light</color>
     <color name="reader_divider_blue">@color/blue_light</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
