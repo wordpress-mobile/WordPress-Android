@@ -18,6 +18,7 @@
     <dimen name="menu_drawer_row_height">48dp</dimen>
     <dimen name="menu_drawer_icon_size">28dp</dimen>
     <dimen name="menu_drawer_badge_size">24dp</dimen>
+    <dimen name="menu_drawer_header_height">96dp</dimen>
 
 	<dimen name="media_grid_local_image_width">160dp</dimen>
 	<dimen name="media_grid_progress_height">50dp</dimen>

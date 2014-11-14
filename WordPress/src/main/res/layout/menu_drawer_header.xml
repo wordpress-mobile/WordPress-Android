@@ -6,9 +6,9 @@
     <ImageView
         android:id="@+id/image_drawer_banner"
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="@dimen/menu_drawer_header_height"
         android:scaleType="centerCrop"
-        android:src="@drawable/drawer_header" />
+        android:src="@drawable/drawer_header_background" />
 
     <Spinner
         android:id="@+id/blog_spinner"
