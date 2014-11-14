@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,14 +23,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -67,7 +64,6 @@ import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -102,9 +98,10 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private MenuAdapter mAdapter;
     protected final List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mDrawerListView;
-    private Spinner mBlogSpinner;
     private View mDrawerHeaderView;
+    private Spinner mBlogSpinner;
     protected boolean mFirstLaunch = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -232,10 +229,13 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);
 
-        // add header image
-        View header = getLayoutInflater().inflate(R.layout.menu_drawer_header, mDrawerListView, false);
-        mDrawerListView.addHeaderView(header, null, false);
+        // add header containing image and spinner if it hasn't already been added
+        if (mDrawerHeaderView == null) {
+            mDrawerHeaderView = getLayoutInflater().inflate(R.layout.menu_drawer_header, mDrawerListView, false);
+            mDrawerListView.addHeaderView(mDrawerHeaderView, null, false);
+        }
 
+        // blog spinner only appears if there's more than one blog
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
         String[] blogNames = getBlogNames();
         if (blogNames.length > 1) {
@@ -300,8 +300,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * sets the adapter for the blog spinner and populates it with the passed array of blog names
      */
     private void populateBlogSpinner(String[] blogNames) {
-        if (mBlogSpinner == null)
+        if (mBlogSpinner == null) {
             return;
+        }
         mBlogSpinnerInitialized = false;
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -380,9 +381,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     public void updateMenuDrawer() {
         mAdapter.clear();
         // iterate over the available menu items and only show the ones that should be visible
-        Iterator<MenuDrawerItem> availableItems = mMenuItems.iterator();
-        while (availableItems.hasNext()) {
-            MenuDrawerItem item = availableItems.next();
+        for (MenuDrawerItem item : mMenuItems) {
             if (item.isVisible()) {
                 mAdapter.add(item);
             }
@@ -636,9 +635,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         WordPress.wpDB.updateLastBlogId(WordPress.getCurrentLocalTableBlogId());
         // the menu may have changed, we need to change the selection if the selected item
         // is not available in the menu anymore
-        Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
-        while (itemIterator.hasNext()) {
-            MenuDrawerItem item = itemIterator.next();
+        for (MenuDrawerItem item : mMenuItems) {
             // if the item is selected, but it's no longer visible we need to
             // select the first available item from the adapter
             if (item.isSelected() && !item.isVisible()) {
