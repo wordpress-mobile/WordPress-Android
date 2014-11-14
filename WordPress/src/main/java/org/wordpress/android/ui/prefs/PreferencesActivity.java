@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -19,6 +18,8 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -78,6 +79,26 @@ public class PreferencesActivity extends PreferenceActivity {
     public static final int RESULT_SIGNED_OUT = RESULT_FIRST_USER;
     public static final String CURRENT_BLOG_CHANGED = "CURRENT_BLOG_CHANGED";
 
+    private Toolbar mActionBar;
+
+    @Override
+    public void setContentView(int layoutResID) {
+        ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.preference_activity,
+                new LinearLayout(this), false);
+        mActionBar = (Toolbar) contentView.findViewById(R.id.toolbar);
+        mActionBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        mActionBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        ViewGroup wrapper = (ViewGroup) contentView.findViewById(R.id.wrapper);
+        LayoutInflater.from(this).inflate(layoutResID, wrapper, true);
+        getWindow().setContentView(contentView);
+        mActionBar.setTitle(R.string.settings);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,10 +111,6 @@ public class PreferencesActivity extends PreferenceActivity {
 
         setTitle(getResources().getText(R.string.settings));
         mCurrentBlogOnCreate = WordPress.getCurrentBlog();
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         addPreferencesFromResource(R.xml.preferences);
 

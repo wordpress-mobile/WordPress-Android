@@ -81,7 +81,13 @@
         <activity
             android:name=".ui.prefs.PreferencesActivity"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@android:style/Theme.Holo.Light"/>
+            android:parentActivityName=".ui.posts.PostsActivity"
+            android:theme="@style/CalypsoTheme">
+            <!-- Parent activity meta-data to support API level 4+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.posts.PostsActivity"/>
+        </activity>
         <activity
             android:name=".ui.accounts.ManageBlogsActivity"/>
 
