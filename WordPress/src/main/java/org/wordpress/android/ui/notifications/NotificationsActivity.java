@@ -109,9 +109,6 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
             launchWithNoteId();
         }
 
-        // remove window background since background color is set in fragment (reduces overdraw)
-        getWindow().setBackgroundDrawable(null);
-
         // Show an auth alert if we don't have an authorized Simperium user
         if (SimperiumUtils.isUserNotAuthorized()) {
             AuthenticationDialogUtils.showAuthErrorDialog(this, R.string.sign_in_again,
