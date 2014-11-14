@@ -56,25 +56,21 @@
     <color name="stats_views_hover_color">#f0821e</color>
     <color name="stats_visitors_hover_color">#d54e21</color>
 
-    <!--
-        these are from the mobile handbook, handbook color name is in the comment
-        http://make.wordpress.org/mobile/handbook/pathways/design/colors/
-    -->
-    <color name="blue_extra_light">#c8eefc</color>  <!-- (not in handbook) -->
-    <color name="blue_light">#78c8e6</color>        <!-- "light blue" -->
-    <color name="blue_new_kid">#2EA2CC</color>      <!-- "new kid on the block blue" -->
-    <color name="blue_medium">#1e8cbe</color>       <!-- "base lighter blue" -->
-    <color name="blue_dark">#0074a2</color>         <!-- "base darker blue" -->
-    <color name="blue_extra_dark">#005684</color>   <!-- "midnight blue" -->
-    <color name="orange_medium">#f1831e</color>     <!-- "jazzy orange" -->
-    <color name="orange_dark">#d54e21</color>       <!-- "fire orange" -->
-    <color name="grey_extra_light">#eeeeee</color>  <!-- "it's everywhere grey" -->
-    <color name="grey_light">#dddddd</color>        <!-- "read grey" -->
+    <color name="blue_extra_light">#c8eefc</color>
+    <color name="blue_light">#78dcfa</color>
+    <color name="blue_new_kid">#2EA2CC</color>
+    <color name="blue_medium">#0087be</color>
+    <color name="blue_dark">#0074a2</color>
+    <color name="blue_extra_dark">#005082</color>
+    <color name="orange_medium">#f1831e</color>
+    <color name="orange_dark">#d54e21</color>
+    <color name="grey_extra_light">#eeeeee</color>
+    <color name="grey_light">#dddddd</color>
     <color name="grey_medium_light">#bbbbbb</color>
-    <color name="grey_medium">#999999</color>       <!-- "all T, all shade grey" -->
-    <color name="grey_medium_dark">#666666</color>  <!-- "whisper grey" -->
-    <color name="grey_dark">#333333</color>         <!-- "little eddie grey" -->
-    <color name="grey_extra_dark">#222222</color>   <!-- "big eddie grey" -->
+    <color name="grey_medium">#999999</color>
+    <color name="grey_medium_dark">#666666</color>
+    <color name="grey_dark">#333333</color>
+    <color name="grey_extra_dark">#222222</color>
     <color name="semi_transparent_blue_medium">#cc1e8cbe</color>
     <color name="translucent_grey_extra_dark">#80222222</color>
 

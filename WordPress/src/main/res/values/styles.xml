@@ -4,7 +4,7 @@
     <style name="WordPress" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Material theme -->
         <item name="colorPrimary">@color/blue_medium</item>
-        <item name="colorPrimaryDark">@color/blue_dark</item>
+        <item name="colorPrimaryDark">@color/blue_extra_dark</item>
         <item name="colorAccent">@color/blue_light</item>
         <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
