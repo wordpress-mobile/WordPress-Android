@@ -20,10 +20,11 @@
             android:paddingRight="@dimen/reader_list_margin"
             tools:listitem="@layout/reader_listitem_post_excerpt" />
 
-        <include
-            android:id="@+id/empty_view"
-            layout="@layout/reader_empty_view" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <include
+        android:id="@+id/empty_view"
+        layout="@layout/reader_empty_view" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_new_posts"
