@@ -145,7 +145,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     }
 
     private void setValueForPeopleProperty(String peopleProperty, Object value) {
-        mMixpanel.getPeople().set(peopleProperty, value);
+        try {
+            mMixpanel.getPeople().set(peopleProperty, value);
+        } catch (OutOfMemoryError outOfMemoryError) {
+            // ignore exception
+        }
     }
 
     private void trackMixpanelEventForInstructions(AnalyticsTrackerMixpanelInstructionsForStat instructions,
@@ -183,7 +187,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
     @Override
     public void registerPushNotificationToken(String regId) {
-        mMixpanel.getPeople().setPushRegistrationId(regId);
+        try {
+            mMixpanel.getPeople().setPushRegistrationId(regId);
+        } catch (OutOfMemoryError outOfMemoryError) {
+            // ignore exception
+        }
     }
 
     @Override
@@ -217,15 +225,18 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         if (connected) {
             String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
             mMixpanel.identify(username);
-            mMixpanel.getPeople().identify(username);
             try {
+                mMixpanel.getPeople().identify(username);
                 JSONObject jsonObj = new JSONObject();
                 jsonObj.put("$username", username);
                 jsonObj.put("$first_name", username);
                 mMixpanel.getPeople().set(jsonObj);
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.UTILS, e);
+            } catch (OutOfMemoryError outOfMemoryError) {
+                // ignore exception
             }
+
             retrieveAndRegisterEmailAddressIfApplicable();
         }
     }
@@ -233,7 +244,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     @Override
     public void clearAllData() {
         mMixpanel.clearSuperProperties();
-        mMixpanel.getPeople().clearPushRegistrationId();
+        try {
+            mMixpanel.getPeople().clearPushRegistrationId();
+        } catch (OutOfMemoryError outOfMemoryError) {
+            // ignore exception
+        }
     }
 
     private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(
@@ -560,7 +575,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     }
 
     private void incrementPeopleProperty(String property) {
-        mMixpanel.getPeople().increment(property, 1);
+        try {
+            mMixpanel.getPeople().increment(property, 1);
+        } catch (OutOfMemoryError outOfMemoryError) {
+            // ignore exception
+        }
     }
 
     private void incrementSuperProperty(String property) {
