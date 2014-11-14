@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class JSONUtil {
     private static String QUERY_SEPERATOR=".";
@@ -230,5 +231,26 @@ public class JSONUtil {
                 return null;
         }
         return jsonChild;
+    }
+
+    // Returns a copy of the passed JSONObject
+    @SuppressWarnings("unchecked")
+    public static JSONObject copyJSONObject(JSONObject object) {
+        JSONObject objectCopy = new JSONObject();
+
+        if (object == null) return objectCopy;
+
+        Iterator<String> iterator = object.keys();
+        while (iterator.hasNext()) {
+            try {
+                String key = iterator.next();
+                Object value = object.get(key);
+                objectCopy.put(key, value);
+            } catch (JSONException e) {
+                AppLog.e(T.UTILS, e);
+            }
+        }
+
+        return objectCopy;
     }
 }
