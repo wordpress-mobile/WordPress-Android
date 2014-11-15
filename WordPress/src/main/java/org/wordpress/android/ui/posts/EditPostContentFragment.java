@@ -96,8 +96,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class EditPostContentFragment extends Fragment implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
@@ -964,6 +962,16 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
     private void startMediaSelection() {
         Intent intent = new Intent(mActivity, MediaSelectActivity.class);
+        String[] tabConfig = {
+            "Images;" + MediaSelectActivity.FILTER_CAPTURE_IMAGE + "|" +
+                        MediaSelectActivity.FILTER_DEVICE_IMAGES + "|" +
+                        MediaSelectActivity.FILTER_WP_IMAGES,
+            "Videos;" + MediaSelectActivity.FILTER_CAPTURE_VIDEO + "|" +
+                        MediaSelectActivity.FILTER_DEVICE_VIDEOS + "|" +
+                        MediaSelectActivity.FILTER_WP_VIDEOS
+        };
+        intent.putExtra(MediaSelectActivity.PARAMETER_REQUEST_KEY, true);
+        intent.putExtra(MediaSelectActivity.PARAMETER_TAB_CONFIG, tabConfig);
         startActivityForResult(intent, MediaSelectActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
         mActivity.overridePendingTransition(R.anim.reader_activity_slide_in, R.anim.fade_out);
     }

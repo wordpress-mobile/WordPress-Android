@@ -184,12 +184,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     public void onDestroyActionMode(ActionMode mode) {
         if (!mCapturingMedia) {
             if (mListener != null) {
-                if (mSelectedContent.size() == 0) {
-                    mListener.onMediaContentSelectionCancelled();
-                }
-                else {
-                    mListener.onMediaContentSelectionConfirmed(mSelectedContent);
-                }
+                mListener.onMediaContentSelectionCancelled();
             }
 
             mSelectedContent.clear();
