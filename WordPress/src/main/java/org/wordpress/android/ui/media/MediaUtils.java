@@ -520,6 +520,16 @@ public class MediaUtils {
         return WordPress.wpDB.getMediaImagesForBlog(String.valueOf(blog.getLocalTableBlogId()));
     }
 
+    public static Cursor getWordPressMediaVideos() {
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (blog == null) {
+            return null;
+        }
+
+        return WordPress.wpDB.getMediaFilesForBlog(String.valueOf(blog.getLocalTableBlogId()));
+    }
+
     public static Cursor getDeviceMediaStoreImageThumbnails(ContentResolver contentResolver, String[] columns) {
         Uri thumbnailUri = MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI;
         return MediaStore.Images.Thumbnails.query(contentResolver, thumbnailUri, columns);

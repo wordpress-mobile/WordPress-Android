@@ -250,12 +250,9 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
         if (cursor.moveToFirst()) {
             do {
                 int attachmentIdColumnIndex = cursor.getColumnIndex("mediaId");
-                int titleIdColumnIndex = cursor.getColumnIndex("title");
                 int fileUrlColumnIndex = cursor.getColumnIndex("fileURL");
                 int thumbnailColumnIndex = cursor.getColumnIndex("thumbnailURL");
                 int dateCreatedColumnIndex = cursor.getColumnIndex("date_created_gmt");
-                int widthColumnIndex = cursor.getColumnIndex("width");
-                int heightColumnIndex = cursor.getColumnIndex("height");
 
                 String id = "";
                 if (attachmentIdColumnIndex != -1) {
@@ -285,6 +282,44 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
         }
     }
 
+    private void addWordPressVideosFromCursor(Cursor cursor) {
+        if (cursor.moveToFirst()) {
+            do {
+                int attachmentIdColumnIndex = cursor.getColumnIndex("mediaId");
+                int fileUrlColumnIndex = cursor.getColumnIndex("fileURL");
+                int thumbnailColumnIndex = cursor.getColumnIndex("thumbnailURL");
+                int dateCreatedColumnIndex = cursor.getColumnIndex("date_created_gmt");
+
+                String id = "";
+                if (attachmentIdColumnIndex != -1) {
+                    id = String.valueOf(cursor.getInt(attachmentIdColumnIndex));
+                }
+                MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.WEB_VIDEO);
+                newContent.setContentId(id);
+
+                if (fileUrlColumnIndex != -1) {
+                    String fileUrl = cursor.getString(fileUrlColumnIndex);
+                    newContent.setContentUri(Uri.parse(fileUrl));
+                }
+
+                if (dateCreatedColumnIndex != -1) {
+                    String dateTaken = cursor.getString(dateCreatedColumnIndex);
+                    try {
+                        newContent.setContentTitle(DATE_DISPLAY_FORMAT.format(new Date(Long.valueOf(dateTaken))));
+                    } catch (NumberFormatException numberFormatException) {
+                        Log.w("TEST", "Error formatting DATE_TAKEN(" + dateTaken + "): " + numberFormatException);
+                    }
+                }
+                if (thumbnailColumnIndex != -1) {
+                    newContent.setContentPreviewUri(Uri.parse(cursor.getString(thumbnailColumnIndex)));
+                }
+                if (newContent.getContentUri().toString().endsWith(".mp4")) {
+                    mAdapter.addContent(newContent);
+                }
+            } while (cursor.moveToNext());
+        }
+    }
+
     private void addWordPressImages() {
         Cursor wordPressImages = MediaUtils.getWordPressMediaImages();
 
@@ -294,6 +329,11 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     }
 
     private void addWordPressVideos() {
+        Cursor wordPressVideos = MediaUtils.getWordPressMediaVideos();
+
+        if (wordPressVideos != null) {
+            addWordPressVideosFromCursor(wordPressVideos);
+        }
     }
 
     private MediaContent imageContentFromQuery(Cursor imageCursor, Cursor thumbnailCursor) {
