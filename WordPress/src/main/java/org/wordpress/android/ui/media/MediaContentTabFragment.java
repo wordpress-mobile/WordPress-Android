@@ -234,6 +234,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
             do {
                 int attachmentIdColumnIndex = cursor.getColumnIndex("mediaId");
                 int titleIdColumnIndex = cursor.getColumnIndex("title");
+                int fileUrlColumnIndex = cursor.getColumnIndex("fileURL");
                 int thumbnailColumnIndex = cursor.getColumnIndex("thumbnailURL");
                 int dateCreatedColumnIndex = cursor.getColumnIndex("date_created_gmt");
                 int widthColumnIndex = cursor.getColumnIndex("width");
@@ -245,6 +246,11 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
                 }
                 MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.WEB_IMAGE);
                 newContent.setContentId(id);
+
+                if (fileUrlColumnIndex != -1) {
+                    String fileUrl = cursor.getString(fileUrlColumnIndex);
+                    newContent.setContentUri(Uri.parse(fileUrl));
+                }
 
                 if (dateCreatedColumnIndex != -1) {
                     String dateTaken = cursor.getString(dateCreatedColumnIndex);
