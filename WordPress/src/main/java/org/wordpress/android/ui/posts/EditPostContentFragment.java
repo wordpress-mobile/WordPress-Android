@@ -71,7 +71,7 @@ import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.MediaSelectActivity;
 import org.wordpress.android.ui.media.MediaUtils;
-import org.wordpress.android.ui.media.content.MediaContent;
+import org.wordpress.android.ui.media.MediaContent;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -338,7 +338,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             List<MediaContent> selectedContent = data.getParcelableArrayListExtra(MediaSelectActivity.SELECTED_CONTENT_RESULTS_KEY);
 
             for (MediaContent selectedItem : selectedContent) {
-                if (!addMedia(Uri.parse(selectedItem.getData()), null, getActivity())) {
+                if (!addMedia(selectedItem.getContentUri(), null, getActivity())) {
                     Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
                          .show();
                 }

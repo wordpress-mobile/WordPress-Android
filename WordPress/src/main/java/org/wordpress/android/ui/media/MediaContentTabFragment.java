@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -20,9 +21,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.media.content.CaptureMediaContent;
-import org.wordpress.android.ui.media.content.DeviceImageMediaContent;
-import org.wordpress.android.ui.media.content.MediaContent;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,14 +108,17 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MediaContent selectedContent = (MediaContent) mAdapter.getItem(position);
 
-        if (selectedContent instanceof CaptureMediaContent) {
-            captureMediaContent((CaptureMediaContent)selectedContent);
-            MediaUtils.launchCamera(this, this);
-        } else if (selectedContent != null) {
-            mSelectedContent.add(selectedContent);
+        if (selectedContent != null) {
+            if (selectedContent.getType() == MediaContent.MEDIA_TYPE.CAPTURE) {
+                captureMediaContent(selectedContent);
+                MediaUtils.launchCamera(this, this);
+            }
+            else {
+                mSelectedContent.add(selectedContent);
 
-            if (mListener != null) {
-                mListener.onMediaContentSelectionConfirmed(mSelectedContent);
+                if (mListener != null) {
+                    mListener.onMediaContentSelectionConfirmed(mSelectedContent);
+                }
             }
         }
     }
@@ -131,15 +132,18 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
         MediaContent selectedContent = (MediaContent) mAdapter.getItem(position);
 
-        if (selectedContent instanceof CaptureMediaContent) {
-            captureMediaContent((CaptureMediaContent) selectedContent);
-            MediaUtils.launchCamera(this, this);
-        } else if (selectedContent != null) {
-            if (checked && !mSelectedContent.contains(selectedContent)) {
-                mSelectedContent.add(selectedContent);
+        if (selectedContent != null) {
+            if (selectedContent.getType() == MediaContent.MEDIA_TYPE.CAPTURE) {
+                captureMediaContent(selectedContent);
+                MediaUtils.launchCamera(this, this);
             }
-            else if (mSelectedContent.contains(selectedContent)) {
-                mSelectedContent.remove(selectedContent);
+            else {
+                if (checked && !mSelectedContent.contains(selectedContent)) {
+                    mSelectedContent.add(selectedContent);
+                }
+                else if (mSelectedContent.contains(selectedContent)) {
+                    mSelectedContent.remove(selectedContent);
+                }
             }
         }
 
@@ -193,9 +197,9 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
 
     @Override
     public void onMediaCapturePathReady(String mediaCapturePath) {
-        DeviceImageMediaContent newContent = new DeviceImageMediaContent("");
-        newContent.setImageUri(mediaCapturePath);
-        newContent.setThumbUri(mediaCapturePath);
+        MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.CAPTURE);
+        newContent.setContentUri(Uri.parse(mediaCapturePath));
+        newContent.setContentPreviewUri(Uri.parse(mediaCapturePath));
         mAdapter.addContent(newContent);
     }
 
@@ -212,38 +216,65 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
 
         if (imageCursor.moveToFirst() && thumbCursor.moveToFirst()) {
             do {
-                DeviceImageMediaContent newContent = imageContentFromQuery(imageCursor, thumbCursor);
+                MediaContent newContent = imageContentFromQuery(imageCursor, thumbCursor);
 
-                if (newContent != null && !mImageIds.contains(newContent.getId())) {
+                if (newContent != null && !mImageIds.contains(newContent.getContentId())) {
                     mAdapter.addContent(newContent);
-                    mImageIds.add(newContent.getId());
+                    mImageIds.add(newContent.getContentId());
                 }
             } while(imageCursor.moveToNext() && thumbCursor.moveToNext());
         }
     }
 
     private void addMediaStoreVideos() {
-//        String[] columns = { MediaStore.Video.Media._ID, MediaStore.Video.Media.DATA, MediaStore.Video.Thumbnails.VIDEO_ID };
-//        Cursor imageCursor = MediaUtils.getDeviceMediaStoreVideoThumbnails(getActivity().getContentResolver(), columns);
-//
-//        if (imageCursor.moveToFirst()) {
-//            do {
-//                String id = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.MediaColumns._ID));
-//                String data = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
-//                String name = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.MediaColumns.TITLE));
-//
-//                if(!mImageIds.contains(id)) {
-//                    DeviceImageMediaContent newContent = new DeviceImageMediaContent(data);
-//                    newContent.setName(name);
-//                    mGridView.addContent(newContent);
-//                    mImageIds.add(name);
-//                }
-//            } while(imageCursor.moveToNext());
-//        }
     }
 
-    private DeviceImageMediaContent imageContentFromQuery(Cursor imageCursor, Cursor thumbnailCursor) {
-        DeviceImageMediaContent content = null;
+    private void addWordPressImagesFromCursor(Cursor cursor) {
+        if (cursor.moveToFirst()) {
+            do {
+                int attachmentIdColumnIndex = cursor.getColumnIndex("_id");
+                int titleIdColumnIndex = cursor.getColumnIndex("title");
+                int thumbnailColumnIndex = cursor.getColumnIndex("thumbnailURL");
+                int dateCreatedColumnIndex = cursor.getColumnIndex("date_created_gmt");
+                int widthColumnIndex = cursor.getColumnIndex("width");
+                int heightColumnIndex = cursor.getColumnIndex("height");
+
+                String id = "";
+                if (attachmentIdColumnIndex != -1) {
+                    id = cursor.getString(attachmentIdColumnIndex);
+                }
+                MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.WEB_IMAGE);
+                newContent.setContentId(id);
+
+                if (dateCreatedColumnIndex != -1) {
+                    String dateTaken = cursor.getString(dateCreatedColumnIndex);
+                    try {
+                        newContent.setContentTitle(DATE_DISPLAY_FORMAT.format(new Date(Long.valueOf(dateTaken))));
+                    } catch (NumberFormatException numberFormatException) {
+                        Log.w("TEST", "Error formatting DATE_TAKEN(" + dateTaken + "): " + numberFormatException);
+                    }
+                }
+                if (thumbnailColumnIndex != -1) {
+                    newContent.setContentPreviewUri(Uri.parse(cursor.getString(thumbnailColumnIndex)));
+                }
+                mAdapter.addContent(newContent);
+            } while (cursor.moveToNext());
+        }
+    }
+
+    private void addWordPressImages() {
+        Cursor wordPressImages = MediaUtils.getWordPressMediaImages();
+
+        if (wordPressImages != null) {
+            addWordPressImagesFromCursor(wordPressImages);
+        }
+    }
+
+    private void addWordPressVideos() {
+    }
+
+    private MediaContent imageContentFromQuery(Cursor imageCursor, Cursor thumbnailCursor) {
+        MediaContent content = null;
 
         int imageIdColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media._ID);
         int imageDataColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
@@ -251,22 +282,22 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
         int thumbnailColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
 
         if (imageIdColumnIndex != -1) {
-            String imageId = imageCursor.getString(imageIdColumnIndex);
-            content = new DeviceImageMediaContent(imageId);
+            content = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_IMAGE);
+            content.setContentId(imageCursor.getString(imageIdColumnIndex));
 
             if (imageDataColumnIndex != -1) {
-                content.setImageUri(imageCursor.getString(imageDataColumnIndex));
+                content.setContentUri(Uri.parse(imageCursor.getString(imageDataColumnIndex)));
             }
             if (dateTakenColumnIndex != -1) {
                 String dateTaken = imageCursor.getString(dateTakenColumnIndex);
                 try {
-                    content.setName(DATE_DISPLAY_FORMAT.format(new Date(Long.valueOf(dateTaken))));
+                    content.setContentTitle(DATE_DISPLAY_FORMAT.format(new Date(Long.valueOf(dateTaken))));
                 } catch (NumberFormatException numberFormatException) {
                     Log.w("TEST", "Error formatting DATE_TAKEN(" + dateTaken + "): " + numberFormatException);
                 }
             }
             if (thumbnailColumnIndex != -1) {
-                content.setThumbUri(thumbnailCursor.getString(thumbnailColumnIndex));
+                content.setContentPreviewUri(Uri.parse(thumbnailCursor.getString(thumbnailColumnIndex)));
             }
         }
 
@@ -300,10 +331,14 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     /** Helper method to add content to the adapter based on the currently set filters. */
     private void applyFilters() {
         if ((mFilter & CAPTURE_IMAGE) != 0) {
-            mAdapter.addContent(new CaptureMediaContent(CaptureMediaContent.CAPTURE_TYPE_IMAGE));
+            MediaContent captureImageContent = new MediaContent(MediaContent.MEDIA_TYPE.CAPTURE);
+            captureImageContent.setTag("CaptureImage");
+            mAdapter.addContent(captureImageContent);
         }
         if ((mFilter & CAPTURE_VIDEO) != 0) {
-            mAdapter.addContent(new CaptureMediaContent(CaptureMediaContent.CAPTURE_TYPE_VIDEO));
+            MediaContent captureVideoContent = new MediaContent(MediaContent.MEDIA_TYPE.CAPTURE);
+            captureVideoContent.setTag("CaptureVideo");
+            mAdapter.addContent(captureVideoContent);
         }
         if ((mFilter & DEVICE_IMAGES) != 0) {
             addMediaStoreImages();
@@ -311,15 +346,23 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
         if ((mFilter & DEVICE_VIDEOS) != 0) {
             addMediaStoreVideos();
         }
+        if ((mFilter & WP_IMAGES) != 0) {
+            addWordPressImages();
+        }
+        if ((mFilter & WP_VIDEOS) != 0) {
+            addWordPressVideos();
+        }
     }
 
-    private void captureMediaContent(CaptureMediaContent mediaContent) {
-        if (mediaContent.isImageCapture()) {
-            mCapturingMedia = true;
-            MediaUtils.launchCamera(this, this);
-        } else if (mediaContent.isVideoCapture()) {
-            mCapturingMedia = true;
+    private void captureMediaContent(MediaContent mediaContent) {
+        String tag = mediaContent.getTag();
+
+        if (tag != null && tag.equals("CaptureVideo")) {
             MediaUtils.launchVideoCamera(this);
+        } else {
+            MediaUtils.launchCamera(this, this);
         }
+
+        mCapturingMedia = true;
     }
 }

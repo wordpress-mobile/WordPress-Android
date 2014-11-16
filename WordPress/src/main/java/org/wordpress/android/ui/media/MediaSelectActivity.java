@@ -7,7 +7,6 @@ import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.media.content.MediaContent;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.ArrayList;

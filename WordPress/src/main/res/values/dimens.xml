@@ -113,5 +113,6 @@
     <!-- stats -->
     <dimen name="stats_button_corner_radius">4dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
+    <dimen name="media_content_grid_item_height">148dp</dimen>
 
 </resources>

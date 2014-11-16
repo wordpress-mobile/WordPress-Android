@@ -9,12 +9,15 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -35,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -522,5 +526,27 @@ public class MediaUtils {
     public static Cursor getDeviceMediaStoreVideos(ContentResolver contentResolver, String[] columns) {
         Uri videoUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         return MediaStore.Video.query(contentResolver, videoUri, columns);
+    }
+
+    public static class BackgroundDownloadDeviceImage extends AsyncTask<Uri, String, Bitmap> {
+        WeakReference<ImageView> mReference;
+
+        public BackgroundDownloadDeviceImage(ImageView resultStore) {
+            mReference = new WeakReference<ImageView>(resultStore);
+        }
+
+        @Override
+        protected Bitmap doInBackground(Uri... params) {
+            return BitmapFactory.decodeFile(params[0].getPath());
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            ImageView imageView = mReference.get();
+
+            if (imageView != null) {
+                imageView.setImageBitmap(result);
+            }
+        }
     }
 }

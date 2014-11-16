@@ -2,9 +2,6 @@ package org.wordpress.android.ui.media;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.media.content.CaptureMediaContent;
-import org.wordpress.android.ui.media.content.DeviceImageMediaContent;
-import org.wordpress.android.ui.media.content.MediaContent;
+import org.wordpress.android.widgets.WPTextView;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Displays {@link org.wordpress.android.ui.media.content.MediaContent}.
+ * Displays {@link MediaContent}.
  */
 
 public class MediaContentAdapter extends BaseAdapter {
@@ -40,18 +34,12 @@ public class MediaContentAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return MediaContent.MEDIA_TYPE.COUNT.ordinal();
+        return 1;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position < mContent.size()) {
-            return mContent.get(position)
-                           .getType()
-                           .ordinal();
-        }
-
-        return 0;
+        return position;
     }
 
     @Override
@@ -71,16 +59,19 @@ public class MediaContentAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        MediaContent content = mContent.get(position);
+        if (convertView == null) {
+            convertView = mLayoutInflator.inflate(R.layout.media_content_grid_item, parent, false);
+        }
 
+        MediaContent content = mContent.get(position);
         switch (content.getType()) {
         case INVALID:
             break;
         case CAPTURE:
-            convertView = createCaptureContentView(convertView, (CaptureMediaContent) content, parent);
+            convertView = createCaptureContentView(convertView, content);
             break;
         case DEVICE_IMAGE:
-            convertView = createDeviceImageContentView(convertView, (DeviceImageMediaContent) content, parent);
+            convertView = createDeviceImageContentView(convertView, content);
             break;
         case DEVICE_VIDEO:
             break;
@@ -103,73 +94,76 @@ public class MediaContentAdapter extends BaseAdapter {
         }
     }
 
-    private View createDeviceImageContentView(View convertView, DeviceImageMediaContent content, ViewGroup root) {
-        if (convertView == null) {
-            convertView = mLayoutInflator.inflate(R.layout.device_image_media_content, root, false);
-        }
-
+    /** Helper method to create the view for content capture. */
+    private View createCaptureContentView(View convertView, MediaContent content) {
         if (convertView != null) {
-            ImageView contentImage = (ImageView) convertView.findViewById(R.id.deviceImageContentImage);
-            TextView contentTitle = (TextView) convertView.findViewById(R.id.deviceImageContentTitle);
+            String tag = content.getTag();
+            boolean isVideo = tag != null && tag.equals("CaptureVideo");
 
-            if (contentTitle != null) {
-                contentTitle.setText(content.getName());
-            }
-
-            if (contentImage != null) {
-                BackgroundDownload bgDownload = new BackgroundDownload(contentImage);
-                bgDownload.execute(content.getThumbUri());
-            }
-        }
-
-        return convertView;
-    }
-
-    /** Helper method to create the view for content capture */
-    private View createCaptureContentView(View convertView, CaptureMediaContent content, ViewGroup root) {
-        if (convertView == null) {
-            convertView = mLayoutInflator.inflate(R.layout.capture_media_content, root, false);
-        }
-
-        if (convertView != null) {
-            int captureType = content.getCaptureType();
-
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.contentImage);
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
             if (imageView != null) {
-                if (captureType == CaptureMediaContent.CAPTURE_TYPE_IMAGE) {
-                    imageView.setImageDrawable(mResources.getDrawable(R.drawable.dashicon_camera_black));
-                } else if (captureType == CaptureMediaContent.CAPTURE_TYPE_VIDEO) {
-                    imageView.setImageDrawable(mResources.getDrawable(R.drawable.dashicon_video_alt2_black));
+                if (isVideo) {
+                    imageView.setImageDrawable(mResources.getDrawable(R.drawable.media_image_placeholder));
+                } else {
+                    imageView.setImageDrawable(mResources.getDrawable(R.drawable.media_image_placeholder));
                 }
             }
 
-//            TextView textView = (TextView) convertView.findViewById(R.id.contentTitle);
-//            if (textView != null) {
-//                textView.setText(content.getName());
-//            }
+            ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
+            if (overlayView != null) {
+                overlayView.setVisibility(View.VISIBLE);
+                if (isVideo) {
+                    overlayView.setImageDrawable(mResources.getDrawable(R.drawable.dashicon_video_alt2_black));
+                } else {
+                    overlayView.setImageDrawable(mResources.getDrawable(R.drawable.dashicon_camera_black));
+                }
+            }
+
+            WPTextView titleView = (WPTextView) convertView.findViewById(R.id.mediaContentTitle);
+            if (titleView != null) {
+                if (isVideo) {
+                    titleView.setText("Capture video");
+                } else {
+                    titleView.setText("Capture image");
+                }
+            }
         }
 
         return convertView;
     }
 
-    private class BackgroundDownload extends AsyncTask<String, String, Bitmap> {
-        WeakReference<ImageView> mReference;
+    /** Helper method to create the view for device images. */
+    private View createDeviceImageContentView(View convertView, MediaContent content) {
+        if (convertView != null) {
+            ImageView contentImage = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
+            TextView contentTitle = (TextView) convertView.findViewById(R.id.mediaContentTitle);
+            ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
 
-        public BackgroundDownload(ImageView resultStore) {
-            mReference = new WeakReference<ImageView>(resultStore);
+            if (contentTitle != null) {
+                contentTitle.setText(content.getContentTitle());
+            }
+
+            if (contentImage != null) {
+                if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
+                    contentImage.setImageResource(R.drawable.media_image_placeholder);
+                } else {
+                    contentImage.setImageResource(R.drawable.media_image_placeholder);
+                    MediaUtils.BackgroundDownloadDeviceImage bgDownload = new MediaUtils.BackgroundDownloadDeviceImage(contentImage);
+                    bgDownload.execute(content.getContentPreviewUri());
+                }
+            }
+
+            if (overlayView != null) {
+                overlayView.setVisibility(View.INVISIBLE);
+            }
         }
 
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            return BitmapFactory.decodeFile(params[0]);
-        }
+        return convertView;
+    }
 
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            ImageView imageView = mReference.get();
 
-            if (imageView != null) {
-                imageView.setImageBitmap(result);
+
+
             }
         }
     }

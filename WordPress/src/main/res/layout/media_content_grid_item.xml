@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.wordpress.android.ui.media.CheckableFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/deviceImageContentContainer"
-    android:layout_width="fill_parent"
-    android:layout_height="148dp"
-    android:orientation="vertical"
+    android:id="@+id/mediaContentFrame"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/media_content_grid_item_height"
+    android:padding="8dp"
     android:background="@drawable/media_grid_item_checkstate_selector">
 
     <ImageView
-        android:id="@+id/deviceImageContentImage"
-        android:contentDescription="@string/content_description_preview_image"
+        android:id="@+id/mediaContentBackgroundImage"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:paddingTop="8dp"
-        android:layout_gravity="center_horizontal"
         android:scaleType="fitCenter" />
 
+    <ImageView
+        android:id="@+id/mediaContentOverlayImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/deviceImageContentTitle"
+        android:id="@+id/mediaContentTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start|bottom"
@@ -29,6 +32,7 @@
         android:background="@color/media_gallery_grid_label_bg"
         android:singleLine="true"
         android:ellipsize="end"
+        android:text="Hello World"
         android:textSize="@dimen/text_sz_small"
         android:textColor="@color/media_gallery_grid_label" />
 
