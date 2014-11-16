@@ -37,6 +37,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.ReaderTypes.RefreshType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -222,7 +223,7 @@ public class ReaderPostListFragment extends Fragment
                     && getPostListType() == ReaderPostListType.TAG_FOLLOWED
                     && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
                 AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
-                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
+                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
             }
         }
     }
@@ -327,18 +328,20 @@ public class ReaderPostListFragment extends Fragment
                     @Override
                     public void onRefreshStarted() {
                         if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                            mSwipeToRefreshHelper.setRefreshing(false);
+                            showSwipeToRefreshProgress(false);
                             return;
                         }
                         switch (getPostListType()) {
                             case TAG_FOLLOWED:
                             case TAG_PREVIEW:
-                                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.MANUAL);
+                                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
                                 break;
                             case BLOG_PREVIEW:
                                 updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
                                 break;
                         }
+                        // make sure swipe-to-refresh progress shows since this is a manual refresh
+                        showSwipeToRefreshProgress(true);
                     }
                 }
         );
@@ -388,7 +391,7 @@ public class ReaderPostListFragment extends Fragment
             boolean isRecreated = (savedInstanceState != null);
             getPostAdapter().setCurrentTag(mCurrentTag);
             if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
+                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
             }
         }
 
@@ -508,22 +511,6 @@ public class ReaderPostListFragment extends Fragment
     private void hideUndoBar() {
         if (isAdded()) {
             UndoBarController.clear(getActivity());
-        }
-    }
-
-    /*
-     * show/hide progress bar which appears at the bottom of the activity when loading more posts
-     */
-    private void showLoadingProgress() {
-        if (isAdded() && mProgress != null) {
-            mProgress.bringToFront();
-            mProgress.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void hideLoadingProgress() {
-        if (isAdded() && mProgress != null) {
-            mProgress.setVisibility(View.GONE);
         }
     }
 
@@ -693,7 +680,7 @@ public class ReaderPostListFragment extends Fragment
                     // skip if we already have the max # of posts
                     if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         // request older posts
-                        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_OLDER, ReaderTypes.RefreshType.MANUAL);
+                        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_OLDER, RefreshType.MANUAL);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                     }
                     break;
@@ -802,11 +789,11 @@ public class ReaderPostListFragment extends Fragment
         hideNewPostsBar();
         hideUndoBar();
         updateTagPreviewHeader();
-        hideLoadingProgress();
+        showLoadingProgress(false);
 
         // update posts in this tag if it's time to do so
         if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
-            updatePostsWithTag(tag, RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
+            updatePostsWithTag(tag, RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
         }
     }
 
@@ -916,7 +903,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     void updateCurrentTag() {
-        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
+        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
     }
 
     /*
@@ -924,7 +911,7 @@ public class ReaderPostListFragment extends Fragment
      */
     void updatePostsWithTag(final ReaderTag tag,
                             final RequestDataAction updateAction,
-                            final ReaderTypes.RefreshType refreshType) {
+                            final RefreshType refreshType) {
         if (tag == null) {
             return;
         }
@@ -949,7 +936,7 @@ public class ReaderPostListFragment extends Fragment
 
         // if this is "Posts I Like" or "Blogs I Follow" and it's a manual refresh (user tapped refresh icon),
         // refresh the posts so posts that were unliked/unfollowed no longer appear
-        if (refreshType == ReaderTypes.RefreshType.MANUAL && isCurrentTag(tag)) {
+        if (refreshType == RefreshType.MANUAL && isCurrentTag(tag)) {
             if (tag.getTagName().equals(ReaderTag.TAG_NAME_LIKED) || tag.getTagName().equals(ReaderTag.TAG_NAME_FOLLOWING))
                 refreshPosts();
         }
@@ -995,28 +982,40 @@ public class ReaderPostListFragment extends Fragment
         return mIsUpdating;
     }
 
-    private boolean hasSwipeToRefresh() {
-        return (mSwipeToRefreshHelper != null);
+    private void showSwipeToRefreshProgress(boolean showProgress) {
+        if (mSwipeToRefreshHelper != null && mSwipeToRefreshHelper.isRefreshing() != showProgress) {
+            mSwipeToRefreshHelper.setRefreshing(showProgress);
+        }
+    }
+
+    /*
+    * show/hide progress bar which appears at the bottom of the activity when loading more posts
+    */
+    private void showLoadingProgress(boolean showProgress) {
+        if (isAdded() && mProgress != null) {
+            if (showProgress) {
+                mProgress.bringToFront();
+                mProgress.setVisibility(View.VISIBLE);
+            } else {
+                mProgress.setVisibility(View.GONE);
+            }
+        }
     }
 
     void setIsUpdating(boolean isUpdating, RequestDataAction updateAction) {
         if (!isAdded() || mIsUpdating == isUpdating) {
             return;
         }
-        switch (updateAction) {
-            case LOAD_OLDER:
-                // if these are older posts, show/hide message bar at bottom
-                if (isUpdating) {
-                    showLoadingProgress();
-                } else {
-                    hideLoadingProgress();
-                }
-                break;
-            default:
-                if (hasSwipeToRefresh()) {
-                    mSwipeToRefreshHelper.setRefreshing(isUpdating);
-                }
-                break;
+
+        if (updateAction == RequestDataAction.LOAD_OLDER) {
+            // show/hide progress bar at bottom if these are older posts
+            showLoadingProgress(isUpdating);
+        } else if (isUpdating && isPostAdapterEmpty()) {
+            // show swipe-to-refresh if update started and no posts are showing
+            showSwipeToRefreshProgress(true);
+        } else if (!isUpdating) {
+            // hide swipe-to-refresh progress if update is complete
+            showSwipeToRefreshProgress(false);
         }
         mIsUpdating = isUpdating;
     }
