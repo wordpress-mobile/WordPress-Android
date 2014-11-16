@@ -173,8 +173,12 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.menu_media_content_selection_gallery) {
             return true;
-        } else if (menuItem.getItemId() == R.id.menu_media_content_selection_cancel) {
-            mSelectedContent.clear();
+        } else if (menuItem.getItemId() == R.id.menu_media_content_selection_confirm) {
+            if (mSelectedContent.size() > 0) {
+                if (mListener != null) {
+                    mListener.onMediaContentSelectionConfirmed(mSelectedContent);
+                }
+            }
             mode.finish();
             return true;
         } else if (mListener != null) {
@@ -188,14 +192,8 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         if (!mCapturingMedia) {
-            if (mSelectedContent.size() > 0) {
-                if (mListener != null) {
-                    mListener.onMediaContentSelectionConfirmed(mSelectedContent);
-                }
-            } else {
-                if (mListener != null) {
-                    mListener.onMediaContentSelectionCancelled();
-                }
+            if (mListener != null) {
+                mListener.onMediaContentSelectionCancelled();
             }
 
             mSelectedContent.clear();

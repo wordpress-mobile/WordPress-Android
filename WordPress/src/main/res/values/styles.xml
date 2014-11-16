@@ -10,6 +10,7 @@
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
         <item name="android:actionBarStyle">@style/ActionBar.Solid.WordPress</item>
+        <item name="android:actionModeCloseDrawable">@drawable/hs__action_cancel</item>
         <item name="android:actionModeBackground">@drawable/cab_background_top_wordpress</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_wordpress</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>

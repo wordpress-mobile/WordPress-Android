@@ -10,9 +10,9 @@
         android:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_media_content_selection_cancel"
+        android:id="@+id/menu_media_content_selection_confirm"
         android:title="@string/cancel"
-        android:icon="@drawable/hs__action_cancel"
+        android:icon="@drawable/com_mixpanel_android_checkmark"
         android:enabled="true"
         android:visible="true"
         android:showAsAction="ifRoom" />
