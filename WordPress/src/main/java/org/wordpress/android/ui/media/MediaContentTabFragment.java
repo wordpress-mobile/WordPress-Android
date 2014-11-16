@@ -68,6 +68,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     private MediaContentAdapter    mAdapter;
     private GridView               mGridView;
     private List<String> mImageIds = new ArrayList<String>();
+    private List<String> mVideoIds = new ArrayList<String>();
 
     public MediaContentTabFragment() {
         super();
@@ -227,6 +228,22 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     }
 
     private void addMediaStoreVideos() {
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        String[] videoColumns= { MediaStore.Video.Media._ID,
+                                 MediaStore.Video.Media.DATA,
+                                 MediaStore.Video.Media.DATE_TAKEN };
+        Cursor videoCursor = MediaUtils.getDeviceMediaStoreVideos(contentResolver, videoColumns);
+
+        if (videoCursor.moveToFirst()) {
+            do {
+                MediaContent newContent = videoContentFromQuery(videoCursor);
+
+                if (newContent != null && !mVideoIds.contains(newContent.getContentId())) {
+                    mAdapter.addContent(newContent);
+                    mVideoIds.add(newContent.getContentId());
+                }
+            } while(videoCursor.moveToNext());
+        }
     }
 
     private void addWordPressImagesFromCursor(Cursor cursor) {
@@ -304,6 +321,34 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
             }
             if (thumbnailColumnIndex != -1) {
                 content.setContentPreviewUri(Uri.parse(thumbnailCursor.getString(thumbnailColumnIndex)));
+            }
+        }
+
+        return content;
+    }
+
+    private MediaContent videoContentFromQuery(Cursor videoCursor) {
+        MediaContent content = null;
+
+        int videoIdColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media._ID);
+        int videoDataColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATA);
+        int dateTakenColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATE_TAKEN);
+
+        if (videoIdColumnIndex != -1) {
+            content = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_VIDEO);
+            content.setContentId(videoCursor.getString(videoIdColumnIndex));
+
+            if (videoDataColumnIndex != -1) {
+                content.setContentUri(Uri.parse(videoCursor.getString(videoDataColumnIndex)));
+                content.setContentPreviewUri(content.getContentUri());
+            }
+            if (dateTakenColumnIndex != -1) {
+                String dateTaken = videoCursor.getString(dateTakenColumnIndex);
+                try {
+                    content.setContentTitle(DATE_DISPLAY_FORMAT.format(new Date(Long.valueOf(dateTaken))));
+                } catch (NumberFormatException numberFormatException) {
+                    Log.w("TEST", "Error formatting DATE_TAKEN(" + dateTaken + "): " + numberFormatException);
+                }
             }
         }
 

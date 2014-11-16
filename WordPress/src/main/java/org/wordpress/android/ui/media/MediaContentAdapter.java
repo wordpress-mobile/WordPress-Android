@@ -74,6 +74,7 @@ public class MediaContentAdapter extends BaseAdapter {
             convertView = createDeviceImageContentView(convertView, content);
             break;
         case DEVICE_VIDEO:
+            convertView = createDeviceVideoContentView(convertView, content);
             break;
         case WEB_IMAGE:
             convertView = createWebImageContentView(convertView, content);
@@ -151,7 +152,36 @@ public class MediaContentAdapter extends BaseAdapter {
                     contentImage.setImageResource(R.drawable.media_image_placeholder);
                 } else {
                     contentImage.setImageResource(R.drawable.media_image_placeholder);
-                    MediaUtils.BackgroundDownloadDeviceImage bgDownload = new MediaUtils.BackgroundDownloadDeviceImage(contentImage);
+                    MediaUtils.BackgroundFetchDeviceImage bgDownload = new MediaUtils.BackgroundFetchDeviceImage(contentImage);
+                    bgDownload.execute(content.getContentPreviewUri());
+                }
+            }
+
+            if (overlayView != null) {
+                overlayView.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        return convertView;
+    }
+
+    /** Helper method to create the view for device images. */
+    private View createDeviceVideoContentView(View convertView, MediaContent content) {
+        if (convertView != null) {
+            ImageView contentImage = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
+            TextView contentTitle = (TextView) convertView.findViewById(R.id.mediaContentTitle);
+            ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
+
+            if (contentTitle != null) {
+                contentTitle.setText(content.getContentTitle());
+            }
+
+            if (contentImage != null) {
+                if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
+                    contentImage.setImageResource(R.drawable.media_image_placeholder);
+                } else {
+                    contentImage.setImageResource(R.drawable.media_image_placeholder);
+                    MediaUtils.BackgroundFetchVideoThumbnail bgDownload = new MediaUtils.BackgroundFetchVideoThumbnail(contentImage);
                     bgDownload.execute(content.getContentPreviewUri());
                 }
             }

@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -529,26 +530,43 @@ public class MediaUtils {
         return MediaStore.Images.Media.query(contentResolver, imageUri, columns);
     }
 
-    public static Cursor getDeviceMediaStoreVideoThumbnails(ContentResolver contentResolver, String[] columns) {
-        Uri videoThumbnailUri = MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI;
-        return MediaStore.Video.query(contentResolver, videoThumbnailUri, columns);
-    }
-
     public static Cursor getDeviceMediaStoreVideos(ContentResolver contentResolver, String[] columns) {
         Uri videoUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         return MediaStore.Video.query(contentResolver, videoUri, columns);
     }
 
-    public static class BackgroundDownloadDeviceImage extends AsyncTask<Uri, String, Bitmap> {
+    public static class BackgroundFetchDeviceImage extends AsyncTask<Uri, String, Bitmap> {
         WeakReference<ImageView> mReference;
 
-        public BackgroundDownloadDeviceImage(ImageView resultStore) {
+        public BackgroundFetchDeviceImage(ImageView resultStore) {
             mReference = new WeakReference<ImageView>(resultStore);
         }
 
         @Override
         protected Bitmap doInBackground(Uri... params) {
             return BitmapFactory.decodeFile(params[0].getPath());
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            ImageView imageView = mReference.get();
+
+            if (imageView != null) {
+                imageView.setImageBitmap(result);
+            }
+        }
+    }
+
+    public static class BackgroundFetchVideoThumbnail extends AsyncTask<Uri, String, Bitmap> {
+        WeakReference<ImageView> mReference;
+
+        public BackgroundFetchVideoThumbnail(ImageView resultStore) {
+            mReference = new WeakReference<ImageView>(resultStore);
+        }
+
+        @Override
+        protected Bitmap doInBackground(Uri... params) {
+            return ThumbnailUtils.createVideoThumbnail(params[0].toString(), MediaStore.Video.Thumbnails.MINI_KIND);
         }
 
         @Override
