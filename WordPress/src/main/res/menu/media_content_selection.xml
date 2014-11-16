@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menu_media_content_selection_gallery"
         android:title="@string/media_add_new_media_gallery"
-        android:icon="@drawable/action_gallery_icon_circles"
+        android:icon="@drawable/tab_icon_create_gallery"
         android:enabled="true"
         android:visible="true"
         android:showAsAction="always" />
