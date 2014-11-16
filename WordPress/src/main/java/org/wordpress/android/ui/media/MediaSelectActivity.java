@@ -87,11 +87,7 @@ public class MediaSelectActivity extends WPActionBarActivity implements MediaCon
     @Override
     public void onMediaContentSelectionConfirmed(ArrayList<MediaContent> mediaContent) {
         if (mStartedForResult) {
-            Intent result = new Intent();
-            result.putParcelableArrayListExtra(SELECTED_CONTENT_RESULTS_KEY, mediaContent);
-
-            setResult(ACTIVITY_REQUEST_CODE_MEDIA_SELECTION, result);
-            finish();
+            finishWithResults(mediaContent);
         }
     }
 
@@ -173,6 +169,15 @@ public class MediaSelectActivity extends WPActionBarActivity implements MediaCon
     /** Helper method to end the activity with a result code but no data. */
     private void finishWithNoResults() {
         setResult(ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
+        finish();
+    }
+
+    /** Helper method to end the activity with a result code and selected content. */
+    private void finishWithResults(ArrayList<MediaContent> results) {
+        Intent result = new Intent();
+        result.putParcelableArrayListExtra(SELECTED_CONTENT_RESULTS_KEY, results);
+
+        setResult(ACTIVITY_REQUEST_CODE_MEDIA_SELECTION, result);
         finish();
     }
 }

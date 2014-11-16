@@ -187,7 +187,8 @@ public class MediaContentAdapter extends BaseAdapter {
             }
 
             if (overlayView != null) {
-                overlayView.setVisibility(View.INVISIBLE);
+                overlayView.setImageResource(R.drawable.ic_media_play);
+                overlayView.setVisibility(View.VISIBLE);
             }
         }
 
