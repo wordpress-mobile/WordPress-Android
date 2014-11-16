@@ -1,9 +1,10 @@
 package org.wordpress.android.ui;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,36 +12,81 @@ import org.wordpress.android.R;
 
 import java.util.ArrayList;
 
-public class MenuDrawerAdapter extends ArrayAdapter<MenuDrawerItem> {
+public class MenuDrawerAdapter extends BaseAdapter {
+
+    private final LayoutInflater mInflater;
+    private final ArrayList<MenuDrawerItem> mItems = new ArrayList<MenuDrawerItem>();
 
     public MenuDrawerAdapter(Context context) {
-        super(context, R.layout.menu_drawer_row, R.id.menu_row_title, new ArrayList<MenuDrawerItem>());
+        super();
+        mInflater = LayoutInflater.from(context);
+    }
+
+
+    @Override
+    public int getCount() {
+        return mItems.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mItems.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public void clear() {
+        mItems.clear();
+    }
+
+    public void addItem(MenuDrawerItem item) {
+        mItems.add(item);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final View view = super.getView(position, convertView, parent);
-        final TextView txtTitle = (TextView) view.findViewById(R.id.menu_row_title);
-        final TextView txtBadge = (TextView) view.findViewById(R.id.menu_row_badge);
-        final ImageView imgIcon = (ImageView) view.findViewById(R.id.menu_row_icon);
+        final MenuViewHolder holder;
+        if (convertView == null || !(convertView.getTag() instanceof MenuViewHolder)) {
+            convertView = mInflater.inflate(R.layout.menu_drawer_row, parent, false);
+            holder = new MenuViewHolder(convertView);
+        } else {
+            holder = (MenuViewHolder) convertView.getTag();
+        }
 
-        final MenuDrawerItem item = getItem(position);
+
+        final MenuDrawerItem item = mItems.get(position);
         boolean isSelected = item.isSelected();
 
-        txtTitle.setText(item.getTitleRes());
-        txtTitle.setSelected(isSelected);
-        imgIcon.setImageResource(item.getIconRes());
-        txtBadge.setVisibility(View.GONE);
+        holder.txtTitle.setText(item.getTitleRes());
+        holder.txtTitle.setSelected(isSelected);
+        holder.imgIcon.setImageResource(item.getIconRes());
+        holder.txtBadge.setVisibility(View.GONE);
 
         if (isSelected) {
-            view.setBackgroundResource(R.color.md__background_selected);
+            convertView.setBackgroundResource(R.color.md__background_selected);
         } else {
-            view.setBackgroundResource(R.drawable.md_list_selector);
+            convertView.setBackgroundResource(R.drawable.md_list_selector);
         }
 
         // allow the drawer item to configure the view
-        item.configureView(view);
+        item.configureView(convertView);
 
-        return view;
+        return convertView;
+    }
+
+    private static class MenuViewHolder {
+        final TextView txtTitle;
+        final TextView txtBadge;
+        final ImageView imgIcon;
+
+        MenuViewHolder(View view) {
+            txtTitle = (TextView) view.findViewById(R.id.menu_row_title);
+            txtBadge = (TextView) view.findViewById(R.id.menu_row_badge);
+            imgIcon = (ImageView) view.findViewById(R.id.menu_row_icon);
+        }
+
     }
 }

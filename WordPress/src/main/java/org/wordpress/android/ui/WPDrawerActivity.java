@@ -257,7 +257,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 if (menuPosition < 0 || menuPosition >= mAdapter.getCount()) {
                     return;
                 }
-                MenuDrawerItem item = mAdapter.getItem(menuPosition);
+                MenuDrawerItem item = (MenuDrawerItem) mAdapter.getItem(menuPosition);
 
                 // if the item has an id, remember it for launch
                 if (item.hasItemId()) {
@@ -380,7 +380,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         // iterate over the available menu items and only show the ones that should be visible
         for (MenuDrawerItem item : mMenuItems) {
             if (item.isVisible()) {
-                mAdapter.add(item);
+                mAdapter.addItem(item);
             }
         }
         mAdapter.notifyDataSetChanged();
@@ -603,7 +603,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             if (item.isSelected() && !item.isVisible()) {
                 // then select the first item and activate it
                 if (mAdapter.getCount() > 0) {
-                    mAdapter.getItem(0).selectItem();
+                    ((MenuDrawerItem)mAdapter.getItem(0)).selectItem();
                 }
                 // if it has an item id save it to the preferences
                 if (item.hasItemId()) {
