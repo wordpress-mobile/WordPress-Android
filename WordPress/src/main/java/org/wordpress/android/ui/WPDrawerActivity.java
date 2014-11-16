@@ -26,9 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -95,7 +93,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     protected ActionBarDrawerToggle mDrawerToggle;
-    private MenuAdapter mAdapter;
+    private MenuDrawerAdapter mAdapter;
     protected final List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
@@ -245,7 +243,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             mBlogSpinner.setVisibility(View.GONE);
         }
 
-        mAdapter = new MenuAdapter(this);
+        mAdapter = new MenuDrawerAdapter(this);
         mDrawerListView.setAdapter(mAdapter);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -387,41 +385,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
         mAdapter.notifyDataSetChanged();
     }
-
-    public static class MenuAdapter extends ArrayAdapter<MenuDrawerItem> {
-
-        MenuAdapter(Context context) {
-            super(context, R.layout.menu_drawer_row, R.id.menu_row_title, new ArrayList<MenuDrawerItem>());
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final View view = super.getView(position, convertView, parent);
-            final TextView txtTitle = (TextView) view.findViewById(R.id.menu_row_title);
-            final TextView txtBadge = (TextView) view.findViewById(R.id.menu_row_badge);
-            final ImageView imgIcon = (ImageView) view.findViewById(R.id.menu_row_icon);
-
-            final MenuDrawerItem item = getItem(position);
-            boolean isSelected = item.isSelected();
-
-            txtTitle.setText(item.getTitleRes());
-            txtTitle.setSelected(isSelected);
-            imgIcon.setImageResource(item.getIconRes());
-            txtBadge.setVisibility(View.GONE);
-
-            if (isSelected) {
-                view.setBackgroundResource(R.color.md__background_selected);
-            } else {
-                view.setBackgroundResource(R.drawable.md_list_selector);
-            }
-
-            // allow the drawer item to configure the view
-            item.configureView(view);
-
-            return view;
-        }
-    }
-
 
     /**
      * Called when the activity has detected the user's press of the back key.
