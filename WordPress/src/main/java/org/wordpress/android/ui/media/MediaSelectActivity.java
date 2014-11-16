@@ -86,11 +86,13 @@ public class MediaSelectActivity extends WPActionBarActivity implements MediaCon
 
     @Override
     public void onMediaContentSelectionConfirmed(ArrayList<MediaContent> mediaContent) {
-        Intent result = new Intent();
-        result.putParcelableArrayListExtra(SELECTED_CONTENT_RESULTS_KEY, mediaContent);
+        if (mStartedForResult) {
+            Intent result = new Intent();
+            result.putParcelableArrayListExtra(SELECTED_CONTENT_RESULTS_KEY, mediaContent);
 
-        setResult(ACTIVITY_REQUEST_CODE_MEDIA_SELECTION, result);
-        finish();
+            setResult(ACTIVITY_REQUEST_CODE_MEDIA_SELECTION, result);
+            finish();
+        }
     }
 
     @Override
