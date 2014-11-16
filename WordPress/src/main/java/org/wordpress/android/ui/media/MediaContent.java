@@ -55,7 +55,7 @@ public class MediaContent implements Parcelable {
             String contentData = data.remove(0);
             String key = contentData.substring(0, contentData.indexOf('='));
             String value = contentData.substring(contentData.indexOf('=') + 1, contentData.length());
-            writeDataFromParcel(key, value);
+            setDataFromParcel(key, value);
         }
     }
 
@@ -66,6 +66,9 @@ public class MediaContent implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         List<String> stringList = new ArrayList<String>();
+        if (mMediaType != null) {
+            stringList.add("mMediaType=" + String.valueOf(mMediaType.getValue()));
+        }
         if (mTag != null) {
             stringList.add(("mTag=" + mTag));
         }
@@ -145,8 +148,19 @@ public class MediaContent implements Parcelable {
         mContentDescription = contentDescription;
     }
 
-    private void writeDataFromParcel(String key, String value) {
-        if (key.equals("mTag")) {
+    private void setDataFromParcel(String key, String value) {
+        if (key.equals("mMediaType")) {
+            int type = Integer.parseInt(value);
+            if (type == MEDIA_TYPE.DEVICE_IMAGE.getValue()) {
+                mMediaType = MEDIA_TYPE.DEVICE_IMAGE;
+            } else if (type == MEDIA_TYPE.WEB_IMAGE.getValue()) {
+                mMediaType = MEDIA_TYPE.WEB_IMAGE;
+            } else if (type == MEDIA_TYPE.DEVICE_VIDEO.getValue()) {
+                mMediaType = MEDIA_TYPE.DEVICE_VIDEO;
+            } else if (type == MEDIA_TYPE.WEB_VIDEO.getValue()) {
+                mMediaType = MEDIA_TYPE.WEB_VIDEO;
+            }
+        } else if (key.equals("mTag")) {
             mTag = value;
         } else if (key.equals("mContentId")) {
             mContentId = value;

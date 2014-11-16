@@ -338,9 +338,13 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             List<MediaContent> selectedContent = data.getParcelableArrayListExtra(MediaSelectActivity.SELECTED_CONTENT_RESULTS_KEY);
 
             for (MediaContent selectedItem : selectedContent) {
-                if (!addMedia(selectedItem.getContentUri(), null, getActivity())) {
-                    Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
-                         .show();
+                if (selectedItem.getType() == MediaContent.MEDIA_TYPE.DEVICE_IMAGE) {
+                    if (!addMedia(selectedItem.getContentUri(), null, getActivity())) {
+                        Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
+                             .show();
+                    }
+                } else if(selectedItem.getType() == MediaContent.MEDIA_TYPE.WEB_IMAGE) {
+                    addExistingMediaToEditor(selectedItem.getContentId());
                 }
             }
         }

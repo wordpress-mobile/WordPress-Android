@@ -63,7 +63,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     private final ArrayList<MediaContent> mSelectedContent;
 
     private int                    mFilter;
-    private boolean mCapturingMedia;
+    private boolean                mCapturingMedia;
     private OnMediaContentSelected mListener;
     private MediaContentAdapter    mAdapter;
     private GridView               mGridView;
@@ -232,7 +232,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     private void addWordPressImagesFromCursor(Cursor cursor) {
         if (cursor.moveToFirst()) {
             do {
-                int attachmentIdColumnIndex = cursor.getColumnIndex("_id");
+                int attachmentIdColumnIndex = cursor.getColumnIndex("mediaId");
                 int titleIdColumnIndex = cursor.getColumnIndex("title");
                 int thumbnailColumnIndex = cursor.getColumnIndex("thumbnailURL");
                 int dateCreatedColumnIndex = cursor.getColumnIndex("date_created_gmt");
@@ -241,7 +241,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
 
                 String id = "";
                 if (attachmentIdColumnIndex != -1) {
-                    id = cursor.getString(attachmentIdColumnIndex);
+                    id = String.valueOf(cursor.getInt(attachmentIdColumnIndex));
                 }
                 MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.WEB_IMAGE);
                 newContent.setContentId(id);
