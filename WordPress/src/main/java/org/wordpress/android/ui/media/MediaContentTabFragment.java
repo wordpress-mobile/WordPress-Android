@@ -135,9 +135,15 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
             else {
                 if (checked && !mSelectedContent.contains(selectedContent)) {
                     mSelectedContent.add(selectedContent);
+                    if (mListener != null) {
+                        mListener.onMediaContentSelected(selectedContent, true);
+                    }
                 }
                 else if (mSelectedContent.contains(selectedContent)) {
                     mSelectedContent.remove(selectedContent);
+                    if (mListener != null) {
+                        mListener.onMediaContentSelected(selectedContent, false);
+                    }
                 }
             }
         }
