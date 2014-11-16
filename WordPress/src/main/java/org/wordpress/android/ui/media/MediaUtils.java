@@ -21,6 +21,7 @@ import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -508,6 +509,16 @@ public class MediaUtils {
         return fileExtensionFromMimeType.toLowerCase();
     }
 
+    public static Cursor getWordPressMediaImages() {
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (blog == null) {
+            return null;
+        }
+
+        return WordPress.wpDB.getMediaImagesForBlog(String.valueOf(blog.getLocalTableBlogId()));
+    }
+
     public static Cursor getDeviceMediaStoreImageThumbnails(ContentResolver contentResolver, String[] columns) {
         Uri thumbnailUri = MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI;
         return MediaStore.Images.Thumbnails.query(contentResolver, thumbnailUri, columns);
@@ -546,6 +557,40 @@ public class MediaUtils {
 
             if (imageView != null) {
                 imageView.setImageBitmap(result);
+            }
+        }
+    }
+
+    public static class BackgroundDownloadWebImage extends AsyncTask<Uri, String, Bitmap> {
+        WeakReference<ImageView> mReference;
+
+        public BackgroundDownloadWebImage(ImageView resultStore) {
+            mReference = new WeakReference<ImageView>(resultStore);
+        }
+
+        @Override
+        protected Bitmap doInBackground(Uri... params) {
+            try {
+                URL url = new URL(params[0].toString());
+                return BitmapFactory.decodeStream(url.openConnection()
+                                                     .getInputStream());
+            }
+            catch(IOException notFoundException) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            ImageView imageView = mReference.get();
+
+            if (imageView != null) {
+                if (result != null) {
+                    imageView.setImageBitmap(result);
+                }
+                else {
+                    imageView.setImageResource(R.drawable.media_image_placeholder);
+                }
             }
         }
     }

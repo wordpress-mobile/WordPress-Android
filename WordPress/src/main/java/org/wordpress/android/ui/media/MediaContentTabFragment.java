@@ -3,7 +3,6 @@ package org.wordpress.android.ui.media;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -124,11 +123,6 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
         MediaContent selectedContent = (MediaContent) mAdapter.getItem(position);
 
@@ -187,8 +181,14 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         if (!mCapturingMedia) {
-            if (mListener != null) {
-                mListener.onMediaContentSelectionCancelled();
+            if (mSelectedContent.size() > 0) {
+                if (mListener != null) {
+                    mListener.onMediaContentSelectionConfirmed(mSelectedContent);
+                }
+            } else {
+                if (mListener != null) {
+                    mListener.onMediaContentSelectionCancelled();
+                }
             }
 
             mSelectedContent.clear();

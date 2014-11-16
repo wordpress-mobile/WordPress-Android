@@ -75,6 +75,9 @@ public class MediaContentAdapter extends BaseAdapter {
             break;
         case DEVICE_VIDEO:
             break;
+        case WEB_IMAGE:
+            convertView = createWebImageContentView(convertView, content);
+            break;
         }
 
         return convertView;
@@ -161,10 +164,31 @@ public class MediaContentAdapter extends BaseAdapter {
         return convertView;
     }
 
+    private View createWebImageContentView(View convertView, MediaContent content) {
+        if (convertView != null) {
+            ImageView contentImage = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
+            TextView contentTitle = (TextView) convertView.findViewById(R.id.mediaContentTitle);
+            ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
 
+            if (contentTitle != null) {
+                contentTitle.setText(content.getContentTitle());
+            }
 
+            if (contentImage != null) {
+                if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
+                    contentImage.setImageResource(R.drawable.ic_action_web_site);
+                } else {
+                    contentImage.setImageResource(R.drawable.media_image_placeholder);
+                    MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(contentImage);
+                    bgDownload.execute(content.getContentPreviewUri());
+                }
+            }
 
+            if (overlayView != null) {
+                overlayView.setVisibility(View.INVISIBLE);
             }
         }
+
+        return convertView;
     }
 }
