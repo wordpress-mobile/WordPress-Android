@@ -333,23 +333,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         menu.add(0, 5, 0, getResources().getText(R.string.select_from_media_library));
     }
 
-    private void handleMediaSelection(Intent data) {
-        if (data != null) {
-            List<MediaContent> selectedContent = data.getParcelableArrayListExtra(MediaSelectActivity.SELECTED_CONTENT_RESULTS_KEY);
-
-            for (MediaContent selectedItem : selectedContent) {
-                if (selectedItem.getType() == MediaContent.MEDIA_TYPE.DEVICE_IMAGE) {
-                    if (!addMedia(selectedItem.getContentUri(), null, getActivity())) {
-                        Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
-                             .show();
-                    }
-                } else if(selectedItem.getType() == MediaContent.MEDIA_TYPE.WEB_IMAGE) {
-                    addExistingMediaToEditor(selectedItem.getContentId());
-                }
-            }
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -993,6 +976,27 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
         String mediaId = ids.get(0);
         addExistingMediaToEditor(mediaId);
+    }
+
+    private void handleMediaSelection(Intent data) {
+        if (data != null) {
+            List<MediaContent> selectedContent = data.getParcelableArrayListExtra(MediaSelectActivity.SELECTED_CONTENT_RESULTS_KEY);
+
+            for (MediaContent selectedItem : selectedContent) {
+                MediaContent.MEDIA_TYPE type = selectedItem.getType();
+
+                if (type == MediaContent.MEDIA_TYPE.DEVICE_IMAGE) {
+                    if (!addMedia(selectedItem.getContentUri(), null, getActivity())) {
+                        Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
+                             .show();
+                    }
+                } else if(type == MediaContent.MEDIA_TYPE.WEB_IMAGE) {
+                    addExistingMediaToEditor(selectedItem.getContentId());
+                } else if(type == MediaContent.MEDIA_TYPE.DEVICE_VIDEO) {
+                } else if(type == MediaContent.MEDIA_TYPE.WEB_VIDEO) {
+                }
+            }
+        }
     }
 
     private void handleMediaGalleryResult(Intent data) {

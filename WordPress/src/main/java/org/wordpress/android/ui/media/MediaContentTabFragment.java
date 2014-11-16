@@ -23,6 +23,7 @@ import org.wordpress.android.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -49,7 +50,8 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
 
     public static final String FILTER_ARG = "KEY_FILTER";
 
-    private static final SimpleDateFormat DATE_DISPLAY_FORMAT = new SimpleDateFormat("MMMM dd, yyyy");
+    private static final SimpleDateFormat DATE_DISPLAY_FORMAT_THIS_YEAR = new SimpleDateFormat("MMM dd");
+    private static final SimpleDateFormat DATE_DISPLAY_FORMAT_PREV_YEAR = new SimpleDateFormat("MMM dd, yyyy");
 
     // Bit flags for fragment filters
     public static final int NONE          = 0x00;
@@ -106,44 +108,35 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        MediaContent selectedContent = (MediaContent) mAdapter.getItem(position);
+        MediaContent selectedContent = (MediaContent)mAdapter.getItem(position);
 
         if (selectedContent != null) {
             if (selectedContent.getType() == MediaContent.MEDIA_TYPE.CAPTURE) {
                 captureMediaContent(selectedContent);
-                MediaUtils.launchCamera(this, this);
             }
             else {
                 mSelectedContent.add(selectedContent);
-
-                if (mListener != null) {
-                    mListener.onMediaContentSelectionConfirmed(mSelectedContent);
-                }
+                notifyMediaSelectionConfirmed();
             }
         }
     }
 
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        MediaContent selectedContent = (MediaContent) mAdapter.getItem(position);
+        MediaContent selectedContent = (MediaContent)mAdapter.getItem(position);
 
         if (selectedContent != null) {
             if (selectedContent.getType() == MediaContent.MEDIA_TYPE.CAPTURE) {
                 captureMediaContent(selectedContent);
-                MediaUtils.launchCamera(this, this);
             }
             else {
                 if (checked && !mSelectedContent.contains(selectedContent)) {
                     mSelectedContent.add(selectedContent);
-                    if (mListener != null) {
-                        mListener.onMediaContentSelected(selectedContent, true);
-                    }
+                    notifyMediaSelected(selectedContent, true);
                 }
                 else if (mSelectedContent.contains(selectedContent)) {
                     mSelectedContent.remove(selectedContent);
-                    if (mListener != null) {
-                        mListener.onMediaContentSelected(selectedContent, false);
-                    }
+                    notifyMediaSelected(selectedContent, false);
                 }
             }
         }
@@ -160,10 +153,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
 
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        if (mListener != null) {
-            mListener.onMediaContentSelectionStarted();
-        }
-
+        notifiyMediaSelectionStarted();
         getActivity().getMenuInflater().inflate(R.menu.media_content_selection, menu);
 
         return true;
@@ -175,228 +165,56 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
             return true;
         } else if (menuItem.getItemId() == R.id.menu_media_content_selection_confirm) {
             if (mSelectedContent.size() > 0) {
-                if (mListener != null) {
-                    mListener.onMediaContentSelectionConfirmed(mSelectedContent);
-                }
+                notifyMediaSelectionConfirmed();
             }
             mode.finish();
             return true;
-        } else if (mListener != null) {
-            mListener.onMediaContentSelectionConfirmed(mSelectedContent);
+        } else {
+            notifyMediaSelectionConfirmed();
             return true;
         }
-
-        return false;
     }
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         if (!mCapturingMedia) {
-            if (mListener != null) {
-                mListener.onMediaContentSelectionCancelled();
-            }
-
+            notifiyMediaSelectionCancelled();
             mSelectedContent.clear();
         }
     }
 
     @Override
     public void onMediaCapturePathReady(String mediaCapturePath) {
-        MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.CAPTURE);
+        mCapturingMedia = false;
+
+        MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_IMAGE);
         newContent.setContentUri(Uri.parse(mediaCapturePath));
         newContent.setContentPreviewUri(Uri.parse(mediaCapturePath));
         mAdapter.addContent(newContent);
     }
 
-    /** Helper method to load image and image thumbnail data to add device media content to the adapter. */
-    private void addMediaStoreImages() {
-        ContentResolver contentResolver = getActivity().getContentResolver();
-        String[] imageColumns= { MediaStore.Images.Media._ID,
-                                 MediaStore.Images.Media.DATA,
-                                 MediaStore.Images.Media.DATE_TAKEN };
-        String[] thumbnailColumns = { MediaStore.Images.Thumbnails._ID,
-                                      MediaStore.Images.Thumbnails.DATA };
-        Cursor thumbCursor = MediaUtils.getDeviceMediaStoreImageThumbnails(contentResolver, thumbnailColumns);
-        Cursor imageCursor = MediaUtils.getDeviceMediaStoreImages(contentResolver, imageColumns);
-
-        if (imageCursor.moveToFirst() && thumbCursor.moveToFirst()) {
-            do {
-                MediaContent newContent = imageContentFromQuery(imageCursor, thumbCursor);
-
-                if (newContent != null && !mImageIds.contains(newContent.getContentId())) {
-                    mAdapter.addContent(newContent);
-                    mImageIds.add(newContent.getContentId());
-                }
-            } while(imageCursor.moveToNext() && thumbCursor.moveToNext());
+    private void notifiyMediaSelectionStarted() {
+        if (mListener != null) {
+            mListener.onMediaContentSelectionStarted();
         }
     }
 
-    private void addMediaStoreVideos() {
-        ContentResolver contentResolver = getActivity().getContentResolver();
-        String[] videoColumns= { MediaStore.Video.Media._ID,
-                                 MediaStore.Video.Media.DATA,
-                                 MediaStore.Video.Media.DATE_TAKEN };
-        Cursor videoCursor = MediaUtils.getDeviceMediaStoreVideos(contentResolver, videoColumns);
-
-        if (videoCursor.moveToFirst()) {
-            do {
-                MediaContent newContent = videoContentFromQuery(videoCursor);
-
-                if (newContent != null && !mVideoIds.contains(newContent.getContentId())) {
-                    mAdapter.addContent(newContent);
-                    mVideoIds.add(newContent.getContentId());
-                }
-            } while(videoCursor.moveToNext());
+    private void notifyMediaSelected(MediaContent content, boolean selected) {
+        if (mListener != null) {
+            mListener.onMediaContentSelected(content, selected);
         }
     }
 
-    private void addWordPressImagesFromCursor(Cursor cursor) {
-        if (cursor.moveToFirst()) {
-            do {
-                int attachmentIdColumnIndex = cursor.getColumnIndex("mediaId");
-                int fileUrlColumnIndex = cursor.getColumnIndex("fileURL");
-                int thumbnailColumnIndex = cursor.getColumnIndex("thumbnailURL");
-                int dateCreatedColumnIndex = cursor.getColumnIndex("date_created_gmt");
-
-                String id = "";
-                if (attachmentIdColumnIndex != -1) {
-                    id = String.valueOf(cursor.getInt(attachmentIdColumnIndex));
-                }
-                MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.WEB_IMAGE);
-                newContent.setContentId(id);
-
-                if (fileUrlColumnIndex != -1) {
-                    String fileUrl = cursor.getString(fileUrlColumnIndex);
-                    newContent.setContentUri(Uri.parse(fileUrl));
-                }
-
-                if (dateCreatedColumnIndex != -1) {
-                    String dateTaken = cursor.getString(dateCreatedColumnIndex);
-                    try {
-                        newContent.setContentTitle(DATE_DISPLAY_FORMAT.format(new Date(Long.valueOf(dateTaken))));
-                    } catch (NumberFormatException numberFormatException) {
-                        Log.w("TEST", "Error formatting DATE_TAKEN(" + dateTaken + "): " + numberFormatException);
-                    }
-                }
-                if (thumbnailColumnIndex != -1) {
-                    newContent.setContentPreviewUri(Uri.parse(cursor.getString(thumbnailColumnIndex)));
-                }
-                mAdapter.addContent(newContent);
-            } while (cursor.moveToNext());
+    private void notifyMediaSelectionConfirmed() {
+        if (mListener != null) {
+            mListener.onMediaContentSelectionConfirmed(mSelectedContent);
         }
     }
 
-    private void addWordPressVideosFromCursor(Cursor cursor) {
-        if (cursor.moveToFirst()) {
-            do {
-                int attachmentIdColumnIndex = cursor.getColumnIndex("mediaId");
-                int fileUrlColumnIndex = cursor.getColumnIndex("fileURL");
-                int thumbnailColumnIndex = cursor.getColumnIndex("thumbnailURL");
-                int dateCreatedColumnIndex = cursor.getColumnIndex("date_created_gmt");
-
-                String id = "";
-                if (attachmentIdColumnIndex != -1) {
-                    id = String.valueOf(cursor.getInt(attachmentIdColumnIndex));
-                }
-                MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.WEB_VIDEO);
-                newContent.setContentId(id);
-
-                if (fileUrlColumnIndex != -1) {
-                    String fileUrl = cursor.getString(fileUrlColumnIndex);
-                    newContent.setContentUri(Uri.parse(fileUrl));
-                }
-
-                if (dateCreatedColumnIndex != -1) {
-                    String dateTaken = cursor.getString(dateCreatedColumnIndex);
-                    try {
-                        newContent.setContentTitle(DATE_DISPLAY_FORMAT.format(new Date(Long.valueOf(dateTaken))));
-                    } catch (NumberFormatException numberFormatException) {
-                        Log.w("TEST", "Error formatting DATE_TAKEN(" + dateTaken + "): " + numberFormatException);
-                    }
-                }
-                if (thumbnailColumnIndex != -1) {
-                    newContent.setContentPreviewUri(Uri.parse(cursor.getString(thumbnailColumnIndex)));
-                }
-                if (newContent.getContentUri().toString().endsWith(".mp4")) {
-                    mAdapter.addContent(newContent);
-                }
-            } while (cursor.moveToNext());
+    private void notifiyMediaSelectionCancelled() {
+        if (mListener != null) {
+            mListener.onMediaContentSelectionCancelled();
         }
-    }
-
-    private void addWordPressImages() {
-        Cursor wordPressImages = MediaUtils.getWordPressMediaImages();
-
-        if (wordPressImages != null) {
-            addWordPressImagesFromCursor(wordPressImages);
-        }
-    }
-
-    private void addWordPressVideos() {
-        Cursor wordPressVideos = MediaUtils.getWordPressMediaVideos();
-
-        if (wordPressVideos != null) {
-            addWordPressVideosFromCursor(wordPressVideos);
-        }
-    }
-
-    private MediaContent imageContentFromQuery(Cursor imageCursor, Cursor thumbnailCursor) {
-        MediaContent content = null;
-
-        int imageIdColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media._ID);
-        int imageDataColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
-        int dateTakenColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN);
-        int thumbnailColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
-
-        if (imageIdColumnIndex != -1) {
-            content = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_IMAGE);
-            content.setContentId(imageCursor.getString(imageIdColumnIndex));
-
-            if (imageDataColumnIndex != -1) {
-                content.setContentUri(Uri.parse(imageCursor.getString(imageDataColumnIndex)));
-            }
-            if (dateTakenColumnIndex != -1) {
-                String dateTaken = imageCursor.getString(dateTakenColumnIndex);
-                try {
-                    content.setContentTitle(DATE_DISPLAY_FORMAT.format(new Date(Long.valueOf(dateTaken))));
-                } catch (NumberFormatException numberFormatException) {
-                    Log.w("TEST", "Error formatting DATE_TAKEN(" + dateTaken + "): " + numberFormatException);
-                }
-            }
-            if (thumbnailColumnIndex != -1) {
-                content.setContentPreviewUri(Uri.parse(thumbnailCursor.getString(thumbnailColumnIndex)));
-            }
-        }
-
-        return content;
-    }
-
-    private MediaContent videoContentFromQuery(Cursor videoCursor) {
-        MediaContent content = null;
-
-        int videoIdColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media._ID);
-        int videoDataColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATA);
-        int dateTakenColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATE_TAKEN);
-
-        if (videoIdColumnIndex != -1) {
-            content = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_VIDEO);
-            content.setContentId(videoCursor.getString(videoIdColumnIndex));
-
-            if (videoDataColumnIndex != -1) {
-                content.setContentUri(Uri.parse(videoCursor.getString(videoDataColumnIndex)));
-                content.setContentPreviewUri(content.getContentUri());
-            }
-            if (dateTakenColumnIndex != -1) {
-                String dateTaken = videoCursor.getString(dateTakenColumnIndex);
-                try {
-                    content.setContentTitle(DATE_DISPLAY_FORMAT.format(new Date(Long.valueOf(dateTaken))));
-                } catch (NumberFormatException numberFormatException) {
-                    Log.w("TEST", "Error formatting DATE_TAKEN(" + dateTaken + "): " + numberFormatException);
-                }
-            }
-        }
-
-        return content;
     }
 
     /** Helper method to instantiate a GridView, adjust its layout, and give it an adapter. */
@@ -459,5 +277,204 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
         }
 
         mCapturingMedia = true;
+    }
+
+    /** Helper method to load image and image thumbnail data to add device media content to the adapter. */
+    private void addMediaStoreImages() {
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        String[] imageColumns= { MediaStore.Images.Media._ID,
+                                 MediaStore.Images.Media.DATA,
+                                 MediaStore.Images.Media.DATE_TAKEN };
+        String[] thumbnailColumns = { MediaStore.Images.Thumbnails._ID,
+                                      MediaStore.Images.Thumbnails.DATA };
+        Cursor thumbCursor = MediaUtils.getDeviceMediaStoreImageThumbnails(contentResolver, thumbnailColumns);
+        Cursor imageCursor = MediaUtils.getDeviceMediaStoreImages(contentResolver, imageColumns);
+
+        if (imageCursor.moveToFirst() && thumbCursor.moveToFirst()) {
+            do {
+                MediaContent newContent = imageContentFromQuery(imageCursor, thumbCursor);
+
+                if (newContent != null && !mImageIds.contains(newContent.getContentId())) {
+                    mAdapter.addContent(newContent);
+                    mImageIds.add(newContent.getContentId());
+                }
+            } while(imageCursor.moveToNext() && thumbCursor.moveToNext());
+        }
+    }
+
+    private void addMediaStoreVideos() {
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        String[] videoColumns= { MediaStore.Video.Media._ID,
+                                 MediaStore.Video.Media.DATA,
+                                 MediaStore.Video.Media.DATE_TAKEN };
+        Cursor videoCursor = MediaUtils.getDeviceMediaStoreVideos(contentResolver, videoColumns);
+
+        if (videoCursor.moveToFirst()) {
+            do {
+                MediaContent newContent = videoContentFromQuery(videoCursor);
+
+                if (newContent != null && !mVideoIds.contains(newContent.getContentId())) {
+                    mAdapter.addContent(newContent);
+                    mVideoIds.add(newContent.getContentId());
+                }
+            } while(videoCursor.moveToNext());
+        }
+    }
+
+    private void addWordPressImages() {
+        Cursor wordPressImages = MediaUtils.getWordPressMediaImages();
+
+        if (wordPressImages != null) {
+            addWordPressImagesFromCursor(wordPressImages);
+        }
+    }
+
+    private void addWordPressVideos() {
+        Cursor wordPressVideos = MediaUtils.getWordPressMediaVideos();
+
+        if (wordPressVideos != null) {
+            addWordPressVideosFromCursor(wordPressVideos);
+        }
+    }
+
+    private void addWordPressImagesFromCursor(Cursor cursor) {
+        if (cursor.moveToFirst()) {
+            do {
+                int attachmentIdColumnIndex = cursor.getColumnIndex("mediaId");
+                int fileUrlColumnIndex = cursor.getColumnIndex("fileURL");
+                int thumbnailColumnIndex = cursor.getColumnIndex("thumbnailURL");
+                int dateCreatedColumnIndex = cursor.getColumnIndex("date_created_gmt");
+
+                String id = "";
+                if (attachmentIdColumnIndex != -1) {
+                    id = String.valueOf(cursor.getInt(attachmentIdColumnIndex));
+                }
+                MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.WEB_IMAGE);
+                newContent.setContentId(id);
+
+                if (fileUrlColumnIndex != -1) {
+                    String fileUrl = cursor.getString(fileUrlColumnIndex);
+                    newContent.setContentUri(Uri.parse(fileUrl));
+                }
+
+                if (dateCreatedColumnIndex != -1) {
+                    String dateTaken = cursor.getString(dateCreatedColumnIndex);
+                    newContent.setContentTitle(formattedDateFromEpoch(Long.valueOf(dateTaken)));
+                }
+                if (thumbnailColumnIndex != -1) {
+                    newContent.setContentPreviewUri(Uri.parse(cursor.getString(thumbnailColumnIndex)));
+                }
+                mAdapter.addContent(newContent);
+            } while (cursor.moveToNext());
+        }
+    }
+
+    private void addWordPressVideosFromCursor(Cursor cursor) {
+        if (cursor.moveToFirst()) {
+            do {
+                int attachmentIdColumnIndex = cursor.getColumnIndex("mediaId");
+                int fileUrlColumnIndex = cursor.getColumnIndex("fileURL");
+                int thumbnailColumnIndex = cursor.getColumnIndex("thumbnailURL");
+                int dateCreatedColumnIndex = cursor.getColumnIndex("date_created_gmt");
+
+                String id = "";
+                if (attachmentIdColumnIndex != -1) {
+                    id = String.valueOf(cursor.getInt(attachmentIdColumnIndex));
+                }
+                MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.WEB_VIDEO);
+                newContent.setContentId(id);
+
+                if (fileUrlColumnIndex != -1) {
+                    String fileUrl = cursor.getString(fileUrlColumnIndex);
+                    newContent.setContentUri(Uri.parse(fileUrl));
+                }
+
+                if (dateCreatedColumnIndex != -1) {
+                    String dateTaken = cursor.getString(dateCreatedColumnIndex);
+                    newContent.setContentTitle(formattedDateFromEpoch(Long.valueOf(dateTaken)));
+                }
+                if (thumbnailColumnIndex != -1) {
+                    newContent.setContentPreviewUri(Uri.parse(cursor.getString(thumbnailColumnIndex)));
+                }
+                if (newContent.getContentUri().toString().endsWith(".mp4")) {
+                    mAdapter.addContent(newContent);
+                }
+            } while (cursor.moveToNext());
+        }
+    }
+
+    private MediaContent imageContentFromQuery(Cursor imageCursor, Cursor thumbnailCursor) {
+        MediaContent content = null;
+
+        int imageIdColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media._ID);
+        int imageDataColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+        int dateTakenColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN);
+        int thumbnailColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
+
+        if (imageIdColumnIndex != -1) {
+            content = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_IMAGE);
+            content.setContentId(imageCursor.getString(imageIdColumnIndex));
+
+            if (imageDataColumnIndex != -1) {
+                content.setContentUri(Uri.parse(imageCursor.getString(imageDataColumnIndex)));
+            }
+            if (dateTakenColumnIndex != -1) {
+                String dateTaken = imageCursor.getString(dateTakenColumnIndex);
+                content.setContentTitle(formattedDateFromEpoch(Long.valueOf(dateTaken)));
+            }
+            if (thumbnailColumnIndex != -1) {
+                content.setContentPreviewUri(Uri.parse(thumbnailCursor.getString(thumbnailColumnIndex)));
+            }
+        }
+
+        return content;
+    }
+
+    private MediaContent videoContentFromQuery(Cursor videoCursor) {
+        MediaContent content = null;
+
+        int videoIdColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media._ID);
+        int videoDataColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATA);
+        int dateTakenColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATE_TAKEN);
+
+        if (videoIdColumnIndex != -1) {
+            content = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_VIDEO);
+            content.setContentId(videoCursor.getString(videoIdColumnIndex));
+
+            if (videoDataColumnIndex != -1) {
+                content.setContentUri(Uri.parse(videoCursor.getString(videoDataColumnIndex)));
+                content.setContentPreviewUri(content.getContentUri());
+            }
+            if (dateTakenColumnIndex != -1) {
+                String dateTaken = videoCursor.getString(dateTakenColumnIndex);
+                try {
+                    content.setContentTitle(formattedDateFromEpoch(Long.valueOf(dateTaken)));
+                } catch (NumberFormatException numberFormatException) {
+                    Log.w("TEST", "Error formatting DATE_TAKEN(" + dateTaken + "): " + numberFormatException);
+                }
+            }
+        }
+
+        return content;
+    }
+
+    private String formattedDateFromEpoch(long timeSinceEpoch) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+
+        long startOfThisYear = calendar.getTimeInMillis();
+
+        try {
+            if (timeSinceEpoch < startOfThisYear) {
+                return DATE_DISPLAY_FORMAT_PREV_YEAR.format(new Date(timeSinceEpoch));
+            } else {
+                return DATE_DISPLAY_FORMAT_THIS_YEAR.format(new Date(timeSinceEpoch));
+            }
+        } catch (NumberFormatException numberFormatException) {
+            Log.w("TEST", "Error formatting DATE_TAKEN(" + timeSinceEpoch + "): " + numberFormatException);
+        }
+
+        return null;
     }
 }

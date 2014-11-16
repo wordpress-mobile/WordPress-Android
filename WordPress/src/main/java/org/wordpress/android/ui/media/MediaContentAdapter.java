@@ -66,6 +66,7 @@ public class MediaContentAdapter extends BaseAdapter {
         MediaContent content = mContent.get(position);
         switch (content.getType()) {
         case INVALID:
+            // TODO
             break;
         case CAPTURE:
             convertView = createCaptureContentView(convertView, content);
