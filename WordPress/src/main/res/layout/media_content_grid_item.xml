@@ -11,7 +11,7 @@
         android:id="@+id/mediaContentBackgroundImage"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scaleType="fitCenter" />
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/mediaContentOverlayImage"
