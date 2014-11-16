@@ -22,7 +22,6 @@ public class MenuDrawerAdapter extends BaseAdapter {
         mInflater = LayoutInflater.from(context);
     }
 
-
     @Override
     public int getCount() {
         return mItems.size();
@@ -56,23 +55,26 @@ public class MenuDrawerAdapter extends BaseAdapter {
             holder = (MenuViewHolder) convertView.getTag();
         }
 
-
         final MenuDrawerItem item = mItems.get(position);
         boolean isSelected = item.isSelected();
+        int badgeCount = item.getBadgeCount();
 
         holder.txtTitle.setText(item.getTitleRes());
         holder.txtTitle.setSelected(isSelected);
         holder.imgIcon.setImageResource(item.getIconRes());
-        holder.txtBadge.setVisibility(View.GONE);
+
+        if (badgeCount > 0) {
+            holder.txtBadge.setVisibility(View.VISIBLE);
+            holder.txtBadge.setText(String.valueOf(badgeCount));
+        } else {
+            holder.txtBadge.setVisibility(View.GONE);
+        }
 
         if (isSelected) {
             convertView.setBackgroundResource(R.color.md__background_selected);
         } else {
             convertView.setBackgroundResource(R.drawable.md_list_selector);
         }
-
-        // allow the drawer item to configure the view
-        item.configureView(convertView);
 
         return convertView;
     }
@@ -87,6 +89,5 @@ public class MenuDrawerAdapter extends BaseAdapter {
             txtBadge = (TextView) view.findViewById(R.id.menu_row_badge);
             imgIcon = (ImageView) view.findViewById(R.id.menu_row_icon);
         }
-
     }
 }

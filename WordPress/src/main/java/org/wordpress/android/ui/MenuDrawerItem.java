@@ -85,10 +85,11 @@ public abstract class MenuDrawerItem {
     public void selectItem(){
         onSelectItem();
     }
+
     /**
-     * Allows the menu item to do additional manipulation to the view
+     * Allows the menu item to show a badge with a count - must be non-zero for badge to appear
      */
-    public void configureView(View v){
-        onConfigureView(v);
+    public int getBadgeCount() {
+        return 0;
     }
 }

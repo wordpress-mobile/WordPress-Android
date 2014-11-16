@@ -36,6 +36,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -775,17 +776,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             startActivity(intent);
         }
         @Override
-        public void configureView(View view){
-            if (WordPress.getCurrentBlog() != null) {
-                TextView badgeTextView = (TextView) view.findViewById(R.id.menu_row_badge);
-                int commentCount = WordPress.getCurrentBlog().getUnmoderatedCommentCount();
-                if (commentCount > 0) {
-                    badgeTextView.setVisibility(View.VISIBLE);
-                } else {
-                    badgeTextView.setVisibility(View.GONE);
-                }
-                badgeTextView.setText(String.valueOf(commentCount));
-            }
+        public int getBadgeCount() {
+            // TODO: cache this
+            return CommentTable.getUnmoderatedCommentCount(WordPress.getCurrentLocalTableBlogId());
         }
         @Override
         public Boolean isVisible() {

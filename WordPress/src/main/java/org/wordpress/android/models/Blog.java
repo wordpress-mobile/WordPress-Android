@@ -311,11 +311,6 @@ public class Blog {
         return true;
     }
 
-    // FIXME - Move to DB
-    public int getUnmoderatedCommentCount() {
-        return CommentTable.getUnmoderatedCommentCount(this.localTableBlogId);
-    }
-
     public boolean isScaledImage() {
         return scaledImage;
     }
