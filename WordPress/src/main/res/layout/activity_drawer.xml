@@ -14,10 +14,10 @@
         <include layout="@layout/toolbar" />
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/left_drawer"
         android:layout_width="@dimen/menu_drawer_width"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/md__background"
         android:orientation="vertical">
@@ -25,7 +25,8 @@
         <ListView
             android:id="@+id/drawer_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/drawer_divider"
             android:choiceMode="singleChoice"
             android:divider="@null"
             android:dividerHeight="0dp"
@@ -36,7 +37,7 @@
             android:id="@+id/drawer_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_above="@+id/settings_row"
             android:layout_marginTop="@dimen/margin_small"
             android:background="@color/md__divider" />
 
@@ -44,6 +45,7 @@
             android:id="@+id/settings_row"
             android:layout_width="match_parent"
             android:layout_height="@dimen/menu_drawer_row_height"
+            android:layout_alignParentBottom="true"
             android:background="@drawable/md_list_selector"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -59,5 +61,5 @@
                 android:text="@string/settings" />
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>
