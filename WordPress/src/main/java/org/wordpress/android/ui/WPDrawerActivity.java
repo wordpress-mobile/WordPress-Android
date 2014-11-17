@@ -248,13 +248,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         mDrawerListView.setAdapter(mDrawerAdapter);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // close the menu drawer
                 mDrawerLayout.closeDrawer(Gravity.START);
 
-                // account for header views
                 int menuPosition = position - mDrawerListView.getHeaderViewsCount();
-
-                // bail if the adjusted position is out of bounds for the adapter
                 if (menuPosition < 0 || menuPosition >= mDrawerAdapter.getCount()) {
                     return;
                 }
@@ -445,8 +441,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     private void showReader() {
-        Intent intent;
-        intent = new Intent(WPDrawerActivity.this, ReaderPostListActivity.class);
+        Intent intent = new Intent(WPDrawerActivity.this, ReaderPostListActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
@@ -647,9 +642,10 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     /**
-     * called when user selects an item from the drawer to start the associated activity
+     * called when user selects an item from the drawer - starts the associated activity
+     * after a brief delay (to give drawer time to close)
      */
-    private void startDrawerIntent(Intent intent) {
+    private void startDrawerIntent(final Intent intent) {
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
