@@ -280,9 +280,10 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
             mDrawerLayout.setScrimColor(getResources().getColor(R.color.transparent));
             mDrawerToggle = null;
-            ViewGroup layoutContainer = (ViewGroup) findViewById(R.id.activity_container);
             int drawerWidth = getResources().getDimensionPixelSize(R.dimen.menu_drawer_width);
-            layoutContainer.setPadding(drawerWidth, 0, 0, 0);
+            ViewGroup layoutContainer = (ViewGroup) findViewById(R.id.activity_container);
+            DrawerLayout.LayoutParams lp = (DrawerLayout.LayoutParams) layoutContainer.getLayoutParams();
+            lp.leftMargin = drawerWidth;
         } else {
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             mDrawerToggle = new ActionBarDrawerToggle(
