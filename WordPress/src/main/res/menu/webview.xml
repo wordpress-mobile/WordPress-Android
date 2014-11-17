@@ -5,11 +5,16 @@
     <item
         android:id="@+id/menu_browser"
         android:icon="@drawable/ic_action_web_site"
-        app:showAsAction="ifRoom"
-        android:title="@string/view_in_browser"/>
+        android:title="@string/view_in_browser"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_action_share"
-        app:showAsAction="ifRoom"
-        android:title="@string/share_link"/>
+        android:title="@string/share_link"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_refresh"
+        android:icon="@drawable/ic_action_refresh"
+        android:title="@string/refresh"
+        app:showAsAction="never" />
 </menu>

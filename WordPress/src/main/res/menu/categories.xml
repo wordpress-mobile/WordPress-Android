@@ -4,10 +4,6 @@
     <item
         android:id="@+id/menu_new_category"
         android:icon="@drawable/ic_action_new"
-        app:showAsAction="ifRoom"
-        android:title="@string/new_post"/>
-    <item
-        android:id="@+id/menu_refresh"
-        app:showAsAction="never"
-        android:title="@string/refresh"/>
+        android:title="@string/new_post"
+        app:showAsAction="ifRoom" />
 </menu>

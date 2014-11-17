@@ -3,14 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_show_all"
-        app:showAsAction="ifRoom"
-        android:title="@string/show_all"/>
+        android:title="@string/show_all"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_hide_all"
-        app:showAsAction="collapseActionView|ifRoom"
-        android:title="@string/hide_all"/>
-    <item
-        android:id="@+id/menu_refresh"
-        app:showAsAction="never"
-        android:title="@string/refresh"/>
+        android:title="@string/hide_all"
+        app:showAsAction="collapseActionView|ifRoom" />
 </menu>
