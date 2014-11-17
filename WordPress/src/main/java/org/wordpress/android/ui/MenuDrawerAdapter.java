@@ -11,6 +11,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MenuDrawerAdapter extends BaseAdapter {
 
@@ -37,12 +38,14 @@ public class MenuDrawerAdapter extends BaseAdapter {
         return position;
     }
 
-    public void clear() {
+    public void setItems(List<MenuDrawerItem> visibleItems) {
+        // do nothing if passed list is the same as current
+        if (mItems.size() == visibleItems.size() && mItems.containsAll(visibleItems)) {
+            return;
+        }
         mItems.clear();
-    }
-
-    public void addItem(MenuDrawerItem item) {
-        mItems.add(item);
+        mItems.addAll(visibleItems);
+        notifyDataSetChanged();
     }
 
     @Override

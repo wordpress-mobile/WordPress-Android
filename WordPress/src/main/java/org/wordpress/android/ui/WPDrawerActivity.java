@@ -377,14 +377,13 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * Update all of the items in the menu drawer based on the current active blog.
      */
     public void updateMenuDrawer() {
-        mDrawerAdapter.clear();
-        // iterate over the available menu items and only show the ones that should be visible
+        List<MenuDrawerItem> visibleItems = new ArrayList<MenuDrawerItem>();
         for (MenuDrawerItem item : mMenuItems) {
             if (item.isVisible()) {
-                mDrawerAdapter.addItem(item);
+                visibleItems.add(item);
             }
         }
-        mDrawerAdapter.notifyDataSetChanged();
+        mDrawerAdapter.setItems(visibleItems);
     }
 
     /**
@@ -647,6 +646,14 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     public void onSignout() {
     }
 
+    /**
+     * called when user selects an item from the drawer to start the associated activity
+     */
+    private void startDrawerIntent(Intent intent) {
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+    }
+
     private class ReaderMenuItem extends MenuDrawerItem {
         ReaderMenuItem(){
             super(ActivityId.READER, R.string.reader, R.drawable.noticon_reader_alt_black);
@@ -665,10 +672,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         public void onSelectItem(){
             if (!isSelected())
                 mShouldFinish = true;
-            Intent intent;
-            intent = new Intent(WPDrawerActivity.this, ReaderPostListActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            startDrawerIntent(new Intent(WPDrawerActivity.this, ReaderPostListActivity.class));
         }
     }
 
@@ -690,9 +694,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_POSTS);
             }
-            Intent intent = new Intent(WPDrawerActivity.this, PostsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            startDrawerIntent(new Intent(WPDrawerActivity.this, PostsActivity.class));
         }
         @Override
         public boolean isVisible() {
@@ -714,9 +716,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
             }
-            Intent intent = new Intent(WPDrawerActivity.this, MediaBrowserActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            startDrawerIntent(new Intent(WPDrawerActivity.this, MediaBrowserActivity.class));
         }
         @Override
         public boolean isVisible() {
@@ -744,8 +744,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            startDrawerIntent(intent);
         }
         @Override
         public boolean isVisible() {
@@ -772,8 +771,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             Intent intent = new Intent(WPDrawerActivity.this, CommentsActivity.class);
             intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            startDrawerIntent(intent);
         }
         @Override
         public int getBadgeCount() {
@@ -798,9 +796,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         public void onSelectItem(){
             if (!(WPDrawerActivity.this instanceof ThemeBrowserActivity))
                 mShouldFinish = true;
-            Intent intent = new Intent(WPDrawerActivity.this, ThemeBrowserActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            startDrawerIntent(new Intent(WPDrawerActivity.this, ThemeBrowserActivity.class));
         }
 
         @Override
@@ -828,8 +824,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
             Intent intent = new Intent(WPDrawerActivity.this, StatsActivity.class);
             intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, WordPress.getCurrentBlog().getLocalTableBlogId());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            startDrawerIntent(intent);
         }
         @Override
         public boolean isVisible() {
@@ -891,9 +886,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
             }
-            Intent intent = new Intent(WPDrawerActivity.this, ViewSiteActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            startDrawerIntent(new Intent(WPDrawerActivity.this, ViewSiteActivity.class));
         }
         @Override
         public boolean isVisible() {
@@ -917,9 +910,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         public void onSelectItem(){
             if (!(WPDrawerActivity.this instanceof NotificationsActivity))
                 mShouldFinish = true;
-            Intent intent = new Intent(WPDrawerActivity.this, NotificationsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            startDrawerIntent(new Intent(WPDrawerActivity.this, NotificationsActivity.class));
         }
     }
 
