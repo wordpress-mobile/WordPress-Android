@@ -13,13 +13,13 @@ public abstract class MenuDrawerItem {
     /**
      * Determines if the menu item should be displayed in the menu. Default is always true.
      */
-    public Boolean isVisible(){
+    public boolean isVisible(){
         return true;
     }
     /**
      * Determines if the item is selected. Default is always false.
      */
-    public Boolean isSelected(){
+    public boolean isSelected(){
         return false;
     }
 

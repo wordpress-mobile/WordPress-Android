@@ -94,7 +94,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     protected ActionBarDrawerToggle mDrawerToggle;
-    private MenuDrawerAdapter mAdapter;
+    private MenuDrawerAdapter mDrawerAdapter;
     protected final List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
@@ -160,7 +160,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     void refreshMenuDrawer() {
-        if (mAdapter == null) return;
+        if (mDrawerAdapter == null) return;
         // the current blog may have changed while we were away
         setupCurrentBlog();
         updateMenuDrawer();
@@ -244,8 +244,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             mBlogSpinner.setVisibility(View.GONE);
         }
 
-        mAdapter = new MenuDrawerAdapter(this);
-        mDrawerListView.setAdapter(mAdapter);
+        mDrawerAdapter = new MenuDrawerAdapter(this);
+        mDrawerListView.setAdapter(mDrawerAdapter);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // close the menu drawer
@@ -255,10 +255,10 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 int menuPosition = position - mDrawerListView.getHeaderViewsCount();
 
                 // bail if the adjusted position is out of bounds for the adapter
-                if (menuPosition < 0 || menuPosition >= mAdapter.getCount()) {
+                if (menuPosition < 0 || menuPosition >= mDrawerAdapter.getCount()) {
                     return;
                 }
-                MenuDrawerItem item = (MenuDrawerItem) mAdapter.getItem(menuPosition);
+                MenuDrawerItem item = (MenuDrawerItem) mDrawerAdapter.getItem(menuPosition);
 
                 // if the item has an id, remember it for launch
                 if (item.hasItemId()) {
@@ -377,14 +377,14 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * Update all of the items in the menu drawer based on the current active blog.
      */
     public void updateMenuDrawer() {
-        mAdapter.clear();
+        mDrawerAdapter.clear();
         // iterate over the available menu items and only show the ones that should be visible
         for (MenuDrawerItem item : mMenuItems) {
             if (item.isVisible()) {
-                mAdapter.addItem(item);
+                mDrawerAdapter.addItem(item);
             }
         }
-        mAdapter.notifyDataSetChanged();
+        mDrawerAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -603,8 +603,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             // select the first available item from the adapter
             if (item.isSelected() && !item.isVisible()) {
                 // then select the first item and activate it
-                if (mAdapter.getCount() > 0) {
-                    ((MenuDrawerItem)mAdapter.getItem(0)).selectItem();
+                if (mDrawerAdapter.getCount() > 0) {
+                    ((MenuDrawerItem) mDrawerAdapter.getItem(0)).selectItem();
                 }
                 // if it has an item id save it to the preferences
                 if (item.hasItemId()) {
@@ -653,12 +653,12 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         @Override
-        public Boolean isVisible(){
+        public boolean isVisible(){
             return WordPress.hasValidWPComCredentials(WPDrawerActivity.this);
         }
 
         @Override
-        public Boolean isSelected(){
+        public boolean isSelected(){
             return WPDrawerActivity.this instanceof ReaderPostListActivity;
         }
         @Override
@@ -678,7 +678,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         @Override
-        public Boolean isSelected() {
+        public boolean isSelected() {
             WPDrawerActivity activity = WPDrawerActivity.this;
             return (activity instanceof PostsActivity) && !(activity instanceof PagesActivity);
         }
@@ -695,7 +695,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             startActivity(intent);
         }
         @Override
-        public Boolean isVisible() {
+        public boolean isVisible() {
             return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
@@ -705,7 +705,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             super(ActivityId.MEDIA, R.string.media, R.drawable.dashicon_admin_media_black);
         }
         @Override
-        public Boolean isSelected(){
+        public boolean isSelected(){
             return WPDrawerActivity.this instanceof MediaBrowserActivity;
         }
         @Override
@@ -719,7 +719,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             startActivity(intent);
         }
         @Override
-        public Boolean isVisible() {
+        public boolean isVisible() {
             return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
@@ -729,7 +729,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             super(ActivityId.PAGES, R.string.pages, R.drawable.dashicon_admin_page_black);
         }
         @Override
-        public Boolean isSelected(){
+        public boolean isSelected(){
             return WPDrawerActivity.this instanceof PagesActivity;
         }
         @Override
@@ -748,7 +748,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             startActivity(intent);
         }
         @Override
-        public Boolean isVisible() {
+        public boolean isVisible() {
             return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
@@ -758,7 +758,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             super(ActivityId.COMMENTS, R.string.tab_comments, R.drawable.dashicon_admin_comments_black);
         }
         @Override
-        public Boolean isSelected(){
+        public boolean isSelected(){
             return WPDrawerActivity.this instanceof CommentsActivity;
         }
         @Override
@@ -781,7 +781,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             return CommentTable.getUnmoderatedCommentCount(WordPress.getCurrentLocalTableBlogId());
         }
         @Override
-        public Boolean isVisible() {
+        public boolean isVisible() {
             return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
@@ -791,7 +791,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             super(ActivityId.THEMES, R.string.themes, R.drawable.dashboard_icon_themes);
         }
         @Override
-        public Boolean isSelected(){
+        public boolean isSelected(){
             return WPDrawerActivity.this instanceof ThemeBrowserActivity;
         }
         @Override
@@ -804,10 +804,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         @Override
-        public Boolean isVisible() {
-            if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isAdmin() && WordPress.getCurrentBlog().isDotcomFlag())
-                return true;
-            return false;
+        public boolean isVisible() {
+            Blog blog = WordPress.getCurrentBlog();
+            return (blog != null && blog.isAdmin() && blog.isDotcomFlag());
         }
     }
 
@@ -817,7 +816,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             super(ActivityId.STATS, R.string.tab_stats, R.drawable.noticon_milestone_black);
         }
         @Override
-        public Boolean isSelected(){
+        public boolean isSelected(){
             return WPDrawerActivity.this instanceof StatsActivity;
         }
         @Override
@@ -833,7 +832,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             startActivity(intent);
         }
         @Override
-        public Boolean isVisible() {
+        public boolean isVisible() {
             return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
@@ -853,7 +852,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             startActivity(intent);
         }
         @Override
-        public Boolean isVisible() {
+        public boolean isVisible() {
             return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
@@ -873,7 +872,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             startActivity(intent);
         }
         @Override
-        public Boolean isVisible() {
+        public boolean isVisible() {
             return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
@@ -883,7 +882,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             super(ActivityId.VIEW_SITE, R.string.view_site, R.drawable.noticon_show_black);
         }
         @Override
-        public Boolean isSelected(){
+        public boolean isSelected(){
             return WPDrawerActivity.this instanceof ViewSiteActivity;
         }
         @Override
@@ -897,7 +896,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             startActivity(intent);
         }
         @Override
-        public Boolean isVisible() {
+        public boolean isVisible() {
             return WordPress.wpDB.getNumVisibleAccounts() != 0;
         }
     }
@@ -907,11 +906,11 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             super(ActivityId.NOTIFICATIONS, R.string.notifications, R.drawable.noticon_notification_black);
         }
         @Override
-        public Boolean isVisible(){
+        public boolean isVisible(){
             return WordPress.hasValidWPComCredentials(WPDrawerActivity.this);
         }
         @Override
-        public Boolean isSelected(){
+        public boolean isSelected(){
             return WPDrawerActivity.this instanceof NotificationsActivity;
         }
         @Override
