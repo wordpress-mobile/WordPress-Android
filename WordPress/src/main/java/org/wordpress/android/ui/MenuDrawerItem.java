@@ -5,8 +5,6 @@
  */
 package org.wordpress.android.ui;
 
-import android.view.View;
-
 public abstract class MenuDrawerItem {
     /**
      * Called when the menu item is selected.
@@ -24,18 +22,13 @@ public abstract class MenuDrawerItem {
     public Boolean isSelected(){
         return false;
     }
-    /**
-     * Method to allow the menu item to provide additional configuration to the view, default
-     * implementation does nothing.
-     */
-    public void onConfigureView(View view){};
 
     // Resource id for the title string
-    protected int mTitle;
+    private final int mTitle;
     // Resource id for the icon drawable
-    protected int mIconRes;
+    private final int mIconRes;
     // ID for the item for remembering which item was selected
-    private ActivityId mItemId;
+    private final ActivityId mItemId;
     /**
      * Creates a MenuDrawerItem with the specific id, string resource id and drawable resource id
      */
@@ -58,17 +51,12 @@ public abstract class MenuDrawerItem {
         return getItemId() != ActivityId.UNKNOWN;
     }
     /**
-     * Get's the item's unique ID
+     * Gets the item's unique ID
      */
     public ActivityId getItemId(){
         return mItemId;
     }
-    /**
-     * Returns the item's string representation (used by ArrayAdapter.getView)
-     */
-    public String toString(){
-        return "";
-    }
+
     /**
      * The resource id to use for the menu item's title
      */
