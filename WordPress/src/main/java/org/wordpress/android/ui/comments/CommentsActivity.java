@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.cocosw.undobar.UndoBarController;
@@ -101,14 +99,6 @@ public class CommentsActivity extends WPDrawerActivity
         if (hasDetailFragment()) {
             getDetailFragment().clear();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.comments, menu);
-        return true;
     }
 
     @Override

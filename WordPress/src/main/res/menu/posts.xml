@@ -6,18 +6,4 @@
         android:icon="@drawable/ic_action_new"
         app:showAsAction="ifRoom"
         android:title="@string/new_post"/>
-    <item
-        android:id="@+id/menu_refresh"
-        app:showAsAction="never"
-        android:title="@string/refresh"/>
-    <item
-        android:id="@+id/menu_settings"
-        android:icon="@android:drawable/ic_menu_preferences"
-        app:showAsAction="never"
-        android:title="@string/settings"/>
-    <item
-        android:id="@+id/menu_signout"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        app:showAsAction="never"
-        android:title="@string/sign_out"/>
 </menu>

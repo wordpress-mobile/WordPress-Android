@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 
@@ -23,8 +21,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.WPDrawerActivity;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -153,14 +151,6 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.notifications, menu);
-        return true;
     }
 
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =

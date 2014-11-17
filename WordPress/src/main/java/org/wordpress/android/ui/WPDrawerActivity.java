@@ -542,37 +542,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             mDrawerLayout.openDrawer(Gravity.START);
-        } else if (item.getItemId() == R.id.menu_settings) {
-            showSettings();
-        } else if (item.getItemId() == R.id.menu_signout) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            dialogBuilder.setMessage(getString(R.string.sign_out_confirm));
-            dialogBuilder.setPositiveButton(R.string.yes,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,
-                                            int whichButton) {
-                            AnalyticsTracker.refreshMetadata();
-                            WordPress.signOutAsyncWithProgressBar(WPDrawerActivity.this, new SignOutCallback() {
-                                @Override
-                                public void onSignOut() {
-                                    refreshMenuDrawer();
-                                }
-                            });
-                        }
-                    });
-            dialogBuilder.setNegativeButton(R.string.cancel,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,
-                                            int whichButton) {
-                            // Just close the window.
-                        }
-                    });
-            dialogBuilder.setCancelable(true);
-            if (!isFinishing())
-                dialogBuilder.create().show();
-        } else if (item.getItemId()  == R.id.menu_refresh) {
-            // Broadcast a refresh action, SwipeToRefreshHelper should trigger the default swipe to refresh action
-            WordPress.sendLocalBroadcast(this, SwipeToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
         }
         return super.onOptionsItemSelected(item);
     }

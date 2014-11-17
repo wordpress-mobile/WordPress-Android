@@ -38,7 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_above="@+id/settings_row"
-            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_medium"
             android:background="@color/md__divider" />
 
         <LinearLayout
