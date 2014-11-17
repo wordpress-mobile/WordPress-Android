@@ -2,11 +2,14 @@ package org.wordpress.android.ui.media;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -107,30 +110,24 @@ public class MediaContentAdapter extends BaseAdapter {
 
             ImageView imageView = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
             if (imageView != null) {
-                if (isVideo) {
-                    imageView.setImageDrawable(mResources.getDrawable(R.drawable.media_image_placeholder));
-                } else {
-                    imageView.setImageDrawable(mResources.getDrawable(R.drawable.media_image_placeholder));
-                }
+                int imageResource = isVideo ? R.drawable.media_image_placeholder : R.drawable.media_image_placeholder;
+                imageView.setImageDrawable(mResources.getDrawable(imageResource));
             }
 
             ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
             if (overlayView != null) {
+                overlayView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                                         ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                                         Gravity.CENTER));
+                overlayView.setAlpha(0.8f);
                 overlayView.setVisibility(View.VISIBLE);
-                if (isVideo) {
-                    overlayView.setImageDrawable(mResources.getDrawable(R.drawable.dashicon_video_alt2_black));
-                } else {
-                    overlayView.setImageDrawable(mResources.getDrawable(R.drawable.dashicon_camera_black));
-                }
+                int overlayResource = isVideo ? R.drawable.dashicon_video_alt2_black : R.drawable.dashicon_camera_black;
+                overlayView.setImageDrawable(mResources.getDrawable(overlayResource));
             }
 
             WPTextView titleView = (WPTextView) convertView.findViewById(R.id.mediaContentTitle);
             if (titleView != null) {
-                if (isVideo) {
-                    titleView.setText("Capture video");
-                } else {
-                    titleView.setText("Capture image");
-                }
+                titleView.setText(isVideo ? "Capture video" : "Capture image");
             }
         }
 
@@ -188,6 +185,10 @@ public class MediaContentAdapter extends BaseAdapter {
             }
 
             if (overlayView != null) {
+                overlayView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                                         ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                                         Gravity.CENTER));
+                overlayView.setAlpha(0.7f);
                 overlayView.setImageResource(R.drawable.ic_media_play);
                 overlayView.setVisibility(View.VISIBLE);
             }
@@ -217,7 +218,12 @@ public class MediaContentAdapter extends BaseAdapter {
             }
 
             if (overlayView != null) {
-                overlayView.setVisibility(View.INVISIBLE);
+                overlayView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                                         ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                                         Gravity.TOP | Gravity.RIGHT));
+                overlayView.setAlpha(0.65f);
+                overlayView.setImageResource(R.drawable.dashicon_wordpress_alt);
+                overlayView.setVisibility(View.VISIBLE);
             }
         }
 
