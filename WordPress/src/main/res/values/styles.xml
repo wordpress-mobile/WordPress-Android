@@ -134,6 +134,7 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:clickable">false</item>
     </style>
 
     <style name="MenuDrawerIcon">
@@ -142,7 +143,7 @@
         <item name="android:layout_height">@dimen/menu_drawer_icon_size</item>
         <item name="android:layout_width">@dimen/menu_drawer_icon_size</item>
         <item name="android:scaleType">centerInside</item>
-        <item name="android:tint">@color/md__icon_tint</item>
+        <item name="android:clickable">false</item>
     </style>
 
     <style name="MenuDrawerBadge">

@@ -14,15 +14,50 @@
         <include layout="@layout/toolbar" />
     </LinearLayout>
 
-    <ListView
+    <LinearLayout
         android:id="@+id/left_drawer"
         android:layout_width="@dimen/menu_drawer_width"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:background="@color/md__background"
-        android:choiceMode="singleChoice"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        tools:listheader="@layout/menu_drawer_header"
-        tools:listitem="@layout/menu_drawer_row" />
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/drawer_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:choiceMode="singleChoice"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            tools:listheader="@layout/menu_drawer_header"
+            tools:listitem="@layout/menu_drawer_row" />
+
+        <View
+            android:id="@+id/drawer_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
+            android:background="@color/md__divider" />
+
+        <LinearLayout
+            android:id="@+id/settings_row"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/menu_drawer_row_height"
+            android:background="@drawable/md_list_selector"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/settings_icon"
+                style="@style/MenuDrawerIcon"
+                android:src="@drawable/ic_action_settings" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/settings_title"
+                style="@style/MenuDrawerText"
+                android:text="@string/settings" />
+        </LinearLayout>
+
+    </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

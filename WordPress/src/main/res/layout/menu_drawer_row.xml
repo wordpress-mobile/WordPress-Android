@@ -9,14 +9,13 @@
     <ImageView
         android:id="@+id/menu_row_icon"
         style="@style/MenuDrawerIcon"
-        android:clickable="false"
+        android:tint="@color/md__icon_tint"
         tools:src="@drawable/dashicon_admin_post_black" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/menu_row_title"
         style="@style/MenuDrawerText"
         android:layout_weight="1"
-        android:clickable="false"
         tools:text="Drawer row title" />
 
     <org.wordpress.android.widgets.WPTextView

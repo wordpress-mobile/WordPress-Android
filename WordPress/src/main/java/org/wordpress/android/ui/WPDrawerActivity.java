@@ -225,7 +225,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         // Set up the menu drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerListView = (ListView) findViewById(R.id.left_drawer);
+        mDrawerListView = (ListView) findViewById(R.id.drawer_list);
 
         // add header containing spinner if it hasn't already been added
         if (mDrawerListView.getHeaderViewsCount() == 0) {
@@ -246,6 +246,14 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             mBlogSpinner.setVisibility(View.GONE);
             divider.setVisibility(View.GONE);
         }
+
+        View settingsRow = findViewById(R.id.settings_row);
+        settingsRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSettings();
+            }
+        });
 
         mDrawerAdapter = new MenuDrawerAdapter(this);
         mDrawerListView.setAdapter(mDrawerAdapter);
@@ -449,6 +457,10 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+    private void showSettings() {
+        startActivityForResult(new Intent(this, SettingsActivity.class), SETTINGS_REQUEST);
+    }
+
     /*
      * redirect to the Reader if there aren't any visible blogs
      * returns true if redirected, false otherwise
@@ -531,8 +543,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         if (item.getItemId() == android.R.id.home) {
             mDrawerLayout.openDrawer(Gravity.START);
         } else if (item.getItemId() == R.id.menu_settings) {
-            Intent i = new Intent(this, SettingsActivity.class);
-            startActivityForResult(i, SETTINGS_REQUEST);
+            showSettings();
         } else if (item.getItemId() == R.id.menu_signout) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
             dialogBuilder.setMessage(getString(R.string.sign_out_confirm));
