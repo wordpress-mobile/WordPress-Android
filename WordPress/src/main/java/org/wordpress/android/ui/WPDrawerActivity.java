@@ -227,7 +227,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);
 
-        // add header containing image and spinner if it hasn't already been added
+        // add header containing spinner if it hasn't already been added
         if (mDrawerListView.getHeaderViewsCount() == 0) {
             View view = getLayoutInflater().inflate(R.layout.menu_drawer_header, mDrawerListView, false);
             mDrawerListView.addHeaderView(view, null, false);
@@ -235,13 +235,16 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         // blog spinner only appears if there's more than one blog
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
+        View divider = findViewById(R.id.blog_spinner_divider);
         String[] blogNames = getBlogNames();
         if (blogNames.length > 1) {
             mBlogSpinner.setVisibility(View.VISIBLE);
+            divider.setVisibility(View.VISIBLE);
             mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
             populateBlogSpinner(blogNames);
         } else {
             mBlogSpinner.setVisibility(View.GONE);
+            divider.setVisibility(View.GONE);
         }
 
         mDrawerAdapter = new MenuDrawerAdapter(this);

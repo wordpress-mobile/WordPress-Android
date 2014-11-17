@@ -4,9 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/menu_drawer_row_height"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingLeft="@dimen/margin_large"
-    android:paddingTop="@dimen/margin_medium">
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/menu_row_icon"
@@ -19,12 +17,11 @@
         style="@style/MenuDrawerText"
         android:layout_weight="1"
         android:clickable="false"
-        tools:text="@string/posts" />
+        tools:text="Drawer row title" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/menu_row_badge"
         style="@style/MenuDrawerBadge"
-        android:layout_marginRight="@dimen/margin_large"
         android:visibility="gone"
         tools:visibility="visible" />
 
