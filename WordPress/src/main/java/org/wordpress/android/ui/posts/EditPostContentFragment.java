@@ -342,7 +342,11 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             Bundle extras;
             switch (requestCode) {
                 case MediaSelectActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
-                    handleMediaSelection(data);
+                    if (resultCode == MediaSelectActivity.ACTIVITY_RESULT_CODE_GALLERY_CREATED) {
+                        // TODO
+                    } else {
+                        handleMediaSelection(data);
+                    }
                     break;
                 case MediaGalleryActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {

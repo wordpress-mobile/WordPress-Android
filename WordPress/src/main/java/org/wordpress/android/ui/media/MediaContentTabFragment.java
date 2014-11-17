@@ -45,6 +45,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
         public void onMediaContentSelectionConfirmed(ArrayList<MediaContent> mediaContent);
         // Called when the last selected item is deselected
         public void onMediaContentSelectionCancelled();
+        public void onGalleryCreated(ArrayList<MediaContent> mediaContent);
         // TODO: public void onMenuItemClicked(int itemd);
     }
 
@@ -113,8 +114,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
         if (selectedContent != null) {
             if (selectedContent.getType() == MediaContent.MEDIA_TYPE.CAPTURE) {
                 captureMediaContent(selectedContent);
-            }
-            else {
+            } else {
                 mSelectedContent.add(selectedContent);
                 notifyMediaSelectionConfirmed();
             }
@@ -128,13 +128,11 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
         if (selectedContent != null) {
             if (selectedContent.getType() == MediaContent.MEDIA_TYPE.CAPTURE) {
                 captureMediaContent(selectedContent);
-            }
-            else {
+            } else {
                 if (checked && !mSelectedContent.contains(selectedContent)) {
                     mSelectedContent.add(selectedContent);
                     notifyMediaSelected(selectedContent, true);
-                }
-                else if (mSelectedContent.contains(selectedContent)) {
+                } else if (mSelectedContent.contains(selectedContent)) {
                     mSelectedContent.remove(selectedContent);
                     notifyMediaSelected(selectedContent, false);
                 }
@@ -162,6 +160,8 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.menu_media_content_selection_gallery) {
+            notifyGalleryCreated();
+            mode.finish();
             return true;
         } else if (menuItem.getItemId() == R.id.menu_media_content_selection_confirm) {
             if (mSelectedContent.size() > 0) {
@@ -208,6 +208,12 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     private void notifyMediaSelectionConfirmed() {
         if (mListener != null) {
             mListener.onMediaContentSelectionConfirmed(mSelectedContent);
+        }
+    }
+
+    private void notifyGalleryCreated() {
+        if (mListener != null) {
+            mListener.onGalleryCreated(mSelectedContent);
         }
     }
 

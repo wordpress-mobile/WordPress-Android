@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 public class MediaSelectActivity extends WPActionBarActivity implements MediaContentTabFragment.OnMediaContentSelected {
     public static final int    ACTIVITY_REQUEST_CODE_MEDIA_SELECTION = 6000;
+    public static final int    ACTIVITY_RESULT_CODE_GALLERY_CREATED  = 5001;
     public static final String PARAMETER_REQUEST_KEY                 = "requestCode";
     public static final String PARAMETER_TAB_CONFIG                  = "tabConfiguration";
     public static final String FILTER_CAPTURE_IMAGE                  = "CAPTURE_IMAGE";
@@ -89,6 +90,10 @@ public class MediaSelectActivity extends WPActionBarActivity implements MediaCon
         if (mStartedForResult) {
             finishWithResults(mediaContent);
         }
+    }
+
+    @Override
+    public void onGalleryCreated(ArrayList<MediaContent> mediaContent) {
     }
 
     @Override
@@ -176,8 +181,14 @@ public class MediaSelectActivity extends WPActionBarActivity implements MediaCon
     private void finishWithResults(ArrayList<MediaContent> results) {
         Intent result = new Intent();
         result.putParcelableArrayListExtra(SELECTED_CONTENT_RESULTS_KEY, results);
-
         setResult(ACTIVITY_REQUEST_CODE_MEDIA_SELECTION, result);
+        finish();
+    }
+
+    private void finishWithGallery(ArrayList<MediaContent> results) {
+        Intent result = new Intent();
+        result.putParcelableArrayListExtra(SELECTED_CONTENT_RESULTS_KEY, results);
+        setResult(ACTIVITY_RESULT_CODE_GALLERY_CREATED, result);
         finish();
     }
 }
