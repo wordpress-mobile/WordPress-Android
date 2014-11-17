@@ -158,10 +158,10 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
                 public void onBackStackChanged() {
                     int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
                     if (backStackEntryCount == 0) {
-                        mDrawerToggle.setDrawerIndicatorEnabled(true);
                         setTitle(R.string.notifications);
-                    } else {
-                        mDrawerToggle.setDrawerIndicatorEnabled(false);
+                    }
+                    if (getDrawerToggle() != null) {
+                        getDrawerToggle().setDrawerIndicatorEnabled(backStackEntryCount == 0);
                     }
                 }
             };

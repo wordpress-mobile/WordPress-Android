@@ -88,7 +88,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
-    protected ActionBarDrawerToggle mDrawerToggle;
+    private ActionBarDrawerToggle mDrawerToggle;
     private MenuDrawerAdapter mDrawerAdapter;
     protected final List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mDrawerListView;
@@ -217,13 +217,11 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * Create menu drawer ListView and listeners
      */
     private void initMenuDrawer(int blogSelection) {
-
-        // Set up the menu drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.menu_drawer_shadow, GravityCompat.START);
-        mDrawerListView = (ListView) findViewById(R.id.drawer_list);
 
-        // add header containing spinner if it hasn't already been added
+        // add listVew header containing spinner if it hasn't already been added
+        mDrawerListView = (ListView) findViewById(R.id.drawer_list);
         if (mDrawerListView.getHeaderViewsCount() == 0) {
             View view = getLayoutInflater().inflate(R.layout.menu_drawer_header, mDrawerListView, false);
             mDrawerListView.addHeaderView(view, null, false);
@@ -255,7 +253,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         mDrawerListView.setAdapter(mDrawerAdapter);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mDrawerLayout.closeDrawer(GravityCompat.START);
+                if (!isStaticMenuDrawer()) {
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                }
 
                 int menuPosition = position - mDrawerListView.getHeaderViewsCount();
                 if (menuPosition < 0 || menuPosition >= mDrawerAdapter.getCount()) {
@@ -275,26 +275,39 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             }
         });
 
-
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, mToolbar, R.string.open_drawer,
-                R.string.close_drawer
-        ) {
-            public void onDrawerClosed(View view) {
-                invalidateOptionsMenu();
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                invalidateOptionsMenu();
-            }
-        };
-        mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        // drawer is fixed to the left on landscape tablets
+        if (isStaticMenuDrawer()) {
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+            mDrawerLayout.setScrimColor(getResources().getColor(R.color.transparent));
+            mDrawerToggle = null;
+            ViewGroup layoutContainer = (ViewGroup) findViewById(R.id.activity_container);
+            int drawerWidth = getResources().getDimensionPixelSize(R.dimen.menu_drawer_width);
+            layoutContainer.setPadding(drawerWidth, 0, 0, 0);
+        } else {
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            mDrawerToggle = new ActionBarDrawerToggle(
+                    this, mDrawerLayout, mToolbar, R.string.open_drawer,
+                    R.string.close_drawer
+            ) {
+                public void onDrawerClosed(View view) {
+                    invalidateOptionsMenu();
+                }
+                public void onDrawerOpened(View drawerView) {
+                    invalidateOptionsMenu();
+                }
+            };
+            mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        }
 
         if (blogSelection != -1 && mBlogSpinner != null) {
             mBlogSpinner.setSelection(blogSelection);
         }
 
         updateMenuDrawer();
+    }
+
+    protected ActionBarDrawerToggle getDrawerToggle() {
+        return mDrawerToggle;
     }
 
     /*
