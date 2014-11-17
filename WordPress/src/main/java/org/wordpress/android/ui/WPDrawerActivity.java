@@ -17,7 +17,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -221,6 +220,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         // Set up the menu drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setDrawerShadow(R.drawable.menu_drawer_shadow, GravityCompat.START);
         mDrawerListView = (ListView) findViewById(R.id.drawer_list);
 
         // add header containing spinner if it hasn't already been added
@@ -255,7 +255,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         mDrawerListView.setAdapter(mDrawerAdapter);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mDrawerLayout.closeDrawer(Gravity.START);
+                mDrawerLayout.closeDrawer(GravityCompat.START);
 
                 int menuPosition = position - mDrawerListView.getHeaderViewsCount();
                 if (menuPosition < 0 || menuPosition >= mDrawerAdapter.getCount()) {
@@ -537,7 +537,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            mDrawerLayout.openDrawer(Gravity.START);
+            mDrawerLayout.openDrawer(GravityCompat.START);
         }
         return super.onOptionsItemSelected(item);
     }
