@@ -3,37 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/menu_drawer_row_height"
-    android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingLeft="@dimen/margin_large">
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/margin_large"
+    android:paddingTop="@dimen/margin_medium">
 
     <ImageView
         android:id="@+id/menu_row_icon"
-        android:layout_width="@dimen/menu_drawer_icon_size"
-        android:layout_height="@dimen/menu_drawer_icon_size"
+        style="@style/MenuDrawerIcon"
         android:clickable="false"
-        android:contentDescription="@string/posts"
-        android:scaleType="centerInside"
-        android:tint="@color/md__icon_tint"
         tools:src="@drawable/dashicon_admin_post_black" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/menu_row_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_medium"
+        style="@style/MenuDrawerText"
+        android:layout_weight="1"
         android:clickable="false"
-        android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/grey_dark"
         tools:text="@string/posts" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/menu_row_badge"
-        style="@style/MenuDrawerCommentBadge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/menu_drawer_badge_size"
-        android:minWidth="@dimen/menu_drawer_badge_size"
+        style="@style/MenuDrawerBadge"
+        android:layout_marginRight="@dimen/margin_large"
         android:visibility="gone"
         tools:visibility="visible" />
 

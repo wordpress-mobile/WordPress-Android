@@ -19,6 +19,8 @@
     <color name="md__background">@color/white</color>
     <color name="md__background_selected">@color/background_material_light</color>
     <color name="md__icon_tint">@color/grey_medium_dark</color>
+    <color name="md__text">@color/grey_extra_dark</color>
+    <color name="md__divider">@color/grey_extra_light</color>
 
     <color name="wordpress_blue">#21759B</color>
 
