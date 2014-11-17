@@ -59,6 +59,8 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/settings_title"
                 style="@style/MenuDrawerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/settings" />
         </LinearLayout>
 

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,9 +14,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,14 +37,14 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.WPDrawerActivity;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -109,7 +110,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
         if (mNoMenuDrawer) {
             setContentView(R.layout.stats_activity);
-            ActionBar actionBar = getActionBar();
+            ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
@@ -204,7 +205,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         super.onSaveInstanceState(outState);
     }
 
-    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onDown(MotionEvent event) {
             return true;
@@ -233,7 +234,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
+    public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
         this.mDetector.onTouchEvent(event);
         return super.dispatchTouchEvent(event);
     }
@@ -746,7 +747,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
     }
 
-    private static RateLimitedTask sTrackBottomReachedStats = new RateLimitedTask(2) {
+    private static final RateLimitedTask sTrackBottomReachedStats = new RateLimitedTask(2) {
         protected boolean run() {
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SCROLLED_TO_BOTTOM);
             return true;

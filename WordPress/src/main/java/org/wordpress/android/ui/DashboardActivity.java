@@ -33,16 +33,16 @@ import java.net.URLEncoder;
  */
 public class DashboardActivity extends ActionBarActivity {
     /** Primary webview used to display content. */
-    protected WebView mWebView;
+    private WebView mWebView;
 
     /**
      * Blog for which this activity is loading content.
      */
-    protected Blog mBlog;
+    private Blog mBlog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_PROGRESS);
+        supportRequestWindowFeature(Window.FEATURE_PROGRESS);
 
         super.onCreate(savedInstanceState);
 
@@ -112,7 +112,7 @@ public class DashboardActivity extends ActionBarActivity {
      *
      * @return URL of the login page.
      */
-    protected String getLoginUrl() {
+    String getLoginUrl() {
         if (mBlog.getUrl().lastIndexOf("/") != -1) {
             return mBlog.getUrl().substring(0, mBlog.getUrl().lastIndexOf("/"))
                     + "/wp-login.php";
@@ -126,7 +126,7 @@ public class DashboardActivity extends ActionBarActivity {
      *
      * @param url URL to be loaded in the webview.
      */
-    protected void loadAuthenticatedUrl(String url) {
+    void loadAuthenticatedUrl(String url) {
         try {
             String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
                     URLEncoder.encode(mBlog.getUsername(), "UTF-8"), URLEncoder.encode(mBlog.getPassword(), "UTF-8"),

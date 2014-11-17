@@ -1,7 +1,7 @@
 package org.wordpress.android.networking;
 
-import android.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.webkit.WebSettings;
 
 import org.wordpress.android.R;
@@ -18,7 +18,7 @@ public class SSLCertsViewActivity extends WebViewActivity {
         super.onCreate(savedInstanceState);
         setTitle(getResources().getText(R.string.ssl_certificate_details));
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
         }
