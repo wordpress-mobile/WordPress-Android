@@ -363,8 +363,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             try {
                 mNote = noteBucket.get(noteId);
+
                 // Mark note as read since we are looking at it already
-                mNote.markAsRead();
+                if (mNote.isUnread()) {
+                    mNote.markAsRead();
+                }
+
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
