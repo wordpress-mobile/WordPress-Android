@@ -372,7 +372,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                         }
 
                         @Override
-                        public void onClear() {
+                        public void onClear(Parcelable[] token) {
                             //noop
                         }
 
