@@ -323,7 +323,7 @@ public class CommentsActivity extends WPDrawerActivity
                         }
 
                         @Override
-                        public void onClear() {
+                        public void onClear(Parcelable[] token) {
                             //noop
                         }
 
