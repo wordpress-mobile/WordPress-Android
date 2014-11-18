@@ -230,7 +230,7 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="FloatingActivityTheme" parent="android:Theme.Holo.Light.NoActionBar">
+    <style name="FloatingActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:checkboxStyle">@style/FloatingActivityTheme.CheckBox</item>
