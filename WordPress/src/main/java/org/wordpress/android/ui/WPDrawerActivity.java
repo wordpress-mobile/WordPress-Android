@@ -670,7 +670,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 }
                 intent = new Intent(this, CommentsActivity.class);
                 intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
-                intent.putExtra("isNew", true);
                 break;
             case MEDIA:
                 intent = new Intent(this, MediaBrowserActivity.class);
@@ -684,7 +683,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 }
                 intent = new Intent(this, PagesActivity.class);
                 intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
-                intent.putExtra("isNew", true);
                 intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
                 break;
             case POSTS:
@@ -958,7 +956,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
                     ? Constants.QUICK_POST_PHOTO_CAMERA
                     : Constants.QUICK_POST_PHOTO_LIBRARY);
-            intent.putExtra("isNew", true);
             startActivity(intent);
         }
         @Override
@@ -978,7 +975,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
                     ? Constants.QUICK_POST_VIDEO_CAMERA
                     : Constants.QUICK_POST_VIDEO_LIBRARY);
-            intent.putExtra("isNew", true);
             startActivity(intent);
         }
         @Override
