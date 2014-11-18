@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -108,10 +107,10 @@ public class MediaContentAdapter extends BaseAdapter {
             String tag = content.getTag();
             boolean isVideo = tag != null && tag.equals("CaptureVideo");
 
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
-            if (imageView != null) {
-                int imageResource = isVideo ? R.drawable.media_image_placeholder : R.drawable.media_image_placeholder;
-                imageView.setImageDrawable(mResources.getDrawable(imageResource));
+            ImageView contentImageView = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
+            if (contentImageView != null) {
+                contentImageView.setImageBitmap(null);
+                contentImageView.setBackgroundColor(mResources.getColor(R.color.grey_medium_light));
             }
 
             ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
@@ -125,9 +124,10 @@ public class MediaContentAdapter extends BaseAdapter {
                 overlayView.setImageDrawable(mResources.getDrawable(overlayResource));
             }
 
-            WPTextView titleView = (WPTextView) convertView.findViewById(R.id.mediaContentTitle);
-            if (titleView != null) {
-                titleView.setText(isVideo ? "Capture video" : "Capture image");
+            WPTextView contentTitleView = (WPTextView) convertView.findViewById(R.id.mediaContentTitle);
+            if (contentTitleView != null) {
+                contentTitleView.setVisibility(View.VISIBLE);
+                contentTitleView.setText(isVideo ? "Capture video" : "Capture image");
             }
         }
 
@@ -137,20 +137,20 @@ public class MediaContentAdapter extends BaseAdapter {
     /** Helper method to create the view for device images. */
     private View createDeviceImageContentView(View convertView, MediaContent content) {
         if (convertView != null) {
-            ImageView contentImage = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
-            TextView contentTitle = (TextView) convertView.findViewById(R.id.mediaContentTitle);
+            ImageView contentImageView = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
+            TextView contentTitleView = (TextView) convertView.findViewById(R.id.mediaContentTitle);
             ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
 
-            if (contentTitle != null) {
-                contentTitle.setText(content.getContentTitle());
+            if (contentTitleView != null) {
+                contentTitleView.setVisibility(View.INVISIBLE);
             }
 
-            if (contentImage != null) {
+            if (contentImageView != null) {
                 if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
-                    contentImage.setImageResource(R.drawable.media_image_placeholder);
+                    contentImageView.setImageResource(R.drawable.media_image_placeholder);
                 } else {
-                    contentImage.setImageResource(R.drawable.media_image_placeholder);
-                    MediaUtils.BackgroundFetchDeviceImage bgDownload = new MediaUtils.BackgroundFetchDeviceImage(contentImage);
+                    contentImageView.setImageResource(R.drawable.media_image_placeholder);
+                    MediaUtils.BackgroundFetchDeviceImage bgDownload = new MediaUtils.BackgroundFetchDeviceImage(contentImageView);
                     bgDownload.execute(content.getContentPreviewUri());
                 }
             }
@@ -171,7 +171,7 @@ public class MediaContentAdapter extends BaseAdapter {
             ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
 
             if (contentTitle != null) {
-                contentTitle.setText(content.getContentTitle());
+                contentTitle.setVisibility(View.INVISIBLE);
             }
 
             if (contentImage != null) {
@@ -199,20 +199,20 @@ public class MediaContentAdapter extends BaseAdapter {
 
     private View createWebImageContentView(View convertView, MediaContent content) {
         if (convertView != null) {
-            ImageView contentImage = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
-            TextView contentTitle = (TextView) convertView.findViewById(R.id.mediaContentTitle);
+            ImageView contentImageView = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
+            TextView contentTitleView = (TextView) convertView.findViewById(R.id.mediaContentTitle);
             ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
 
-            if (contentTitle != null) {
-                contentTitle.setText(content.getContentTitle());
+            if (contentTitleView != null) {
+                contentTitleView.setVisibility(View.INVISIBLE);
             }
 
-            if (contentImage != null) {
+            if (contentImageView != null) {
                 if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
-                    contentImage.setImageResource(R.drawable.ic_action_web_site);
+                    contentImageView.setImageResource(R.drawable.ic_action_web_site);
                 } else {
-                    contentImage.setImageResource(R.drawable.media_image_placeholder);
-                    MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(contentImage);
+                    contentImageView.setImageResource(R.drawable.media_image_placeholder);
+                    MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(contentImageView);
                     bgDownload.execute(content.getContentPreviewUri());
                 }
             }
