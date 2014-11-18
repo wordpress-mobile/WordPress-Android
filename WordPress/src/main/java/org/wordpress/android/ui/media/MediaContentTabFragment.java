@@ -187,10 +187,12 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
     public void onMediaCapturePathReady(String mediaCapturePath) {
         mCapturingMedia = false;
 
-        MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_IMAGE);
-        newContent.setContentUri(Uri.parse(mediaCapturePath));
-        newContent.setContentPreviewUri(Uri.parse(mediaCapturePath));
-        mAdapter.addContent(newContent);
+        if (mediaCapturePath != null && !mediaCapturePath.equals("")) {
+            MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_IMAGE);
+            newContent.setContentUri(Uri.parse(mediaCapturePath));
+            newContent.setContentPreviewUri(Uri.parse(mediaCapturePath));
+            mAdapter.addContent(newContent);
+        }
     }
 
     private void notifiyMediaSelectionStarted() {
