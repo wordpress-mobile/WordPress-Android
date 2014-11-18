@@ -98,7 +98,7 @@ dependencies {
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
-    compile('com.simperium.android:simperium:0.4.12')
+    compile('com.simperium.android:simperium:0.6.+@aar')
 
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
