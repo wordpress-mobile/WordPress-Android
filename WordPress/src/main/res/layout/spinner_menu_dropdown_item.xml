@@ -8,5 +8,5 @@
     android:ellipsize="marquee"
     android:singleLine="true"
     android:textColor="@color/md__text"
-    android:textSize="@dimen/text_sz_medium"
+    android:textSize="@dimen/text_sz_large"
     tools:text="menu_text_dropdown" />
