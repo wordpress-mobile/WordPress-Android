@@ -661,14 +661,67 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     public void onSignout() {
     }
 
+    private Intent getIntentForActivityId(ActivityId id) {
+        final Intent intent;
+        switch (id) {
+            case COMMENTS:
+                intent = new Intent(WPDrawerActivity.this, CommentsActivity.class);
+                intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
+                intent.putExtra("isNew", true);
+                break;
+            case MEDIA:
+                intent = new Intent(WPDrawerActivity.this, MediaBrowserActivity.class);
+                break;
+            case NOTIFICATIONS:
+                intent = new Intent(WPDrawerActivity.this, NotificationsActivity.class);
+                break;
+            case PAGES:
+                intent = new Intent(WPDrawerActivity.this, PagesActivity.class);
+                intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
+                intent.putExtra("isNew", true);
+                intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
+                break;
+            case POSTS:
+                intent = new Intent(WPDrawerActivity.this, PostsActivity.class);
+                break;
+            case READER:
+                intent = new Intent(WPDrawerActivity.this, ReaderPostListActivity.class);
+                break;
+            case STATS:
+                intent = new Intent(WPDrawerActivity.this, StatsActivity.class);
+                intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, WordPress.getCurrentBlog().getLocalTableBlogId());
+                break;
+            case THEMES:
+                intent = new Intent(WPDrawerActivity.this, ThemeBrowserActivity.class);
+                break;
+            case VIEW_SITE:
+                intent = new Intent(WPDrawerActivity.this, ViewSiteActivity.class);
+                break;
+            default:
+                intent = null;
+                break;
+        }
+
+        return intent;
+    }
+
     /**
      * called when user selects an item from the drawer
      */
-    private void startDrawerIntent(final Intent intent) {
+    private void startDrawerActivity(ActivityId id) {
+        final Intent intent = getIntentForActivityId(id);
+        if (intent == null) {
+            return;
+        }
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(null);
         }
+
+        // fade out the activity container, then start the new activity after a brief delay to
+        // give the drawer time to close
         hideActivityContainer(true);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -697,7 +750,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         public void onSelectItem(){
             if (!isSelected())
                 mShouldFinish = true;
-            startDrawerIntent(new Intent(WPDrawerActivity.this, ReaderPostListActivity.class));
+            startDrawerActivity(getItemId());
         }
     }
 
@@ -719,7 +772,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_POSTS);
             }
-            startDrawerIntent(new Intent(WPDrawerActivity.this, PostsActivity.class));
+            startDrawerActivity(getItemId());
         }
         @Override
         public boolean isVisible() {
@@ -741,7 +794,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
             }
-            startDrawerIntent(new Intent(WPDrawerActivity.this, MediaBrowserActivity.class));
+            startDrawerActivity(getItemId());
         }
         @Override
         public boolean isVisible() {
@@ -765,11 +818,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_PAGES);
             }
-            Intent intent = new Intent(WPDrawerActivity.this, PagesActivity.class);
-            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
-            intent.putExtra("isNew", true);
-            intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
-            startDrawerIntent(intent);
+            startDrawerActivity(getItemId());
         }
         @Override
         public boolean isVisible() {
@@ -793,14 +842,10 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_COMMENTS);
             }
-            Intent intent = new Intent(WPDrawerActivity.this, CommentsActivity.class);
-            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
-            intent.putExtra("isNew", true);
-            startDrawerIntent(intent);
+            startDrawerActivity(getItemId());
         }
         @Override
         public int getBadgeCount() {
-            // TODO: cache this
             return CommentTable.getUnmoderatedCommentCount(WordPress.getCurrentLocalTableBlogId());
         }
         @Override
@@ -821,7 +866,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         public void onSelectItem(){
             if (!(WPDrawerActivity.this instanceof ThemeBrowserActivity))
                 mShouldFinish = true;
-            startDrawerIntent(new Intent(WPDrawerActivity.this, ThemeBrowserActivity.class));
+            startDrawerActivity(getItemId());
         }
 
         @Override
@@ -846,10 +891,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 return;
             if (!isSelected())
                 mShouldFinish = true;
-
-            Intent intent = new Intent(WPDrawerActivity.this, StatsActivity.class);
-            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, WordPress.getCurrentBlog().getLocalTableBlogId());
-            startDrawerIntent(intent);
+            startDrawerActivity(getItemId());
         }
         @Override
         public boolean isVisible() {
@@ -911,7 +953,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 mShouldFinish = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
             }
-            startDrawerIntent(new Intent(WPDrawerActivity.this, ViewSiteActivity.class));
+            startDrawerActivity(getItemId());
         }
         @Override
         public boolean isVisible() {
@@ -935,7 +977,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         public void onSelectItem(){
             if (!(WPDrawerActivity.this instanceof NotificationsActivity))
                 mShouldFinish = true;
-            startDrawerIntent(new Intent(WPDrawerActivity.this, NotificationsActivity.class));
+            startDrawerActivity(getItemId());
         }
     }
 
