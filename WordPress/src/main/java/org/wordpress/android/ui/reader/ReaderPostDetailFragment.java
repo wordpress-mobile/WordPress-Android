@@ -136,9 +136,8 @@ public class ReaderPostDetailFragment extends Fragment
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
 
         if (isFullScreenSupported()) {
-            // TODO: uncomment once appcompat supports FEATURE_ACTION_BAR_OVERLAY
-            //spacer.getLayoutParams().height = DisplayUtils.getActionBarHeight(container.getContext());
-            //spacer.setVisibility(View.VISIBLE);
+            spacer.getLayoutParams().height = DisplayUtils.getActionBarHeight(container.getContext());
+            spacer.setVisibility(View.VISIBLE);
             mScrollView.setOnScrollDirectionListener(this);
         } else {
             spacer.setVisibility(View.GONE);

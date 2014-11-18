@@ -15,6 +15,7 @@ import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
@@ -68,9 +69,8 @@ public class ReaderPostPagerActivity extends ActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (isFullScreenSupported()) {
-            // TODO: this is broken in API 21 appcompat - revisit then investigate
-            // using setHideOnContentScrollEnabled
-            //supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+            // TODO: investigate setHideOnContentScrollEnabled
+            supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         }
 
         super.onCreate(savedInstanceState);
@@ -290,15 +290,13 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             return false;
         }
 
-        // TODO: toggle toolbar (currently broken in appcompat)
-        /*ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
+        if (getSupportActionBar() != null) {
             if (enableFullScreen) {
-                actionBar.hide();
+                getSupportActionBar().hide();
             } else {
-                actionBar.show();
+                getSupportActionBar().show();
             }
-        }*/
+        }
 
         mIsFullScreen = enableFullScreen;
         return true;
