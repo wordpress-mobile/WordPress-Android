@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -344,12 +343,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             return;
         }
         mBlogSpinnerInitialized = false;
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            mBlogSpinner.setAdapter(new BlogSpinnerAdapter(actionBar.getThemedContext(), blogNames));
-        } else {
-            mBlogSpinner.setAdapter(new BlogSpinnerAdapter(this, blogNames));
-        }
+        Context context = WPActivityUtils.getThemedContext(this);
+        mBlogSpinner.setAdapter(new BlogSpinnerAdapter(context, blogNames));
     }
 
     /*

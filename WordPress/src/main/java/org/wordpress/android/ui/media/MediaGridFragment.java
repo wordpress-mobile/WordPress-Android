@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateFormat;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -44,6 +46,7 @@ import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
@@ -255,7 +258,7 @@ public class MediaGridFragment extends Fragment
 
         updateFilterText();
 
-        Context context = getActivity();
+        Context context = WPActivityUtils.getThemedContext(getActivity());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_menu_dropdown_item, mFiltersText);
         mSpinner.setAdapter(adapter);
         mSpinner.setSelection(mFilter.ordinal());

@@ -70,12 +70,6 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (WordPress.wpDB == null) {
-            Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-
         createMenuDrawer(R.layout.media_browser_activity);
         setSupportActionBar(getToolbar());
 
