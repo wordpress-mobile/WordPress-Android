@@ -41,7 +41,6 @@ import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClick
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -72,7 +71,6 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsBlockBlogDisabled;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
-    private ReaderInterfaces.FullScreenListener mFullScreenListener;
 
     private ReaderResourceVars mResourceVars;
 
@@ -116,13 +114,7 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         mResourceVars = new ReaderResourceVars(activity);
-
-        if (activity instanceof ReaderInterfaces.FullScreenListener) {
-            mFullScreenListener = (ReaderInterfaces.FullScreenListener) activity;
-        }
-
         if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
             mOnPopupListener = (ReaderInterfaces.OnPostPopupListener) activity;
         }
@@ -132,16 +124,8 @@ public class ReaderPostDetailFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
-        final View spacer = view.findViewById(R.id.spacer_actionbar);
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
-
-        if (isFullScreenSupported()) {
-            spacer.getLayoutParams().height = DisplayUtils.getActionBarHeight(container.getContext());
-            spacer.setVisibility(View.VISIBLE);
-            mScrollView.setOnScrollDirectionListener(this);
-        } else {
-            spacer.setVisibility(View.GONE);
-        }
+        mScrollView.setOnScrollDirectionListener(this);
 
         mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
@@ -170,25 +154,20 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollUp() {
-        // disable full screen when scrolling up
-        if (isFullScreen()) {
-            setIsFullScreen(false);
-        }
+        animateIconBar(true);
     }
 
     @Override
     public void onScrollDown() {
-        // enable full screen when scrolling down
-        if (!isFullScreen() && mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
-            setIsFullScreen(true);
+        if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
+            animateIconBar(false);
         }
     }
 
     @Override
     public void onScrollCompleted() {
-        // disable full screen if scroll has ended and user hit the bottom
-        if (isFullScreen() && !mScrollView.canScrollDown()) {
-            setIsFullScreen(false);
+        if (!mScrollView.canScrollDown()) {
+            animateIconBar(true);
         }
     }
 
@@ -226,26 +205,6 @@ public class ReaderPostDetailFragment extends Fragment
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /*
-     * full-screen mode hides the ActionBar and icon bar
-     */
-    private boolean isFullScreen() {
-        return (mFullScreenListener != null && mFullScreenListener.isFullScreen());
-    }
-
-    private boolean isFullScreenSupported() {
-        return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
-    }
-
-    private void setIsFullScreen(boolean enableFullScreen) {
-        // this tells the host activity to enable/disable fullscreen
-        if (mFullScreenListener != null && mFullScreenListener.onRequestFullScreen(enableFullScreen)) {
-            if (mPost.isWP()) {
-                animateIconBar(!enableFullScreen);
-            }
         }
     }
 
@@ -879,7 +838,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * return the container view that should host the fullscreen video
+     * return the container view that should host the full screen video
      */
     @Override
     public ViewGroup onRequestCustomView() {
@@ -891,7 +850,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * return the container view that should be hidden when fullscreen video is shown
+     * return the container view that should be hidden when full screen video is shown
      */
     @Override
     public ViewGroup onRequestContentView() {
@@ -904,7 +863,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onCustomViewShown() {
-        // fullscreen video has just been shown so hide the ActionBar
+        // full screen video has just been shown so hide the ActionBar
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.hide();
@@ -913,7 +872,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onCustomViewHidden() {
-        // user returned from fullscreen video so re-display the ActionBar
+        // user returned from full screen video so re-display the ActionBar
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.show();

@@ -15,7 +15,6 @@ import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
@@ -48,8 +47,7 @@ import javax.annotation.Nonnull;
  * post detail
  */
 public class ReaderPostPagerActivity extends ActionBarActivity
-        implements ReaderInterfaces.FullScreenListener,
-                   ReaderInterfaces.OnPostPopupListener {
+        implements ReaderInterfaces.OnPostPopupListener {
 
     private Toolbar mToolbar;
     private ReaderViewPager mViewPager;
@@ -60,7 +58,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
     private long mPostId;
     private ReaderPostListType mPostListType;
 
-    private boolean mIsFullScreen;
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
 
@@ -68,11 +65,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (isFullScreenSupported()) {
-            // TODO: investigate setHideOnContentScrollEnabled
-            supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        }
-
+        // TODO: investigate setHideOnContentScrollEnabled
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
 
@@ -121,7 +114,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                onRequestFullScreen(false);
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
             }
 
@@ -129,10 +121,8 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
                 if (state == ViewPager.SCROLL_STATE_DRAGGING) {
-                    // return from fullscreen and pause the active web view when the user
-                    // starts scrolling - important because otherwise embedded content in
-                    // the web view will continue to play
-                    onRequestFullScreen(false);
+                    // pause the active web view when the user starts scrolling - important
+                    // because otherwise embedded content in the web view will continue to play
                     ReaderPostDetailFragment fragment = getActiveDetailFragment();
                     if (fragment != null) {
                         fragment.pauseWebView();
@@ -203,13 +193,11 @@ public class ReaderPostPagerActivity extends ActionBarActivity
     public void onBackPressed() {
         ReaderPostDetailFragment fragment = getActiveDetailFragment();
         if (fragment != null && fragment.isCustomViewShowing()) {
-            // if fullscreen video is showing, hide the custom view rather than navigate back
+            // if full screen video is showing, hide the custom view rather than navigate back
             fragment.hideCustomView();
         } else {
             super.onBackPressed();
-            if (isFullScreenSupported()) {
-                overridePendingTransition(R.anim.reader_activity_scale_in, R.anim.reader_activity_slide_out);
-            }
+            overridePendingTransition(R.anim.reader_activity_scale_in, R.anim.reader_activity_slide_out);
         }
     }
 
@@ -284,36 +272,8 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    public boolean onRequestFullScreen(boolean enableFullScreen) {
-        if (!isFullScreenSupported() || enableFullScreen == mIsFullScreen) {
-            return false;
-        }
-
-        if (getSupportActionBar() != null) {
-            if (enableFullScreen) {
-                getSupportActionBar().hide();
-            } else {
-                getSupportActionBar().show();
-            }
-        }
-
-        mIsFullScreen = enableFullScreen;
-        return true;
-    }
-
     ReaderPostListType getPostListType() {
         return mPostListType;
-    }
-
-    @Override
-    public boolean isFullScreen() {
-        return mIsFullScreen;
-    }
-
-    @Override
-    public boolean isFullScreenSupported() {
-        return true;
     }
 
     private Fragment getActivePagerFragment() {
