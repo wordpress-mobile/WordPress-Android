@@ -14,6 +14,7 @@ import android.util.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
@@ -41,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.crypto.Cipher;
@@ -155,6 +157,7 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_MEDIA);
         db.execSQL(CREATE_TABLE_THEMES);
         CommentTable.createTables(db);
+        SuggestionTable.createTables(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
@@ -1547,10 +1550,11 @@ public class WordPressDB {
     }
 
     /** Mark media files for deletion without actually deleting them. **/
-    public void setMediaFilesMarkedForDelete(String blogId, List<String> ids) {
+    public void setMediaFilesMarkedForDelete(String blogId, Set<String> ids) {
         // This is for queueing up files to delete on the server
-        for (String id : ids)
+        for (String id : ids) {
             updateMediaUploadState(blogId, id, "delete");
+        }
     }
 
     /** Mark media files as deleted without actually deleting them **/

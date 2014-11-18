@@ -26,7 +26,6 @@ import java.util.Collections;
 /**
  * Fragment where containing a drag-sort listview where the user can drag items
  * to change their position in a media gallery
- *
  */
 public class MediaGalleryEditFragment extends Fragment implements DropListener, RemoveListener {
     private static final String SAVED_MEDIA_IDS = "SAVED_MEDIA_IDS";
@@ -38,10 +37,12 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
         super.onCreateView(inflater, container, savedInstanceState);
 
         mIds = new ArrayList<String>();
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             mIds = savedInstanceState.getStringArrayList(SAVED_MEDIA_IDS);
+        }
 
-        mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true, MediaImageLoader.getInstance());
+        mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true,
+                MediaImageLoader.getInstance());
 
         View view = inflater.inflate(R.layout.media_gallery_edit_fragment, container, false);
 
@@ -61,20 +62,17 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
         outState.putStringArrayList(SAVED_MEDIA_IDS, mIds);
     }
 
-
     private void refreshGridView() {
-        if (WordPress.getCurrentBlog() == null)
+        if (WordPress.getCurrentBlog() == null) {
             return;
+        }
 
         String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-
         Cursor cursor = WordPress.wpDB.getMediaFiles(blogId, mIds);
-
         if (cursor == null) {
             mGridAdapter.changeCursor(null);
             return;
         }
-
         SparseIntArray positions = mapIdsToCursorPositions(cursor);
         mGridAdapter.swapCursor(new OrderedCursor(cursor, positions));
     }
@@ -109,7 +107,6 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
         refreshGridView();
     }
 
-
     private class OrderedCursor extends CursorWrapper {
         final int mPos;
         private final int mCount;
@@ -117,7 +114,9 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
         // a map of custom position to cursor position
         private final SparseIntArray mPositions;
 
-        /** A wrapper to allow for a custom order of items in a cursor **/
+        /**
+         * A wrapper to allow for a custom order of items in a cursor *
+         */
         public OrderedCursor(Cursor cursor, SparseIntArray positions) {
             super(cursor);
             cursor.moveToPosition(-1);
@@ -128,17 +127,17 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
         @Override
         public boolean move(int offset) {
-            return this.moveToPosition(this.mPos+offset);
+            return this.moveToPosition(this.mPos + offset);
         }
 
         @Override
         public boolean moveToNext() {
-            return this.moveToPosition(this.mPos+1);
+            return this.moveToPosition(this.mPos + 1);
         }
 
         @Override
         public boolean moveToPrevious() {
-            return this.moveToPosition(this.mPos-1);
+            return this.moveToPosition(this.mPos - 1);
         }
 
         @Override
@@ -148,23 +147,22 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
         @Override
         public boolean moveToLast() {
-            return this.moveToPosition(this.mCount-1);
+            return this.moveToPosition(this.mCount - 1);
         }
 
         @Override
         public boolean moveToPosition(int position) {
             return super.moveToPosition(mPositions.get(position));
         }
-
-
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Cursor cursor = mGridAdapter.getCursor();
-        if (cursor == null)
+        if (cursor == null) {
             return;
+        }
         cursor.moveToPosition(info.position);
         String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
 
