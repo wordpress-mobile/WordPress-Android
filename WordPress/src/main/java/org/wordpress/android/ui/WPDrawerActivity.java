@@ -665,37 +665,46 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         final Intent intent;
         switch (id) {
             case COMMENTS:
-                intent = new Intent(WPDrawerActivity.this, CommentsActivity.class);
+                if (WordPress.getCurrentBlog() == null) {
+                    return null;
+                }
+                intent = new Intent(this, CommentsActivity.class);
                 intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
                 intent.putExtra("isNew", true);
                 break;
             case MEDIA:
-                intent = new Intent(WPDrawerActivity.this, MediaBrowserActivity.class);
+                intent = new Intent(this, MediaBrowserActivity.class);
                 break;
             case NOTIFICATIONS:
-                intent = new Intent(WPDrawerActivity.this, NotificationsActivity.class);
+                intent = new Intent(this, NotificationsActivity.class);
                 break;
             case PAGES:
-                intent = new Intent(WPDrawerActivity.this, PagesActivity.class);
+                if (WordPress.getCurrentBlog() == null) {
+                    return null;
+                }
+                intent = new Intent(this, PagesActivity.class);
                 intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
                 intent.putExtra("isNew", true);
                 intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
                 break;
             case POSTS:
-                intent = new Intent(WPDrawerActivity.this, PostsActivity.class);
+                intent = new Intent(this, PostsActivity.class);
                 break;
             case READER:
-                intent = new Intent(WPDrawerActivity.this, ReaderPostListActivity.class);
+                intent = new Intent(this, ReaderPostListActivity.class);
                 break;
             case STATS:
-                intent = new Intent(WPDrawerActivity.this, StatsActivity.class);
+                if (WordPress.getCurrentBlog() == null) {
+                    return null;
+                }
+                intent = new Intent(this, StatsActivity.class);
                 intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, WordPress.getCurrentBlog().getLocalTableBlogId());
                 break;
             case THEMES:
-                intent = new Intent(WPDrawerActivity.this, ThemeBrowserActivity.class);
+                intent = new Intent(this, ThemeBrowserActivity.class);
                 break;
             case VIEW_SITE:
-                intent = new Intent(WPDrawerActivity.this, ViewSiteActivity.class);
+                intent = new Intent(this, ViewSiteActivity.class);
                 break;
             default:
                 intent = null;
@@ -711,17 +720,56 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private void startDrawerActivity(ActivityId id) {
         final Intent intent = getIntentForActivityId(id);
         if (intent == null) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_generic);
             return;
         }
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(null);
-        }
-
-        // fade out the activity container, then start the new activity after a brief delay to
-        // give the drawer time to close
+        // fade out the activity container so it appears the current activity is going away
         hideActivityContainer(true);
 
+        // set the ActionBar title to that of the incoming activity
+        if (getSupportActionBar() != null) {
+            final int titleResId;
+            switch (id) {
+                case COMMENTS:
+                    titleResId = R.string.tab_comments;
+                    break;
+                case MEDIA:
+                    titleResId = R.string.media;
+                    break;
+                case NOTIFICATIONS:
+                    titleResId = R.string.notifications;
+                    break;
+                case PAGES:
+                    titleResId = R.string.pages;
+                    break;
+                case POSTS:
+                    titleResId = R.string.posts;
+                    break;
+                case READER:
+                    titleResId = 0;
+                    break;
+                case STATS:
+                    titleResId = R.string.stats;
+                    break;
+                case THEMES:
+                    titleResId = R.string.themes;
+                    break;
+                case VIEW_SITE:
+                    titleResId = R.string.view_site;
+                    break;
+                default:
+                    titleResId = 0;
+                    break;
+            }
+            if (titleResId != 0) {
+                getSupportActionBar().setTitle(getString(titleResId));
+            } else {
+                getSupportActionBar().setTitle(null);
+            }
+        }
+
+        // start the new activity after a brief delay to give the drawer time to close
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

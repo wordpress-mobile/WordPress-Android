@@ -74,6 +74,7 @@ public class PostsActivity extends WPDrawerActivity
         }
 
         // Restore last selection on app creation
+        // TODO: move this logic to app startup
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null &&
                 !(this instanceof PagesActivity)) {
             WordPress.shouldRestoreSelectedActivity = false;
