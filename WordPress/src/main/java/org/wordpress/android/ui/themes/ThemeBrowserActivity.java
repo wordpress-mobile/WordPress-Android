@@ -135,14 +135,17 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
     };
 
     private void setupBaseLayout() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            mDrawerToggle.setDrawerIndicatorEnabled(true);
+        int backstackCount = getFragmentManager().getBackStackEntryCount();
+        if (backstackCount == 0) {
             mViewPager.setVisibility(View.VISIBLE);
             mTabView.setVisibility(View.VISIBLE);
         } else {
-            mDrawerToggle.setDrawerIndicatorEnabled(false);
             mViewPager.setVisibility(View.GONE);
             mTabView.setVisibility(View.GONE);
+        }
+
+        if (getDrawerToggle() != null) {
+            getDrawerToggle().setDrawerIndicatorEnabled(backstackCount == 0);
         }
     }
 

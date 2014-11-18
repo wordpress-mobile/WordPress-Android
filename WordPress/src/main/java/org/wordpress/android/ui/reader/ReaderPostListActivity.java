@@ -69,9 +69,9 @@ public class ReaderPostListActivity extends WPDrawerActivity
         }
 
         // hide drawer toggle and enable back arrow click if this is blog preview or tag preview
-        if (mPostListType.isPreviewType() && mDrawerToggle != null) {
-            mDrawerToggle.setDrawerIndicatorEnabled(false);
-            mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+        if (mPostListType.isPreviewType() && getDrawerToggle() != null) {
+            getDrawerToggle().setDrawerIndicatorEnabled(false);
+            getDrawerToggle().setToolbarNavigationClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onBackPressed();

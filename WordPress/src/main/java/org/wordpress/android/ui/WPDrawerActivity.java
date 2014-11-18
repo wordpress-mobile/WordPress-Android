@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -88,7 +87,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
-    protected ActionBarDrawerToggle mDrawerToggle;
+    private ActionBarDrawerToggle mDrawerToggle;
     private MenuDrawerAdapter mDrawerAdapter;
     protected final List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mDrawerListView;
@@ -193,20 +192,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         return mToolbar;
     }
 
-    /**
-     * returns true if this is an extra-large device in landscape mode
-     */
-    boolean isXLargeLandscape() {
-        return isXLarge() && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
-    }
-
-    boolean isXLarge() {
-        return ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) ==
-                Configuration.SCREENLAYOUT_SIZE_XLARGE);
-    }
-
     public boolean isStaticMenuDrawer() {
-        return isXLargeLandscape();
+        // drawer layout does not exist on landscape tablets
+        return (findViewById(R.id.drawer_layout) != null);
     }
 
     private void initMenuDrawer() {
@@ -217,13 +205,26 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * Create menu drawer ListView and listeners
      */
     private void initMenuDrawer(int blogSelection) {
-
-        // Set up the menu drawer
+        // locate the drawer layout - note that it will not exist on landscape tablets
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setDrawerShadow(R.drawable.menu_drawer_shadow, GravityCompat.START);
-        mDrawerListView = (ListView) findViewById(R.id.drawer_list);
+        if (mDrawerLayout != null) {
+            mDrawerLayout.setDrawerShadow(R.drawable.menu_drawer_shadow, GravityCompat.START);
+            mDrawerToggle = new ActionBarDrawerToggle(
+                    this, mDrawerLayout, mToolbar, R.string.open_drawer,
+                    R.string.close_drawer
+            ) {
+                public void onDrawerClosed(View view) {
+                    invalidateOptionsMenu();
+                }
+                public void onDrawerOpened(View drawerView) {
+                    invalidateOptionsMenu();
+                }
+            };
+            mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        }
 
-        // add header containing spinner if it hasn't already been added
+        // add listVew header containing spinner if it hasn't already been added
+        mDrawerListView = (ListView) findViewById(R.id.drawer_list);
         if (mDrawerListView.getHeaderViewsCount() == 0) {
             View view = getLayoutInflater().inflate(R.layout.menu_drawer_header, mDrawerListView, false);
             mDrawerListView.addHeaderView(view, null, false);
@@ -255,7 +256,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         mDrawerListView.setAdapter(mDrawerAdapter);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mDrawerLayout.closeDrawer(GravityCompat.START);
+                if (mDrawerLayout != null) {
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                }
 
                 int menuPosition = position - mDrawerListView.getHeaderViewsCount();
                 if (menuPosition < 0 || menuPosition >= mDrawerAdapter.getCount()) {
@@ -275,26 +278,15 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             }
         });
 
-
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, mToolbar, R.string.open_drawer,
-                R.string.close_drawer
-        ) {
-            public void onDrawerClosed(View view) {
-                invalidateOptionsMenu();
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                invalidateOptionsMenu();
-            }
-        };
-        mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
-
         if (blogSelection != -1 && mBlogSpinner != null) {
             mBlogSpinner.setSelection(blogSelection);
         }
 
         updateMenuDrawer();
+    }
+
+    protected ActionBarDrawerToggle getDrawerToggle() {
+        return mDrawerToggle;
     }
 
     /*
@@ -536,7 +528,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     };
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home && mDrawerLayout != null) {
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
         return super.onOptionsItemSelected(item);

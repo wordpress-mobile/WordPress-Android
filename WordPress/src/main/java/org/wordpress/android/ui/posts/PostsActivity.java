@@ -163,10 +163,8 @@ public class PostsActivity extends WPDrawerActivity
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
-            if (getFragmentManager().getBackStackEntryCount() == 0) {
-                mDrawerToggle.setDrawerIndicatorEnabled(true);
-            } else {
-                mDrawerToggle.setDrawerIndicatorEnabled(false);
+            if (getDrawerToggle() != null) {
+                getDrawerToggle().setDrawerIndicatorEnabled(getFragmentManager().getBackStackEntryCount() == 0);
             }
         }
     };

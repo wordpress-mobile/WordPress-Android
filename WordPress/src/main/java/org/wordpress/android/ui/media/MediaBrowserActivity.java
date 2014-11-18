@@ -149,10 +149,8 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
 
     private void setupBaseLayout() {
         // hide access to the drawer when there are fragments in the back stack
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            mDrawerToggle.setDrawerIndicatorEnabled(true);
-        } else {
-            mDrawerToggle.setDrawerIndicatorEnabled(false);
+        if (getDrawerToggle() != null) {
+            getDrawerToggle().setDrawerIndicatorEnabled(getFragmentManager().getBackStackEntryCount() == 0);
         }
     }
 
@@ -377,7 +375,9 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
                 ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
                 ft.addToBackStack(null);
                 ft.commit();
-                mDrawerToggle.setDrawerIndicatorEnabled(false);
+                if (getDrawerToggle() != null) {
+                    getDrawerToggle().setDrawerIndicatorEnabled(false);
+                }
             } else {
                 // tablet layout: update edit fragment
                 mMediaEditFragment.loadMedia(mediaId);

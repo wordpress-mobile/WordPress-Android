@@ -118,11 +118,13 @@ public class CommentsActivity extends WPDrawerActivity
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
-                    int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
-                    if (backStackEntryCount == 0) {
-                        mDrawerToggle.setDrawerIndicatorEnabled(true);
-                    } else {
-                        mDrawerToggle.setDrawerIndicatorEnabled(false);
+                    if (getDrawerToggle() != null) {
+                        int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
+                        if (backStackEntryCount == 0) {
+                            getDrawerToggle().setDrawerIndicatorEnabled(true);
+                        } else {
+                            getDrawerToggle().setDrawerIndicatorEnabled(false);
+                        }
                     }
                 }
             };
@@ -198,7 +200,10 @@ public class CommentsActivity extends WPDrawerActivity
             ft.hide(listFragment);
         }
         ft.commitAllowingStateLoss();
-        mDrawerToggle.setDrawerIndicatorEnabled(false);
+
+        if (getDrawerToggle() != null) {
+            getDrawerToggle().setDrawerIndicatorEnabled(false);
+        }
     }
 
     /*
