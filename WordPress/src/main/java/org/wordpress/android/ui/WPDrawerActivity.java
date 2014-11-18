@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -43,6 +44,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
+import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -94,12 +96,13 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private Spinner mBlogSpinner;
     protected boolean mFirstLaunch = false;
 
+    private static final String OPENED_FROM_DRAWER = "opened_from_drawer";
+    private static final int OPENED_FROM_DRAWER_DELAY = 250;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_drawer);
-
         setSupportActionBar(getToolbar());
 
         // configure all the available menu items
@@ -114,6 +117,56 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         mMenuItems.add(new QuickPhotoMenuItem());
         mMenuItems.add(new QuickVideoMenuItem());
         mMenuItems.add(new ViewSiteMenuItem());
+
+        // if this activity was opened from the drawer (ie: via startDrawerIntent() from another
+        // drawer activity), hide the activity view then fade it in after a short delay
+        if (getIntent() != null && getIntent().getBooleanExtra(OPENED_FROM_DRAWER, false)) {
+            hideActivityContainer(false);
+            getIntent().putExtra(OPENED_FROM_DRAWER, false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isFinishing()) {
+                        showActivityContainer(true);
+                    }
+                }
+            }, OPENED_FROM_DRAWER_DELAY);
+        }
+    }
+
+    /*
+     * returns the view containing the activity, which will be the second child of the container
+     * view (the first child is the toolbar)
+     */
+    private View getActivityView() {
+        ViewGroup container = (ViewGroup) findViewById(R.id.activity_container);
+        if (container == null || container.getChildCount() <= 1) {
+            return null;
+        }
+        return container.getChildAt(1);
+    }
+
+    private void hideActivityContainer(boolean animate) {
+        View activityView = getActivityView();
+        if (activityView == null || activityView.getVisibility() != View.VISIBLE) {
+            return;
+        }
+        if (animate) {
+            ReaderAnim.fadeOut(activityView, ReaderAnim.Duration.SHORT);
+        } else {
+            activityView.setVisibility(View.GONE);
+        }
+    }
+    private void showActivityContainer(boolean animate) {
+        View activityView = getActivityView();
+        if (activityView == null || activityView.getVisibility() == View.VISIBLE) {
+            return;
+        }
+        if (animate) {
+            ReaderAnim.fadeIn(activityView, ReaderAnim.Duration.SHORT);
+        } else {
+            activityView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -613,12 +666,21 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     /**
-     * called when user selects an item from the drawer - starts the associated activity
-     * after a brief delay (to give drawer time to close)
+     * called when user selects an item from the drawer
      */
     private void startDrawerIntent(final Intent intent) {
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(intent);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(null);
+        }
+        hideActivityContainer(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                intent.putExtra(OPENED_FROM_DRAWER, true);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+        }, OPENED_FROM_DRAWER_DELAY);
     }
 
     private class ReaderMenuItem extends MenuDrawerItem {
