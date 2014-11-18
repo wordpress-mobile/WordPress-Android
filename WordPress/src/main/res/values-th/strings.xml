@@ -20,8 +20,6 @@
 	<string name="preference_privacy">ส่วนตัว</string>
 	<string name="preference_send_usage_stats">ส่งสถิติ</string>
 	<string name="preference_send_usage_stats_summary">ส่งข้อมูลการใช้งานอัตโนมัติเพื่อช่วยเราในการปรับปรุงเวิร์ดเพรสสำหรับแอนดรอยด์</string>
-	<string name="reader_label_reached_last_post">คุณได้มาถึงเรื่องสุดท้ายแล้ว</string>
-	<string name="reader_label_tap_to_dismiss">แตะเพื่อยกเลิก</string>
 	<string name="reader_hint_reblog_comment">เพิ่มความเห็นของคุณ (ทางเลือก)</string>
 	<string name="reader_title_reblog">รีบล็อกเรื่อง</string>
 	<string name="reader_label_reblog_to">รีบล็อกไปที่</string>
@@ -67,8 +65,6 @@
 	<string name="need_help_signin_wpcom">ต้องการความช่วยเหลือ?</string>
 	<string name="wpcom_signin_dialog_title">เข้าสู่ระบบ WordPress.com</string>
 	<string name="jetpack_stats_switch_user">บัญชี WordPress.com ปัจจุบัน (%s) ไม่สามารถเข้าถึงสถิติของบล็อกนี้ได้   คุณต้องการที่จะเข้าสู่ระบบด้วยบัญชีอื่นหรือไม่?</string>
-	<string name="username_or_password_incorrect_selfhosted_hint">ชื่อผู้ใช้และรหัสผ่านที่คุณใส่นั้นไม่ถูกต้อง  เป็นเว็บที่ติดตั้งบนโฮสท์เองหรือไม่? แตะ "%s" และเพิ่ม URL</string>
-	<string name="nux_help_description">เยี่ยมชนศูษย์ช่วยเหลือเพื่อหาคำตอบสำหรับคำถามทั่ว ๆ ไปหรือเยี่ยมชมฟอรั่มเพื่อตั้งคำถามใหม่</string>
 	<string name="ssl_certificate_details">รายละเอียดสิทธิ (Certificate)</string>
 	<string name="loading_posts">กำลังโหลดเรื่อง...</string>
 	<string name="loading_pages">กำลังโหลดหน้า....</string>
@@ -83,7 +79,6 @@
 	<string name="nux_cannot_log_in">เราไม่สามารถนำคุณเข้าสู่ระบบ</string>
 	<string name="username_exists">ผู้ใช้ชื่อนั้นมีอยู่แล้ว</string>
 	<string name="out_of_memory">อุปกรณ์ใช้ความจำหมดแล้ว</string>
-	<string name="reader_empty_followed_blogs_title">คุณยังไม่ได้ตามบล็อกใด ๆ</string>
 	<string name="mnu_comment_unspam">ไม่ใช่สแปม</string>
 	<string name="mnu_comment_edit">แก้ไข</string>
 	<string name="no_site_error">ไม่สามารถเชื่อมต่อกับเว็บเวิร์ดเพรส</string>
@@ -111,13 +106,9 @@
 	<string name="blog_name_reserved_but_may_be_available">เว็บนั้นถูกสงวนไว้ในเวลานี้ แต่อาจจะว่างภายในสองสามวันข้างหน้า </string>
 	<string name="username_or_password_incorrect">คุณกรอกชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</string>
 	<string name="passcode_wrong_passcode">PIN ไม่ถูกต้อง</string>
-	<string name="reader_empty_posts_in_tag">ไม่มีเรื่องที่ใช้ป้ายกำกับนี้</string>
-	<string name="reader_empty_followed_tags">คุณยังไม่ได้ติดตามป้ายกำกับใด ๆ</string>
-	<string name="reader_empty_posts_liked">คุณไม่เคยกดชอบเรื่องใด ๆ เลย</string>
 	<string name="invalid_password_message">รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร</string>
 	<string name="invalid_username_too_short">ชื่อผู้ใช้ต้องยาวกว่า 4 ตัวอักษร</string>
 	<string name="invalid_username_too_long">ชื่อผู้ใช้ต้องสั้นกว่า 61 ตัวอักษร</string>
-	<string name="agree_terms_of_service">โดยการสร้างบัญชี คุณได้ยินยอมตาม %1$sเงื่อนไขบริการ%2$s ที่น่าตื่นเต้นของเรา</string>
 	<string name="error_delete_post">มีความผิดพลาดเกิดขึ้นขณะกำลังลบ %s</string>
 	<string name="theme_auth_error_message">โปรดแน่ใจว่าคุณมีสิทธิการตั้งค่า themes</string>
 	<string name="comments_empty_list">ไม่มีความเห็น</string>
@@ -134,7 +125,6 @@
 	<string name="gallery_error">ไม่สามารถรับไฟล์สื่อ</string>
 	<string name="blog_not_found">มีความผิดพลาดเกิดขึ้นเมื่อทำการเข้าบล็อกนี้</string>
 	<string name="wait_until_upload_completes">รอจนกระทั่งการอัปโหลดเสร็จสิ้น</string>
-	<string name="media_empty_list_custom_date">ไม่มีไฟล์สื่อในช่วงเวลานี้</string>
 	<string name="theme_set_failed">ล้มเหลวในการตั้งค่า theme</string>
 	<string name="error_refresh_stats">ไม่สามารถโหลดใหม่สถิติในตอนนี้</string>
 	<string name="error_generic">มีความผิดพลาดเกิดขึ้น</string>
@@ -165,7 +155,6 @@
 	<string name="reader_toast_err_reblog_requires_blog">เลือกบล็อก</string>
 	<string name="reader_toast_err_add_tag">ไม่สามารถเพิ่มป้ายกำกับนี้</string>
 	<string name="reader_toast_err_remove_tag">ไม่สามารถลบป้ายกำกับนี้</string>
-	<string name="create_new_blog_wpcom">สร้างบล็อก WordPress.com</string>
 	<string name="required_field">ช่องที่ต้องการ</string>
 	<string name="new_page">หน้าใหม่</string>
 	<string name="new_media">ไฟล์สื่อใหม่</string>
@@ -193,7 +182,6 @@
 	<string name="pending_review">รอคอยการตรวจสอบ</string>
 	<string name="post_format">รูปแบบเรื่อง</string>
 	<string name="new_post">เรื่องใหม่</string>
-	<string name="select_a_blog">เลือกบล็อก</string>
 	<string name="category_parent">หมวดหมู่แม่ (ตัวเลือก):</string>
 	<string name="share_action_post">เรื่องใหม่</string>
 	<string name="share_action_media">คลังไฟล์สื่อ</string>
@@ -249,10 +237,8 @@
 	<string name="theme_premium_theme">theme พรีเมี่ยม</string>
 	<string name="link_enter_url_text">ลิงก์ข้อความ (ทางเลือก)</string>
 	<string name="create_a_link">สร้างลิงก์</string>
-	<string name="pages_empty_list">ยังไม่มีหน้า  ทำไมไม่สร้างซักหนึ่งหน้า</string>
 	<string name="page_settings">การตั้งค่าหน้า</string>
 	<string name="local_draft">ฉบับร่างที่บันทึกในเครื่อง</string>
-	<string name="posts_empty_list">ยังไม่มีเรื่อง ทำไมไม่สร้างซักเรื่องหนึ่ง</string>
 	<string name="upload_failed">การอัปโหลดล้มเหลว</string>
 	<string name="select_categories">เลือกหมวดหมู่</string>
 	<string name="account_details">รายละเอียดบัญชี</string>
@@ -296,9 +282,9 @@
 	<string name="share_link">แบ่งปันลิงก์</string>
 	<string name="creating_your_account">กำลังสร้างบัญชีของคุณ</string>
 	<string name="creating_your_site">กำลังสร้างเว็บของคุณ</string>
-	<string name="create_account_wpcom">สร้างบัญชีบน WordPress.com</string>
 	<string name="error_refresh_media">บางสิ่งผิดปกติในระหว่างโหลดใหม่คลังไฟล์สื่อ  โปรดลองใหม่ภายหลัง</string>
 	<string name="reader_empty_posts_in_tag_updating">กำลังดึงข้อมูลเรื่อง...</string>
+	<string name="comment_spammed">ความเห็นนี้ถูกบันทึกเป็นสแปม</string>
 	<string name="share_preference_title">แบ่งปันไปยังเวิร์ดเพรส</string>
 	<string name="cant_share_no_visible_blog">คุณสามารถแบ่งปันไปยังเวิร์ดเพรสได้ถ้าไม่มีบล็อกที่มองเห็นได้</string>
 	<string name="reset_auto_share_preference">ล้างค่าการตั้งค่าการแบ่งปันอัตโนมัติ</string>
@@ -311,7 +297,6 @@
 	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">วีดีโอ</string>
 	<string name="download">กำลังดาวน์โหลดไฟล์สื่อ</string>
-	<string name="reader_empty_followed_blogs_description">แต่ไม่ต้องกังวล เพียงแตะที่ไอคอนป้ายกำกับเพื่อเริ่มค้นหา</string>
 	<string name="pick_photo">เลือกรูปภาพ</string>
 	<string name="add_self_hosted_blog">เพิ่มบล็อกที่ติดตั้งเอง</string>
 	<string name="pick_video">เลือกวีดีโอ</string>
@@ -332,7 +317,9 @@
 	<string name="connecting_wpcom">เชื่อมต่อไปยัง WordPress.com</string>
 	<string name="reader_toast_err_view_image">ไม่สามารถดูรูปได้</string>
 	<string name="reader_toast_err_url_intent">ไม่สามารถเปิด %s</string>
+	<string name="reader_empty_followed_tags">คุณยังไม่ได้ติดตามป้ายกำกับใด ๆ</string>
 	<string name="reader_empty_popular_tags">ไม่มีป้ายกำกับยอดนิยม</string>
+	<string name="create_account_wpcom">สร้างบัญชีบน  WordPress.com</string>
 	<string name="reader_likes_one">หนึ่งคนชอบสิ่งนี้</string>
 	<string name="reader_likes_only_you">คุณชอบสิ่งนี้</string>
 	<string name="reader_toast_err_comment_failed">ไม่สามารถเขียนความเห็นของคุณ</string>
@@ -422,8 +409,6 @@
 	<string name="media_edit_description_hint">ใส่คำอธิบายที่นี่</string>
 	<string name="media_edit_success">อัปเดตแล้ว</string>
 	<string name="media_edit_failure">ล้มเหลวในการอัปเดต</string>
-	<string name="confirm_delete_media">คุณแน่ใจรึเปล่าว่าต้องการลบไฟล์สื่อนี้</string>
-	<string name="confirm_delete_multi_media">คุณแน่ใจรึเปล่าว่าต้องการลบสิ่งเหล่านี้</string>
 	<string name="themes_details_label">รายละเอียด</string>
 	<string name="media_gallery_type_tiled">เรียงแบบกระเบื้อง</string>
 	<string name="media_gallery_type_circles">เรียงแบบวงกลม</string>
@@ -455,13 +440,10 @@
 	<string name="passcode_preference_title">PIN ล็อค</string>
 	<string name="passcode_turn_off">ปิดการใช้ PIN ล็อค</string>
 	<string name="passcode_turn_on">เปิดการใช้ PIN ล็อค</string>
-	<string name="remote_changes">คุณได้เปลี่ยนแปลงเรื่องแต่ยังไม่ได้ทำการอัปโหลด   จะให้ทำการโหลดข้อมูลจากเว็บและเขียนทับที่คุณทำการเปลี่ยนแปลงไว้หรือไม่?</string>
 	<string name="upload">อัปโหลด</string>
 	<string name="manage">จัดการ</string>
-	<string name="sign_out_confirm">คุณแน่ใจหรือว่าต้องการออกจากระบบ</string>
 	<string name="sign_in">เข้าสู่ระบบ</string>
 	<string name="sign_out">ออกจากระบบ</string>
-	<string name="attempting_configure">กำลังเข้าสู่ระบบ</string>
 	<string name="notifications">การเตือน</string>
 	<string name="tooltip_follow">ติดตามหรือเลิกติดตามบล็อกนี้</string>
 	<string name="manage_notifications">จัดการคำเตือน</string>
@@ -533,8 +515,6 @@
 	<string name="categories">หมวดหมู่</string>
 	<string name="tags_separate_with_commas">ป้ายกำกับ (แยกป้ายกำกับด้วย commas)</string>
 	<string name="tab_stats">สถิติ</string>
-	<string name="delete_sure_post">คุณแน่ใจหรือไม่ว่าต้องการลบเรื่อง</string>
-	<string name="delete_sure_page">คุณแน่ใจหรือไม่ว่าต้องการลบหน้า</string>
 	<string name="notification_vibrate">สั่น</string>
 	<string name="notification_blink">เปิดไฟกระพริบการแจ้งเตือน</string>
 	<string name="notification_sound">เปิดเสียงการแจ้งเตือน </string>
@@ -546,7 +526,6 @@
 	<string name="delete">ลบ</string>
 	<string name="none">ไม่มี</string>
 	<string name="blogs">บล็อก</string>
-	<string name="sure_to_remove_account">คุณแน่ใจว่าต้องการลบบล็อกนี้</string>
 	<string name="select_photo">เลือกรูปจาก gallery</string>
 	<string name="error">ผิดพลาด</string>
 	<string name="yes">ใช่</string>
@@ -557,7 +536,6 @@
 	<string name="tab_comments">ความเห็น</string>
 	<string name="on">บน</string>
 	<string name="reply">ตอบกลับ</string>
-	<string name="delete_sure">คุณแน่ใจแล้วว่าต้องการลบฉบับร่าง</string>
 	<string name="category_refresh_error">โหลดหมวดหมู่อีกครั้งผิดพลาด</string>
 	<string name="preview">ดูก่อน</string>
 	<string-array name="alignment_array">

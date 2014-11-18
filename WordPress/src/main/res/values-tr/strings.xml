@@ -1,5 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_empty_followed_blogs_title">Henüz herhangi bir blog takip etmiyorsunuz.</string>
+	<string name="reader_empty_posts_liked">Henüz hiçbir yazıyı beğenmediniz</string>
+	<string name="faq_button">SSS</string>
+	<string name="browse_our_faq_button">SSS sayfamıza göz atın</string>
+	<string name="nux_help_description">Sık sorulan sorulara yanıt bulmak için yardım merkezini, yeni sorular sormak için forumları ziyaret edin</string>
+	<string name="agree_terms_of_service">Bir hesap açarak %1$sHizmet Koşulları%2$s\'nı kabul etmiş oluyorsunuz.</string>
+	<string name="create_new_blog_wpcom">WordPress.com blogu oluştur</string>
+	<string name="new_blog_wpcom_created">WordPress.com blogu oluşturuldu!</string>
+	<string name="reader_empty_comments">Henüz yorum yapılmadı</string>
+	<string name="reader_likes_multi_short">%,d kişi</string>
+	<string name="reader_empty_posts_in_tag">Bu etiketi içeren yazı yok</string>
+	<string name="reader_label_comment_count_multi">%,d yorum</string>
+	<string name="reader_label_view_original">Orijinal makaleyi oku</string>
+	<string name="reader_label_like">Beğen</string>
+	<string name="reader_label_liked_by">Beğenenler:</string>
+	<string name="reader_label_liked_by_you">Siz beğendiniz</string>
+	<string name="reader_likes_one_short">1 kişi</string>
+	<string name="reader_label_comment_count_single">Bir yorum</string>
+	<string name="reader_label_comments_closed">Yorumlar kapandı</string>
+	<string name="reader_label_comments_on">Yorum yapılan konu:</string>
+	<string name="reader_title_comments">Yorumlar</string>
+	<string name="reader_title_photo_viewer">%1$d / %2$d</string>
+	<string name="error_publish_empty_post">Boş bir yazı yayınlanamaz</string>
+	<string name="error_refresh_unauthorized_posts">Yazıları görüntüleme veya düzenleme izniniz yok</string>
+	<string name="error_refresh_unauthorized_pages">Sayfaları görüntüleme veya düzenleme izniniz yok</string>
+	<string name="error_refresh_unauthorized_comments">Yorumları görüntüleme veya düzenleme izniniz yok</string>
+	<string name="overwrite_local_changes">Henüz yüklenmemiş bir yazıda değişiklik yaptınız. Yazı yenilenerek yerel değişiklikler üzerine yazılsın mı?</string>
+	<string name="older_month">Bir aydan eski</string>
+	<string name="more">Daha Fazla</string>
+	<string name="older_two_days">2 günden eski</string>
+	<string name="older_last_week">1 haftadan eski</string>
+	<string name="stats_tooltip_week_of">Hafta:</string>
+	<string name="stats_totals_views_per_visitor">Ziyaretçi başına Okunma:</string>
+	<string name="help_and_support">Yardım ve destek</string>
+	<string name="stats_no_blog">İstenen blog için istatistikler yüklenemiyor</string>
+	<string name="select_a_blog">Bir WordPress sitesi seçin</string>
+	<string name="sending_content">%s içeriği yükleniyor</string>
+	<string name="uploading_total">%1$d / %2$d yükleniyor</string>
+	<string name="mnu_comment_liked">Beğenildi</string>
+	<string name="comment">Yorum Yap</string>
+	<string name="comment_trashed">Yorum iptal edildi</string>
+	<string name="dlg_confirm_spam_comment">Bu yorum istenmeyen olarak işaretlensin mi?</string>
+	<string name="comment_mark_spam">İstenmeyen olarak işaretle</string>
+	<string name="posts_empty_list">Henüz yazı yok. Bir yazı oluşturmaya ne dersiniz?</string>
+	<string name="comment_reply_to_user">Şunu yanıtla: %s</string>
+	<string name="pages_empty_list">Henüz sayfa yok. Bir sayfa oluşturmaya ne dersiniz?</string>
+	<string name="media_empty_list_custom_date">Bu zaman aralığında medya yok</string>
+	<string name="posting_post">Yazılan: "%s"</string>
+	<string name="signing_out">Çıkış yapılıyor…</string>
 	<string name="reader_toast_err_block_blog">Bu blog engellenemiyor</string>
 	<string name="reader_toast_blog_blocked">Bu blogdan yazılar artık gösterilmeyecek</string>
 	<string name="reader_toast_err_generic">Bu eylemi gerçekleştirilemiyor</string>
@@ -20,8 +69,6 @@
 	<string name="preference_privacy">Gizlilik</string>
 	<string name="preference_send_usage_stats">Kullanım istatistiklerini gönder</string>
 	<string name="preference_send_usage_stats_summary">Android için WordPress\'i geliştirmemize yardımcı olmak için bize otomatik olarak kullanım istatistiklerini gönderin. </string>
-	<string name="reader_label_tap_to_dismiss">Kapatmak için dokunun</string>
-	<string name="reader_label_reached_last_post">Sona ulaştınız</string>
 	<string name="reader_title_reblog">Yazıyı yeniden blogla</string>
 	<string name="reader_hint_reblog_comment">Düşüncelerinizi ekleyin (seçime bağlı)</string>
 	<string name="reader_label_reblog_to">Yeniden blogla</string>
@@ -60,14 +107,12 @@
 	<string name="stats_empty_clicks_desc">"Tıklamalar" sitenizdeki giden bağlantıları tıklayan ziyaretçilerdir.</string>
 	<string name="ssl_certificate_trust">Güven</string>
 	<string name="ssl_certificate_do_not_trust">Güvenme</string>
-	<string name="username_or_password_incorrect_selfhosted_hint">Girdiğiniz kullanıcı adı veya parola yanlış. Kendi sunucunuzda barındırdığınız bir siteniz mi var? "%s" sekmesine dokunun ve URL\'yi ekleyin.</string>
 	<string name="load_settings">Kullanıcı adı ve şifrenizi Ayarlar\'dan değiştirebilirsiniz.</string>
 	<string name="saving">Kaydediliyor</string>
 	<string name="media_empty_list">Medya bulunamadı</string>
 	<string name="need_help_signin_wpcom">Yardıma ihtiyacınız var mı?</string>
 	<string name="wpcom_signin_dialog_title">WordPress.com\'a giriş yap</string>
 	<string name="jetpack_stats_switch_user">Şuan ki WordPress.com hesabı (%s) bu blog için istatistiklere erişmeye yetkili değil. Farklı bir hesap ile giriş yapmak ister misiniz?</string>
-	<string name="nux_help_description">Genel sorulara cevap alabilmek için destek merkezini veya yeni sorular sormak için forumları ziyaret edin.</string>
 	<string name="ssl_certificate_details">Sertifika Detayları</string>
 	<string name="ptr_tip_message">Püf nokta: Yenilemek için aşağı çekin</string>
 	<string name="help">Yardım</string>
@@ -80,7 +125,6 @@
 	<string name="loading_posts">Yazılar yükleniyor...</string>
 	<string name="ssl_certificate_error">Geçersiz SSL setifikası</string>
 	<string name="ssl_certificate_ask_trust">Eğer bu siteye genelde sorunsuz şekilde bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>
-	<string name="reader_empty_followed_blogs_title">Henüz hiçbir blogu takip etmiyorsunuz</string>
 	<string name="wait_until_upload_completes">Yükleme tamamlanana kadar bekleyin</string>
 	<string name="theme_set_failed">Tema ayarlanamadı</string>
 	<string name="theme_auth_error_message">Tema ayarlama yetkisine sahip olduğunuzdan emin olun</string>
@@ -109,7 +153,6 @@
 	<string name="invalid_password_message">Şifreler en az 4 karakter içermelidir</string>
 	<string name="invalid_username_too_short">Kullanıcı adı 4 karakterden uzun olmalıdır</string>
 	<string name="invalid_username_too_long">Kullanıcı adı 61 karakterden kısa olmalıdır</string>
-	<string name="agree_terms_of_service">Hesap oluştururken büyüleyici %1$s Hizmet Şartları %2$s \'nı kabul etmiş sayılırsınız </string>
 	<string name="username_required">Bir kullanıcı adı gir</string>
 	<string name="username_must_be_at_least_four_characters">Kullanıcı adı en az 4 karakter olmalıdır</string>
 	<string name="username_exists">Bu kullanıcı adı zaten kullanılıyor</string>
@@ -124,7 +167,6 @@
 	<string name="nux_cannot_log_in">Girişinizi yapamıyoruz</string>
 	<string name="could_not_remove_account">Blog kaldırılamadı</string>
 	<string name="gallery_error">Ortam dosyası geri getirilemedi</string>
-	<string name="media_empty_list_custom_date">Bu zaman aralığında ortam dosyası yok</string>
 	<string name="out_of_memory">Cihaz hafızası doldu</string>
 	<string name="no_network_message">Uygun durumda şebeke yok</string>
 	<string name="blog_not_found">Bu blog\'a erişilirken hata ile karşılaşıldı</string>
@@ -143,9 +185,6 @@
 	<string name="error_refresh_stats">İstatistikler şuan yenilenemedi</string>
 	<string name="error_parsing_response">Veri çekilirken hata oluştu</string>
 	<string name="error_edit_comment">Yorum düzeltilirken hata oluştu</string>
-	<string name="reader_empty_posts_in_tag">Bu etikette gönderi yok</string>
-	<string name="reader_empty_followed_tags">Hiçbir etiket takip etmiyorsunuz</string>
-	<string name="reader_empty_posts_liked">Hiçbir gönderiyi beğenmediniz</string>
 	<string name="invalid_email_message">Geçersiz Email adresi</string>
 	<string name="username_only_lowercase_letters_and_numbers">Kullanıcı adı sadece küçük harfler(a-z) ve numaralar içerebilir</string>
 	<string name="username_not_allowed">Kullanıcı adı izin verilmiyor</string>
@@ -203,7 +242,6 @@
 	<string name="category_name">Kategori adı</string>
 	<string name="category_desc">Kategori açıklaması (opsiyonel)</string>
 	<string name="category_parent">Üst kategori (opsiyonel)</string>
-	<string name="select_a_blog">Blog seç</string>
 	<string name="share_action_media">Medya kütüphanesi</string>
 	<string name="stats_view_video_plays">Video oynatımları</string>
 	<string name="stats_entry_video_plays">Video adı</string>
@@ -264,8 +302,6 @@
 	<string name="cannot_delete_multi_media_items">Bazı medyalar silinemedi. Daha sonra tekrar deneyin</string>
 	<string name="link_enter_url_text">Link yazısı (opsiyonel)</string>
 	<string name="create_a_link">Link oluştur</string>
-	<string name="pages_empty_list"> Henüz sayfa yok. Neden bir tane oluşturmuyorsun ?</string>
-	<string name="posts_empty_list">Henüz gönderi yok. Neden bir tane oluşturmuyorsun ?</string>
 	<string name="file_not_found">Upload edilecek medya dosyası bulunamadı. Silindi veya taşındı mı?</string>
 	<string name="post_settings">Yazı ayarları</string>
 	<string name="delete_post">Yazıyı sil</string>
@@ -282,7 +318,6 @@
 	<string name="stats_view_search_engine_terms">Ara motoru terimleri</string>
 	<string name="post_format">Yazı formatı</string>
 	<string name="new_post">Yeni yazı</string>
-	<string name="create_new_blog_wpcom">WordPress.com bloğu oluştur</string>
 	<string name="email_hint">Email adresi</string>
 	<string name="username_email">Kullanıcı adı veya email</string>
 	<string name="site_address">Kendi sunucunuzda barınan blog adresiniz</string>
@@ -297,7 +332,6 @@
 	<string name="creating_your_account">Hesabınız oluşturuluyor</string>
 	<string name="creating_your_site">Siteniz oluşturuluyor</string>
 	<string name="reader_empty_posts_in_tag_updating">Yazılar getiriliyor...</string>
-	<string name="create_account_wpcom">WordPress.com üzerinde hesap oluştur</string>
 	<string name="error_refresh_media">Medya kütüphanesi yenilenirken bir şeyler ters gitti. Daha sonra tekrar deneyin.</string>
 	<string name="reader_toast_err_get_comment">Bu yoruma erişilemiyor</string>
 	<string name="reader_label_reply">Yanıtla</string>
@@ -311,7 +345,7 @@
 	<string name="reader_likes_you_and_multi">Siz ve %,d kişi bunu beğendi</string>
 	<string name="cant_share_no_visible_blog">Görünürbir bloğunuz olmadan WordPress ile paylaşamazsınız</string>
 	<string name="always_use_these_settings_to_share">Herzaman bu ayarları kullan</string>
-	<string name="reader_empty_followed_blogs_description">Fakat merak etmeyin, gezintiye başlamak için etiket ikonuna dokunun.</string>
+	<string name="comment_spammed">Yorum istenmeyen olarak işaretlendi</string>
 	<string name="select_time">Zaman seçin</string>
 	<string name="select_date">Tarih seçin</string>
 	<string name="pick_photo">Fotoğraf seçin</string>
@@ -322,11 +356,13 @@
 	<string name="validating_site_data">Site verisi doğrulanıyor</string>
 	<string name="reader_likes_you_and_one">Siz ve bir başkası daha bunu değendi</string>
 	<string name="reader_toast_err_get_post">Bu yazıya erişilemiyor</string>
+	<string name="reader_empty_followed_blogs_description">Kaygılanmayın, keşfetmeye başlamak için etiket simgesine dokunmanız yeterli!</string>
 	<string name="nux_oops_not_selfhosted_blog">WordPress.com\'a giriş yap</string>
 	<string name="nux_tap_continue">Devam</string>
 	<string name="nux_welcome_create_account">Hesap oluştur</string>
 	<string name="nux_add_selfhosted_blog">Kendi sunucumda bulunan siteyi ekle</string>
 	<string name="password_invalid">Daha güvenli bir paraloya ihtiyacınız var. 7 veya daha fazla karakter kullandığınızdan emin olun, büyük ve küçük harfleri, numaraları ve özel karakterleri harmanlayın.</string>
+	<string name="signing_in">Giriş yapılıyor...</string>
 	<string name="media_add_popup_title">Medya kütüphanesine ekle</string>
 	<string name="media_add_new_media_gallery">Galeri oluştur</string>
 	<string name="empty_list_default">Bu liste boş</string>
@@ -361,6 +397,8 @@
 	<string name="reader_toast_err_reblog_failed">Bu yazı yeniden bloglanamadı</string>
 	<string name="reader_toast_err_already_reblogged">Bu yazıyı zaten yeniden bloglamışsınız</string>
 	<string name="reader_toast_err_view_image">Imaj görüntülenemedi</string>
+	<string name="reader_empty_followed_tags">Herhangi bir etiketi takip etmiyorsunuz</string>
+	<string name="create_account_wpcom">WordPress.com\'da bir hesap oluştur</string>
 	<string name="stats_totals_followers_shares_header_includes_publicize">%sPublicize içeriyor</string>
 	<string name="themes">Temalar</string>
 	<string name="media_edit_title_text">Başlık</string>
@@ -371,7 +409,6 @@
 	<string name="media_edit_description_hint">Buraya bir açıklama girin</string>
 	<string name="media_edit_success">Güncellendi</string>
 	<string name="media_edit_failure">Güncelleme hatası</string>
-	<string name="confirm_delete_multi_media">Bu öğeleri silmek istediğinize emin misiniz?</string>
 	<string name="themes_details_label">Detaylar</string>
 	<string name="themes_features_label">Özellikler</string>
 	<string name="theme_set_success">Tema başarıyla ayarlandı!</string>
@@ -437,7 +474,6 @@
 	<string name="media_gallery_type_squares">Kare</string>
 	<string name="media_gallery_type_circles">Çember</string>
 	<string name="media_no_video_message">Video gönderimi için VideoPress yükseltmesini edin!</string>
-	<string name="confirm_delete_media">Bu medyayı silmek istediğinize emin misiniz?</string>
 	<string name="theme_activate_button">Aktifleştir</string>
 	<string name="theme_activating_button">Aktifleştiriliyor</string>
 	<string name="theme_auth_error_title">Temalar alınamadı</string>
@@ -455,10 +491,8 @@
 	<string name="passcode_enter_passcode">PIN girin</string>
 	<string name="passcode_enter_old_passcode">Eski PINi girin</string>
 	<string name="passcode_re_enter_passcode">PINi tekrar girin</string>
-	<string name="remote_changes">Henüz siteye yüklemediğiniz bir yazıda değişiklikler yaptınız. Yenileme ile devam edip yerel değişikliklerin üzerine yazılsın mı?</string>
 	<string name="upload">Yükle</string>
 	<string name="manage">Yönet</string>
-	<string name="attempting_configure">Oturum açılıyor...</string>
 	<string name="notifications">Bildirimler</string>
 	<string name="manage_notifications">Bildirimleri yönet</string>
 	<string name="enable_notifications">Bildirimleri etkinleştir</string>
@@ -471,7 +505,6 @@
 	<string name="more_notifications">ve %d daha.</string>
 	<string name="sign_in">Oturum aç</string>
 	<string name="sign_out">Oturum kapat</string>
-	<string name="sign_out_confirm">Oturumu kapatmak istediğinize emin misiniz?</string>
 	<string name="tooltip_follow">Bu blogu takip et ya da takibi bırak.</string>
 	<string name="types">Tipler</string>
 	<string name="loading">Yükleniyor...</string>
@@ -533,8 +566,6 @@
 	<string name="tags_separate_with_commas">Etiketler (etiketleri virgül ile ayırın)</string>
 	<string name="title">Başlık</string>
 	<string name="tab_stats">İstatistikler</string>
-	<string name="delete_sure_page">Bu sayfayı silmek istediğinizden emin misiniz</string>
-	<string name="delete_sure_post">Bu yazıyı silmek istediğinizden emin misiniz</string>
 	<string name="notification_sound">Bilgilendirme sesi çal</string>
 	<string name="notification_vibrate">Titre</string>
 	<string name="notification_blink">Bilgilendirme ışığını parlat</string>
@@ -545,7 +576,6 @@
 	<string name="media">Ortam</string>
 	<string name="delete">Sil</string>
 	<string name="none">Hiçbiri</string>
-	<string name="sure_to_remove_account">Bu blogu kaldırmak istediğinizden emin misiniz?</string>
 	<string name="blogs">Bloglar</string>
 	<string name="select_photo">Galeriden bir fotoğraf seç</string>
 	<string name="error">Hata</string>
@@ -555,7 +585,6 @@
 	<string name="tab_comments">Yorumlar</string>
 	<string name="preview">Önizleme</string>
 	<string name="on">üstünde</string>
-	<string name="delete_sure">Taslağı silmek istediğinizden emin misiniz</string>
 	<string name="reply">Cevapla</string>
 	<string name="yes">Evet</string>
 	<string name="no">Hayır</string>

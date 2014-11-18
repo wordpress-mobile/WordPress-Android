@@ -18,7 +18,6 @@
 	<string name="search_location">Keresés</string>
 	<string name="search_current_location">Hely meghatározás</string>
 	<string name="preference_send_usage_stats">Statisztika küldés</string>
-	<string name="reader_label_reached_last_post">Elértünk a végére</string>
 	<string name="reader_title_reblog">Post újrablogolása</string>
 	<string name="reader_label_reblog_to">Post újrablogolása ide</string>
 	<string name="update_verb">Frissítést</string>
@@ -53,7 +52,6 @@
 	<string name="need_help_signin_wpcom">Segítségre van szükség?</string>
 	<string name="ssl_certificate_do_not_trust">Nem megbízható</string>
 	<string name="ssl_certificate_trust">Megbízható</string>
-	<string name="username_or_password_incorrect_selfhosted_hint">A megadott felhasználónév vagy jelszó hibás. Saját üzemeltetésű oldalra lépünk be? A "%s" gombbal megadható a webcím.</string>
 	<string name="ptr_tip_message">Tipp: A frissítéshez húzzuk le</string>
 	<string name="loading_posts">Bejegyzések betöltése...</string>
 	<string name="loading_pages">Oldalak betöltése...</string>
@@ -98,11 +96,9 @@
 	<string name="preview_page">Oldal előnézet</string>
 	<string name="email_hint">E-mail cím</string>
 	<string name="theme_premium_theme">Prémium sablon</string>
-	<string name="select_a_blog">Válaszunk egy blogot</string>
 	<string name="hint_comment_content">Hozzászólás</string>
 	<string name="comment_added">Sikeres hozzászólás</string>
 	<string name="author_email">Szerző e-mail</string>
-	<string name="posts_empty_list">Még nincs bejegyzés. Mi lenne, ha írnánk egyet?</string>
 	<string name="category_desc">Kategória leírás (nem kötelező)</string>
 	<string name="mnu_comment_trash">Lomtár</string>
 	<string name="media_error_no_permission">Nincs elég jogosultság a médiatár megtekitéséhez</string>
@@ -151,8 +147,6 @@
 	<string name="stats_entry_most_commented">Bejegyzés</string>
 	<string name="media_gallery_type_squares">Négyzetek</string>
 	<string name="theme_activate_button">Bekapcsolás</string>
-	<string name="confirm_delete_multi_media">Biztosan töröljük a kiválasztott elem(ek)et?</string>
-	<string name="confirm_delete_media">Biztosan töröljük a média elemet?</string>
 	<string name="media_gallery_type_circles">Körök</string>
 	<string name="media_no_video_title">VideoPress nem érhető el</string>
 	<string name="media_edit_caption_hint">A feliratot itt lehet megadni</string>
@@ -208,18 +202,15 @@
 	<string name="stats_video_summary_label_impressions">Hatások</string>
 	<string name="stats_video_summary_header">%s összegyűjtött statisztikája</string>
 	<string name="passcode_preference_title">Azonosítókód lezárás</string>
-	<string name="remote_changes">A bejegyzés már módosításra került, csak még nem lett feltöltve. Folytatjuk a frissítést, és írjuk felül a helyi változatot?</string>
 	<string name="upload">Feltöltés</string>
 	<string name="manage">Kezelés</string>
 	<string name="sign_in">Bejelentkezés</string>
 	<string name="sign_out">Kijelentkezés</string>
-	<string name="attempting_configure">Bejelentkezés...</string>
 	<string name="notifications">Értesítések</string>
 	<string name="manage_notifications">Értesítések kezelése</string>
 	<string name="enable_notifications">Értesítések engedélyezése</string>
 	<string name="types">Típusok</string>
 	<string name="options">Lehetőségek</string>
-	<string name="sign_out_confirm">Biztosan kijelentkezünk?</string>
 	<string name="notifications_turn_off">Kikapcsolás</string>
 	<string name="notifications_turn_off_1hr">Kikapcsolás egy órára</string>
 	<string name="notifications_turn_off_8hr">Kikapcsolás nyolc órára</string>
@@ -286,8 +277,6 @@
 	<string name="categories">Kategóriák</string>
 	<string name="title">Címsor</string>
 	<string name="tab_stats">Statisztikák</string>
-	<string name="delete_sure_post">Biztosan töröljük a bejegyzést?</string>
-	<string name="delete_sure_page">Biztosan töröljük az oldalt?</string>
 	<string name="notification_blink">Figyelmeztető fényjelzés</string>
 	<string name="notification_sound">Figyelmeztető hang lejátszása</string>
 	<string name="notification_vibrate">Rezgés</string>
@@ -298,7 +287,6 @@
 	<string name="media">Média</string>
 	<string name="delete">Törlés</string>
 	<string name="none">Egyik sem</string>
-	<string name="sure_to_remove_account">Biztosan eltávolítjuk ezt a honlapot?</string>
 	<string name="blogs">Honlapok</string>
 	<string name="select_photo">Válasszunk egy képet a galériából</string>
 	<string name="error">Hiba</string>
@@ -308,7 +296,6 @@
 	<string name="category_refresh_error">Kategóriák frissítése sikertelen</string>
 	<string name="tab_comments">Hozzászólások</string>
 	<string name="on"> -</string>
-	<string name="delete_sure">Biztosan töröljük a vázlatot?</string>
 	<string name="reply">Válasz</string>
 	<string name="yes">Igen</string>
 	<string name="no">Nem</string>
