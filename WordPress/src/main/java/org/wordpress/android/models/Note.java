@@ -72,8 +72,8 @@ public class Note extends Syncable {
      * Simperium method @see Diffable
      */
     @Override
-    synchronized public JSONObject getDiffableValue() {
-        return JSONUtil.copyJSONObject(mNoteJSON);
+    public JSONObject getDiffableValue() {
+        return mNoteJSON;
     }
 
     /**
@@ -101,8 +101,10 @@ public class Note extends Syncable {
     }
 
     public Boolean isCommentType() {
-        return (isAutomattcherType() && JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1) ||
-                isType(NOTE_COMMENT_TYPE);
+        synchronized (mNoteJSON) {
+            return (isAutomattcherType() && JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1) ||
+                    isType(NOTE_COMMENT_TYPE);
+        }
     }
 
     public Boolean isAutomattcherType() {
@@ -119,9 +121,11 @@ public class Note extends Syncable {
 
     private JSONObject getSubject() {
         try {
-            JSONArray subjectArray = mNoteJSON.getJSONArray("subject");
-            if (subjectArray.length() > 0) {
-                return subjectArray.getJSONObject(0);
+            synchronized (mNoteJSON) {
+                JSONArray subjectArray = mNoteJSON.getJSONArray("subject");
+                if (subjectArray.length() > 0) {
+                    return subjectArray.getJSONObject(0);
+                }
             }
         } catch (JSONException e) {
             return null;
@@ -143,23 +147,22 @@ public class Note extends Syncable {
     }
 
     private String getCommentSubject() {
-        JSONArray subjectArray = mNoteJSON.optJSONArray("subject");
-        if (subjectArray != null) {
-            String commentSubject = JSONUtil.queryJSON(subjectArray, "subject[1].text", "");
+        synchronized (mNoteJSON) {
+            JSONArray subjectArray = mNoteJSON.optJSONArray("subject");
+            if (subjectArray != null) {
+                String commentSubject = JSONUtil.queryJSON(subjectArray, "subject[1].text", "");
 
-            // Trim down the comment preview if the comment text is too large.
-            if (commentSubject != null && commentSubject.length() > MAX_COMMENT_PREVIEW_LENGTH) {
-                commentSubject = commentSubject.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1);
+                // Trim down the comment preview if the comment text is too large.
+                if (commentSubject != null && commentSubject.length() > MAX_COMMENT_PREVIEW_LENGTH) {
+                    commentSubject = commentSubject.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1);
+                }
+
+                return commentSubject;
             }
 
-            return commentSubject;
         }
 
         return "";
-    }
-
-    public String getHeaderSnippet() {
-        return queryJSON("header[1].text", "");
     }
 
     /**
@@ -196,7 +199,9 @@ public class Note extends Syncable {
 
     public void markAsRead() {
         try {
-            mNoteJSON.put("read", 1);
+            synchronized (mNoteJSON) {
+                mNoteJSON.put("read", 1);
+            }
         } catch (JSONException e) {
             Log.e(TAG, "Unable to update note read property", e);
             return;
@@ -213,7 +218,9 @@ public class Note extends Syncable {
 
     public JSONArray getBody() {
         try {
-            return mNoteJSON.getJSONArray("body");
+            synchronized (mNoteJSON) {
+                return mNoteJSON.getJSONArray("body");
+            }
         } catch (JSONException e) {
             return null;
         }
@@ -234,7 +241,9 @@ public class Note extends Syncable {
 
 
     private void updateJSON(JSONObject json) {
-        mNoteJSON = json;
+        synchronized (mNoteJSON) {
+            mNoteJSON = json;
+        }
     }
 
     /*
@@ -267,27 +276,30 @@ public class Note extends Syncable {
     }
 
     public int getSiteId() {
-        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.site", 0);
+        return queryJSON("meta.ids.site", 0);
     }
 
     public int getPostId() {
-        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.post", 0);
+        return queryJSON("meta.ids.post", 0);
     }
 
     public long getCommentId() {
-        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", 0);
+        return queryJSON("meta.ids.comment", 0);
     }
 
 
     public long getParentCommentId() {
-        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.parent_comment", 0);
+        return queryJSON("meta.ids.parent_comment", 0);
     }
 
     /**
      * Rudimentary system for pulling an item out of a JSON object hierarchy
      */
     private <U> U queryJSON(String query, U defaultObject) {
-        return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
+        JSONObject json = this.toJSONObject();
+        synchronized (json) {
+            return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
+        }
     }
 
     /**
@@ -364,7 +376,9 @@ public class Note extends Syncable {
     }
 
     public JSONArray getHeader() {
-        return mNoteJSON.optJSONArray("header");
+        synchronized (mNoteJSON) {
+            return mNoteJSON.optJSONArray("header");
+        }
     }
 
     /**
