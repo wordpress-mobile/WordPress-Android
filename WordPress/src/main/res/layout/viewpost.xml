@@ -78,9 +78,9 @@
             android:layout_height="@dimen/post_detail_button_size"
             android:background="@drawable/selectable_background_wordpress"
             android:scaleType="fitCenter"
-            android:padding="9dp"
+            android:padding="12dp"
             android:tint="@color/post_detail_icon_tint"
-            android:src="@drawable/ic_action_discard"
+            android:src="@drawable/ic_delete_white_24dp"
             android:contentDescription="@string/delete_post" />
 
         <LinearLayout
@@ -95,9 +95,9 @@
                 android:layout_height="@dimen/post_detail_button_size"
                 android:background="@drawable/selectable_background_wordpress"
                 android:scaleType="fitCenter"
-                android:padding="6dp"
+                android:padding="12dp"
                 android:tint="@color/post_detail_icon_tint"
-                android:src="@drawable/ic_post_preview"
+                android:src="@drawable/ic_remove_red_eye_white_24dp"
                 android:contentDescription="@string/preview_post" />
 
             <ImageButton
@@ -106,9 +106,9 @@
                 android:layout_height="@dimen/post_detail_button_size"
                 android:background="@drawable/selectable_background_wordpress"
                 android:scaleType="fitCenter"
-                android:padding="10dp"
+                android:padding="12dp"
                 android:tint="@color/post_detail_icon_tint"
-                android:src="@drawable/ic_action_share"
+                android:src="@drawable/ic_share_white_24dp"
                 android:contentDescription="@string/share_url" />
 
             <ImageButton
@@ -117,8 +117,9 @@
                 android:layout_height="@dimen/post_detail_button_size"
                 android:background="@drawable/selectable_background_wordpress"
                 android:scaleType="fitCenter"
-                android:padding="9dp"
-                android:src="@drawable/dashicon_admin_comments_black"
+                android:padding="12dp"
+                android:tint="@color/post_detail_icon_tint"
+                android:src="@drawable/ic_action_comment"
                 android:contentDescription="@string/add_comment" />
 
             <ImageButton
@@ -127,9 +128,9 @@
                 android:layout_height="@dimen/post_detail_button_size"
                 android:background="@drawable/selectable_background_wordpress"
                 android:scaleType="fitCenter"
-                android:padding="10dp"
+                android:padding="12dp"
                 android:tint="@color/post_detail_icon_tint"
-                android:src="@drawable/ab_icon_edit"
+                android:src="@drawable/ic_create_white_24dp"
                 android:contentDescription="@string/edit_post" />
         </LinearLayout>
     </RelativeLayout>

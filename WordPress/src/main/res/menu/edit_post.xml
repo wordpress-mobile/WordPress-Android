@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_preview_post"
-        android:icon="@drawable/ic_post_preview"
+        android:icon="@drawable/ic_remove_red_eye_white_24dp"
         app:showAsAction="always"
         android:title="@string/preview"/>
     <item
