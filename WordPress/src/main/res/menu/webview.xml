@@ -4,17 +4,17 @@
 
     <item
         android:id="@+id/menu_browser"
-        android:icon="@drawable/ic_action_web_site"
+        android:icon="@drawable/ic_web_white_24dp"
         android:title="@string/view_in_browser"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_share"
-        android:icon="@drawable/ic_action_share"
+        android:icon="@drawable/ic_share_white_24dp"
         android:title="@string/share_link"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_refresh"
-        android:icon="@drawable/ic_action_refresh"
+        android:icon="@drawable/ic_refresh_white_24dp"
         android:title="@string/refresh"
         app:showAsAction="never" />
 </menu>

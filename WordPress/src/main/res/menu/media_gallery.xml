@@ -4,12 +4,12 @@
 
     <item
         android:id="@+id/menu_add_media"
-        android:icon="@drawable/ic_action_new"
+        android:icon="@drawable/ic_add_white_24dp"
         app:showAsAction="always"
         android:title="@string/content_description_add_media"/>
     <item
         android:id="@+id/menu_save"
-        android:icon="@drawable/ic_action_save"
+        android:icon="@drawable/ic_save_white_24dp"
         app:showAsAction="always"
         android:title="@string/save"/>
 

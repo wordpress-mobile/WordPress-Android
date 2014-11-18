@@ -4,12 +4,12 @@
 
     <item
         android:id="@+id/menu_browser"
-        android:icon="@drawable/ic_action_web_site"
+        android:icon="@drawable/ic_web_white_24dp"
         app:showAsAction="ifRoom"
         android:title="@string/view_in_browser"/>
     <item
         android:id="@+id/menu_refresh"
-        android:icon="@drawable/ic_action_refresh"
+        android:icon="@drawable/ic_refresh_white_24dp"
         app:showAsAction="never"
         android:title="@string/refresh"/>
 </menu>

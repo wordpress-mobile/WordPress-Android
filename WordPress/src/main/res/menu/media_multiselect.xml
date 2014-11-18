@@ -9,12 +9,12 @@
         android:title="@string/media_add_new_media_gallery"/>
     <item
         android:id="@+id/media_multiselect_actionbar_post"
-        android:icon="@drawable/tab_icon_newpost"
+        android:icon="@drawable/ic_create_white_24dp"
         app:showAsAction="always"
         android:title="@string/new_post"/>
     <item
         android:id="@+id/media_multiselect_actionbar_trash"
-        android:icon="@drawable/ic_action_discard"
+        android:icon="@drawable/ic_delete_white_24dp"
         app:showAsAction="always"
         android:title="@string/delete"/>
 

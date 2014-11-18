@@ -39,7 +39,7 @@
         <ImageView
             android:id="@+id/settings_icon"
             style="@style/MenuDrawerIcon"
-            android:src="@drawable/ic_action_settings" />
+            android:src="@drawable/ic_settings_grey600_24dp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/settings_title"

@@ -121,7 +121,7 @@ public class AppLogViewerActivity extends ActionBarActivity {
         super.onCreateOptionsMenu(menu);
         MenuItem item = menu.add(Menu.NONE, ID_SHARE, Menu.NONE, R.string.reader_btn_share);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        item.setIcon(R.drawable.ic_action_share);
+        item.setIcon(R.drawable.ic_share_white_24dp);
         return true;
     }
 
