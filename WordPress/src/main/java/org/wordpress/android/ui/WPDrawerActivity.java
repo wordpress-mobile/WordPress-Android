@@ -55,6 +55,7 @@ import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.WPActivityUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
@@ -91,10 +92,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private MenuDrawerAdapter mDrawerAdapter;
-    protected final List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
+    private final List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
-    protected boolean mFirstLaunch = false;
 
     private static final String OPENED_FROM_DRAWER = "opened_from_drawer";
     private static final int OPENED_FROM_DRAWER_DELAY = 250;
@@ -185,8 +185,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         if (mShouldFinish) {
             overridePendingTransition(0, 0);
             finish();
-        } else {
-            WordPress.shouldRestoreSelectedActivity = true;
         }
     }
 
@@ -661,62 +659,11 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     public void onSignout() {
     }
 
-    private Intent getIntentForActivityId(ActivityId id) {
-        final Intent intent;
-        switch (id) {
-            case COMMENTS:
-                if (WordPress.getCurrentBlog() == null) {
-                    return null;
-                }
-                intent = new Intent(this, CommentsActivity.class);
-                intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
-                break;
-            case MEDIA:
-                intent = new Intent(this, MediaBrowserActivity.class);
-                break;
-            case NOTIFICATIONS:
-                intent = new Intent(this, NotificationsActivity.class);
-                break;
-            case PAGES:
-                if (WordPress.getCurrentBlog() == null) {
-                    return null;
-                }
-                intent = new Intent(this, PagesActivity.class);
-                intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
-                intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
-                break;
-            case POSTS:
-                intent = new Intent(this, PostsActivity.class);
-                break;
-            case READER:
-                intent = new Intent(this, ReaderPostListActivity.class);
-                break;
-            case STATS:
-                if (WordPress.getCurrentBlog() == null) {
-                    return null;
-                }
-                intent = new Intent(this, StatsActivity.class);
-                intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, WordPress.getCurrentBlog().getLocalTableBlogId());
-                break;
-            case THEMES:
-                intent = new Intent(this, ThemeBrowserActivity.class);
-                break;
-            case VIEW_SITE:
-                intent = new Intent(this, ViewSiteActivity.class);
-                break;
-            default:
-                intent = null;
-                break;
-        }
-
-        return intent;
-    }
-
     /**
      * called when user selects an item from the drawer
      */
     private void startDrawerActivity(ActivityId id) {
-        final Intent intent = getIntentForActivityId(id);
+        final Intent intent = WPActivityUtils.getIntentForActivityId(this, id);
         if (intent == null) {
             ToastUtils.showToast(this, R.string.reader_toast_err_generic);
             return;

@@ -23,13 +23,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -66,32 +63,6 @@ public class PostsActivity extends WPDrawerActivity
         super.onCreate(savedInstanceState);
         ProfilingUtils.split("PostsActivity.onCreate");
         ProfilingUtils.dump();
-        // Special check for a null database (see #507)
-        if (WordPress.wpDB == null) {
-            Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-
-        // Restore last selection on app creation
-        // TODO: move this logic to app startup
-        if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null &&
-                !(this instanceof PagesActivity)) {
-            WordPress.shouldRestoreSelectedActivity = false;
-            ActivityId lastActivity = ActivityId.getActivityIdFromName(AppPrefs.getLastActivityStr());
-            if (lastActivity.autoRestoreMapper() != ActivityId.UNKNOWN) {
-                for (MenuDrawerItem item : mMenuItems) {
-                    // if we have a matching item id, and it's not selected and it's visible, call it
-                    if (item.hasItemId() && item.getItemId() == lastActivity.autoRestoreMapper() && !item.isSelected()
-                            && item.isVisible()) {
-                        mFirstLaunch = true;
-                        item.selectItem();
-                        finish();
-                        return;
-                    }
-                }
-            }
-        }
 
         createMenuDrawer(R.layout.posts);
         setSupportActionBar(getToolbar());

@@ -50,6 +50,15 @@
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon">
 
+        <activity
+            android:name=".ui.WPLaunchActivity"
+            android:theme="@style/Calypso.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <!-- Account activities -->
         <activity
             android:name=".ui.accounts.SignInActivity"
@@ -122,9 +131,6 @@
             android:theme="@style/Calypso.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -167,10 +173,8 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="viewpost"
                     android:scheme="wordpress" >

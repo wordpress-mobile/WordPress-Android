@@ -84,7 +84,6 @@ public class WordPress extends Application {
     public static WordPressStatsDB wpStatsDB;
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
-    public static boolean shouldRestoreSelectedActivity;
     public static RestClientUtils mRestClientUtils;
     public static RestClientUtils mRestClientUtilsVersion1_1;
     public static RequestQueue requestQueue;
@@ -193,11 +192,6 @@ public class WordPress extends Application {
         setupVolleyQueue();
 
         ABTestingUtils.init();
-
-        String lastActivityStr = AppPrefs.getLastActivityStr();
-        if (!TextUtils.isEmpty(lastActivityStr) && !lastActivityStr.equals(ActivityId.UNKNOWN)) {
-            shouldRestoreSelectedActivity = true;
-        }
 
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
