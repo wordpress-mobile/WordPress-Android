@@ -12,37 +12,12 @@
         android:title="@string/self_hosted_blogs">
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/notifications"
-                        android:key="wp_pref_notifications_category">
-        <PreferenceScreen
-            android:key="wp_pref_notifications"
-            android:persistent="false"
-            android:title="@string/manage_notifications">
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="wp_pref_notifications_enabled"
-                android:title="@string/enable_notifications"/>
-            <PreferenceCategory android:title="@string/types"
-                                android:key="wp_pref_notification_types">
-            </PreferenceCategory>
-            <PreferenceCategory android:title="@string/blogs"
-                                android:key="wp_pref_notification_blogs">
-            </PreferenceCategory>
-            <PreferenceCategory android:title="@string/options">
-                <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:key="wp_pref_notification_sound"
-                    android:title="@string/notification_sound"/>
-                <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:key="wp_pref_notification_vibrate"
-                    android:title="@string/notification_vibrate"/>
-                <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:key="wp_pref_notification_light"
-                    android:title="@string/notification_blink"/>
-            </PreferenceCategory>
-        </PreferenceScreen>
+    <PreferenceCategory
+        android:title="@string/notifications"
+        android:key="wp_pref_notifications_category">
+        <Preference
+            android:key="wp_pref_manage_notifications"
+            android:title="@string/manage_notifications"/>
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -67,8 +42,9 @@
             android:defaultValue="false"
             android:key="wp_pref_passlock_enabled"
             android:title="@string/passcode_preference_title">
-            <intent android:targetClass="org.wordpress.passcodelock.PasscodePreferencesActivity"
-                    android:targetPackage="org.wordpress.android"/>
+            <intent
+                android:targetClass="org.wordpress.passcodelock.PasscodePreferencesActivity"
+                android:targetPackage="org.wordpress.android"/>
         </CheckBoxPreference>
     </PreferenceCategory>
 
@@ -96,18 +72,22 @@
     <PreferenceCategory
         android:key="wp_pref_app_about_section"
         android:title="@string/about">
-        <Preference android:title="@string/app_title"
-                    android:key="wp_pref_app_title">
-            <intent android:targetClass="org.wordpress.android.ui.prefs.AboutActivity"
-                    android:targetPackage="org.wordpress.android"/>
+        <Preference
+            android:title="@string/app_title"
+            android:key="wp_pref_app_title">
+            <intent
+                android:targetClass="org.wordpress.android.ui.prefs.AboutActivity"
+                android:targetPackage="org.wordpress.android"/>
         </Preference>
         <Preference android:title="@string/open_source_licenses">
-            <intent android:targetClass="org.wordpress.android.ui.prefs.LicensesActivity"
-                    android:targetPackage="org.wordpress.android"/>
+            <intent
+                android:targetClass="org.wordpress.android.ui.prefs.LicensesActivity"
+                android:targetPackage="org.wordpress.android"/>
         </Preference>
         <Preference android:title="@string/help_and_support">
-            <intent android:targetClass="org.wordpress.android.ui.accounts.HelpActivity"
-                    android:targetPackage="org.wordpress.android"/>
+            <intent
+                android:targetClass="org.wordpress.android.ui.accounts.HelpActivity"
+                android:targetPackage="org.wordpress.android"/>
         </Preference>
     </PreferenceCategory>
 
@@ -118,5 +98,4 @@
             android:key="wp_pref_sign_out"
             android:title="@string/sign_out"/>
     </PreferenceCategory>
-
 </PreferenceScreen>
