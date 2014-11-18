@@ -72,23 +72,12 @@
     <PreferenceCategory
         android:key="wp_pref_app_about_section"
         android:title="@string/about">
-        <Preference
-            android:title="@string/app_title"
-            android:key="wp_pref_app_title">
-            <intent
-                android:targetClass="org.wordpress.android.ui.prefs.AboutActivity"
-                android:targetPackage="org.wordpress.android"/>
-        </Preference>
-        <Preference android:title="@string/open_source_licenses">
-            <intent
-                android:targetClass="org.wordpress.android.ui.prefs.LicensesActivity"
-                android:targetPackage="org.wordpress.android"/>
-        </Preference>
-        <Preference android:title="@string/help_and_support">
-            <intent
-                android:targetClass="org.wordpress.android.ui.accounts.HelpActivity"
-                android:targetPackage="org.wordpress.android"/>
-        </Preference>
+        <Preference android:title="@string/app_title"
+                    android:key="wp_pref_app_about"/>
+        <Preference android:title="@string/open_source_licenses"
+                    android:key="wp_pref_open_source_licenses"/>
+        <Preference android:title="@string/help_and_support"
+                    android:key="wp_pref_help_and_support"/>
     </PreferenceCategory>
 
     <PreferenceCategory

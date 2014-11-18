@@ -27,12 +27,12 @@ public class SettingsActivity extends ActionBarActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        setTitle(R.string.settings);
         mCurrentBlogOnCreate = WordPress.getCurrentBlog();
         setContentView(R.layout.settings_activity);
-        FragmentManager fragmentManager = getFragmentManager();
-        mSettingsFragment = (SettingsFragment) fragmentManager.findFragmentById(R.id.settings_fragment);
-
+        mSettingsFragment = new SettingsFragment();
+        getFragmentManager().beginTransaction()
+                            .add(R.id.fragment_container, mSettingsFragment)
+                            .commit();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class SettingsActivity extends ActionBarActivity {
                 }
             }
         } else {
-            // no visible blogs when preferences opened
+            // no visible blogs when settings opened
             if (WordPress.wpDB.getNumVisibleAccounts() != 0) {
                 // now at least one blog could be selected
                 currentBlogChanged = true;
@@ -78,5 +78,15 @@ public class SettingsActivity extends ActionBarActivity {
         setResult(Activity.RESULT_OK, data);
         AnalyticsTracker.loadPrefHasUserOptedOut(true);
         super.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

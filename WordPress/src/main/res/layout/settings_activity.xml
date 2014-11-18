@@ -3,12 +3,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/default_background"
-              android:orientation="vertical">
-
-    <fragment
-        android:name="org.wordpress.android.ui.prefs.SettingsFragment"
-        android:id="@+id/settings_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+              android:orientation="vertical"
+              android:id="@+id/fragment_container">
 
 </LinearLayout>
