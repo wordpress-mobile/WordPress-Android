@@ -102,6 +102,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_drawer);
         setSupportActionBar(getToolbar());
 
@@ -135,19 +136,14 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     /*
-     * returns the view containing the activity, which will be the second child of the container
-     * view (the first child is the toolbar)
+     * returns the view containing the activity
      */
-    private View getActivityView() {
-        ViewGroup container = (ViewGroup) findViewById(R.id.activity_container);
-        if (container == null || container.getChildCount() <= 1) {
-            return null;
-        }
-        return container.getChildAt(1);
+    private ViewGroup getActivityContainer() {
+        return (ViewGroup) findViewById(R.id.activity_container);
     }
 
     private void hideActivityContainer(boolean animate) {
-        View activityView = getActivityView();
+        View activityView = getActivityContainer();
         if (activityView == null || activityView.getVisibility() != View.VISIBLE) {
             return;
         }
@@ -158,7 +154,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
     }
     private void showActivityContainer(boolean animate) {
-        View activityView = getActivityView();
+        View activityView = getActivityContainer();
         if (activityView == null || activityView.getVisibility() == View.VISIBLE) {
             return;
         }
@@ -231,7 +227,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * @param contentViewId {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(int contentViewId) {
-        ViewGroup layoutContainer = (ViewGroup) findViewById(R.id.activity_container);
+        ViewGroup layoutContainer = getActivityContainer();
         layoutContainer.addView(getLayoutInflater().inflate(contentViewId, null));
 
         initMenuDrawer();
