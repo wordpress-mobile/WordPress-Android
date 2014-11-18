@@ -44,11 +44,6 @@
         <item name="android:divider">@drawable/tab_divider_wordpress</item>
     </style>
 
-    <!-- http://www.curious-creature.org/2009/03/04/speed-up-your-android-ui/ -->
-    <style name="WordPress.Theme.NoBackground" parent="WordPress">
-        <item name="android:windowBackground">@null</item>
-    </style>
-
    <style name="PopupMenu.WordPress" parent="android:Widget.Holo.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
     </style>
@@ -74,7 +69,6 @@
 
     <style name="DropDownNav.WordPress" parent="android:Widget.Holo.Light.Spinner">
         <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_wordpress</item>
     </style>
 

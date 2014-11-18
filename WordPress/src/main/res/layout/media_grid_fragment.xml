@@ -9,7 +9,7 @@
         android:id="@+id/media_filter_spinner_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/md_list_selector"
+        android:background="@color/grey_extra_light"
         android:clickable="true"
         android:paddingLeft="8dp"
         android:paddingRight="16dp">
