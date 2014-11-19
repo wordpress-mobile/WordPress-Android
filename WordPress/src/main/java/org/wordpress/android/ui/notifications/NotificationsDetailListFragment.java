@@ -46,7 +46,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     }
 
     private Note mNote;
-    private final List<NoteBlock> mNoteBlockArray = new ArrayList<NoteBlock>();
     private LinearLayout mRootLayout;
     private ViewGroup mFooterView;
 
@@ -200,14 +199,16 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
 
     // Loop through the 'body' items in this note, and create blocks for each.
-    private class LoadNoteBlocksTask extends AsyncTask<Void, Boolean, Boolean> {
+    private class LoadNoteBlocksTask extends AsyncTask<Void, Boolean, List<NoteBlock>> {
+
+        private boolean mIsBadgeView;
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            if (mNote == null) return false;
+        protected List<NoteBlock> doInBackground(Void... params) {
+            if (mNote == null) return null;
 
             JSONArray bodyArray = mNote.getBody();
-            mNoteBlockArray.clear();
+            final List<NoteBlock> noteList = new ArrayList<NoteBlock>();
 
             // Add the note header if one was provided
             if (mNote.getHeader() != null) {
@@ -219,10 +220,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 );
 
                 headerNoteBlock.setIsComment(mNote.isCommentType());
-                mNoteBlockArray.add(headerNoteBlock);
+                noteList.add(headerNoteBlock);
             }
 
-            boolean isBadgeView = false;
             if (bodyArray != null && bodyArray.length() > 0) {
                 for (int i=0; i < bodyArray.length(); i++) {
                     try {
@@ -235,7 +235,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             if (mNote.isCommentType()) {
                                 // Set comment position so we can target it later
                                 // See refreshBlocksForCommentStatus()
-                                mCommentListPosition = i + mNoteBlockArray.size();
+                                mCommentListPosition = i + noteList.size();
 
                                 // We'll snag the next body array item for comment user blocks
                                 if (i + 1 < bodyArray.length()) {
@@ -273,33 +273,33 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
                         // Badge notifications apply different colors and formatting
                         if (isAdded() && noteBlock.containsBadgeMediaType()) {
-                            isBadgeView = true;
+                            mIsBadgeView = true;
                             mBackgroundColor = getActivity().getResources().getColor(R.color.transparent);
                         }
 
-                        if (isBadgeView) {
+                        if (mIsBadgeView) {
                             noteBlock.setIsBadge();
                         }
 
-                        mNoteBlockArray.add(noteBlock);
+                        noteList.add(noteBlock);
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.NOTIFS, "Invalid note data, could not parse.");
                     }
                 }
             }
 
-            return isBadgeView;
+            return noteList;
         }
 
         @Override
-        protected void onPostExecute(Boolean isBadgeView) {
-            if (!isAdded()) return;
+        protected void onPostExecute(List<NoteBlock> noteList) {
+            if (!isAdded() || noteList == null) return;
 
-            if (isBadgeView) {
+            if (mIsBadgeView) {
                 mRootLayout.setGravity(Gravity.CENTER_VERTICAL);
             }
 
-            setListAdapter(new NoteBlockAdapter(getActivity(), mNoteBlockArray));
+            setListAdapter(new NoteBlockAdapter(getActivity(), noteList));
         }
     }
 
