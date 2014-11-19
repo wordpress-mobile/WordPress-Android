@@ -4,10 +4,10 @@
     simple list fragment used to show followed tags, popular tags and recommended blogs
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
@@ -17,7 +17,7 @@
         android:text="@string/reader_empty_recommended_blogs"
         android:textColor="@color/grey_medium"
         android:visibility="gone"
-        app:fixWidowWords="true"/>
+        app:fixWidowWords="true" />
 
     <ListView
         android:id="@id/android:list"
