@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListener;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.WPActivityUtils;
 
 /*
  * fragment hosted by ReaderSubsActivity which shows either followed or popular tags
@@ -128,7 +130,8 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
 
     private ReaderTagAdapter getTagAdapter() {
         if (mTagAdapter == null) {
-            mTagAdapter = new ReaderTagAdapter(getActivity(), getTagType(), this);
+            Context context = WPActivityUtils.getThemedContext(getActivity());
+            mTagAdapter = new ReaderTagAdapter(context, getTagType(), this);
         }
         return mTagAdapter;
     }

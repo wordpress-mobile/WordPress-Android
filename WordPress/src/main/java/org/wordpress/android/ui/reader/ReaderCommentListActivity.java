@@ -40,6 +40,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -288,7 +289,8 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                     }
                 }
             };
-            mCommentAdapter = new ReaderCommentAdapter(this, getPost(), replyListener, dataLoadedListener, dataRequestedListener);
+            Context context = WPActivityUtils.getThemedContext(this);
+            mCommentAdapter = new ReaderCommentAdapter(context, getPost(), replyListener, dataLoadedListener, dataRequestedListener);
         }
         return mCommentAdapter;
     }

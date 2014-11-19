@@ -7,8 +7,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white">
+                android:layout_height="wrap_content">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
@@ -22,7 +21,7 @@
 
     <ListView
         android:id="@id/android:list"
-        style="@style/ReaderListView.Topics"
+        style="@style/ReaderListView"
         tools:listitem="@layout/reader_listitem_tag" />
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -54,6 +55,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.widgets.WPListView;
@@ -710,8 +712,9 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
-
-            mPostAdapter = new ReaderPostAdapter(getActivity(),
+            Context context = WPActivityUtils.getThemedContext(getActivity());
+            mPostAdapter = new ReaderPostAdapter(
+                    context,
                     getPostListType(),
                     mReblogListener,
                     mDataLoadedListener,
