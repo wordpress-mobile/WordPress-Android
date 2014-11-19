@@ -93,7 +93,6 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-
         mFilter = (args == null) ? NONE : args.getInt(FILTER_ARG);
     }
 
@@ -139,7 +138,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
             }
         }
 
-        mode.setTitle(mSelectedContent.size() + " items selected");
+        mode.setTitle(mSelectedContent.size() + getString(R.string.media_selection_selected_text));
     }
 
     @Override
@@ -241,7 +240,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
         mGridView.setNumColumns(numColumns);
         mGridView.setVerticalSpacing(columnSpacingY);
         mGridView.setHorizontalSpacing(columnSpacingX);
-        mGridView.setPadding(gridPadding, gridPadding, gridPadding, gridPadding);
+        mGridView.setPadding(gridPadding, 0, gridPadding, 0);
 
         mAdapter = new MediaContentAdapter(getActivity());
         mGridView.setAdapter(mAdapter);

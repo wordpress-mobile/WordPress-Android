@@ -197,15 +197,21 @@ public class MediaSelectActivity extends WPActionBarActivity implements MediaCon
 
     private void finishWithGallery(ArrayList<MediaContent> results) {
         MediaGallery gallery = new MediaGallery();
-        ArrayList<String> resultIds = new ArrayList<String>();
+        ArrayList<String> galleryIds = new ArrayList<String>();
+        ArrayList<MediaContent> images = new ArrayList<MediaContent>();
         for (MediaContent content : results) {
             if (content.getType() == MediaContent.MEDIA_TYPE.WEB_IMAGE) {
-                resultIds.add(content.getContentId());
+                galleryIds.add(content.getContentId());
+            } else if (content.getType() == MediaContent.MEDIA_TYPE.DEVICE_IMAGE) {
+                images.add(content);
             }
         }
-        gallery.setIds(resultIds);
+        gallery.setIds(galleryIds);
 
         Intent result = new Intent();
+        if (images.size() > 0) {
+            result.putParcelableArrayListExtra(SELECTED_CONTENT_RESULTS_KEY, images);
+        }
         result.putExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY, gallery);
         setResult(ACTIVITY_RESULT_CODE_GALLERY_CREATED, result);
         finish();
