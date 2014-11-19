@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_browse"
-        android:icon="@drawable/ic_web_white_24dp"
+        android:icon="@drawable/ic_genericon_web_white_24dp"
         android:title="@string/view_in_browser"
         app:showAsAction="always" />
 

@@ -18,7 +18,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:drawableLeft="@drawable/ic_action_tag_dark"
+        android:drawableLeft="@drawable/ic_genericon_tag_dark_24dp"
         android:drawablePadding="@dimen/margin_small"
         android:gravity="center_vertical"
         android:textColor="@color/grey_dark"

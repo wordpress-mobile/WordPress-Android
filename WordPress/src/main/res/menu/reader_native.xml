@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_tags"
-        android:icon="@drawable/ic_action_tag"
+        android:icon="@drawable/ic_genericon_tag_white_24dp"
         app:showAsAction="always"
         android:title="@string/reader_menu_tags" />
 
