@@ -273,6 +273,8 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
         if (note.getFormattedSubject() != null) {
             setTitle(note.getTitle());
         }
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
 
     public void showCommentDetailForNote(Note note) {
