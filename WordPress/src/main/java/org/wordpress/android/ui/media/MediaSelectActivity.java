@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.widgets.WPViewPager;
 
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 
 public class MediaSelectActivity extends WPActionBarActivity implements MediaContentTabFragment.OnMediaContentSelected {
     public static final int    ACTIVITY_REQUEST_CODE_MEDIA_SELECTION = 6000;
-    public static final int    ACTIVITY_RESULT_CODE_GALLERY_CREATED  = 5001;
+    public static final int    ACTIVITY_RESULT_CODE_GALLERY_CREATED  = 6001;
     public static final String PARAMETER_REQUEST_KEY                 = "requestCode";
     public static final String PARAMETER_TAB_CONFIG                  = "tabConfiguration";
     public static final String FILTER_CAPTURE_IMAGE                  = "CAPTURE_IMAGE";
@@ -94,6 +95,9 @@ public class MediaSelectActivity extends WPActionBarActivity implements MediaCon
 
     @Override
     public void onGalleryCreated(ArrayList<MediaContent> mediaContent) {
+        if (mStartedForResult) {
+            finishWithGallery(mediaContent);
+        }
     }
 
     @Override
@@ -186,8 +190,17 @@ public class MediaSelectActivity extends WPActionBarActivity implements MediaCon
     }
 
     private void finishWithGallery(ArrayList<MediaContent> results) {
+        MediaGallery gallery = new MediaGallery();
+        ArrayList<String> resultIds = new ArrayList<String>();
+        for (MediaContent content : results) {
+            if (content.getType() == MediaContent.MEDIA_TYPE.WEB_IMAGE) {
+                resultIds.add(content.getContentId());
+            }
+        }
+        gallery.setIds(resultIds);
+
         Intent result = new Intent();
-        result.putParcelableArrayListExtra(SELECTED_CONTENT_RESULTS_KEY, results);
+        result.putExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY, gallery);
         setResult(ACTIVITY_RESULT_CODE_GALLERY_CREATED, result);
         finish();
     }
