@@ -50,6 +50,9 @@ public abstract class StatsAbstractFragment extends Fragment {
             case PUBLICIZE:
                 fragment = new StatsPublicizeFragment();
                 break;
+            case FOLLOWERS:
+                fragment = new StatsFollowersFragment();
+                break;
         }
 
         Bundle args = new Bundle();

@@ -11,7 +11,7 @@ public class FollowerModel implements Serializable {
     private String mAvatar;
     private String mUrl;
     private String mFollowData;
-    private String mDataSubscribed;
+    private String mDateSubscribed;
 
     public FollowerModel(String mBlogId, JSONObject followerJSONData) throws JSONException{
         this.mBlogId = mBlogId;
@@ -21,7 +21,7 @@ public class FollowerModel implements Serializable {
             setAvatar(followerJSONData.getString("avatar"));
         }
         this.mUrl = followerJSONData.optString("url");
-        this.mDataSubscribed = followerJSONData.getString("date_subscribed");
+        this.mDateSubscribed = followerJSONData.getString("date_subscribed");
         // Follow data could return a boolean false
         JSONObject followData = followerJSONData.optJSONObject("follow_data");
         setFollowData((followData != null) ? followData.toString() : null);
@@ -57,5 +57,9 @@ public class FollowerModel implements Serializable {
 
     public void setAvatar(String icon) {
         this.mAvatar = icon;
+    }
+
+    public String getDateSubscribed() {
+        return mDateSubscribed;
     }
 }

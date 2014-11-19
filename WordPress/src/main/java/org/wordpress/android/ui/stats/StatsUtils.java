@@ -1,22 +1,11 @@
 package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.RemoteException;
 import android.preference.PreferenceManager;
 
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
@@ -24,30 +13,20 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A utility class to help with date parsing and saving summaries in stats
  */
 public class StatsUtils {
-    private static final String STAT_SUMMARY = "StatSummary_";
-    private static final String STAT_VIDEO_SUMMARY = "StatVideoSummary_";
-    private static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
-    /**
-     * Converts date in the form of 2013-07-18 to ms *
-     */
     @SuppressLint("SimpleDateFormat")
-    public static long toMs(String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    public static long toMs(String date, String pattern) {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         try {
             return sdf.parse(date).getTime();
         } catch (ParseException e) {
@@ -56,27 +35,57 @@ public class StatsUtils {
         return -1;
     }
 
+    /**
+     * Converts date in the form of 2013-07-18 to ms *
+     */
+    public static long toMs(String date) {
+        return toMs(date, "yyyy-MM-dd");
+    }
+
     public static String msToString(long ms, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(new Date(ms));
     }
 
-    public static String getCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    /**
+     * Get the current date of the blog in the form of yyyy-MM-dd (EX: 2013-07-18) *
+     */
+    public static String getCurrentDateTZ(int localTableBlogID) {
+        String pattern = "yyyy-MM-dd";
+        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
+        if (timezone == null) {
+            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
+            return getCurrentDate();
+        }
+
+        return getCurrentDateTimeTZ(timezone, pattern);
+    }
+
+    /**
+     * Get the current datetime of the blog in Ms *
+     */
+    public static long getCurrentDateTimeMsTZ(int localTableBlogID) {
+        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
+        if (timezone == null) {
+            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
+            return new Date().getTime();
+        }
+        String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
+        return toMs(getCurrentDateTimeTZ(timezone, pattern), pattern);
+    }
+
+    /**
+     * Get the current date in the form of yyyy-MM-dd (EX: 2013-07-18) *
+     */
+    private static String getCurrentDate() {
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         return sdf.format(new Date());
     }
 
-    public static String getYesterdaysDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(new Date(getCurrentDateMs() - ONE_DAY));
-    }
-
-    public static long getCurrentDateMs() {
-        return toMs(getCurrentDate());
-    }
-
-    public static String getBlogTimezone(Blog blog) {
+    private static String getBlogTimezone(Blog blog) {
         if (blog == null) {
+            AppLog.w(T.UTILS, "Blog object is null!! Can't read timezone opt then.");
             return null;
         }
 
@@ -94,9 +103,9 @@ public class StatsUtils {
         return timezone;
     }
 
-    public static String getCurrentDateTZ(String blogTimeZoneOption) {
+    private static String getCurrentDateTimeTZ(String blogTimeZoneOption, String pattern) {
         Date date = new Date();
-        SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat gmtDf = new SimpleDateFormat(pattern);
 
         if (blogTimeZoneOption == null) {
             AppLog.w(T.UTILS, "blogTimeZoneOption is null. getCurrentDateTZ() will return the device time!");
@@ -117,17 +126,6 @@ public class StatsUtils {
         return gmtDf.format(date);
     }
 
-    public static String getYesterdaysDateTZ(String blogTimeZoneOption) {
-        String todayDateTZ = getCurrentDateTZ(blogTimeZoneOption);
-        long yesterdayMillis = StatsUtils.toMs(todayDateTZ);
-        SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
-        return gmtDf.format(new Date(yesterdayMillis - StatsUtils.ONE_DAY));
-    }
-
-    public static long getCurrentDateMsTZ(String blogTimeZoneOption) {
-        return toMs(getCurrentDateTZ(blogTimeZoneOption));
-    }
-
     public static String parseDate(String timestamp, String fromFormat, String toFormat) {
         SimpleDateFormat from = new SimpleDateFormat(fromFormat);
         SimpleDateFormat to = new SimpleDateFormat(toFormat);
@@ -140,29 +138,17 @@ public class StatsUtils {
         return "";
     }
 
-    public static void deleteSummary(String blogId) {
-        WordPress.getContext().deleteFile(STAT_SUMMARY + blogId);
+    /**
+     * Get a diff between two dates
+     * @param date1 the oldest date in Ms
+     * @param date2 the newest date in Ms
+     * @param timeUnit the unit in which you want the diff
+     * @return the diff value, in the provided unit
+     */
+    public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
     }
-
-    public static void saveVideoSummary(String blogId, JSONObject stat) {
-        try {
-            stat.put("date", getCurrentDate());
-            FileOutputStream fos = WordPress.getContext().openFileOutput(STAT_VIDEO_SUMMARY + blogId, Context.MODE_PRIVATE);
-            fos.write(stat.toString().getBytes());
-            fos.close();
-        } catch (FileNotFoundException e) {
-            AppLog.e(T.STATS, e);
-        } catch (IOException e) {
-            AppLog.e(T.STATS, e);
-        } catch (JSONException e) {
-            AppLog.e(T.STATS, e);
-        }
-    }
-
-    public static void deleteVideoSummary(String blogId) {
-        WordPress.getContext().deleteFile(STAT_VIDEO_SUMMARY + blogId);
-    }
-
 
     public static int getSmallestWidthDP() {
         return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);

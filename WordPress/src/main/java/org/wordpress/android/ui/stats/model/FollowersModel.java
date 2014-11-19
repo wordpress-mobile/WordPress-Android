@@ -54,4 +54,12 @@ public class FollowersModel implements Serializable {
     public List<FollowerModel> getFollowers() {
         return this.mSubscribers;
     }
+
+    public int getTotalEmail() {
+        return mTotalEmail;
+    }
+
+    public int getTotalWPCom() {
+        return mTotalWPCom;
+    }
 }

@@ -380,6 +380,7 @@
     <string name="stats_view_comments">Comments</string>
     <string name="stats_view_search_engine_terms">Search engine terms</string>
     <string name="stats_view_publicize">Publicize</string>
+    <string name="stats_view_followers">Followers</string>
 
     <!-- stats: label for the entries -->
     <string name="stats_entry_country">Country</string>
@@ -392,7 +393,8 @@
     <string name="stats_entry_top_commenter">Commenter</string>
     <string name="stats_entry_most_commented">Posts</string>
     <string name="stats_entry_search_engine_terms">Search</string>
-    <string name="stats_entry_publicize">Followers</string>
+    <string name="stats_entry_publicize">Service</string>
+    <string name="stats_entry_followers">Follower</string>
 
     <!-- stats: label for the totals -->
     <string name="stats_totals_views">Views</string>
@@ -401,6 +403,38 @@
     <string name="stats_totals_comments">Comments</string>
     <string name="stats_totals_visitors">Visitors</string>
     <string name="stats_totals_publicize">Followers</string>
+    <string name="stats_totals_followers">Since</string>
+
+
+    <!-- stats: empty list strings -->
+    <string name="stats_empty_geoviews">No posts viewed.</string>
+    <string name="stats_empty_geoviews_desc">This view shows which countries and regions generate the most traffic to your site.</string>
+    <string name="stats_empty_top_posts_title">No top posts or pages found yet.</string>
+    <string name="stats_empty_top_posts_desc">This view shows your most viewed posts and pages.</string>
+    <string name="stats_empty_referrers_title">No referrers.</string>
+    <string name="stats_empty_referrers_desc">A referrer is a click from another site that links to yours.</string>
+    <string name="stats_empty_clicks_title">No clicks recorded.</string>
+    <string name="stats_empty_clicks_desc">"Clicks" are viewers clicking outbound links on your site.</string>
+    <string name="stats_empty_search_engine_terms_title">No search terms.</string>
+    <string name="stats_empty_search_engine_terms_desc">Search terms are words or phrases users find you with when they search.</string>
+    <string name="stats_empty_top_authors">No posts viewed.</string>
+    <string name="stats_empty_top_authors_desc">Track the views on each contributor\'s posts, and zoom in to discover the most popular content by each author.</string>
+    <string name="stats_empty_tags_and_categories">No tagged posts or pages have been viewed yet.</string>
+    <string name="stats_empty_tags_and_categories_desc">Get an overview of the most popular topics on your site, as reflected in your top posts from the past week.</string>
+    <string name="stats_empty_video">No videos have been played yet.</string>
+    <string name="stats_empty_video_desc">If you\'ve uploaded videos using VideoPress, find out how many times they’ve been watched.</string>
+    <string name="stats_empty_comments">No comments yet.</string>
+    <string name="stats_empty_comments_desc">If you allow comments on your site, track your top commenters and discover what content sparks the liveliest conversations, based on the most recent 1,000 comments.</string>
+    <string name="stats_bar_graph_empty">No stats available</string>
+    <string name="stats_empty_publicize">No posts followed.</string>
+    <string name="stats_empty_publicize_desc">Keep track of your followers from various social networking services using publicize.</string>
+    <string name="stats_empty_followers">No followers.</string>
+    <string name="stats_empty_followers_desc">Keep track of your overall number of followers, and how long each one has been following your site.</string>
+
+
+    <!-- invalid_url -->
+    <string name="invalid_url_message">Check that the blog URL entered is valid</string>
+
 
     <!-- stats: views and visitors -->
     <string name="stats_visitors_and_views_header_today">Today</string>
@@ -426,33 +460,6 @@
     <string name="stats_video_summary_label_impressions">Impressions</string>
     <string name="stats_video_summary_label_bandwidth">Bandwidth</string>
     <string name="stats_video_summary_header">Aggregated stats for %s</string>
-
-    <!-- stats: empty list strings -->
-    <string name="stats_empty_geoviews">No posts viewed.</string>
-    <string name="stats_empty_geoviews_desc">This view shows which countries and regions generate the most traffic to your site.</string>
-    <string name="stats_empty_top_posts_title">No top posts or pages found yet.</string>
-    <string name="stats_empty_top_posts_desc">This view shows your most viewed posts and pages.</string>
-    <string name="stats_empty_referrers_title">No referrers.</string>
-    <string name="stats_empty_referrers_desc">A referrer is a click from another site that links to yours.</string>
-    <string name="stats_empty_clicks_title">No clicks recorded.</string>
-    <string name="stats_empty_clicks_desc">"Clicks" are viewers clicking outbound links on your site.</string>
-    <string name="stats_empty_search_engine_terms_title">No search terms.</string>
-    <string name="stats_empty_search_engine_terms_desc">Search terms are words or phrases users find you with when they search.</string>
-    <string name="stats_empty_top_authors">No posts viewed.</string>
-    <string name="stats_empty_top_authors_desc">Track the views on each contributor\'s posts, and zoom in to discover the most popular content by each author.</string>
-    <string name="stats_empty_tags_and_categories">No tagged posts or pages have been viewed yet.</string>
-    <string name="stats_empty_tags_and_categories_desc">Get an overview of the most popular topics on your site, as reflected in your top posts from the past week.</string>
-    <string name="stats_empty_video">No videos have been played yet.</string>
-    <string name="stats_empty_video_desc">If you\'ve uploaded videos using VideoPress, find out how many times they’ve been watched.</string>
-    <string name="stats_empty_comments">No comments yet.</string>
-    <string name="stats_empty_comments_desc">If you allow comments on your site, track your top commenters and discover what content sparks the liveliest conversations, based on the most recent 1,000 comments.</string>
-    <string name="stats_bar_graph_empty">No stats available</string>
-    <string name="stats_empty_publicize">No posts followed.</string>
-    <string name="stats_empty_publicize_desc">Keep track of your followers from various social networking services using publicize.</string>
-
-
-    <!-- invalid_url -->
-    <string name="invalid_url_message">Check that the blog URL entered is valid</string>
 
     <!-- post status -->
     <string name="publish_post">Publish</string>

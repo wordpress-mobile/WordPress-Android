@@ -12,11 +12,11 @@ import java.util.List;
 public class CommentsModel implements Serializable {
     private String mDate;
     private String mBlogID;
-    private int monthlyComments;
-    private int totalComments;
-    private String mostActiveDay;
-    private String mostActiveTime;
-    private SingleItemModel mostCommentedPost;
+    private int mMonthlyComments;
+    private int mTotalComments;
+    private String mMostActiveDay;
+    private String mMostActiveTime;
+    private SingleItemModel mMostCommentedPost;
 
     private List<SingleItemModel> mPosts;
     private List<AuthorModel> mAuthors;
@@ -25,10 +25,10 @@ public class CommentsModel implements Serializable {
         this.mBlogID = blogID;
         this.mDate = response.getString("date");
 
-        this.monthlyComments = response.getInt("monthly_comments");
-        this.totalComments = response.getInt("total_comments");
-        this.mostActiveDay = response.getString("most_active_day");
-        this.mostActiveTime = response.getString("most_active_time");
+        this.mMonthlyComments = response.getInt("monthly_comments");
+        this.mTotalComments = response.getInt("total_comments");
+        this.mMostActiveDay = response.getString("most_active_day");
+        this.mMostActiveTime = response.getString("most_active_time");
 
 
         JSONArray postsJSONArray = response.optJSONArray("posts");
@@ -81,5 +81,9 @@ public class CommentsModel implements Serializable {
     }
     public List<AuthorModel> getAuthors() {
         return this.mAuthors;
+    }
+
+    public int getTotalComments() {
+        return mTotalComments;
     }
 }

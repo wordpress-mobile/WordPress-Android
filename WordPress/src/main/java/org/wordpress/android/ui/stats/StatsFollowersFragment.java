@@ -12,8 +12,11 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.stats.model.AuthorModel;
 import org.wordpress.android.ui.stats.model.CommentsModel;
+import org.wordpress.android.ui.stats.model.FollowerModel;
+import org.wordpress.android.ui.stats.model.FollowersModel;
 import org.wordpress.android.ui.stats.model.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
@@ -21,17 +24,20 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
-public class StatsCommentsFragment extends StatsAbstractListFragment implements RadioGroup.OnCheckedChangeListener {
-    public static final String TAG = StatsCommentsFragment.class.getSimpleName();
+public class StatsFollowersFragment extends StatsAbstractListFragment implements RadioGroup.OnCheckedChangeListener {
+    public static final String TAG = StatsFollowersFragment.class.getSimpleName();
 
     private RadioGroup mRadioGroup;
 
     private static final String SELECTED_BUTTON_INDEX = "SELECTED_BUTTON_INDEX";
     private int mSelectedButtonIndex = 0;
-    private static String totalLabel = "Total comment followers: ";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,7 +50,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
         //String[] titles = getTabTitles();
 
-        String[] titles = {"By Authors", "By Posts & Pages"};
+        String[] titles = {"WordPress.com", "Email"};
 
         for (int i = 0; i < titles.length; i++) {
             RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
@@ -67,7 +73,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         mRadioGroup.setOnCheckedChangeListener(this);
 
         mTotalsLabel.setVisibility(View.VISIBLE);
-        mTotalsLabel.setText(totalLabel + 0);
+        mTotalsLabel.setText("Total comment followers: 0");
 
         return view;
     }
@@ -123,33 +129,43 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
         if (mDatamodel == null) {
             showEmptyUI(true);
-            mTotalsLabel.setText(totalLabel + 0);
+            mTotalsLabel.setText(getTotalFollowersLabel(0));
             return;
         }
 
-        CommentsModel commentsModel = (CommentsModel) mDatamodel;
+        FollowersModel followersModel = (FollowersModel) mDatamodel;
         ArrayAdapter adapter = null;
         if (mSelectedButtonIndex == 0) {
-            List<AuthorModel> authors = commentsModel.getAuthors();
-            if (authors != null && authors.size() > 0) {
-                adapter = new AuthorsAdapter(getActivity(), authors);
+            List<FollowerModel> mSubscribers = followersModel.getFollowers();
+            if (mSubscribers != null && mSubscribers.size() > 0) {
+                adapter = new DotComFollowerAdapter(getActivity(), mSubscribers);
             }
         } else {
-            List<SingleItemModel> posts = commentsModel.getPosts();
-            if (posts != null && posts.size() > 0) {
-                adapter = new TopPostsAndPagesAdapter(getActivity(), posts);
-            }
+
         }
 
         if (adapter != null) {
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList);
-            mTotalsLabel.setText(totalLabel + commentsModel.getTotalComments());
             showEmptyUI(false);
+            if ( mSelectedButtonIndex == 0 ) {
+                mTotalsLabel.setText(getTotalFollowersLabel(followersModel.getTotalWPCom()));
+            } else {
+                mTotalsLabel.setText(getTotalFollowersLabel(followersModel.getTotalEmail()));
+            }
         } else {
-            mTotalsLabel.setText(totalLabel + "0");
             showEmptyUI(true);
+            mTotalsLabel.setText(getTotalFollowersLabel(0));
         }
     }
+
+    private String getTotalFollowersLabel(int total) {
+        if ( mSelectedButtonIndex == 0 ) {
+            return "Total WordPress.com Followers: " + total;
+        }
+
+        return "Total Email Followers: " + total;
+    }
+
 
     @Override
     protected boolean isExpandableList() {
@@ -195,13 +211,13 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         }
     }
 
-    private class AuthorsAdapter extends ArrayAdapter<AuthorModel> {
+    private class DotComFollowerAdapter extends ArrayAdapter<FollowerModel> {
 
-        private final List<AuthorModel> list;
+        private final List<FollowerModel> list;
         private final Activity context;
         private final LayoutInflater inflater;
 
-        public AuthorsAdapter(Activity context, List<AuthorModel> list) {
+        public DotComFollowerAdapter(Activity context, List<FollowerModel> list) {
             super(context, R.layout.stats_list_cell, list);
             this.context = context;
             this.list = list;
@@ -219,14 +235,17 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
                 rowView.setTag(viewHolder);
             }
 
-            final AuthorModel currentRowData = list.get(position);
+            final FollowerModel currentRowData = list.get(position);
             StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
-            // fill data
-            // entries
-            holder.entryTextView.setText(currentRowData.getName());
-            // totals
-            holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
 
+            // entries
+            holder.setEntryTextOrLink(currentRowData.getURL(), currentRowData.getLabel());
+
+            // since date
+
+            holder.totalsTextView.setText(getSinceLabel(currentRowData.getDateSubscribed()));
+
+            // Avatar
             holder.showNetworkImage(currentRowData.getAvatar());
 
             // no icon
@@ -234,39 +253,119 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
             return rowView;
         }
-    }
 
-    @Override
-    protected int getEntryLabelResId() {
-        if (mSelectedButtonIndex == 0) {
-            return R.string.stats_entry_top_commenter;
-        } else {
-            return R.string.stats_entry_posts_and_pages;
+        private int roundUp(double num, double divisor) {
+            double unrounded = num / divisor;
+            return (int) (unrounded + 0.5);
+        }
+
+        private String getSinceLabel(String dataSubscribed) {
+
+            Date currentDateTime = new Date(StatsUtils.getCurrentDateTimeMsTZ(getLocalTableBlogID()));
+
+            try {
+                SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = from.parse(dataSubscribed);
+
+                // See http://momentjs.com/docs/#/displaying/fromnow/
+                long currentDifference = Math.abs(
+                        StatsUtils.getDateDiff(date, currentDateTime, TimeUnit.SECONDS)
+                );
+
+                if (currentDifference <= 45 ) {
+                    return "seconds ago";
+                }
+                if (currentDifference < 90 ) {
+                    return "a minute ago";
+                }
+
+                // 90 seconds to 45 minutes
+                if (currentDifference <= 2700 ) {
+                    long minutes = this.roundUp(currentDifference, 60);
+                    return minutes + " minutes";
+                }
+
+                // 45 to 90 minutes
+                if (currentDifference <= 5400 ) {
+                    return "an hour ago";
+                }
+
+                // 90 minutes to 22 hours
+                if (currentDifference <= 79200 ) {
+                    long hours = this.roundUp(currentDifference, 60*60);
+                    return hours + " hours";
+                }
+
+                // 22 to 36 hours
+                if (currentDifference <= 129600 ) {
+                    return "A day";
+                }
+
+                // 36 hours to 25 days
+                // 86400 secs in a day -  2160000 secs in 25 days
+                if (currentDifference <= 2160000 ) {
+                    long days = this.roundUp(currentDifference, 86400);
+                    return days + " days";
+                }
+
+                // 25 to 45 days
+                // 3888000 secs in 45 days
+                if (currentDifference <= 3888000 ) {
+                    return "A month";
+                }
+
+                // 45 to 345 days
+                // 2678400 secs in a month - 29808000 secs in 345 days
+                if (currentDifference <= 29808000 ) {
+                    long months = this.roundUp(currentDifference, 2678400);
+                    return months + " months";
+                }
+
+                // 345 to 547 days (1.5 years)
+                if (currentDifference <= 47260800 ) {
+                    return  "A year";
+                }
+
+                // 548 days+
+                // 31536000 secs in a year
+                long years = this.roundUp(currentDifference, 31536000);
+                return years + " years";
+
+            } catch (ParseException e) {
+                AppLog.e(AppLog.T.STATS, e);
+            }
+
+            return "";
         }
     }
 
     @Override
+    protected int getEntryLabelResId() {
+        return R.string.stats_entry_followers;
+    }
+
+    @Override
     protected int getTotalsLabelResId() {
-        return R.string.stats_totals_comments;
+        return R.string.stats_totals_followers;
     }
 
     @Override
     protected int getEmptyLabelTitleResId() {
-        return R.string.stats_empty_comments;
+        return R.string.stats_empty_followers;
     }
 
     @Override
     protected int getEmptyLabelDescResId() {
-        return R.string.stats_empty_comments_desc;
+        return R.string.stats_empty_followers_desc;
     }
 
     @Override
     protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
-        return StatsService.StatsEndpointsEnum.COMMENTS;
+        return StatsService.StatsEndpointsEnum.FOLLOWERS;
     }
 
     @Override
     public String getTitle() {
-        return getString(R.string.stats_view_comments);
+        return getString(R.string.stats_view_followers);
     }
 }

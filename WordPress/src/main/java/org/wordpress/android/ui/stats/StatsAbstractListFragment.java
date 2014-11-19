@@ -30,6 +30,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected static final int NO_STRING_ID = -1;
 
     protected TextView mEmptyLabel;
+    protected TextView mTotalsLabel;
     protected LinearLayout mListContainer;
     protected LinearLayout mList;
     protected Serializable mDatamodel;
@@ -62,9 +63,10 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         totalsLabel.setText(getTotalsLabelResId());
 
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
+        mTotalsLabel = (TextView) view.findViewById(R.id.stats_module_totals_label);
         mList = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
         mList.setVisibility(View.VISIBLE);
-        mListContainer = (LinearLayout) view.findViewById(R.id.stats_list_header_container);
+        mListContainer = (LinearLayout) view.findViewById(R.id.stats_list_container);
 
         // Init the UI
         if (mDatamodel != null) {

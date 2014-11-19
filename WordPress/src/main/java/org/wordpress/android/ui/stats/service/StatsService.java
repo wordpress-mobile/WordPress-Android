@@ -115,7 +115,9 @@ public class StatsService extends Service {
         if (requestedDate == null) {
             AppLog.w(T.STATS, "StatsService is started with a NULL date on this blogID - "
                     + mServiceBlogId + ". Using current date!!!");
-            requestedDate = StatsUtils.getCurrentDate();
+            int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+                    Integer.parseInt(mServiceBlogId));
+            requestedDate = StatsUtils.getCurrentDateTZ(localTableBlogId);
         }
 
         // True when the network call to update the graph is needed
@@ -231,13 +233,13 @@ public class StatsService extends Service {
 
                 // Followers
                 RestListener followersListener = new RestListener(StatsEndpointsEnum.FOLLOWERS, mServiceBlogId, mServiceRequestedTimeframe);
-                final String followersPath = String.format("/sites/%s/stats/followers?max=%s", mServiceBlogId, 7);
+                final String followersPath = String.format("/sites/%s/stats/followers?max=%s", mServiceBlogId, 10);
                 statsNetworkRequests.add(restClientUtils.get(followersPath, followersListener, followersListener));
                 broadcastSectionUpdating(StatsEndpointsEnum.FOLLOWERS);
 
                 // Comments Followers
                 RestListener commentFollowersListener = new RestListener(StatsEndpointsEnum.COMMENT_FOLLOWERS, mServiceBlogId, mServiceRequestedTimeframe);
-                final String commentFollowersPath = String.format("/sites/%s/stats/comment-followers?max=%s", mServiceBlogId, 7);
+                final String commentFollowersPath = String.format("/sites/%s/stats/comment-followers?max=%s", mServiceBlogId, 10);
                 statsNetworkRequests.add(restClientUtils.get(commentFollowersPath, commentFollowersListener, commentFollowersListener));
                 broadcastSectionUpdating(StatsEndpointsEnum.COMMENT_FOLLOWERS);
 

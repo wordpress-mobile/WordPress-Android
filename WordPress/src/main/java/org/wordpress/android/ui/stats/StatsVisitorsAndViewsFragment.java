@@ -287,9 +287,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 }
                 break;
             case MONTH:
-                mDateTextView.setText(
-                        StatsUtils.msToString(StatsUtils.toMs(date), "MMMM")
-                );
+                mDateTextView.setText(StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM"));
                 break;
             case YEAR:
                 mDateTextView.setText(StatsUtils.parseDate(date, "yyyy-MM-dd", "yyyy"));

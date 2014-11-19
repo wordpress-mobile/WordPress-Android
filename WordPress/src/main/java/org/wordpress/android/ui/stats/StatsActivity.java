@@ -134,7 +134,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                             AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
                             return;
                         }
-                        refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDate());
+                        refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID));
                     }
                 });
 
@@ -190,7 +190,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         // Refresh stats on new activity only.
         if (needToRefreshStats) {
-            refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDate());
+            refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID));
             mPullToRefreshHelper.setRefreshing(true);
         }
     }
@@ -293,6 +293,11 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
         }
 
+        if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || force) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID, mCurrentTimeframe);
+            ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
+        }
+
         ft.commit();
     }
 
@@ -338,7 +343,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
                                     mPullToRefreshHelper.setRefreshing(true);
-                                    refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDate());
+                                    refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDateTZ(mLocalBlogID));
                                 }
                             }
                         }
@@ -360,7 +365,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                         }
                     }, "wp.getOptions", params);
                 } else {
-                    refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDate());
+                    refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDateTZ(mLocalBlogID));
                 }
                 mPullToRefreshHelper.setRefreshing(true);
             }
@@ -497,7 +502,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         scrollToTop();
         loadStatsFragments(true);
         mPullToRefreshHelper.setRefreshing(true);
-        refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDate());
+        refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID));
     }
 
     /**
@@ -745,7 +750,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         mCurrentTimeframe = selectedTimeframe;
         if (NetworkUtils.isNetworkAvailable(this)) {
             loadStatsFragments(true);
-            refreshStats(selectedTimeframe, StatsUtils.getCurrentDate());
+            refreshStats(selectedTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID));
             mPullToRefreshHelper.setRefreshing(true);
         }
 
