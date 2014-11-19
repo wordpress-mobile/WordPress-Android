@@ -232,25 +232,4 @@ public class JSONUtil {
         }
         return jsonChild;
     }
-
-    // Returns a copy of the passed JSONObject
-    @SuppressWarnings("unchecked")
-    public static JSONObject copyJSONObject(JSONObject object) {
-        JSONObject objectCopy = new JSONObject();
-
-        if (object == null) return objectCopy;
-
-        Iterator<String> iterator = object.keys();
-        while (iterator.hasNext()) {
-            try {
-                String key = iterator.next();
-                Object value = object.get(key);
-                objectCopy.put(key, value);
-            } catch (JSONException e) {
-                AppLog.e(T.UTILS, e);
-            }
-        }
-
-        return objectCopy;
-    }
 }
