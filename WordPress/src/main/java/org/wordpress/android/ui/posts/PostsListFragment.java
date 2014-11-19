@@ -7,13 +7,12 @@ import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -32,7 +31,6 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
-import org.wordpress.android.widgets.WPListView;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
@@ -40,8 +38,7 @@ import java.util.List;
 import java.util.Vector;
 
 public class PostsListFragment extends ListFragment
-        implements WordPress.OnPostUploadedListener,
-                   WPListView.OnScrollDirectionListener {
+        implements WordPress.OnPostUploadedListener {
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -51,7 +48,6 @@ public class PostsListFragment extends ListFragment
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
     private View mProgressFooterView;
-    private ImageButton mPostFab;
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
@@ -77,7 +73,7 @@ public class PostsListFragment extends ListFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.post_listview, container, false);
     }
 
@@ -225,47 +221,17 @@ public class PostsListFragment extends ListFragment
         mSwipeToRefreshHelper.registerReceiver(getActivity());
         WordPress.setOnPostUploadedListener(this);
 
-        mPostFab = (ImageButton) getView().findViewById(R.id.fab_button);
-        mPostFab.setOnClickListener(new View.OnClickListener() {
+        ImageButton fabButton = (ImageButton) getView().findViewById(R.id.fab_button);
+        fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 newPost();
             }
         });
 
-        ((WPListView) getListView()).setOnScrollDirectionListener(this);
-
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            ((PostsActivity) getActivity()).requestPosts();;
+            ((PostsActivity) getActivity()).requestPosts();
         }
-    }
-
-    private void showFab(boolean show) {
-        if (!isAdded() || mPostFab == null) {
-            return;
-        }
-        boolean isVisible = (mPostFab.getVisibility() == View.VISIBLE);
-        if (show == isVisible) {
-            return;
-        }
-
-        final Animation animation;
-        if (show) {
-            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                    1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        } else {
-            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                    0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
-        }
-
-        animation.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
-
-        mPostFab.clearAnimation();
-        mPostFab.startAnimation(animation);
-        mPostFab.setVisibility(show ? View.VISIBLE : View.GONE);
-
     }
 
     private void newPost() {
@@ -304,14 +270,6 @@ public class PostsListFragment extends ListFragment
         }
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden) {
-            showFab(true);
-        }
-    }
-
     public boolean isRefreshing() {
         return mSwipeToRefreshHelper.isRefreshing();
     }
@@ -338,7 +296,7 @@ public class PostsListFragment extends ListFragment
         }
     }
 
-    public boolean isLoadingMorePosts() {
+    boolean isLoadingMorePosts() {
         return mIsFetchingPosts && (mProgressFooterView != null && mProgressFooterView.getVisibility() == View.VISIBLE);
     }
 
@@ -502,29 +460,6 @@ public class PostsListFragment extends ListFragment
         }
         mIsFetchingPosts = false;
         mSwipeToRefreshHelper.setRefreshing(false);
-    }
-
-    @Override
-    public void onScrollUp() {
-        showFab(true);
-    }
-
-    @Override
-    public void onScrollDown() {
-        WPListView listView = (WPListView) getListView();
-        if (listView.canScrollDown() && listView.canScrollUp()) {
-            showFab(false);
-        } else {
-            showFab(true);
-        }
-    }
-
-    @Override
-    public void onScrollCompleted() {
-        WPListView listView = (WPListView) getListView();
-        if (!listView.canScrollDown()) {
-            showFab(true);
-        }
     }
 
     public interface OnPostSelectedListener {
