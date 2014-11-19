@@ -241,7 +241,7 @@ public class PostsListFragment extends ListFragment
     }
 
     private void showFab(boolean show) {
-        if (!isAdded()) {
+        if (!isAdded() || mPostFab == null) {
             return;
         }
         boolean isVisible = (mPostFab.getVisibility() == View.VISIBLE);
@@ -301,6 +301,14 @@ public class PostsListFragment extends ListFragment
             }
 
             getPostListAdapter().loadPosts();
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            showFab(true);
         }
     }
 
