@@ -70,6 +70,7 @@
         android:layout_marginRight="@dimen/fab_margin"
         android:background="@drawable/fab_background"
         android:elevation="@dimen/fab_elevation"
-        android:src="@drawable/ic_create_white_24dp" />
+        android:src="@drawable/ic_create_white_24dp"
+        android:stateListAnimator="@anim/fab_pressed" />
 </RelativeLayout>
 

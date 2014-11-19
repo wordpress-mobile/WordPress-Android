@@ -4,5 +4,10 @@
 
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="?android:colorControlHighlight">
-    <item android:drawable="@color/list_selected" />
+    <item>
+        <shape>
+            <solid android:color="@color/list_selected" />
+            <corners android:radius="2dp" />
+        </shape>
+    </item>
 </ripple>
