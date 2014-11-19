@@ -22,7 +22,7 @@
 
     <ListView
         android:id="@id/android:list"
-        style="@style/ReaderListView"
+        style="@style/ReaderListView.Topics"
         tools:listitem="@layout/reader_listitem_tag" />
 
 </RelativeLayout>

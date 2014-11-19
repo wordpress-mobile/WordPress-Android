@@ -13,9 +13,11 @@
 
         <ListView
             android:id="@id/android:list"
-            style="WordPress.ListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawSelectorOnTop="false"
+            android:listSelector="@drawable/reader_list_selector"
             tools:listitem="@layout/post_list_row" />
 
     </android.support.v4.widget.SwipeRefreshLayout>

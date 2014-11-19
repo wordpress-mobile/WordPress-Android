@@ -8,10 +8,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/margin_large"
+    android:paddingBottom="@dimen/margin_medium"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingRight="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_large">
+    android:paddingTop="@dimen/margin_medium">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_topic"
