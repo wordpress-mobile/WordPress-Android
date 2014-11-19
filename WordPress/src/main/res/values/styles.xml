@@ -329,4 +329,9 @@
     <style name="WordPress.SwipeToRefresh">
         <item name="refreshIndicatorColor">@color/blue_new_kid</item>
     </style>
+
+    <style name="WordPress.ListView" parent="android:Widget.ListView">
+        <item name="android:drawSelectorOnTop">false</item>
+        <item name="android:listSelector">?android:selectableItemBackground</item>
+    </style>
 </resources>

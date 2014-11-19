@@ -12,7 +12,7 @@
 
         <org.wordpress.android.widgets.WPListView
             android:id="@android:id/list"
-            style="@style/ReaderListView.PostList"
+            style="@style/ReaderListView"
             android:divider="@color/transparent"
             android:dividerHeight="@dimen/reader_post_divider_height"
             android:headerDividersEnabled="false"

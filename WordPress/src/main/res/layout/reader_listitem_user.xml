@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/reader_transparent_selector"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="@dimen/margin_large">
+    android:paddingBottom="@dimen/margin_large"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_large">
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_avatar"
