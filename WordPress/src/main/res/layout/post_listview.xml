@@ -59,5 +59,17 @@
             android:layout_marginLeft="@dimen/empty_list_description_side_margin"
             android:layout_marginRight="@dimen/empty_list_description_side_margin" />
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/fab_button"
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="@dimen/fab_size"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:background="@drawable/fab_background"
+        android:elevation="@dimen/fab_elevation"
+        android:src="@drawable/ic_add_white_24dp" />
 </RelativeLayout>
 

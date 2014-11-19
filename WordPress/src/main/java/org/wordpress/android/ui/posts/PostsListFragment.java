@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
     private View mProgressFooterView;
+    private ImageButton mPostFab;
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
@@ -77,7 +79,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     private void initSwipeToRefreshHelper() {
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(
                 getActivity(),
-                (SwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
+                (SwipeRefreshLayout) getView().findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -206,7 +208,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             }
         });
 
-        TextView textView = (TextView) getActivity().findViewById(R.id.title_empty);
+        TextView textView = (TextView) getView().findViewById(R.id.title_empty);
         if (textView != null) {
             if (mIsPage) {
                 textView.setText(getText(R.string.pages_empty_list));
@@ -218,8 +220,22 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         mSwipeToRefreshHelper.registerReceiver(getActivity());
         WordPress.setOnPostUploadedListener(this);
 
+        mPostFab = (ImageButton) getView().findViewById(R.id.fab_button);
+        mPostFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newPost();
+            }
+        });
+
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             ((PostsActivity) getActivity()).requestPosts();;
+        }
+    }
+
+    private void newPost() {
+        if (getActivity() instanceof PostsActivity) {
+            ((PostsActivity)getActivity()).newPost();
         }
     }
 

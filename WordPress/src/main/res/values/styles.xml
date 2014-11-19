@@ -3,9 +3,9 @@
 
     <style name="WordPress" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Material theme -->
-        <item name="colorPrimary">@color/blue_medium</item>
-        <item name="colorPrimaryDark">@color/blue_extra_dark</item>
-        <item name="colorAccent">@color/blue_light</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
 
         <item name="android:windowBackground">@color/calypso_blue_light</item>
         <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>

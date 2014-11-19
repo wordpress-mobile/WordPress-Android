@@ -13,8 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -206,17 +204,6 @@ public class PostsActivity extends WPDrawerActivity
         super.onPause();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.posts, menu);
-        if (mIsPage) {
-            menu.findItem(R.id.menu_new_post).setTitle(R.string.new_page);
-        }
-        return true;
-    }
-
     public void newPost() {
         if (WordPress.getCurrentBlog() == null) {
             if (!isFinishing())
@@ -235,11 +222,7 @@ public class PostsActivity extends WPDrawerActivity
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_new_post) {
-            newPost();
-            return true;
-        } else if (itemId == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             FragmentManager fm = getFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 popPostDetail();
