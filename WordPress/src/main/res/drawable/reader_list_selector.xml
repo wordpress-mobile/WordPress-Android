@@ -3,17 +3,17 @@
     <!-- see http://stackoverflow.com/a/5155600/1673548 -->
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="@color/reader_list_selector" />
+            <solid android:color="@color/list_selected" />
         </shape>
     </item>
     <item android:state_selected="true">
         <shape>
-            <solid android:color="@color/reader_list_selector" />
+            <solid android:color="@color/list_selected" />
         </shape>
     </item>
     <item android:state_focused="true">
         <shape>
-            <solid android:color="@color/reader_list_selector" />
+            <solid android:color="@color/list_selected" />
         </shape>
     </item>
 </selector>

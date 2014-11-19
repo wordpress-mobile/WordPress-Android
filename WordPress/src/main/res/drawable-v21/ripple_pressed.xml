@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- used to denote pressed/selected state -->
+
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="?android:colorControlHighlight">
-    <item android:drawable="@color/reader_list_selector"/>
+    <item android:drawable="@color/list_selected" />
 </ripple>
