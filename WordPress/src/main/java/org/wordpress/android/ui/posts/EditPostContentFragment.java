@@ -112,6 +112,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     private static final String TAG_FORMAT_BAR_BUTTON_UNDERLINE = "u";
     private static final String TAG_FORMAT_BAR_BUTTON_STRIKE = "strike";
     private static final String TAG_FORMAT_BAR_BUTTON_QUOTE = "blockquote";
+    private static final String IMAGES_TAB_TITLE = "Images";
+    private static final String VIDEOS_TAB_TITLE = "Videos";
 
     private static final int CONTENT_ANIMATION_DURATION = 250;
     private static final int MIN_THUMBNAIL_WIDTH = 200;
@@ -954,15 +956,16 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     private void startMediaSelection() {
         Intent intent = new Intent(mActivity, MediaSelectActivity.class);
         String[] tabConfig = {
-            "Images;" + MediaSelectActivity.FILTER_CAPTURE_IMAGE + "|" +
-                        MediaSelectActivity.FILTER_DEVICE_IMAGES + "|" +
-                        MediaSelectActivity.FILTER_WP_IMAGES,
-            "Videos;" + MediaSelectActivity.FILTER_CAPTURE_VIDEO + "|" +
-                        MediaSelectActivity.FILTER_DEVICE_VIDEOS + "|" +
-                        MediaSelectActivity.FILTER_WP_VIDEOS
+            IMAGES_TAB_TITLE + ";" + MediaSelectActivity.FILTER_CAPTURE_IMAGE + "|" +
+                                     MediaSelectActivity.FILTER_DEVICE_IMAGES + "|" +
+                                     MediaSelectActivity.FILTER_WP_IMAGES,
+            VIDEOS_TAB_TITLE + ";" + MediaSelectActivity.FILTER_CAPTURE_VIDEO + "|" +
+                                     MediaSelectActivity.FILTER_DEVICE_VIDEOS + "|" +
+                                     MediaSelectActivity.FILTER_WP_VIDEOS
         };
         intent.putExtra(MediaSelectActivity.PARAMETER_REQUEST_KEY, true);
-        intent.putExtra(MediaSelectActivity.PARAMETER_TAB_CONFIG, tabConfig);
+        intent.putExtra(MediaSelectActivity.PARAMETER_TAB_CONFIG_KEY, tabConfig);
+        intent.putExtra(MediaSelectActivity.PARAMETER_TITLE_KEY, mActivity.getString(R.string.edit_post_media_select_title));
         startActivityForResult(intent, MediaSelectActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
         mActivity.overridePendingTransition(R.anim.reader_activity_slide_in, R.anim.fade_out);
     }

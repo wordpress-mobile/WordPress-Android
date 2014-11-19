@@ -123,7 +123,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
 
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        MediaContent selectedContent = (MediaContent)mAdapter.getItem(position);
+        MediaContent selectedContent = (MediaContent) mAdapter.getItem(position);
 
         if (selectedContent != null) {
             if (selectedContent.getType() == MediaContent.MEDIA_TYPE.CAPTURE) {

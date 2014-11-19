@@ -19,9 +19,9 @@ import java.util.ArrayList;
  * This will toggle use of the NavigationDrawer for navigation.
  *
  * The default behavior of the tabs in this Activity is to display all media content in two tabs, Images and Videos.
- * To override this behavior (such as on the Media page) simply add PARAMETER_TAB_CONFIG=[config] when starting the
+ * To override this behavior (such as on the Media page) simply add PARAMETER_TAB_CONFIG_KEY=[config] when starting the
  * Activity. The config specifies a list of tabs to display as well as the content to show in each tab. For example,
- *      PARAMETER_TAB_CONFIG=["WordPress Images;WP_IMAGES","Device Videos;DEVICE_VIDEOS"]
+ *      PARAMETER_TAB_CONFIG_KEY=["WordPress Images;WP_IMAGES","Device Videos;DEVICE_VIDEOS"]
  * will display two tabs, 'WordPress Images' containing WordPress library images and 'Device Videos' containing videos
  * on the users device.
  */
@@ -30,7 +30,8 @@ public class MediaSelectActivity extends WPActionBarActivity implements MediaCon
     public static final int    ACTIVITY_REQUEST_CODE_MEDIA_SELECTION = 6000;
     public static final int    ACTIVITY_RESULT_CODE_GALLERY_CREATED  = 6001;
     public static final String PARAMETER_REQUEST_KEY                 = "requestCode";
-    public static final String PARAMETER_TAB_CONFIG                  = "tabConfiguration";
+    public static final String PARAMETER_TITLE_KEY                   = "title";
+    public static final String PARAMETER_TAB_CONFIG_KEY              = "tabConfiguration";
     public static final String FILTER_CAPTURE_IMAGE                  = "CAPTURE_IMAGE";
     public static final String FILTER_CAPTURE_VIDEO                  = "CAPTURE_VIDEO";
     public static final String FILTER_DEVICE_IMAGES                  = "DEVICE_IMAGES";
@@ -48,6 +49,11 @@ public class MediaSelectActivity extends WPActionBarActivity implements MediaCon
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(PARAMETER_TITLE_KEY)) {
+            setTitle(intent.getStringExtra(PARAMETER_TITLE_KEY));
+        } else {
+            setTitle(getString(R.string.default_content_selection_title));
+        }
         mStartedForResult = intent != null && intent.getBooleanExtra(PARAMETER_REQUEST_KEY, false);
 
         initializeContentView();
@@ -124,7 +130,7 @@ public class MediaSelectActivity extends WPActionBarActivity implements MediaCon
             setupTabs(null);
         }
         else {
-            setupTabs(intent.getStringArrayExtra(PARAMETER_TAB_CONFIG));
+            setupTabs(intent.getStringArrayExtra(PARAMETER_TAB_CONFIG_KEY));
         }
     }
 

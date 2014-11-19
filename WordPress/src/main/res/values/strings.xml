@@ -794,4 +794,6 @@
     <string name="hs__conversation_header">Support chat</string>
     <string name="hs__username_blank_error">Enter a valid name</string>
     <string name="hs__invalid_email_error">Enter a valid email address</string>
+    <string name="edit_post_media_select_title">Add to Post</string>
+    <string name="default_content_selection_title">Select Content</string>
 </resources>
