@@ -498,10 +498,7 @@ public class PostsListFragment extends ListFragment
 
     @Override
     public void onScrollUp() {
-        WPListView listView = (WPListView) getListView();
-        if (!listView.canScrollDown()) {
-            showFab(true);
-        }
+        showFab(true);
     }
 
     @Override
@@ -510,6 +507,14 @@ public class PostsListFragment extends ListFragment
         if (listView.canScrollDown() && listView.canScrollUp()) {
             showFab(false);
         } else {
+            showFab(true);
+        }
+    }
+
+    @Override
+    public void onScrollCompleted() {
+        WPListView listView = (WPListView) getListView();
+        if (!listView.canScrollDown()) {
             showFab(true);
         }
     }
