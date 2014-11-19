@@ -139,6 +139,11 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                     if (!isAdded()) {
                         return;
                     }
+                    // set the empty view now that posts have been loaded - this avoids the problem
+                    // of the empty view immediately appearing when set at design time
+                    if (getListView().getEmptyView() == null) {
+                        getListView().setEmptyView(getView().findViewById(R.id.empty_view));
+                    }
                     if (postCount == 0 && mCanLoadMorePosts) {
                         // No posts, let's request some if network available
                         if (isAdded() && NetworkUtils.isNetworkAvailable(getActivity())) {
