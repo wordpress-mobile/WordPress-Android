@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.widgets.WPTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +21,17 @@ import java.util.List;
  */
 
 public class MediaContentAdapter extends BaseAdapter {
+    private static final FrameLayout.LayoutParams CAPTURE_CONTENT_OVERLAY_LAYOUT_PARAMES =
+            new FrameLayout.LayoutParams(128, 128, Gravity.CENTER);
+    private static final FrameLayout.LayoutParams DEVICE_VIDEO_CONTENT_OVERLAY_LAYOUT_PARAMS =
+            new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                                         ViewGroup.LayoutParams.WRAP_CONTENT,
+                                         Gravity.CENTER);
+    private static final FrameLayout.LayoutParams WEB_IMAGE_CONTENT_OVERLAY_LAYOUT_PARAMS =
+            new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                                         ViewGroup.LayoutParams.WRAP_CONTENT,
+                                         Gravity.TOP | Gravity.END);
+
     private final Resources      mResources;
     private final LayoutInflater mLayoutInflator;
 
@@ -113,22 +123,8 @@ public class MediaContentAdapter extends BaseAdapter {
                 contentImageView.setBackgroundColor(mResources.getColor(R.color.grey_medium_light));
             }
 
-            ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
-            if (overlayView != null) {
-                overlayView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                                                                         ViewGroup.LayoutParams.WRAP_CONTENT,
-                                                                         Gravity.CENTER));
-                overlayView.setAlpha(0.8f);
-                overlayView.setVisibility(View.VISIBLE);
-                int overlayResource = isVideo ? R.drawable.dashicon_video_alt2_black : R.drawable.dashicon_camera_black;
-                overlayView.setImageDrawable(mResources.getDrawable(overlayResource));
-            }
-
-            WPTextView contentTitleView = (WPTextView) convertView.findViewById(R.id.mediaContentTitle);
-            if (contentTitleView != null) {
-                contentTitleView.setVisibility(View.VISIBLE);
-                contentTitleView.setText(isVideo ? "Capture video" : "Capture image");
-            }
+            layoutTitleView(convertView, isVideo ? "Capture video" : "Capture image", View.VISIBLE);
+            layoutOverlay(convertView, CAPTURE_CONTENT_OVERLAY_LAYOUT_PARAMES, 0.8f, isVideo ? R.drawable.video : R.drawable.camera, View.VISIBLE);
         }
 
         return convertView;
@@ -138,12 +134,6 @@ public class MediaContentAdapter extends BaseAdapter {
     private View createDeviceImageContentView(View convertView, MediaContent content) {
         if (convertView != null) {
             ImageView contentImageView = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
-            TextView contentTitleView = (TextView) convertView.findViewById(R.id.mediaContentTitle);
-            ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
-
-            if (contentTitleView != null) {
-                contentTitleView.setVisibility(View.INVISIBLE);
-            }
 
             if (contentImageView != null) {
                 if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
@@ -155,9 +145,8 @@ public class MediaContentAdapter extends BaseAdapter {
                 }
             }
 
-            if (overlayView != null) {
-                overlayView.setVisibility(View.INVISIBLE);
-            }
+            layoutTitleView(convertView, "", View.INVISIBLE);
+            layoutOverlay(convertView, null, 0.0f, -1, View.INVISIBLE);
         }
 
         return convertView;
@@ -167,12 +156,6 @@ public class MediaContentAdapter extends BaseAdapter {
     private View createDeviceVideoContentView(View convertView, MediaContent content) {
         if (convertView != null) {
             ImageView contentImage = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
-            TextView contentTitle = (TextView) convertView.findViewById(R.id.mediaContentTitle);
-            ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
-
-            if (contentTitle != null) {
-                contentTitle.setVisibility(View.INVISIBLE);
-            }
 
             if (contentImage != null) {
                 if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
@@ -184,14 +167,8 @@ public class MediaContentAdapter extends BaseAdapter {
                 }
             }
 
-            if (overlayView != null) {
-                overlayView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                                                                         ViewGroup.LayoutParams.WRAP_CONTENT,
-                                                                         Gravity.CENTER));
-                overlayView.setAlpha(0.7f);
-                overlayView.setImageResource(R.drawable.ic_media_play);
-                overlayView.setVisibility(View.VISIBLE);
-            }
+            layoutTitleView(convertView, "", View.INVISIBLE);
+            layoutOverlay(convertView, DEVICE_VIDEO_CONTENT_OVERLAY_LAYOUT_PARAMS, 0.7f, R.drawable.ic_media_play, View.VISIBLE);
         }
 
         return convertView;
@@ -200,12 +177,6 @@ public class MediaContentAdapter extends BaseAdapter {
     private View createWebImageContentView(View convertView, MediaContent content) {
         if (convertView != null) {
             ImageView contentImageView = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
-            TextView contentTitleView = (TextView) convertView.findViewById(R.id.mediaContentTitle);
-            ImageView overlayView = (ImageView) convertView.findViewById(R.id.mediaContentOverlayImage);
-
-            if (contentTitleView != null) {
-                contentTitleView.setVisibility(View.INVISIBLE);
-            }
 
             if (contentImageView != null) {
                 if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
@@ -217,16 +188,34 @@ public class MediaContentAdapter extends BaseAdapter {
                 }
             }
 
-            if (overlayView != null) {
-                overlayView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                                                                         ViewGroup.LayoutParams.WRAP_CONTENT,
-                                                                         Gravity.TOP | Gravity.RIGHT));
-                overlayView.setAlpha(0.65f);
-                overlayView.setImageResource(R.drawable.dashicon_wordpress_alt);
-                overlayView.setVisibility(View.VISIBLE);
-            }
+            layoutTitleView(convertView, "", View.INVISIBLE);
+            layoutOverlay(convertView, WEB_IMAGE_CONTENT_OVERLAY_LAYOUT_PARAMS, 0.65f, R.drawable.dashicon_wordpress_alt, View.VISIBLE);
         }
 
         return convertView;
+    }
+
+    private void layoutTitleView(View host, String text, int visibility) {
+        final TextView contentTitleView = (TextView) host.findViewById(R.id.mediaContentTitle);
+
+        if (contentTitleView != null) {
+            contentTitleView.setText(text);
+            contentTitleView.setVisibility(visibility);
+        }
+    }
+
+    private void layoutOverlay(View host, FrameLayout.LayoutParams layoutParams, float alpha, int resource, int visibility) {
+        ImageView overlayView = (ImageView) host.findViewById(R.id.mediaContentOverlayImage);
+
+        if (overlayView != null) {
+            if (layoutParams != null) {
+                overlayView.setLayoutParams(layoutParams);
+            }
+            if (resource > -1) {
+                overlayView.setImageResource(resource);
+            }
+            overlayView.setAlpha(alpha);
+            overlayView.setVisibility(visibility);
+        }
     }
 }
