@@ -17,7 +17,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawSelectorOnTop="false"
-            android:listSelector="@drawable/reader_list_selector" />
+            android:listSelector="@drawable/reader_list_selector"
+            tools:listitem="@layout/post_list_row" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

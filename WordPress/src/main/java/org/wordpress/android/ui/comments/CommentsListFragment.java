@@ -42,12 +42,11 @@ public class CommentsListFragment extends Fragment {
     private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
     boolean mHasAutoRefreshedComments = false;
-    boolean mHasCheckedDeletedComments = false;
+    private boolean mHasCheckedDeletedComments = false;
 
     private ProgressBar mProgressLoadMore;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ListView mListView;
-    private View mEmptyView;
     private CommentAdapter mCommentAdapter;
     private ActionMode mActionMode;
 
@@ -71,11 +70,7 @@ public class CommentsListFragment extends Fragment {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isAdded())
                         return;
-                    if (isEmpty) {
-                        showEmptyView();
-                    } else {
-                        hideEmptyView();
-                    }
+                    showEmptyView(isEmpty);
                 }
             };
 
@@ -175,7 +170,6 @@ public class CommentsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
 
         mListView = (ListView) view.findViewById(android.R.id.list);
-        mEmptyView = view.findViewById(android.R.id.empty);
 
         // progress bar that appears when loading more comments
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress_loading);
@@ -506,14 +500,14 @@ public class CommentsListFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void showEmptyView() {
-        if (mEmptyView != null)
-            mEmptyView.setVisibility(View.VISIBLE);
-    }
-
-    private void hideEmptyView() {
-        if (mEmptyView != null)
-            mEmptyView.setVisibility(View.GONE);
+    private void showEmptyView(boolean show) {
+        if (!isAdded()) {
+            return;
+        }
+        View emptyView = getView().findViewById(R.id.empty_view);
+        if (emptyView != null) {
+            emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
 
     /**

@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ListView
             android:id="@android:id/list"
+            style="@style/WordPress.BorderedBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:cacheColorHint="#00000000"
@@ -20,27 +20,27 @@
             android:dividerHeight="1dp"
             android:listSelector="@drawable/reader_list_selector"
             android:scrollingCache="true"
-            style="@style/WordPress.BorderedBackground"
-            tools:listitem="@layout/comment_listitem"/>
+            tools:listitem="@layout/comment_listitem" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@id/android:empty"
+        android:id="@+id/empty_view"
         style="@style/WordPress.EmptyList.Title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
         android:layout_marginLeft="@dimen/empty_list_title_side_margin"
         android:layout_marginRight="@dimen/empty_list_title_side_margin"
+        android:gravity="center"
+        android:text="@string/comments_empty_list"
         android:visibility="gone"
-        android:text="@string/comments_empty_list"/>
+        tools:visibility="visible" />
 
     <ProgressBar
+        android:id="@+id/progress_loading"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/margin_extra_large"
         android:layout_marginBottom="@dimen/margin_medium"
-        android:id="@+id/progress_loading"/>
+        android:layout_marginLeft="@dimen/margin_extra_large" />
 </RelativeLayout>
