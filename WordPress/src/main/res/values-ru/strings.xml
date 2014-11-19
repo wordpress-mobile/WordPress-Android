@@ -36,7 +36,6 @@
 	<string name="help_and_support">Помощь и техническая поддержка</string>
 	<string name="stats_no_blog">Невозможно загрузить статистику для этого блога.</string>
 	<string name="select_a_blog">Выберите сайт WordPress</string>
-	<string name="sending_content">Загрузка контента (%s)</string>
 	<string name="uploading_total">Загружается %1$d из %2$d</string>
 	<string name="mnu_comment_liked">Понравилось</string>
 	<string name="comment">Комментировать</string>
@@ -49,6 +48,7 @@
 	<string name="media_empty_list_custom_date">За этот период нет медиафайлов.</string>
 	<string name="posting_post">Публикуется материал "%s"</string>
 	<string name="signing_out">Выход из системы...</string>
+	<string name="sending_content">Загрузка содержимого: %s</string>
 	<string name="reader_menu_block_blog">Заблокировать этот блог</string>
 	<string name="reader_toast_blog_blocked">Записи из этого блога больше не будут отображаться</string>
 	<string name="reader_toast_err_block_blog">Не удалось заблокировать этот блог</string>

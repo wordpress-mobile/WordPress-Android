@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="delete_sure_post">Supprimer cet article</string>
+	<string name="delete_sure">Supprimer ce brouillon</string>
+	<string name="delete_sure_page">Supprimer cette page</string>
+	<string name="confirm_delete_multi_media">Supprimer les elements sélectionnés ?</string>
+	<string name="confirm_delete_media">Supprimer l\'element sélectionné ?</string>
+	<string name="cab_selected">%d sélectionnés</string>
+	<string name="media_gallery_date_range">Affiche les médias entre %1$s et %2$s</string>
+	<string name="sure_to_remove_account">Supprimer ce blog ?</string>
+	<string name="sign_out_confirm">Se déconnecter ?</string>
 	<string name="faq_button">FAQ</string>
 	<string name="reader_empty_followed_blogs_title">Vous ne suivez aucun blog pour le moment</string>
 	<string name="reader_empty_posts_liked">Vous n\'aimez aucun article</string>
@@ -362,6 +371,7 @@
 	<string name="nux_oops_not_selfhosted_blog">Se connecter à WordPress.com</string>
 	<string name="nux_tap_continue">Continuer</string>
 	<string name="password_invalid">Il vous faut un mot de passe plus sûr. Faites en sorte qu\'il comprenne au moins 7 caractères, mélangez les lettres capitales et bas-de-casse, les chiffres ou les caractères spéciaux.</string>
+	<string name="signing_in">Connexion…</string>
 	<string name="media_add_popup_title">Ajouter à la bibliothèque média</string>
 	<string name="empty_list_default">Cette liste est vide</string>
 	<string name="select_from_media_library">Sélectionner depuis la bibliothèque média</string>

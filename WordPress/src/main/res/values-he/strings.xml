@@ -365,7 +365,7 @@
 	<string name="reader_toast_err_get_post">לא ניתן לאחזר רשומה זו</string>
 	<string name="validating_user_data">מאמת נתוני משתמש</string>
 	<string name="validating_site_data">מאמת נתוני אתר</string>
-	<string name="reader_empty_followed_blogs_description">אך אין צורך לדאוג, פשוט צריך להקיש על סמל התגית כדי להתחיל לשוטט באתר!</string>
+	<string name="reader_empty_followed_blogs_description">אך אין צורך לדאוג, פשוט צריך להקיש על סמל התגית כדי להתחיל לשוטט!</string>
 	<string name="password_invalid">נחוצה לך סיסמה בטוחה יותר. הקפד להשתמש ב-7 תווים או יותר, שלב אותיות רישיות ורגילות, מספרים או תווים מיוחדים.</string>
 	<string name="nux_tap_continue">המשך</string>
 	<string name="nux_welcome_create_account">צור חשבון</string>

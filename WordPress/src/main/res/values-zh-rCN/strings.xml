@@ -36,7 +36,6 @@
 	<string name="help_and_support">帮助与支持</string>
 	<string name="stats_no_blog">无法加载所需博客的统计信息</string>
 	<string name="select_a_blog">选择一个 WordPress 站点</string>
-	<string name="sending_content">正在上传 %s 内容</string>
 	<string name="uploading_total">正在上传 %1$d/%2$d</string>
 	<string name="mnu_comment_liked">赞</string>
 	<string name="comment">评论</string>
@@ -49,6 +48,7 @@
 	<string name="media_empty_list_custom_date">此事件段内没有媒体</string>
 	<string name="posting_post">正在发布“%s”</string>
 	<string name="signing_out">正在注销…</string>
+	<string name="sending_content">正在上传“%s”内容</string>
 	<string name="reader_toast_err_generic">无法执行此操作</string>
 	<string name="reader_toast_err_block_blog">无法阻止此博客</string>
 	<string name="reader_toast_blog_blocked">此博客中的文章不会再显示</string>

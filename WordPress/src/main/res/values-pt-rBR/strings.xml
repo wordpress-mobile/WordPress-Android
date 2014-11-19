@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="reader_empty_followed_blogs_title">Você ainda não está seguindo um blog</string>
-	<string name="reader_empty_posts_liked">Você não curtiu um post</string>
 	<string name="faq_button">Perguntas frequentes</string>
-	<string name="browse_our_faq_button">Veja nossas Perguntas frequentes</string>
-	<string name="nux_help_description">Visite a central de ajuda para obter respostas sobre as perguntas mais comuns ou visite os fóruns para fazer novas perguntas</string>
 	<string name="agree_terms_of_service">Ao criar sua conta, você está concordando com os nossos %1$sTermos de Serviço%2$s</string>
 	<string name="create_new_blog_wpcom">Crie um blog do WordPress.com</string>
 	<string name="new_blog_wpcom_created">Seu blog do WordPress.com foi criado!</string>
@@ -36,7 +33,6 @@
 	<string name="help_and_support">Ajuda e suporte</string>
 	<string name="stats_no_blog">Não foi possível carregar as estatísticas do blog</string>
 	<string name="select_a_blog">Selecione um site do WordPress</string>
-	<string name="sending_content">Fazendo upload de conteúdo %s</string>
 	<string name="uploading_total">Fazendo upload de %1$d de %2$d</string>
 	<string name="mnu_comment_liked">Curtiu</string>
 	<string name="comment">Comentário</string>
@@ -49,6 +45,10 @@
 	<string name="media_empty_list_custom_date">Nenhuma mídia no intervalo de tempo especificado</string>
 	<string name="posting_post">Publicando "%s"</string>
 	<string name="signing_out">Saindo…</string>
+	<string name="reader_empty_posts_liked">Você não curtiu posts ainda</string>
+	<string name="browse_our_faq_button">Veja nossa seção de Perguntas Frequentes</string>
+	<string name="nux_help_description">Visite a central de ajuda para obter respostas para perguntas frequentes, ou visite os fóruns para fazer novas perguntas.</string>
+	<string name="sending_content">Fazendo upload do conteúdo de %s</string>
 	<string name="reader_menu_block_blog">Bloquear este blog</string>
 	<string name="reader_toast_err_block_blog">Não é possível bloquear este blog</string>
 	<string name="reader_toast_err_generic">Não é possível executar esta ação</string>

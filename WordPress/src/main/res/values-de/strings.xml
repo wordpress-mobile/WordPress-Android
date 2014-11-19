@@ -359,10 +359,10 @@
 	<string name="reader_empty_followed_blogs_description">Keine Bange, tippe einfach das Tag-Icon zum Durchsuchen!</string>
 	<string name="nux_welcome_create_account">Konto erstellen</string>
 	<string name="nux_tap_continue">Weiter</string>
-	<string name="nux_add_selfhosted_blog">Selbs-gehostete Webseite hinzufügen</string>
 	<string name="password_invalid">Du benötigst ein sichereres Passwort. Stelle sicher, dass Du 7 oder mehr Zeichen benutzt und Groß- und Kleinbuchstaben enthalten sind, genau so wie Zahlen und Sonderzeichen.</string>
 	<string name="nux_oops_not_selfhosted_blog">Bei WordPress.com anmelden</string>
 	<string name="signing_in">Einloggen&amp;hellip;</string>
+	<string name="nux_add_selfhosted_blog">Selbst-gehostete Webseite hinzufügen</string>
 	<string name="media_add_new_media_gallery">Erstelle Galerie</string>
 	<string name="reader_label_added_tag">%s hinzugefügt</string>
 	<string name="reader_label_removed_tag">%s entfernt</string>

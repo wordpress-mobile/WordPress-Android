@@ -2,8 +2,6 @@
 <resources>
 	<string name="reader_empty_followed_blogs_title">Todavía no sigues ningún blog.</string>
 	<string name="reader_empty_posts_liked">No te ha gustado ninguna entrada.</string>
-	<string name="faq_button">P+F</string>
-	<string name="browse_our_faq_button">Explora nuestras P+F.</string>
 	<string name="nux_help_description">Visita el centro de ayuda para obtener respuestas a las preguntas habituales o visita los foros para hacer preguntas nuevas.</string>
 	<string name="agree_terms_of_service">Al crear una cuenta, aceptas los fascinantes %1$sTérminos de servicio%2$s.</string>
 	<string name="create_new_blog_wpcom">Crear un blog de WordPress.com</string>
@@ -36,19 +34,21 @@
 	<string name="help_and_support">Ayuda y soporte técnico</string>
 	<string name="stats_no_blog">No se han podido cargar las estadísticas del blog solicitado</string>
 	<string name="select_a_blog">Elegir un sitio de WordPress</string>
-	<string name="sending_content">Cargando %s contenidos</string>
 	<string name="uploading_total">Cargando %1$d de %2$d</string>
 	<string name="mnu_comment_liked">Me gustó</string>
 	<string name="comment">Comentario</string>
 	<string name="comment_trashed">El comentario se ha enviado a la papelera.</string>
 	<string name="dlg_confirm_spam_comment">¿Quieres marcar este comentario como spam?</string>
 	<string name="comment_mark_spam">Marcar como spam</string>
-	<string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear uno?</string>
 	<string name="comment_reply_to_user">Responder a %s</string>
 	<string name="pages_empty_list">Sin páginas todavía. ¿Por qué no crear una?</string>
 	<string name="media_empty_list_custom_date">Sin multimedia durante este intervalo de tiempo.</string>
 	<string name="posting_post">Publicando "%s"</string>
 	<string name="signing_out">Cerrando sesión…</string>
+	<string name="faq_button">Preguntas frecuentes</string>
+	<string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
+	<string name="sending_content">Cargando el contenido de %s</string>
+	<string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
 	<string name="reader_toast_err_generic">No es posible realizar esta acción</string>
 	<string name="reader_toast_err_block_blog">No es posible bloquear este blog</string>
 	<string name="reader_toast_blog_blocked">Las entradas de este blog no volverán a mostrarse</string>
