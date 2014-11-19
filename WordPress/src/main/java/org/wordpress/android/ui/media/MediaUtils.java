@@ -599,9 +599,16 @@ public class MediaUtils {
         @Override
         protected Bitmap doInBackground(Uri... params) {
             try {
-                URL url = new URL(params[0].toString());
-                return BitmapFactory.decodeStream(url.openConnection()
-                                                     .getInputStream());
+                String uri = params[0].toString();
+                Bitmap bitmap = WordPress.getBitmapCache().getBitmap(uri);
+
+                if (bitmap == null) {
+                    URL url = new URL(uri);
+                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    WordPress.getBitmapCache().put(uri, bitmap);
+                }
+
+                return bitmap;
             }
             catch(IOException notFoundException) {
                 return null;
