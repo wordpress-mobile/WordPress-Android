@@ -8,6 +8,9 @@
     <color name="color_primary_dark">@color/blue_extra_dark</color>
     <color name="color_accent">@color/blue_light</color>
 
+    <color name="fab_color">@color/calypso_orange_dark</color>
+    <color name="fab_color_selected">@color/calypso_orange</color>
+
     <!-- Default colors -->
     <color name="light_gray">#E5E5E5</color>
     <color name="gray">#CCC</color>

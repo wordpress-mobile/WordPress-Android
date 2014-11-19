@@ -254,7 +254,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         // locate the drawer layout - note that it will not exist on landscape tablets
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null) {
-            mDrawerLayout.setDrawerShadow(R.drawable.menu_drawer_shadow, GravityCompat.START);
+            mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
             mDrawerToggle = new ActionBarDrawerToggle(
                     this, mDrawerLayout, mToolbar, R.string.open_drawer,
                     R.string.close_drawer
