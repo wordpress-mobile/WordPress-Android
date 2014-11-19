@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -21,7 +20,6 @@ import org.wordpress.android.util.PhotonUtils;
 public class CommentUserNoteBlock extends UserNoteBlock {
 
     private CommentStatus mCommentStatus = CommentStatus.UNKNOWN;
-    private int mTextViewIndent;
     private int mNormalBackgroundColor;
     private int mNormalTextColor;
     private int mAgoTextColor;
@@ -60,6 +58,18 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
         noteBlockHolder.nameTextView.setText(getNoteText().toString());
         noteBlockHolder.agoTextView.setText(DateTimeUtils.timestampToTimeSpan(getTimestamp()));
+        if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
+            noteBlockHolder.bulletTextView.setVisibility(View.VISIBLE);
+            noteBlockHolder.siteTextView.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(getMetaHomeTitle())) {
+                noteBlockHolder.siteTextView.setText(getMetaHomeTitle());
+            } else {
+                noteBlockHolder.siteTextView.setText(getMetaSiteUrl().replace("http://", "").replace("https://", ""));
+            }
+        } else {
+            noteBlockHolder.bulletTextView.setVisibility(View.GONE);
+            noteBlockHolder.siteTextView.setVisibility(View.GONE);
+        }
 
         if (hasImageMediaItem()) {
             String imageUrl = PhotonUtils.fixAvatar(getNoteMediaItem().optString("url", ""), getAvatarSize());
@@ -70,14 +80,15 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 noteBlockHolder.avatarImageView.setOnTouchListener(null);
             }
         } else {
-            noteBlockHolder.avatarImageView.setImageResource(R.drawable.placeholder);
+            noteBlockHolder.avatarImageView.setImageResource(R.drawable.gravatar_placeholder);
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 
-        CommentUtils.indentTextViewFirstLine(
-                noteBlockHolder.commentTextView,
-                NotificationsUtils.getSpannableTextFromIndices(getNoteData().optJSONObject("comment_text"), getOnNoteBlockTextClickListener()),
-                mTextViewIndent
+        noteBlockHolder.commentTextView.setText(
+                NotificationsUtils.getSpannableContentFromIndices(
+                    getNoteData().optJSONObject("comment_text"),
+                    noteBlockHolder.commentTextView,
+                    getOnNoteBlockTextClickListener())
         );
 
         // Change display based on comment status and type:
@@ -98,6 +109,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.dividerView.setVisibility(View.INVISIBLE);
 
             noteBlockHolder.agoTextView.setTextColor(mUnapprovedTextColor);
+            noteBlockHolder.bulletTextView.setTextColor(mUnapprovedTextColor);
+            noteBlockHolder.siteTextView.setTextColor(mUnapprovedTextColor);
             noteBlockHolder.nameTextView.setTextColor(mUnapprovedTextColor);
             noteBlockHolder.commentTextView.setTextColor(mUnapprovedTextColor);
         } else {
@@ -111,6 +124,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             }
 
             noteBlockHolder.agoTextView.setTextColor(mAgoTextColor);
+            noteBlockHolder.bulletTextView.setTextColor(mAgoTextColor);
+            noteBlockHolder.siteTextView.setTextColor(mAgoTextColor);
             noteBlockHolder.nameTextView.setTextColor(mNormalTextColor);
             noteBlockHolder.commentTextView.setTextColor(mNormalTextColor);
         }
@@ -149,6 +164,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         private final NetworkImageView avatarImageView;
         private final TextView nameTextView;
         private final TextView agoTextView;
+        private final TextView bulletTextView;
+        private final TextView siteTextView;
         private final TextView commentTextView;
         private final View dividerView;
 
@@ -156,10 +173,21 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             nameTextView = (TextView)view.findViewById(R.id.user_name);
             agoTextView = (TextView)view.findViewById(R.id.user_comment_ago);
             agoTextView.setVisibility(View.VISIBLE);
+            bulletTextView = (TextView)view.findViewById(R.id.user_comment_bullet);
+            siteTextView = (TextView)view.findViewById(R.id.user_comment_site);
             commentTextView = (TextView)view.findViewById(R.id.user_comment);
             commentTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
             avatarImageView = (NetworkImageView)view.findViewById(R.id.user_avatar);
             dividerView = view.findViewById(R.id.divider_view);
+
+            siteTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getOnNoteBlockTextClickListener() != null) {
+                        getOnNoteBlockTextClickListener().showSitePreview(getMetaSiteId(), getMetaSiteUrl());
+                    }
+                }
+            });
         }
     }
 
@@ -170,8 +198,6 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         mNormalBackgroundColor = context.getResources().getColor(R.color.white);
         mAgoTextColor = context.getResources().getColor(R.color.calypso_blue);
         mUnapprovedTextColor = context.getResources().getColor(R.color.calypso_orange_dark);
-        mTextViewIndent = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small) +
-                context.getResources().getDimensionPixelSize(R.dimen.notifications_adjusted_font_margin);
         // Double margin_extra_large for increased indent in comment replies
         mIndentedLeftPadding = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large) * 2;
     }

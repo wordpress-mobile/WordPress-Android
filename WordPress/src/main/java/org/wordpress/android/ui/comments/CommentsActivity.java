@@ -316,7 +316,7 @@ public class CommentsActivity extends WPActionBarActivity
                         }
 
                         @Override
-                        public void onClear() {
+                        public void onClear(Parcelable[] token) {
                             //noop
                         }
 

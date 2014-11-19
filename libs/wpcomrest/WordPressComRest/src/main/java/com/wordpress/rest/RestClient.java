@@ -13,20 +13,34 @@ import java.util.Map;
 
 public class RestClient {
     public static final String TAG = "WordPressREST";
-    public static final String REST_API_ENDPOINT_URL = "https://public-api.wordpress.com/rest/v1/";
+    public static enum REST_CLIENT_VERSIONS {V1, V1_1}
     public static final String PARAMS_ENCODING = "UTF-8";
 
+    protected static final String REST_API_ENDPOINT_URL_V1 = "https://public-api.wordpress.com/rest/v1/";
+    protected static final String REST_API_ENDPOINT_URL_V1_1 = "https://public-api.wordpress.com/rest/v1.1/";
     private RequestQueue mQueue;
     private String mAccessToken;
     private String mUserAgent;
+    private String mRestApiEndpointURL;
 
     public RestClient(RequestQueue queue) {
-        mQueue = queue;
+        this(queue, REST_CLIENT_VERSIONS.V1);
     }
 
-    public RestClient(RequestQueue queue, String token) {
+    public RestClient(RequestQueue queue, REST_CLIENT_VERSIONS version) {
+        mQueue = queue;
+        if (version == REST_CLIENT_VERSIONS.V1_1) {
+            mRestApiEndpointURL = REST_API_ENDPOINT_URL_V1_1;
+        } else {
+            // Fallback to version 1
+            mRestApiEndpointURL = REST_API_ENDPOINT_URL_V1;
+        }
+    }
+
+    public RestClient(RequestQueue queue, String token, String endpointURL) {
         this(queue);
         mAccessToken = token;
+        mRestApiEndpointURL = endpointURL;
     }
 
     public RestRequest get(String path, Listener<JSONObject> listener, ErrorListener errorListener) {
@@ -52,9 +66,9 @@ public class RestClient {
         return request;
     }
 
-    public static String getAbsoluteURL(String url) {
+    public String getAbsoluteURL(String url) {
         // if it already starts with our endpoint, let it pass through
-        if (url.indexOf(REST_API_ENDPOINT_URL) == 0) {
+        if (url.indexOf(mRestApiEndpointURL) == 0) {
             return url;
         }
         // if it has a leading slash, remove it
@@ -62,10 +76,10 @@ public class RestClient {
             url = url.substring(1);
         }
         // prepend the endpoint
-        return String.format("%s%s", REST_API_ENDPOINT_URL, url);
+        return String.format("%s%s", mRestApiEndpointURL, url);
     }
 
-    public static String getAbsoluteURL(String path, Map<String, String> params) {
+    public String getAbsoluteURL(String path, Map<String, String> params) {
         String url = getAbsoluteURL(path);
         if (params != null) {
             // build a query string
@@ -97,5 +111,9 @@ public class RestClient {
 
     public boolean isAuthenticated() {
         return mAccessToken != null;
+    }
+
+    public String getEndpointURL() {
+        return mRestApiEndpointURL;
     }
 }

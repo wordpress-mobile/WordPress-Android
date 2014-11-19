@@ -52,7 +52,7 @@
     <View
         android:id="@+id/divider_header"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/reader_header_divider_height"
         android:layout_marginTop="@dimen/margin_large"
         android:background="@color/reader_divider_grey" />
 </LinearLayout>

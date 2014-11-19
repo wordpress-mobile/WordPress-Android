@@ -13,7 +13,7 @@
         android:title="@string/new_post"/>
     <item
         android:id="@+id/media_multiselect_actionbar_trash"
-        android:icon="@drawable/tab_icon_trash"
+        android:icon="@drawable/ic_action_discard"
         android:showAsAction="always"
         android:title="@string/delete"/>
 

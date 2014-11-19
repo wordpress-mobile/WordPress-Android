@@ -48,6 +48,7 @@ public class ReaderPost {
     public boolean isExternal;
     public boolean isPrivate;
     public boolean isVideoPress;
+    public boolean isJetpack;
 
     public boolean isLikesEnabled;
     public boolean isSharingEnabled;    // currently unused
@@ -163,14 +164,15 @@ public class ReaderPost {
             post.attachmentsJson = jsonAttachments.toString();
         }
 
-        // the single-post sites/$site/posts/$post endpoint returns all site metadata
-        // under meta/data/site (assuming ?meta=site was added to the request)
+        // site metadata - returned when ?meta=site was added to the request
         JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
         if (jsonSite != null) {
             post.blogId = jsonSite.optInt("ID");
             post.blogName = JSONUtil.getString(jsonSite, "name");
             post.setBlogUrl(JSONUtil.getString(jsonSite, "URL"));
             post.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
+            // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
+            post.isJetpack = JSONUtil.getBool(jsonSite, "jetpack");
         }
 
         return post;
@@ -434,6 +436,20 @@ public class ReaderPost {
      */
     public boolean isWP() {
         return !isExternal;
+    }
+
+
+    public boolean isSamePost(ReaderPost post) {
+        return post != null
+                && post.blogId == this.blogId
+                && post.postId == this.postId
+                && post.numLikes == this.numLikes
+                && post.numReplies == this.numReplies
+                && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
+                && post.isLikedByCurrentUser == this.isLikedByCurrentUser
+                && post.isCommentsOpen == this.isCommentsOpen
+                && post.isLikesEnabled == this.isLikesEnabled
+                && post.isRebloggedByCurrentUser == this.isRebloggedByCurrentUser;
     }
 
     /****

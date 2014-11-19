@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_save_comment"
-        android:icon="@drawable/ab_icon_send_lite"
+        android:icon="@drawable/ic_action_send_now"
         android:showAsAction="always"
         android:title="@string/upload" />
 </menu>

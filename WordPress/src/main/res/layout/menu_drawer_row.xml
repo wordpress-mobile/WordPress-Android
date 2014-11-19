@@ -15,7 +15,7 @@
         android:clickable="false"
         android:contentDescription="@string/posts"
         android:scaleType="centerInside"
-        android:src="@drawable/dashboard_icon_posts"
+        android:src="@drawable/dashicon_admin_post_black"
         android:tint="@color/md__iconTintColor" />
 
     <org.wordpress.android.widgets.WPTextView

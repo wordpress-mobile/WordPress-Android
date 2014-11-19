@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.3.1"
-        versionCode 147
+        versionName "3.4-rc-2"
+        versionCode 146
         minSdkVersion 14
         targetSdkVersion 19
 
@@ -75,7 +75,7 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.helpshift:android-aar:3.5.0'
     compile 'commons-lang:commons-lang:2.6'
-    compile 'com.cocosw:undobar:1.+@aar'
+    compile 'com.cocosw:undobar:1.6@aar'
 
     compile('org.apache.httpcomponents:httpmime:4.1.+') {
         exclude group: 'commons-logging', module: 'commons-logging'

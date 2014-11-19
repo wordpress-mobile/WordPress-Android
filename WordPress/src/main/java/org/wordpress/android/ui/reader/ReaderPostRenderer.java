@@ -9,6 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils;
+import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
@@ -66,35 +68,61 @@ class ReaderPostRenderer {
     }
 
     void beginRender() {
+        final Handler handler = new Handler();
         mRenderBuilder = new StringBuilder(getPostContent());
 
-        // start image scanner to find images so we can replace them with ones that have h/w set
-        final Handler handler = new Handler();
         new Thread() {
             @Override
             public void run() {
-                ReaderImageScanner.ImageScanListener imageListener = new ReaderImageScanner.ImageScanListener() {
-                    @Override
-                    public void onImageFound(String imageTag, String imageUrl, int start, int end) {
-                        replaceImageTag(imageTag, imageUrl);
-                    }
+                resizeImages();
+                resizeIframes();
 
+                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString());
+                mRenderBuilder = null;
+                handler.post(new Runnable() {
                     @Override
-                    public void onScanCompleted() {
-                        final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString());
-                        mRenderBuilder = null;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                renderHtmlContent(htmlContent);
-                            }
-                        });
+                    public void run() {
+                        renderHtmlContent(htmlContent);
                     }
-                };
-                ReaderImageScanner scanner = new ReaderImageScanner(mRenderBuilder.toString(), mPost.isPrivate);
-                scanner.beginScan(imageListener);
+                });
             }
         }.start();
+    }
+
+    /*
+     * scan the content for images and make sure they're correctly sized for the device
+     */
+    void resizeImages() {
+        ReaderHtmlUtils.HtmlScannerListener imageListener = new ReaderHtmlUtils.HtmlScannerListener() {
+            @Override
+            public void onTagFound(String imageTag, String imageUrl, int start, int end) {
+                replaceImageTag(imageTag, imageUrl);
+            }
+            @Override
+            public void onScanCompleted() {
+                // nop
+            }
+        };
+        ReaderImageScanner scanner = new ReaderImageScanner(mRenderBuilder.toString(), mPost.isPrivate);
+        scanner.beginScan(imageListener);
+    }
+
+    /*
+     * scan the content for iframes and make sure they're correctly sized for the device
+     */
+    void resizeIframes() {
+        ReaderHtmlUtils.HtmlScannerListener iframeListener = new ReaderHtmlUtils.HtmlScannerListener() {
+            @Override
+            public void onTagFound(String tag, String src, int start, int end) {
+                replaceIframeTag(tag, src);
+            }
+            @Override
+            public void onScanCompleted() {
+                // nop
+            }
+        };
+        ReaderIframeScanner scanner = new ReaderIframeScanner(mRenderBuilder.toString());
+        scanner.beginScan(iframeListener);
     }
 
     /*
@@ -232,6 +260,39 @@ class ReaderPostRenderer {
     }
 
     /*
+     * replace the passed iframe tag with one that's correctly sized for the device
+     */
+    private void replaceIframeTag(final String tag, final String src) {
+        int width = ReaderHtmlUtils.getWidthAttrValue(tag);
+        int height = ReaderHtmlUtils.getHeightAttrValue(tag);
+
+        int newHeight;
+        int newWidth;
+        if (width > 0 && height > 0) {
+            float ratio = ((float) height / (float) width);
+            newWidth = mResourceVars.videoWidthPx;
+            newHeight = (int) (newWidth * ratio);
+        } else {
+            newWidth = mResourceVars.videoWidthPx;
+            newHeight = mResourceVars.videoHeightPx;
+        }
+
+        String newTag = new StringBuilder("<iframe src='").append(src).append("'")
+                .append(" frameborder='0' allowfullscreen='true' allowtransparency='true'")
+                .append(" width='").append(pxToDp(newWidth)).append("'")
+                .append(" height='").append(pxToDp(newHeight)).append("' />")
+                .toString();
+
+        int start = mRenderBuilder.indexOf(tag);
+        if (start == -1) {
+            AppLog.w(AppLog.T.READER, "reader renderer > iframe not found in builder");
+            return;
+        }
+
+        mRenderBuilder.replace(start, start + tag.length(), newTag);
+    }
+
+    /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
     private String formatPostContentForWebView(final String content) {
@@ -298,25 +359,20 @@ class ReaderPostRenderer {
         .append("  .wp-caption .wp-caption-text {")
         .append("       font-size: smaller; line-height: 1.2em; margin: 0px;")
         .append("       padding: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
-        .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }");
+        .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }")
 
-        // if javascript is allowed, make sure embedded videos fit the browser width and
-        // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
-        if (canEnableJavaScript()) {
-            sbHtml.append("  iframe, embed { width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
-                  .append("                  height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");
-        } else {
-            sbHtml.append("  iframe, embed { display: none; }");
-        }
+        // horizontally center iframes
+        .append("   iframe { display: block; margin: 0 auto; }")
 
-        // html5 video doesn't require javascript
-        sbHtml.append(" video { width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
-              .append("         height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");
+        // make sure html5 videos fit the browser width and use 16:9 ratio (YouTube standard)
+        .append("  video {")
+        .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
+        .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }")
 
-        sbHtml.append("</style>")
-              .append("</head><body>")
-              .append(content)
-              .append("</body></html>");
+        .append("</style>")
+        .append("</head><body>")
+        .append(content)
+        .append("</body></html>");
 
         return sbHtml.toString();
     }
@@ -363,8 +419,8 @@ class ReaderPostRenderer {
 
     private ImageSize getImageSizeFromAttributes(final String imageTag) {
         return new ImageSize(
-                ReaderImageScanner.getWidthAttrValue(imageTag),
-                ReaderImageScanner.getHeightAttrValue(imageTag));
+                ReaderHtmlUtils.getWidthAttrValue(imageTag),
+                ReaderHtmlUtils.getHeightAttrValue(imageTag));
     }
 
     private int pxToDp(int px) {
@@ -375,10 +431,10 @@ class ReaderPostRenderer {
     }
 
     /*
-     * javascript should only be enabled for wp blogs (not external feeds)
+     * javascript should only be enabled for WordPress.com blogs (not feeds or Jetpack blogs)
      */
     private boolean canEnableJavaScript() {
-        return mPost.isWP();
+        return mPost.isWP() && !mPost.isJetpack;
     }
 
     /*

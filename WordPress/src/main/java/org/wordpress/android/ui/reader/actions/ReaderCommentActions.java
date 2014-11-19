@@ -33,27 +33,19 @@ public class ReaderCommentActions {
      * get the latest comments for this post
      **/
     public static void updateCommentsForPost(final ReaderPost post,
-                                             final boolean requestNewer,
+                                             final int pageNumber,
                                              final ReaderActions.UpdateResultListener resultListener) {
         String path = "sites/" + post.blogId + "/posts/" + post.postId + "/replies/"
                     + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
-                    + "&meta=likes";
-
-        // get older comments first - subsequent calls to this routine will get newer ones if they exist
-        path += "&order=ASC";
-
-        // offset by the number of comments already stored locally (so we only get new comments)
-        if (requestNewer) {
-            int numLocalComments = ReaderCommentTable.getNumCommentsForPost(post);
-            if (numLocalComments > 0) {
-                path += "&offset=" + Integer.toString(numLocalComments);
-            }
-        }
+                    + "&meta=likes"
+                    + "&hierarchical=true"
+                    + "&order=ASC"
+                    + "&page=" + pageNumber;
 
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdateCommentsResponse(jsonObject, post.blogId, requestNewer, resultListener);
+                handleUpdateCommentsResponse(jsonObject, post.blogId, pageNumber, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -70,7 +62,7 @@ public class ReaderCommentActions {
     }
     private static void handleUpdateCommentsResponse(final JSONObject jsonObject,
                                                      final long blogId,
-                                                     final boolean requestNewer,
+                                                     final int pageNumber,
                                                      final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject == null) {
             if (resultListener != null) {
@@ -96,6 +88,7 @@ public class ReaderCommentActions {
 
                             // extract this comment and add it to the list
                             ReaderComment comment = ReaderComment.fromJson(jsonComment, blogId);
+                            comment.pageNumber = pageNumber;
                             serverComments.add(comment);
 
                             // extract and save likes for this comment
@@ -108,11 +101,7 @@ public class ReaderCommentActions {
                         }
                     }
 
-                    if (requestNewer) {
-                        hasNewComments = (serverComments.size() > 0);
-                    } else {
-                        hasNewComments = ReaderCommentTable.hasNewComments(serverComments);
-                    }
+                    hasNewComments = (serverComments.size() > 0);
 
                     // save to db regardless of whether any are new so changes to likes are stored
                     ReaderCommentTable.addOrUpdateComments(serverComments);
@@ -125,7 +114,7 @@ public class ReaderCommentActions {
                     handler.post(new Runnable() {
                         public void run() {
                             ReaderActions.UpdateResult result =
-                                    (hasNewComments ? ReaderActions.UpdateResult.CHANGED
+                                    (hasNewComments ? ReaderActions.UpdateResult.HAS_NEW
                                                     : ReaderActions.UpdateResult.UNCHANGED);
                             resultListener.onUpdateResult(result);
                         }
@@ -133,74 +122,6 @@ public class ReaderCommentActions {
                 }
             }
         }.start();
-    }
-
-    /*
-     * request liking users for the passed comment - UNTESTED
-     */
-    private static void updateCommentLikes(final ReaderComment comment,
-                                           final ReaderActions.UpdateResultListener resultListener) {
-        if (comment == null) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-            }
-            return;
-        }
-
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleUpdateCommentLikesResponse(comment, jsonObject, resultListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (resultListener != null) {
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-                }
-
-            }
-        };
-
-        AppLog.d(T.READER, "updating comment likes");
-        String path = "sites/" + comment.blogId + "/comments/" + comment.commentId + "/likes/";
-        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
-    }
-
-    private static void handleUpdateCommentLikesResponse(final ReaderComment comment,
-                                                         final JSONObject jsonObject,
-                                                         final ReaderActions.UpdateResultListener resultListener) {
-        if (comment == null || jsonObject == null) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-            }
-            return;
-        }
-
-        int numLikes = jsonObject.optInt("found");
-        boolean isLikedByCurrentUser = JSONUtil.getBool(jsonObject, "i_like");
-        boolean isChanged = (comment.numLikes != numLikes || comment.isLikedByCurrentUser != isLikedByCurrentUser);
-
-        if (isChanged) {
-            comment.isLikedByCurrentUser = isLikedByCurrentUser;
-            comment.numLikes = numLikes;
-            ReaderCommentTable.addOrUpdateComment(comment);
-            ReaderLikeTable.setCurrentUserLikesComment(comment, isLikedByCurrentUser);
-        }
-
-        ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonObject);
-        ReaderUserTable.addOrUpdateUsers(likingUsers);
-        ReaderLikeTable.setLikesForComment(comment, likingUsers.getUserIds());
-
-        if (resultListener != null) {
-            if (isChanged) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.CHANGED);
-            } else {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED);
-            }
-        }
     }
 
     /*
@@ -219,8 +140,17 @@ public class ReaderCommentActions {
                                                   final String commentText,
                                                   final long replyToCommentId,
                                                   final ReaderActions.CommentActionListener actionListener) {
-        if (post==null || TextUtils.isEmpty(commentText))
+        if (post == null || TextUtils.isEmpty(commentText)) {
             return null;
+        }
+
+        // determine which page this new comment should be assigned to
+        final int pageNumber;
+        if (replyToCommentId != 0) {
+            pageNumber = ReaderCommentTable.getPageNumberForComment(post.blogId, post.postId, replyToCommentId);
+        } else {
+            pageNumber = ReaderCommentTable.getLastPageNumberForPost(post.blogId, post.postId);
+        }
 
         // create a "fake" comment that's added to the db so it can be shown right away - will be
         // replaced with actual comment if it succeeds to be posted, or deleted if comment fails
@@ -230,20 +160,24 @@ public class ReaderCommentActions {
         newComment.postId = post.postId;
         newComment.blogId = post.blogId;
         newComment.parentId = replyToCommentId;
+        newComment.pageNumber = pageNumber;
         newComment.setText(commentText);
+
         String published = DateTimeUtils.nowUTC().toString();
         newComment.setPublished(published);
         newComment.timestamp = DateTimeUtils.iso8601ToTimestamp(published);
+
         ReaderUser currentUser = ReaderUserTable.getCurrentUser();
-        if (currentUser!=null) {
+        if (currentUser != null) {
             newComment.setAuthorAvatar(currentUser.getAvatarUrl());
             newComment.setAuthorName(currentUser.getDisplayName());
         }
+
         ReaderCommentTable.addOrUpdateComment(newComment);
 
         // different endpoint depending on whether the new comment is a reply to another comment
         final String path;
-        if (replyToCommentId==0) {
+        if (replyToCommentId == 0) {
             path = "sites/" + post.blogId + "/posts/" + post.postId + "/replies/new";
         } else {
             path = "sites/" + post.blogId + "/comments/" + Long.toString(replyToCommentId) + "/replies/new";
@@ -258,9 +192,11 @@ public class ReaderCommentActions {
                 ReaderCommentTable.deleteComment(post, fakeCommentId);
                 AppLog.i(T.READER, "comment succeeded");
                 ReaderComment newComment = ReaderComment.fromJson(jsonObject, post.blogId);
+                newComment.pageNumber = pageNumber;
                 ReaderCommentTable.addOrUpdateComment(newComment);
-                if (actionListener!=null)
+                if (actionListener != null) {
                     actionListener.onActionResult(true, newComment);
+                }
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -269,8 +205,9 @@ public class ReaderCommentActions {
                 ReaderCommentTable.deleteComment(post, fakeCommentId);
                 AppLog.w(T.READER, "comment failed");
                 AppLog.e(T.READER, volleyError);
-                if (actionListener!=null)
+                if (actionListener != null) {
                     actionListener.onActionResult(false, null);
+                }
             }
         };
 

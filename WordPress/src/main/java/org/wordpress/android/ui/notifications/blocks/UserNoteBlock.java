@@ -23,7 +23,6 @@ import org.wordpress.android.util.UrlUtils;
 
 /**
  * A block that displays information about a User (such as a user that liked a post)
- * Will display an action button if available (e.g. follow button)
  */
 public class UserNoteBlock extends NoteBlock {
     private final OnGravatarClickedListener mGravatarClickedListener;
@@ -79,11 +78,7 @@ public class UserNoteBlock extends NoteBlock {
         }
 
         if (!TextUtils.isEmpty(linkedText)) {
-            noteBlockHolder.urlTextView.setText(NotificationsUtils.getClickableTextForIdUrl(
-                    getUrlRangeObject(),
-                    linkedText,
-                    getOnNoteBlockTextClickListener()
-            ));
+            noteBlockHolder.urlTextView.setText(linkedText);
             noteBlockHolder.urlTextView.setVisibility(View.VISIBLE);
         } else {
             noteBlockHolder.urlTextView.setVisibility(View.GONE);
@@ -91,9 +86,6 @@ public class UserNoteBlock extends NoteBlock {
 
         if (hasUserBlogTagline()) {
             noteBlockHolder.taglineTextView.setText(getUserBlogTagline());
-            noteBlockHolder.taglineTextView.setVisibility(View.VISIBLE);
-        } else if (hasUserUrlAndTitle()) {
-            noteBlockHolder.taglineTextView.setText(getUserUrl());
             noteBlockHolder.taglineTextView.setVisibility(View.VISIBLE);
         } else {
             noteBlockHolder.taglineTextView.setVisibility(View.GONE);
@@ -112,7 +104,7 @@ public class UserNoteBlock extends NoteBlock {
                 noteBlockHolder.rootView.setOnClickListener(null);
             }
         } else {
-            noteBlockHolder.avatarImageView.setImageResource(R.drawable.placeholder);
+            noteBlockHolder.avatarImageView.setImageResource(R.drawable.gravatar_placeholder);
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 
@@ -142,39 +134,13 @@ public class UserNoteBlock extends NoteBlock {
             rootView = view.findViewById(R.id.user_block_root_view);
             nameTextView = (TextView)view.findViewById(R.id.user_name);
             urlTextView = (TextView)view.findViewById(R.id.user_blog_url);
-            urlTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
             taglineTextView = (TextView)view.findViewById(R.id.user_blog_tagline);
             avatarImageView = (NetworkImageView)view.findViewById(R.id.user_avatar);
         }
     }
 
-    JSONObject getUrlRangeObject() {
-        if (getNoteData() == null) return null;
-
-        JSONArray rangesArray = getNoteData().optJSONArray("ranges");
-        if (rangesArray != null) {
-            for (int i=0; i < rangesArray.length(); i++) {
-                try {
-                    JSONObject rangeObject = rangesArray.getJSONObject(i);
-                    if (rangeObject.has("url")) {
-                        return rangeObject;
-                    }
-                } catch (JSONException e) {
-                    AppLog.i(AppLog.T.NOTIFS, "Unexpected object in notifications ids array.");
-                }
-            }
-        }
-
-        return null;
-    }
-
     String getUserUrl() {
-        if (getUrlRangeObject() != null) {
-            String url = UrlUtils.normalizeUrl(getUrlRangeObject().optString("url", ""));
-            return url.replace("http://", "").replace("https://", "");
-        }
-
-        return null;
+        return JSONUtil.queryJSON(getNoteData(), "meta.links.home", "");
     }
 
     private String getUserBlogTitle() {

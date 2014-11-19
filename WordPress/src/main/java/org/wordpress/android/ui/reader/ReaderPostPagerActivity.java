@@ -29,8 +29,6 @@ import org.wordpress.android.ui.reader.ReaderAnim.AnimationEndListener;
 import org.wordpress.android.ui.reader.ReaderAnim.Duration;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
-import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultAndCountListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -577,15 +575,16 @@ public class ReaderPostPagerActivity extends Activity
             mProgress.setVisibility(View.VISIBLE);
             AppLog.d(AppLog.T.READER, "reader pager > requesting older posts");
 
+            ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
+                @Override
+                public void onUpdateResult(ReaderActions.UpdateResult result) {
+                    doAfterUpdate(result);
+                }
+            };
+
             switch (getPostListType()) {
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
-                    UpdateResultAndCountListener resultListener = new UpdateResultAndCountListener() {
-                        @Override
-                        public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
-                            doAfterUpdate(numNewPosts > 0);
-                        }
-                    };
                     ReaderPostActions.updatePostsInTag(
                             getCurrentTag(),
                             ReaderActions.RequestDataAction.LOAD_OLDER,
@@ -593,22 +592,17 @@ public class ReaderPostPagerActivity extends Activity
                     break;
 
                 case BLOG_PREVIEW:
-                    ActionListener actionListener = new ActionListener() {
-                        @Override
-                        public void onActionResult(boolean succeeded) {
-                            doAfterUpdate(succeeded);
-                        }
-                    };
+
                     ReaderPostActions.requestPostsForBlog(
                             mBlogId,
                             null,
                             ReaderActions.RequestDataAction.LOAD_OLDER,
-                            actionListener);
+                            resultListener);
                     break;
             }
         }
 
-        private void doAfterUpdate(boolean hasNewPosts) {
+        private void doAfterUpdate(ReaderActions.UpdateResult result) {
             mIsRequestingMorePosts = false;
 
             if (isFinishing()) {
@@ -617,7 +611,7 @@ public class ReaderPostPagerActivity extends Activity
 
             mProgress.setVisibility(View.GONE);
 
-            if (hasNewPosts) {
+            if (result == ReaderActions.UpdateResult.HAS_NEW) {
                 AppLog.d(AppLog.T.READER, "reader pager > older posts received");
                 // remember which post to keep active
                 ReaderBlogIdPostId id = getCurrentBlogIdPostId();

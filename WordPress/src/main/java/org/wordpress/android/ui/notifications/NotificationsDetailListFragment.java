@@ -7,6 +7,7 @@ import android.app.ListFragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -183,6 +184,20 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             } else {
                 // otherwise, load the post in the Reader
                 notificationsActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
+            }
+        }
+
+        @Override
+        public void showSitePreview(long siteId, String siteUrl) {
+            if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsActivity)) {
+                return;
+            }
+
+            NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
+            if (siteId > 0) {
+                notificationsActivity.showBlogPreviewActivity(siteId, siteUrl);
+            } else if (!TextUtils.isEmpty(siteUrl)) {
+                notificationsActivity.showWebViewActivityForUrl(siteUrl);
             }
         }
     };

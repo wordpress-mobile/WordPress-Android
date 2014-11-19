@@ -117,9 +117,6 @@ public abstract class NewAccountAbstractPageFragment extends Fragment {
     }
 
     protected void showError(int messageId) {
-        if (!isAdded()) {
-            return;
-        }
         if (specificShowError(messageId)) {
             return;
         }
@@ -128,9 +125,12 @@ public abstract class NewAccountAbstractPageFragment extends Fragment {
     }
 
     protected void showError(String message) {
+        if (!isAdded()) {
+            return;
+        }
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.error), message, getString(
-                R.string.nux_tap_continue), R.drawable.nux_icon_alert);
+        NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.error), message,
+                R.drawable.noticon_alert_big, getString(R.string.nux_tap_continue));
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
     }

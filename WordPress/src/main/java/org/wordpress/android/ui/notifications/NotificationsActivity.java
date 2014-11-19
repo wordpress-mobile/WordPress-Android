@@ -44,7 +44,6 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         CommentActions.OnCommentChangeListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
-    public static final String FROM_NOTIFICATION_EXTRA = "fromNotification";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
 
     private static final String KEY_INITIAL_UPDATE = "initialUpdate";
@@ -64,6 +63,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
+        AppLog.i(T.NOTIFS, "Creating NotificationsActivity");
         createMenuDrawer(R.layout.notifications_activity);
 
         if (savedInstanceState == null) {
@@ -121,6 +121,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        AppLog.i(T.NOTIFS, "Launching NotificationsActivity with new intent");
         GCMIntentService.clearNotificationsMap();
         launchWithNoteId();
     }
@@ -135,6 +136,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
         if (SimperiumUtils.isUserAuthorized()) {
             SimperiumUtils.startBuckets();
+            AppLog.i(T.NOTIFS, "Starting Simperium buckets");
         }
     }
 
@@ -221,6 +223,10 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 commentDetailFragment.setRestoredReplyText(mRestoredReplyText);
             }
 
+            if (getIntent() != null && getIntent().hasExtra(NOTE_INSTANT_REPLY_EXTRA)) {
+                commentDetailFragment.setShouldFocusReplyField(true);
+            }
+
             fragment = commentDetailFragment;
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
@@ -270,6 +276,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         if (note.getFormattedSubject() != null) {
             setTitle(note.getTitle());
         }
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
 
     public void showCommentDetailForNote(Note note) {
@@ -305,7 +313,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     public void showWebViewActivityForUrl(String url) {
         if (isFinishing() || url == null)
             return;
-        WPWebViewActivity.openUrlByUsingMainWPCOMCredentials(this, url);
+        WPWebViewActivity.openURL(this, url);
     }
 
     @Override
@@ -316,6 +324,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         }
 
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
+            note.setLocalStatus(CommentStatus.toRESTString(newStatus));
+            note.save();
             mNotesListFragment.setNoteIsModerating(note.getId(), true);
             CommentActions.moderateCommentForNote(note, newStatus,
                     new CommentActions.CommentActionListener() {
@@ -326,6 +336,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                             mNotesListFragment.setNoteIsModerating(note.getId(), false);
 
                             if (!succeeded) {
+                                note.setLocalStatus(null);
+                                note.save();
                                 ToastUtils.showToast(NotificationsActivity.this,
                                         R.string.error_moderate_comment,
                                         ToastUtils.Duration.LONG
@@ -362,7 +374,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                         }
 
                         @Override
-                        public void onClear() {
+                        public void onClear(Parcelable[] token) {
                             //noop
                         }
 

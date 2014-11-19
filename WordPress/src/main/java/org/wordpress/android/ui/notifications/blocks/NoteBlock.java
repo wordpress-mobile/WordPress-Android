@@ -47,6 +47,7 @@ public class NoteBlock {
     public interface OnNoteBlockTextClickListener {
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan);
         public void showDetailForNoteIds();
+        public void showSitePreview(long siteId, String siteUrl);
     }
 
     public NoteBlock(JSONObject noteObject, OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
@@ -67,7 +68,19 @@ public class NoteBlock {
     }
 
     Spannable getNoteText() {
-        return NotificationsUtils.getSpannableTextFromIndices(mNoteData, mOnNoteBlockTextClickListener);
+        return NotificationsUtils.getSpannableContentFromIndices(mNoteData, null, mOnNoteBlockTextClickListener);
+    }
+
+    public String getMetaHomeTitle() {
+        return JSONUtil.queryJSON(mNoteData, "meta.titles.home", "");
+    }
+
+    public long getMetaSiteId() {
+        return JSONUtil.queryJSON(mNoteData, "meta.ids.site", -1);
+    }
+
+    public String getMetaSiteUrl() {
+        return JSONUtil.queryJSON(mNoteData, "meta.links.home", "");
     }
 
     JSONObject getNoteMediaItem() {
