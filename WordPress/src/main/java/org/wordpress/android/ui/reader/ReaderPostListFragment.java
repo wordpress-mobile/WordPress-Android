@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -349,7 +348,6 @@ public class ReaderPostListFragment extends Fragment {
         // assign the post list adapter
         boolean adapterAlreadyExists = hasPostRecycler();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(getPostRecycler());
 
         // if adapter didn't already exist, populate it now then update the tag - this
@@ -439,7 +437,8 @@ public class ReaderPostListFragment extends Fragment {
                 ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
-        getPostRecycler().removeItem(post);
+        // remove posts in this blog from the adapter
+        getPostRecycler().removePostsInBlog(post.blogId);
 
         // show the undo bar enabling the user to undo the block
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
@@ -450,10 +449,11 @@ public class ReaderPostListFragment extends Fragment {
             }
         };
         new UndoBarController.UndoBar(getActivity())
-                             .message(getString(R.string.reader_toast_blog_blocked))
-                             .listener(undoListener)
-                             .translucent(true)
-                             .show();
+                .message(getString(R.string.reader_toast_blog_blocked))
+                .listener(undoListener)
+                .translucent(true)
+                .show();
+
     }
 
     private void hideUndoBar() {

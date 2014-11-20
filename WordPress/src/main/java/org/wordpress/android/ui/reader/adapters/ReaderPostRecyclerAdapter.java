@@ -367,15 +367,22 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
         loadPosts();
     }
 
-    public void removeItem(int position) {
+    void removeItem(int position) {
         if (isValidPosition(position)) {
             mPosts.remove(position);
             notifyItemRemoved(position);
         }
     }
 
-    public void removeItem(ReaderPost post) {
+    void removePost(ReaderPost post) {
         removeItem(indexOfPost(post));
+    }
+
+    public void removePostsInBlog(long blogId) {
+        ReaderPostList postsInBlog = mPosts.getPostsInBlog(blogId);
+        for (ReaderPost post: postsInBlog) {
+            removePost(post);
+        }
     }
 
     /*
@@ -394,7 +401,7 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
         }
     }
 
-    public int indexOfPost(ReaderPost post) {
+    int indexOfPost(ReaderPost post) {
         return mPosts.indexOfPost(post);
     }
 
@@ -433,7 +440,7 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public ReaderPost getItem(int position) {
+    ReaderPost getItem(int position) {
         if (isValidPosition(position)) {
             return mPosts.get(position);
         } else {
