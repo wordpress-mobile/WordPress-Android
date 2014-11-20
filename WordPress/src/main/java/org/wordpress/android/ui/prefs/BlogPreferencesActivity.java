@@ -63,7 +63,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(StringUtils.unescapeHTML(blog.getBlogName()));
+            actionBar.setTitle(StringUtils.unescapeHTML(blog.getNameOrHostUrl()));
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
