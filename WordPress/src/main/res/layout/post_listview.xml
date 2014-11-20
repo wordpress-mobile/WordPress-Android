@@ -71,7 +71,7 @@
                 android:background="@drawable/fab_background"
                 android:elevation="@dimen/fab_elevation"
                 android:src="@drawable/ic_create_white_24dp"
-                android:stateListAnimator="@anim/fab_pressed" />
+                android:stateListAnimator="@anim/pressed_fab" />
 
         </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>

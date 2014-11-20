@@ -22,6 +22,9 @@
     <dimen name="fab_elevation">2dp</dimen>
     <dimen name="fab_elevation_pressed">4dp</dimen>
 
+    <dimen name="card_elevation">@dimen/cardview_default_elevation</dimen>
+    <dimen name="card_elevation_pressed">4dp</dimen>
+
     <dimen name="menu_drawer_width">250dp</dimen>
     <dimen name="menu_drawer_row_height">40dp</dimen>
     <dimen name="menu_drawer_icon_size">28dp</dimen>
