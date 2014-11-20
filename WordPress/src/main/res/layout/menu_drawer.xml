@@ -15,6 +15,7 @@
         android:choiceMode="singleChoice"
         android:divider="@null"
         android:dividerHeight="0dp"
+        android:drawSelectorOnTop="false"
         tools:listheader="@layout/menu_drawer_header"
         tools:listitem="@layout/menu_drawer_row" />
 
@@ -32,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/menu_drawer_row_height"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/md_list_selector"
+        android:background="?android:selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 

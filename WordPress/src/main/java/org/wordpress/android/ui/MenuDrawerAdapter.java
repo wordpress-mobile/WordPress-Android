@@ -55,11 +55,9 @@ public class MenuDrawerAdapter extends BaseAdapter {
         }
 
         final MenuDrawerItem item = mItems.get(position);
-        boolean isSelected = item.isSelected();
         int badgeCount = item.getBadgeCount();
 
         holder.txtTitle.setText(item.getTitleRes());
-        holder.txtTitle.setSelected(isSelected);
         holder.imgIcon.setImageResource(item.getIconRes());
 
         if (badgeCount > 0) {
@@ -69,10 +67,10 @@ public class MenuDrawerAdapter extends BaseAdapter {
             holder.txtBadge.setVisibility(View.GONE);
         }
 
-        if (isSelected) {
+        if (item.isSelected()) {
             convertView.setBackgroundResource(R.color.md__background_selected);
         } else {
-            convertView.setBackgroundResource(R.drawable.md_list_selector);
+            convertView.setBackgroundResource(0);
         }
 
         return convertView;
