@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ptr_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.wordpress.android.ui.stats.ScrollViewExt xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scroll_view_stats"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/stats_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_medium"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/stats_single_view_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"/>
+
+        </LinearLayout>
+    </org.wordpress.android.ui.stats.ScrollViewExt>
+</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

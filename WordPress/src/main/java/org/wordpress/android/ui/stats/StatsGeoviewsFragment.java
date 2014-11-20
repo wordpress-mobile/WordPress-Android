@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.stats.model.ClicksModel;
 import org.wordpress.android.ui.stats.model.GeoviewModel;
 import org.wordpress.android.ui.stats.model.GeoviewsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -23,11 +24,17 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
         if (mDatamodel != null && ((GeoviewsModel) mDatamodel).getCountries() != null) {
             List<GeoviewModel> postViews = ((GeoviewsModel) mDatamodel).getCountries();
             ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), postViews);
-            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList);
+            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
             showEmptyUI(true);
         }
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return (mDatamodel != null && ((GeoviewsModel) mDatamodel).getCountries() != null
+                && ((GeoviewsModel) mDatamodel).getCountries().size() > 10);
     }
 
     @Override

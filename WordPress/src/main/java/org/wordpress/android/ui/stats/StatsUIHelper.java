@@ -43,13 +43,13 @@ public class StatsUIHelper {
                 || (StatsUtils.getSmallestWidthDP() == TABLET_600DP && isInLandscape(act)));
     }
 
-    public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout, int maxNumberOrItemsToshow) {
+    public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout, int maxNumberOfItemsToshow) {
         if (ctx == null || linearLayout == null || adapter == null) {
             return;
         }
 
         // limit number of items to show otherwise it would cause performance issues on the LinearLayout
-        int count = Math.min(adapter.getCount(), maxNumberOrItemsToshow);
+        int count = Math.min(adapter.getCount(), maxNumberOfItemsToshow);
 
         if (count == 0) {
             linearLayout.removeAllViews();
@@ -91,11 +91,19 @@ public class StatsUIHelper {
                                         final ExpandableListAdapter mAdapter,
                                         final SparseBooleanArray mGroupIdToExpandedMap,
                                         final LinearLayout mLinearLayout) {
+        reloadGroupViews(ctx, mAdapter, mGroupIdToExpandedMap, mLinearLayout, STATS_GROUP_MAX_ITEMS);
+    }
+
+    public static void reloadGroupViews(final Context ctx,
+                                        final ExpandableListAdapter mAdapter,
+                                        final SparseBooleanArray mGroupIdToExpandedMap,
+                                        final LinearLayout mLinearLayout,
+                                        final int maxNumberOfItemsToshow) {
         if (ctx == null || mLinearLayout == null || mAdapter == null || mGroupIdToExpandedMap == null) {
             return;
         }
 
-        int groupCount = Math.min(mAdapter.getGroupCount(), STATS_GROUP_MAX_ITEMS);
+        int groupCount = Math.min(mAdapter.getGroupCount(), maxNumberOfItemsToshow);
         if (groupCount == 0) {
             mLinearLayout.removeAllViews();
             return;

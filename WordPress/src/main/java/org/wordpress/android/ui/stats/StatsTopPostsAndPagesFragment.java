@@ -26,11 +26,16 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
         if (mDatamodel != null && ((TopPostsAndPagesModel) mDatamodel).getTopPostsAndPages().size() > 0) {
             List<SingleItemModel> postViews = ((TopPostsAndPagesModel) mDatamodel).getTopPostsAndPages();
             ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), postViews);
-            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList);
+            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
             showEmptyUI(true);
         }
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return (mDatamodel != null && ((TopPostsAndPagesModel) mDatamodel).getTopPostsAndPages().size() > 10);
     }
 
     @Override

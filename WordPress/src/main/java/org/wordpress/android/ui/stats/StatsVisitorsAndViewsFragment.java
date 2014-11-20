@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +41,7 @@ import java.util.List;
 
 
 public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
-        implements RadioGroup.OnCheckedChangeListener, StatsBarGraph.OnGestureListener  {
+        implements RadioGroup.OnCheckedChangeListener, StatsBarGraph.OnGestureListener {
 
     public static final String TAG = StatsVisitorsAndViewsFragment.class.getSimpleName();
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
@@ -53,6 +54,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private TextView mDateTextView;
     private String[] mStatsDate;
 
+    private OnDateChangeListener mListener;
+
     OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
             OverviewLabel.REBLOGS, OverviewLabel.COMMENTS};
 
@@ -61,6 +64,20 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private int mSelectedOverviewItemIndex = 0;
     private int mSelectedBarGraphBarIndex = -1;
 
+    // Container Activity must implement this interface
+    public interface OnDateChangeListener {
+        public void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate, boolean updateGraph);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnDateChangeListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnDateChangeListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -532,14 +549,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
-        final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
-        // start service to get stats
-        Intent intent = new Intent(getActivity(), StatsService.class);
-        intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
-        intent.putExtra(StatsService.ARG_PERIOD, getTimeframe());
-        intent.putExtra(StatsService.ARG_DATE, calculatedDate);
-        intent.putExtra(StatsService.ARG_UPDATE_GRAPH, false);
-        getActivity().startService(intent);
+        // Update the data below the graph
+        if (mListener!= null) {
+            // Should never be null
+            final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
+            mListener.onDateChanged(blogId, getTimeframe(), calculatedDate, false);
+        }
     }
 
 

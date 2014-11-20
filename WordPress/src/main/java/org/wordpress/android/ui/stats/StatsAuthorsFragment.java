@@ -51,9 +51,15 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         }
 
         BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), authors);
-        StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList);
+        StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
         showEmptyUI(false);
         mListener.onAuthorsVisibilityChange(false);
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return (mDatamodel != null && ((AuthorsModel) mDatamodel).getAuthors() != null
+                && ((AuthorsModel) mDatamodel).getAuthors().size() > 10);
     }
 
     @Override

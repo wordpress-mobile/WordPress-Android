@@ -24,11 +24,17 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
                 && ((VideoPlaysModel) mDatamodel).getPlays().size() > 0) {
             List<SingleItemModel> postViews = ((VideoPlaysModel) mDatamodel).getPlays();
             ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), postViews);
-            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList);
+            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
             showEmptyUI(true);
         }
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return mDatamodel != null && ((VideoPlaysModel) mDatamodel).getPlays() != null
+                && ((VideoPlaysModel) mDatamodel).getPlays().size() > 10;
     }
 
     @Override

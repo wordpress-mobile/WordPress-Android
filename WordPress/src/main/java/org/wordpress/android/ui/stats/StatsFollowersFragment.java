@@ -145,7 +145,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
         }
 
         if (adapter != null) {
-            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList);
+            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
             if ( mSelectedButtonIndex == 0 ) {
                 mTotalsLabel.setText(getTotalFollowersLabel(followersModel.getTotalWPCom()));
@@ -156,6 +156,11 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             showEmptyUI(true);
             mTotalsLabel.setText(getTotalFollowersLabel(0));
         }
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return false;
     }
 
     private String getTotalFollowersLabel(int total) {

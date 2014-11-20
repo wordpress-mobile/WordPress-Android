@@ -140,6 +140,9 @@
         <activity android:name=".ui.stats.StatsSinglePostDetailsActivity" >
         </activity>
 
+        <activity android:name=".ui.stats.StatsViewAllActivity" >
+        </activity>
+
         <activity android:name=".ui.WPWebViewActivity" >
         </activity>
 

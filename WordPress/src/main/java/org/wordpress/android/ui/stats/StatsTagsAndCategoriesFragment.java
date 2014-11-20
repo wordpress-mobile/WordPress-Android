@@ -21,11 +21,16 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     protected void updateUI() {
         if (mDatamodel != null && ((List<TagsModel>) mDatamodel).size() > 0) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((List<TagsModel>)mDatamodel));
-            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList);
+            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
             showEmptyUI(true);
         }
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return mDatamodel != null && ((List<TagsModel>) mDatamodel).size() > 10;
     }
 
     @Override

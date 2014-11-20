@@ -142,13 +142,34 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         }
 
         if (adapter != null) {
-            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList);
+            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             mTotalsLabel.setText(totalLabel + commentsModel.getTotalComments());
             showEmptyUI(false);
         } else {
             mTotalsLabel.setText(totalLabel + "0");
             showEmptyUI(true);
         }
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        if (mDatamodel == null) {
+            return false;
+        }
+        CommentsModel commentsModel = (CommentsModel) mDatamodel;
+        if (mSelectedButtonIndex == 0) {
+            List<AuthorModel> authors = commentsModel.getAuthors();
+            if (authors != null && authors.size() > 10) {
+                return true;
+            }
+        } else {
+            List<SingleItemModel> posts = commentsModel.getPosts();
+            if (posts != null && posts.size() > 10) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

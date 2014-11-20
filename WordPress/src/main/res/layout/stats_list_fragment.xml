@@ -76,6 +76,13 @@
                 android:visibility="gone" >
             </LinearLayout>
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View All"
+                android:id="@+id/btnViewAll"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
         <!-- ListView

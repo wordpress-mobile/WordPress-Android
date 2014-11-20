@@ -11,12 +11,14 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.stats.model.AuthorsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -34,6 +36,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected LinearLayout mListContainer;
     protected LinearLayout mList;
     protected Serializable mDatamodel;
+    protected Button mViewAll;
 
     protected SparseBooleanArray mGroupIdToExpandedMap;
 
@@ -44,6 +47,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract StatsService.StatsEndpointsEnum getSectionToUpdate();
     protected abstract void updateUI();
     protected abstract boolean isExpandableList();
+    protected abstract boolean isViewAllOptionAvailable();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,20 +71,15 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mList = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
         mList.setVisibility(View.VISIBLE);
         mListContainer = (LinearLayout) view.findViewById(R.id.stats_list_container);
+        mViewAll = (Button) view.findViewById(R.id.btnViewAll);
 
-        // Init the UI
-        if (mDatamodel != null) {
-            updateUI();
-        } else {
-            showEmptyUI(true);
-        }
         return view;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        AppLog.d(AppLog.T.STATS, this.getTag() + " > onCreate");
         mGroupIdToExpandedMap = new SparseBooleanArray();
 
         if (savedInstanceState != null) {
@@ -101,16 +100,25 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     @Override
     public void onPause() {
         super.onPause();
+        AppLog.d(AppLog.T.STATS, this.getTag() + " > onPause");
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.unregisterReceiver(mReceiver);
     }
 
     @Override
     public void onResume() {
+        AppLog.d(AppLog.T.STATS, this.getTag() + " > onResume");
         super.onResume();
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATED));
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATING));
+
+        // Init the UI
+        if (mDatamodel != null) {
+            updateUI();
+        } else {
+            showEmptyUI(true);
+        }
     }
 
     protected void showLoadingUI() {
@@ -142,8 +150,33 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             mEmptyLabel.setVisibility(View.GONE);
             mListContainer.setVisibility(View.VISIBLE);
             mList.setVisibility(View.VISIBLE);
+            if (!isSingleView() && isViewAllOptionAvailable()) {
+                // No view all button if already in single view
+                configureViewAllButton();
+            } else {
+                mViewAll.setVisibility(View.GONE);
+            }
             //StatsUIHelper.reloadGroupViews(getActivity(), mAdapter, mGroupIdToExpandedMap, mList);
         }
+    }
+
+    private void configureViewAllButton() {
+        if (isSingleView()) {
+            // No view all button if you're already in single view
+            mViewAll.setVisibility(View.GONE);
+            return;
+        }
+        mViewAll.setVisibility(View.VISIBLE);
+        mViewAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lauchViewAllActivity(mDatamodel);
+            }
+        });
+    }
+
+    protected int getMaxNumberOfItemsToShowInList() {
+        return isSingleView() ? 100 : 10;
     }
 
     /*

@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.stats.model.GeoviewsModel;
 import org.wordpress.android.ui.stats.model.ReferrerGroupModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
 import org.wordpress.android.ui.stats.model.SingleItemModel;
+import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 
@@ -22,11 +24,17 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     protected void updateUI() {
         if (mDatamodel != null && ((ReferrersModel) mDatamodel).getGroups().size() > 0) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((ReferrersModel)mDatamodel).getGroups());
-            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList);
+            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
             showEmptyUI(true);
         }
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return (mDatamodel != null && ((ReferrersModel) mDatamodel).getGroups() != null
+                && ((ReferrersModel) mDatamodel).getGroups().size() > 10);
     }
 
     @Override

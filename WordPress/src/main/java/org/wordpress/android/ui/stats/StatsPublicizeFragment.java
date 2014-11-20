@@ -23,11 +23,16 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
         if (mDatamodel != null && ((List<SingleItemModel>) mDatamodel).size() > 0) {
             List<SingleItemModel> publicizeItems = ((List<SingleItemModel>) mDatamodel);
             ArrayAdapter adapter = new PublicizeAdapter(getActivity(), publicizeItems);
-            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList);
+            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
             showEmptyUI(true);
         }
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return false;
     }
 
     @Override

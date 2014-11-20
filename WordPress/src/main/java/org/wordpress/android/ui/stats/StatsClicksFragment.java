@@ -22,11 +22,17 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
     protected void updateUI() {
        if (mDatamodel != null && ((ClicksModel) mDatamodel).getClickGroups().size() > 0) {
            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((ClicksModel)mDatamodel).getClickGroups());
-           StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList);
+           StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
             showEmptyUI(true);
         }
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return (mDatamodel != null && ((ClicksModel) mDatamodel).getClickGroups() != null
+                    && ((ClicksModel) mDatamodel).getClickGroups().size() > 10);
     }
 
     @Override
