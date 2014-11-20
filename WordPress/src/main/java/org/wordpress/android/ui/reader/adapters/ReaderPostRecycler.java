@@ -102,7 +102,7 @@ public class ReaderPostRecycler extends RecyclerView.Adapter<ReaderPostRecycler.
 
     @Override
     public ReaderPostViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.reader_listitem_post_excerpt, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.reader_cardview_post, viewGroup, false);
         return new ReaderPostViewHolder(view);
     }
 
