@@ -367,14 +367,15 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
         loadPosts();
     }
 
-    /*
-     * remove a single post at the passed position
-     */
-    public void removePost(int position) {
+    public void removeItem(int position) {
         if (isValidPosition(position)) {
             mPosts.remove(position);
-            notifyDataSetChanged();
+            notifyItemRemoved(position);
         }
+    }
+
+    public void removeItem(ReaderPost post) {
+        removeItem(indexOfPost(post));
     }
 
     /*

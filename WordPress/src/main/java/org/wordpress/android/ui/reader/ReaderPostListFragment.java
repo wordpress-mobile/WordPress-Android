@@ -439,30 +439,7 @@ public class ReaderPostListFragment extends Fragment {
                 ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
-        // animate out the post the user chose to block from, then remove the post from the adapter
-        final int position = getPostRecycler().indexOfPost(post);
-        Animation.AnimationListener aniListener = new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) { }
-            @Override
-            public void onAnimationRepeat(Animation animation) { }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if (isAdded()) {
-                    // remove this specific post, then refresh the adapter so other posts in this
-                    // blog no long appear
-                    getPostRecycler().removePost(position);
-                    getPostRecycler().refresh();
-                }
-            }
-        };
-        // TODO
-        /*ReaderAnim.animateRecyclerItem(mRecyclerView,
-                position,
-                ReaderAnim.AnimateListItemStyle.SHRINK,
-                aniListener);*/
-
-        mRecyclerView.removeViewAt(position);
+        getPostRecycler().removeItem(post);
 
         // show the undo bar enabling the user to undo the block
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
