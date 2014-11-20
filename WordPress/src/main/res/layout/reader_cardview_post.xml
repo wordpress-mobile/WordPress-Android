@@ -64,7 +64,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin_small"
-                android:background="@drawable/reader_transparent_selector"
+                android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/margin_large"
                 android:paddingLeft="@dimen/margin_large"
                 android:paddingRight="@dimen/margin_large"

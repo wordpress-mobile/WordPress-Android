@@ -58,7 +58,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:drawSelectorOnTop="false"
-                android:listSelector="@drawable/reader_list_selector"
                 tools:listitem="@layout/post_list_row" />
 
             <ImageButton

@@ -18,7 +18,6 @@
             android:choiceMode="singleChoice"
             android:divider="@drawable/list_divider"
             android:dividerHeight="1dp"
-            android:listSelector="@drawable/reader_list_selector"
             android:scrollingCache="true"
             tools:listitem="@layout/comment_listitem" />
     </android.support.v4.widget.SwipeRefreshLayout>

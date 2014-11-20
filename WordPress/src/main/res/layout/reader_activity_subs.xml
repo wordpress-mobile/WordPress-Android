@@ -66,7 +66,7 @@
             android:id="@+id/btn_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/reader_transparent_selector"
+            android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_add_grey600_24dp" />
 
     </LinearLayout>
