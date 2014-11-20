@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.StringMap;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -241,13 +243,14 @@ public class NotificationSettingsFragment extends PreferenceFragment {
         @Override
         protected Void doInBackground(Void... params) {
             if (mNotificationSettings != null) {
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                Context context = WordPress.getContext();
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
                 SharedPreferences.Editor editor = settings.edit();
                 Gson gson = new Gson();
                 String settingsJson = gson.toJson(mNotificationSettings);
                 editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJson);
                 editor.commit();
-                NotificationsUtils.setPushNotificationSettings(getActivity());
+                NotificationsUtils.setPushNotificationSettings(context);
             }
             return null;
         }
