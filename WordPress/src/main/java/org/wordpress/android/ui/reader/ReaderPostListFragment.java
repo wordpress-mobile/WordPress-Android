@@ -9,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -47,7 +46,8 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
-import org.wordpress.android.ui.reader.adapters.ReaderPostRecycler;
+import org.wordpress.android.ui.reader.adapters.ReaderPostRecyclerAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderPostRecyclerView;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
@@ -71,8 +71,8 @@ public class ReaderPostListFragment extends Fragment {
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
 
-    private ReaderPostRecycler mPostRecycler;
-    private RecyclerView mRecyclerView;
+    private ReaderPostRecyclerAdapter mPostRecycler;
+    private ReaderPostRecyclerView mRecyclerView;
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
@@ -247,7 +247,7 @@ public class ReaderPostListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_cards, container, false);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mRecyclerView = (ReaderPostRecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) rootView.findViewById(R.id.text_new_posts);
@@ -457,10 +457,12 @@ public class ReaderPostListFragment extends Fragment {
             }
         };
         // TODO
-        /*ReaderAnim.animateListItem(mListView,
+        /*ReaderAnim.animateRecyclerItem(mRecyclerView,
                 position,
                 ReaderAnim.AnimateListItemStyle.SHRINK,
                 aniListener);*/
+
+        mRecyclerView.removeViewAt(position);
 
         // show the undo bar enabling the user to undo the block
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
@@ -671,12 +673,12 @@ public class ReaderPostListFragment extends Fragment {
         }
     };
 
-    private ReaderPostRecycler getPostRecycler() {
+    private ReaderPostRecyclerAdapter getPostRecycler() {
         if (mPostRecycler == null) {
             AppLog.d(T.READER, "reader post list > creating post recycler");
 
             Context context = WPActivityUtils.getThemedContext(getActivity());
-            mPostRecycler = new ReaderPostRecycler(context, getPostListType());
+            mPostRecycler = new ReaderPostRecyclerAdapter(context, getPostListType());
 
             mPostRecycler.setOnPostSelectedListener(mPostSelectedListener);
             mPostRecycler.setOnDataLoadedListener(mDataLoadedListener);
