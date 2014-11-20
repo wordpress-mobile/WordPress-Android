@@ -432,7 +432,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawers();
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -571,7 +571,11 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home && mDrawerLayout != null) {
-            mDrawerLayout.openDrawer(GravityCompat.START);
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                mDrawerLayout.openDrawer(GravityCompat.START);
+            }
         }
         return super.onOptionsItemSelected(item);
     }

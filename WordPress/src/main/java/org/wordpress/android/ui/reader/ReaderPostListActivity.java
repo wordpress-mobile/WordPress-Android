@@ -154,14 +154,10 @@ public class ReaderPostListActivity extends WPDrawerActivity
 
     @Override
     public void onBackPressed() {
-        /*if (mMenuDrawer != null && mMenuDrawer.isMenuVisible()) {
+        ReaderPostListFragment fragment = getListFragment();
+        if (fragment == null || !fragment.goBackInTagHistory()) {
             super.onBackPressed();
-        } else {*/
-            ReaderPostListFragment fragment = getListFragment();
-            if (fragment == null || !fragment.goBackInTagHistory()) {
-                super.onBackPressed();
-            }
-        //}
+        }
     }
 
     @Override
