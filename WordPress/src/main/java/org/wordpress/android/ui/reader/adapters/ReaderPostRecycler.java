@@ -415,6 +415,14 @@ public class ReaderPostRecycler extends RecyclerView.Adapter<ReaderPostRecycler.
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    public ReaderPost getItem(int position) {
+        if (isValidPosition(position)) {
+            return mPosts.get(position);
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public int getItemCount() {
         return mPosts.size();
