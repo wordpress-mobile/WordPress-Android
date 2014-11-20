@@ -23,7 +23,7 @@
     <dimen name="fab_elevation_pressed">4dp</dimen>
 
     <dimen name="menu_drawer_width">250dp</dimen>
-    <dimen name="menu_drawer_row_height">42dp</dimen>
+    <dimen name="menu_drawer_row_height">40dp</dimen>
     <dimen name="menu_drawer_icon_size">28dp</dimen>
     <dimen name="menu_drawer_badge_size">24dp</dimen>
     <dimen name="menu_drawer_header_height">96dp</dimen>

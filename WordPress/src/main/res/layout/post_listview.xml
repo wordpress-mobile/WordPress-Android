@@ -57,7 +57,6 @@
                 android:id="@id/android:list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:drawSelectorOnTop="false"
                 android:listSelector="@drawable/reader_list_selector"
                 tools:listitem="@layout/post_list_row" />
@@ -66,8 +65,6 @@
                 android:id="@+id/fab_button"
                 android:layout_width="@dimen/fab_size"
                 android:layout_height="@dimen/fab_size"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
                 android:layout_gravity="end|bottom"
                 android:layout_marginBottom="@dimen/fab_margin"
                 android:layout_marginRight="@dimen/fab_margin"

@@ -24,7 +24,7 @@
         android:layout_height="1dp"
         android:layout_above="@+id/settings_row"
         android:layout_marginBottom="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:background="@color/md__divider" />
 
     <LinearLayout
