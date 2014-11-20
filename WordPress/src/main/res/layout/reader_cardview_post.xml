@@ -32,7 +32,8 @@
                 style="@style/ReaderImageView.Avatar"
                 android:layout_marginLeft="@dimen/margin_large"
                 android:layout_marginRight="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_large" />
+                android:layout_marginTop="@dimen/margin_large"
+                android:background="?android:selectableItemBackground" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_blog_name"
