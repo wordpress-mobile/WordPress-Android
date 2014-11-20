@@ -282,22 +282,6 @@ public class ReaderPostListFragment extends Fragment {
         // textView that appears when current tag has no posts
         mEmptyView = rootView.findViewById(R.id.empty_view);
 
-        // TODO: tapping a post opens the detail view
-        /*mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // take headers into account
-                position -= mListView.getHeaderViewsCount();
-                if (position >= 0 && mPostSelectedListener != null) {
-                    ReaderPost post = (ReaderPost) getPostRecycler().getItem(position);
-                    if (post != null) {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
-                        mPostSelectedListener.onPostSelected(post.blogId, post.postId);
-                    }
-                }
-            }
-        });*/
-
         // progress bar that appears when loading more posts
         mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
@@ -676,7 +660,7 @@ public class ReaderPostListFragment extends Fragment {
     /*
      * called by post adapter when user requests to reblog a post
      */
-    private final ReaderInterfaces.RequestReblogListener mReblogListener = new ReaderInterfaces.RequestReblogListener() {
+    private final ReaderInterfaces.RequestReblogListener mRequestReblogListener = new ReaderInterfaces.RequestReblogListener() {
         @Override
         public void onRequestReblog(ReaderPost post, View view) {
             if (isAdded()) {
@@ -688,13 +672,14 @@ public class ReaderPostListFragment extends Fragment {
     private ReaderPostRecycler getPostRecycler() {
         if (mPostRecycler == null) {
             AppLog.d(T.READER, "reader post list > creating post recycler");
+
             Context context = WPActivityUtils.getThemedContext(getActivity());
-            mPostRecycler = new ReaderPostRecycler(
-                    context,
-                    getPostListType(),
-                    mReblogListener,
-                    mDataLoadedListener,
-                    mDataRequestedListener);
+            mPostRecycler = new ReaderPostRecycler(context, getPostListType());
+
+            mPostRecycler.setOnPostSelectedListener(mPostSelectedListener);
+            mPostRecycler.setOnDataLoadedListener(mDataLoadedListener);
+            mPostRecycler.setOnDataRequestedListener(mDataRequestedListener);
+            mPostRecycler.setOnReblogRequestedListener(mRequestReblogListener);
         }
         return mPostRecycler;
     }

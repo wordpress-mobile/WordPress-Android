@@ -34,7 +34,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class ReaderPostRecycler extends RecyclerView.Adapter<ReaderPostRecycler.ReaderPostViewHolder> {
-
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
 
@@ -48,17 +47,18 @@ public class ReaderPostRecycler extends RecyclerView.Adapter<ReaderPostRecycler.
     private final ReaderTypes.ReaderPostListType mPostListType;
     private ReaderPostList mPosts = new ReaderPostList();
 
+    private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
-    private final ReaderInterfaces.RequestReblogListener mReblogListener;
-    private final ReaderInterfaces.DataLoadedListener mDataLoadedListener;
-    private final ReaderActions.DataRequestedListener mDataRequestedListener;
+    private ReaderInterfaces.RequestReblogListener mReblogListener;
+    private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
+    private ReaderActions.DataRequestedListener mDataRequestedListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
     private static final int MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
 
-    static class ReaderPostViewHolder extends RecyclerView.ViewHolder {
+    class ReaderPostViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtTitle;
         private final TextView txtText;
         private final TextView txtBlogName;
@@ -101,8 +101,17 @@ public class ReaderPostRecycler extends RecyclerView.Adapter<ReaderPostRecycler.
     }
 
     @Override
-    public ReaderPostViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ReaderPostViewHolder onCreateViewHolder(ViewGroup viewGroup, final int position) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.reader_cardview_post, viewGroup, false);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReaderPost post = getItem(position);
+                if (mPostSelectedListener != null && post != null) {
+                    mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+                }
+            }
+        });
         return new ReaderPostViewHolder(view);
     }
 
@@ -278,18 +287,10 @@ public class ReaderPostRecycler extends RecyclerView.Adapter<ReaderPostRecycler.
 
     // ********************************************************************************************
 
-     public ReaderPostRecycler(Context context,
-                               ReaderTypes.ReaderPostListType postListType,
-                               ReaderInterfaces.RequestReblogListener reblogListener,
-                               ReaderInterfaces.DataLoadedListener dataLoadedListener,
-                               ReaderActions.DataRequestedListener dataRequestedListener) {
+     public ReaderPostRecycler(Context context, ReaderTypes.ReaderPostListType postListType) {
         super();
 
         mPostListType = postListType;
-        mReblogListener = reblogListener;
-        mDataLoadedListener = dataLoadedListener;
-        mDataRequestedListener = dataRequestedListener;
-
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
 
@@ -299,8 +300,24 @@ public class ReaderPostRecycler extends RecyclerView.Adapter<ReaderPostRecycler.
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
     }
 
+    public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
+        mPostSelectedListener = listener;
+    }
+
     public void setOnTagSelectedListener(ReaderInterfaces.OnTagSelectedListener listener) {
         mOnTagSelectedListener = listener;
+    }
+
+    public void setOnDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
+        mDataLoadedListener = listener;
+    }
+
+    public void setOnDataRequestedListener(ReaderActions.DataRequestedListener listener) {
+        mDataRequestedListener = listener;
+    }
+
+    public void setOnReblogRequestedListener(ReaderInterfaces.RequestReblogListener listener) {
+        mReblogListener = listener;
     }
 
     public void setOnPostPopupListener(ReaderInterfaces.OnPostPopupListener onPostPopupListener) {

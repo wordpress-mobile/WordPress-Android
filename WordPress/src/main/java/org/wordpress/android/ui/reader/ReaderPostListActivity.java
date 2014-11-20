@@ -340,6 +340,8 @@ public class ReaderPostListActivity extends WPDrawerActivity
             return;
         }
 
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
+
         ReaderPostListFragment listFragment = getListFragment();
         if (listFragment != null) {
             switch (getPostListType()) {
