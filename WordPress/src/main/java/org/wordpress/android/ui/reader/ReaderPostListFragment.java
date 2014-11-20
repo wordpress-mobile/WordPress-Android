@@ -1068,10 +1068,8 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     private boolean isListScrolledToTop() {
-        // TODO
-        return false; //(mRecyclerView != null && mRecyclerView.isScrolledToTop());
+        return (mRecyclerView != null && !mRecyclerView.canScrollVertically(-1));
     }
-
 
     /*
      * toolbar spinner adapter which shows list of tags
