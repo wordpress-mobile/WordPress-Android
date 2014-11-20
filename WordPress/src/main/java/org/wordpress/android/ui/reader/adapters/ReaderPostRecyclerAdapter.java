@@ -138,18 +138,16 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
                 }
             });
 
-            // tapping header shows blog preview unless this post is from an external feed
+            // tapping avatar shows blog preview unless this post is from an external feed
             if (!post.isExternal) {
-                holder.layoutPostHeader.setEnabled(true);
-                holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
+                holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post.blogId, post.getBlogUrl());
                     }
                 });
             } else {
-                holder.layoutPostHeader.setOnClickListener(null);
-                holder.layoutPostHeader.setEnabled(false);
+                holder.imgAvatar.setOnClickListener(null);
             }
         }
 
@@ -271,7 +269,7 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
         }
 
         // if we're nearing the end of the posts, fire request to load more
-        if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getItemCount()-1)) {
+        if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getItemCount() - 1)) {
             mDataRequestedListener.onRequestData();
         }
 
@@ -282,12 +280,13 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
                     mPostSelectedListener.onPostSelected(post.blogId, post.postId);
                 }
             });
-        };
+        }
+        ;
     }
 
     // ********************************************************************************************
 
-     public ReaderPostRecyclerAdapter(Context context, ReaderTypes.ReaderPostListType postListType) {
+    public ReaderPostRecyclerAdapter(Context context, ReaderTypes.ReaderPostListType postListType) {
         super();
 
         mPostListType = postListType;
@@ -380,7 +379,7 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
 
     public void removePostsInBlog(long blogId) {
         ReaderPostList postsInBlog = mPosts.getPostsInBlog(blogId);
-        for (ReaderPost post: postsInBlog) {
+        for (ReaderPost post : postsInBlog) {
             removePost(post);
         }
     }
@@ -420,7 +419,7 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
         }
 
         boolean isChanged = false;
-        for (ReaderPost post: mPosts) {
+        for (ReaderPost post : mPosts) {
             boolean isMatched = (hasBlogId ? (blogId == post.blogId) : blogUrl.equals(post.getBlogUrl()));
             if (isMatched) {
                 post.isFollowedByCurrentUser = followStatus;
@@ -549,21 +548,26 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
      * AsyncTask to load posts in the current tag
      */
     private boolean mIsTaskRunning = false;
+
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         ReaderPostList tmpPosts;
+
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
         }
+
         @Override
         protected void onCancelled() {
             mIsTaskRunning = false;
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             final int numExisting;
             switch (getPostListType()) {
-                case TAG_PREVIEW: case TAG_FOLLOWED:
+                case TAG_PREVIEW:
+                case TAG_FOLLOWED:
                     tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
@@ -588,7 +592,7 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
             // computed, so calling these getters ensures the values are immediately available
             // when accessed from getView
             String currentTagName = (mCurrentTag != null ? mCurrentTag.getTagName() : "");
-            for (ReaderPost post: tmpPosts) {
+            for (ReaderPost post : tmpPosts) {
                 post.getPostAvatarForDisplay(mAvatarSz);
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
                 post.getDatePublished();
@@ -597,6 +601,7 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
 
             return true;
         }
+
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
