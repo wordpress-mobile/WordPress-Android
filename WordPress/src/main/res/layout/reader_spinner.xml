@@ -6,6 +6,5 @@
 <Spinner xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/action_bar_spinner"
     style="?android:actionDropDownStyle"
-    android:popupBackground="@color/grey_extra_light"
     android:layout_width="wrap_content"
     android:layout_height="@dimen/toolbar_height" />
