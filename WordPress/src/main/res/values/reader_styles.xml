@@ -140,22 +140,6 @@
         <item name="android:maxLength">@integer/reader_max_length_topic_name</item>
     </style>
 
-    <!-- ListViews -->
-    <style name="ReaderListView" parent="android:Widget.ListView">
-        <item name="android:scrollbars">none</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:drawSelectorOnTop">false</item>
-        <item name="android:divider">@drawable/list_divider</item>
-        <item name="android:dividerHeight">1dp</item>
-        <item name="android:footerDividersEnabled">false</item>
-        <item name="android:headerDividersEnabled">false</item>
-    </style>
-    <style name="ReaderListView.NoDivider" parent="ReaderListView">
-        <item name="android:divider">@null</item>
-        <item name="android:dividerHeight">0dp</item>
-    </style>
-
     <!-- images -->
     <style name="ReaderImageView" />
     <style name="ReaderImageView.Featured" parent="ReaderImageView">
