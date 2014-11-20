@@ -52,6 +52,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
@@ -102,7 +103,12 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_drawer);
+        if (isStaticMenuDrawer()) {
+            setContentView(R.layout.activity_drawer_static);
+        } else {
+            setContentView(R.layout.activity_drawer);
+        }
+
         setSupportActionBar(getToolbar());
 
         // configure all the available menu items
@@ -239,8 +245,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     public boolean isStaticMenuDrawer() {
-        // drawer layout does not exist on landscape tablets
-        return (findViewById(R.id.drawer_layout) != null);
+        return DisplayUtils.isLandscape(this)
+            && DisplayUtils.isXLarge(this);
     }
 
     private void initMenuDrawer() {
