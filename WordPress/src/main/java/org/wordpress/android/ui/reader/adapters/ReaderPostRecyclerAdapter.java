@@ -101,17 +101,8 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
     }
 
     @Override
-    public ReaderPostViewHolder onCreateViewHolder(ViewGroup viewGroup, final int position) {
+    public ReaderPostViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.reader_cardview_post, viewGroup, false);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ReaderPost post = getItem(position);
-                if (mPostSelectedListener != null && post != null) {
-                    mPostSelectedListener.onPostSelected(post.blogId, post.postId);
-                }
-            }
-        });
         return new ReaderPostViewHolder(view);
     }
 
@@ -283,6 +274,15 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
         if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getItemCount()-1)) {
             mDataRequestedListener.onRequestData();
         }
+
+        if (mPostSelectedListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+                }
+            });
+        };
     }
 
     // ********************************************************************************************

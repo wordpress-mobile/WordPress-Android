@@ -23,6 +23,11 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
         return posts;
     }
 
+    @Override
+    public Object clone() {
+        return super.clone();
+    }
+
     private int indexOfPost(long blogId, long postId) {
         for (int i = 0; i < size(); i++) {
             if (this.get(i).blogId == blogId && this.get(i).postId == postId) {
