@@ -229,7 +229,7 @@ public class StatsService extends Service {
 
                 // Comments
                 RestListener commentsListener = new RestListener(StatsEndpointsEnum.COMMENTS, mServiceBlogId, mServiceRequestedTimeframe);
-                final String commentsPath = String.format("/sites/%s/stats/comments?max=%s", mServiceBlogId, 12);
+                final String commentsPath = String.format("/sites/%s/stats/comments", mServiceBlogId); // No max parameter available
                 statsNetworkRequests.add(restClientUtils.get(commentsPath, commentsListener, commentsListener));
                 broadcastSectionUpdating(StatsEndpointsEnum.COMMENTS);
 

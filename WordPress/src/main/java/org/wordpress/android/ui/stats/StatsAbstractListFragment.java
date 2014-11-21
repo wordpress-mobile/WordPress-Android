@@ -13,12 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.stats.model.AuthorsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -29,6 +29,11 @@ import java.util.Locale;
 
 public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
+    protected static final String ARGS_IS_SINGLE_VIEW = "ARGS_IS_SINGLE_VIEW";
+
+    // Used when the fragment has 2 pages/kind of stats in it. Not meaning the bottom pagination.
+    protected static final String ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX = "OUTER_PAGER_SELECTED_BUTTON_INDEX";
+
     protected static final int NO_STRING_ID = -1;
 
     protected TextView mEmptyLabel;
@@ -37,6 +42,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected LinearLayout mList;
     protected Serializable mDatamodel;
     protected Button mViewAll;
+    protected RadioGroup mRadioGroup;
 
     protected SparseBooleanArray mGroupIdToExpandedMap;
 
@@ -72,6 +78,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mList.setVisibility(View.VISIBLE);
         mListContainer = (LinearLayout) view.findViewById(R.id.stats_list_container);
         mViewAll = (Button) view.findViewById(R.id.btnViewAll);
+        mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
 
         return view;
     }
@@ -160,6 +167,10 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         }
     }
 
+    protected boolean isSingleView() {
+        return getArguments().getBoolean(ARGS_IS_SINGLE_VIEW, false);
+    }
+
     private void configureViewAllButton() {
         if (isSingleView()) {
             // No view all button if you're already in single view
@@ -170,9 +181,38 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mViewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                lauchViewAllActivity(mDatamodel);
+                viewAllButtonAction(mDatamodel);
             }
         });
+    }
+
+    protected void viewAllButtonAction(Serializable restResponse) {
+        if (isSingleView()) {
+            return; // already in single view
+        }
+        AppLog.w(AppLog.T.STATS, "View All Tapped");
+
+        // Model cannot be null here
+        if (restResponse == null) {
+            return;
+        }
+
+        Intent viewAllIntent = new Intent(getActivity(), StatsViewAllActivity.class);
+        viewAllIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
+        viewAllIntent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, getTimeframe());
+        viewAllIntent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, getViewType().ordinal());
+        viewAllIntent.putExtra(StatsAbstractFragment.ARGS_START_DATE, getStartDate());
+        viewAllIntent.putExtra(ARGS_IS_SINGLE_VIEW, true);
+        viewAllIntent.putExtra(StatsAbstractFragment.ARG_REST_RESPONSE, restResponse);
+
+        if (mRadioGroup.getVisibility() == View.VISIBLE) {
+            int radioButtonID = mRadioGroup.getCheckedRadioButtonId();
+            View radioButton = mRadioGroup.findViewById(radioButtonID);
+            int idx = mRadioGroup.indexOfChild(radioButton);
+            viewAllIntent.putExtra(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX,idx);
+        }
+
+        getActivity().startActivity(viewAllIntent);
     }
 
     protected int getMaxNumberOfItemsToShowInList() {

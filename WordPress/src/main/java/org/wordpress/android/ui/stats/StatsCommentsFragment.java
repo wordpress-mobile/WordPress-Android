@@ -27,17 +27,12 @@ import java.util.List;
 public class StatsCommentsFragment extends StatsAbstractListFragment implements RadioGroup.OnCheckedChangeListener {
     public static final String TAG = StatsCommentsFragment.class.getSimpleName();
 
-    private RadioGroup mRadioGroup;
-
-    private static final String SELECTED_BUTTON_INDEX = "SELECTED_BUTTON_INDEX";
     private int mSelectedButtonIndex = 0;
     private static String totalLabel = "Total comment followers: ";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
-
 
         int dp8 = DisplayUtils.dpToPx(view.getContext(), 8);
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
@@ -77,16 +72,19 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             AppLog.d(AppLog.T.STATS, this.getTag() + " > restoring instance state");
-            if (savedInstanceState.containsKey(SELECTED_BUTTON_INDEX)) {
-                mSelectedButtonIndex = savedInstanceState.getInt(SELECTED_BUTTON_INDEX);
+            if (savedInstanceState.containsKey(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX)) {
+                mSelectedButtonIndex = savedInstanceState.getInt(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX);
             }
+        } else {
+            // first time it's created
+            mSelectedButtonIndex = getArguments().getInt(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, 0);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
-        outState.putInt(SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
+        outState.putInt(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
         super.onSaveInstanceState(outState);
     }
 
@@ -129,8 +127,8 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
         CommentsModel commentsModel = (CommentsModel) mDatamodel;
         ArrayAdapter adapter = null;
+        List<AuthorModel> authors = commentsModel.getAuthors();
         if (mSelectedButtonIndex == 0) {
-            List<AuthorModel> authors = commentsModel.getAuthors();
             if (authors != null && authors.size() > 0) {
                 adapter = new AuthorsAdapter(getActivity(), authors);
             }
@@ -141,14 +139,22 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
             }
         }
 
+        // calculate the total comment followers
+        int totalCommentFollowers = 0;
+        if (authors != null && authors.size() > 0) {
+            totalCommentFollowers = authors.size();
+        }
+
         if (adapter != null) {
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
-            mTotalsLabel.setText(totalLabel + commentsModel.getTotalComments());
+            mTotalsLabel.setText(totalLabel + totalCommentFollowers);
             showEmptyUI(false);
         } else {
             mTotalsLabel.setText(totalLabel + "0");
             showEmptyUI(true);
         }
+
+        mTotalsLabel.setVisibility(View.GONE); //FIXME : the API doesn't return the value
     }
 
     @Override

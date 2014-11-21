@@ -74,6 +74,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
     private StatsViewType mStatsViewType;
     private String mDate;
     private Serializable mRestResponse;
+    private int mOuterPagerSelectedButtonIndex = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,6 +118,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
             mDate = savedInstanceState.getString(StatsAbstractFragment.ARGS_START_DATE);
             int ordinal = savedInstanceState.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, -1);
             mStatsViewType = StatsViewType.values()[ordinal];
+            mOuterPagerSelectedButtonIndex = savedInstanceState.getInt(StatsAbstractListFragment.ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, -1);
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mLocalBlogID = extras.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
@@ -125,6 +127,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
             mRestResponse = extras.getSerializable(StatsAbstractFragment.ARG_REST_RESPONSE);
             int ordinal = extras.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, -1);
             mStatsViewType = StatsViewType.values()[ordinal];
+            mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, -1);
             refreshStats(); // refresh stats when launched for the first time
         }
 
@@ -133,9 +136,12 @@ public class StatsViewAllActivity extends WPActionBarActivity
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        fragment = getInnerFragment();
-        ft.replace(R.id.stats_single_view_fragment, fragment, "ViewAll-"+getInnerFragmentTAG());
-        ft.commit();
+
+        if (fm.findFragmentByTag("ViewAll-"+getInnerFragmentTAG()) == null) {
+            fragment = getInnerFragment();
+            ft.replace(R.id.stats_single_view_fragment, fragment, "ViewAll-"+getInnerFragmentTAG());
+            ft.commit();
+        }
     }
 
     private StatsAbstractListFragment getInnerFragment() {
@@ -177,14 +183,14 @@ public class StatsViewAllActivity extends WPActionBarActivity
         args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         args.putInt(StatsAbstractFragment.ARGS_VIEW_TYPE, mStatsViewType.ordinal());
         args.putSerializable(StatsAbstractFragment.ARGS_TIMEFRAME, mTimeframe);
-        args.putBoolean(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true); // Always true here
+        args.putBoolean(StatsAbstractListFragment.ARGS_IS_SINGLE_VIEW, true); // Always true here
         args.putString(StatsAbstractFragment.ARGS_START_DATE, mDate);
+        args.putInt(StatsAbstractListFragment.ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, mOuterPagerSelectedButtonIndex);
         fragment.setArguments(args);
         return fragment;
     }
 
     private String getInnerFragmentTAG() {
-        StatsAbstractListFragment fragment = null;
         switch (mStatsViewType) {
             case TOP_POSTS_AND_PAGES:
                 return StatsTopPostsAndPagesFragment.TAG;
@@ -217,6 +223,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
         outState.putSerializable(StatsAbstractFragment.ARGS_TIMEFRAME, mTimeframe);
         outState.putString(StatsAbstractFragment.ARGS_START_DATE, mDate);
         outState.putInt(StatsAbstractFragment.ARGS_VIEW_TYPE, mStatsViewType.ordinal());
+        outState.putInt(StatsAbstractListFragment.ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, mOuterPagerSelectedButtonIndex);
         super.onSaveInstanceState(outState);
     }
 
