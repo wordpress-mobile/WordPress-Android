@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_toast_err_generic">Kan ikke gjøre dette</string>
+	<string name="reader_toast_err_block_blog">Kan ikke blokkere denne bloggen</string>
+	<string name="reader_toast_blog_blocked">Innlegg fra denne bloggen vil ikke bli vist lenger.</string>
+	<string name="reader_menu_block_blog">Blokker denne bloggen.</string>
 	<string name="contact_us">Kontakt oss</string>
 	<string name="contact_us_pref_summary">Få hjelp fra Automattic-forum</string>
 	<string name="hs__conversation_detail_error">Beskriv problemet du opplever</string>
@@ -16,7 +20,7 @@
 	<string name="preference_privacy">Synlighet</string>
 	<string name="preference_send_usage_stats">Send statistikk</string>
 	<string name="preference_send_usage_stats_summary">Send automatisk brukerdata til å forbedre WordPress for Android</string>
-	<string name="reader_label_reached_last_post">Siste innlegg</string>
+	<string name="reader_title_reblog">Legg ut innlegg på nytt.</string>
 	<string name="reader_hint_reblog_comment">Skriv en kommentar (valgfritt)</string>
 	<string name="update_verb">Oppdater</string>
 	<string name="schedule_verb">Publiser</string>
@@ -44,8 +48,6 @@
 	<string name="media_edit_description_text">Beskrivelse</string>
 	<string name="media_edit_success">Oppdatert</string>
 	<string name="media_edit_failure">Oppdatering mislyktes</string>
-	<string name="confirm_delete_media">Er du sikker du vil slette dette media objektet?</string>
-	<string name="confirm_delete_multi_media">Er du sikker du vil slette disse element(ene)?</string>
 	<string name="themes_details_label">Detaljer</string>
 	<string name="theme_activate_button">Aktiver</string>
 	<string name="theme_activating_button">Aktiverer</string>
@@ -117,13 +119,10 @@
 	<string name="passcode_preference_title">Lås PIN</string>
 	<string name="passcode_turn_off">Slå av PIN-lås</string>
 	<string name="passcode_turn_on">Slå PIN-lås på</string>
-	<string name="remote_changes">Du har gjort endringer på et innlegg som ikke er lastet opp enda. Fortsette med oppfriskningen og overskrive dine lokale endringer?</string>
 	<string name="upload">Last opp</string>
 	<string name="manage">Håndter</string>
-	<string name="sign_out_confirm">Er du sikker på at du vil logge ut?</string>
 	<string name="sign_in">Logg inn</string>
 	<string name="sign_out">Logg ut</string>
-	<string name="attempting_configure">Logger inn...</string>
 	<string name="notifications">Varsler</string>
 	<string name="manage_notifications">Håndter varsler</string>
 	<string name="enable_notifications">Aktiver versler</string>
@@ -195,8 +194,6 @@
 	<string name="tags_separate_with_commas">Stikkord (separer flere stikkord med komma)</string>
 	<string name="categories">Kategorier</string>
 	<string name="tab_stats">Statistikk</string>
-	<string name="delete_sure_page">Er du sikker på at du vil slette denne siden</string>
-	<string name="delete_sure_post">Er du sikker på at du vil slette dette innlegget</string>
 	<string name="notification_sound">Spill av meldingslyd</string>
 	<string name="notification_vibrate">Vibrer</string>
 	<string name="notification_blink">Blinkende varsler</string>
@@ -208,11 +205,9 @@
 	<string name="delete">Slett</string>
 	<string name="none">Ingen</string>
 	<string name="blogs">Blogger</string>
-	<string name="sure_to_remove_account">Er du sikker på at du vil fjerne denne bloggen?</string>
 	<string name="select_photo">Velg et foto fra galleriet</string>
 	<string name="yes">Ja</string>
 	<string name="reply">Svar</string>
-	<string name="delete_sure">Er du sikker på at du vil slette dette utkastet</string>
 	<string name="on">på</string>
 	<string name="preview">Forhåndsvisning</string>
 	<string name="tab_comments">Kommentarer</string>

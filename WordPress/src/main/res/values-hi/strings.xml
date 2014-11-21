@@ -20,8 +20,6 @@
 	<string name="preference_privacy">गोपनीयता</string>
 	<string name="preference_send_usage_stats">आंकड़े भेजें</string>
 	<string name="preference_send_usage_stats_summary">स्वचालित रूप से उपयोग के आंकड़े भेज कर हमें एंड्रॉयड के लिए वर्डप्रेस को बेहतर बनाने में मदद करे\n\n</string>
-	<string name="reader_label_reached_last_post">आप अंत तक पहुंच गए हैं</string>
-	<string name="reader_label_tap_to_dismiss">हटाने के लिए थपथपाये</string>
 	<string name="reader_hint_reblog_comment">अपने विचारों को जोड़ें (वैकल्पिक)</string>
 	<string name="reader_title_reblog">पोस्ट को फिर से ब्लॉग करे</string>
 	<string name="reader_label_reblog_to">फिर से ब्लॉग करे</string>
@@ -66,8 +64,6 @@
 	<string name="ssl_certificate_trust">भरोसा</string>
 	<string name="wpcom_signin_dialog_title">वर्डप्रेस डॉट कॉम साइन इन</string>
 	<string name="load_settings">आप सेटिंग में जाएं और वहां अपना उपयोक्तानाम और कूटशब्द बदल सकते हैं.</string>
-	<string name="nux_help_description">सामान्य प्रश्नों के उत्तर पाने के लिए सहायता केंद्र पर जाएं या नए प्रश्न को पूछने के लिए फोरम पर जाएँ</string>
-	<string name="username_or_password_incorrect_selfhosted_hint">आपने जो कूटशब्द या  उपयोगकर्ता  दर्ज किया है वो गलत है.स्वयं से होस्ट साइट है ? "%s" को थपथपाये और यूआरएल जोड़े.</string>
 	<string name="ptr_tip_message">सुझाव: रिफ्रेश करने के लिए नीचे खींचे</string>
 	<string name="jetpack_stats_switch_user">वर्तमान वर्डप्रेस डॉट कॉम खाता (%s)  को इस ब्लॉग के आँकड़े तक पहुँच नहीं है. आप एक अलग खाते में साइन इन करना चाहेंगे?</string>
 	<string name="help_center">सहायता केंद्र</string>
@@ -91,11 +87,9 @@
 	<string name="error_downloading_image">छवि डाउनलोड करते समय त्रुटि </string>
 	<string name="comments_empty_list">कोई टिप्पणी नहीं</string>
 	<string name="stats_empty_comments">अभी तक कोई टिप्पणी नहीं</string>
-	<string name="media_empty_list_custom_date">इस समय अन्तराल में कोई मीडिया नहीं</string>
 	<string name="notifications_empty_list">कोई सूचनाएं नहीं</string>
 	<string name="stats_empty_geoviews">कोई पोस्ट देखा नहीं गया</string>
 	<string name="stats_empty_top_authors">पोस्ट नहीं देखे गए</string>
-	<string name="reader_empty_posts_in_tag">इस टैग के साथ कोई पोस्ट नहीं</string>
 	<string name="mnu_comment_unspam">स्पैम नहीं</string>
 	<string name="invalid_password_message">कूटशब्द कम से कम 4 अक्षर का चाहिए</string>
 	<string name="no_network_message">नेटवर्क उपलब्ध नहीं है </string>
@@ -103,13 +97,10 @@
 	<string name="stats_bar_graph_empty">कोई आंकड़े उपलब्ध नहीं</string>
 	<string name="invalid_email_message">आपका ईमेल पता मान्य नहीं है</string>
 	<string name="adding_cat_failed">श्रेणी जोड़ना असफल हुआ</string>
-	<string name="reader_empty_followed_blogs_title">आप किसी भी ब्लॉग का अनुसरण नहीं कर रहे है </string>
 	<string name="reply_failed">जवाब असफल हुआ</string>
 	<string name="nux_cannot_log_in">हम लॉग इन नहीं कर सकते</string>
 	<string name="error_load_comment">टिप्पणी लोड नहीं हो सका</string>
 	<string name="theme_set_failed">थीम को सेट करने में असफल</string>
-	<string name="reader_empty_posts_liked">आपने किसी पोस्ट को लिखे पसंद नहीं किया है</string>
-	<string name="reader_empty_followed_tags">आप किसी भी टैग का अनुसरण नहीं करते</string>
 	<string name="passcode_wrong_passcode">गलत पिन</string>
 	<string name="wait_until_upload_completes">अपलोड पूर्ण होने तक प्रतीक्षा करे</string>
 	<string name="username_not_allowed">उपयोगकर्ता नाम की अनुमति नहीं</string>
@@ -153,7 +144,6 @@
 	<string name="error_moderate_comment">मध्यस्थता करते हुए त्रुटि हुई</string>
 	<string name="stats_empty_video">अभी तक कोई भी विडियो चलाया नहीं गया है</string>
 	<string name="no_account">कोई वर्डप्रेस खाता नहीं है,एक खाता जोड़े और फिर से प्रयास करे</string>
-	<string name="agree_terms_of_service">खाता बनाते हुए आप आकर्षक %1$sTसेवा की शर्तें%2$s से सहमत है</string>
 	<string name="auto_sharing_preference_reset_caused_by_error">पहले चयनित ब्लॉग अब नहीं दिख रहा है</string>
 	<string name="auto_sharing_preference_reset">स्वत: साझा सेटिंग रीसेट करें</string>
 	<string name="sdcard_message">मीडिया अपलोड करने के लिए एक माउंटेड एसडी कार्ड की आवश्यकता है</string>
@@ -186,7 +176,6 @@
 	<string name="media_gallery_settings_title">गैलरी सेटिंग्स</string>
 	<string name="category_desc">श्रेणी विवरण (वैकल्पिक)</string>
 	<string name="create_a_link">एक कड़ी बनाएं</string>
-	<string name="create_new_blog_wpcom">वर्डप्रेस डॉट कॉम का ब्लॉग बनाएं</string>
 	<string name="hide_all">सभी छुपाएं</string>
 	<string name="media_gallery_image_order">छवि के क्रम</string>
 	<string name="image_settings">छवि सेटिंग्स</string>
@@ -240,7 +229,6 @@
 	<string name="media_error_no_permission">आपको मीडिया समूह देखने की अनुमति नहीं है</string>
 	<string name="wpcom_blogs">वर्डप्रेस डॉट कॉम के ब्लॉगस</string>
 	<string name="stats_view_top_posts_and_pages">शीर्ष पोस्ट और पृष्ठे</string>
-	<string name="select_a_blog">एक ब्लॉग को चुने </string>
 	<string name="reader_toast_err_reblog_requires_blog">एक ब्लॉग को चुने </string>
 	<string name="select_categories">श्रेणियों को चुने</string>
 	<string name="share_action_media">मीडिया संग्रह</string>
@@ -268,8 +256,6 @@
 	<string name="stats_visitors_and_views_header_best_ever">सर्वश्रेष्ठ</string>
 	<string name="local_changes">स्थानीय परिवर्तन</string>
 	<string name="local_draft">स्थानीय प्रारूप</string>
-	<string name="pages_empty_list">अभी कोई पृष्ठ नहीं.क्यों नहीं एक जोड़े? </string>
-	<string name="posts_empty_list">अभी कोई पोस्ट नहीं. क्यों नहीं एक जोड़े?</string>
 	<string name="stats_view_search_engine_terms">खोज इंजन के शब्द</string>
 	<string name="category_parent">श्रेणी जनक (वैकल्पिक):</string>
 	<string name="category_slug">श्रेणी स्लग (वैकल्पिक)</string>
@@ -296,7 +282,6 @@
 	<string name="share_url_post">पोस्ट साझा करे</string>
 	<string name="creating_your_account">आपका खाता बनाया जा रहा</string>
 	<string name="creating_your_site">आपकी साइट बनाया जा रहा</string>
-	<string name="create_account_wpcom">वर्डप्रेस डॉट कॉम पर एक खाता बनाएं</string>
 	<string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा...</string>
 	<string name="error_refresh_media">मीडिया लाइब्रेरी को रिफ्रेश करते समय कुछ गलत हो गया. बाद में पुन: प्रयास करें.</string>
 	<string name="video">वीडियो</string>
@@ -311,7 +296,6 @@
 	<string name="share_preference_title">वर्डप्रेस पर साझा करे</string>
 	<string name="cant_share_no_visible_blog"> आप एक प्रत्यक्ष ब्लॉग के बिना वर्डप्रेस में साझा नहीं कर सकते</string>
 	<string name="reset_auto_share_preference">स्वत: साझा सेटिंग रीसेट करें</string>
-	<string name="reader_empty_followed_blogs_description">खोज शुरू करने के लिए टैग आइकॉन पर टैप करे,चिंता नहीं करे!</string>
 	<string name="reader_toast_err_get_post">इस संदेश को पुनः प्राप्त में असमर्थ</string>
 	<string name="reader_likes_you_and_one">आपने और एक और ने इसे पसंद किया है</string>
 	<string name="validating_user_data">उपयोगकर्ता डेटा को सत्यापित किया जा रहा</string>
@@ -403,8 +387,6 @@
 	<string name="media_gallery_image_order_random">क्रमरहित</string>
 	<string name="stats_timeframe_weeks">सप्ताह</string>
 	<string name="stats_timeframe_yesterday">कल</string>
-	<string name="confirm_delete_media">क्या आप इस मीडिया आइटम हटाना चाहते हैं?</string>
-	<string name="confirm_delete_multi_media">क्या आप इन आइटम(स) को मिटाना चाहते हैं?</string>
 	<string name="stats_totals_followers_shares_header_followers">प्रशंसक</string>
 	<string name="media_edit_success">अपडेट किया गया</string>
 	<string name="stats_comments_summary_footer">* सबसे नये 1000 टिप्पणियो के आधार पर</string>
@@ -455,12 +437,10 @@
 	<string name="passcode_manage">पिन का प्रबंधन करे</string>
 	<string name="passcode_preference_title">पिन लॉक</string>
 	<string name="media_gallery_type_tiled">टाइल किया हुआ</string>
-	<string name="remote_changes">आपने जिस पोस्ट में परिवर्तन किया है वह अभी अपलोड नहीं किया गया है.रिफ्रेश करे और स्थानीय परिवर्तन को अधिलेखित करें</string>
 	<string name="upload">अपलोड</string>
 	<string name="manage">प्रबंधन</string>
 	<string name="notifications">सूचनाएं</string>
 	<string name="options">विकल्प</string>
-	<string name="sign_out_confirm">क्या आप साइन आउट होना चाहते हैं?</string>
 	<string name="enable_notifications">सूचनाएं सक्रिय करे </string>
 	<string name="tooltip_follow">इस ब्लॉग का अनुसरण करे या अनुसरण न करे</string>
 	<string name="note_reply_successful">जवाब प्रकाशित हो गया</string>
@@ -473,7 +453,6 @@
 	<string name="sign_in">साइन इन</string>
 	<string name="sign_out">साइन आउट</string>
 	<string name="manage_notifications">सूचनाएं का प्रबंधन</string>
-	<string name="attempting_configure">साइन इन किया जा रहा...</string>
 	<string name="loading">लोड किया जा रहा...</string>
 	<string name="httppassword">एचटीटीपी कूटशब्द</string>
 	<string name="httpuser">एचटीटीपी उपयोगकर्ता नाम</string>
@@ -533,8 +512,6 @@
 	<string name="title">शीर्षक</string>
 	<string name="tags_separate_with_commas">टैग (अल्पविराम से अलग किये जाये टैग)</string>
 	<string name="tab_stats">आँकड़े</string>
-	<string name="delete_sure_post">क्या आप पोस्ट हटाना चाहते हैं</string>
-	<string name="delete_sure_page">क्या आप पेज हटाना चाहते हैं</string>
 	<string name="notification_vibrate">वाइब्रेट</string>
 	<string name="notification_blink">ब्लिंक सुचना का प्रकाश </string>
 	<string name="notification_sound">सूचना ध्वनि चलाएं</string>
@@ -546,7 +523,6 @@
 	<string name="delete">हटाये</string>
 	<string name="none">कुछ भी नहीं</string>
 	<string name="blogs">ब्लॉग</string>
-	<string name="sure_to_remove_account">क्या आप इस ब्लॉग को हटाना चाहते हैं?</string>
 	<string name="select_photo">गैलरी से एक तस्वीर को चुने </string>
 	<string name="add"> जोड़े</string>
 	<string name="tab_comments">टिप्पणियां</string>
@@ -558,7 +534,6 @@
 	<string name="reply">जवाब दें</string>
 	<string name="save">सहेजें</string>
 	<string name="yes">हां</string>
-	<string name="delete_sure">क्या आप प्रारूप हटाना चाहते हैं</string>
 	<string name="category_refresh_error">श्रेणी रिफ्रेश त्रुटि</string>
 	<string-array name="alignment_array">
 		<item>कुछ भी नहीं</item>
