@@ -157,8 +157,8 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
                     int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
-                    if (backStackEntryCount == 0) {
-                        setTitle(R.string.notifications);
+                    if (getSupportActionBar() != null && backStackEntryCount == 0) {
+                        getSupportActionBar().setTitle(R.string.notifications);
                     }
                     if (getDrawerToggle() != null) {
                         getDrawerToggle().setDrawerIndicatorEnabled(backStackEntryCount == 0);
@@ -270,8 +270,8 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
         ft.commitAllowingStateLoss();
 
         // Update title
-        if (note.getFormattedSubject() != null) {
-            setTitle(note.getTitle());
+        if (getSupportActionBar() != null && note.getFormattedSubject() != null) {
+            getSupportActionBar().setTitle(note.getTitle());
         }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
