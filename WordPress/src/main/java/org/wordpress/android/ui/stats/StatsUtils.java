@@ -19,13 +19,19 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-/**
- * A utility class to help with date parsing and saving summaries in stats
- */
 public class StatsUtils {
 
     @SuppressLint("SimpleDateFormat")
     public static long toMs(String date, String pattern) {
+        if (date == null) {
+            AppLog.w(T.UTILS, "Trying to parse a null date");
+            return -1;
+        }
+        if (pattern == null) {
+            AppLog.w(T.UTILS, "Trying to parse with a null pattern");
+            return -1;
+        }
+
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         try {
             return sdf.parse(date).getTime();

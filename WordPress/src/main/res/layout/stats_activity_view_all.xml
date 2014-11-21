@@ -18,6 +18,13 @@
             android:paddingBottom="@dimen/margin_medium"
             android:orientation="vertical">
 
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/stats_summary_date"
+                android:textAppearance="?android:attr/textAppearance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Date"/>
+
             <FrameLayout
                 android:id="@+id/stats_single_view_fragment"
                 android:layout_width="match_parent"

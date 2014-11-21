@@ -27,15 +27,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="6dp"
-            android:orientation="vertical"
+            android:orientation="horizontal"
+            android:gravity="center|top"
             android:visibility="gone" >
         </RadioGroup>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_summary_date"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="Date"/>
 
     </LinearLayout>

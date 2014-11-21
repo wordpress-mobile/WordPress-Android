@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class VisitModel implements Serializable {
 
     private int mViews;
-    private int mReblogs;
     private int mLikes;
     private int mVisitors;
     private int mComments;
@@ -26,14 +25,6 @@ public class VisitModel implements Serializable {
 
     public void setViews(int views) {
         this.mViews = views;
-    }
-
-    public int getReblogs() {
-        return mReblogs;
-    }
-
-    public void setReblogs(int reblogs) {
-        this.mReblogs = reblogs;
     }
 
     public int getLikes() {

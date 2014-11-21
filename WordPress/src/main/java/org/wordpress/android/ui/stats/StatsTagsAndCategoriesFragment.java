@@ -8,6 +8,7 @@ import android.widget.BaseExpandableListAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.TagModel;
+import org.wordpress.android.ui.stats.model.TagsContainerModel;
 import org.wordpress.android.ui.stats.model.TagsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
@@ -19,8 +20,9 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodel != null && ((List<TagsModel>) mDatamodel).size() > 0) {
-            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((List<TagsModel>)mDatamodel));
+        if (mDatamodel != null && ((TagsContainerModel) mDatamodel).getTags() != null
+                && (((TagsContainerModel) mDatamodel).getTags()).size() > 0) {
+            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((TagsContainerModel) mDatamodel).getTags());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
@@ -30,7 +32,8 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return mDatamodel != null && ((List<TagsModel>) mDatamodel).size() > 10;
+        return mDatamodel != null && ((TagsContainerModel) mDatamodel).getTags() != null
+                && (((TagsContainerModel) mDatamodel).getTags()).size() > 10;
     }
 
     @Override

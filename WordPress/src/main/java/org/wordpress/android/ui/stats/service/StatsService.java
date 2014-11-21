@@ -25,8 +25,10 @@ import org.wordpress.android.ui.stats.model.CommentFollowersModel;
 import org.wordpress.android.ui.stats.model.CommentsModel;
 import org.wordpress.android.ui.stats.model.FollowersModel;
 import org.wordpress.android.ui.stats.model.GeoviewsModel;
+import org.wordpress.android.ui.stats.model.PublicizeModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
 import org.wordpress.android.ui.stats.model.SingleItemModel;
+import org.wordpress.android.ui.stats.model.TagsContainerModel;
 import org.wordpress.android.ui.stats.model.TagsModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.model.VideoPlaysModel;
@@ -373,32 +375,10 @@ public class StatsService extends Service {
                     model = new CommentFollowersModel(mRequestBlogId, response);
                     break;
                 case TAGS_AND_CATEGORIES:
-                    JSONArray outerTags = response.getJSONArray("tags");
-                    if (outerTags == null) {
-                        break;
-                    }
-                    ArrayList<TagsModel> tagsParsed = new ArrayList<TagsModel>(outerTags.length());
-                    for (int i = 0; i < outerTags.length(); i++) {
-                        JSONObject current = outerTags.getJSONObject(i);
-                        tagsParsed.add(new TagsModel(mRequestBlogId, current));
-                    }
-                    model = tagsParsed;
+                    model = new TagsContainerModel(mRequestBlogId, response);
                     break;
                 case PUBLICIZE:
-                    JSONArray services = response.getJSONArray("services");
-                    if (services == null || services.length() == 0) {
-                        break;
-                    }
-                    ArrayList<SingleItemModel> servicesParsed = new ArrayList<SingleItemModel>(services.length());
-                    for (int i = 0; i < services.length(); i++) {
-                        JSONObject current = services.getJSONObject(i);
-                        String serviceName = current.getString("service");
-                        int followers = current.getInt("followers");
-                        SingleItemModel currentItem = new SingleItemModel(mRequestBlogId, mServiceRequestedDate,
-                                null, serviceName, followers, null, null);
-                        servicesParsed.add(currentItem);
-                    }
-                    model = servicesParsed;
+                    model = new PublicizeModel(mRequestBlogId, response);
                     break;
             }
             return model;

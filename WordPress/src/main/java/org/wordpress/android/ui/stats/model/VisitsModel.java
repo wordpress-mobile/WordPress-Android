@@ -57,7 +57,6 @@ public class VisitsModel implements Serializable {
             int viewsColumnIndex = columnsMapping.get("views");
             int visitorsColumnIndex = columnsMapping.get("visitors");
             int likesColumnIndex = columnsMapping.get("likes");
-            int reblogsColumnIndex = columnsMapping.get("reblogs");
             int commentsColumnIndex = columnsMapping.get("comments");
             int periodColumnIndex = columnsMapping.get("period");
 
@@ -73,7 +72,6 @@ public class VisitsModel implements Serializable {
                     currentVisitModel.setVisitors(currentDayData.getInt(visitorsColumnIndex));
                     currentVisitModel.setComments(currentDayData.getInt(commentsColumnIndex));
                     currentVisitModel.setLikes(currentDayData.getInt(likesColumnIndex));
-                    currentVisitModel.setReblogs(currentDayData.getInt(reblogsColumnIndex));
                     mVisits.add(currentVisitModel);
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.STATS, "Cannot read the Visit item at index " + i

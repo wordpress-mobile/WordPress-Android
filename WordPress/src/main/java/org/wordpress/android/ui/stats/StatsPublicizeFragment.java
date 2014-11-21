@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.stats.model.PublicizeModel;
 import org.wordpress.android.ui.stats.model.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
@@ -20,8 +21,9 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodel != null && ((List<SingleItemModel>) mDatamodel).size() > 0) {
-            List<SingleItemModel> publicizeItems = ((List<SingleItemModel>) mDatamodel);
+        if (mDatamodel != null && ((PublicizeModel)mDatamodel).getServices() != null
+                && ((PublicizeModel)mDatamodel).getServices().size() > 0) {
+            List<SingleItemModel> publicizeItems = ((PublicizeModel)mDatamodel).getServices();
             ArrayAdapter adapter = new PublicizeAdapter(getActivity(), publicizeItems);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);

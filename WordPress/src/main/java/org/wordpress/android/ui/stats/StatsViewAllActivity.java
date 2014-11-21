@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -25,14 +26,17 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.accounts.AbstractFragment;
 import org.wordpress.android.ui.stats.model.AuthorsModel;
 import org.wordpress.android.ui.stats.model.ClicksModel;
 import org.wordpress.android.ui.stats.model.CommentFollowersModel;
 import org.wordpress.android.ui.stats.model.CommentsModel;
 import org.wordpress.android.ui.stats.model.FollowersModel;
 import org.wordpress.android.ui.stats.model.GeoviewsModel;
+import org.wordpress.android.ui.stats.model.PublicizeModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
 import org.wordpress.android.ui.stats.model.SingleItemModel;
+import org.wordpress.android.ui.stats.model.TagsContainerModel;
 import org.wordpress.android.ui.stats.model.TagsModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.model.VideoPlaysModel;
@@ -124,10 +128,13 @@ public class StatsViewAllActivity extends WPActionBarActivity
             refreshStats(); // refresh stats when launched for the first time
         }
 
+        TextView dateTextView = (TextView) findViewById(R.id.stats_summary_date);
+        dateTextView.setText(StatsUIHelper.getDateForDisplayInLabels(mDate, mTimeframe));
+
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         fragment = getInnerFragment();
-        ft.replace(R.id.stats_single_view_fragment, fragment, fragment.TAG);
+        ft.replace(R.id.stats_single_view_fragment, fragment, "ViewAll-"+getInnerFragmentTAG());
         ft.commit();
     }
 
@@ -176,6 +183,32 @@ public class StatsViewAllActivity extends WPActionBarActivity
         return fragment;
     }
 
+    private String getInnerFragmentTAG() {
+        StatsAbstractListFragment fragment = null;
+        switch (mStatsViewType) {
+            case TOP_POSTS_AND_PAGES:
+                return StatsTopPostsAndPagesFragment.TAG;
+            case REFERRERS:
+                return StatsReferrersFragment.TAG;
+            case CLICKS:
+                return StatsClicksFragment.TAG;
+            case GEOVIEWS:
+                return StatsGeoviewsFragment.TAG;
+            case AUTHORS:
+                return StatsAuthorsFragment.TAG;
+            case VIDEO_PLAYS:
+                return StatsVideoplaysFragment.TAG;
+            case COMMENTS:
+                return StatsCommentsFragment.TAG;
+            case TAGS_AND_CATEGORIES:
+                return StatsTagsAndCategoriesFragment.TAG;
+            case PUBLICIZE:
+                return StatsPublicizeFragment.TAG;
+            case FOLLOWERS:
+                return StatsFollowersFragment.TAG;
+        }
+        return StatsAbstractFragment.TAG;
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -399,32 +432,10 @@ public class StatsViewAllActivity extends WPActionBarActivity
                     model = new CommentFollowersModel(mRequestBlogId, response);
                     break;
                 case TAGS_AND_CATEGORIES:
-                    JSONArray outerTags = response.getJSONArray("tags");
-                    if (outerTags == null) {
-                        break;
-                    }
-                    ArrayList<TagsModel> tagsParsed = new ArrayList<TagsModel>(outerTags.length());
-                    for (int i = 0; i < outerTags.length(); i++) {
-                        JSONObject current = outerTags.getJSONObject(i);
-                        tagsParsed.add(new TagsModel(mRequestBlogId, current));
-                    }
-                    model = tagsParsed;
+                    model = new TagsContainerModel(mRequestBlogId, response);
                     break;
                 case PUBLICIZE:
-                    JSONArray services = response.getJSONArray("services");
-                    if (services == null || services.length() == 0) {
-                        break;
-                    }
-                    ArrayList<SingleItemModel> servicesParsed = new ArrayList<SingleItemModel>(services.length());
-                    for (int i = 0; i < services.length(); i++) {
-                        JSONObject current = services.getJSONObject(i);
-                        String serviceName = current.getString("service");
-                        int followers = current.getInt("followers");
-                        SingleItemModel currentItem = new SingleItemModel(mRequestBlogId, mDate,
-                                null, serviceName, followers, null, null);
-                        servicesParsed.add(currentItem);
-                    }
-                    model = servicesParsed;
+                    model = new PublicizeModel(mRequestBlogId, response);
                     break;
             }
             return model;

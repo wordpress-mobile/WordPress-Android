@@ -57,7 +57,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private OnDateChangeListener mListener;
 
     OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
-            OverviewLabel.REBLOGS, OverviewLabel.COMMENTS};
+            OverviewLabel.COMMENTS};
 
     // Restore the following variables on restart
     private VisitsModel mVisitsData;
@@ -89,6 +89,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         int dp8 = DisplayUtils.dpToPx(view.getContext(), 8);
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
+        int dp44 = DisplayUtils.dpToPx(view.getContext(), 44);
 
         for (int i = 0; i < overviewItems.length; i++) {
             RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
@@ -96,8 +97,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     RadioGroup.LayoutParams.WRAP_CONTENT);
             rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
 
-            params.setMargins(0, dp8, 0, 0);
-            rb.setMinimumWidth(dp80);
+            params.setMargins(0, dp8, dp8, 0);
+            rb.setMinimumWidth(dp44);
             rb.setGravity(Gravity.CENTER);
             rb.setLayoutParams(params);
             rb.setText(overviewItems[i].getLabel());
@@ -219,9 +220,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 case VISITORS:
                     currentItemValue = dataToShowOnGraph[i].getVisitors();
                     break;
-                case REBLOGS:
-                    currentItemValue = dataToShowOnGraph[i].getReblogs();
-                    break;
                 case LIKES:
                     currentItemValue = dataToShowOnGraph[i].getLikes();
                     break;
@@ -232,7 +230,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             views[i] = new GraphView.GraphViewData(i, currentItemValue);
 
             String currentItemStatsDate = dataToShowOnGraph[i].getPeriod();
-            horLabels[i] = getDateLabel(currentItemStatsDate);
+            horLabels[i] = getDateLabelForBarInGraph(currentItemStatsDate);
             mStatsDate[i] = currentItemStatsDate;
         }
 
@@ -272,44 +270,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
-        switch (getTimeframe()) {
-            case DAY:
-                mDateTextView.setText(StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM d"));
-                break;
-            case WEEK:
-                try {
-                    SimpleDateFormat sdf;
-                    Calendar c;
-                    final Date parsedDate;
-                    // first four digits are the year
-                    // followed by Wxx where xx is the month
-                    // followed by Wxx where xx is the day of the month
-                    // ex: 2013W07W22 = July 22, 2013
-                    sdf = new SimpleDateFormat("yyyy'W'MM'W'dd");
-                    //Calculate the end of the week
-                    parsedDate = sdf.parse(date);
-                    c = Calendar.getInstance();
-                    c.setTime(parsedDate);
-                    // first day of this week
-                    c.setFirstDayOfWeek(Calendar.MONDAY);
-                    c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY );
-                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
-                    // last day of this week
-                    c.add(Calendar.DAY_OF_WEEK, + 6);
-                    String endDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
-                    mDateTextView.setText(startDateLabel + " - " + endDateLabel);
-                } catch (ParseException e) {
-                    AppLog.e(AppLog.T.UTILS, e);
-                    mDateTextView.setText("");
-                }
-                break;
-            case MONTH:
-                mDateTextView.setText(StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM"));
-                break;
-            case YEAR:
-                mDateTextView.setText(StatsUtils.parseDate(date, "yyyy-MM-dd", "yyyy"));
-                break;
-        }
+        mDateTextView.setText(StatsUIHelper.getDateForDisplayInLabels(date, getTimeframe()));
 
         VisitModel modelTapped = dataToShowOnGraph[itemPosition];
         for (int i=0 ; i < mRadioGroup.getChildCount(); i++) {
@@ -322,27 +283,26 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
                 switch (overviewItem) {
                     case VIEWS:
-                        currentBtm.setText(overviewItem.getLabel() + " - " +  modelTapped.getViews());
+                        currentBtm.setText(overviewItem.getLabel() + "\n" +  modelTapped.getViews());
                         break;
                     case VISITORS:
-                        currentBtm.setText(overviewItem.getLabel() + " - " +  modelTapped.getVisitors());
-                        break;
-                    case REBLOGS:
-                        currentBtm.setText(overviewItem.getLabel() + " - " +  modelTapped.getReblogs());
+                        currentBtm.setText(overviewItem.getLabel() + "\n" +  modelTapped.getVisitors());
                         break;
                     case LIKES:
-                        currentBtm.setText(overviewItem.getLabel() + " - " +  modelTapped.getLikes());
+                        currentBtm.setText(overviewItem.getLabel() + "\n" +  modelTapped.getLikes());
                         break;
                     case COMMENTS:
-                        currentBtm.setText(overviewItem.getLabel() + " - " +  modelTapped.getComments());
+                        currentBtm.setText(overviewItem.getLabel() + "\n" +  modelTapped.getComments());
                         break;
                 }
             }
         }
     }
 
-
-    private String getDateLabel(String dateToFormat) {
+    /**
+     * Return the date string that is displayed under each bar in the graph
+     */
+    private String getDateLabelForBarInGraph(String dateToFormat) {
         switch (getTimeframe()) {
             case DAY:
                 return StatsUtils.parseDate(dateToFormat, "yyyy-MM-dd", "MMM d");
@@ -388,19 +348,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
                 switch (overviewItem) {
                     case VIEWS:
-                        currentBtm.setText(overviewItem.getLabel() + " - " +  0);
+                        currentBtm.setText(overviewItem.getLabel() + "\n" +  0);
                         break;
                     case VISITORS:
-                        currentBtm.setText(overviewItem.getLabel() + " - " + 0);
-                        break;
-                    case REBLOGS:
-                        currentBtm.setText(overviewItem.getLabel() + " - " +  0);
+                        currentBtm.setText(overviewItem.getLabel() + "\n" + 0);
                         break;
                     case LIKES:
-                        currentBtm.setText(overviewItem.getLabel() + " - " +  0);
+                        currentBtm.setText(overviewItem.getLabel() + "\n" +  0);
                         break;
                     case COMMENTS:
-                        currentBtm.setText(overviewItem.getLabel() + " - " +  0);
+                        currentBtm.setText(overviewItem.getLabel() + "\n" +  0);
                         break;
                 }
             }
@@ -562,7 +519,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         VIEWS(R.string.stats_views),
         VISITORS(R.string.stats_visitors),
         LIKES(R.string.stats_likes),
-        REBLOGS(R.string.stats_reblogs),
         COMMENTS(R.string.stats_comments),
         ;
 
