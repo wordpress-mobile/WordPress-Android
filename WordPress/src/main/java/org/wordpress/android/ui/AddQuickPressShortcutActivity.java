@@ -210,8 +210,6 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                 view = (RelativeLayout)inflater.inflate(R.layout.home_row, parent, false);
             }
             String username = accountUsers[position];
-            view.setBackgroundDrawable(getResources().getDrawable(
-                    R.drawable.list_bg_selector));
             view.setId(Integer.valueOf(accountIDs[position]));
 
             TextView blogName = (TextView)view.findViewById(R.id.blogName);
