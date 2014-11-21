@@ -286,7 +286,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleFollow(holder, position, post);
+                    toggleFollow(holder, position);
                 }
             });
 
@@ -363,7 +363,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.likeCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleLike(v.getContext(), holder, position, post);
+                    toggleLike(v.getContext(), holder, position);
                 }
             });
         } else {
@@ -500,7 +500,12 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * triggered when user taps the like button (textView)
      */
-    private void toggleLike(Context context, PostViewHolder holder, int position, ReaderPost post) {
+    private void toggleLike(Context context, PostViewHolder holder, int position) {
+        ReaderPost post = (ReaderPost) getItem(position);
+        if (post == null) {
+            return;
+        }
+
         boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
         boolean isAskingToLike = !isCurrentlyLiked;
         ReaderAnim.animateLikeButton(holder.likeCount.getImageView(), isAskingToLike);
@@ -524,7 +529,12 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * triggered when user taps the follow button
      */
-    private void toggleFollow(final PostViewHolder holder, int position, ReaderPost post) {
+    private void toggleFollow(final PostViewHolder holder, int position) {
+        ReaderPost post = (ReaderPost) getItem(position);
+        if (post == null) {
+            return;
+        }
+
         ReaderAnim.animateFollowButton(holder.txtFollow);
         final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
 
