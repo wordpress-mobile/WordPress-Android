@@ -7,19 +7,12 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.NotificationsConstants;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
  * A block that displays information about a User (such as a user that liked a post)
@@ -93,7 +86,7 @@ public class UserNoteBlock extends NoteBlock {
 
         if (hasImageMediaItem()) {
             String imageUrl = PhotonUtils.fixAvatar(getNoteMediaItem().optString("url", ""), getAvatarSize());
-            noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WordPress.imageLoader);
+            noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
                 noteBlockHolder.rootView.setBackgroundResource(R.drawable.notifications_header_selector);
@@ -128,14 +121,14 @@ public class UserNoteBlock extends NoteBlock {
         private final TextView nameTextView;
         private final TextView urlTextView;
         private final TextView taglineTextView;
-        private final NetworkImageView avatarImageView;
+        private final WPNetworkImageView avatarImageView;
 
         public UserActionNoteBlockHolder(View view) {
             rootView = view.findViewById(R.id.user_block_root_view);
             nameTextView = (TextView)view.findViewById(R.id.user_name);
             urlTextView = (TextView)view.findViewById(R.id.user_blog_url);
             taglineTextView = (TextView)view.findViewById(R.id.user_blog_tagline);
-            avatarImageView = (NetworkImageView)view.findViewById(R.id.user_avatar);
+            avatarImageView = (WPNetworkImageView)view.findViewById(R.id.user_avatar);
         }
     }
 

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_grey">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background_grey">
 
     <FrameLayout
         android:id="@+id/media_filter_spinner_container"
@@ -37,7 +38,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/media_filter_result_text">
 
-        <org.wordpress.android.ui.MultiSelectGridView
+        <GridView
             android:id="@+id/media_gridview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,8 +46,10 @@
             android:numColumns="@integer/media_grid_num_columns"
             android:scrollbarStyle="outsideOverlay"
             android:stretchMode="columnWidth"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
+            android:verticalSpacing="@dimen/margin_small"
+            android:horizontalSpacing="@dimen/margin_small"
             android:visibility="gone"/>
 
         <LinearLayout
@@ -65,7 +68,8 @@
                 android:text="@string/media_empty_list_custom_date"
                 android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
                 android:layout_marginLeft="@dimen/empty_list_title_side_margin"
-                android:layout_marginRight="@dimen/empty_list_title_side_margin" />
+                android:layout_marginRight="@dimen/empty_list_title_side_margin"
+                app:fixWidowWords="true"/>
 
         </LinearLayout>
 

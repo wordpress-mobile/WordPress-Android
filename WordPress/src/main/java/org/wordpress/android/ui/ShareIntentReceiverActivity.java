@@ -17,7 +17,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.BlogUtils;
@@ -119,7 +119,7 @@ public class ShareIntentReceiverActivity extends Activity implements OnItemSelec
         // visible
         if (!WordPress.isSignedIn(getBaseContext())) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
-            startActivity(new Intent(this, WelcomeActivity.class));
+            startActivity(new Intent(this, SignInActivity.class));
             finish();
         } else {
             ToastUtils.showToast(getBaseContext(), R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);

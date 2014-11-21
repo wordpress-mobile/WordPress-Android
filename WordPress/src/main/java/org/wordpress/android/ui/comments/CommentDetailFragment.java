@@ -4,8 +4,13 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -16,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -32,10 +36,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
+import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
@@ -47,6 +53,10 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
+import org.wordpress.android.ui.suggestion.service.SuggestionService;
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -59,9 +69,11 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * comment detail displayed from both the notification list and the comment list
@@ -74,10 +86,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private Comment mComment;
     private Note mNote;
 
+    private SuggestionAdapter mSuggestionAdapter;
+    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
+
     private TextView mTxtStatus;
     private TextView mTxtContent;
     private ImageView mImgSubmitReply;
-    private EditText mEditReply;
+    private SuggestionAutoCompleteText mEditReply;
     private ViewGroup mLayoutReply;
     private ViewGroup mLayoutButtons;
 
@@ -136,6 +151,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      */
     public static CommentDetailFragment newInstance(final Note note) {
         CommentDetailFragment fragment = new CommentDetailFragment();
+        fragment.setRemoteBlogId(note.getSiteId());
         fragment.setNote(note);
         return fragment;
     }
@@ -171,6 +187,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mSuggestionServiceConnectionManager.unbindFromService();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
 
@@ -191,7 +214,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         setTextDrawable(mBtnTrashComment, R.drawable.ic_action_trash);
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
-        mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
+        mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
         mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
 
         // hide comment like button until we know it can be enabled in showCommentForNote()
@@ -247,7 +270,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
+        setupSuggestionServiceAndAdapter();
+
         return view;
+    }
+
+    private void setupSuggestionServiceAndAdapter() {
+        if (!isAdded()) return;
+
+        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mRemoteBlogId);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mRemoteBlogId, getActivity(), mSuggestionServiceConnectionManager);
+        if (mSuggestionAdapter != null) {
+            mEditReply.setAdapter(mSuggestionAdapter);
+        }
     }
 
     void setComment(int localBlogId, long commentId) {
@@ -309,6 +344,26 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
+                .registerReceiver(mReceiver, new IntentFilter(SuggestionService.ACTION_SUGGESTIONS_LIST_UPDATED));
+    }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int updatedBlogId = intent.getIntExtra(SuggestionService.SUGGESTIONS_LIST_UPDATED_EXTRA, 0);
+            // check if the updated suggestions are for the current blog and update the suggestions
+            if (updatedBlogId != 0 && mRemoteBlogId == updatedBlogId) {
+                List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(mRemoteBlogId);
+                mSuggestionAdapter.setSuggestionList(suggestions);
+            }
+        }
+    };
+
+    @Override
     public void onPause() {
         super.onPause();
         // Reset comment if this is from a notification
@@ -316,6 +371,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mComment = null;
         }
         EditTextUtils.hideSoftInput(mEditReply);
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
+                .unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -889,7 +946,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
          * this user made on someone else's blog
          */
         mEnabledActions = note.getEnabledActions();
-        mRemoteBlogId = note.getSiteId();
 
         // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
         if (!TextUtils.isEmpty(mNote.getCommentAuthorName()) && mNote.getCommentAuthorName().length() < 28) {
@@ -1031,5 +1087,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         final String path = String.format("/sites/%s/comments/%s", remoteBlogId, commentId);
         WordPress.getRestClientUtils().get(path, restListener, restErrListener);
+    }
+
+    private void setRemoteBlogId(int remoteBlogId) {
+        mRemoteBlogId = remoteBlogId;
     }
 }

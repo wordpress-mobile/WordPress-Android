@@ -45,7 +45,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
-import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -322,9 +322,9 @@ public class PreferencesActivity extends PreferenceActivity {
         // Add self-hosted blog button
         Preference addBlogPreference = new Preference(this);
         addBlogPreference.setTitle(R.string.add_self_hosted_blog);
-        Intent intentWelcome = new Intent(this, WelcomeActivity.class);
-        intentWelcome.putExtra(WelcomeActivity.START_FRAGMENT_KEY,
-                WelcomeActivity.ADD_SELF_HOSTED_BLOG);
+        Intent intentWelcome = new Intent(this, SignInActivity.class);
+        intentWelcome.putExtra(SignInActivity.START_FRAGMENT_KEY,
+                SignInActivity.ADD_SELF_HOSTED_BLOG);
         addBlogPreference.setIntent(intentWelcome);
         addBlogPreference.setOrder(order++);
         blogsCategory.addPreference(addBlogPreference);
@@ -673,7 +673,7 @@ public class PreferencesActivity extends PreferenceActivity {
     private OnPreferenceClickListener signInPreferenceClickListener = new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Intent i = new Intent(PreferencesActivity.this, WelcomeActivity.class);
+            Intent i = new Intent(PreferencesActivity.this, SignInActivity.class);
             i.putExtra("wpcom", true);
             i.putExtra("auth-only", true);
             startActivityForResult(i, 0);
@@ -700,9 +700,8 @@ public class PreferencesActivity extends PreferenceActivity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PreferencesActivity.this);
-            dialogBuilder.setTitle(getResources().getText(R.string.sign_out));
             dialogBuilder.setMessage(getString(R.string.sign_out_confirm));
-            dialogBuilder.setPositiveButton(R.string.sign_out,
+            dialogBuilder.setPositiveButton(R.string.yes,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {

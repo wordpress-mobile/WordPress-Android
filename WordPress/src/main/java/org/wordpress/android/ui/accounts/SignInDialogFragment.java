@@ -14,7 +14,7 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.widgets.WPTextView;
 
-public class NUXDialogFragment extends DialogFragment {
+public class SignInDialogFragment extends DialogFragment {
     private static String ARG_TITLE = "title";
     private static String ARG_DESCRIPTION = "message";
     private static String ARG_FOOTER = "footer";
@@ -38,19 +38,19 @@ public class NUXDialogFragment extends DialogFragment {
     public static final int ACTION_OPEN_URL = 2;
     public static final int ACTION_OPEN_SUPPORT_CHAT = 3;
 
-    public NUXDialogFragment() {
+    public SignInDialogFragment() {
         // Empty constructor required for DialogFragment
     }
 
-    public static NUXDialogFragment newInstance(String title, String message, int imageSource, String buttonLabel) {
+    public static SignInDialogFragment newInstance(String title, String message, int imageSource, String buttonLabel) {
         return newInstance(title, message, imageSource, 1, buttonLabel, "", "", 0, 0);
     }
 
-    public static NUXDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
+    public static SignInDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
                                                 String firstButtonLabel, String secondButtonLabel,
                                                 String thirdButtonLabel, int secondButtonAction,
                                                 int thirdButtonAction) {
-        NUXDialogFragment adf = new NUXDialogFragment();
+        SignInDialogFragment adf = new SignInDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_TITLE, title);
         bundle.putString(ARG_DESCRIPTION, message);
@@ -71,7 +71,7 @@ public class NUXDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         getDialog().getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.nux_alert_bg));
-        View v = inflater.inflate(R.layout.nux_dialog_fragment, container, false);
+        View v = inflater.inflate(R.layout.signin_dialog_fragment, container, false);
 
         mImageView = (ImageView) v.findViewById(R.id.nux_dialog_image);
         mTitleTextView = (WPTextView) v.findViewById(R.id.nux_dialog_title);
@@ -147,9 +147,9 @@ public class NUXDialogFragment extends DialogFragment {
                 break;
             case ACTION_OPEN_SUPPORT_CHAT:
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, arguments.getString(
-                        WelcomeFragmentSignIn.ENTERED_URL_KEY));
+                        SignInFragment.ENTERED_URL_KEY));
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
-                        WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
+                        SignInFragment.ENTERED_USERNAME_KEY));
                 HelpshiftHelper.getInstance().showConversation(getActivity());
                 dismissAllowingStateLoss();
                 break;

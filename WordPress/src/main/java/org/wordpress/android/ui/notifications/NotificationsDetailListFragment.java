@@ -353,6 +353,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     @Override
     public void onChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String noteId) {
+        // We're not interested in INDEX events here
+        if (changeType == Bucket.ChangeType.INDEX) return;
+
         // Refresh content if we receive a change for the Note
         if (mNote != null && mNote.getId().equals(noteId)) {
             // If the note was removed, pop the back stack to return to the notes list

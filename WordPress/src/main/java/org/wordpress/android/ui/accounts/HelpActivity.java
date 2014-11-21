@@ -17,7 +17,7 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.widgets.WPTextView;
 
-public class NuxHelpActivity extends Activity {
+public class HelpActivity extends Activity {
     final private static String FAQ_URL = "http://android.wordpress.org/faq/";
     final private static String FORUM_URL = "http://android.forums.wordpress.org/";
 
@@ -45,7 +45,7 @@ public class NuxHelpActivity extends Activity {
     }
 
     private void initHelpshiftLayout() {
-        setContentView(R.layout.activity_nux_help_with_helpshift);
+        setContentView(R.layout.help_activity_with_helpshift);
 
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
         version.setText(getString(R.string.version) + " " + WordPress.versionName);
@@ -58,11 +58,11 @@ public class NuxHelpActivity extends Activity {
                     // This could be moved to WelcomeFragmentSignIn directly, but better to have all Helpshift
                     // related code at the same place (Note: value can be null).
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, extras.getString(
-                            WelcomeFragmentSignIn.ENTERED_URL_KEY));
+                            SignInFragment.ENTERED_URL_KEY));
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
-                            WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
+                            SignInFragment.ENTERED_USERNAME_KEY));
                 }
-                HelpshiftHelper.getInstance().showConversation(NuxHelpActivity.this);
+                HelpshiftHelper.getInstance().showConversation(HelpActivity.this);
             }
         });
 
@@ -70,13 +70,13 @@ public class NuxHelpActivity extends Activity {
         faqbutton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                HelpshiftHelper.getInstance().showFAQ(NuxHelpActivity.this);
+                HelpshiftHelper.getInstance().showFAQ(HelpActivity.this);
             }
         });
     }
 
     private void initDefaultLayout() {
-        setContentView(R.layout.activity_nux_help);
+        setContentView(R.layout.help_activity);
 
         WPTextView helpCenterButton = (WPTextView) findViewById(R.id.help_button);
         helpCenterButton.setOnClickListener(new OnClickListener() {

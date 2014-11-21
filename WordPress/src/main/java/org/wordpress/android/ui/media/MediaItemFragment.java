@@ -34,7 +34,6 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment display a media item's details.
@@ -63,7 +62,6 @@ public class MediaItemFragment extends Fragment {
     public interface MediaItemFragmentCallback {
         public void onResume(Fragment fragment);
         public void onPause(Fragment fragment);
-        public void onDeleteMedia(final List<String> ids);
     }
 
     public static MediaItemFragment newInstance(String mediaId) {
@@ -316,8 +314,9 @@ public class MediaItemFragment extends Fragment {
         menu.findItem(R.id.menu_new_media).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
 
-        if (mIsLocal || ! MediaUtils.isWordPressVersionWithMediaEditingCapabilities() )
+        if (mIsLocal || !MediaUtils.isWordPressVersionWithMediaEditingCapabilities()) {
             menu.findItem(R.id.menu_edit_media).setVisible(false);
+        }
     }
 
     @Override
@@ -332,22 +331,21 @@ public class MediaItemFragment extends Fragment {
                 return true;
             }
 
-            Builder builder = new AlertDialog.Builder(getActivity())
-                    .setMessage(R.string.confirm_delete_media)
-                    .setCancelable(true)
-                    .setPositiveButton(R.string.delete, new OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                                ArrayList<String> ids = new ArrayList<String>(1);
-                                ids.add(getMediaId());
-                                mCallback.onDeleteMedia(ids);
-                        }
-                    })
-                    .setNegativeButton(R.string.cancel, null);
+            Builder builder = new AlertDialog.Builder(getActivity()).setMessage(R.string.confirm_delete_media)
+                                                                    .setCancelable(true).setPositiveButton(
+                            R.string.delete, new OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ArrayList<String> ids = new ArrayList<String>(1);
+                                    ids.add(getMediaId());
+                                    if (getActivity() instanceof MediaBrowserActivity) {
+                                        ((MediaBrowserActivity) getActivity()).deleteMedia(ids);
+                                    }
+                                }
+                            }).setNegativeButton(R.string.cancel, null);
             AlertDialog dialog = builder.create();
             dialog.show();
             return true;
-
         }
 
         return super.onOptionsItemSelected(item);

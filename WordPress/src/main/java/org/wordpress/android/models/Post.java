@@ -473,11 +473,11 @@ public class Post implements Serializable {
         return postContent;
     }
 
-    public boolean isNew() {
-        return getLocalTablePostId() >= 0;
+    public boolean isPublished() {
+        return !getRemotePostId().isEmpty();
     }
 
     public boolean isPublishable() {
-        return !(isNew() && getContent().isEmpty() && getPostExcerpt().isEmpty() && getTitle().isEmpty());
+        return !(getContent().isEmpty() && getPostExcerpt().isEmpty() && getTitle().isEmpty());
     }
 }

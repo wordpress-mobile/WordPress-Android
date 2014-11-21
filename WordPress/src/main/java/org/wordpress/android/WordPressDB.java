@@ -14,6 +14,7 @@ import android.util.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
@@ -41,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.crypto.Cipher;
@@ -141,7 +143,6 @@ public class WordPressDB {
     private SQLiteDatabase db;
 
     protected static final String PASSWORD_SECRET = BuildConfig.DB_SECRET;
-
     private Context context;
 
     public WordPressDB(Context ctx) {
@@ -156,6 +157,7 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_MEDIA);
         db.execSQL(CREATE_TABLE_THEMES);
         CommentTable.createTables(db);
+        SuggestionTable.createTables(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
@@ -296,6 +298,7 @@ public class WordPressDB {
             values.putNull("wpVersion");
         }
         values.put("isAdmin", blog.isAdmin());
+        values.put("isHidden", blog.isHidden());
         return db.insert(SETTINGS_TABLE, null, values) > -1;
     }
 
@@ -315,16 +318,23 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields) {
+        return getAccountsBy(byString, extraFields, 0);
+    }
+
+    public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields, int limit) {
         if (db == null) {
             return new Vector<Map<String, Object>>();
         }
-        String[] baseFields = new String[]{"id", "blogName", "username", "blogId", "url",
-                "password"};
+        String limitStr = null;
+        if (limit != 0) {
+            limitStr = String.valueOf(limit);
+        }
+        String[] baseFields = new String[]{"id", "blogName", "username", "blogId", "url", "password"};
         String[] allFields = baseFields;
         if (extraFields != null) {
             allFields = (String[]) ArrayUtils.addAll(baseFields, extraFields);
         }
-        Cursor c = db.query(SETTINGS_TABLE, allFields, byString, null, null, null, null);
+        Cursor c = db.query(SETTINGS_TABLE, allFields, byString, null, null, null, null, limitStr);
         int numRows = c.getCount();
         c.moveToFirst();
         List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
@@ -435,6 +445,7 @@ public class WordPressDB {
         values.put("isHidden", blog.isHidden());
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
+        values.put("isHidden", blog.isHidden());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -1539,10 +1550,11 @@ public class WordPressDB {
     }
 
     /** Mark media files for deletion without actually deleting them. **/
-    public void setMediaFilesMarkedForDelete(String blogId, List<String> ids) {
+    public void setMediaFilesMarkedForDelete(String blogId, Set<String> ids) {
         // This is for queueing up files to delete on the server
-        for (String id : ids)
+        for (String id : ids) {
             updateMediaUploadState(blogId, id, "delete");
+        }
     }
 
     /** Mark media files as deleted without actually deleting them **/

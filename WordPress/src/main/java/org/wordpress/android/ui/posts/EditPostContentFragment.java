@@ -62,28 +62,29 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
-import org.wordpress.android.widgets.MediaGalleryImageSpan;
-import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.widgets.WPEditText;
 import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.widgets.MediaGalleryImageSpan;
+import org.wordpress.android.widgets.WPEditText;
 import org.wordpress.android.widgets.WPImageSpan;
 import org.wordpress.android.widgets.WPUnderlineSpan;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
@@ -93,6 +94,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EditPostContentFragment extends Fragment implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
@@ -479,22 +482,10 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             if (title != null) {
                 mTitleEditText.setText(title);
             }
-
-            if (text.contains("youtube_gdata")) {
-                // Just use the URL for YouTube links for oEmbed support
-                mContentEditText.setText(text);
-            } else {
-                // add link tag around URLs, trac #64
-                text = text.replaceAll("((http|https|ftp|mailto):\\S+)", "<a href=\"$1\">$1</a>");
-                mContentEditText.setText(
-                        WPHtml.fromHtml(
-                                StringUtils.addPTags(text),
-                                getActivity(),
-                                mActivity.getPost(),
-                                getMaximumThumbnailWidth()
-                        )
-                );
-            }
+            // Create an <a href> element around links
+            text = AutolinkUtils.autoCreateLinks(text);
+            mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(text), getActivity(), mActivity.getPost(),
+                    getMaximumThumbnailWidth()));
         }
 
         // Check for shared media
@@ -1614,6 +1605,4 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             }
         }
     }
-
-
 }

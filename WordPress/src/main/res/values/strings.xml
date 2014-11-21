@@ -7,7 +7,7 @@
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="sign_out_confirm">Are you sure you want to sign out?</string>
+    <string name="sign_out_confirm">Sign out?</string>
     <string name="sign_in_again">Sign in again</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
     <string name="visit_security_settings">Visit security settings</string>
@@ -46,7 +46,7 @@
     <string name="notification_sound">Play notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_blink">Blink notification light</string>
-    <string name="sure_to_remove_account">Are you sure you want to remove this blog?</string>
+    <string name="sure_to_remove_account">Remove this blog?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="error">Error</string>
@@ -72,10 +72,6 @@
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
     <string name="signing_out">Signing out…</string>
-    <string name="all">All</string>
-    <string name="images">Images</string>
-    <string name="unattached">Unattached</string>
-    <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custom date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
@@ -85,8 +81,16 @@
     <string name="media_add_popup_capture_photo">Capture photo</string>
     <string name="media_add_popup_capture_video">Capture video</string>
     <string name="media_add_new_media_gallery">Create gallery</string>
+    <string name="media_gallery_date_range" comment="Displaying media from 2014-01-13 to 2014-01-23">Displaying media from %1$s to %2$s</string>
+
+    <!-- CAB -->
+    <string name="cab_selected">%d selected</string>
 
     <!-- Media Gallery -->
+    <string name="all">All</string>
+    <string name="images">Images</string>
+    <string name="unattached">Unattached</string>
+    <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custom date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
     <string name="media_gallery_settings_title">Gallery settings</string>
     <string name="media_gallery_image_order">Image order</string>
     <string name="media_gallery_image_order_random">Random</string>
@@ -119,12 +123,12 @@
     <string name="saving">Saving…</string>
 
     <!-- Delete Media -->
-    <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>
-    <string name="confirm_delete_multi_media">Are you sure you want to delete these item(s)?</string>
+    <string name="confirm_delete_media">Delete selected item?</string>
+    <string name="confirm_delete_multi_media">Delete selected items?</string>
     <string name="wait_until_upload_completes">Wait until upload completes</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="media_empty_list">No media</string>
-    <string name="media_empty_list_custom_date">No media in this time interval</string>
+    <string name="media_empty_list_custom_date">No media in this time interval</string>
     <string name="delete">Delete</string>
 
     <!-- tab titles -->
@@ -153,14 +157,14 @@
 
     <!-- page view -->
     <string name="title">Title</string>
-    <string name="pages_empty_list">No pages yet. Why not create one?</string>
+    <string name="pages_empty_list">No pages yet. Why not create one?</string>
     <string name="page_id">Page</string>
     <string name="page_settings">Page settings</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
     <string name="local_draft">Local draft</string>
-    <string name="posts_empty_list">No posts yet. Why not create one?</string>
+    <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="empty_list_default">This list is empty</string>
 
     <!-- post view -->
@@ -239,20 +243,20 @@
 
     <!-- draft actions -->
     <string name="delete_draft">Delete draft</string>
-    <string name="delete_sure">Are you sure you want to delete the draft</string>
+    <string name="delete_sure">Delete this draft</string>
 
     <!-- page actions -->
     <string name="preview_page">Preview page</string>
     <string name="deleting_page">Deleting page</string>
     <string name="page_deleted">Page deleted successfully</string>
-    <string name="delete_sure_page">Are you sure you want to delete the page</string>
+    <string name="delete_sure_page">Delete this page</string>
 
     <!-- post actions -->
     <string name="preview_post">Preview post</string>
     <string name="deleting_post">Deleting post</string>
     <string name="post_deleted">Post deleted successfully</string>
     <string name="comment_added">Comment added successfully</string>
-    <string name="delete_sure_post">Are you sure you want to delete the post</string>
+    <string name="delete_sure_post">Delete this post</string>
     <string name="share_url_post">Share post</string>
     <string name="share_url_page">Share page</string>
     <string name="share_link">Share link</string>
@@ -269,7 +273,7 @@
     <string name="uploading_total">Uploading %1$d of %2$d</string>
 
     <!-- new account view -->
-    <string name="attempting_configure">Signing in…</string>
+    <string name="signing_in">Signing in…</string>
     <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
 
     <!-- drafts -->
@@ -692,14 +696,14 @@
     <string name="reader_toast_err_generic">Unable to perform this action</string>
 
     <!-- empty list/grid text -->
-    <string name="reader_empty_posts_in_tag">No posts with this tag</string>
+    <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
-    <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
+    <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_popular_tags">No popular tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
-    <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet</string>
-    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>
-    <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
+    <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet</string>
+    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>
+    <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
     <string name="reader_empty_comments">No comments yet</string>
 
     <!-- layout tags - do not translate -->
@@ -711,8 +715,8 @@
     <string name="dual_pane_mode" translatable="false">dual_pane_mode</string>
 
     <!-- NUX strings -->
-    <string name="create_account_wpcom">Create an account on WordPress.com</string>
-    <string name="create_new_blog_wpcom">Create WordPress.com blog</string>
+    <string name="create_account_wpcom">Create an account on WordPress.com</string>
+    <string name="create_new_blog_wpcom">Create WordPress.com blog</string>
     <string name="new_blog_wpcom_created">WordPress.com blog created!</string>
     <string name="validating_user_data">Validating user data</string>
     <string name="validating_site_data">Validating site data</string>
@@ -724,7 +728,7 @@
     <string name="invalid_username_too_short">Username must be longer than 4 characters</string>
     <string name="invalid_username_too_long">Username must be shorter than 61 characters</string>
     <string name="email_hint">Email address</string>
-    <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms of Service%2$s</string>
+    <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms of Service%2$s</string>
     <string name="username_email">Username or email</string>
     <string name="site_address">Your self-hosted address (URL)</string>
     <string name="connecting_wpcom">Connecting to WordPress.com</string>
@@ -775,7 +779,7 @@
     <!-- Help view -->
     <string name="help">Help</string>
     <string name="forgot_password">Lost your password?</string>
-    <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new ones</string>
+    <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new ones</string>
     <string name="forums">Forums</string>
     <string name="contact_us">Contact us</string>
     <string name="contact_us_pref_summary">Get help from Automattic support</string>

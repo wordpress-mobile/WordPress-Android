@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts;
+package org.wordpress.android.ui.accounts.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,6 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.ui.accounts.AbstractFragment.ErrorListener;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -37,13 +38,13 @@ public class CreateUserAndBlog {
     private String mLanguage;
     private Context mContext;
     private Callback mCallback;
-    private NewAccountAbstractPageFragment.ErrorListener mErrorListener;
+    private ErrorListener mErrorListener;
     private RestClientUtils mRestClient;
     private ResponseHandler mResponseHandler;
 
     public CreateUserAndBlog(String email, String username, String password, String siteUrl, String siteName,
                              String language, RestClientUtils restClient, Context context,
-                             NewAccountAbstractPageFragment.ErrorListener errorListener, Callback callback) {
+                             ErrorListener errorListener, Callback callback) {
         mEmail = email;
         mUsername = username;
         mPassword = password;

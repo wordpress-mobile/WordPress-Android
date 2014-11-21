@@ -1,5 +1,6 @@
 package org.wordpress.android.networking;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -15,7 +16,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 
 public class OAuthAuthenticator implements Authenticator {
     @Override
-    public void authenticate(AuthenticatorRequest request) {
+    public void authenticate(final AuthenticatorRequest request) {
         String siteId = request.getSiteId();
         String token = null;
         Blog blog = null;
@@ -61,8 +62,51 @@ public class OAuthAuthenticator implements Authenticator {
         }
     }
 
-    public void requestAccessToken(final AuthenticatorRequest request, final Blog blog) {
+    /**
+     * Create an OAuth Request with default listeners
+     *
+     * @param username must be set
+     * @param password must be set
+     * @param request request that will be sent after authentication, can be null if we just want to authenticate
+     * @param blog concerned blog associated with a wpcom account, can be null
+     * @return a com.android.volley.Request that can be sent to a REST queue
+     */
+    private Request makeRequest(final String username, final String password, final AuthenticatorRequest request,
+                                final Blog blog) {
+        final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         Oauth oauth = new Oauth(BuildConfig.OAUTH_APP_ID, BuildConfig.OAUTH_APP_SECRET, BuildConfig.OAUTH_REDIRECT_URI);
+        Request oauthRequest;
+        oauthRequest = oauth.makeRequest(username, password, new Oauth.Listener() {
+                    @SuppressLint("CommitPrefEdits")
+                    @Override
+                    public void onResponse(Oauth.Token token) {
+                        if (blog == null) {
+                            settings.edit().putString(WordPress.ACCESS_TOKEN_PREFERENCE, token.toString()).commit();
+                        } else {
+                            blog.setApi_key(token.toString());
+                            WordPress.wpDB.saveBlog(blog);
+                        }
+
+                        // Once we have a token, start up Simperium
+                        SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
+                        if (request != null) {
+                            request.sendWithAccessToken(token);
+                        }
+                    }
+                },
+
+                new Oauth.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (request != null) {
+                            request.abort(error);
+                        }
+                    }
+                });
+        return oauthRequest;
+    }
+
+    public void requestAccessToken(final AuthenticatorRequest request, final Blog blog) {
         String username;
         String password;
         final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
@@ -83,32 +127,7 @@ public class OAuthAuthenticator implements Authenticator {
                 password = blog.getDotcom_password();
             }
         }
-
-        Request oauthRequest = oauth.makeRequest(username, password,
-                new Oauth.Listener() {
-                    @Override
-                    public void onResponse(Oauth.Token token) {
-                        if (blog == null) {
-                            settings.edit().putString(WordPress.ACCESS_TOKEN_PREFERENCE, token.toString()).commit();
-                        } else {
-                            blog.setApi_key(token.toString());
-                            WordPress.wpDB.saveBlog(blog);
-                        }
-
-                        // Once we have a token, start up Simperium
-                        SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
-
-                        request.sendWithAccessToken(token);
-                    }
-                },
-
-                new Oauth.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        request.abort(error);
-                    }
-                }
-        );
+        Request oauthRequest = makeRequest(username, password, request, blog);
         // add oauth request to the request queue
         WordPress.requestQueue.add(oauthRequest);
     }

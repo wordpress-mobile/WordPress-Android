@@ -4,7 +4,7 @@ import org.wordpress.android.ActivityRobotiumTestCase;
 import org.wordpress.android.R;
 import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
-import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 
 public class LoginTest extends ActivityRobotiumTestCase<PostsActivity> {
@@ -117,6 +117,6 @@ public class LoginTest extends ActivityRobotiumTestCase<PostsActivity> {
         mSolo.enterText(0, "test");
         mSolo.enterText(1, "test");
         mSolo.clickOnText(mSolo.getString(R.string.sign_in));
-        mSolo.waitForActivity(WelcomeActivity.class);
+        mSolo.waitForActivity(SignInActivity.class);
     }
 }

@@ -198,18 +198,18 @@ public class BlogTest extends InstrumentationTestCase {
     }
 
     public void testGetSetBlogOptions() {
-        assertNull(blog.getBlogOptions());
-        blog.setBlogOptions("options");
-        assertEquals("options", blog.getBlogOptions());
+        assertEquals("{}", blog.getBlogOptions());
+        blog.setBlogOptions("{option:1}");
+        assertEquals("{option:1}", blog.getBlogOptions());
     }
 
     public void testBSetBlogOptions() {
-        assertNull(blog.getBlogOptions());
-        boolean val = blog.bsetBlogOptions("options");
+        assertEquals("{}", blog.getBlogOptions());
+        boolean val = blog.bsetBlogOptions("{option:1}");
         assertTrue(val);
-        val = blog.bsetBlogOptions("options");
+        val = blog.bsetBlogOptions("{option:1}");
         assertFalse(val);
-        val = blog.bsetBlogOptions("options2");
+        val = blog.bsetBlogOptions("{option:2}");
         assertTrue(val);
     }
 
