@@ -352,18 +352,6 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mSwipeToRefreshHelper.registerReceiver(getActivity());
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mSwipeToRefreshHelper.unregisterReceiver(getActivity());
-    }
-
-    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 

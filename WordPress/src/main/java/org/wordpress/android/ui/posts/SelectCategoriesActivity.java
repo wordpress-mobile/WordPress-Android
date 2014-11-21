@@ -321,10 +321,6 @@ public class SelectCategoriesActivity extends ActionBarActivity {
         } else if (itemId == android.R.id.home) {
             saveAndFinish();
             return true;
-        } else if (item.getItemId()  == R.id.menu_refresh) {
-            // Broadcast a refresh action, SwipeToRefreshHelper should trigger the default swipe to refresh action
-            WordPress.sendLocalBroadcast(this, SwipeToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -376,18 +372,6 @@ public class SelectCategoriesActivity extends ActionBarActivity {
     public void onBackPressed() {
         saveAndFinish();
         super.onBackPressed();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mSwipeToRefreshHelper.unregisterReceiver(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSwipeToRefreshHelper.registerReceiver(this);
     }
 
     private void updateSelectedCategoryList() {

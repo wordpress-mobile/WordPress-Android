@@ -107,9 +107,6 @@ public class ManageBlogsActivity extends ActionBarActivity implements OnItemClic
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.menu_refresh:
-                WordPress.sendLocalBroadcast(this, SwipeToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -182,17 +179,5 @@ public class ManageBlogsActivity extends ActionBarActivity implements OnItemClic
             mListScrollPositionManager.restoreScrollOffset();
             mSwipeToRefreshHelper.setRefreshing(false);
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mSwipeToRefreshHelper.unregisterReceiver(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSwipeToRefreshHelper.registerReceiver(this);
     }
 }

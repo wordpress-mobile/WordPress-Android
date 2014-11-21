@@ -49,7 +49,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         super.onActivityCreated(savedInstanceState);
 
         initSwipeToRefreshHelper();
-        mFauxSwipeToRefreshHelper.registerReceiver(getActivity());
 
         // setup the initial notes adapter, starts listening to the bucket
         mBucket = SimperiumUtils.getNotesBucket();
@@ -102,7 +101,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             mNotesAdapter.closeCursor();
         }
 
-        mFauxSwipeToRefreshHelper.unregisterReceiver(getActivity());
         super.onDestroy();
     }
 

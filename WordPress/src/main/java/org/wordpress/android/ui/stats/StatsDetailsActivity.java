@@ -169,7 +169,6 @@ public class StatsDetailsActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mSwipeToRefreshHelper.registerReceiver(this);
         mIsInFront = true;
         refreshStats();
     }
@@ -178,7 +177,6 @@ public class StatsDetailsActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
         mIsInFront = false;
-        mSwipeToRefreshHelper.unregisterReceiver(this);
     }
 
     @Override

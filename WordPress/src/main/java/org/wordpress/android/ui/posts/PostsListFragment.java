@@ -218,7 +218,6 @@ public class PostsListFragment extends ListFragment
             }
         }
         initSwipeToRefreshHelper();
-        mSwipeToRefreshHelper.registerReceiver(getActivity());
         WordPress.setOnPostUploadedListener(this);
 
         ImageButton fabButton = (ImageButton) getView().findViewById(R.id.fab_button);
@@ -251,12 +250,6 @@ public class PostsListFragment extends ListFragment
             throw new ClassCastException(activity.toString()
                     + " must implement Callback");
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mSwipeToRefreshHelper.unregisterReceiver(getActivity());
     }
 
     public void onResume() {

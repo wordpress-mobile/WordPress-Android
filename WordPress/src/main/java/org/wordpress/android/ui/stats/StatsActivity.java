@@ -179,7 +179,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     @Override
     protected void onResume() {
         super.onResume();
-        mSwipeToRefreshHelper.registerReceiver(this);
         mIsInFront = true;
         // register to receive broadcasts when StatsService starts/stops updating
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
@@ -194,7 +193,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
         mSwipeToRefreshHelper.setRefreshing(false);
-        mSwipeToRefreshHelper.unregisterReceiver(this);
     }
 
     @Override
