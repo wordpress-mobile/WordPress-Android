@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
+        <item name="colorControlActivated">@color/color_control_activated</item>
+        <item name="colorControlHighlight">@color/color_control_highlight</item>
 
         <item name="android:windowBackground">@color/calypso_blue_light</item>
         <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>

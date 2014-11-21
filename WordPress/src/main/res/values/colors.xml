@@ -4,11 +4,20 @@
     <color name="transparent">#00000000</color>
 
     <!-- material colors -->
+    <!--
+        colorPrimary            app branding color for the app bar
+        colorPrimaryDark        status bar and contextual app bars
+        colorControlNormal      (unused here) controls in their normal state (spinner arrow, scrollbars, unchecked checkboxes)
+        colorControlActivated   controls in their activated/checked state (search highlight, checked checkboxes)
+        colorControlHighlight   control highlights (ripples, list selectors)
+    -->
     <color name="color_primary">@color/blue_medium</color>
     <color name="color_primary_dark">@color/blue_extra_dark</color>
-    <color name="color_accent">@color/blue_light</color>
+    <color name="color_accent">@color/orange_medium</color>
+    <color name="color_control_activated">@color/blue_light</color>
+    <color name="color_control_highlight">@color/blue_extra_light</color>
 
-    <color name="fab_color">@color/calypso_orange_dark</color>
+    <color name="fab_color">@color/color_accent</color>
     <color name="fab_color_selected">@color/calypso_orange</color>
 
     <color name="list_selected">@color/semi_transparent_blue_extra_light</color>
