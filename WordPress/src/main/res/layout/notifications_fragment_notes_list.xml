@@ -14,8 +14,7 @@
             android:id="@id/android:list"
             style="@style/WordPress.BorderedBackground"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:listSelector="@drawable/reader_list_selector" />
+            android:layout_height="match_parent" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

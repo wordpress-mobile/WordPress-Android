@@ -16,8 +16,7 @@
             android:id="@id/android:list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:listSelector="@drawable/reader_list_selector" />
+            android:layout_weight="1" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@id/android:empty"

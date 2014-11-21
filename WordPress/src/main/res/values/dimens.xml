@@ -14,13 +14,18 @@
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
     <dimen name="toolbar_height">48dp</dimen>
 
+    <dimen name="default_elevation_pressed">4dp</dimen>
+
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_padding">10dp</dimen>
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
     <dimen name="fab_elevation">2dp</dimen>
-    <dimen name="fab_elevation_pressed">4dp</dimen>
+    <dimen name="fab_elevation_pressed">@dimen/default_elevation_pressed</dimen>
+
+    <dimen name="card_elevation">@dimen/cardview_default_elevation</dimen>
+    <dimen name="card_elevation_pressed">@dimen/default_elevation_pressed</dimen>
 
     <dimen name="menu_drawer_width">250dp</dimen>
     <dimen name="menu_drawer_row_height">40dp</dimen>

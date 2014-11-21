@@ -7,6 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/margin_large"
     android:paddingLeft="@dimen/margin_extra_large"
@@ -29,7 +30,7 @@
         android:id="@+id/btn_add_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/reader_transparent_selector"
+        android:background="?android:selectableItemBackground"
         android:gravity="center_vertical"
         android:src="@drawable/ic_close_grey600_24dp" />
 </LinearLayout>

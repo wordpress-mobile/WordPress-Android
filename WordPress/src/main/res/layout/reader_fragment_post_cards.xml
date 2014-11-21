@@ -10,14 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <org.wordpress.android.widgets.WPListView
-            android:id="@android:id/list"
-            style="@style/ReaderListView"
-            android:divider="@color/transparent"
-            android:dividerHeight="@dimen/reader_post_divider_height"
+        <org.wordpress.android.ui.reader.adapters.ReaderPostRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:paddingLeft="@dimen/reader_list_margin"
             android:paddingRight="@dimen/reader_list_margin"
-            tools:listitem="@layout/reader_listitem_post_excerpt" />
+            android:scrollbars="vertical" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

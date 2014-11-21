@@ -198,7 +198,8 @@ public class ReaderSubsActivity extends ActionBarActivity
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
 
-            mPageAdapter = new SubsPageAdapter(getFragmentManager(), fragments);
+            FragmentManager fm = getFragmentManager();
+            mPageAdapter = new SubsPageAdapter(fm, fragments);
         }
         return mPageAdapter;
     }

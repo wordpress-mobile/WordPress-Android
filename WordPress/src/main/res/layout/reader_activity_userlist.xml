@@ -13,7 +13,6 @@
 
     <ListView
         android:id="@id/android:list"
-        style="@style/ReaderListView.NoDivider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/reader_listitem_user" />

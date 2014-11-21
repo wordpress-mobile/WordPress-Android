@@ -7,6 +7,11 @@ import java.util.ArrayList;
 
 public class ReaderBlogList extends ArrayList<ReaderBlog> {
 
+    @Override
+    public Object clone() {
+        return super.clone();
+    }
+
     public static ReaderBlogList fromJson(JSONObject json) {
         ReaderBlogList blogs = new ReaderBlogList();
         if (json == null) {

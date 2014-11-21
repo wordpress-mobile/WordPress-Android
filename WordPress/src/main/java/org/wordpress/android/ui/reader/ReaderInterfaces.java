@@ -6,7 +6,7 @@ import org.wordpress.android.models.ReaderPost;
 
 public class ReaderInterfaces {
 
-    static interface OnPostSelectedListener {
+    public static interface OnPostSelectedListener {
         public void onPostSelected(long blogId, long postId);
     }
 

@@ -3,13 +3,17 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.ReaderBlog;
+import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.BlogFollowChangeListener;
@@ -21,7 +25,8 @@ import org.wordpress.android.util.WPActivityUtils;
  * fragment hosted by ReaderSubsActivity which shows either recommended blogs and followed blogs
  */
 public class ReaderBlogFragment extends Fragment
-                                implements BlogFollowChangeListener {
+        implements BlogFollowChangeListener,
+        AdapterView.OnItemClickListener {
     private ListView mListView;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
@@ -85,6 +90,7 @@ public class ReaderBlogFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mListView.setOnItemClickListener(this);
         mListView.setAdapter(getBlogAdapter());
         refresh();
     }
@@ -159,7 +165,8 @@ public class ReaderBlogFragment extends Fragment
     private ReaderBlogAdapter getBlogAdapter() {
         if (mAdapter == null) {
             Context context = WPActivityUtils.getThemedContext(getActivity());
-            mAdapter = new ReaderBlogAdapter(context, getBlogType(), this);
+            mAdapter = new ReaderBlogAdapter(context, getBlogType());
+            mAdapter.setFollowChangeListener(this);
         }
         return mAdapter;
     }
@@ -175,6 +182,29 @@ public class ReaderBlogFragment extends Fragment
     public void onFollowBlogChanged() {
         if (getActivity() instanceof BlogFollowChangeListener) {
             ((BlogFollowChangeListener) getActivity()).onFollowBlogChanged();
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final long blogId;
+        final String blogUrl;
+        Object item = getBlogAdapter().getItem(position);
+        if (item instanceof ReaderRecommendedBlog) {
+            ReaderRecommendedBlog blog = (ReaderRecommendedBlog) item;
+            blogId = blog.blogId;
+            blogUrl = blog.getBlogUrl();
+        } else if (item instanceof ReaderBlog) {
+            ReaderBlog blog = (ReaderBlog) item;
+            blogId = blog.blogId;
+            blogUrl = blog.getUrl();
+        } else {
+            return;
+        }
+
+        // make sure we have either the blog id or url
+        if (blogId != 0 || !TextUtils.isEmpty(blogUrl)) {
+            ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), blogId, blogUrl);
         }
     }
 }

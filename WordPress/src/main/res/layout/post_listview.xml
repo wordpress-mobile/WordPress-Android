@@ -58,7 +58,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:drawSelectorOnTop="false"
-                android:listSelector="@drawable/reader_list_selector"
                 tools:listitem="@layout/post_list_row" />
 
             <ImageButton
@@ -71,7 +70,7 @@
                 android:background="@drawable/fab_background"
                 android:elevation="@dimen/fab_elevation"
                 android:src="@drawable/ic_create_white_24dp"
-                android:stateListAnimator="@anim/fab_pressed" />
+                android:stateListAnimator="@anim/pressed_fab" />
 
         </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>

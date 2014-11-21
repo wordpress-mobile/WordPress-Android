@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -18,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -45,7 +45,8 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
-import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderPostRecyclerAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderPostRecyclerView;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
@@ -58,25 +59,24 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
-import org.wordpress.android.widgets.WPListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-public class ReaderPostListFragment extends Fragment
-                                    implements AbsListView.OnScrollListener {
+public class ReaderPostListFragment extends Fragment {
 
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
-    private ReaderPostAdapter mPostAdapter;
+
+    private ReaderPostRecyclerAdapter mPostRecycler;
+    private ReaderPostRecyclerView mRecyclerView;
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private WPListView mListView;
     private TextView mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
@@ -90,10 +90,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostListType mPostListType;
 
     private boolean mIsUpdating;
-    private boolean mIsFlinging;
     private boolean mWasPaused;
-
-    private Parcelable mListState = null;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -188,9 +185,6 @@ public class ReaderPostListFragment extends Fragment
             if (savedInstanceState.containsKey(ReaderConstants.ARG_BLOG_URL)) {
                 mCurrentBlogUrl = savedInstanceState.getString(ReaderConstants.ARG_BLOG_URL);
             }
-            if (savedInstanceState.containsKey(ReaderConstants.KEY_LIST_STATE)) {
-                mListState = savedInstanceState.getParcelable(ReaderConstants.KEY_LIST_STATE);
-            }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -246,19 +240,13 @@ public class ReaderPostListFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
-        // retain list state so we can return to this position
-        // http://stackoverflow.com/a/5694441/1673548
-        if (mListView != null && mListView.getFirstVisiblePosition() > 0) {
-            outState.putParcelable(ReaderConstants.KEY_LIST_STATE, mListView.onSaveInstanceState());
-        }
-
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_list, container, false);
-        mListView = (WPListView) rootView.findViewById(android.R.id.list);
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_cards, container, false);
+        mRecyclerView = (ReaderPostRecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) rootView.findViewById(R.id.text_new_posts);
@@ -291,33 +279,8 @@ public class ReaderPostListFragment extends Fragment
                 break;
         }
 
-        // add blank listView header if this is tag/blog preview to provide some initial space
-        // between the tag/blog header and the posts (height is zero so only divider appears)
-        if (getPostListType().isPreviewType()) {
-            ReaderUtils.addListViewHeader(mListView, 0);
-        }
-
         // textView that appears when current tag has no posts
         mEmptyView = rootView.findViewById(R.id.empty_view);
-
-        // set the listView's scroll listener so we can detect flings
-        mListView.setOnScrollListener(this);
-
-        // tapping a post opens the detail view
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // take headers into account
-                position -= mListView.getHeaderViewsCount();
-                if (position >= 0 && mPostSelectedListener != null) {
-                    ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
-                    if (post != null) {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
-                        mPostSelectedListener.onPostSelected(post.blogId, post.postId);
-                    }
-                }
-            }
-        });
 
         // progress bar that appears when loading more posts
         mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
@@ -371,15 +334,16 @@ public class ReaderPostListFragment extends Fragment
         setupActionBar();
 
         // assign the post list adapter
-        boolean adapterAlreadyExists = hasPostAdapter();
-        mListView.setAdapter(getPostAdapter());
+        boolean adapterAlreadyExists = hasPostRecycler();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(getPostRecycler());
 
         // if adapter didn't already exist, populate it now then update the tag - this
         // check is important since without it the adapter would be reset and posts would
         // be updated every time the user moves between fragments
         if (!adapterAlreadyExists && getPostListType().isTagType()) {
             boolean isRecreated = (savedInstanceState != null);
-            getPostAdapter().setCurrentTag(mCurrentTag);
+            getPostRecycler().setCurrentTag(mCurrentTag);
             if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
                 updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
             }
@@ -394,8 +358,8 @@ public class ReaderPostListFragment extends Fragment
                 break;
         }
 
-        getPostAdapter().setOnTagSelectedListener(mOnTagSelectedListener);
-        getPostAdapter().setOnPostPopupListener(mOnPostPopupListener);
+        getPostRecycler().setOnTagSelectedListener(mOnTagSelectedListener);
+        getPostRecycler().setOnPostPopupListener(mOnPostPopupListener);
     }
 
     @Override
@@ -437,7 +401,7 @@ public class ReaderPostListFragment extends Fragment
      * from the adapter
      */
     private void blockBlogForPost(final ReaderPost post) {
-        if (post == null || !hasPostAdapter()) {
+        if (post == null || !hasPostRecycler()) {
             return;
         }
 
@@ -461,27 +425,8 @@ public class ReaderPostListFragment extends Fragment
                 ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
-        // animate out the post the user chose to block from, then remove the post from the adapter
-        final int position = getPostAdapter().indexOfPost(post);
-        Animation.AnimationListener aniListener = new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) { }
-            @Override
-            public void onAnimationRepeat(Animation animation) { }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if (isAdded()) {
-                    // remove this specific post, then refresh the adapter so other posts in this
-                    // blog no long appear
-                    getPostAdapter().removePost(position);
-                    getPostAdapter().refresh();
-                }
-            }
-        };
-        ReaderAnim.animateListItem(mListView,
-                position,
-                ReaderAnim.AnimateListItemStyle.SHRINK,
-                aniListener);
+        // remove posts in this blog from the adapter
+        getPostRecycler().removePostsInBlog(post.blogId);
 
         // show the undo bar enabling the user to undo the block
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
@@ -492,10 +437,11 @@ public class ReaderPostListFragment extends Fragment
             }
         };
         new UndoBarController.UndoBar(getActivity())
-                             .message(getString(R.string.reader_toast_blog_blocked))
-                             .listener(undoListener)
-                             .translucent(true)
-                             .show();
+                .message(getString(R.string.reader_toast_blog_blocked))
+                .listener(undoListener)
+                .translucent(true)
+                .show();
+
     }
 
     private void hideUndoBar() {
@@ -644,11 +590,6 @@ public class ReaderPostListFragment extends Fragment
                 mEmptyView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.GONE);
-                // restore listView state - this returns to the previously scrolled-to item
-                if (mListState != null && mListView != null) {
-                    mListView.onRestoreInstanceState(mListState);
-                    mListState = null;
-                }
             }
         }
     };
@@ -688,7 +629,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * called by post adapter when user requests to reblog a post
      */
-    private final ReaderInterfaces.RequestReblogListener mReblogListener = new ReaderInterfaces.RequestReblogListener() {
+    private final ReaderInterfaces.RequestReblogListener mRequestReblogListener = new ReaderInterfaces.RequestReblogListener() {
         @Override
         public void onRequestReblog(ReaderPost post, View view) {
             if (isAdded()) {
@@ -697,26 +638,27 @@ public class ReaderPostListFragment extends Fragment
         }
     };
 
-    private ReaderPostAdapter getPostAdapter() {
-        if (mPostAdapter == null) {
-            AppLog.d(T.READER, "reader post list > creating post adapter");
+    private ReaderPostRecyclerAdapter getPostRecycler() {
+        if (mPostRecycler == null) {
+            AppLog.d(T.READER, "reader post list > creating post recycler");
+
             Context context = WPActivityUtils.getThemedContext(getActivity());
-            mPostAdapter = new ReaderPostAdapter(
-                    context,
-                    getPostListType(),
-                    mReblogListener,
-                    mDataLoadedListener,
-                    mDataRequestedListener);
+            mPostRecycler = new ReaderPostRecyclerAdapter(context, getPostListType());
+
+            mPostRecycler.setOnPostSelectedListener(mPostSelectedListener);
+            mPostRecycler.setOnDataLoadedListener(mDataLoadedListener);
+            mPostRecycler.setOnDataRequestedListener(mDataRequestedListener);
+            mPostRecycler.setOnReblogRequestedListener(mRequestReblogListener);
         }
-        return mPostAdapter;
+        return mPostRecycler;
     }
 
-    private boolean hasPostAdapter() {
-        return (mPostAdapter != null);
+    private boolean hasPostRecycler() {
+        return (mPostRecycler != null);
     }
 
-    boolean isPostAdapterEmpty() {
-        return (mPostAdapter == null || mPostAdapter.isEmpty());
+    boolean isPostListEmpty() {
+        return (mPostRecycler == null || mPostRecycler.isEmpty());
     }
 
     private boolean isCurrentTag(final ReaderTag tag) {
@@ -759,8 +701,8 @@ public class ReaderPostListFragment extends Fragment
         // will happen when the list fragment is restored and the current tag is re-selected in the
         // toolbar dropdown
         if (isCurrentTag(tag)
-                && hasPostAdapter()
-                && getPostAdapter().isCurrentTag(tag)) {
+                && hasPostRecycler()
+                && getPostRecycler().isCurrentTag(tag)) {
             return;
         }
 
@@ -776,7 +718,7 @@ public class ReaderPostListFragment extends Fragment
                 break;
         }
 
-        getPostAdapter().setCurrentTag(tag);
+        getPostRecycler().setCurrentTag(tag);
         hideNewPostsBar();
         hideUndoBar();
         updateTagPreviewHeader();
@@ -845,8 +787,8 @@ public class ReaderPostListFragment extends Fragment
      * refresh adapter so latest posts appear
      */
     void refreshPosts() {
-        if (hasPostAdapter()) {
-            getPostAdapter().refresh();
+        if (hasPostRecycler()) {
+            getPostRecycler().refresh();
         }
     }
 
@@ -855,8 +797,8 @@ public class ReaderPostListFragment extends Fragment
      * post may have been changed (either by the user, or because it updated)
      */
     void reloadPost(ReaderPost post) {
-        if (post != null && hasPostAdapter()) {
-            getPostAdapter().reloadPost(post);
+        if (post != null && hasPostRecycler()) {
+            getPostRecycler().reloadPost(post);
         }
     }
 
@@ -864,7 +806,7 @@ public class ReaderPostListFragment extends Fragment
      * reload the list of posts
      */
     private void reloadPosts() {
-        getPostAdapter().reload();
+        getPostRecycler().reload();
     }
 
     /*
@@ -951,7 +893,7 @@ public class ReaderPostListFragment extends Fragment
                 // if the user is viewing posts for a followed tag, posts are already
                 // displayed, and the user has scrolled the list
                 boolean showNewPostsBar = result == ReaderActions.UpdateResult.HAS_NEW
-                        && !isPostAdapterEmpty()
+                        && !isPostListEmpty()
                         && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
                         && updateAction == RequestDataAction.LOAD_NEWER
                         && !isListScrolledToTop();
@@ -1001,7 +943,7 @@ public class ReaderPostListFragment extends Fragment
         if (updateAction == RequestDataAction.LOAD_OLDER) {
             // show/hide progress bar at bottom if these are older posts
             showLoadingProgress(isUpdating);
-        } else if (isUpdating && isPostAdapterEmpty()) {
+        } else if (isUpdating && isPostListEmpty()) {
             // show swipe-to-refresh if update started and no posts are showing
             showSwipeToRefreshProgress(true);
         } else if (!isUpdating) {
@@ -1093,27 +1035,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private boolean isListScrolledToTop() {
-        return (mListView != null && mListView.isScrolledToTop());
-    }
-
-    /*
-     * let the post adapter know when we're in a fling - this way the adapter can
-     * skip pre-loading images during a fling
-     */
-    @Override
-    public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-        boolean isFlingingNow = (scrollState == SCROLL_STATE_FLING);
-        if (isFlingingNow != mIsFlinging) {
-            mIsFlinging = isFlingingNow;
-            if (hasPostAdapter()) {
-                getPostAdapter().setIsFlinging(mIsFlinging);
-            }
-        }
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        // nop
+        return (mRecyclerView != null && !mRecyclerView.canScrollVertically(-1));
     }
 
     /*
@@ -1171,8 +1093,8 @@ public class ReaderPostListFragment extends Fragment
                             if (isAdded()) {
                                 mCurrentBlogId = blogInfo.blogId;
                                 mCurrentBlogUrl = blogInfo.getUrl();
-                                if (isPostAdapterEmpty()) {
-                                    getPostAdapter().setCurrentBlog(mCurrentBlogId);
+                                if (isPostListEmpty()) {
+                                    getPostRecycler().setCurrentBlog(mCurrentBlogId);
                                     updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
                                 }
                             }

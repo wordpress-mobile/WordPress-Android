@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 public class ReaderTagList extends ArrayList<ReaderTag> {
 
+    @Override
+    public Object clone() {
+        return super.clone();
+    }
+
     public int indexOfTagName(final String tagName) {
         if (tagName == null || isEmpty()) {
             return -1;
