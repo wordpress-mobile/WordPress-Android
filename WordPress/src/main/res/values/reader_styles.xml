@@ -4,6 +4,14 @@
     and all font sizes use text_sz_xxxx sizes defined in dimens.xml for consistency
 -->
 <resources>
+    <style name="ReaderPhotoViewerTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <!-- TextViews -->
     <style name="ReaderTextView" parent="android:Widget.TextView">
         <item name="android:textColorLink">@color/reader_hyperlink</item>

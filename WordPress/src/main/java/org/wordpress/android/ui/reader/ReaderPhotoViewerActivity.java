@@ -2,14 +2,12 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -39,14 +37,7 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.reader_activity_photo_viewer);
-
-        // hide the status bar (SDK 16+)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        }
 
         mViewPager = (ReaderViewPager) findViewById(R.id.viewpager);
         mTxtTitle = (TextView) findViewById(R.id.text_title);

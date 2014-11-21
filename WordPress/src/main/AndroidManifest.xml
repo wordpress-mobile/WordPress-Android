@@ -215,7 +215,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/ReaderPhotoViewerTheme" />
 
         <!-- Other activities -->
 
