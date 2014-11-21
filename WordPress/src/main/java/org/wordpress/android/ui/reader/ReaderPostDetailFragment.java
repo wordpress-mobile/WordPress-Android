@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -48,9 +49,9 @@ import org.wordpress.android.widgets.WPScrollView;
 
 public class ReaderPostDetailFragment extends Fragment
         implements WPScrollView.OnScrollDirectionListener,
-                   ReaderCustomViewListener,
-                   ReaderWebViewPageFinishedListener,
-                   ReaderWebViewUrlClickListener {
+        ReaderCustomViewListener,
+        ReaderWebViewPageFinishedListener,
+        ReaderWebViewUrlClickListener {
 
     private static final String ARG_DISABLE_BLOCK_BLOG = "disable_block_blog";
 
@@ -527,17 +528,17 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        final TextView txtCommentCount = (TextView) getView().findViewById(R.id.text_comment_count);
+        final Button btnCommentCount = (Button) getView().findViewById(R.id.button_comment_count);
         if (mPost.numReplies == 0) {
-            txtCommentCount.setVisibility(View.GONE);
+            btnCommentCount.setVisibility(View.GONE);
         } else {
-            txtCommentCount.setVisibility(View.VISIBLE);
+            btnCommentCount.setVisibility(View.VISIBLE);
             if (mPost.numReplies == 1) {
-                txtCommentCount.setText(getString(R.string.reader_label_comment_count_single));
+                btnCommentCount.setText(getString(R.string.reader_label_comment_count_single));
             } else {
-                txtCommentCount.setText(getString(R.string.reader_label_comment_count_multi, mPost.numReplies));
+                btnCommentCount.setText(getString(R.string.reader_label_comment_count_multi, mPost.numReplies));
             }
-            txtCommentCount.setOnClickListener(new View.OnClickListener() {
+            btnCommentCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ReaderActivityLauncher.showReaderComments(getActivity(), mPost);
@@ -773,8 +774,8 @@ public class ReaderPostDetailFragment extends Fragment
 
             // external blogs (feeds) don't support action icons
             if (!mPost.isExternal && (mPost.isLikesEnabled
-                                   || mPost.canReblog()
-                                   || mPost.isCommentsOpen)) {
+                    || mPost.canReblog()
+                    || mPost.isCommentsOpen)) {
                 mLayoutIcons.setVisibility(View.VISIBLE);
             } else {
                 mLayoutIcons.setVisibility(View.GONE);
