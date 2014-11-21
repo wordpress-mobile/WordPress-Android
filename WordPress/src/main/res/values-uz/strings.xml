@@ -3,7 +3,6 @@
 	<string name="creating_your_account">Akkauntingiz yaratilmoqda</string>
 	<string name="creating_your_site">Saytingiz yaratilmoqda</string>
 	<string name="reader_empty_posts_in_tag_updating">Postlar yuklanmoqda...</string>
-	<string name="create_account_wpcom">WordPress.com da akkaunt oching</string>
 	<string name="error_refresh_media">Media kutubxonani yangilashda xatolik yuz berdi. Iltimos, keyinroq qayta harakat qilib ko‘ring.</string>
 	<string name="reader_likes_you_and_multi">Siz hamda %,d kishi buni yoqtiradi</string>
 	<string name="reader_likes_multi">%,d kishi buni yoqtiradi</string>
@@ -12,12 +11,12 @@
 	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">Video</string>
 	<string name="download">Media saqlanmoqda</string>
+	<string name="comment_spammed">Mulohaza spam sifatida belgilandi</string>
 	<string name="cant_share_no_visible_blog">Ochiq blogsiz WordPress bilan bo‘lisha olmaysiz</string>
 	<string name="share_preference_title">WordPress bilan bo‘lishish</string>
 	<string name="reset_auto_share_preference">Avto-bo‘lishish moslamalarini qayta tiklash</string>
 	<string name="always_use_these_settings_to_share">Har doim ushbu moslamalardan foydalanish</string>
 	<string name="view_stats_activity">Ko‘rishlar statistikasi</string>
-	<string name="reader_empty_followed_blogs_description">Xavotirga o‘rin yo‘q. Teg tugmasini bosing va sayohatni boshlang!</string>
 	<string name="select_time">Vaqt tanlang</string>
 	<string name="reader_likes_you_and_one">Siz va yana bir kishi buni yoqtiradi</string>
 	<string name="select_date">Sana tanlang</string>
@@ -75,8 +74,6 @@
 	<string name="media_edit_description_text">Izoh</string>
 	<string name="media_edit_success">Yangilandi</string>
 	<string name="media_edit_failure">Yangilanmadi</string>
-	<string name="confirm_delete_media">Ushbu media faylni o‘chirmoqchimisiz?</string>
-	<string name="confirm_delete_multi_media">Ushbu ma‘lumotlarni o‘chirmoqchimisiz?</string>
 	<string name="themes_details_label">Batafsil</string>
 	<string name="themes_features_label">Xususiyatlari</string>
 	<string name="theme_activate_button">Faollashtir</string>
@@ -151,10 +148,8 @@
 	<string name="media_edit_title_hint">Sarlavha kiriting</string>
 	<string name="media_edit_caption_hint">Titr kiriting</string>
 	<string name="media_edit_description_hint">Izoh kiriting</string>
-	<string name="remote_changes">Postga kiritilgan o‘zgarishlar serverga hali yuklanmagan. Sahifani qayta yuklab ushbu mahalliy o‘zgarishlardan voz kechasizmi?</string>
 	<string name="upload">Yuklash</string>
 	<string name="manage">Boshqarish</string>
-	<string name="attempting_configure">Kirishga harakat...</string>
 	<string name="notifications">Xabarlar</string>
 	<string name="manage_notifications">Xabarlarni moslash</string>
 	<string name="enable_notifications">Xabarlardan foydalanish</string>
@@ -167,7 +162,6 @@
 	<string name="new_notifications">%d ta yangi xabarlar</string>
 	<string name="more_notifications">va yana %d ta.</string>
 	<string name="tooltip_follow">Blogni kuzatish yoxud kuzatishni to‘xtatish</string>
-	<string name="sign_out_confirm">Chiqmoqchimisiz?</string>
 	<string name="sign_in">Kirish</string>
 	<string name="sign_out">Chiqish</string>
 	<string name="loading">Yuklanmoqda...</string>
@@ -228,8 +222,6 @@
 	<string name="title">Sarlavha</string>
 	<string name="categories">Bo‘limlar</string>
 	<string name="tab_stats">Statistika</string>
-	<string name="delete_sure_post">Jiddiy ushbu postni o‘chirmoqchimisiz?</string>
-	<string name="delete_sure_page">Jiddiy ushbu sahifani o‘chirmoqchimisiz?</string>
 	<string name="notification_vibrate">Vibratsiya</string>
 	<string name="notification_blink">Yonib-o‘chuvchi xabar</string>
 	<string name="notification_sound">Ovozli xabar</string>
@@ -241,12 +233,10 @@
 	<string name="delete">O‘chir</string>
 	<string name="none">Hech bir</string>
 	<string name="blogs">Bloglar</string>
-	<string name="sure_to_remove_account">Ushbu blogni o‘chirmoqchimisiz?</string>
 	<string name="select_photo">Galereyadan rasm tanlash</string>
 	<string name="no">Yo‘q</string>
 	<string name="yes">Ha</string>
 	<string name="reply">Javob</string>
-	<string name="delete_sure">Haqiqatda o‘chirmoqchimisiz?</string>
 	<string name="cancel">Bekor qilish</string>
 	<string name="add">Qo‘shish</string>
 	<string name="preview">Oldindan ko‘rish</string>

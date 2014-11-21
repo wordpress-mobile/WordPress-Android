@@ -17,7 +17,6 @@
 	<string name="invalid_password_message">Pasahitzak gutxienez 4 karaktere eduki behar ditu</string>
 	<string name="invalid_username_too_short">Erabiltzaile izenak gutxienez 4 karaktere eduki behar ditu</string>
 	<string name="invalid_username_too_long">Erabiltzaile izenak 64 karaktere baino gutxiago eduki behar ditu</string>
-	<string name="agree_terms_of_service">Kontu bat sortzean %1$sZerbitzu baldintza eta terminoak%2$s onartzen dituzu</string>
 	<string name="username_only_lowercase_letters_and_numbers">Erabiltzaile izenak letra minuskulak (a-z) eta zenbakiak bakarrik eduki ditzake</string>
 	<string name="theme_fetch_failed">Errorea gertatu da gaiak jasotzean.</string>
 	<string name="comments_empty_list">Ez dago iruzkinik.</string>
@@ -27,7 +26,6 @@
 	<string name="error_refresh_posts">Sarrerak ezin dira momentu honetan eguneratu</string>
 	<string name="error_refresh_pages">Orrialdeak ezin dira momentu honetan eguneratu.</string>
 	<string name="out_of_memory">Gailuaren memoria agortu da</string>
-	<string name="reader_empty_followed_blogs_title">Ez daude blogik jarraitzen oraindik</string>
 	<string name="mnu_comment_unspam">Ez da spama</string>
 	<string name="no_site_error">Ezin izan da WordPressekin konektatu</string>
 	<string name="adding_cat_failed">Ezin izan da kategoria gehitu</string>
@@ -51,7 +49,6 @@
 	<string name="username_reserved_but_may_be_available">Momentu honetan erabiltzaile izen hori erreserbatuta dago baina pare bat egunetan eskuragarri egon daiteke</string>
 	<string name="blog_name_not_allowed">Webgune helbide hori ez dago eskuragarri</string>
 	<string name="blog_name_required">Sartu zure webgunearentzako helbide bat</string>
-	<string name="media_empty_list_custom_date">Ez dago multimedia elemeturik denbora tarte honetan</string>
 	<string name="theme_auth_error_message">Ziurtatu gaiak aukeratzeko baimena izateaz</string>
 	<string name="cat_name_required">Kategoria izena beharrezkoa da</string>
 	<string name="category_automatically_renamed">%1$s kategoria izena ez da zuzena. %2$s bezala berrizendatua izan da.</string>
@@ -60,7 +57,6 @@
 	<string name="error_refresh_notifications">Jakinarazpenak ezin izan dira eguneratu</string>
 	<string name="error_load_comment">Ezin izan da iruzkina kargatu</string>
 	<string name="error_downloading_image">Irudia deskargatzean errorea</string>
-	<string name="reader_empty_followed_tags">Ez zaude etiketarik jarraitzen</string>
 	<string name="blog_name_must_be_at_least_four_characters">Webgunearen helbideak gutxienez 4 karaktere eduki behar ditu</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Webgunearen helbideak 64 karaktere baino gutxiago eduki behar ditu</string>
 	<string name="blog_name_contains_invalid_characters">Webgunearen helbideak ezin du “_” karakterea eduki</string>
@@ -69,7 +65,6 @@
 	<string name="blog_name_reserved">Webgune hori erreserbatuta dago</string>
 	<string name="stats_empty_geoviews">Ez da sarrerarik ikusi</string>
 	<string name="stats_empty_top_authors">Ez da sarrerarik ikusi</string>
-	<string name="reader_empty_posts_in_tag">Ez dago etiketa hau duen sarrerarik</string>
 	<string name="stats_empty_tags_and_categories">Ez da oraindik etiketatutako sarrerik edo orririk ikusi</string>
 	<string name="stats_empty_comments">Oraindik iruzkin gabe</string>
 	<string name="sdcard_message">Edukiak igotzeko muntatutako SD txartel bat beharrezkoa da</string>
@@ -87,7 +82,6 @@
 	<string name="reply_failed">Erantzunak huts egin du</string>
 	<string name="error_refresh_comments">Iruzkinak ezin izan dira une honetan freskatu</string>
 	<string name="error_refresh_stats">Estatistikak ezin izan dira une honetan freskatu </string>
-	<string name="reader_empty_posts_liked">Ez duzu sarrerarik gustoko duzula adierazi</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Webgunearen helbideak letra xeheak (a-z) eta zenbakiak bakarrik izan ditzake</string>
 	<string name="blog_name_reserved_but_may_be_available">Webgune hau momentu honetan erreserbatuta dago baina egun batzuk barru eskuragarri egon liteke</string>
 	<string name="show_all">Dena ikusi</string>
@@ -124,7 +118,6 @@
 	<string name="preview_page">Orriaren aurrebista</string>
 	<string name="page_deleted">Orria ezabatu da</string>
 	<string name="preview_post">Sarreraren aurrebista</string>
-	<string name="select_a_blog">Aukeratu blog bat</string>
 	<string name="share_action_post">Sarrera berria</string>
 	<string name="share_action_media">Multimedia bilduma</string>
 	<string name="media_gallery_num_columns">Zutabe kopurua</string>
@@ -149,15 +142,12 @@
 	<string name="page_settings">Orrialdearen hobespenak</string>
 	<string name="image_settings">Irudiaren hobespenak</string>
 	<string name="post_settings">Sarreraren hobespenak</string>
-	<string name="posts_empty_list">Ez dago sarrerarik oraindik. Zergaitik ez duzu bat sortzen?</string>
 	<string name="visit_security_settings">Ikusi segurtasun hobespenak</string>
 	<string name="select_categories">Kategoriak aukeratu</string>
 	<string name="theme_current_theme">Momentuko gaia</string>
 	<string name="theme_premium_theme">Premium gaia</string>
 	<string name="link_enter_url_text">Estekaren testua (aukerazkoa)</string>
 	<string name="create_a_link">Esteka sortu</string>
-	<string name="create_new_blog_wpcom">WordPress.com-en bloga sortu</string>
-	<string name="pages_empty_list">Ez dago orrialderik oraindik. Zergatik ez duzu bat sortzen?</string>
 	<string name="file_error_create">Ezin izan da multimedia fitzategia igotzeko behin-behineko fitxategia sortu. Ziurtatu zure gailuan nahikoa espazio edukitzeaz.</string>
 	<string name="post_not_found">Sarrera kargatzean errore bat gertatu da. Eguneratu sarrerak eta saiatu berriz.</string>
 	<string name="stats_view_top_posts_and_pages">Top sarrerak eta orrialdeak</string>
@@ -229,7 +219,6 @@
 	<string name="creating_your_account">Zure kontua sortzen</string>
 	<string name="creating_your_site">Zure webgunea sortzen</string>
 	<string name="reader_empty_posts_in_tag_updating">Sarrerak berreskuratzen...</string>
-	<string name="create_account_wpcom">WordPress.com-en kontu bat sortu</string>
 	<string name="error_refresh_media">Zerbait gaizki irten da multimedia bilduma eguneratzean. Saiatu beranduago.</string>
 	<string name="reader_likes_you_and_multi">Zure eta %,d pertsonak hau gustoko dute</string>
 	<string name="reader_likes_multi">%,d pertsonak hau gustoko dute</string>
@@ -243,7 +232,6 @@
 	<string name="view_stats_activity">Estatistikak ikusi</string>
 	<string name="reset_auto_share_preference">Automatikoki partekatzeko hobespenak berrasiarazi</string>
 	<string name="always_use_these_settings_to_share">Beti hobespen hauek erabili</string>
-	<string name="reader_empty_followed_blogs_description">Ez kezkatu, soilik ikonoa sakatu esploratzen hasteko!</string>
 	<string name="reader_likes_you_and_one">Zuk eta beste pertsona batek hau gustoko duzue.</string>
 	<string name="select_date">Data aukeratu</string>
 	<string name="pick_photo">Argazki bat aukeratu</string>
@@ -330,7 +318,6 @@
 	<string name="theme_activating_button">Gaitzen</string>
 	<string name="share_action_title">Gehitu ...</string>
 	<string name="media_edit_success">Eguneratuta</string>
-	<string name="confirm_delete_media">Ziru al zaude multimedia elementua ezabatzeaz?</string>
 	<string name="stats_entry_most_commented">Sarrerak</string>
 	<string name="media_gallery_image_order_random">Ausazkoa</string>
 	<string name="media_edit_title_hint">Idatzi izenburu bat hemen</string>
@@ -381,13 +368,11 @@
 	<string name="media_edit_caption_hint">Idatzi leienda bat hemen</string>
 	<string name="media_edit_description_hint">Idatzi deskribapen bat hemen</string>
 	<string name="media_edit_failure">Ezin izan da eguneratu</string>
-	<string name="confirm_delete_multi_media">Ziur elementu hauek ezabatu nahi dituzula¿</string>
 	<string name="themes_features_label">Ezaugarriak</string>
 	<string name="stats_view_comments">Iruzkinak</string>
 	<string name="stats_entry_search_engine_terms">Bilaketa</string>
 	<string name="stats_totals_views">Ikuspegiak</string>
 	<string name="stats_totals_comments">Komentarioak</string>
-	<string name="remote_changes">Oraindik igo ez den sarrera batean aldaketak egin dituzu. Aldaketa lokalak gainidatzi nahi dituzu?</string>
 	<string name="upload">Igo</string>
 	<string name="manage">Kudeatu</string>
 	<string name="new_notifications">%d jakinarazpen berri</string>
@@ -399,9 +384,7 @@
 	<string name="manage_notifications">Jakinarazpenak kudeatu</string>
 	<string name="notifications_turn_off">Itzali</string>
 	<string name="options">Aukerak</string>
-	<string name="sign_out_confirm">Ziur irtetzea nahi duzula?</string>
 	<string name="sign_in">Sartu</string>
-	<string name="attempting_configure">Sartzen...</string>
 	<string name="notifications_turn_off_1hr">Itzali ordu 1</string>
 	<string name="notifications_turn_off_8hr">Itzali 8 ordu</string>
 	<string name="note_reply_successful">Erantzuna argitaratu da</string>
@@ -465,8 +448,6 @@
 	<string name="categories">Kategoriak</string>
 	<string name="tags_separate_with_commas">Etiketak (banandu etiketak komak erabiliz)</string>
 	<string name="tab_stats">Estatistikak</string>
-	<string name="delete_sure_post">Ziur sarrera ezabatu nahi duzula?</string>
-	<string name="delete_sure_page">Ziur orrialdea ezabatu nahi duzula?</string>
 	<string name="notification_vibrate">Bibratu</string>
 	<string name="notification_sound">Soinu jakinarazpena</string>
 	<string name="notification_blink">Argi jakinarazpena</string>
@@ -478,7 +459,6 @@
 	<string name="delete">Ezabatu</string>
 	<string name="none">Bat ere ez</string>
 	<string name="blogs">Blogak</string>
-	<string name="sure_to_remove_account">Ziur bloga ezabatu nahi duzula?</string>
 	<string name="select_photo">Aukeratu bildumako argazki bat</string>
 	<string name="error">Errorea</string>
 	<string name="cancel">Ezeztatu</string>
@@ -490,7 +470,6 @@
 	<string name="yes">Bai</string>
 	<string name="preview">Aurrebista</string>
 	<string name="category_refresh_error">Kategoria eguneraketa errorea</string>
-	<string name="delete_sure">Ziur zirriborroa ezabatu nahi duzula?</string>
 	<string name="on">en</string>
 	<string-array name="alignment_array">
 		<item>Bat ere ez</item>

@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="faq_button">ÇVS</string>
+	<string name="create_new_blog_wpcom">WordPress.com bloqu yarat</string>
+	<string name="new_blog_wpcom_created">WordPress.com blou yaradıldı!</string>
+	<string name="reader_empty_comments">Şərh yoxdur</string>
+	<string name="reader_likes_multi_short">%,d nəfər</string>
+	<string name="reader_label_comment_count_multi">%,d şərh</string>
+	<string name="reader_label_view_original">Orijinal məqaləyə bax</string>
+	<string name="reader_label_like">Bəyən</string>
+	<string name="reader_label_liked_by">Bəyənən</string>
+	<string name="reader_likes_one_short">1 nəfər</string>
+	<string name="reader_label_comment_count_single">Bir şərh</string>
+	<string name="reader_label_comments_closed">Şərhlər bağlıdır</string>
+	<string name="reader_label_comments_on">Şərh</string>
+	<string name="reader_title_comments">Şərh</string>
+	<string name="reader_title_photo_viewer">%1$d / %2$d</string>
+	<string name="error_refresh_unauthorized_posts">Yazıya baxmağa və ya onu redaktə etməyə izniniz yoxdur</string>
+	<string name="stats_totals_views_per_visitor">Ziyarətçi Başına Baxış</string>
+	<string name="help_and_support">Yardım və dəstək</string>
+	<string name="select_a_blog">WordPress saytı seç</string>
+	<string name="mnu_comment_liked">Bəyənildi</string>
+	<string name="comment">Şərh</string>
+	<string name="comment_trashed">Şərh zibil qutusuna göndərildi</string>
+	<string name="dlg_confirm_spam_comment">Bu şərh spam olaraq işarələnsinmi?</string>
+	<string name="comment_mark_spam">Spam olaraq işarələ</string>
 	<string name="contact_us">Əlaqə yaradın</string>
 	<string name="contact_us_pref_summary">Automattic dəstək heyətindən yardım alın</string>
 	<string name="hs__conversation_detail_error">Qarşılaşdığınız problem haqqında məlumat verin</string>
@@ -15,7 +39,6 @@
 	<string name="search_current_location">Yerləşdir</string>
 	<string name="preference_privacy">Gizlilik</string>
 	<string name="preference_send_usage_stats">Statistikaları göndər</string>
-	<string name="reader_label_tap_to_dismiss">Davam etmək üçün toxunun</string>
 	<string name="reader_title_reblog">Yazını yenidən bloqla</string>
 	<string name="reader_hint_reblog_comment">Öz rəyini yaz (seçimə bağlı)</string>
 	<string name="reader_label_reblog_to">Yenidən bloqla</string>
@@ -65,13 +88,11 @@
 	<string name="mnu_comment_unspam">Spam deyil</string>
 	<string name="mnu_comment_edit">Redaktə et</string>
 	<string name="out_of_memory">Cihazın yaddaşı doldu</string>
-	<string name="reader_empty_followed_blogs_title">Hələlik heç bir bloqu izləmirsiniz</string>
 	<string name="no_network_message">Uyğun vəziyyətdə şəbəkə yoxdur</string>
 	<string name="could_not_remove_account">Bloq silinə bilmədi</string>
 	<string name="gallery_error">Media maddəsi bərpa edilə bilmədi</string>
 	<string name="blog_not_found">Bu bloqla əlaqə qurularkən bir xəta ilə qarşılaşıldı</string>
 	<string name="wait_until_upload_completes">Yükləmə bitənə qədər gözləyin</string>
-	<string name="media_empty_list_custom_date">Bu zaman intervalında media maddəsi yoxdur</string>
 	<string name="theme_fetch_failed">Mövzuları qəbul etmək mümkün olmadı</string>
 	<string name="theme_set_failed">Mövzunu qurmaq mümkün olmadı</string>
 	<string name="theme_auth_error_message">Mövzu qurma səlahiyyətinə sahib olduğunuzdan əmin olun</string>
@@ -107,14 +128,10 @@
 	<string name="error_downloading_image">Təsvir endirilərkən xəta baş verdi</string>
 	<string name="passcode_wrong_passcode">Yanlış PIN</string>
 	<string name="error_edit_comment">Şərh redaktəsi sırasında xəta baş verdi</string>
-	<string name="reader_empty_posts_in_tag">Bu etiketə sahib yazı yoxdur</string>
-	<string name="reader_empty_followed_tags">Heç bir etiketi izləmirsiniz</string>
-	<string name="reader_empty_posts_liked">Heç bir yazını bəyənməmisiniz</string>
 	<string name="invalid_email_message">Keçərsiz e-poçt ünvanı</string>
 	<string name="invalid_password_message">Parollar ən az 4 simvol olmalıdır</string>
 	<string name="invalid_username_too_short">İstifadəçi adı 4 simvoldan artıq olmalıdır</string>
 	<string name="invalid_username_too_long">İstifadəçi adı 61 simvoldan qısa olmalıdır</string>
-	<string name="agree_terms_of_service">Hesab yaradarkən sehirli %1$s Xidmət Şərtləri %2$s -ni qəbul etmiş sayılırsınız</string>
 	<string name="username_only_lowercase_letters_and_numbers">İstifadəçi adı sadəcə kiçik hərflərdən (a-z) və rəqəmlərdən ibarət olmalıdır</string>
 	<string name="username_required">İstifadəçi adınızı daxil edin</string>
 	<string name="username_not_allowed">İstifadəçi adına izin verilmir</string>
@@ -165,7 +182,6 @@
 	<string name="reader_toast_err_reblog_requires_blog">Bloq seç</string>
 	<string name="reader_toast_err_add_tag">Bu etiket əlavə edilə bilmir</string>
 	<string name="reader_toast_err_remove_tag">Bu etiket silinə bilmir</string>
-	<string name="create_new_blog_wpcom">WordPress.com bloqu yarat</string>
 	<string name="required_field">Gərəkli sahə</string>
 	<string name="email_hint">E-poçt ünvanı</string>
 	<string name="username_email">İstifadəçi adı və ya e-poçt</string>
@@ -201,7 +217,6 @@
 	<string name="category_slug">Kateqoriya yarlığı (seçimə bağlı)</string>
 	<string name="category_desc">Kateqoriya açıqlaması (seçimə bağlı)</string>
 	<string name="category_parent">Valideyin kateqoriya (seçimə bağlı):</string>
-	<string name="select_a_blog">Bloq seç</string>
 	<string name="share_action_post">Yeni yazı</string>
 	<string name="share_action_media">Media kitabxanası</string>
 	<string name="file_error_create">Müvəqqəti media faylı yaradıla bilmir. Cihazınızda yetərli böş sahə olduğundan əmin olun.</string>
@@ -239,10 +254,8 @@
 	<string name="author_name">Müəllifin adı</string>
 	<string name="author_email">Müəllifin e-poçtu</string>
 	<string name="author_url">Müəllifin URL</string>
-	<string name="pages_empty_list">Hələlik heç bir səhifə yoxdur. Niyə bir ədədini yaratmırsınız?</string>
 	<string name="page_settings">Səhifə parametrləri</string>
 	<string name="local_draft">Yerli qaralama</string>
-	<string name="posts_empty_list">Hələlik heç bir yazı yoxdur. Niyə bir ədədini yaratmırsınız?</string>
 	<string name="upload_failed">Yükləmə baş tutmadı</string>
 	<string name="horizontal_alignment">Üfüqi qruplaşma</string>
 	<string name="file_not_found">Yüklənəcək media faylı tapılmadı. Silinmiş vəya daşınmış ola bilərmi?</string>
@@ -276,11 +289,11 @@
 	<string name="share_link">Bağlantını paylaş</string>
 	<string name="creating_your_account">Yeni hesabınız yaradılır</string>
 	<string name="creating_your_site">Yeni saytınız yaradılır</string>
-	<string name="create_account_wpcom">WordPress.com-da hesab yarat</string>
 	<string name="error_refresh_media">Media kitabxanasının yenilənməsi zamanı bəzi şeylər tərs getdi. Daha sonra təkrar yoxlayın.</string>
 	<string name="reader_empty_posts_in_tag_updating">Yazılar gətirilir...</string>
 	<string name="reader_label_reply">Cavab</string>
 	<string name="copyright">©2014 Automattic, Inc</string>
+	<string name="comment_spammed">Şərh spam olaraq işarələnmişdir</string>
 	<string name="view_stats_activity">Statistikalara Bax</string>
 	<string name="video">Video</string>
 	<string name="reader_likes_multi">%,d şəxs bunu bəyənir</string>
@@ -291,7 +304,6 @@
 	<string name="share_preference_title">WordPress ilə paylaş</string>
 	<string name="download">Media endirilir</string>
 	<string name="cant_share_no_visible_blog">Görünən bir bloqunuz olmadan WordPress ilə paylaşa bilməzsiniz</string>
-	<string name="reader_empty_followed_blogs_description">Həyəcanlanmayın, sadəcə etiket ikonuna tıklayın və kəşf etməyə başlayın!</string>
 	<string name="select_time">Saat seç</string>
 	<string name="select_date">Tarix seç</string>
 	<string name="pick_photo">Foto seç</string>
@@ -326,7 +338,9 @@
 	<string name="reader_label_removed_tag">%s silindi</string>
 	<string name="connecting_wpcom">WordPress.com-a qoşulma</string>
 	<string name="limit_reached">Limit həddini aşdınız. 1 dəqiqə ərzində təkrar yoxlaya bilərsiniz. Bir daha cəhd etsəniz qadağanın ləğv edilməsi üçün bir az gözləməli olacaqsınız. Bunun bir xəta olduğunu düşünürsünüzsə dəstək xidmətinə müraciət edin.</string>
+	<string name="reader_empty_followed_tags">Siz hər hansı bir etiketi izləyə bilməyəcəksiniz</string>
 	<string name="reader_empty_popular_tags">Populyar hər hansı bir etiket yoxdur</string>
+	<string name="create_account_wpcom">WordPress.com-da hesab yaradın</string>
 	<string name="reader_btn_reblog">Rebloq</string>
 	<string name="reader_btn_follow">İzlə</string>
 	<string name="reader_btn_unfollow">İzlənən</string>
@@ -396,8 +410,6 @@
 	<string name="media_gallery_type_tiled">Döşənmiş</string>
 	<string name="media_gallery_type_circles">Çəmbərlər</string>
 	<string name="media_edit_failure">Yenilənmə sirasında xəta</string>
-	<string name="confirm_delete_media">Bu media maddəsini silmək istədiyinizdən əminsinizmi?</string>
-	<string name="confirm_delete_multi_media">Bu media maddə(lərini) silmək istədiyinizdən əminsinizmi?</string>
 	<string name="themes_details_label">Ətraflı detallar</string>
 	<string name="themes_features_label">Özəlliklər</string>
 	<string name="theme_activate_button">Aktivasiya</string>
@@ -435,7 +447,6 @@
 	<string name="passcode_enter_passcode">PIN kodunu daxil et</string>
 	<string name="passcode_enter_old_passcode">Əvvəlki PIN kodunu daxil et</string>
 	<string name="passcode_manage">PIN bloklamasının idarəetməsi</string>
-	<string name="remote_changes">Hələ ki sayta yükləmədiyiniz bir yazıda dəyişikliklər etdiniz. Yeniləmə ilə davam edib lokal dəyişikliklərin üzərinə yazılsınmı?</string>
 	<string name="upload">Yüklə</string>
 	<string name="manage">İdarəetmə</string>
 	<string name="sign_in">Giriş</string>
@@ -443,8 +454,6 @@
 	<string name="types">Növlər</string>
 	<string name="options">Parametrlər</string>
 	<string name="notifications_turn_off">Söndür</string>
-	<string name="sign_out_confirm">Seansı tamamlamaq istədiyinizdən əminsinizmi?</string>
-	<string name="attempting_configure">...Giriş</string>
 	<string name="notifications">Bildirişlər</string>
 	<string name="manage_notifications">Bildirişlərin idarə edilməsi</string>
 	<string name="enable_notifications">Bildirişləri aç</string>
@@ -513,8 +522,6 @@
 	<string name="tags_separate_with_commas">Etiketlər(etiketləri vergüllə ayırın)</string>
 	<string name="title">Başlıq</string>
 	<string name="tab_stats">Statistikalar</string>
-	<string name="delete_sure_page">Bu səhifəni silməyinizdən əminsinizmi?</string>
-	<string name="delete_sure_post">Bu yazını silməyinizdən əminsinizmi?</string>
 	<string name="notification_vibrate">Vibrasiya</string>
 	<string name="notification_blink">Məlumatlandırma işığını parlat</string>
 	<string name="notification_sound">Məlumatlandırma səsi çal</string>
@@ -526,7 +533,6 @@
 	<string name="delete">Sil</string>
 	<string name="none">Heç biri</string>
 	<string name="blogs">Bloqlar</string>
-	<string name="sure_to_remove_account">Bu bloqu silməyinizdən əminsinizmi?</string>
 	<string name="select_photo">Qalereyadan bir foto seçin</string>
 	<string name="no">Xeyr</string>
 	<string name="yes">Bəli</string>
@@ -536,7 +542,6 @@
 	<string name="cancel">İmtina</string>
 	<string name="save">Qeyd et</string>
 	<string name="add">Əlavə et</string>
-	<string name="delete_sure">Qaralamanı silmək istədiyinizdən əminsinizmi</string>
 	<string name="preview">Önizləmə</string>
 	<string name="on">üstündə</string>
 	<string name="category_refresh_error">Kateqoriya təzələnməsi əsnasında xəta baş verdi.</string>
