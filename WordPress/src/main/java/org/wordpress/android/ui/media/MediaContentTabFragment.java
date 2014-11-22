@@ -157,6 +157,11 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         notifiyMediaSelectionStarted();
         getActivity().getMenuInflater().inflate(R.menu.media_content_selection, menu);
 
+        if ((mFilter & WP_IMAGES) == 0 && (mFilter & WP_VIDEOS) == 0) {
+            MenuItem galleryItem = menu.findItem(R.id.menu_media_content_selection_gallery);
+            galleryItem.setVisible(false);
+        }
+
         return true;
     }
 
