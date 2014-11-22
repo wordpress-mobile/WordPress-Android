@@ -307,6 +307,9 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
                 }
             } while(imageCursor.moveToNext() && thumbCursor.moveToNext());
         }
+
+        thumbCursor.close();
+        imageCursor.close();
     }
 
     private void addMediaStoreVideos() {
@@ -326,6 +329,8 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
                 }
             } while(videoCursor.moveToNext());
         }
+
+        videoCursor.close();
     }
 
     private void addWordPressImages() {
@@ -333,6 +338,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
 
         if (wordPressImages != null) {
             addWordPressImagesFromCursor(wordPressImages);
+            wordPressImages.close();
         }
     }
 
@@ -341,6 +347,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
 
         if (wordPressVideos != null) {
             addWordPressVideosFromCursor(wordPressVideos);
+            wordPressVideos.close();
         }
     }
 
