@@ -7,7 +7,7 @@
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="sign_out_confirm">Are you sure you want to sign out?</string>
+    <string name="sign_out_confirm">Sign out?</string>
     <string name="sign_in_again">Sign in again</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
     <string name="visit_security_settings">Visit security settings</string>
@@ -46,7 +46,7 @@
     <string name="notification_sound">Play notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_blink">Blink notification light</string>
-    <string name="sure_to_remove_account">Are you sure you want to remove this blog?</string>
+    <string name="sure_to_remove_account">Remove this blog?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="error">Error</string>
@@ -72,10 +72,6 @@
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
     <string name="signing_out">Signing out…</string>
-    <string name="all">All</string>
-    <string name="images">Images</string>
-    <string name="unattached">Unattached</string>
-    <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custom date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
@@ -86,9 +82,17 @@
     <string name="media_add_popup_capture_photo">Capture photo</string>
     <string name="media_add_popup_capture_video">Capture video</string>
     <string name="media_add_new_media_gallery">Create gallery</string>
+    <string name="media_gallery_date_range" comment="Displaying media from 2014-01-13 to 2014-01-23">Displaying media from %1$s to %2$s</string>
+
+    <!-- CAB -->
+    <string name="cab_selected">%d selected</string>
 
     <!-- Media Gallery -->
     <string name="content_description_preview_image">Preview Image</string>
+    <string name="all">All</string>
+    <string name="images">Images</string>
+    <string name="unattached">Unattached</string>
+    <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custom date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
     <string name="media_gallery_settings_title">Gallery settings</string>
     <string name="media_gallery_image_order">Image order</string>
     <string name="media_gallery_image_order_random">Random</string>
@@ -121,8 +125,8 @@
     <string name="saving">Saving…</string>
 
     <!-- Delete Media -->
-    <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>
-    <string name="confirm_delete_multi_media">Are you sure you want to delete these item(s)?</string>
+    <string name="confirm_delete_media">Delete selected item?</string>
+    <string name="confirm_delete_multi_media">Delete selected items?</string>
     <string name="wait_until_upload_completes">Wait until upload completes</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="media_empty_list">No media</string>
@@ -241,20 +245,20 @@
 
     <!-- draft actions -->
     <string name="delete_draft">Delete draft</string>
-    <string name="delete_sure">Are you sure you want to delete the draft</string>
+    <string name="delete_sure">Delete this draft</string>
 
     <!-- page actions -->
     <string name="preview_page">Preview page</string>
     <string name="deleting_page">Deleting page</string>
     <string name="page_deleted">Page deleted successfully</string>
-    <string name="delete_sure_page">Are you sure you want to delete the page</string>
+    <string name="delete_sure_page">Delete this page</string>
 
     <!-- post actions -->
     <string name="preview_post">Preview post</string>
     <string name="deleting_post">Deleting post</string>
     <string name="post_deleted">Post deleted successfully</string>
     <string name="comment_added">Comment added successfully</string>
-    <string name="delete_sure_post">Are you sure you want to delete the post</string>
+    <string name="delete_sure_post">Delete this post</string>
     <string name="share_url_post">Share post</string>
     <string name="share_url_page">Share page</string>
     <string name="share_link">Share link</string>

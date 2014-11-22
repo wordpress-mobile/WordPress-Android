@@ -245,15 +245,17 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
     @Override
     public void onChange(Bucket<Note> bucket, Bucket.ChangeType type, String key) {
-        // Reset the note's local status when a change is received
-        try {
-            Note note = bucket.get(key);
-            if (note.isCommentType()) {
-                note.setLocalStatus(null);
-                note.save();
+        if (type == Bucket.ChangeType.MODIFY) {
+            // Reset the note's local status when a change is received
+            try {
+                Note note = bucket.get(key);
+                if (note.isCommentType()) {
+                    note.setLocalStatus(null);
+                    note.save();
+                }
+            } catch (BucketObjectMissingException e) {
+                AppLog.e(AppLog.T.NOTIFS, "Could not create note after receiving change.");
             }
-        } catch (BucketObjectMissingException e) {
-            AppLog.e(AppLog.T.NOTIFS, "Could not create note after receiving change.");
         }
 
         refreshNotes();

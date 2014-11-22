@@ -276,6 +276,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         if (note.getFormattedSubject() != null) {
             setTitle(note.getTitle());
         }
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
 
     public void showCommentDetailForNote(Note note) {
@@ -372,7 +374,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                         }
 
                         @Override
-                        public void onClear() {
+                        public void onClear(Parcelable[] token) {
                             //noop
                         }
 

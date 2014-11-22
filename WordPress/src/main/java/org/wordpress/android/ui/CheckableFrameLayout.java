@@ -14,7 +14,6 @@ public class CheckableFrameLayout extends FrameLayout implements Checkable {
 
     public interface OnCheckedChangeListener {
         public void onCheckedChanged(CheckableFrameLayout view, boolean isChecked);
-
     }
 
     public CheckableFrameLayout(Context context) {
@@ -37,14 +36,16 @@ public class CheckableFrameLayout extends FrameLayout implements Checkable {
     @Override
     public void setChecked(boolean checked) {
         CheckBox checkbox = (CheckBox) findViewById(R.id.media_grid_item_checkstate);
-        if (checkbox != null)
+        if (checkbox != null) {
             checkbox.setChecked(checked);
+        }
 
         if (mIsChecked != checked) {
             mIsChecked = checked;
             refreshDrawableState();
-            if(mOnCheckedChangeListener != null) {
-                mOnCheckedChangeListener.onCheckedChanged((CheckableFrameLayout) this.findViewById(R.id.media_grid_frame_layout), checked);
+            if (mOnCheckedChangeListener != null) {
+                mOnCheckedChangeListener.onCheckedChanged((CheckableFrameLayout) this.findViewById(
+                        R.id.media_grid_frame_layout), checked);
             }
         }
     }
