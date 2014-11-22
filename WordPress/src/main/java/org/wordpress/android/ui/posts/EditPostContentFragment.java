@@ -112,8 +112,10 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     private static final String TAG_FORMAT_BAR_BUTTON_UNDERLINE = "u";
     private static final String TAG_FORMAT_BAR_BUTTON_STRIKE = "strike";
     private static final String TAG_FORMAT_BAR_BUTTON_QUOTE = "blockquote";
-    private static final String IMAGES_TAB_TITLE = "Images";
-    private static final String VIDEOS_TAB_TITLE = "Videos";
+    private static final String LOCAL_IMAGES_TAB_TITLE = "Local Images";
+    private static final String LOCAL_VIDEOS_TAB_TITLE = "Local Videos";
+    private static final String WP_IMAGES_TAB_TITLE = "Library Images";
+    private static final String WP_VIDEOS_TAB_TITLE = "Library Videos";
 
     private static final int CONTENT_ANIMATION_DURATION = 250;
     private static final int MIN_THUMBNAIL_WIDTH = 200;
@@ -958,12 +960,12 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     private void startMediaSelection() {
         Intent intent = new Intent(mActivity, MediaSelectActivity.class);
         String[] tabConfig = {
-            IMAGES_TAB_TITLE + ";" + MediaSelectActivity.FILTER_CAPTURE_IMAGE + "|" +
-                                     MediaSelectActivity.FILTER_DEVICE_IMAGES + "|" +
-                                     MediaSelectActivity.FILTER_WP_IMAGES,
-            VIDEOS_TAB_TITLE + ";" + MediaSelectActivity.FILTER_CAPTURE_VIDEO + "|" +
-                                     MediaSelectActivity.FILTER_DEVICE_VIDEOS + "|" +
-                                     MediaSelectActivity.FILTER_WP_VIDEOS
+            LOCAL_IMAGES_TAB_TITLE + ";" + MediaSelectActivity.FILTER_CAPTURE_IMAGE + "|" +
+                                           MediaSelectActivity.FILTER_DEVICE_IMAGES,
+            WP_IMAGES_TAB_TITLE + ";" + MediaSelectActivity.FILTER_WP_IMAGES,
+            LOCAL_VIDEOS_TAB_TITLE + ";" + MediaSelectActivity.FILTER_CAPTURE_VIDEO + "|" +
+                                           MediaSelectActivity.FILTER_DEVICE_VIDEOS,
+            WP_VIDEOS_TAB_TITLE + ";" + MediaSelectActivity.FILTER_WP_VIDEOS
         };
         intent.putExtra(MediaSelectActivity.PARAMETER_REQUEST_KEY, true);
         intent.putExtra(MediaSelectActivity.PARAMETER_TAB_CONFIG_KEY, tabConfig);
