@@ -33,13 +33,13 @@ public class MediaContentAdapter extends BaseAdapter {
                                          Gravity.TOP | Gravity.END);
 
     private final Resources      mResources;
-    private final LayoutInflater mLayoutInflator;
+    private final LayoutInflater mLayoutInflater;
 
     private List<MediaContent> mContent;
 
     public MediaContentAdapter(Context context) {
         mResources = context.getResources();
-        mLayoutInflator = LayoutInflater.from(context);
+        mLayoutInflater = LayoutInflater.from(context);
 
         mContent = new ArrayList<MediaContent>();
     }
@@ -72,7 +72,7 @@ public class MediaContentAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mLayoutInflator.inflate(R.layout.media_content_grid_item, parent, false);
+            convertView = mLayoutInflater.inflate(R.layout.media_content_grid_item, parent, false);
         }
 
         MediaContent content = mContent.get(position);

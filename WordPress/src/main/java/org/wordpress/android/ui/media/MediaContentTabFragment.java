@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,8 +17,11 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AbsListView.MultiChoiceModeListener;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AppLog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,8 +36,9 @@ import java.util.List;
  * {@link org.wordpress.android.ui.media.MediaContentTabFragment.OnMediaContentSelected}.
  */
 
-public class MediaContentTabFragment extends Fragment implements AdapterView.OnItemClickListener,
-                                                                 AbsListView.MultiChoiceModeListener, MediaUtils.LaunchCameraCallback {
+public class MediaContentTabFragment extends Fragment implements OnItemClickListener,
+                                                                 MultiChoiceModeListener,
+                                                                 MediaUtils.LaunchCameraCallback {
     public interface OnMediaContentSelected {
         // Called when the first item is selected
         public void onMediaContentSelectionStarted();
@@ -94,14 +97,14 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
 
         Bundle args = getArguments();
         mFilter = (args == null) ? NONE : args.getInt(FILTER_ARG);
+
+        layoutGridView();
+        applyFilters();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
-        layoutGridView();
-        applyFilters();
 
         return mGridView;
     }
@@ -464,7 +467,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
                 try {
                     content.setContentTitle(formattedDateFromEpoch(Long.valueOf(dateTaken)));
                 } catch (NumberFormatException numberFormatException) {
-                    Log.w("TEST", "Error formatting DATE_TAKEN(" + dateTaken + "): " + numberFormatException);
+                    AppLog.d(AppLog.T.MEDIA, "Error formatting DATE_TAKEN(" + dateTaken + "): " + numberFormatException);
                 }
             }
         }
@@ -486,7 +489,7 @@ public class MediaContentTabFragment extends Fragment implements AdapterView.OnI
                 return DATE_DISPLAY_FORMAT_THIS_YEAR.format(new Date(timeSinceEpoch));
             }
         } catch (NumberFormatException numberFormatException) {
-            Log.w("TEST", "Error formatting DATE_TAKEN(" + timeSinceEpoch + "): " + numberFormatException);
+            AppLog.d(AppLog.T.MEDIA, "Error formatting DATE_TAKEN(" + timeSinceEpoch + "): " + numberFormatException);
         }
 
         return null;
