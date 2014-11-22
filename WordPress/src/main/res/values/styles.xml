@@ -329,7 +329,11 @@
     </style>
 
     <!-- Dialog -->
-    <style name="WordPress.Dialog" parent="Theme.AppCompat.Light.Dialog"/>
+    <style name="WordPress.Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <!-- work around a bug that causes weird styling of the dialog title on Android 5 -->
+        <item name="android:windowNoTitle">false</item>
+        <item name="windowActionBar">false</item>
+    </style>
 
     <style name="WordPress.SwipeToRefresh">
         <item name="refreshIndicatorColor">@color/blue_new_kid</item>
