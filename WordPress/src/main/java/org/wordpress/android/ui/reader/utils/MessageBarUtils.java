@@ -32,10 +32,10 @@ public class MessageBarUtils {
 
         switch (messageBarType) {
             case INFO:
-                txtMessageBar.setBackgroundResource(R.color.reader_message_bar_blue);
+                txtMessageBar.setBackgroundResource(R.color.reader_message_bar_info);
                 break;
             case ALERT:
-                txtMessageBar.setBackgroundResource(R.color.reader_message_bar_orange);
+                txtMessageBar.setBackgroundResource(R.color.reader_message_bar_alert);
                 break;
             default :
                 return;

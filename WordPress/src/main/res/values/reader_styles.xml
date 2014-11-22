@@ -129,9 +129,10 @@
         <item name="android:gravity">center</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
-        <item name="android:background">@color/reader_message_bar_blue</item>
+        <item name="android:background">@color/reader_message_bar_info</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:elevation">@dimen/message_bar_elevation</item>
     </style>
 
     <!-- EditTexts -->

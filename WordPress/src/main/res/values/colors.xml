@@ -45,7 +45,6 @@
     <!-- Media Gallery colors -->
     <color name="media_gallery_grid_label_bg">#B3000000</color>
     <color name="media_gallery_grid_label">#FFFFFF</color>
-    <color name="media_gallery_image_bg">#FFFFFF</color>
 	<color name="media_gallery_bg">#75797C</color>
 	<color name="media_gallery_option_selected">#333333</color>
 	<color name="media_gallery_option_default">#EEEEEE</color>
@@ -89,19 +88,16 @@
     <color name="grey_dark">#333333</color>
     <color name="grey_extra_dark">#222222</color>
 
-    <color name="semi_transparent_blue_medium">#cc1e8cbe</color>
-    <color name="semi_transparent_blue_light">#cc78dcfa</color>
     <color name="semi_transparent_blue_extra_light">#ccc8eefc</color>
     <color name="translucent_grey_extra_dark">#80222222</color>
 
     <!-- native reader colors -->
     <color name="reader_divider_grey">@color/grey_extra_light</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
-    <color name="reader_message_bar_blue">@color/semi_transparent_blue_medium</color>     <!-- blue_medium with alpha -->
-    <color name="reader_message_bar_orange">#ccf1831e</color>       <!-- orange_medium with alpha -->
+    <color name="reader_message_bar_info">@color/color_primary_dark</color>
+    <color name="reader_message_bar_alert">@color/color_accent</color>
 
     <!-- comment status colors -->
-    <color name="comment_status_approved">@color/blue_extra_dark</color>
     <color name="comment_status_unapproved">@color/orange_medium</color>
     <color name="comment_status_spam">#dd3d36</color>
 
