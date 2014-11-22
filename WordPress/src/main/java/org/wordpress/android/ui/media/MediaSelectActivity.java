@@ -3,12 +3,14 @@ package org.wordpress.android.ui.media;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.widgets.WPViewPager;
+import org.wordpress.android.ui.media.MediaContentTabFragment.OnMediaContentSelected;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,7 @@ import java.util.ArrayList;
  * on the users device.
  */
 
-public class MediaSelectActivity extends WPActionBarActivity implements MediaContentTabFragment.OnMediaContentSelected {
+public class MediaSelectActivity extends WPActionBarActivity implements OnMediaContentSelected {
     public static final int    ACTIVITY_REQUEST_CODE_MEDIA_SELECTION = 6000;
     public static final int    ACTIVITY_RESULT_CODE_GALLERY_CREATED  = 6001;
     public static final String PARAMETER_REQUEST_KEY                 = "requestCode";
@@ -72,6 +74,20 @@ public class MediaSelectActivity extends WPActionBarActivity implements MediaCon
         }
 
         super.onBackPressed();
+    }
+
+    @Override
+    public void onActionModeStarted(ActionMode mode) {
+        super.onActionModeStarted(mode);
+
+        mMediaSelectFragment.setActionMode(mode);
+    }
+
+    @Override
+    public void onActionModeFinished(ActionMode mode) {
+        super.onActionModeFinished(mode);
+
+        mMediaSelectFragment.setActionMode(null);
     }
 
     @Override

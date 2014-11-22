@@ -8,6 +8,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.ActionMode;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -22,7 +23,6 @@ public class MediaContentFragmentPagerAdapter extends FragmentPagerAdapter
         implements AdapterView.OnItemClickListener,
                    ViewPager.OnPageChangeListener,
                    ActionBar.TabListener {
-
     private class TabInfo {
         public Class<?> classType;
         public Bundle args;
@@ -36,6 +36,7 @@ public class MediaContentFragmentPagerAdapter extends FragmentPagerAdapter
     private Activity mActivity;
     private ViewPager mViewPager;
     private ActionBar mActionBar;
+    private ActionMode mActionMode;
     private List<TabInfo> mTabs;
 
     private MediaContentFragmentPagerAdapter(FragmentManager fragmentManager) {
@@ -98,6 +99,9 @@ public class MediaContentFragmentPagerAdapter extends FragmentPagerAdapter
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         mViewPager.setCurrentItem(tab.getPosition());
+        if (mActionMode != null) {
+            mActionMode.finish();
+        }
     }
 
     @Override
@@ -106,6 +110,10 @@ public class MediaContentFragmentPagerAdapter extends FragmentPagerAdapter
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+    }
+
+    public void setActionMode(ActionMode mode) {
+        mActionMode = mode;
     }
 
     /** Used to add filtered {@link org.wordpress.android.ui.media.MediaContentTabFragment}'s. */

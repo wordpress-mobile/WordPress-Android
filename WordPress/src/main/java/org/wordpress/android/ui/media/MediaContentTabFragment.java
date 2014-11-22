@@ -147,6 +147,7 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         mode.setTitle("Select content");
+        getActivity().onActionModeStarted(mode);
 
         return true;
     }
@@ -239,7 +240,7 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         mAdapter = new MediaContentAdapter(getActivity());
         mGridView = new GridView(activity);
         mGridView.setBackgroundColor(getResources().getColor(R.color.grey_extra_light));
-        mGridView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        mGridView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mGridView.setMultiChoiceModeListener(this);
         mGridView.setOnItemClickListener(this);
         mGridView.setNumColumns(numColumns);
