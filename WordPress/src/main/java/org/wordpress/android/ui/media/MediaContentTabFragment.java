@@ -236,19 +236,17 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         int columnSpacingY = Math.round(resources.getDimension(R.dimen.media_grid_column_spacing_vertical));
         int columnSpacingX = Math.round(resources.getDimension(R.dimen.media_grid_column_spacing_horizontal));
 
+        mAdapter = new MediaContentAdapter(getActivity());
         mGridView = new GridView(activity);
         mGridView.setBackgroundColor(getResources().getColor(R.color.grey_extra_light));
         mGridView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        mGridView.setMultiChoiceModeListener(this);
         mGridView.setOnItemClickListener(this);
         mGridView.setNumColumns(numColumns);
         mGridView.setVerticalSpacing(columnSpacingY);
         mGridView.setHorizontalSpacing(columnSpacingX);
         mGridView.setPadding(gridPadding, 0, gridPadding, 0);
-
-        mAdapter = new MediaContentAdapter(getActivity());
         mGridView.setAdapter(mAdapter);
-        mGridView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-        mGridView.setMultiChoiceModeListener(this);
     }
 
     /** Helper method to add content to the adapter based on the currently set filters. */

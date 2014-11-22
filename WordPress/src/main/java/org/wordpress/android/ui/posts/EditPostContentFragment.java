@@ -962,9 +962,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         String[] tabConfig = {
             LOCAL_IMAGES_TAB_TITLE + ";" + MediaSelectActivity.FILTER_CAPTURE_IMAGE + "|" +
                                            MediaSelectActivity.FILTER_DEVICE_IMAGES,
-            WP_IMAGES_TAB_TITLE + ";" + MediaSelectActivity.FILTER_WP_IMAGES,
             LOCAL_VIDEOS_TAB_TITLE + ";" + MediaSelectActivity.FILTER_CAPTURE_VIDEO + "|" +
                                            MediaSelectActivity.FILTER_DEVICE_VIDEOS,
+            WP_IMAGES_TAB_TITLE + ";" + MediaSelectActivity.FILTER_WP_IMAGES,
             WP_VIDEOS_TAB_TITLE + ";" + MediaSelectActivity.FILTER_WP_VIDEOS
         };
         intent.putExtra(MediaSelectActivity.PARAMETER_REQUEST_KEY, true);
