@@ -3,7 +3,6 @@
 	<string name="creating_your_account">A\' cruthachadh a\' chunntais agad</string>
 	<string name="creating_your_site">A\' cruthachadh na làraich agad</string>
 	<string name="reader_empty_posts_in_tag_updating">A\' faighinn nam post...</string>
-	<string name="create_account_wpcom">Cruthaich cunntas air WordPress.com</string>
 	<string name="error_refresh_media">Chaidh rudeigin cearr fhad \'s a bha sinn ag ath-nuadhachadh leabhar-lann nam meadhanan. Feuch ris a-rithist an ceann greis.</string>
 	<string name="reader_likes_you_and_multi">Thuirt thusa agus %,d eile gur toigh leibh seo</string>
 	<string name="reader_likes_multi">\'S toigh le %,d daoine seo</string>
@@ -12,12 +11,12 @@
 	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">Video</string>
 	<string name="download">A\' luchdadh a-nuas a\' mheadhain</string>
+	<string name="comment_spammed">Chaidh comharra spama a chur ris a\' bheachd</string>
 	<string name="cant_share_no_visible_blog">Chan urrainn dhut co-roinneadh gu WordPress as aonais bloga a tha ri fhaicinn</string>
 	<string name="share_preference_title">Co-roinn gu WordPress</string>
 	<string name="reset_auto_share_preference">Ath-shuidhich roghainnean a\' cho-roinnidh fhèin-obrachail</string>
 	<string name="always_use_these_settings_to_share">Cleachd na roghainnean seo an-còmhnaidh</string>
 	<string name="view_stats_activity">Seall na stats</string>
-	<string name="reader_empty_followed_blogs_description">Ach na gabh dragh, cha leig thu leas ach gnogag a thoirt air ìomhaigheag nan taga gus an rùrachadh!</string>
 	<string name="select_time">Tagh àm</string>
 	<string name="reader_likes_you_and_one">Thuirt thusa agus aonan eile gur toigh leibh seo</string>
 	<string name="select_date">Tagh ceann-là</string>
@@ -90,8 +89,6 @@
 	<string name="media_edit_description_hint">Cuir tuairisgeul an-seo</string>
 	<string name="media_edit_success">Air ùrachadh</string>
 	<string name="media_edit_failure">Dh\'fhàillig an t-ùrachadh</string>
-	<string name="confirm_delete_media">A bheil thu cinnteach gu bheil thu airson am meadhan seo a sguabadh às?</string>
-	<string name="confirm_delete_multi_media">A bheil thu cinnteach gu bheil thu airson na rudan seo a sguabadh às?</string>
 	<string name="themes_details_label">Mion-fhiosrachadh</string>
 	<string name="themes_features_label">Feartan</string>
 	<string name="theme_activate_button">Cuir an gnìomh</string>
@@ -159,13 +156,10 @@
 	<string name="passcode_preference_title">Glas a\' PIN</string>
 	<string name="passcode_turn_off">Cuir glas a\' PIN dheth</string>
 	<string name="passcode_turn_on">Cuir glas a\' PIN air</string>
-	<string name="remote_changes">Rinn thu atharrachadh air post nach deach a luchdadh suas fhathast. A bheil thu airson leantainn air adhart leis an ath-nuadhachadh is sgrìobhadh thairis air na h-atharraichean ionadail?</string>
 	<string name="upload">Luchdadh suas</string>
 	<string name="manage">Stiùirich</string>
-	<string name="sign_out_confirm">A bheil thu cinnteach gu bheil thu airson clàradh a-mach?</string>
 	<string name="sign_in">Clàraich a-steach</string>
 	<string name="sign_out">Clàraich a-mach</string>
-	<string name="attempting_configure">\'Gad chlàradh a-steach…</string>
 	<string name="notifications">Brathan</string>
 	<string name="manage_notifications">Rianaich na brathan</string>
 	<string name="types">Seòrsaichean</string>
@@ -236,8 +230,6 @@
 	<string name="tags_separate_with_commas">Tagaichean (sgar na tagaichean le cromagan)</string>
 	<string name="categories">Roinnean-seòrsa</string>
 	<string name="tab_stats">Stats</string>
-	<string name="delete_sure_post">A bheil thu cinnteach gu bheil thu airson am post a sguabadh às?</string>
-	<string name="delete_sure_page">A bheil thu cinnteach gu bheil thu airson an duilleag a sguabadh às?</string>
 	<string name="notification_blink">Boillsg solas</string>
 	<string name="notification_sound">Cluich fuaim</string>
 	<string name="notification_vibrate">Crith</string>
@@ -248,7 +240,6 @@
 	<string name="media">Meadhan</string>
 	<string name="delete">Sguab às</string>
 	<string name="none">Chan eil gin</string>
-	<string name="sure_to_remove_account">A bheil thu cinnteach gu bheil thu airson am bloga seo a thoirt air falbh?</string>
 	<string name="blogs">Blogaichean</string>
 	<string name="select_photo">Tagh dealbh on ghailearaidh</string>
 	<string name="error">Mearachd</string>
@@ -258,7 +249,6 @@
 	<string name="tab_comments">Beachdan</string>
 	<string name="preview">Ro-shealladh</string>
 	<string name="on"> </string>
-	<string name="delete_sure">A bheil thu cinnteach gu bheil thu airson an dreachd a sguabadh às?</string>
 	<string name="reply">Freagair</string>
 	<string name="yes">Tha</string>
 	<string name="no">Chan eil</string>

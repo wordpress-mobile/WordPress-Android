@@ -104,7 +104,11 @@ public class ReaderCommentListActivity extends Activity {
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
 
-        loadPost();
+        if (!loadPost()) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
+            finish();
+            return;
+        }
 
         // add listView header to provide initial space between the post header and list content
         int height = getResources().getDimensionPixelSize(R.dimen.margin_medium);
@@ -183,16 +187,14 @@ public class ReaderCommentListActivity extends Activity {
         super.onSaveInstanceState(outState);
     }
 
-    private void loadPost() {
+    private boolean loadPost() {
         mPost = ReaderPostTable.getPost(mBlogId, mPostId, true);
         if (mPost == null) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
-            finish();
+            return false;
         }
 
-        final View postHeader = findViewById(R.id.layout_post_header);
-        final TextView txtTitle = (TextView) postHeader.findViewById(R.id.text_post_title);
-        final WPNetworkImageView imgAvatar = (WPNetworkImageView) postHeader.findViewById(R.id.image_post_avatar);
+        final TextView txtTitle = (TextView) findViewById(R.id.text_post_title);
+        final WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_post_avatar);
         final TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
 
         txtTitle.setText(mPost.getTitle());
@@ -225,6 +227,8 @@ public class ReaderCommentListActivity extends Activity {
             mEditComment.setEnabled(false);
             txtCommentsClosed.setVisibility(View.VISIBLE);
         }
+
+        return true;
     }
 
     @Override

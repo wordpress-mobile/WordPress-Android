@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.simperium.client.BucketSchema;
 import com.simperium.client.Syncable;
+import com.simperium.util.JSONDiff;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.json.JSONArray;
@@ -43,6 +44,7 @@ public class Note extends Syncable {
     private JSONObject mActions;
     private JSONObject mNoteJSON;
 
+    private final Object mSyncLock = new Object();
     private String mLocalStatus;
 
     public static enum EnabledActions {
@@ -72,8 +74,10 @@ public class Note extends Syncable {
      * Simperium method @see Diffable
      */
     @Override
-    synchronized public JSONObject getDiffableValue() {
-        return JSONUtil.copyJSONObject(mNoteJSON);
+    public JSONObject getDiffableValue() {
+        synchronized (mSyncLock) {
+            return JSONDiff.deepCopy(mNoteJSON);
+        }
     }
 
     /**
@@ -82,10 +86,6 @@ public class Note extends Syncable {
     @Override
     public String getSimperiumKey() {
         return getId();
-    }
-
-    private JSONObject toJSONObject() {
-        return mNoteJSON;
     }
 
     public String getId() {
@@ -101,8 +101,10 @@ public class Note extends Syncable {
     }
 
     public Boolean isCommentType() {
-        return (isAutomattcherType() && JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1) ||
-                isType(NOTE_COMMENT_TYPE);
+        synchronized (mSyncLock) {
+            return (isAutomattcherType() && JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1) ||
+                    isType(NOTE_COMMENT_TYPE);
+        }
     }
 
     public Boolean isAutomattcherType() {
@@ -119,9 +121,11 @@ public class Note extends Syncable {
 
     private JSONObject getSubject() {
         try {
-            JSONArray subjectArray = mNoteJSON.getJSONArray("subject");
-            if (subjectArray.length() > 0) {
-                return subjectArray.getJSONObject(0);
+            synchronized (mSyncLock) {
+                JSONArray subjectArray = mNoteJSON.getJSONArray("subject");
+                if (subjectArray.length() > 0) {
+                    return subjectArray.getJSONObject(0);
+                }
             }
         } catch (JSONException e) {
             return null;
@@ -143,23 +147,22 @@ public class Note extends Syncable {
     }
 
     private String getCommentSubject() {
-        JSONArray subjectArray = mNoteJSON.optJSONArray("subject");
-        if (subjectArray != null) {
-            String commentSubject = JSONUtil.queryJSON(subjectArray, "subject[1].text", "");
+        synchronized (mSyncLock) {
+            JSONArray subjectArray = mNoteJSON.optJSONArray("subject");
+            if (subjectArray != null) {
+                String commentSubject = JSONUtil.queryJSON(subjectArray, "subject[1].text", "");
 
-            // Trim down the comment preview if the comment text is too large.
-            if (commentSubject != null && commentSubject.length() > MAX_COMMENT_PREVIEW_LENGTH) {
-                commentSubject = commentSubject.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1);
+                // Trim down the comment preview if the comment text is too large.
+                if (commentSubject != null && commentSubject.length() > MAX_COMMENT_PREVIEW_LENGTH) {
+                    commentSubject = commentSubject.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1);
+                }
+
+                return commentSubject;
             }
 
-            return commentSubject;
         }
 
         return "";
-    }
-
-    public String getHeaderSnippet() {
-        return queryJSON("header[1].text", "");
     }
 
     /**
@@ -196,7 +199,9 @@ public class Note extends Syncable {
 
     public void markAsRead() {
         try {
-            mNoteJSON.put("read", 1);
+            synchronized (mSyncLock) {
+                mNoteJSON.put("read", 1);
+            }
         } catch (JSONException e) {
             Log.e(TAG, "Unable to update note read property", e);
             return;
@@ -213,7 +218,9 @@ public class Note extends Syncable {
 
     public JSONArray getBody() {
         try {
-            return mNoteJSON.getJSONArray("body");
+            synchronized (mSyncLock) {
+                return mNoteJSON.getJSONArray("body");
+            }
         } catch (JSONException e) {
             return null;
         }
@@ -234,7 +241,9 @@ public class Note extends Syncable {
 
 
     private void updateJSON(JSONObject json) {
-        mNoteJSON = json;
+        synchronized (mSyncLock) {
+            mNoteJSON = json;
+        }
     }
 
     /*
@@ -267,27 +276,30 @@ public class Note extends Syncable {
     }
 
     public int getSiteId() {
-        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.site", 0);
+        return queryJSON("meta.ids.site", 0);
     }
 
     public int getPostId() {
-        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.post", 0);
+        return queryJSON("meta.ids.post", 0);
     }
 
     public long getCommentId() {
-        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", 0);
+        return queryJSON("meta.ids.comment", 0);
     }
 
 
     public long getParentCommentId() {
-        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.parent_comment", 0);
+        return queryJSON("meta.ids.parent_comment", 0);
     }
 
     /**
      * Rudimentary system for pulling an item out of a JSON object hierarchy
      */
     private <U> U queryJSON(String query, U defaultObject) {
-        return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
+        synchronized (mSyncLock) {
+            if (mNoteJSON == null) return defaultObject;
+            return JSONUtil.queryJSON(mNoteJSON, query, defaultObject);
+        }
     }
 
     /**
@@ -364,7 +376,9 @@ public class Note extends Syncable {
     }
 
     public JSONArray getHeader() {
-        return mNoteJSON.optJSONArray("header");
+        synchronized (mSyncLock) {
+            return mNoteJSON.optJSONArray("header");
+        }
     }
 
     /**

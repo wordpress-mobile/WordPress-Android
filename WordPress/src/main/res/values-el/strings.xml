@@ -12,7 +12,7 @@
 	<string name="preference_privacy">Ιδιωτικότητα </string>
 	<string name="preference_send_usage_stats">Αποστολή στατιστικών</string>
 	<string name="preference_send_usage_stats_summary">Αυτόματη αποστολή στατιστικών στοιχείων χρήσης ώστε να μας βοηθήσετε να βελτιώσουμε το WordPress για το Android</string>
-	<string name="reader_label_reached_last_post">Έχετε φτάσει στο τέλος</string>
+	<string name="reader_hint_reblog_comment">Προσθέστε τις σκέψεις σας (προαιρετικό)</string>
 	<string name="sign_in_again">Συνδεθείτε ξανά</string>
 	<string name="reader_title_blog_preview">Προεπισκόπηση Ιστολογίου</string>
 	<string name="loading_pages">Φόρτωση σελίδων...</string>
@@ -23,9 +23,15 @@
 	<string name="loading_posts">Φόρτωση άρθρων...</string>
 	<string name="forums">Συζητήσεις</string>
 	<string name="out_of_memory">Η μνήμη της συσκευής εξαντλήθηκε</string>
-	<string name="reader_empty_followed_blogs_title">Δεν ακολουθείς κανένα blog ακόμα</string>
 	<string name="no_network_message">Δεν υπάρχει διαθέσιμο δίκτυο</string>
 	<string name="could_not_remove_account">Η αφαίρεση του blog δεν ήταν δυνατή</string>
+	<string name="mnu_comment_edit">Αλλαγή</string>
+	<string name="learn_more">Μάθετε περισσότερα</string>
+	<string name="show_all">Εμφάνιση όλων</string>
+	<string name="category_name">Όνομα κατηγορίας</string>
+	<string name="preview_page">Προεπισκόπιση σελίδας</string>
+	<string name="delete_page">Διαγραφή σελίδας</string>
+	<string name="trash_yes">Διεγραμμένα</string>
 	<string name="deleting_page">Γίνεται διαγραφή σελίδας</string>
 	<string name="deleting_post">Γίνεται διαγραφή  άρθρου</string>
 	<string name="share_url_post">Κοινοποίηση άρθρου</string>
@@ -34,7 +40,6 @@
 	<string name="creating_your_site">Δημιουργώντας τον ιστότοπο</string>
 	<string name="creating_your_account">Δημιουργώντας τον λογαριασμό σας</string>
 	<string name="reader_empty_posts_in_tag_updating">Γίνεται λήψη άρθρων...</string>
-	<string name="create_account_wpcom">Δημιουργήστε ένα λογαριασμό στο WordPress.com</string>
 	<string name="error_refresh_media">Κάτι πήγε στραβά καθώς γινόταν ανανέωση της βιβλιοθήκης πολυμέσων. Δοκιμάστε πάλι σε λίγο.</string>
 	<string name="reader_label_reply">Απάντηση</string>
 	<string name="video">Βίντεο</string>
@@ -44,11 +49,11 @@
 	<string name="reader_toast_err_get_comment">Δε στάθηκε δυνατό να ανακτηθεί αυτό το σχόλιο</string>
 	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="download">Γίνεται μεταφορά πολυμέσων</string>
+	<string name="comment_spammed">Το σχόλιο αυτό έχει σημειωθεί ως ανεπιθύμητο</string>
 	<string name="cant_share_no_visible_blog">Δε μπορείτε να μοιραστείτε στο WordPress χωρίς ένα ορατό ιστολόγιο</string>
 	<string name="share_preference_title">Μοιραστείτε στο WordPress</string>
 	<string name="reset_auto_share_preference">Επαναφορά ρυθμίσεων αυτόματου μοιρασμού</string>
 	<string name="always_use_these_settings_to_share">Να γίνεται πάντοτε χρήση αυτών των ρυθμίσεων</string>
-	<string name="reader_empty_followed_blogs_description">Αλλά μην ανησυχείτε, πατήστε το εικονίδιο της ετικέτας για να ξεκινήσετε την αναζήτηση!</string>
 	<string name="reader_likes_you_and_one">Αυτό αρέσει σε εσάς και ακόμη ένα χρήστη</string>
 	<string name="select_date">Επιλέξτε ημερομηνία</string>
 	<string name="select_time">Επιλέξτε ώρα</string>
@@ -119,8 +124,6 @@
 	<string name="media_edit_description_hint">Εισάγετε την περιγραφή εδώ</string>
 	<string name="media_edit_success">Ενημερώθηκε</string>
 	<string name="media_edit_failure">Αποτυχία ενημέρωσης</string>
-	<string name="confirm_delete_media">Είστε σίγουρος/η ότι θέλετε να διαγράψετε αυτό το στοιχείο πολυμέσων?</string>
-	<string name="confirm_delete_multi_media">Είστε σίγουρος/η ότι θέλετε να διαγράψετε αυτό/ά το/τα αντικείμενο/α;</string>
 	<string name="themes_details_label">Λεπτομέρειες</string>
 	<string name="themes_features_label">Χαρακτηριστικά</string>
 	<string name="theme_activate_button">Ενεργοποιήση</string>
@@ -190,13 +193,10 @@
 	<string name="passcode_preference_title">Κλείδωμα PIN</string>
 	<string name="passcode_turn_off">Απενεργοποιήστε το κλείδωμα PIN</string>
 	<string name="passcode_turn_on">Ενεργοποιήστε το κλείδωμα PIN</string>
-	<string name="remote_changes">Έχετε κάνει αλλαγές σε ένα άρθρο που δεν έχει φορτωθεί ακόμη. Να προχωρήσουμε με την ανανέωση και να αγνοήσουμε τις τοποικές αλλαγές σας;</string>
 	<string name="upload">Ανέβασμα</string>
 	<string name="manage">Διαχείριση</string>
-	<string name="sign_out_confirm">Είστε σίγουροι ότι θέλετε να αποσυνδεθείτε;</string>
 	<string name="sign_in">Συνδεθείτε</string>
 	<string name="sign_out">Αποσυνδεθείτε</string>
-	<string name="attempting_configure">Γίνεται σύνδεση...</string>
 	<string name="notifications">Ενημερώσεις</string>
 	<string name="manage_notifications">Διαχείριση ενημερώσεων</string>
 	<string name="enable_notifications">Ενεργοποίηση ενημερώσεων</string>
@@ -268,8 +268,6 @@
 	<string name="tags_separate_with_commas">Ετικέτες (ξεχωριστές ετικέτες με κόμματα)</string>
 	<string name="categories">Κατηγορίες</string>
 	<string name="tab_stats">Στατιστικά</string>
-	<string name="delete_sure_page">Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή την σελίδα</string>
-	<string name="delete_sure_post">Είστε βέβαοι ότι επιθυμείτε να διαγραφεί το άρθρο</string>
 	<string name="notification_vibrate">Δόνηση</string>
 	<string name="notification_sound">Αναπαραγωγή ήχου ειδοποιήσης</string>
 	<string name="notification_blink">Να αναβοσβήνει η ένδειξη ενημερώσεων</string>
@@ -280,7 +278,6 @@
 	<string name="media">Πολυμέσα</string>
 	<string name="delete">Διαγραφή</string>
 	<string name="none">Κανένα</string>
-	<string name="sure_to_remove_account">Είστε βέβαιοι ότι επιθυμείτε να διαγράψετε αυτό το ιστολόγιο;</string>
 	<string name="blogs">Ιστολόγια</string>
 	<string name="select_photo">Επιλέξτε μια φωτογραφία από τη συλλογή</string>
 	<string name="reply">Απάντηση</string>
@@ -292,7 +289,6 @@
 	<string name="save">Αποθήκευση</string>
 	<string name="add">Πρόσθεση</string>
 	<string name="tab_comments">Σχόλια</string>
-	<string name="delete_sure">Είστε σίγουρος ότι θέλετε να διαγράψετε αυτό το πρόχειρο</string>
 	<string name="category_refresh_error">Σφάλμα ανανέωσης κατηγοριών</string>
 	<string name="on">ενεργό</string>
 	<string-array name="alignment_array">

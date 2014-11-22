@@ -1,5 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_empty_followed_blogs_title">Anda belum mengikuti blog sama sekali</string>
+	<string name="reader_empty_posts_liked">Anda belum menyukai pos sama sekali</string>
+	<string name="faq_button">Tanya Jawab Umum</string>
+	<string name="browse_our_faq_button">Telusuri Tanya Jawab Umum kami</string>
+	<string name="nux_help_description">Kunjungi pusat bantuan untuk mendapatkan jawaban atas pertanyaan umum, atau kunjungi forum untuk mengajukan pertanyaan baru</string>
+	<string name="agree_terms_of_service">Dengan membuat akun, berarti Anda menyetujui untuk mematuhi %1$sKetentuan Layanan%2$s</string>
+	<string name="create_new_blog_wpcom">Buat blog WordPress.com</string>
+	<string name="new_blog_wpcom_created">Blog WordPress.com sudah dibuat!</string>
+	<string name="reader_empty_comments">Belum ada komentar</string>
+	<string name="reader_likes_multi_short">%,d orang</string>
+	<string name="reader_empty_posts_in_tag">Belum ada pos dengan tag ini</string>
+	<string name="reader_label_comment_count_multi">%,d komentar</string>
+	<string name="reader_label_view_original">Lihat artikel asli</string>
+	<string name="reader_label_like">Suka</string>
+	<string name="reader_label_liked_by">Disukai oleh</string>
+	<string name="reader_label_liked_by_you">Disukai oleh Anda</string>
+	<string name="reader_likes_one_short">1 orang</string>
+	<string name="reader_label_comment_count_single">Satu komentar</string>
+	<string name="reader_label_comments_closed">Komentar ditutup</string>
+	<string name="reader_label_comments_on">Komentar pada</string>
+	<string name="reader_title_comments">Komentar</string>
+	<string name="reader_title_photo_viewer">%1$d dari %2$d</string>
+	<string name="error_publish_empty_post">Tidak dapat menerbitkan pos kosong</string>
+	<string name="error_refresh_unauthorized_posts">Anda tidak memiliki izin untuk melihat atau menyunting pos</string>
+	<string name="error_refresh_unauthorized_pages">Anda tidak memiliki izin untuk melihat atau menyunting halaman</string>
+	<string name="error_refresh_unauthorized_comments">Anda tidak memiliki izin untuk melihat atau menyunting komentar</string>
+	<string name="overwrite_local_changes">Anda telah melakukan perubahan pada pos yang belum diunggah. Lanjutkan dengan menyegarkan dan menimpa perubahan lokal?</string>
+	<string name="older_month">Lebih dari satu bulan</string>
+	<string name="more">Lainnya</string>
+	<string name="older_two_days">Lebih dari 2 hari</string>
+	<string name="older_last_week">Lebih dari satu minggu</string>
+	<string name="stats_tooltip_week_of">Minggu dari</string>
+	<string name="stats_totals_views_per_visitor">Dilihat per Pengunjung</string>
+	<string name="help_and_support">Bantuan dan dukungan</string>
+	<string name="stats_no_blog">Statistik tidak dapat dimuat untuk blog yang diminta</string>
+	<string name="select_a_blog">Pilih situs WordPress</string>
+	<string name="sending_content">Mengunggah konten %s</string>
+	<string name="uploading_total">Mengunggah %1$d dari %2$d</string>
+	<string name="mnu_comment_liked">Disukai</string>
+	<string name="comment">Komentar</string>
+	<string name="comment_trashed">Komentar dibuang</string>
+	<string name="dlg_confirm_spam_comment">Tandai komentar ini sebagai spam?</string>
+	<string name="comment_mark_spam">Tandai sebagai spam</string>
+	<string name="posts_empty_list">Belum ada pos. Mengapa tidak membuatnya?</string>
+	<string name="comment_reply_to_user">Balas ke %s</string>
+	<string name="pages_empty_list">Belum ada halaman. Mengapa tidak membuatnya?</string>
+	<string name="media_empty_list_custom_date">Tidak ada media dalam interval waktu ini</string>
+	<string name="posting_post">Mengeposkan "%s"</string>
+	<string name="signing_out">Keluar…</string>
 	<string name="reader_toast_err_generic">Tidak bisa menjalankan proses ini</string>
 	<string name="reader_toast_err_block_blog">Tidak bisa memblokir blog ini</string>
 	<string name="reader_toast_blog_blocked">Pos-pos dari blog ini tak akan ditampilkan lagi</string>
@@ -20,8 +69,6 @@
 	<string name="preference_privacy">Privasi</string>
 	<string name="preference_send_usage_stats">Kirim statistik</string>
 	<string name="preference_send_usage_stats_summary">Secara otomatis mengirim statistik penggunaan untuk membantu kami meningkatkan WordPress untuk Android</string>
-	<string name="reader_label_reached_last_post">Anda telah mencapai akhir</string>
-	<string name="reader_label_tap_to_dismiss">Ketuk untuk mengabaikan</string>
 	<string name="reader_title_reblog">Reblog Pos</string>
 	<string name="reader_hint_reblog_comment">Tambahkan opini Anda (opsional)</string>
 	<string name="reader_label_reblog_to">Reblog ke</string>
@@ -64,8 +111,6 @@
 	<string name="need_help_signin_wpcom">Butuh bantuan?</string>
 	<string name="wpcom_signin_dialog_title">Masuk ke WordPress.com</string>
 	<string name="jetpack_stats_switch_user">Akun WordPress.com (%s) ini tidak memiliki akses ke statistik untuk blog ini. Apakah Anda ingin masuk menggunakan akun lain?</string>
-	<string name="username_or_password_incorrect_selfhosted_hint">Nama pengguna atau password yang Anda masukkan salah. Punya situs dengan hosting mandiri? Ketuk "%s" dan masukkan URL-nya.</string>
-	<string name="nux_help_description">Kunjungi pusat bantuan untuk memperoleh jawaban atas pertanyaan umum atau kunjungi orum untuk menanyakan permasalahan baru</string>
 	<string name="ssl_certificate_trust">Percayai</string>
 	<string name="ssl_certificate_details">Rincian Sertifikat</string>
 	<string name="ssl_certificate_do_not_trust">Jangan Percayai</string>
@@ -80,14 +125,12 @@
 	<string name="reader_label_reblog_empty">Kelihatannya Anda tidak memiliki blog WordPress.com untuk bisa menerbitkan lagi pos ini.</string>
 	<string name="loading_posts">Memuat pos...</string>
 	<string name="ssl_certificate_ask_trust">Jika biasanya Anda bisa terhubung dengan situs ini tanpa masalah, galat ini bisa berarti seseorang sedang mencoba meniru situs, dan Anda sebaiknya tidak melanjutkannya. Apakah Anda ingin mempercayai sertifikat ini?</string>
-	<string name="reader_empty_followed_blogs_title">Anda belum mengikuti blog apapun</string>
 	<string name="no_network_message">Tidak ada jaringan yang tersedia</string>
 	<string name="could_not_remove_account">Tidak bisa menghapus blog</string>
 	<string name="blog_not_found">Terjadi kekeliruan ketika mengakses blog ini</string>
 	<string name="wait_until_upload_completes">Tunggu sampai pengunggahan lengkap</string>
 	<string name="out_of_memory">Perangkat kehabisan memori.</string>
 	<string name="gallery_error">Item media gagal diambil</string>
-	<string name="media_empty_list_custom_date">Tidak ada media dalam jangka waktu ini</string>
 	<string name="theme_fetch_failed">Gagal mengunduh tema</string>
 	<string name="theme_set_failed">Gagal memasang tema</string>
 	<string name="theme_no_search_result_found">Tema tidak ditemukan</string>
@@ -127,9 +170,6 @@
 	<string name="error_load_comment">Gagal memuat tanggapan</string>
 	<string name="error_downloading_image">Galat saat mengunduh gambar</string>
 	<string name="passcode_wrong_passcode">PIN keliru</string>
-	<string name="reader_empty_posts_in_tag">Tak ada pos dengan tag ini</string>
-	<string name="reader_empty_followed_tags">Kamu tidak mengikuti tag apapun</string>
-	<string name="reader_empty_posts_liked">Kamu belum menyukai pos manapun</string>
 	<string name="invalid_email_message">Alamat emailmu tidak sah</string>
 	<string name="invalid_password_message">Password harus berisi minimal 4 karakter</string>
 	<string name="invalid_username_too_short">Nama pengguna harus lebih dari 4 karakter</string>
@@ -143,7 +183,6 @@
 	<string name="email_invalid">Masukkan alamat email yang sah</string>
 	<string name="email_not_allowed">Alamat email itu tidak diizinkan</string>
 	<string name="username_exists">Nama pengguna itu sudah terpakai</string>
-	<string name="agree_terms_of_service">Dengan membuat akun, Anda menyetujui %1$sTerms of Service%2$s yang menarik.</string>
 	<string name="email_exists">Alamat email itu sudah terpakai</string>
 	<string name="username_reserved_but_may_be_available">Nama pengguna itu sedang dicadangkan, namun bisa menjadi tersedia dalam beberapa hari</string>
 	<string name="blog_name_required">Masukkan alamat situs</string>
@@ -184,10 +223,8 @@
 	<string name="theme_premium_theme">Tema premium</string>
 	<string name="link_enter_url_text">Teks tautan (opsional)</string>
 	<string name="create_a_link">Buat tautan</string>
-	<string name="pages_empty_list">Belum ada laman. Mau membuatnya sekarang?</string>
 	<string name="page_settings">Pengaturan laman</string>
 	<string name="local_draft">Draf lokal</string>
-	<string name="posts_empty_list">Belum ada pos. Mau membuatnya sekarang?</string>
 	<string name="upload_failed">Pengunggahan gagal</string>
 	<string name="horizontal_alignment">Perataan horisontal</string>
 	<string name="file_not_found">Tidak bisa menemukan media yang hendak diunggah. Apakah sudah dihapus atau dipindahkan?</string>
@@ -235,7 +272,6 @@
 	<string name="category_slug">Slug kategori (opsional)</string>
 	<string name="category_desc">Deskripsi kategori (opsional)</string>
 	<string name="category_parent">Induk kategori (opsional)</string>
-	<string name="select_a_blog">Pilih sebuah blog</string>
 	<string name="share_action_post">Pos baru</string>
 	<string name="share_action_media">Pustaka media</string>
 	<string name="file_error_create">Tidak bisa membuat berkas temporer untuk pengunggahan media. Pastikan masih cukup ruang di perangkat Anda.</string>
@@ -278,7 +314,6 @@
 	<string name="reader_toast_err_reblog_requires_blog">Pilih sebuah blog</string>
 	<string name="reader_toast_err_add_tag">Tidak bisa menambahkan tag ini</string>
 	<string name="reader_toast_err_remove_tag">Tidak bisa menghapus tag ini</string>
-	<string name="create_new_blog_wpcom">Buat blog WordPress.com</string>
 	<string name="required_field">Isian wajib</string>
 	<string name="email_hint">Alamat email</string>
 	<string name="username_email">Nama pengguna atau email</string>
@@ -297,7 +332,6 @@
 	<string name="creating_your_account">Membuat akun Anda</string>
 	<string name="creating_your_site">Membuat situs Anda</string>
 	<string name="reader_empty_posts_in_tag_updating">Mengambil pos...</string>
-	<string name="create_account_wpcom">Buat akun di WordPress.com</string>
 	<string name="error_refresh_media">Ada sesuatu yang salah saat menyegarkan pustaka media. Coba lagi nanti.</string>
 	<string name="reader_likes_you_and_multi">Anda dan %,d lainnya menyukai ini</string>
 	<string name="reader_likes_multi">%,d orang menyukai ini</string>
@@ -311,7 +345,7 @@
 	<string name="always_use_these_settings_to_share">Selalu gunakan pengaturan ini</string>
 	<string name="view_stats_activity">Tampilkan statistik</string>
 	<string name="cant_share_no_visible_blog">Anda tidak bisa berbagi ke WordPress tanpa satupun blog yang terlihat oleh publik</string>
-	<string name="reader_empty_followed_blogs_description">Namun jangan khawatir, cukup ketuk ikon tag untuk mulai menjelajah!</string>
+	<string name="comment_spammed">Komentar ditandai sebagai spam</string>
 	<string name="select_time">Pilih waktu</string>
 	<string name="reader_likes_you_and_one">Anda dan satu orang lainnya menyukai ini</string>
 	<string name="select_date">Pilih tanggal</string>
@@ -322,11 +356,13 @@
 	<string name="reader_toast_err_get_post">Gagal membuka pos ini</string>
 	<string name="validating_user_data">Memeriksa keabsahan data pengguna</string>
 	<string name="validating_site_data">Memeriksa keabsahan data situs</string>
+	<string name="reader_empty_followed_blogs_description">Tapi jangan khawatir, cukup ketuk ikon tag untuk mulai menjelajah!</string>
 	<string name="password_invalid">Anda butuh password yang lebih aman. Pastikan menggunakan 7 atau lebih karakter, kombinasikan huruf kapital dan kecil, angka atau tanda baca.</string>
 	<string name="nux_tap_continue">Lanjutkan</string>
 	<string name="nux_welcome_create_account">Buat akun</string>
 	<string name="nux_add_selfhosted_blog">Tambahkan situs dengan hostiing mandiri</string>
 	<string name="nux_oops_not_selfhosted_blog">Masuk ke WordPress.com</string>
+	<string name="signing_in">Masuk…</string>
 	<string name="media_add_popup_title">Tambah ke pustaka media</string>
 	<string name="media_add_new_media_gallery">Buat album</string>
 	<string name="empty_list_default">List ini masih kosong</string>
@@ -386,8 +422,6 @@
 	<string name="media_gallery_type_circles">Lingkaran</string>
 	<string name="media_gallery_type_slideshow">Slide</string>
 	<string name="media_edit_failure">Gagal memperbarui</string>
-	<string name="confirm_delete_media">Apakah Anda yakin ingin menghapus media ini?</string>
-	<string name="confirm_delete_multi_media">Apakah Anda yakin ingin menghapus mereka?</string>
 	<string name="themes_details_label">Detil</string>
 	<string name="themes_features_label">Fitur</string>
 	<string name="theme_activate_button">Aktivasi</string>
@@ -455,7 +489,6 @@
 	<string name="passcode_enter_old_passcode">Masukkan PIN lama Anda</string>
 	<string name="passcode_re_enter_passcode">Masukkan kembali PIN Anda</string>
 	<string name="passcode_change_passcode">Ubah PIN</string>
-	<string name="remote_changes">Anda membuat perubahan pada sebuah tulisan yang belum diunggah. Lanjut muat ulang dan menimpa perubahan lokal?</string>
 	<string name="upload">Unggah</string>
 	<string name="manage">Atur</string>
 	<string name="types">Tipe</string>
@@ -466,10 +499,8 @@
 	<string name="new_notifications">%d notifikasi baru</string>
 	<string name="more_notifications">dan %d lagi.</string>
 	<string name="tooltip_follow">Ikuti atau tidak ikuti blog ini</string>
-	<string name="sign_out_confirm">Apakah Anda yakin ingin log keluar?</string>
 	<string name="sign_in">Log masuk</string>
 	<string name="sign_out">Log keluar</string>
-	<string name="attempting_configure">Sedang log masuk...</string>
 	<string name="options">Pengaturan</string>
 	<string name="notifications_turn_off">Matikan</string>
 	<string name="notifications_turn_off_1hr">Matikan selama satu jam</string>
@@ -533,8 +564,6 @@
 	<string name="title">Judul</string>
 	<string name="tags_separate_with_commas">Tag (pisahkan tag dengan tanda koma)</string>
 	<string name="tab_stats">Statistik</string>
-	<string name="delete_sure_page">Apakah Anda yakin akan menghapus halaman ini</string>
-	<string name="delete_sure_post">Apakah Anda yakin ingin menghapus tulisan ini</string>
 	<string name="notification_vibrate">Getar</string>
 	<string name="notification_blink">Lampu notifikasi berkelip</string>
 	<string name="notification_sound">Bunyikan suara notifikasi</string>
@@ -546,7 +575,6 @@
 	<string name="delete">Hapus</string>
 	<string name="none">Tiada</string>
 	<string name="blogs">Blog</string>
-	<string name="sure_to_remove_account">Apakah Anda yakin ingin menghapus blog ini?</string>
 	<string name="select_photo">Pilih sebuah foto dari galeri</string>
 	<string name="tab_comments">Komentar</string>
 	<string name="reply">Balasan</string>
@@ -558,7 +586,6 @@
 	<string name="yes">Ya</string>
 	<string name="no">Tidak</string>
 	<string name="error">Galat</string>
-	<string name="delete_sure">Apakah Anda yakin ingin menghapus konsep ini</string>
 	<string name="category_refresh_error">Gagal memuat ulang Kategori</string>
 	<string-array name="alignment_array">
 		<item>Tak ada</item>
