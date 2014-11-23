@@ -20,11 +20,8 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodels != null &&  mDatamodels[0] != null
-                && ((VideoPlaysModel) mDatamodels[0]).getPlays() != null
-                && ((VideoPlaysModel) mDatamodels[0]).getPlays().size() > 0) {
-            List<SingleItemModel> postViews = ((VideoPlaysModel) mDatamodels[0]).getPlays();
-            ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), postViews);
+        if (hasVideoplays()) {
+            ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), getVideoplays());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
@@ -32,11 +29,22 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
         }
     }
 
+    private boolean hasVideoplays() {
+        return mDatamodels != null &&  mDatamodels[0] != null
+                && ((VideoPlaysModel) mDatamodels[0]).getPlays() != null
+                && ((VideoPlaysModel) mDatamodels[0]).getPlays().size() > 0;
+    }
+
+    private List<SingleItemModel> getVideoplays() {
+        if (!hasVideoplays()) {
+            return null;
+        }
+        return ((VideoPlaysModel) mDatamodels[0]).getPlays();
+    }
+
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return mDatamodels != null && mDatamodels[0] != null
-                && ((VideoPlaysModel) mDatamodels[0]).getPlays() != null
-                && ((VideoPlaysModel) mDatamodels[0]).getPlays().size() > 10;
+        return hasVideoplays() && getVideoplays().size() > 10;
     }
 
     @Override

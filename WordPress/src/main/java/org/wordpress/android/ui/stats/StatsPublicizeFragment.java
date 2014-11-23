@@ -21,16 +21,26 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodels != null && mDatamodels[0] != null
-                && ((PublicizeModel) mDatamodels[0]).getServices() != null
-                && ((PublicizeModel) mDatamodels[0]).getServices().size() > 0) {
-            List<SingleItemModel> publicizeItems = ((PublicizeModel) mDatamodels[0]).getServices();
-            ArrayAdapter adapter = new PublicizeAdapter(getActivity(), publicizeItems);
+        if (hasPublicize()) {
+            ArrayAdapter adapter = new PublicizeAdapter(getActivity(), getPublicize());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
             showEmptyUI(true);
         }
+    }
+
+    private boolean hasPublicize() {
+        return mDatamodels != null && mDatamodels[0] != null
+                && ((PublicizeModel) mDatamodels[0]).getServices() != null
+                && ((PublicizeModel) mDatamodels[0]).getServices().size() > 0;
+    }
+
+    private List<SingleItemModel> getPublicize() {
+        if (!hasPublicize()) {
+            return null;
+        }
+        return ((PublicizeModel) mDatamodels[0]).getServices();
     }
 
     @Override

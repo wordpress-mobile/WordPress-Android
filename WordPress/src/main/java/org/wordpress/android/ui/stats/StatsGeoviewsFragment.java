@@ -20,15 +20,25 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodels != null && mDatamodels[0] != null &&
-                ((GeoviewsModel) mDatamodels[0]).getCountries() != null) {
-            List<GeoviewModel> postViews = ((GeoviewsModel) mDatamodels[0]).getCountries();
-            ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), postViews);
+        if (hasCountries()) {
+            ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), getCountries());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
             showEmptyUI(true);
         }
+    }
+
+    private boolean hasCountries() {
+        return mDatamodels != null && mDatamodels[0] != null &&
+                ((GeoviewsModel) mDatamodels[0]).getCountries() != null;
+    }
+
+    private List<GeoviewModel> getCountries() {
+        if (!hasCountries()) {
+            return null;
+        }
+        return ((GeoviewsModel) mDatamodels[0]).getCountries();
     }
 
     @Override

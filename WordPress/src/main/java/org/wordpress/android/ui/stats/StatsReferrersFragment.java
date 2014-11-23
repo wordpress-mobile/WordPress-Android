@@ -20,9 +20,8 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodels != null && mDatamodels[0] != null
-                && ((ReferrersModel) mDatamodels[0]).getGroups().size() > 0) {
-            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((ReferrersModel) mDatamodels[0]).getGroups());
+        if (hasReferrers()) {
+            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), getReferrersGroups());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
@@ -30,11 +29,21 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         }
     }
 
+    private boolean hasReferrers() {
+        return mDatamodels != null && mDatamodels[0] != null
+                && ((ReferrersModel) mDatamodels[0]).getGroups().size() > 0;
+    }
+
+    private List<ReferrerGroupModel> getReferrersGroups() {
+        if (!hasReferrers()) {
+            return null;
+        }
+        return ((ReferrersModel) mDatamodels[0]).getGroups();
+    }
+
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (mDatamodels != null && mDatamodels[0] != null
-                && ((ReferrersModel) mDatamodels[0]).getGroups() != null
-                && ((ReferrersModel) mDatamodels[0]).getGroups().size() > 10);
+        return hasReferrers() && getReferrersGroups().size() > 10;
     }
 
     @Override

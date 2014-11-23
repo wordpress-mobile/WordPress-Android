@@ -85,4 +85,8 @@ public class TopPostsAndPagesModel implements Serializable {
     public List<SingleItemModel> getTopPostsAndPages() {
         return mTopPostsAndPages;
     }
+
+    public boolean hasTopPostsAndPages() {
+        return mTopPostsAndPages != null && mTopPostsAndPages.size() > 0;
+    }
 }

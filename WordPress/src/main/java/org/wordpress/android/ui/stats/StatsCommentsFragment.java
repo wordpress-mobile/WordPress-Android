@@ -122,19 +122,11 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         }
 
         ArrayAdapter adapter = null;
-        if (mDatamodels[0] != null) {
-            CommentsModel commentsModel = (CommentsModel) mDatamodels[0];
-            List<AuthorModel> authors = commentsModel.getAuthors();
-            if (mSelectedButtonIndex == 0) {
-                if (authors != null && authors.size() > 0) {
-                    adapter = new AuthorsAdapter(getActivity(), authors);
-                }
-            } else {
-                List<SingleItemModel> posts = commentsModel.getPosts();
-                if (posts != null && posts.size() > 0) {
-                    adapter = new TopPostsAndPagesAdapter(getActivity(), posts);
-                }
-            }
+
+        if (mSelectedButtonIndex == 0 && hasAuthors()) {
+            adapter = new AuthorsAdapter(getActivity(), getAuthors());
+        } else if (mSelectedButtonIndex == 1 && hasPosts()) {
+            adapter = new TopPostsAndPagesAdapter(getActivity(), getPosts());
         }
 
         if (adapter != null) {
@@ -145,24 +137,39 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         }
     }
 
+    private boolean hasAuthors() {
+        return mDatamodels != null && mDatamodels[0] != null
+                && ((CommentsModel) mDatamodels[0]).getAuthors() != null
+                && ((CommentsModel) mDatamodels[0]).getAuthors().size() > 0;
+    }
+
+    private List<AuthorModel> getAuthors() {
+        if (!hasAuthors()) {
+            return null;
+        }
+        return ((CommentsModel) mDatamodels[0]).getAuthors();
+    }
+
+    private boolean hasPosts() {
+        return mDatamodels != null && mDatamodels[0] != null
+                && ((CommentsModel) mDatamodels[0]).getPosts() != null
+                && ((CommentsModel) mDatamodels[0]).getPosts().size() > 0;
+    }
+
+    private List<SingleItemModel> getPosts() {
+        if (!hasPosts()) {
+            return null;
+        }
+        return ((CommentsModel) mDatamodels[0]).getPosts();
+    }
+
     @Override
     protected boolean isViewAllOptionAvailable() {
-        if (mDatamodels == null || mDatamodels[0] == null) {
-            return false;
+        if (mSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > 10) {
+            return true;
+        } else if (mSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > 10) {
+            return true;
         }
-        CommentsModel commentsModel = (CommentsModel) mDatamodels[0];
-        if (mSelectedButtonIndex == 0) {
-            List<AuthorModel> authors = commentsModel.getAuthors();
-            if (authors != null && authors.size() > 10) {
-                return true;
-            }
-        } else {
-            List<SingleItemModel> posts = commentsModel.getPosts();
-            if (posts != null && posts.size() > 10) {
-                return true;
-            }
-        }
-
         return false;
     }
 

@@ -23,8 +23,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodels != null && mDatamodels[0] != null
-                && ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages().size() > 0) {
+        if (hasTopPostsAndPages()) {
             List<SingleItemModel> postViews = ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages();
             ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), postViews);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
@@ -34,10 +33,21 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
         }
     }
 
+    private boolean hasTopPostsAndPages() {
+        return mDatamodels != null && mDatamodels[0] != null
+                && ((TopPostsAndPagesModel) mDatamodels[0]).hasTopPostsAndPages();
+    }
+
+    private List<SingleItemModel> getTopPostsAndPages() {
+        if (!hasTopPostsAndPages()) {
+            return null;
+        }
+        return ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages();
+    }
+
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (mDatamodels != null && mDatamodels[0] != null
-                && ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages().size() > 10);
+        return hasTopPostsAndPages() && getTopPostsAndPages().size() > 10;
     }
 
     @Override

@@ -20,10 +20,8 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodels != null && mDatamodels[0] != null
-                && ((TagsContainerModel) mDatamodels[0]).getTags() != null
-                && (((TagsContainerModel) mDatamodels[0]).getTags()).size() > 0) {
-            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((TagsContainerModel) mDatamodels[0]).getTags());
+        if (hasTags()) {
+            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), getTags());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
@@ -31,11 +29,22 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
         }
     }
 
-    @Override
-    protected boolean isViewAllOptionAvailable() {
+    private boolean hasTags() {
         return mDatamodels != null && mDatamodels[0] != null
                 && ((TagsContainerModel) mDatamodels[0]).getTags() != null
-                && (((TagsContainerModel) mDatamodels[0]).getTags()).size() > 10;
+                && (((TagsContainerModel) mDatamodels[0]).getTags()).size() > 0;
+    }
+
+    private List<TagsModel> getTags() {
+        if (!hasTags()) {
+            return null;
+        }
+        return ((TagsContainerModel) mDatamodels[0]).getTags();
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return hasTags() && getTags().size() > 10;
     }
 
     @Override
