@@ -262,7 +262,10 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         if (mDrawerLayout != null) {
             mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
             mDrawerToggle = new ActionBarDrawerToggle(
-                    this, mDrawerLayout, mToolbar, R.string.open_drawer,
+                    this,
+                    mDrawerLayout,
+                    mToolbar,
+                    R.string.open_drawer,
                     R.string.close_drawer
             ) {
                 public void onDrawerClosed(View view) {
@@ -273,6 +276,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 }
             };
             mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
         }
 
         // add listVew header containing spinner if it hasn't already been added
