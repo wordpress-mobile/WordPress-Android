@@ -14,6 +14,9 @@ import java.util.List;
  */
 
 public class MediaContent implements Parcelable {
+    public static final String TAG_IMAGE_CAPTURE = "CaptureImage";
+    public static final String TAG_VIDEO_CAPTURE = "CaptureVideo";
+
     public enum MEDIA_TYPE {
         INVALID(0), CAPTURE(1), DEVICE_IMAGE(2), DEVICE_VIDEO(3), WEB_IMAGE(4), WEB_VIDEO(5), COUNT(6);
 

@@ -115,7 +115,7 @@ public class MediaContentAdapter extends BaseAdapter {
     private View createCaptureContentView(View convertView, MediaContent content) {
         if (convertView != null) {
             String tag = content.getTag();
-            boolean isVideo = tag != null && tag.equals("CaptureVideo");
+            boolean isVideo = tag != null && tag.equals(MediaContent.TAG_VIDEO_CAPTURE);
 
             ImageView contentImageView = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
             if (contentImageView != null) {
@@ -123,7 +123,9 @@ public class MediaContentAdapter extends BaseAdapter {
                 contentImageView.setBackgroundColor(mResources.getColor(R.color.grey_medium_light));
             }
 
-            layoutTitleView(convertView, isVideo ? "Capture video" : "Capture image", View.VISIBLE);
+            String captureTitle = isVideo ? mResources.getString(R.string.media_add_popup_capture_photo) :
+                                            mResources.getString(R.string.media_add_popup_capture_video);
+            layoutTitleView(convertView, captureTitle, View.VISIBLE);
             layoutOverlay(convertView, CAPTURE_CONTENT_OVERLAY_LAYOUT_PARAMS, 0.8f, isVideo ? R.drawable.video : R.drawable.camera, View.VISIBLE);
         }
 

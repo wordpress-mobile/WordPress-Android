@@ -261,12 +261,12 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
     private void applyFilters() {
         if ((mFilter & CAPTURE_IMAGE) != 0) {
             MediaContent captureImageContent = new MediaContent(MediaContent.MEDIA_TYPE.CAPTURE);
-            captureImageContent.setTag("CaptureImage");
+            captureImageContent.setTag(MediaContent.TAG_IMAGE_CAPTURE);
             mAdapter.addContent(captureImageContent);
         }
         if ((mFilter & CAPTURE_VIDEO) != 0) {
             MediaContent captureVideoContent = new MediaContent(MediaContent.MEDIA_TYPE.CAPTURE);
-            captureVideoContent.setTag("CaptureVideo");
+            captureVideoContent.setTag(MediaContent.TAG_VIDEO_CAPTURE);
             mAdapter.addContent(captureVideoContent);
         }
         if ((mFilter & DEVICE_IMAGES) != 0) {
@@ -286,7 +286,7 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
     private void captureMediaContent(MediaContent mediaContent) {
         String tag = mediaContent.getTag();
 
-        if (tag != null && tag.equals("CaptureVideo")) {
+        if (tag != null && tag.equals(MediaContent.TAG_VIDEO_CAPTURE)) {
             MediaUtils.launchVideoCamera(this);
         } else {
             MediaUtils.launchCamera(this, this);
