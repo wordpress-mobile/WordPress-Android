@@ -128,7 +128,7 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         MediaContent selectedContent = (MediaContent) mAdapter.getItem(position);
 
         if (selectedContent != null) {
-            if (selectedContent.getType() == MediaContent.MEDIA_TYPE.CAPTURE) {
+            if (selectedContent.getType() == MediaContent.MEDIA_TYPE.CAPTURE && mSelectedContent.size() == 0) {
                 captureMediaContent(selectedContent);
             } else {
                 if (checked && !mSelectedContent.contains(selectedContent)) {
