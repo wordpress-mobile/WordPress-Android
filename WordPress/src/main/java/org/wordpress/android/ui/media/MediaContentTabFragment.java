@@ -251,7 +251,9 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         mGridView.setNumColumns(numColumns);
         mGridView.setVerticalSpacing(columnSpacingY);
         mGridView.setHorizontalSpacing(columnSpacingX);
-        mGridView.setPadding(gridPadding, 0, gridPadding, 0);
+        mGridView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        mGridView.setPadding(gridPadding, gridPadding, gridPadding, gridPadding);
+        mGridView.setClipToPadding(false);
         mGridView.setAdapter(mAdapter);
     }
 
