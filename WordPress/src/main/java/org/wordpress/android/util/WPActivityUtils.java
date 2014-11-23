@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -20,14 +19,14 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 
 public class WPActivityUtils {
 
-    public static Context getThemedContext(Activity activity) {
-        if (activity instanceof ActionBarActivity) {
-            ActionBar actionBar = ((ActionBarActivity)activity).getSupportActionBar();
+    public static Context getThemedContext(Context context) {
+        if (context instanceof ActionBarActivity) {
+            ActionBar actionBar = ((ActionBarActivity)context).getSupportActionBar();
             if (actionBar != null) {
                 return actionBar.getThemedContext();
             }
         }
-        return activity;
+        return context;
     }
 
     public static Intent getIntentForActivityId(Context context, ActivityId id) {

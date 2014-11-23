@@ -84,6 +84,7 @@
     </RelativeLayout>
 
     <View
+        android:id="@+id/divider_info_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_header_divider_height"
         android:background="@color/reader_divider_grey" />

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -269,6 +270,7 @@ public class ReaderPostListFragment extends Fragment {
                 mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_info_view, container, false);
                 rootView.addView(mTagInfoView);
                 ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, mTagInfoView.getId());
+                setHeaderViewElevation(mTagInfoView);
                 break;
 
             case BLOG_PREVIEW:
@@ -276,6 +278,8 @@ public class ReaderPostListFragment extends Fragment {
                 mBlogInfoView = new ReaderBlogInfoView(container.getContext());
                 rootView.addView(mBlogInfoView);
                 ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, mBlogInfoView.getId());
+                // TODO: elevation doesn't work on the blog info header, not sure why
+                //setHeaderViewElevation(mBlogInfoView);
                 break;
         }
 
@@ -312,6 +316,17 @@ public class ReaderPostListFragment extends Fragment {
         );
 
         return rootView;
+    }
+
+    /*
+     * for info headers, use elevation rather than a divider on SDK 21+
+     */
+    private void setHeaderViewElevation(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            float elevation = view.getContext().getResources().getDimension(R.dimen.card_elevation);
+            view.setElevation(elevation);
+            view.findViewById(R.id.divider_info_header).setVisibility(View.GONE);
+        }
     }
 
     @Override
