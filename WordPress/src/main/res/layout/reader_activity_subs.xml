@@ -21,9 +21,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
+            android:background="@color/tab_background"
             android:paddingBottom="@dimen/margin_large"
             android:paddingTop="@dimen/margin_large"
-            android:textAppearance="@style/ReaderPagerTabStripText" />
+            android:textAppearance="@style/ReaderTabStripTextAppearance" />
 
     </android.support.v4.view.ViewPager>
 

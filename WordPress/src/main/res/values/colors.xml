@@ -55,10 +55,11 @@
     <color name="theme_details_premium">#B0710E</color>
     <color name="theme_feature_text">#555555</color>
 
-    <!-- Horizontal Tab View colors -->
-    <color name="tab_divider">#565656</color>
-    <color name="tab_background">#363636</color>
-    <color name="tab_text">@color/white</color>
+    <!-- Tab Strip colors -->
+    <color name="tab_background">@color/color_primary</color>
+    <color name="tab_text_normal">@color/blue_light</color>
+    <color name="tab_text_selected">@color/white</color>
+    <color name="tab_indicator">@color/blue_light</color>
 
     <!-- Stats bar graph colors -->
     <color name="stats_bar_graph_views">#7CABC1</color>

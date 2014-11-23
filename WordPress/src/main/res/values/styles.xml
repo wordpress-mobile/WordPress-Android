@@ -338,4 +338,5 @@
     <style name="WordPress.SwipeToRefresh">
         <item name="refreshIndicatorColor">@color/blue_new_kid</item>
     </style>
+
 </resources>

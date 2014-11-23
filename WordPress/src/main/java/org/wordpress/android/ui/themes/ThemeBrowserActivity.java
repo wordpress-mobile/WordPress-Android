@@ -25,9 +25,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Theme;
-import org.wordpress.android.ui.HorizontalTabView;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragmentCallback;
@@ -38,8 +37,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
-import org.wordpress.android.analytics.AnalyticsTracker;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -48,11 +47,11 @@ import java.util.ArrayList;
  * The theme browser. Accessible via side menu drawer.
  */
 public class ThemeBrowserActivity extends WPDrawerActivity implements
-        ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback,
-        TabListener {
-    private HorizontalTabView mTabView;
+        ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback {
+
     private ThemePagerAdapter mThemePagerAdapter;
     private ViewPager mViewPager;
+    private SlidingTabLayout mTabLayout;
     private ThemeSearchFragment mSearchFragment;
     private ThemePreviewFragment mPreviewFragment;
     private ThemeDetailsFragment mDetailsFragment;
@@ -91,23 +90,12 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
 
         mViewPager = (ViewPager) findViewById(R.id.theme_browser_pager);
         mViewPager.setAdapter(mThemePagerAdapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                mTabView.setSelectedTab(position);
-            }
-        });
 
-        mTabView = (HorizontalTabView) findViewById(R.id.horizontalTabView1);
-        mTabView.setTabListener(this);
-
-        int count = ThemeSortType.values().length;
-        for (int i = 0; i < count; i++) {
-            String title = ThemeSortType.values()[i].getTitle();
-
-            mTabView.addTab(mTabView.newTab().setText(title));
-        }
-        mTabView.setSelectedTab(0);
+        mTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        mTabLayout.setCustomTabView(R.layout.tab_text, R.id.text_tab);
+        mTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.tab_indicator));
+        mTabLayout.setDistributeEvenly(true);
+        mTabLayout.setViewPager(mViewPager);
 
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
@@ -138,10 +126,10 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
         int backstackCount = getFragmentManager().getBackStackEntryCount();
         if (backstackCount == 0) {
             mViewPager.setVisibility(View.VISIBLE);
-            mTabView.setVisibility(View.VISIBLE);
+            mTabLayout.setVisibility(View.VISIBLE);
         } else {
             mViewPager.setVisibility(View.GONE);
-            mTabView.setVisibility(View.GONE);
+            mTabLayout.setVisibility(View.GONE);
         }
 
         if (getDrawerToggle() != null) {
@@ -162,11 +150,6 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
                 setRefreshing(true, mViewPager.getCurrentItem());
             }
         }
-    }
-
-    @Override
-    public void onTabSelected(HorizontalTabView.Tab tab) {
-        mViewPager.setCurrentItem(tab.getPosition());
     }
 
     public class ThemePagerAdapter extends FragmentStatePagerAdapter {

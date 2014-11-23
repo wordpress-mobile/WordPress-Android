@@ -176,11 +176,11 @@
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="@android:style/Widget.Holo.Light.ProgressBar" />
 
-    <!-- tab strip text appearance -->
-    <style name="ReaderPagerTabStripText">
+    <style name="ReaderTabStripTextAppearance">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/tab_text_color</item>
         <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center</item>
     </style>
 </resources>
