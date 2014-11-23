@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
@@ -36,14 +35,14 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -65,7 +64,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 /**
  * The native stats activity, accessible via the menu drawer.
  * <p>
- * By pressing a spinner on the action bar, the user can select which stats view they wish to see.
+ * By pressing a spinner on the action bar, the user can select which timeframe they wish to see.
  * </p>
  */
 public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.ScrollViewListener,
@@ -74,6 +73,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
+    private static final String SAVED_STATS_REQUESTED_DATE= "SAVED_STATS_REQUESTED_DATE";
 
     private static final int REQUEST_JETPACK = 7000;
 
@@ -88,6 +88,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     private boolean mNoMenuDrawer = false;
     private int mLocalBlogID = -1;
     private StatsTimeframe mCurrentTimeframe = StatsTimeframe.DAY;
+    private String mRequestedDate;
     private boolean mIsUpdatingStats;
     private PullToRefreshHelper mPullToRefreshHelper;
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
@@ -135,7 +136,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                             AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
                             return;
                         }
-                        refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID));
+                        refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID), true);
                     }
                 });
 
@@ -148,14 +149,16 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
+            mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
         } else if (getIntent() != null) {
-            needToRefreshStats = true;
+            needToRefreshStats = true; // refresh on new intent
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
             } else {
                 mCurrentTimeframe = StatsTimeframe.DAY;
             }
+            mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
         }
 
         //Make sure the blog_id passed to this activity is valid and the blog is available within the app
@@ -168,8 +171,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             return;
         }
 
-        String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-        loadStatsFragments(false, true, date);
+        loadStatsFragments(false, true);
 
         ScrollViewExt scrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
         if (scrollView != null) {
@@ -190,9 +192,8 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         selectTimeframeInActionBar(mCurrentTimeframe);
 
-        // Refresh stats on new activity only.
         if (needToRefreshStats) {
-            refreshStats(mCurrentTimeframe, date);
+            refreshStats(mCurrentTimeframe, mRequestedDate, true);
             mPullToRefreshHelper.setRefreshing(true);
         }
     }
@@ -233,7 +234,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         super.onSaveInstanceState(outState);
     }
 
-    private void loadStatsFragments(boolean forceRecreationOfFragments, boolean includeBarGraphFragment, String date) {
+    private void loadStatsFragments(boolean forceRecreationOfFragments, boolean includeBarGraphFragment) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
@@ -247,58 +248,58 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 */
         if (includeBarGraphFragment) {
             if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, date);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
             }
         }
 
         if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID, mCurrentTimeframe, date);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID, mCurrentTimeframe, date);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID, mCurrentTimeframe, date);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID, mCurrentTimeframe, date);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsAuthorsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID, mCurrentTimeframe, date);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_top_authors_container, fragment, StatsAuthorsFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsVideoplaysFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID, mCurrentTimeframe, date);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID, mCurrentTimeframe, date);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID, mCurrentTimeframe, date);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsPublicizeFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID, mCurrentTimeframe, date);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID, mCurrentTimeframe, date);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
         }
 
@@ -347,7 +348,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
                                     mPullToRefreshHelper.setRefreshing(true);
-                                    refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDateTZ(mLocalBlogID));
+                                    refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDateTZ(mLocalBlogID), true);
                                 }
                             }
                         }
@@ -369,26 +370,11 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                         }
                     }, "wp.getOptions", params);
                 } else {
-                    refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDateTZ(mLocalBlogID));
+                    refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID), true);
                 }
                 mPullToRefreshHelper.setRefreshing(true);
             }
         }
-    }
-
-    // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
-    @Override
-    public void onDateChanged(String blogID, StatsTimeframe timeframe, String date, boolean updateGraph) {
-        // Reload all fragments except the bar graph one
-        loadStatsFragments(true, false, date);
-
-        // start service to get stats
-        Intent intent = new Intent(this, StatsService.class);
-        intent.putExtra(StatsService.ARG_BLOG_ID, blogID);
-        intent.putExtra(StatsService.ARG_PERIOD, timeframe);
-        intent.putExtra(StatsService.ARG_DATE, date);
-        intent.putExtra(StatsService.ARG_UPDATE_GRAPH, updateGraph);
-        this.startService(intent);
     }
 
     private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
@@ -517,12 +503,21 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         stopStatsService();
         mLocalBlogID = WordPress.getCurrentBlog().getLocalTableBlogId();
         mCurrentTimeframe = StatsTimeframe.DAY;
+        mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
         selectTimeframeInActionBar(mCurrentTimeframe);
         scrollToTop();
-        String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-        loadStatsFragments(true, true, date);
+        loadStatsFragments(true, true);
         mPullToRefreshHelper.setRefreshing(true);
-        refreshStats(mCurrentTimeframe, date);
+        refreshStats(mCurrentTimeframe, mRequestedDate, true);
+    }
+
+    // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
+    @Override
+    public void onDateChanged(String blogID, StatsTimeframe timeframe, String date, boolean updateGraph) {
+        mRequestedDate = date;
+        // Reload all fragments except the bar graph one
+        loadStatsFragments(true, false);
+        refreshStats(timeframe, date, updateGraph);
     }
 
     /**
@@ -534,7 +529,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         return false;
     }
 
-    private void refreshStats(StatsTimeframe timeframe, String date) {
+    private void refreshStats(StatsTimeframe timeframe, String date, boolean updateGraph) {
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
         if (currentBlog == null) {
@@ -599,6 +594,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
         intent.putExtra(StatsService.ARG_PERIOD, timeframe);
         intent.putExtra(StatsService.ARG_DATE, date);
+        intent.putExtra(StatsService.ARG_UPDATE_GRAPH, updateGraph);
         startService(intent);
     }
 
@@ -770,8 +766,8 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         mCurrentTimeframe = selectedTimeframe;
         if (NetworkUtils.isNetworkAvailable(this)) {
             String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-            loadStatsFragments(true, true, date);
-            refreshStats(selectedTimeframe, date);
+            loadStatsFragments(true, true);
+            refreshStats(selectedTimeframe, date, true);
             mPullToRefreshHelper.setRefreshing(true);
         }
 

@@ -16,7 +16,6 @@ public class FollowerModel implements Serializable {
     public FollowerModel(String mBlogId, JSONObject followerJSONData) throws JSONException{
         this.mBlogId = mBlogId;
         this.mLabel = followerJSONData.getString("label");
-        this.mLabel = followerJSONData.getString("label");
         if (followerJSONData.has("avatar") && !followerJSONData.getString("avatar").equals("null")) {
             setAvatar(followerJSONData.getString("avatar"));
         }

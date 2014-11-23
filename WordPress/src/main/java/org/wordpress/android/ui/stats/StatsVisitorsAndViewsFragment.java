@@ -160,8 +160,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     public void onResume() {
         super.onResume();
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATED));
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATING));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SECTION_UPDATED));
     }
 
     @Override
@@ -397,7 +396,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         public void onReceive(Context context, Intent intent) {
             String action = StringUtils.notNullStr(intent.getAction());
 
-            if (!(action.equals(StatsService.ACTION_STATS_UPDATED) || action.equals(StatsService.ACTION_STATS_UPDATING))) {
+            if (!action.equals(StatsService.ACTION_STATS_SECTION_UPDATED)) {
                 return;
             }
 
@@ -410,7 +409,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 return;
             }
 
-            if (action.equals(StatsService.ACTION_STATS_UPDATED)) {
+            if (action.equals(StatsService.ACTION_STATS_SECTION_UPDATED)) {
                 Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_DATA);
 
                 /*if (dataObj == null || dataObj instanceof VolleyError) {
@@ -427,8 +426,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 }
 
                 updateUI();
-            } if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
-                setupEmptyUI(true);
             }
         }
     };

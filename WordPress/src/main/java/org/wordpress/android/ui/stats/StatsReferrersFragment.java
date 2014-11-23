@@ -7,11 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.stats.model.GeoviewsModel;
 import org.wordpress.android.ui.stats.model.ReferrerGroupModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
 import org.wordpress.android.ui.stats.model.SingleItemModel;
-import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 
@@ -22,8 +20,9 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodel != null && ((ReferrersModel) mDatamodel).getGroups().size() > 0) {
-            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((ReferrersModel)mDatamodel).getGroups());
+        if (mDatamodels != null && mDatamodels[0] != null
+                && ((ReferrersModel) mDatamodels[0]).getGroups().size() > 0) {
+            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((ReferrersModel) mDatamodels[0]).getGroups());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
@@ -33,8 +32,9 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (mDatamodel != null && ((ReferrersModel) mDatamodel).getGroups() != null
-                && ((ReferrersModel) mDatamodel).getGroups().size() > 10);
+        return (mDatamodels != null && mDatamodels[0] != null
+                && ((ReferrersModel) mDatamodels[0]).getGroups() != null
+                && ((ReferrersModel) mDatamodels[0]).getGroups().size() > 10);
     }
 
     @Override
@@ -43,8 +43,10 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
-        return StatsService.StatsEndpointsEnum.REFERRERS;
+    protected StatsService.StatsEndpointsEnum[]getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.REFERRERS
+        };
     }
 
     @Override

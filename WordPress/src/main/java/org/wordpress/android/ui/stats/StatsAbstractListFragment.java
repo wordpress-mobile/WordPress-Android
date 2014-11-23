@@ -40,9 +40,10 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected TextView mTotalsLabel;
     protected LinearLayout mListContainer;
     protected LinearLayout mList;
-    protected Serializable mDatamodel;
+    protected Serializable[] mDatamodels;
     protected Button mViewAll;
     protected RadioGroup mRadioGroup;
+    protected int mSelectedButtonIndex = 0;
 
     protected SparseBooleanArray mGroupIdToExpandedMap;
 
@@ -50,7 +51,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract int getTotalsLabelResId();
     protected abstract int getEmptyLabelTitleResId();
     protected abstract int getEmptyLabelDescResId();
-    protected abstract StatsService.StatsEndpointsEnum getSectionToUpdate();
+    protected abstract StatsService.StatsEndpointsEnum[] getSectionToUpdate();
     protected abstract void updateUI();
     protected abstract boolean isExpandableList();
     protected abstract boolean isViewAllOptionAvailable();
@@ -92,7 +93,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         if (savedInstanceState != null) {
             AppLog.d(AppLog.T.STATS, this.getTag() + " > restoring instance state");
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
-                mDatamodel = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+                mDatamodels = (Serializable[]) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             }
         }
     }
@@ -100,7 +101,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
-        outState.putSerializable(ARG_REST_RESPONSE, mDatamodel);
+        outState.putSerializable(ARG_REST_RESPONSE, mDatamodels);
         super.onSaveInstanceState(outState);
     }
 
@@ -117,23 +118,14 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         AppLog.d(AppLog.T.STATS, this.getTag() + " > onResume");
         super.onResume();
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATED));
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATING));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SECTION_UPDATED));
 
         // Init the UI
-        if (mDatamodel != null) {
+        if (mDatamodels != null) {
             updateUI();
         } else {
             showEmptyUI(true);
         }
-    }
-
-    protected void showLoadingUI() {
-        mEmptyLabel.setText("Loading...");
-        mEmptyLabel.setVisibility(View.VISIBLE);
-        mList.setVisibility(View.GONE);
-        mListContainer.setVisibility(View.GONE);
-        return;
     }
 
     protected void showEmptyUI(boolean show) {
@@ -181,19 +173,19 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mViewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewAllButtonAction(mDatamodel);
+                viewAllButtonAction(mDatamodels);
             }
         });
     }
 
-    protected void viewAllButtonAction(Serializable restResponse) {
+    protected void viewAllButtonAction(Serializable[] restResponses) {
         if (isSingleView()) {
             return; // already in single view
         }
         AppLog.w(AppLog.T.STATS, "View All Tapped");
 
         // Model cannot be null here
-        if (restResponse == null) {
+        if (restResponses == null) {
             return;
         }
 
@@ -203,13 +195,13 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         viewAllIntent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, getViewType().ordinal());
         viewAllIntent.putExtra(StatsAbstractFragment.ARGS_START_DATE, getStartDate());
         viewAllIntent.putExtra(ARGS_IS_SINGLE_VIEW, true);
-        viewAllIntent.putExtra(StatsAbstractFragment.ARG_REST_RESPONSE, restResponse);
+      //  viewAllIntent.putExtra(StatsAbstractFragment.ARG_REST_RESPONSE, restResponses);
 
         if (mRadioGroup.getVisibility() == View.VISIBLE) {
-            int radioButtonID = mRadioGroup.getCheckedRadioButtonId();
+           /* int radioButtonID = mRadioGroup.getCheckedRadioButtonId();
             View radioButton = mRadioGroup.findViewById(radioButtonID);
-            int idx = mRadioGroup.indexOfChild(radioButton);
-            viewAllIntent.putExtra(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX,idx);
+            int idx = mRadioGroup.indexOfChild(radioButton);*/
+            viewAllIntent.putExtra(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
         }
 
         getActivity().startActivity(viewAllIntent);
@@ -227,7 +219,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         public void onReceive(Context context, Intent intent) {
             String action = StringUtils.notNullStr(intent.getAction());
 
-            if (!(action.equals(StatsService.ACTION_STATS_UPDATED) || action.equals(StatsService.ACTION_STATS_UPDATING))) {
+            if (!action.equals(StatsService.ACTION_STATS_SECTION_UPDATED)) {
                 return;
             }
 
@@ -236,21 +228,34 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             }
 
             StatsService.StatsEndpointsEnum sectionToUpdate = (StatsService.StatsEndpointsEnum) intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_NAME);
-            if (sectionToUpdate != getSectionToUpdate()) {
+            StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionToUpdate();
+            int indexOfDatamodelMatch = -1;
+            for (int i = 0; i < getSectionToUpdate().length; i++) {
+                if (sectionToUpdate == sectionsToUpdate[i]) {
+                    indexOfDatamodelMatch = i;
+                    break;
+                }
+            }
+
+            if (-1 == indexOfDatamodelMatch) {
                 return;
             }
 
             mGroupIdToExpandedMap.clear();
-            if (action.equals(StatsService.ACTION_STATS_UPDATED)) {
+            if (action.equals(StatsService.ACTION_STATS_SECTION_UPDATED)) {
                 Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_DATA);
                /* if (dataObj == null || dataObj instanceof VolleyError) {
                     //TODO: show the error on the section ???
                     return;
                 }*/
-                mDatamodel = (dataObj == null || dataObj instanceof VolleyError) ? null : dataObj;
+
+                if (mDatamodels == null) {
+                    mDatamodels = new Serializable[getSectionToUpdate().length];
+                }
+
+                dataObj = (dataObj == null || dataObj instanceof VolleyError) ? null : dataObj;
+                mDatamodels[indexOfDatamodelMatch] = dataObj;
                 updateUI();
-            } if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
-                showLoadingUI();
             }
 
             return;

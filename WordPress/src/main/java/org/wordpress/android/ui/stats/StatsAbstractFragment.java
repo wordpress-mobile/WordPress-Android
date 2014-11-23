@@ -2,13 +2,7 @@ package org.wordpress.android.ui.stats;
 
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
-
-import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
-import org.wordpress.android.util.AppLog;
-
-import java.io.Serializable;
 
 
 public abstract class StatsAbstractFragment extends Fragment {

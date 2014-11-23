@@ -20,9 +20,10 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodel != null && ((VideoPlaysModel) mDatamodel).getPlays() != null
-                && ((VideoPlaysModel) mDatamodel).getPlays().size() > 0) {
-            List<SingleItemModel> postViews = ((VideoPlaysModel) mDatamodel).getPlays();
+        if (mDatamodels != null &&  mDatamodels[0] != null
+                && ((VideoPlaysModel) mDatamodels[0]).getPlays() != null
+                && ((VideoPlaysModel) mDatamodels[0]).getPlays().size() > 0) {
+            List<SingleItemModel> postViews = ((VideoPlaysModel) mDatamodels[0]).getPlays();
             ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), postViews);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
@@ -33,8 +34,9 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return mDatamodel != null && ((VideoPlaysModel) mDatamodel).getPlays() != null
-                && ((VideoPlaysModel) mDatamodel).getPlays().size() > 10;
+        return mDatamodels != null && mDatamodels[0] != null
+                && ((VideoPlaysModel) mDatamodels[0]).getPlays() != null
+                && ((VideoPlaysModel) mDatamodels[0]).getPlays().size() > 10;
     }
 
     @Override
@@ -103,8 +105,10 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
-        return StatsService.StatsEndpointsEnum.VIDEO_PLAYS;
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.VIDEO_PLAYS
+        };
     }
 
     @Override

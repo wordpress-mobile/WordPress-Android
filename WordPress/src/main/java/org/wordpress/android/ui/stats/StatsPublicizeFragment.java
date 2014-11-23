@@ -21,9 +21,10 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodel != null && ((PublicizeModel)mDatamodel).getServices() != null
-                && ((PublicizeModel)mDatamodel).getServices().size() > 0) {
-            List<SingleItemModel> publicizeItems = ((PublicizeModel)mDatamodel).getServices();
+        if (mDatamodels != null && mDatamodels[0] != null
+                && ((PublicizeModel) mDatamodels[0]).getServices() != null
+                && ((PublicizeModel) mDatamodels[0]).getServices().size() > 0) {
+            List<SingleItemModel> publicizeItems = ((PublicizeModel) mDatamodels[0]).getServices();
             ArrayAdapter adapter = new PublicizeAdapter(getActivity(), publicizeItems);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
@@ -163,8 +164,10 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
-        return StatsService.StatsEndpointsEnum.PUBLICIZE;
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.PUBLICIZE
+        };
     }
 
     @Override

@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;

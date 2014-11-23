@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.AuthorModel;
+import org.wordpress.android.ui.stats.model.CommentFollowersModel;
 import org.wordpress.android.ui.stats.model.CommentsModel;
 import org.wordpress.android.ui.stats.model.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -27,8 +28,7 @@ import java.util.List;
 public class StatsCommentsFragment extends StatsAbstractListFragment implements RadioGroup.OnCheckedChangeListener {
     public static final String TAG = StatsCommentsFragment.class.getSimpleName();
 
-    private int mSelectedButtonIndex = 0;
-    private static String totalLabel = "Total comment followers: ";
+    private static String mTotalLabel = "Total comment followers: ";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,9 +60,6 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
         mRadioGroup.setVisibility(View.VISIBLE);
         mRadioGroup.setOnCheckedChangeListener(this);
-
-        mTotalsLabel.setVisibility(View.VISIBLE);
-        mTotalsLabel.setText(totalLabel + 0);
 
         return view;
     }
@@ -108,61 +105,52 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
     }
 
     @Override
-    protected void showLoadingUI() {
-        super.showLoadingUI();
-        mRadioGroup.setVisibility(View.GONE);
-        mTotalsLabel.setVisibility(View.GONE);
-    }
-
-    @Override
     protected void updateUI() {
         mRadioGroup.setVisibility(View.VISIBLE);
-        mTotalsLabel.setVisibility(View.VISIBLE);
 
-        if (mDatamodel == null) {
+        if (mDatamodels == null) {
             showEmptyUI(true);
-            mTotalsLabel.setText(totalLabel + 0);
+            mTotalsLabel.setVisibility(View.GONE);
             return;
         }
 
-        CommentsModel commentsModel = (CommentsModel) mDatamodel;
-        ArrayAdapter adapter = null;
-        List<AuthorModel> authors = commentsModel.getAuthors();
-        if (mSelectedButtonIndex == 0) {
-            if (authors != null && authors.size() > 0) {
-                adapter = new AuthorsAdapter(getActivity(), authors);
-            }
+        if (mDatamodels[1] != null) { // check if comment-followers is already here
+            mTotalsLabel.setVisibility(View.VISIBLE);
+            mTotalsLabel.setText(mTotalLabel + ((CommentFollowersModel)mDatamodels[1]).getTotal());
         } else {
-            List<SingleItemModel> posts = commentsModel.getPosts();
-            if (posts != null && posts.size() > 0) {
-                adapter = new TopPostsAndPagesAdapter(getActivity(), posts);
-            }
+            mTotalsLabel.setVisibility(View.GONE);
         }
 
-        // calculate the total comment followers
-        int totalCommentFollowers = 0;
-        if (authors != null && authors.size() > 0) {
-            totalCommentFollowers = authors.size();
+        ArrayAdapter adapter = null;
+        if (mDatamodels[0] != null) {
+            CommentsModel commentsModel = (CommentsModel) mDatamodels[0];
+            List<AuthorModel> authors = commentsModel.getAuthors();
+            if (mSelectedButtonIndex == 0) {
+                if (authors != null && authors.size() > 0) {
+                    adapter = new AuthorsAdapter(getActivity(), authors);
+                }
+            } else {
+                List<SingleItemModel> posts = commentsModel.getPosts();
+                if (posts != null && posts.size() > 0) {
+                    adapter = new TopPostsAndPagesAdapter(getActivity(), posts);
+                }
+            }
         }
 
         if (adapter != null) {
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
-            mTotalsLabel.setText(totalLabel + totalCommentFollowers);
             showEmptyUI(false);
         } else {
-            mTotalsLabel.setText(totalLabel + "0");
             showEmptyUI(true);
         }
-
-        mTotalsLabel.setVisibility(View.GONE); //FIXME : the API doesn't return the value
     }
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        if (mDatamodel == null) {
+        if (mDatamodels == null || mDatamodels[0] == null) {
             return false;
         }
-        CommentsModel commentsModel = (CommentsModel) mDatamodel;
+        CommentsModel commentsModel = (CommentsModel) mDatamodels[0];
         if (mSelectedButtonIndex == 0) {
             List<AuthorModel> authors = commentsModel.getAuthors();
             if (authors != null && authors.size() > 10) {
@@ -288,8 +276,10 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
-        return StatsService.StatsEndpointsEnum.COMMENTS;
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.COMMENTS, StatsService.StatsEndpointsEnum.COMMENT_FOLLOWERS
+        };
     }
 
     @Override

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.stats.model.ClicksModel;
 import org.wordpress.android.ui.stats.model.GeoviewModel;
 import org.wordpress.android.ui.stats.model.GeoviewsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -21,8 +20,9 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodel != null && ((GeoviewsModel) mDatamodel).getCountries() != null) {
-            List<GeoviewModel> postViews = ((GeoviewsModel) mDatamodel).getCountries();
+        if (mDatamodels != null && mDatamodels[0] != null &&
+                ((GeoviewsModel) mDatamodels[0]).getCountries() != null) {
+            List<GeoviewModel> postViews = ((GeoviewsModel) mDatamodels[0]).getCountries();
             ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), postViews);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
@@ -33,8 +33,9 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (mDatamodel != null && ((GeoviewsModel) mDatamodel).getCountries() != null
-                && ((GeoviewsModel) mDatamodel).getCountries().size() > 10);
+        return (mDatamodels != null && mDatamodels[0] != null
+                && ((GeoviewsModel) mDatamodels[0]).getCountries() != null
+                && ((GeoviewsModel) mDatamodels[0]).getCountries().size() > 10);
     }
 
     @Override
@@ -104,8 +105,10 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
-        return StatsService.StatsEndpointsEnum.GEO_VIEWS;
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.GEO_VIEWS
+        };
     }
 
     @Override

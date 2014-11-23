@@ -20,9 +20,10 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodel != null && ((TagsContainerModel) mDatamodel).getTags() != null
-                && (((TagsContainerModel) mDatamodel).getTags()).size() > 0) {
-            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((TagsContainerModel) mDatamodel).getTags());
+        if (mDatamodels != null && mDatamodels[0] != null
+                && ((TagsContainerModel) mDatamodels[0]).getTags() != null
+                && (((TagsContainerModel) mDatamodels[0]).getTags()).size() > 0) {
+            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((TagsContainerModel) mDatamodels[0]).getTags());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
@@ -32,8 +33,9 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return mDatamodel != null && ((TagsContainerModel) mDatamodel).getTags() != null
-                && (((TagsContainerModel) mDatamodel).getTags()).size() > 10;
+        return mDatamodels != null && mDatamodels[0] != null
+                && ((TagsContainerModel) mDatamodels[0]).getTags() != null
+                && (((TagsContainerModel) mDatamodels[0]).getTags()).size() > 10;
     }
 
     @Override
@@ -42,8 +44,10 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
-        return StatsService.StatsEndpointsEnum.TAGS_AND_CATEGORIES;
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.TAGS_AND_CATEGORIES
+        };
     }
 
     @Override

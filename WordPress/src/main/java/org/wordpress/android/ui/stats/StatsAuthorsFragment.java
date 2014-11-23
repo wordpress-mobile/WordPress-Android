@@ -36,13 +36,13 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodel == null) {
+        if (mDatamodels == null || mDatamodels[0] == null) {
             showEmptyUI(true);
             mListener.onAuthorsVisibilityChange(true); // Hide the authors section if completely empty
             return;
         }
 
-        List<AuthorModel> authors = ((AuthorsModel) mDatamodel).getAuthors();
+        List<AuthorModel> authors = ((AuthorsModel) mDatamodels[0]).getAuthors();
         // Do not show the authors section if there is one author only
         if (authors == null || authors.size() <= 1) {
             showEmptyUI(true);
@@ -58,8 +58,9 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (mDatamodel != null && ((AuthorsModel) mDatamodel).getAuthors() != null
-                && ((AuthorsModel) mDatamodel).getAuthors().size() > 10);
+        return (mDatamodels != null && mDatamodels[0] != null
+                && ((AuthorsModel) mDatamodels[0]).getAuthors() != null
+                && ((AuthorsModel) mDatamodels[0]).getAuthors().size() > 10);
     }
 
     @Override
@@ -68,8 +69,10 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
-        return StatsService.StatsEndpointsEnum.AUTHORS;
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.AUTHORS
+        };
     }
 
     @Override

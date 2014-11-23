@@ -20,9 +20,10 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-       if (mDatamodel != null && ((ClicksModel) mDatamodel).getClickGroups().size() > 0) {
-           BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((ClicksModel)mDatamodel).getClickGroups());
-           StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
+        if (mDatamodels != null && mDatamodels[0] != null
+                && ((ClicksModel) mDatamodels[0]).getClickGroups().size() > 0) {
+            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((ClicksModel) mDatamodels[0]).getClickGroups());
+            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
         } else {
             showEmptyUI(true);
@@ -31,8 +32,9 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (mDatamodel != null && ((ClicksModel) mDatamodel).getClickGroups() != null
-                    && ((ClicksModel) mDatamodel).getClickGroups().size() > 10);
+        return (mDatamodels != null && mDatamodels[0] != null
+                && ((ClicksModel) mDatamodels[0]).getClickGroups() != null
+                && ((ClicksModel) mDatamodels[0]).getClickGroups().size() > 10);
     }
 
     @Override
@@ -41,8 +43,10 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
-        return StatsService.StatsEndpointsEnum.CLICKS;
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.CLICKS
+        };
     }
 
     @Override

@@ -12,9 +12,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.stats.model.AuthorModel;
-import org.wordpress.android.ui.stats.model.CommentsModel;
 import org.wordpress.android.ui.stats.model.FollowerModel;
 import org.wordpress.android.ui.stats.model.FollowersModel;
 import org.wordpress.android.ui.stats.model.SingleItemModel;
@@ -34,16 +31,9 @@ import java.util.concurrent.TimeUnit;
 public class StatsFollowersFragment extends StatsAbstractListFragment implements RadioGroup.OnCheckedChangeListener {
     public static final String TAG = StatsFollowersFragment.class.getSimpleName();
 
-    private RadioGroup mRadioGroup;
-
-    private static final String SELECTED_BUTTON_INDEX = "SELECTED_BUTTON_INDEX";
-    private int mSelectedButtonIndex = 0;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
-
 
         int dp8 = DisplayUtils.dpToPx(view.getContext(), 8);
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
@@ -83,16 +73,19 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             AppLog.d(AppLog.T.STATS, this.getTag() + " > restoring instance state");
-            if (savedInstanceState.containsKey(SELECTED_BUTTON_INDEX)) {
-                mSelectedButtonIndex = savedInstanceState.getInt(SELECTED_BUTTON_INDEX);
+            if (savedInstanceState.containsKey(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX)) {
+                mSelectedButtonIndex = savedInstanceState.getInt(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX);
             }
+        } else {
+            // first time it's created
+            mSelectedButtonIndex = getArguments().getInt(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, 0);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
-        outState.putInt(SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
+        outState.putInt(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
         super.onSaveInstanceState(outState);
     }
 
@@ -116,41 +109,42 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
     }
 
     @Override
-    protected void showLoadingUI() {
-        super.showLoadingUI();
-        mRadioGroup.setVisibility(View.GONE);
-        mTotalsLabel.setVisibility(View.GONE);
-    }
-
-    @Override
     protected void updateUI() {
         mRadioGroup.setVisibility(View.VISIBLE);
         mTotalsLabel.setVisibility(View.VISIBLE);
 
-        if (mDatamodel == null) {
+        if (mDatamodels == null) {
             showEmptyUI(true);
             mTotalsLabel.setText(getTotalFollowersLabel(0));
             return;
         }
 
-        FollowersModel followersModel = (FollowersModel) mDatamodel;
+        FollowersModel followersWPCOMModel = (FollowersModel) mDatamodels[0];
+        FollowersModel followersEmailModel = (FollowersModel) mDatamodels[1];
         ArrayAdapter adapter = null;
         if (mSelectedButtonIndex == 0) {
-            List<FollowerModel> mSubscribers = followersModel.getFollowers();
-            if (mSubscribers != null && mSubscribers.size() > 0) {
-                adapter = new DotComFollowerAdapter(getActivity(), mSubscribers);
+            if (followersWPCOMModel != null) {
+                List<FollowerModel> mSubscribers = followersWPCOMModel.getFollowers();
+                if (mSubscribers != null && mSubscribers.size() > 0) {
+                    adapter = new DotComFollowerAdapter(getActivity(), mSubscribers);
+                }
             }
         } else {
-
+            if (followersEmailModel != null) {
+                List<FollowerModel> mSubscribers = followersEmailModel.getFollowers();
+                if (mSubscribers != null && mSubscribers.size() > 0) {
+                    adapter = new DotComFollowerAdapter(getActivity(), mSubscribers);
+                }
+            }
         }
 
         if (adapter != null) {
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
             if ( mSelectedButtonIndex == 0 ) {
-                mTotalsLabel.setText(getTotalFollowersLabel(followersModel.getTotalWPCom()));
+                mTotalsLabel.setText(getTotalFollowersLabel(followersWPCOMModel.getTotalWPCom()));
             } else {
-                mTotalsLabel.setText(getTotalFollowersLabel(followersModel.getTotalEmail()));
+                mTotalsLabel.setText(getTotalFollowersLabel(followersEmailModel.getTotalEmail()));
             }
         } else {
             showEmptyUI(true);
@@ -160,7 +154,16 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return false;
+        if (mDatamodels == null) {
+            return false;
+        }
+        FollowersModel followersModel = (FollowersModel) mDatamodels[mSelectedButtonIndex];
+        if (followersModel == null || followersModel.getFollowers() == null
+                || followersModel.getFollowers().size() < 10) {
+            return false;
+        }
+
+        return true;
     }
 
     private String getTotalFollowersLabel(int total) {
@@ -175,45 +178,6 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
     @Override
     protected boolean isExpandableList() {
         return false;
-    }
-
-    private class TopPostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
-
-        private final List<SingleItemModel> list;
-        private final Activity context;
-        private final LayoutInflater inflater;
-
-        public TopPostsAndPagesAdapter(Activity context, List<SingleItemModel> list) {
-            super(context, R.layout.stats_list_cell, list);
-            this.context = context;
-            this.list = list;
-            inflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View rowView = convertView;
-            // reuse views
-            if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, null);
-                // configure view holder
-                StatsViewHolder viewHolder = new StatsViewHolder(rowView);
-                rowView.setTag(viewHolder);
-            }
-
-            final SingleItemModel currentRowData = list.get(position);
-            StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
-            // fill data
-            // entries
-            holder.setEntryTextOrLink(currentRowData.getUrl(), currentRowData.getTitle());
-            // totals
-            holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));
-
-            // no icon
-            holder.networkImageView.setVisibility(View.GONE);
-
-            return rowView;
-        }
     }
 
     private class DotComFollowerAdapter extends ArrayAdapter<FollowerModel> {
@@ -244,7 +208,11 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
             // entries
-            holder.setEntryTextOrLink(currentRowData.getURL(), currentRowData.getLabel());
+            if (mSelectedButtonIndex == 0) {
+                holder.setEntryTextOrLink(currentRowData.getURL(), currentRowData.getLabel());
+            } else {
+                holder.entryTextView.setText(currentRowData.getLabel());
+            }
 
             // since date
 
@@ -365,8 +333,10 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
-        return StatsService.StatsEndpointsEnum.FOLLOWERS;
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.FOLLOWERS_WPCOM, StatsService.StatsEndpointsEnum.FOLLOWERS_EMAIL
+        };
     }
 
     @Override

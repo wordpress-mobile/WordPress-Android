@@ -48,4 +48,8 @@ public class CommentFollowersModel implements Serializable {
     public List<SingleItemModel> getPosts() {
         return this.mPosts;
     }
+
+    public int getTotal() {
+        return mTotal;
+    }
 }

@@ -19,14 +19,12 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.accounts.AbstractFragment;
 import org.wordpress.android.ui.stats.model.AuthorsModel;
 import org.wordpress.android.ui.stats.model.ClicksModel;
 import org.wordpress.android.ui.stats.model.CommentFollowersModel;
@@ -35,9 +33,7 @@ import org.wordpress.android.ui.stats.model.FollowersModel;
 import org.wordpress.android.ui.stats.model.GeoviewsModel;
 import org.wordpress.android.ui.stats.model.PublicizeModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
-import org.wordpress.android.ui.stats.model.SingleItemModel;
 import org.wordpress.android.ui.stats.model.TagsContainerModel;
-import org.wordpress.android.ui.stats.model.TagsModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.model.VideoPlaysModel;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -48,7 +44,6 @@ import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -73,7 +68,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
     private StatsTimeframe mTimeframe;
     private StatsViewType mStatsViewType;
     private String mDate;
-    private Serializable mRestResponse;
+    private Serializable[] mRestResponse;
     private int mOuterPagerSelectedButtonIndex = -1;
 
     @Override
@@ -113,7 +108,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
 
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
-            mRestResponse = savedInstanceState.getSerializable(StatsAbstractFragment.ARG_REST_RESPONSE);
+            mRestResponse = (Serializable[]) savedInstanceState.getSerializable(StatsAbstractFragment.ARG_REST_RESPONSE);
             mTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
             mDate = savedInstanceState.getString(StatsAbstractFragment.ARGS_START_DATE);
             int ordinal = savedInstanceState.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, -1);
@@ -124,7 +119,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
             mLocalBlogID = extras.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
             mTimeframe = (StatsTimeframe) extras.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
             mDate = extras.getString(StatsAbstractFragment.ARGS_START_DATE);
-            mRestResponse = extras.getSerializable(StatsAbstractFragment.ARG_REST_RESPONSE);
+           // mRestResponse = (Serializable[]) extras.getParcelableArray(StatsAbstractFragment.ARG_REST_RESPONSE);
             int ordinal = extras.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, -1);
             mStatsViewType = StatsViewType.values()[ordinal];
             mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, -1);
@@ -240,7 +235,11 @@ public class StatsViewAllActivity extends WPActionBarActivity
             parseResponseExecutor.submit(new Thread() {
                 @Override
                 public void run() {
-                    notifySectionUpdated();
+                    StatsService.StatsEndpointsEnum[] sections = getRestEndpointNames();
+                    for (int i = 0; i < sections.length; i++) {
+                        StatsService.StatsEndpointsEnum currentSection = sections[i];
+                        notifySectionUpdated(currentSection, mRestResponse[i]);
+                    }
                 }
             });
         }
@@ -261,11 +260,11 @@ public class StatsViewAllActivity extends WPActionBarActivity
         return true;
     }
 
-    private String getRestPath() {
+    private String getRestPath(StatsService.StatsEndpointsEnum restEndpoint) {
         final String blogId = StatsUtils.getBlogId(mLocalBlogID);
         String endpointPath = "";
-        switch (mStatsViewType) {
-            case TOP_POSTS_AND_PAGES:
+        switch (restEndpoint) {
+            case TOP_POSTS:
                 endpointPath = "top-posts";
                 break;
             case REFERRERS:
@@ -274,7 +273,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
             case CLICKS:
                 endpointPath = "clicks";
                 break;
-            case GEOVIEWS:
+            case GEO_VIEWS:
                 endpointPath = "country-views";
                 break;
             case AUTHORS:
@@ -292,37 +291,52 @@ public class StatsViewAllActivity extends WPActionBarActivity
             case PUBLICIZE:
                 endpointPath = "publicize";
                 break;
-            case FOLLOWERS:
+            case FOLLOWERS_WPCOM:
                 endpointPath = "followers";
+                return String.format("/sites/%s/stats/%s?type=wpcom&period=%s&date=%s&max=%s", blogId, endpointPath,
+                        mTimeframe.getLabelForRestCall(), mDate, 100);
+            case FOLLOWERS_EMAIL:
+                endpointPath = "followers";
+                return String.format("/sites/%s/stats/%s?type=email&period=%s&date=%s&max=%s", blogId, endpointPath,
+                        mTimeframe.getLabelForRestCall(), mDate, 100);
+            case COMMENT_FOLLOWERS:
+                endpointPath = "comment-followers";
                 break;
+
         }
 
         return String.format("/sites/%s/stats/%s?period=%s&date=%s&max=%s", blogId, endpointPath,
                 mTimeframe.getLabelForRestCall(), mDate, 100);
     }
 
-    private StatsService.StatsEndpointsEnum getRestEndpointName() {
+    private StatsService.StatsEndpointsEnum[] getRestEndpointNames() {
         switch (mStatsViewType) {
             case TOP_POSTS_AND_PAGES:
-                return StatsService.StatsEndpointsEnum.TOP_POSTS;
+                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.TOP_POSTS};
             case REFERRERS:
-                return StatsService.StatsEndpointsEnum.REFERRERS;
+                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.REFERRERS};
             case CLICKS:
-                return StatsService.StatsEndpointsEnum.CLICKS;
+                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.CLICKS};
             case GEOVIEWS:
-                return StatsService.StatsEndpointsEnum.GEO_VIEWS;
+                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.GEO_VIEWS};
             case AUTHORS:
-                return StatsService.StatsEndpointsEnum.AUTHORS;
+                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.AUTHORS};
             case VIDEO_PLAYS:
-                return StatsService.StatsEndpointsEnum.VIDEO_PLAYS;
+                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.VIDEO_PLAYS};
             case COMMENTS:
-                return StatsService.StatsEndpointsEnum.COMMENTS;
+                return new StatsService.StatsEndpointsEnum[]{
+                        StatsService.StatsEndpointsEnum.COMMENTS,
+                        StatsService.StatsEndpointsEnum.COMMENT_FOLLOWERS
+               };
             case TAGS_AND_CATEGORIES:
-                return StatsService.StatsEndpointsEnum.TAGS_AND_CATEGORIES;
+                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.TAGS_AND_CATEGORIES};
             case PUBLICIZE:
-                return StatsService.StatsEndpointsEnum.PUBLICIZE;
+                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.PUBLICIZE};
             case FOLLOWERS:
-                return StatsService.StatsEndpointsEnum.COMMENT_FOLLOWERS;
+                return new StatsService.StatsEndpointsEnum[]{
+                        StatsService.StatsEndpointsEnum.FOLLOWERS_WPCOM,
+                        StatsService.StatsEndpointsEnum.FOLLOWERS_EMAIL,
+                };
         }
         return null;
     }
@@ -334,10 +348,15 @@ public class StatsViewAllActivity extends WPActionBarActivity
         mIsUpdatingStats = true;
         final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
         final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-        final String singlePostRestPath = getRestPath();
-        AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + singlePostRestPath);
-        RestListener vListener = new RestListener(this, getRestEndpointName(), blogId, mTimeframe);
-        restClientUtils.get(singlePostRestPath, vListener, vListener);
+        StatsService.StatsEndpointsEnum[] sections = getRestEndpointNames();
+        for (int i = 0; i < sections.length; i++) {
+            StatsService.StatsEndpointsEnum currentSection = sections[i];
+            String singlePostRestPath = getRestPath(currentSection);
+            RestListener vListener = new RestListener(this, currentSection, blogId, mTimeframe);
+            restClientUtils.get(singlePostRestPath, vListener, vListener);
+            AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + singlePostRestPath);
+        }
+
         mPullToRefreshHelper.setRefreshing(true);
         return;
     }
@@ -375,7 +394,8 @@ public class StatsViewAllActivity extends WPActionBarActivity
                     if (response != null) {
                         try {
                             AppLog.d(AppLog.T.STATS, response.toString());
-                            mRestResponse = parseResponse(response);
+                            Serializable resp = parseResponse(response);
+                            notifySectionUpdated(mEndpointName, resp);
                         } catch (JSONException e) {
                             AppLog.e(AppLog.T.STATS, e);
                         } catch (RemoteException e) {
@@ -384,7 +404,6 @@ public class StatsViewAllActivity extends WPActionBarActivity
                             AppLog.e(AppLog.T.STATS, e);
                         }
                     }
-                    notifySectionUpdated();
                 }
             });
         }
@@ -432,11 +451,14 @@ public class StatsViewAllActivity extends WPActionBarActivity
                 case COMMENTS:
                     model = new CommentsModel(mRequestBlogId, response);
                     break;
-                case FOLLOWERS:
-                    model = new FollowersModel(mRequestBlogId, response);
-                    break;
                 case COMMENT_FOLLOWERS:
                     model = new CommentFollowersModel(mRequestBlogId, response);
+                    break;
+                case FOLLOWERS_WPCOM:
+                    model = new FollowersModel(mRequestBlogId, response);
+                    break;
+                case FOLLOWERS_EMAIL:
+                    model = new FollowersModel(mRequestBlogId, response);
                     break;
                 case TAGS_AND_CATEGORIES:
                     model = new TagsContainerModel(mRequestBlogId, response);
@@ -453,11 +475,11 @@ public class StatsViewAllActivity extends WPActionBarActivity
         mRestResponse = null;
     }
 
-    private void notifySectionUpdated() {
+    private void notifySectionUpdated(StatsService.StatsEndpointsEnum sectionName, Serializable data) {
         Intent intent = new Intent()
-                .setAction(StatsService.ACTION_STATS_UPDATED)
-                .putExtra(StatsService.EXTRA_ENDPOINT_NAME, getRestEndpointName())
-                .putExtra(StatsService.EXTRA_ENDPOINT_DATA, mRestResponse);
+                .setAction(StatsService.ACTION_STATS_SECTION_UPDATED)
+                .putExtra(StatsService.EXTRA_ENDPOINT_NAME, sectionName)
+                .putExtra(StatsService.EXTRA_ENDPOINT_DATA, data);
         LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
     }
 }

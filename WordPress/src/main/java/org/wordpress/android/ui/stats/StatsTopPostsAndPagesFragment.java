@@ -23,8 +23,9 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodel != null && ((TopPostsAndPagesModel) mDatamodel).getTopPostsAndPages().size() > 0) {
-            List<SingleItemModel> postViews = ((TopPostsAndPagesModel) mDatamodel).getTopPostsAndPages();
+        if (mDatamodels != null && mDatamodels[0] != null
+                && ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages().size() > 0) {
+            List<SingleItemModel> postViews = ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages();
             ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), postViews);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
@@ -35,7 +36,8 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (mDatamodel != null && ((TopPostsAndPagesModel) mDatamodel).getTopPostsAndPages().size() > 10);
+        return (mDatamodels != null && mDatamodels[0] != null
+                && ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages().size() > 10);
     }
 
     @Override
@@ -116,8 +118,10 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
-        return StatsService.StatsEndpointsEnum.TOP_POSTS;
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.TOP_POSTS
+        };
     }
 
     @Override
