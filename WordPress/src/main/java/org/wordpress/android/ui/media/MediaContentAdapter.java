@@ -21,7 +21,7 @@ import java.util.List;
  */
 
 public class MediaContentAdapter extends BaseAdapter {
-    private static final FrameLayout.LayoutParams CAPTURE_CONTENT_OVERLAY_LAYOUT_PARAMES =
+    private static final FrameLayout.LayoutParams CAPTURE_CONTENT_OVERLAY_LAYOUT_PARAMS =
             new FrameLayout.LayoutParams(128, 128, Gravity.CENTER);
     private static final FrameLayout.LayoutParams DEVICE_VIDEO_CONTENT_OVERLAY_LAYOUT_PARAMS =
             new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -124,7 +124,7 @@ public class MediaContentAdapter extends BaseAdapter {
             }
 
             layoutTitleView(convertView, isVideo ? "Capture video" : "Capture image", View.VISIBLE);
-            layoutOverlay(convertView, CAPTURE_CONTENT_OVERLAY_LAYOUT_PARAMES, 0.8f, isVideo ? R.drawable.video : R.drawable.camera, View.VISIBLE);
+            layoutOverlay(convertView, CAPTURE_CONTENT_OVERLAY_LAYOUT_PARAMS, 0.8f, isVideo ? R.drawable.video : R.drawable.camera, View.VISIBLE);
         }
 
         return convertView;
@@ -136,6 +136,8 @@ public class MediaContentAdapter extends BaseAdapter {
             ImageView contentImageView = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
 
             if (contentImageView != null) {
+                contentImageView.setBackgroundColor(mResources.getColor(R.color.transparent));
+
                 if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
                 } else {
@@ -155,14 +157,16 @@ public class MediaContentAdapter extends BaseAdapter {
     /** Helper method to create the view for device images. */
     private View createDeviceVideoContentView(View convertView, MediaContent content) {
         if (convertView != null) {
-            ImageView contentImage = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
+            ImageView contentImageView = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
 
-            if (contentImage != null) {
+            if (contentImageView != null) {
+                contentImageView.setBackgroundColor(mResources.getColor(R.color.transparent));
+
                 if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
-                    contentImage.setImageResource(R.drawable.media_image_placeholder);
+                    contentImageView.setImageResource(R.drawable.media_image_placeholder);
                 } else {
-                    contentImage.setImageResource(R.drawable.media_image_placeholder);
-                    MediaUtils.BackgroundFetchVideoThumbnail bgDownload = new MediaUtils.BackgroundFetchVideoThumbnail(contentImage);
+                    contentImageView.setImageResource(R.drawable.media_image_placeholder);
+                    MediaUtils.BackgroundFetchVideoThumbnail bgDownload = new MediaUtils.BackgroundFetchVideoThumbnail(contentImageView);
                     bgDownload.execute(content.getContentPreviewUri());
                 }
             }
@@ -179,6 +183,8 @@ public class MediaContentAdapter extends BaseAdapter {
             ImageView contentImageView = (ImageView) convertView.findViewById(R.id.mediaContentBackgroundImage);
 
             if (contentImageView != null) {
+                contentImageView.setBackgroundColor(mResources.getColor(R.color.transparent));
+
                 if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
                     contentImageView.setImageResource(R.drawable.ic_action_web_site);
                 } else {
