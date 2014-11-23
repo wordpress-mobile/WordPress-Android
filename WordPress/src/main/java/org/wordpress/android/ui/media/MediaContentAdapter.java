@@ -123,8 +123,8 @@ public class MediaContentAdapter extends BaseAdapter {
                 contentImageView.setBackgroundColor(mResources.getColor(R.color.grey_medium_light));
             }
 
-            String captureTitle = isVideo ? mResources.getString(R.string.media_add_popup_capture_photo) :
-                                            mResources.getString(R.string.media_add_popup_capture_video);
+            String captureTitle = isVideo ? mResources.getString(R.string.media_add_popup_capture_video) :
+                                            mResources.getString(R.string.media_add_popup_capture_photo);
             layoutTitleView(convertView, captureTitle, View.VISIBLE);
             layoutOverlay(convertView, CAPTURE_CONTENT_OVERLAY_LAYOUT_PARAMS, 0.8f, isVideo ? R.drawable.video : R.drawable.camera, View.VISIBLE);
         }
