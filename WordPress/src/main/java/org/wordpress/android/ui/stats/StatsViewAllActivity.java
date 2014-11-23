@@ -44,6 +44,10 @@ import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -127,7 +131,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
         }
 
         TextView dateTextView = (TextView) findViewById(R.id.stats_summary_date);
-        dateTextView.setText(StatsUIHelper.getDateForDisplayInLabels(mDate, mTimeframe));
+        dateTextView.setText(getDateForDisplayInLabels(mDate, mTimeframe));
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -137,6 +141,34 @@ public class StatsViewAllActivity extends WPActionBarActivity
             ft.replace(R.id.stats_single_view_fragment, fragment, "ViewAll-"+getInnerFragmentTAG());
             ft.commit();
         }
+    }
+
+    private String getDateForDisplayInLabels(String date, StatsTimeframe timeframe) {
+        String prefix = "Stats for %s";
+        switch (timeframe) {
+            case DAY:
+                return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM d"));
+            case WEEK:
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    final Date parsedDate = sdf.parse(date);
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(parsedDate);
+                    String  endDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
+                    // last day of this week
+                    c.add(Calendar.DAY_OF_WEEK, - 6);
+                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
+                    return String.format(prefix,  startDateLabel + " - " + endDateLabel);
+                } catch (ParseException e) {
+                    AppLog.e(AppLog.T.UTILS, e);
+                    return "";
+                }
+            case MONTH:
+                return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM"));
+            case YEAR:
+                return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "yyyy"));
+        }
+        return "";
     }
 
     private StatsAbstractListFragment getInnerFragment() {

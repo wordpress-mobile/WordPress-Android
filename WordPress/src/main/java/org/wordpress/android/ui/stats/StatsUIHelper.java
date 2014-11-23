@@ -275,49 +275,4 @@ public class StatsUIHelper {
         StatsUIHelper.setGroupChevron(true, groupView, animate);
     }
 
-    public static String getDateForDisplayInLabels(String date, StatsTimeframe timeframe) {
-        String prefix = "Stats for %s";
-        switch (timeframe) {
-            case DAY:
-                return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM d"));
-            case WEEK:
-                try {
-                    SimpleDateFormat sdf;
-                    Calendar c;
-                    final Date parsedDate;
-                    // The bar graph has a sligtly different format for date in week. Other views have yyyy-MM-dd
-                    String regex = "[0-9]{4}-[0-9]{2}-[0-9]{2}";
-                    if( date.matches(regex)) {
-                        sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    } else {
-                        // Used in bar graph
-                        // first four digits are the year
-                        // followed by Wxx where xx is the month
-                        // followed by Wxx where xx is the day of the month
-                        // ex: 2013W07W22 = July 22, 2013
-                        sdf = new SimpleDateFormat("yyyy'W'MM'W'dd");
-                    }
-                    //Calculate the end of the week
-                    parsedDate = sdf.parse(date);
-                    c = Calendar.getInstance();
-                    c.setTime(parsedDate);
-                    // first day of this week
-                    c.setFirstDayOfWeek(Calendar.MONDAY);
-                    c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY );
-                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
-                    // last day of this week
-                    c.add(Calendar.DAY_OF_WEEK, + 6);
-                    String endDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
-                    return String.format(prefix, startDateLabel + " - " + endDateLabel);
-                } catch (ParseException e) {
-                    AppLog.e(AppLog.T.UTILS, e);
-                    return "";
-                }
-            case MONTH:
-                return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM"));
-            case YEAR:
-                return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "yyyy"));
-        }
-        return "";
-    }
 }

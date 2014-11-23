@@ -269,7 +269,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
-        mDateTextView.setText(StatsUIHelper.getDateForDisplayInLabels(date, getTimeframe()));
+        mDateTextView.setText(getDateForDisplayInLabels(date, getTimeframe()));
 
         VisitModel modelTapped = dataToShowOnGraph[itemPosition];
         for (int i=0 ; i < mRadioGroup.getChildCount(); i++) {
@@ -297,6 +297,47 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
         }
     }
+
+    private String getDateForDisplayInLabels(String date, StatsTimeframe timeframe) {
+        String prefix = "Stats for %s";
+        switch (timeframe) {
+            case DAY:
+                return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM d"));
+            case WEEK:
+                try {
+                    SimpleDateFormat sdf;
+                    Calendar c;
+                    final Date parsedDate;
+                    // Used in bar graph
+                    // first four digits are the year
+                    // followed by Wxx where xx is the month
+                    // followed by Wxx where xx is the day of the month
+                    // ex: 2013W07W22 = July 22, 2013
+                    sdf = new SimpleDateFormat("yyyy'W'MM'W'dd");
+                    //Calculate the end of the week
+                    parsedDate = sdf.parse(date);
+                    c = Calendar.getInstance();
+                    c.setTime(parsedDate);
+                    // first day of this week
+                    c.setFirstDayOfWeek(Calendar.MONDAY);
+                    c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY );
+                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
+                    // last day of this week
+                    c.add(Calendar.DAY_OF_WEEK, + 6);
+                    String endDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
+                    return String.format(prefix, startDateLabel + " - " + endDateLabel);
+                } catch (ParseException e) {
+                    AppLog.e(AppLog.T.UTILS, e);
+                    return "";
+                }
+            case MONTH:
+                return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM"));
+            case YEAR:
+                return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "yyyy"));
+        }
+        return "";
+    }
+
 
     /**
      * Return the date string that is displayed under each bar in the graph
@@ -444,7 +485,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // Update Stats here
         String date =  mStatsDate[tappedBar];
         if (date == null) {
-            AppLog.w(AppLog.T.STATS, "A call to update stats is made but a null date is received!!");
+            AppLog.w(AppLog.T.STATS, "A bar was tapped but a null date is received!!");
             return;
         }
 
