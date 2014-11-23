@@ -45,6 +45,8 @@ public class ReaderBlogInfoView extends LinearLayout {
         super(context);
 
         View view = LayoutInflater.from(context).inflate(R.layout.reader_blog_info_view, this, true);
+        view.setId(R.id.layout_blog_info_view);
+
         mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
 
         // set mshot width based on display width
