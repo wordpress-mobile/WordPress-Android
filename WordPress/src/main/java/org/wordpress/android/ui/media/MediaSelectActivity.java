@@ -77,6 +77,12 @@ public class MediaSelectActivity extends WPActionBarActivity implements OnMediaC
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fade_in_compat, R.anim.slide_down);
+    }
+
+    @Override
     public void onActionModeStarted(ActionMode mode) {
         super.onActionModeStarted(mode);
 

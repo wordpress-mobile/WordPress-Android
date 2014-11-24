@@ -969,7 +969,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         intent.putExtra(MediaSelectActivity.PARAMETER_TAB_CONFIG_KEY, tabConfig);
         intent.putExtra(MediaSelectActivity.PARAMETER_TITLE_KEY, mActivity.getString(R.string.edit_post_media_select_title));
         startActivityForResult(intent, MediaSelectActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
-        mActivity.overridePendingTransition(R.anim.reader_activity_slide_in, R.anim.fade_out);
+        mActivity.overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
     }
 
     private void startMediaGalleryAddActivity() {
