@@ -7,18 +7,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/margin_medium"
+    android:paddingBottom="@dimen/margin_large"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingRight="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_medium">
+    android:paddingTop="@dimen/margin_large">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_topic"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:drawableLeft="@drawable/ic_action_tag_dark"
+        android:drawableLeft="@drawable/ic_genericon_tag_dark_24dp"
         android:drawablePadding="@dimen/margin_small"
         android:gravity="center_vertical"
         android:textColor="@color/grey_dark"
@@ -29,7 +30,7 @@
         android:id="@+id/btn_add_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/reader_transparent_selector"
+        android:background="?android:selectableItemBackground"
         android:gravity="center_vertical"
-        android:src="@drawable/ic_content_remove" />
+        android:src="@drawable/ic_close_grey600_24dp" />
 </LinearLayout>

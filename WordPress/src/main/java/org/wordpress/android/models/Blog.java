@@ -2,19 +2,17 @@
 
 package org.wordpress.android.models;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class Blog {
     private int localTableBlogId;
@@ -89,6 +87,10 @@ public class Blog {
 
     public void setLocalTableBlogId(int id) {
         this.localTableBlogId = id;
+    }
+
+    public String getNameOrHostUrl() {
+        return (getBlogName() == null || getBlogName().isEmpty()) ? getUri().getHost() : getBlogName();
     }
 
     public String getUrl() {
@@ -309,11 +311,6 @@ public class Blog {
         }
         setPostFormats(postFormats);
         return true;
-    }
-
-    // FIXME - Move to DB
-    public int getUnmoderatedCommentCount() {
-        return CommentTable.getUnmoderatedCommentCount(this.localTableBlogId);
     }
 
     public boolean isScaledImage() {

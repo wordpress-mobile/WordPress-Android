@@ -1,14 +1,13 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -16,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -40,15 +40,15 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
-import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class ReaderCommentListActivity extends Activity {
+public class ReaderCommentListActivity extends ActionBarActivity {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_TOPMOST_COMMENT_ID = "topmost_comment_id";
@@ -61,7 +61,7 @@ public class ReaderCommentListActivity extends Activity {
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
-    private WPListView mListView;
+    private ListView mListView;
     private SuggestionAutoCompleteText mEditComment;
     private ImageView mImgSubmitComment;
     private ViewGroup mCommentBox;
@@ -78,11 +78,10 @@ public class ReaderCommentListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_comment_list);
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
@@ -99,7 +98,7 @@ public class ReaderCommentListActivity extends Activity {
             }
         }
 
-        mListView = (WPListView) findViewById(android.R.id.list);
+        mListView = (ListView) findViewById(android.R.id.list);
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
@@ -294,7 +293,8 @@ public class ReaderCommentListActivity extends Activity {
                     }
                 }
             };
-            mCommentAdapter = new ReaderCommentAdapter(this, getPost(), replyListener, dataLoadedListener, dataRequestedListener);
+            Context context = WPActivityUtils.getThemedContext(this);
+            mCommentAdapter = new ReaderCommentAdapter(context, getPost(), replyListener, dataLoadedListener, dataRequestedListener);
         }
         return mCommentAdapter;
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ptr_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -116,4 +116,4 @@
 
         </LinearLayout>
     </ScrollView>
-</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

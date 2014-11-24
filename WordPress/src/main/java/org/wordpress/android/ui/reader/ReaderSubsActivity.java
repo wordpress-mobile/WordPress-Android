@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
@@ -15,6 +14,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -62,7 +63,7 @@ import javax.annotation.Nonnull;
  * activity which shows the user's subscriptions and recommended subscriptions - includes
  * followed tags, popular tags, followed blogs, and recommended blogs
  */
-public class ReaderSubsActivity extends Activity
+public class ReaderSubsActivity extends ActionBarActivity
                                 implements ReaderTagAdapter.TagActionListener,
                                            ReaderBlogAdapter.BlogFollowChangeListener,
                                            ActionBar.TabListener {
@@ -96,15 +97,14 @@ public class ReaderSubsActivity extends Activity
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(getPageAdapter());
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pager_tabs);
-        tabStrip.setTabIndicatorColorResource(R.color.blue_medium);
-        tabStrip.setBackgroundColor(getResources().getColor(R.color.grey_extra_light));
+        tabStrip.setTabIndicatorColorResource(R.color.tab_indicator);
+        tabStrip.setTextColor(getResources().getColor(R.color.tab_text_selected));
 
         mEditAdd = (EditText) findViewById(R.id.edit_add);
         mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -198,7 +198,8 @@ public class ReaderSubsActivity extends Activity
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
 
-            mPageAdapter = new SubsPageAdapter(getFragmentManager(), fragments);
+            FragmentManager fm = getFragmentManager();
+            mPageAdapter = new SubsPageAdapter(fm, fragments);
         }
         return mPageAdapter;
     }

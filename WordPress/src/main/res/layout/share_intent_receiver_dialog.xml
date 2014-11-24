@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"
-                android:background="@drawable/md_list_selector">
+                android:background="?android:selectableItemBackground">
 
                 <Spinner
                     android:id="@+id/blog_spinner"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"
-                android:background="@drawable/md_list_selector">
+                android:background="?android:selectableItemBackground">
 
                 <Spinner
                     android:id="@+id/action_spinner"

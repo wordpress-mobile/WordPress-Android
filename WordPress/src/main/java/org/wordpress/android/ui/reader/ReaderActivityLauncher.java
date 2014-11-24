@@ -160,11 +160,7 @@ public class ReaderActivityLauncher {
      */
     public static void showReaderSubsForResult(Activity activity) {
         Intent intent = new Intent(activity, ReaderSubsActivity.class);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.reader_flyin,
-                0);
-        ActivityCompat.startActivityForResult(activity, intent, ReaderConstants.INTENT_READER_SUBS, options.toBundle());
+        activity.startActivityForResult(intent, ReaderConstants.INTENT_READER_SUBS);
     }
 
     /*

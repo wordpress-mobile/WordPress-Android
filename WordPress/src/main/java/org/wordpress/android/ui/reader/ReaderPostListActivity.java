@@ -7,8 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.MenuItem;
+import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -17,7 +18,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostSelectedListener;
@@ -40,7 +41,7 @@ import javax.annotation.Nonnull;
  * this activity serves as the host for ReaderPostListFragment
  */
 
-public class ReaderPostListActivity extends WPActionBarActivity
+public class ReaderPostListActivity extends WPDrawerActivity
                                     implements OnPostSelectedListener,
                                                OnTagSelectedListener {
 
@@ -52,6 +53,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createMenuDrawer(R.layout.reader_activity_post_list);
         readIntent(getIntent(), savedInstanceState);
     }
 
@@ -66,11 +68,15 @@ public class ReaderPostListActivity extends WPActionBarActivity
             mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
         }
 
-        // no menu drawer if this is blog preview or tag preview
-        if (mPostListType.isPreviewType()) {
-            setContentView(R.layout.reader_activity_post_list);
-        } else {
-            createMenuDrawer(R.layout.reader_activity_post_list);
+        // hide drawer toggle and enable back arrow click if this is blog preview or tag preview
+        if (mPostListType.isPreviewType() && getDrawerToggle() != null) {
+            getDrawerToggle().setDrawerIndicatorEnabled(false);
+            getDrawerToggle().setToolbarNavigationClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
         }
 
         switch (mPostListType) {
@@ -148,13 +154,23 @@ public class ReaderPostListActivity extends WPActionBarActivity
 
     @Override
     public void onBackPressed() {
-        if (mMenuDrawer != null && mMenuDrawer.isMenuVisible()) {
+        ReaderPostListFragment fragment = getListFragment();
+        if (fragment == null || !fragment.goBackInTagHistory()) {
             super.onBackPressed();
-        } else {
-            ReaderPostListFragment fragment = getListFragment();
-            if (fragment == null || !fragment.goBackInTagHistory()) {
-                super.onBackPressed();
-            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_tags:
+                ReaderActivityLauncher.showReaderSubsForResult(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -324,6 +340,8 @@ public class ReaderPostListActivity extends WPActionBarActivity
             return;
         }
 
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
+
         ReaderPostListFragment listFragment = getListFragment();
         if (listFragment != null) {
             switch (getPostListType()) {
@@ -385,7 +403,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
                     listFragment.refreshTags();
                     // update the current tag if the list fragment is empty - this will happen if
                     // the tag table was previously empty (ie: first run)
-                    if (listFragment.isPostAdapterEmpty()) {
+                    if (listFragment.isPostListEmpty()) {
                         listFragment.updateCurrentTag();
                     }
                 }

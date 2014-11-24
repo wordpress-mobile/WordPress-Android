@@ -1,29 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menu_browser"
-        android:icon="@drawable/ic_action_web_site"
-        android:showAsAction="ifRoom"
-        android:title="@string/view_in_browser"/>
+        android:icon="@drawable/ic_genericon_web_white_24dp"
+        android:title="@string/view_in_browser"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_share"
-        android:icon="@drawable/ic_action_share"
-        android:showAsAction="ifRoom"
-        android:title="@string/share_link"/>
+        android:icon="@drawable/ic_share_white_24dp"
+        android:title="@string/share_link"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_refresh"
-        android:icon="@drawable/ic_action_refresh"
-        android:showAsAction="never"
-        android:title="@string/refresh"/>
-    <item
-        android:id="@+id/menu_settings"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:showAsAction="never"
-        android:title="@string/settings"/>
-    <item
-            android:id="@+id/menu_signout"
-            android:icon="@android:drawable/ic_menu_close_clear_cancel"
-            android:showAsAction="never"
-            android:title="@string/sign_out"/>
+        android:icon="@drawable/ic_refresh_white_24dp"
+        android:title="@string/refresh"
+        app:showAsAction="never" />
 </menu>

@@ -16,11 +16,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/locationLabel"
-        android:paddingLeft="8dp"
         android:paddingBottom="4dp"
         android:paddingRight="4dp"
-        android:paddingTop="4dp"
         android:text="@string/loading"
+        android:textSize="@dimen/text_sz_large"
         android:background="@drawable/selectable_background_wordpress"/>
 
     <LinearLayout
@@ -33,6 +32,7 @@
             android:id="@+id/updateLocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/text_sz_large"
             android:layout_weight="1"
             android:ellipsize="end"
             android:lines="1"
@@ -42,6 +42,7 @@
             android:id="@+id/removeLocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/text_sz_large"
             android:layout_weight="1"
             android:ellipsize="end"
             android:lines="1"

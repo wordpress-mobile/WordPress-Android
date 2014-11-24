@@ -1,10 +1,10 @@
 package org.wordpress.android.ui;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 /**
  * views the activity log (see utils/AppLog.java)
  */
-public class AppLogViewerActivity extends Activity {
+public class AppLogViewerActivity extends ActionBarActivity {
     private static final int ID_SHARE = 1;
 
     @Override
@@ -32,7 +32,7 @@ public class AppLogViewerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.logviewer_activity);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
             actionBar.setDisplayShowTitleEnabled(true);
@@ -121,7 +121,7 @@ public class AppLogViewerActivity extends Activity {
         super.onCreateOptionsMenu(menu);
         MenuItem item = menu.add(Menu.NONE, ID_SHARE, Menu.NONE, R.string.reader_btn_share);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        item.setIcon(R.drawable.ic_action_share);
+        item.setIcon(R.drawable.ic_share_white_24dp);
         return true;
     }
 

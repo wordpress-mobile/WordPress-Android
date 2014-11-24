@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 
@@ -62,8 +62,8 @@ class ReaderResourceVars {
         int listPadding = resources.getDimensionPixelOffset(R.dimen.margin_large);
         int imageWidth = displayWidthPx - (listMarginWidthPx * 2) - (listPadding * 2);
         boolean hasStaticMenuDrawer =
-                (context instanceof WPActionBarActivity)
-                        && (((WPActionBarActivity) context).isStaticMenuDrawer());
+                (context instanceof WPDrawerActivity)
+                        && (((WPDrawerActivity) context).isStaticMenuDrawer());
         if (hasStaticMenuDrawer) {
             int drawerWidth = resources.getDimensionPixelOffset(R.dimen.menu_drawer_width);
             imageWidth -= drawerWidth;

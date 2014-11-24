@@ -2,7 +2,6 @@ package org.wordpress.android.ui.media;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -28,6 +26,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.xmlrpc.android.ApiHelper;
@@ -194,18 +193,8 @@ public class MediaEditFragment extends Fragment {
         }
     }
 
-    void hideKeyboard() {
-        if (getActivity() != null && getActivity().getCurrentFocus() != null) {
-            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
     void editMedia() {
-        hideKeyboard();
-
+        ActivityUtils.hideKeyboard(getActivity());
         final String mediaId = this.getMediaId();
         final String title = mTitleView.getText().toString();
         final String description = mDescriptionView.getText().toString();

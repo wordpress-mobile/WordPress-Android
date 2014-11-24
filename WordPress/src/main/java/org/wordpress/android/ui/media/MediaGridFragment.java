@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -10,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateFormat;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -44,8 +44,9 @@ import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
-import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 
@@ -54,8 +55,6 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * The grid displaying the media items.
@@ -93,7 +92,7 @@ public class MediaGridFragment extends Fragment
     private LinearLayout mEmptyView;
     private TextView mEmptyViewTitle;
     private CustomSpinner mSpinner;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     private int mOldMediaSyncOffset = 0;
 
@@ -176,20 +175,19 @@ public class MediaGridFragment extends Fragment
 
         });
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
-                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+        // swipe to refresh setup
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
+                (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                            mPullToRefreshHelper.setRefreshing(false);
+                            mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
                         refreshMediaFromServer(0, false);
                     }
-                }, LinearLayout.class);
-
+                });
         restoreState(savedInstanceState);
         setupSpinnerAdapter();
 
@@ -207,7 +205,7 @@ public class MediaGridFragment extends Fragment
             mGridAdapter.setSelectedItems(selectedItems);
             if (isInMultiSelectMode) {
                 setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
-                mPullToRefreshHelper.setEnabled(false);
+                mSwipeToRefreshHelper.setEnabled(false);
             }
         }
 
@@ -258,13 +256,7 @@ public class MediaGridFragment extends Fragment
 
         updateFilterText();
 
-        Context context = getActivity();
-        ActionBar actionBar = getActivity().getActionBar();
-        if (actionBar != null) {
-            if (actionBar.getThemedContext() != null) {
-                context = getActivity().getActionBar().getThemedContext();
-            }
-        }
+        Context context = WPActivityUtils.getThemedContext(getActivity());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_menu_dropdown_item, mFiltersText);
         mSpinner.setAdapter(adapter);
         mSpinner.setSelection(mFilter.ordinal());
@@ -317,18 +309,6 @@ public class MediaGridFragment extends Fragment
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement MediaGridListener");
         }
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mPullToRefreshHelper.registerReceiver(getActivity());
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mPullToRefreshHelper.unregisterReceiver(getActivity());
     }
 
     @Override
@@ -394,7 +374,7 @@ public class MediaGridFragment extends Fragment
                                     mGridView.setSelection(0);
                                 mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
-                                mPullToRefreshHelper.setRefreshing(false);
+                                mSwipeToRefreshHelper.setRefreshing(false);
                             }
                         });
                     }
@@ -421,7 +401,7 @@ public class MediaGridFragment extends Fragment
                                 mIsRefreshing = false;
                                 mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
-                                mPullToRefreshHelper.setRefreshing(false);
+                                mSwipeToRefreshHelper.setRefreshing(false);
                             }
                         });
                     }
@@ -664,11 +644,11 @@ public class MediaGridFragment extends Fragment
     }
 
     public void setRefreshing(boolean refreshing) {
-        mPullToRefreshHelper.setRefreshing(refreshing);
+        mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
-    public void setPullToRefreshEnabled(boolean enabled) {
-        mPullToRefreshHelper.setEnabled(enabled);
+    public void setSwipeToRefreshEnabled(boolean enabled) {
+        mSwipeToRefreshHelper.setEnabled(enabled);
     }
 
     @Override
@@ -687,7 +667,7 @@ public class MediaGridFragment extends Fragment
             inflater.inflate(R.menu.media_multiselect, menu);
             mNewPostButton = menu.findItem(R.id.media_multiselect_actionbar_post);
             mNewGalleryButton = menu.findItem(R.id.media_multiselect_actionbar_gallery);
-            setPullToRefreshEnabled(false);
+            setSwipeToRefreshEnabled(false);
             mIsMultiSelect = true;
             updateActionButtons(selectCount);
             return true;
@@ -714,7 +694,7 @@ public class MediaGridFragment extends Fragment
 
         public void onDestroyActionMode(ActionMode mode) {
             mGridAdapter.clearSelection();
-            setPullToRefreshEnabled(true);
+            setSwipeToRefreshEnabled(true);
             mIsMultiSelect = false;
             setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
         }

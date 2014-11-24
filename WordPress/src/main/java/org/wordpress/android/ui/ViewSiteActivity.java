@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -30,11 +31,12 @@ import java.util.Map;
 /**
  * Activity to view the WordPress blog in a WebView
  */
-public class ViewSiteActivity extends WebViewActivity {
+public class ViewSiteActivity extends WPDrawerActivity {
     /**
      * Blog for which this activity is loading content.
      */
     protected Blog mBlog;
+    protected WebView mWebView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,15 +48,14 @@ public class ViewSiteActivity extends WebViewActivity {
                     Toast.LENGTH_SHORT).show();
             finish();
         }
+        createMenuDrawer(R.layout.webview);
+        mWebView = (WebView) findViewById(R.id.webView);
         mWebView.setWebViewClient(new WPWebViewClient(mBlog));
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
-
-        createMenuDrawer(this.findViewById(R.id.webview_wrapper));
         this.setTitle(getResources().getText(R.string.view_site));
-
         loadSiteURL();
     }
 
@@ -106,13 +107,6 @@ public class ViewSiteActivity extends WebViewActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (mWebView == null) {
             return false;
-        }
-
-        if (item.getItemId() == android.R.id.home) {
-            if (mMenuDrawer != null) {
-                mMenuDrawer.toggleMenu();
-                return true;
-            }
         }
 
         int itemID = item.getItemId();

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.wordpress.android.widgets.WPTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_large"
+    android:textColor="@color/grey_dark"
+    android:textSize="@dimen/text_sz_large"
+    tools:text="spinner dropdown item" />
+

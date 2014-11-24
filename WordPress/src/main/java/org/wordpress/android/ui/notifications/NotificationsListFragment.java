@@ -3,10 +3,10 @@ package org.wordpress.android.ui.notifications;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,14 +19,12 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 
 import javax.annotation.Nonnull;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-
 public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
-    private PullToRefreshHelper mFauxPullToRefreshHelper;
+    private SwipeToRefreshHelper mFauxSwipeToRefreshHelper;
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
 
@@ -50,8 +48,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initPullToRefreshHelper();
-        mFauxPullToRefreshHelper.registerReceiver(getActivity());
+        initSwipeToRefreshHelper();
 
         // setup the initial notes adapter, starts listening to the bucket
         mBucket = SimperiumUtils.getNotesBucket();
@@ -104,29 +101,27 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             mNotesAdapter.closeCursor();
         }
 
-        mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
         super.onDestroy();
     }
 
-    private void initPullToRefreshHelper() {
-        mFauxPullToRefreshHelper = new PullToRefreshHelper(
+    private void initSwipeToRefreshHelper() {
+        mFauxSwipeToRefreshHelper = new SwipeToRefreshHelper(
                 getActivity(),
-                (PullToRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
-                new PullToRefreshHelper.RefreshListener() {
+                (SwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         // Show a fake refresh animation for a few seconds
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 if (isAdded()) {
-                                    mFauxPullToRefreshHelper.setRefreshing(false);
+                                    mFauxSwipeToRefreshHelper.setRefreshing(false);
                                 }
                             }
                         }, 2000);
                     }
-                }, LinearLayout.class
-        );
+                });
     }
 
     @Override
