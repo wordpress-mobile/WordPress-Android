@@ -30,8 +30,6 @@ public class ReaderPostRecyclerView extends RecyclerView {
         initialize(context);
     }
 
-
-
     private void initialize(Context context) {
         if (!isInEditMode()) {
             ItemAnimator animator = new DefaultItemAnimator();
@@ -52,16 +50,24 @@ public class ReaderPostRecyclerView extends RecyclerView {
 
     private class DividerItemDecoration extends RecyclerView.ItemDecoration {
         private final int mSpacing;
+        private final int mHalfSpacing;
+        private final boolean mIsGridView;
 
         DividerItemDecoration(Context context, boolean isGridView) {
             super();
+            mIsGridView = isGridView;
             mSpacing = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing);
+            mHalfSpacing = (mSpacing / 2);
         }
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
             super.getItemOffsets(outRect, view, parent, state);
-            outRect.set(mSpacing, mSpacing, mSpacing, 0);
+            if (mIsGridView) {
+                outRect.set(mHalfSpacing, mHalfSpacing, mHalfSpacing, mHalfSpacing);
+            } else {
+                outRect.set(mSpacing, mSpacing, mSpacing, 0);
+            }
         }
     }
 
