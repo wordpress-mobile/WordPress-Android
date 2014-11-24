@@ -77,7 +77,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      */
     private static final int AUTHENTICATE_REQUEST = 300;
 
-    private static int[] blogIDs;
+    private static int[] mBlogIDs;
     private boolean isAnimatingRefreshButton;
     private boolean mShouldFinish;
     private boolean mBlogSpinnerInitialized;
@@ -203,8 +203,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         Blog currentBlog = WordPress.getCurrentBlog();
 
         if (currentBlog != null && mDrawerListView != null && mDrawerListView.getHeaderViewsCount() > 0) {
-            for (int i = 0; i < blogIDs.length; i++) {
-                if (blogIDs[i] == currentBlog.getLocalTableBlogId()) {
+            for (int i = 0; i < mBlogIDs.length; i++) {
+                if (mBlogIDs[i] == currentBlog.getLocalTableBlogId()) {
                     if (mBlogSpinner != null) {
                         mBlogSpinner.setSelection(i);
                     }
@@ -221,7 +221,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     protected void createMenuDrawer(int contentViewId) {
         ViewGroup layoutContainer = getActivityContainer();
         layoutContainer.addView(getLayoutInflater().inflate(contentViewId, null));
-
         initMenuDrawer();
     }
 
@@ -238,14 +237,10 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             && DisplayUtils.isXLarge(this);
     }
 
-    private void initMenuDrawer() {
-        initMenuDrawer(-1);
-    }
-
     /**
      * Create menu drawer ListView and listeners
      */
-    private void initMenuDrawer(int blogSelection) {
+    private void initMenuDrawer() {
         // locate the drawer layout - note that it will not exist on landscape tablets
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null) {
@@ -268,25 +263,12 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             mDrawerLayout.setDrawerListener(mDrawerToggle);
         }
 
-        // add listVew header containing spinner if it hasn't already been added
+        // add listVew header containing spinner if it hasn't already been added - note that
+        // initBlogSpinner() will setup the spinner
         mDrawerListView = (ListView) findViewById(R.id.drawer_list);
         if (mDrawerListView.getHeaderViewsCount() == 0) {
             View view = getLayoutInflater().inflate(R.layout.menu_drawer_header, mDrawerListView, false);
             mDrawerListView.addHeaderView(view, null, false);
-        }
-
-        // blog spinner only appears if there's more than one blog
-        mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
-        View divider = findViewById(R.id.blog_spinner_divider);
-        String[] blogNames = getBlogNames();
-        if (blogNames.length > 1) {
-            mBlogSpinner.setVisibility(View.VISIBLE);
-            divider.setVisibility(View.VISIBLE);
-            mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
-            populateBlogSpinner(blogNames);
-        } else {
-            mBlogSpinner.setVisibility(View.GONE);
-            divider.setVisibility(View.GONE);
         }
 
         View settingsRow = findViewById(R.id.settings_row);
@@ -307,11 +289,27 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             }
         });
 
-        if (blogSelection != -1 && mBlogSpinner != null) {
-            mBlogSpinner.setSelection(blogSelection);
-        }
-
+        initBlogSpinner();
         updateMenuDrawer();
+    }
+
+    /*
+     * setup the spinner in the drawer which shows a list of the user's blogs - only appears
+     * when the user has more than one visible blog
+     */
+    private void initBlogSpinner() {
+        mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
+        View divider = findViewById(R.id.blog_spinner_divider);
+        String[] blogNames = getBlogNames();
+        if (blogNames.length > 1) {
+            mBlogSpinner.setVisibility(View.VISIBLE);
+            divider.setVisibility(View.VISIBLE);
+            mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
+            populateBlogSpinner(blogNames);
+        } else {
+            mBlogSpinner.setVisibility(View.GONE);
+            divider.setVisibility(View.GONE);
+        }
     }
 
     private void closeDrawer() {
@@ -319,6 +317,23 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
     }
+
+    private void openDrawer() {
+        if (mDrawerLayout != null) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+        }
+    }
+
+    private void toggleDrawer() {
+        if (mDrawerLayout != null) {
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                closeDrawer();
+            } else {
+                openDrawer();
+            }
+        }
+    }
+
     /**
      * called when user selects an item from the drawer
      */
@@ -540,13 +555,13 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
 
         int blogCount = accounts.size();
-        blogIDs = new int[blogCount];
+        mBlogIDs = new int[blogCount];
         String[] blogNames = new String[blogCount];
 
         for (int i = 0; i < blogCount; i++) {
             Map<String, Object> account = accounts.get(i);
             blogNames[i] = BlogUtils.getBlogNameFromAccountMap(account);
-            blogIDs[i] = Integer.valueOf(account.get("id").toString());
+            mBlogIDs[i] = Integer.valueOf(account.get("id").toString());
         }
 
         return blogNames;
@@ -606,7 +621,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                     getBlogNames();
                     setupCurrentBlog();
                     if (mDrawerListView != null) {
-                        initMenuDrawer();
+                        initBlogSpinner();
                     }
                     WordPress.registerForCloudMessaging(this);
                     // If logged in without blog, redirect to the Reader view
@@ -619,7 +634,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 // user returned from settings - skip if user signed out
                 if (mDrawerListView != null && resultCode != SettingsActivity.RESULT_SIGNED_OUT) {
                     // If we need to add or remove the blog spinner, init the drawer again
-                    initMenuDrawer();
+                    initBlogSpinner();
 
                     String[] blogNames = getBlogNames();
                     if (blogNames.length >= 1) {
@@ -650,7 +665,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             if (!mBlogSpinnerInitialized) {
                 mBlogSpinnerInitialized = true;
             } else {
-                WordPress.setCurrentBlog(blogIDs[position]);
+                WordPress.setCurrentBlog(mBlogIDs[position]);
                 updateMenuDrawer();
                 blogChanged();
             }
@@ -663,11 +678,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home && mDrawerLayout != null) {
-            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-            } else {
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
+            toggleDrawer();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -799,7 +810,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 ToastUtils.showToast(context, R.string.limit_reached, Duration.LONG);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED)) {
-                initMenuDrawer();
+                initBlogSpinner();
             }
         }
     };
