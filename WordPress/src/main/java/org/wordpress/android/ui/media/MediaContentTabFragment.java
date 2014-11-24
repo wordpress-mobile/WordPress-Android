@@ -3,6 +3,7 @@ package org.wordpress.android.ui.media;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -23,6 +24,7 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,10 +71,10 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
     private final ArrayList<MediaContent> mSelectedContent;
 
     private int                    mFilter;
-    private boolean                mCapturingMedia;
     private OnMediaContentSelected mListener;
     private MediaContentAdapter    mAdapter;
     private GridView               mGridView;
+    private String                 mMediaCapturePath;
     private List<String> mImageIds = new ArrayList<String>();
     private List<String> mVideoIds = new ArrayList<String>();
 
@@ -107,6 +109,37 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         super.onCreateView(inflater, container, savedInstanceState);
 
         return mGridView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data != null || ((requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
+                requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
+            switch (requestCode) {
+                case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                    if (resultCode == Activity.RESULT_OK) {
+                        try {
+                            File f = new File(mMediaCapturePath);
+                            Uri capturedImageUri = Uri.fromFile(f);
+                            MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_IMAGE);
+                            newContent.setContentUri(capturedImageUri);
+                            newContent.setContentPreviewUri(capturedImageUri);
+                            mAdapter.addContent(newContent, 1);
+                        } catch (RuntimeException runtimeException) {
+                            AppLog.e(AppLog.T.MEDIA, runtimeException);
+                        } catch (OutOfMemoryError outOfMemoryError) {
+                            AppLog.e(AppLog.T.MEDIA, outOfMemoryError);
+                        }
+                    }
+                    break;
+                case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                    break;
+            }
+
+            mMediaCapturePath = null;
+        }
     }
 
     @Override
@@ -185,7 +218,7 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        if (!mCapturingMedia) {
+        if (mMediaCapturePath != null && !mMediaCapturePath.equals("")) {
             notifiyMediaSelectionCancelled();
             mSelectedContent.clear();
         }
@@ -193,14 +226,7 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
 
     @Override
     public void onMediaCapturePathReady(String mediaCapturePath) {
-        mCapturingMedia = false;
-
-        if (mediaCapturePath != null && !mediaCapturePath.equals("")) {
-            MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_IMAGE);
-            newContent.setContentUri(Uri.parse(mediaCapturePath));
-            newContent.setContentPreviewUri(Uri.parse(mediaCapturePath));
-            mAdapter.addContent(newContent);
-        }
+        mMediaCapturePath = mediaCapturePath;
     }
 
     private void notifyMediaSelectionStarted() {
@@ -291,8 +317,6 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         } else {
             MediaUtils.launchCamera(this, this);
         }
-
-        mCapturingMedia = true;
     }
 
     /** Helper method to load image and image thumbnail data to add device media content to the adapter. */

@@ -101,6 +101,10 @@ public class MediaContentAdapter extends BaseAdapter {
         addContent(newContent, false);
     }
 
+    public void addContent(MediaContent newContent, int position) {
+        mContent.add(position, newContent);
+    }
+
     public void addContent(MediaContent newContent, boolean sort) {
         if (newContent != null) {
             mContent.add(newContent);
