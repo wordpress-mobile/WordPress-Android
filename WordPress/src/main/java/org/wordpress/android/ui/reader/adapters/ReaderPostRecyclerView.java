@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,8 +37,28 @@ public class ReaderPostRecyclerView extends RecyclerView {
             animator.setSupportsChangeAnimations(true);
             setItemAnimator(animator);
 
-            // use a staggered grid rather than a list when in landscape or when using a large tablet
-            boolean isGridView = DisplayUtils.isLandscape(context) || DisplayUtils.isXLarge(context);
+            boolean isGridView;
+            int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+            switch(screenSize) {
+                case Configuration.SCREENLAYOUT_SIZE_XLARGE:
+                    // always use a staggered grid when running a large tablet
+                    isGridView = true;
+                    break;
+                case Configuration.SCREENLAYOUT_SIZE_LARGE:
+                    // use a staggered grid on other tablets when in landscape
+                    isGridView = DisplayUtils.isLandscape(context);
+                    break;
+                case Configuration.SCREENLAYOUT_SIZE_NORMAL:
+                    // use a staggered grid on normal displays when in landscape if they're xhdpi+
+                    float density = context.getResources().getDisplayMetrics().density;
+                    isGridView = DisplayUtils.isLandscape(context) && (density >= 2.0f);
+                    break;
+                default:
+                    // skip staggered grid for all other displays
+                    isGridView = false;
+                    break;
+            }
+
             if (isGridView) {
                 setLayoutManager(new StaggeredGridLayoutManager(GRID_SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL));
             } else {
