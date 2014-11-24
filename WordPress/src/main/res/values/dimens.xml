@@ -52,14 +52,12 @@
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
 
-    <!-- left/right margin for posts in both list and detail views -->
-    <dimen name="reader_list_margin_normal">8dp</dimen>
-    <dimen name="reader_list_margin_landscape">48dp</dimen>
-    <dimen name="reader_list_margin_tablet">48dp</dimen>
-    <dimen name="reader_list_margin_landscape_tablet">96dp</dimen>
-    <dimen name="reader_list_margin_tablet_large">96dp</dimen>
-    <dimen name="reader_list_margin_landscape_tablet_large">192dp</dimen>
-    <dimen name="reader_list_margin">@dimen/reader_list_margin_normal</dimen>
+    <!-- left/right margin for posts reader detail -->
+    <dimen name="reader_detail_margin_normal">8dp</dimen>
+    <dimen name="reader_detail_margin_normal_landscape">48dp</dimen>
+    <dimen name="reader_detail_margin_tablet">48dp</dimen>
+    <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
+    <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
     <!-- spacing between posts in the card view -->
     <dimen name="reader_card_spacing">12dp</dimen>

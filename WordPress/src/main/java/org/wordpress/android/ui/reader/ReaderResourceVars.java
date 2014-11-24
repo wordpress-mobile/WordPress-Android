@@ -20,7 +20,7 @@ class ReaderResourceVars {
     final int marginLargePx;
     final int marginSmallPx;
     final int marginExtraSmallPx;
-    final int listMarginWidthPx;
+    final int detailMarginWidthPx;
 
     final int fullSizeImageWidthPx;
     final int featuredImageHeightPx;
@@ -48,7 +48,7 @@ class ReaderResourceVars {
         marginLargePx = resources.getDimensionPixelSize(R.dimen.margin_large);
         marginSmallPx = resources.getDimensionPixelSize(R.dimen.margin_small);
         marginExtraSmallPx = resources.getDimensionPixelSize(R.dimen.margin_extra_small);
-        listMarginWidthPx = resources.getDimensionPixelOffset(R.dimen.reader_list_margin);
+        detailMarginWidthPx = resources.getDimensionPixelOffset(R.dimen.reader_detail_margin);
 
         colorGreyExtraLight = resources.getColor(R.color.grey_extra_light);
         mediumAnimTime = resources.getInteger(android.R.integer.config_mediumAnimTime);
@@ -58,9 +58,9 @@ class ReaderResourceVars {
         greyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
         greyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_extra_light);
 
-        // full-size image width must take list margin and padding into account
+        // full-size image width must take margin and padding into account
         int listPadding = resources.getDimensionPixelOffset(R.dimen.margin_large);
-        int imageWidth = displayWidthPx - (listMarginWidthPx * 2) - (listPadding * 2);
+        int imageWidth = displayWidthPx - (detailMarginWidthPx * 2) - (listPadding * 2);
         boolean hasStaticMenuDrawer =
                 (context instanceof WPDrawerActivity)
                         && (((WPDrawerActivity) context).isStaticMenuDrawer());
