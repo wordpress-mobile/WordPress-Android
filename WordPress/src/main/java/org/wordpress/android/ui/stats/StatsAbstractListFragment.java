@@ -24,6 +24,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Locale;
 
 
@@ -32,7 +33,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected static final String ARGS_IS_SINGLE_VIEW = "ARGS_IS_SINGLE_VIEW";
 
     // Used when the fragment has 2 pages/kind of stats in it. Not meaning the bottom pagination.
-    protected static final String ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX = "OUTER_PAGER_SELECTED_BUTTON_INDEX";
+    protected static final String ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX = "ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX";
 
     protected static final int NO_STRING_ID = -1;
 
@@ -42,8 +43,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected LinearLayout mList;
     protected Serializable[] mDatamodels;
     protected Button mViewAll;
-    protected RadioGroup mRadioGroup;
-    protected int mSelectedButtonIndex = 0;
+    protected RadioGroup mTopPagerRadioGroup;
+    protected int mTopPagerSelectedButtonIndex = 0;
 
     protected SparseBooleanArray mGroupIdToExpandedMap;
 
@@ -79,7 +80,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mList.setVisibility(View.VISIBLE);
         mListContainer = (LinearLayout) view.findViewById(R.id.stats_list_container);
         mViewAll = (Button) view.findViewById(R.id.btnViewAll);
-        mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
+        mTopPagerRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
 
         return view;
     }
@@ -159,6 +160,33 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         }
     }
 
+    protected void showErrorUI(Serializable error) {
+        mGroupIdToExpandedMap.clear();
+        String volleyErrorMsg = null;
+        if (error instanceof VolleyError) {
+            volleyErrorMsg =   ((VolleyError)error).getMessage();
+        }
+        String label;
+        if (volleyErrorMsg == null) {
+            label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
+        } else {
+            label = "<b>" + getString(R.string.error_refresh_stats) + "</b> " + getString(getEmptyLabelDescResId());
+        }
+        if (label.contains("<")) {
+            mEmptyLabel.setText(Html.fromHtml(label));
+        } else {
+            mEmptyLabel.setText(label);
+        }
+        mEmptyLabel.setVisibility(View.VISIBLE);
+        mListContainer.setVisibility(View.GONE);
+        mList.setVisibility(View.GONE);
+    }
+
+    protected boolean isErrorResponse(int index) {
+        return mDatamodels != null && mDatamodels[index] != null
+                && mDatamodels[index] instanceof VolleyError;
+    }
+
     protected boolean isSingleView() {
         return getArguments().getBoolean(ARGS_IS_SINGLE_VIEW, false);
     }
@@ -197,11 +225,11 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         viewAllIntent.putExtra(ARGS_IS_SINGLE_VIEW, true);
       //  viewAllIntent.putExtra(StatsAbstractFragment.ARG_REST_RESPONSE, restResponses);
 
-        if (mRadioGroup.getVisibility() == View.VISIBLE) {
-           /* int radioButtonID = mRadioGroup.getCheckedRadioButtonId();
-            View radioButton = mRadioGroup.findViewById(radioButtonID);
-            int idx = mRadioGroup.indexOfChild(radioButton);*/
-            viewAllIntent.putExtra(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
+        if (mTopPagerRadioGroup.getVisibility() == View.VISIBLE) {
+           /* int radioButtonID = mTopPagerRadioGroup.getCheckedRadioButtonId();
+            View radioButton = mTopPagerRadioGroup.findViewById(radioButtonID);
+            int idx = mTopPagerRadioGroup.indexOfChild(radioButton);*/
+            viewAllIntent.putExtra(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
         }
 
         getActivity().startActivity(viewAllIntent);
@@ -244,16 +272,12 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             mGroupIdToExpandedMap.clear();
             if (action.equals(StatsService.ACTION_STATS_SECTION_UPDATED)) {
                 Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_DATA);
-               /* if (dataObj == null || dataObj instanceof VolleyError) {
-                    //TODO: show the error on the section ???
-                    return;
-                }*/
 
                 if (mDatamodels == null) {
                     mDatamodels = new Serializable[getSectionToUpdate().length];
                 }
 
-                dataObj = (dataObj == null || dataObj instanceof VolleyError) ? null : dataObj;
+                //dataObj = (dataObj == null || dataObj instanceof VolleyError) ? null : dataObj;
                 mDatamodels[indexOfDatamodelMatch] = dataObj;
                 updateUI();
             }

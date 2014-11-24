@@ -117,7 +117,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
             mDate = savedInstanceState.getString(StatsAbstractFragment.ARGS_START_DATE);
             int ordinal = savedInstanceState.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, -1);
             mStatsViewType = StatsViewType.values()[ordinal];
-            mOuterPagerSelectedButtonIndex = savedInstanceState.getInt(StatsAbstractListFragment.ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, -1);
+            mOuterPagerSelectedButtonIndex = savedInstanceState.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, -1);
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mLocalBlogID = extras.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
@@ -126,7 +126,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
            // mRestResponse = (Serializable[]) extras.getParcelableArray(StatsAbstractFragment.ARG_REST_RESPONSE);
             int ordinal = extras.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, -1);
             mStatsViewType = StatsViewType.values()[ordinal];
-            mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, -1);
+            mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, -1);
             refreshStats(); // refresh stats when launched for the first time
         }
 
@@ -212,7 +212,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
         args.putSerializable(StatsAbstractFragment.ARGS_TIMEFRAME, mTimeframe);
         args.putBoolean(StatsAbstractListFragment.ARGS_IS_SINGLE_VIEW, true); // Always true here
         args.putString(StatsAbstractFragment.ARGS_START_DATE, mDate);
-        args.putInt(StatsAbstractListFragment.ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, mOuterPagerSelectedButtonIndex);
+        args.putInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mOuterPagerSelectedButtonIndex);
         fragment.setArguments(args);
         return fragment;
     }
@@ -250,7 +250,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
         outState.putSerializable(StatsAbstractFragment.ARGS_TIMEFRAME, mTimeframe);
         outState.putString(StatsAbstractFragment.ARGS_START_DATE, mDate);
         outState.putInt(StatsAbstractFragment.ARGS_VIEW_TYPE, mStatsViewType.ordinal());
-        outState.putInt(StatsAbstractListFragment.ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, mOuterPagerSelectedButtonIndex);
+        outState.putInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mOuterPagerSelectedButtonIndex);
         super.onSaveInstanceState(outState);
     }
 
@@ -374,9 +374,16 @@ public class StatsViewAllActivity extends WPActionBarActivity
     }
 
     private void refreshStats() {
-       if (mIsUpdatingStats) {
+        if (mIsUpdatingStats) {
             return;
         }
+
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            mPullToRefreshHelper.setRefreshing(false);
+            AppLog.w(AppLog.T.STATS, getInnerFragmentTAG() + " > no connection, update canceled");
+            return;
+        }
+
         mIsUpdatingStats = true;
         final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
         final String blogId = StatsUtils.getBlogId(mLocalBlogID);

@@ -14,11 +14,9 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.FollowerModel;
 import org.wordpress.android.ui.stats.model.FollowersModel;
-import org.wordpress.android.ui.stats.model.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.text.ParseException;
@@ -53,14 +51,14 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             rb.setGravity(Gravity.CENTER);
             rb.setLayoutParams(params);
             rb.setText(titles[i]);
-            mRadioGroup.addView(rb);
+            mTopPagerRadioGroup.addView(rb);
 
-            if (i == mSelectedButtonIndex)
+            if (i == mTopPagerSelectedButtonIndex)
                 rb.setChecked(true);
         }
 
-        mRadioGroup.setVisibility(View.VISIBLE);
-        mRadioGroup.setOnCheckedChangeListener(this);
+        mTopPagerRadioGroup.setVisibility(View.VISIBLE);
+        mTopPagerRadioGroup.setOnCheckedChangeListener(this);
 
         mTotalsLabel.setVisibility(View.VISIBLE);
         mTotalsLabel.setText("Total comment followers: 0");
@@ -73,19 +71,19 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             AppLog.d(AppLog.T.STATS, this.getTag() + " > restoring instance state");
-            if (savedInstanceState.containsKey(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX)) {
-                mSelectedButtonIndex = savedInstanceState.getInt(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX);
+            if (savedInstanceState.containsKey(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX)) {
+                mTopPagerSelectedButtonIndex = savedInstanceState.getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX);
             }
         } else {
             // first time it's created
-            mSelectedButtonIndex = getArguments().getInt(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, 0);
+            mTopPagerSelectedButtonIndex = getArguments().getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
-        outState.putInt(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
+        outState.putInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
         super.onSaveInstanceState(outState);
     }
 
@@ -99,7 +97,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
         if (index == -1)
             return;
 
-        mSelectedButtonIndex = index;
+        mTopPagerSelectedButtonIndex = index;
 
         View view = this.getView();
         TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
@@ -110,7 +108,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
 
     @Override
     protected void updateUI() {
-        mRadioGroup.setVisibility(View.VISIBLE);
+        mTopPagerRadioGroup.setVisibility(View.VISIBLE);
         mTotalsLabel.setVisibility(View.VISIBLE);
 
         if (mDatamodels == null) {
@@ -119,10 +117,15 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             return;
         }
 
+        if (isErrorResponse(mTopPagerSelectedButtonIndex)) {
+            showErrorUI(mDatamodels[mTopPagerSelectedButtonIndex]);
+            return;
+        }
+
         FollowersModel followersWPCOMModel = (FollowersModel) mDatamodels[0];
         FollowersModel followersEmailModel = (FollowersModel) mDatamodels[1];
         ArrayAdapter adapter = null;
-        if (mSelectedButtonIndex == 0) {
+        if (mTopPagerSelectedButtonIndex == 0) {
             if (followersWPCOMModel != null) {
                 List<FollowerModel> mSubscribers = followersWPCOMModel.getFollowers();
                 if (mSubscribers != null && mSubscribers.size() > 0) {
@@ -141,7 +144,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
         if (adapter != null) {
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
-            if ( mSelectedButtonIndex == 0 ) {
+            if ( mTopPagerSelectedButtonIndex == 0 ) {
                 mTotalsLabel.setText(getTotalFollowersLabel(followersWPCOMModel.getTotalWPCom()));
             } else {
                 mTotalsLabel.setText(getTotalFollowersLabel(followersEmailModel.getTotalEmail()));
@@ -157,7 +160,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
         if (mDatamodels == null) {
             return false;
         }
-        FollowersModel followersModel = (FollowersModel) mDatamodels[mSelectedButtonIndex];
+        FollowersModel followersModel = (FollowersModel) mDatamodels[mTopPagerSelectedButtonIndex];
         if (followersModel == null || followersModel.getFollowers() == null
                 || followersModel.getFollowers().size() < 10) {
             return false;
@@ -167,7 +170,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
     }
 
     private String getTotalFollowersLabel(int total) {
-        if ( mSelectedButtonIndex == 0 ) {
+        if ( mTopPagerSelectedButtonIndex == 0 ) {
             return "Total WordPress.com Followers: " + total;
         }
 
@@ -208,7 +211,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
             // entries
-            if (mSelectedButtonIndex == 0) {
+            if (mTopPagerSelectedButtonIndex == 0) {
                 holder.setEntryTextOrLink(currentRowData.getURL(), currentRowData.getLabel());
             } else {
                 holder.entryTextView.setText(currentRowData.getLabel());

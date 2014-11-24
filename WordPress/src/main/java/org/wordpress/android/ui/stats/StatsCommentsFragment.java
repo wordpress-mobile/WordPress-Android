@@ -52,14 +52,14 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
             rb.setGravity(Gravity.CENTER);
             rb.setLayoutParams(params);
             rb.setText(titles[i]);
-            mRadioGroup.addView(rb);
+            mTopPagerRadioGroup.addView(rb);
 
-            if (i == mSelectedButtonIndex)
+            if (i == mTopPagerSelectedButtonIndex)
                 rb.setChecked(true);
         }
 
-        mRadioGroup.setVisibility(View.VISIBLE);
-        mRadioGroup.setOnCheckedChangeListener(this);
+        mTopPagerRadioGroup.setVisibility(View.VISIBLE);
+        mTopPagerRadioGroup.setOnCheckedChangeListener(this);
 
         return view;
     }
@@ -69,19 +69,19 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             AppLog.d(AppLog.T.STATS, this.getTag() + " > restoring instance state");
-            if (savedInstanceState.containsKey(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX)) {
-                mSelectedButtonIndex = savedInstanceState.getInt(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX);
+            if (savedInstanceState.containsKey(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX)) {
+                mTopPagerSelectedButtonIndex = savedInstanceState.getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX);
             }
         } else {
             // first time it's created
-            mSelectedButtonIndex = getArguments().getInt(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, 0);
+            mTopPagerSelectedButtonIndex = getArguments().getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
-        outState.putInt(ARGS_OUTER_PAGER_SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
+        outState.putInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
         super.onSaveInstanceState(outState);
     }
 
@@ -95,7 +95,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         if (index == -1)
             return;
 
-        mSelectedButtonIndex = index;
+        mTopPagerSelectedButtonIndex = index;
 
         View view = this.getView();
         TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
@@ -106,11 +106,16 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
     @Override
     protected void updateUI() {
-        mRadioGroup.setVisibility(View.VISIBLE);
+        mTopPagerRadioGroup.setVisibility(View.VISIBLE);
 
         if (mDatamodels == null) {
             showEmptyUI(true);
             mTotalsLabel.setVisibility(View.GONE);
+            return;
+        }
+
+        if (isErrorResponse(mTopPagerSelectedButtonIndex)) {
+            showErrorUI(mDatamodels[mTopPagerSelectedButtonIndex]);
             return;
         }
 
@@ -123,9 +128,9 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
         ArrayAdapter adapter = null;
 
-        if (mSelectedButtonIndex == 0 && hasAuthors()) {
+        if (mTopPagerSelectedButtonIndex == 0 && hasAuthors()) {
             adapter = new AuthorsAdapter(getActivity(), getAuthors());
-        } else if (mSelectedButtonIndex == 1 && hasPosts()) {
+        } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts()) {
             adapter = new TopPostsAndPagesAdapter(getActivity(), getPosts());
         }
 
@@ -165,9 +170,9 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        if (mSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > 10) {
+        if (mTopPagerSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > 10) {
             return true;
-        } else if (mSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > 10) {
+        } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > 10) {
             return true;
         }
         return false;
@@ -260,7 +265,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
     @Override
     protected int getEntryLabelResId() {
-        if (mSelectedButtonIndex == 0) {
+        if (mTopPagerSelectedButtonIndex == 0) {
             return R.string.stats_entry_top_commenter;
         } else {
             return R.string.stats_entry_posts_and_pages;

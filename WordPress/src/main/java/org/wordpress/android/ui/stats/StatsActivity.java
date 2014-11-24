@@ -540,6 +540,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         if (!NetworkUtils.isNetworkAvailable(this)) {
             mPullToRefreshHelper.setRefreshing(false);
+            AppLog.w(AppLog.T.STATS, "StatsActivity > no connection, update canceled");
             return;
         }
 

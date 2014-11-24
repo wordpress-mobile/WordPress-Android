@@ -20,6 +20,10 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
+        if (isErrorResponse(0)) {
+            showErrorUI(mDatamodels[0]);
+            return;
+        }
         if (hasVideoplays()) {
             ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), getVideoplays());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());

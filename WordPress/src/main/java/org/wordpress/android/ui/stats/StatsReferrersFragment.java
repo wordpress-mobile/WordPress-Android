@@ -20,6 +20,11 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
+        if (isErrorResponse(0)) {
+            showErrorUI(mDatamodels[0]);
+            return;
+        }
+
         if (hasReferrers()) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), getReferrersGroups());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());

@@ -20,6 +20,12 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
+
+        if (isErrorResponse(0)) {
+            showErrorUI(mDatamodels[0]);
+            return;
+        }
+
         if (hasCountries()) {
             ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), getCountries());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());

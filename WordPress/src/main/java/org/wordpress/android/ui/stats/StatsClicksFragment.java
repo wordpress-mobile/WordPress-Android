@@ -20,6 +20,11 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
+        if (isErrorResponse(0)) {
+            showErrorUI(mDatamodels[0]);
+            return;
+        }
+
         if (mDatamodels != null && mDatamodels[0] != null
                 && ((ClicksModel) mDatamodels[0]).getClickGroups().size() > 0) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((ClicksModel) mDatamodels[0]).getClickGroups());

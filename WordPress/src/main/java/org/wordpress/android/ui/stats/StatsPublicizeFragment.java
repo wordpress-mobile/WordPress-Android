@@ -21,6 +21,12 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
+
+        if (isErrorResponse(0)) {
+            showErrorUI(mDatamodels[0]);
+            return;
+        }
+
         if (hasPublicize()) {
             ArrayAdapter adapter = new PublicizeAdapter(getActivity(), getPublicize());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());

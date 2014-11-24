@@ -23,6 +23,11 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
+        if (isErrorResponse(0)) {
+            showErrorUI(mDatamodels[0]);
+            return;
+        }
+
         if (hasTopPostsAndPages()) {
             List<SingleItemModel> postViews = ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages();
             ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), postViews);

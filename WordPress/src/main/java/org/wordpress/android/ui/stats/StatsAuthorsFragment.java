@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
+import com.android.volley.VolleyError;
+
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.AuthorModel;
 import org.wordpress.android.ui.stats.model.AuthorsModel;
@@ -36,6 +38,11 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
+        if (isErrorResponse(0)) {
+            showErrorUI(mDatamodels[0]);
+            return;
+        }
+
         if (mDatamodels == null || mDatamodels[0] == null) {
             showEmptyUI(true);
             mListener.onAuthorsVisibilityChange(true); // Hide the authors section if completely empty

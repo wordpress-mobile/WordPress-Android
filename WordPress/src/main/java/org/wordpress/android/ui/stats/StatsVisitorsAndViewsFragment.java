@@ -60,7 +60,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             OverviewLabel.COMMENTS};
 
     // Restore the following variables on restart
-    private VisitsModel mVisitsData;
+    private Serializable mVisitsData; //VisitModel or VolleyError
     private int mSelectedOverviewItemIndex = 0;
     private int mSelectedBarGraphBarIndex = -1;
 
@@ -197,7 +197,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
-        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
+        if( mVisitsData instanceof VolleyError) {
+            setupEmptyUI(false);
+            return;
+        }
+
+        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph((VisitsModel)mVisitsData);
         if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
             setupEmptyUI(false);
             return;
@@ -261,7 +266,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     //update the area right below the graph
     private void updateUIBelowTheGraph(int itemPosition) {
-        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
+        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph((VisitsModel)mVisitsData);
 
         String date =  mStatsDate[itemPosition];
         if (date == null) {
@@ -368,8 +373,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             LayoutInflater inflater = LayoutInflater.from(context);
             View emptyBarGraphView = inflater.inflate(R.layout.stats_bar_graph_empty, mGraphContainer, false);
             if (isLoading) {
-                final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
-                emptyLabel.setText("Loading...");
+                //final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
+                //emptyLabel.setText("Loading...");
             }
             if (emptyBarGraphView != null) {
                 mGraphContainer.removeAllViews();
