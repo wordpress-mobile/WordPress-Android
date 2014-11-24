@@ -48,8 +48,8 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         public void onMediaContentSelectionConfirmed(ArrayList<MediaContent> mediaContent);
         // Called when the last selected item is deselected
         public void onMediaContentSelectionCancelled();
+        // Called when Gallery menu option has been selected
         public void onGalleryCreated(ArrayList<MediaContent> mediaContent);
-        // TODO: public void onMenuItemClicked(int itemd);
     }
 
     public static final String FILTER_ARG = "KEY_FILTER";
@@ -154,7 +154,7 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
 
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        notifiyMediaSelectionStarted();
+        notifyMediaSelectionStarted();
         getActivity().getMenuInflater().inflate(R.menu.media_content_selection, menu);
 
         if ((mFilter & WP_IMAGES) == 0 && (mFilter & WP_VIDEOS) == 0) {
@@ -203,7 +203,7 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         }
     }
 
-    private void notifiyMediaSelectionStarted() {
+    private void notifyMediaSelectionStarted() {
         if (mListener != null) {
             mListener.onMediaContentSelectionStarted();
         }

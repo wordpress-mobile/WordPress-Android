@@ -116,14 +116,14 @@ public class MediaSelectActivity extends WPActionBarActivity implements OnMediaC
     }
 
     @Override
+    public void onMediaContentSelectionCancelled() {
+    }
+
+    @Override
     public void onGalleryCreated(ArrayList<MediaContent> mediaContent) {
         if (mStartedForResult) {
             finishWithGallery(mediaContent);
         }
-    }
-
-    @Override
-    public void onMediaContentSelectionCancelled() {
     }
 
     /** Helper method to conditionally initialize view depending on intended use of the class. */
