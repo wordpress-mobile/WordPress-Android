@@ -31,22 +31,17 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.MenuDrawerItems.DrawerItem;
+import org.wordpress.android.ui.MenuDrawerItems.DrawerItemId;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.comments.CommentsActivity;
-import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PagesActivity;
-import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
-import org.wordpress.android.ui.stats.StatsActivity;
-import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
@@ -59,7 +54,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +86,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private MenuDrawerAdapter mDrawerAdapter;
-    private final List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
+    private final MenuDrawerItems mDrawerItems = new MenuDrawerItems();
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
 
@@ -112,17 +106,17 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         setSupportActionBar(getToolbar());
 
         // configure all the available menu items
-        mMenuItems.add(new ReaderMenuItem());
-        mMenuItems.add(new NotificationsMenuItem());
-        mMenuItems.add(new PostsMenuItem());
-        mMenuItems.add(new MediaMenuItem());
-        mMenuItems.add(new PagesMenuItem());
-        mMenuItems.add(new CommentsMenuItem());
-        mMenuItems.add(new ThemesMenuItem());
-        mMenuItems.add(new StatsMenuItem());
-        mMenuItems.add(new QuickPhotoMenuItem());
-        mMenuItems.add(new QuickVideoMenuItem());
-        mMenuItems.add(new ViewSiteMenuItem());
+        mDrawerItems.addItem(DrawerItemId.READER);
+        mDrawerItems.addItem(DrawerItemId.NOTIFICATIONS);
+        mDrawerItems.addItem(DrawerItemId.POSTS);
+        mDrawerItems.addItem(DrawerItemId.MEDIA);
+        mDrawerItems.addItem(DrawerItemId.PAGES);
+        mDrawerItems.addItem(DrawerItemId.COMMENTS);
+        mDrawerItems.addItem(DrawerItemId.THEMES);
+        mDrawerItems.addItem(DrawerItemId.STATS);
+        mDrawerItems.addItem(DrawerItemId.QUICK_PHOTO);
+        mDrawerItems.addItem(DrawerItemId.QUICK_VIDEO);
+        mDrawerItems.addItem(DrawerItemId.VIEW_SITE);
 
         // if this activity was opened from the drawer (ie: via startDrawerIntent() from another
         // drawer activity), hide the activity view then fade it in after a short delay
@@ -312,25 +306,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         mDrawerListView.setAdapter(mDrawerAdapter);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mDrawerLayout != null) {
-                    mDrawerLayout.closeDrawer(GravityCompat.START);
-                }
-
                 int menuPosition = position - mDrawerListView.getHeaderViewsCount();
-                if (menuPosition < 0 || menuPosition >= mDrawerAdapter.getCount()) {
-                    return;
-                }
-                MenuDrawerItem item = (MenuDrawerItem) mDrawerAdapter.getItem(menuPosition);
-
-                // if the item has an id, remember it for launch
-                if (item.hasItemId()) {
-                    ActivityId.trackLastActivity(WPDrawerActivity.this, item.getItemId());
-                }
-
-                // only perform selection if the item isn't already selected
-                if (!item.isSelected()) {
-                    item.selectItem();
-                }
+                DrawerItem item = (DrawerItem) mDrawerAdapter.getItem(menuPosition);
+                drawerItemSelected(item);
             }
         });
 
@@ -339,6 +317,127 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         updateMenuDrawer();
+    }
+
+    private void closeDrawer() {
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+    /**
+     * called when user selects an item from the drawer
+     */
+    private void drawerItemSelected(DrawerItem item) {
+        // do nothing if item is already selected
+        if (item == null || item.isSelected(this)) {
+            closeDrawer();
+            return;
+        }
+
+        // if the item has an activity id, remember it for launch
+        ActivityId activityId = item.getDrawerItemId().toActivityId();
+        if (activityId != ActivityId.UNKNOWN) {
+            ActivityId.trackLastActivity(WPDrawerActivity.this, activityId);
+        }
+
+        final Intent intent;
+        switch (item.getDrawerItemId()) {
+            case READER:
+                mShouldFinish = true;
+                intent = WPActivityUtils.getIntentForActivityId(this, activityId);
+                break;
+            case NOTIFICATIONS:
+                mShouldFinish = true;
+                intent = WPActivityUtils.getIntentForActivityId(this, activityId);
+                break;
+            case POSTS:
+                mShouldFinish = true;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_POSTS);
+                intent = WPActivityUtils.getIntentForActivityId(this, activityId);
+                break;
+            case MEDIA:
+                mShouldFinish = true;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
+                intent = WPActivityUtils.getIntentForActivityId(this, activityId);
+                break;
+            case PAGES:
+                mShouldFinish = true;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_PAGES);
+                intent = WPActivityUtils.getIntentForActivityId(this, activityId);
+                break;
+            case COMMENTS:
+                mShouldFinish = true;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_COMMENTS);
+                intent = WPActivityUtils.getIntentForActivityId(this, activityId);
+                break;
+            case THEMES:
+                mShouldFinish = true;
+                intent = WPActivityUtils.getIntentForActivityId(this, activityId);
+                break;
+            case STATS:
+                mShouldFinish = true;
+                intent = WPActivityUtils.getIntentForActivityId(this, activityId);
+                break;
+            case VIEW_SITE:
+                mShouldFinish = true;
+                intent = WPActivityUtils.getIntentForActivityId(this, activityId);
+                break;
+            case QUICK_PHOTO:
+                mShouldFinish = false;
+                intent = new Intent(WPDrawerActivity.this, EditPostActivity.class);
+                intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
+                        ? Constants.QUICK_POST_PHOTO_CAMERA
+                        : Constants.QUICK_POST_PHOTO_LIBRARY);
+                break;
+            case QUICK_VIDEO:
+                mShouldFinish = false;
+                intent = new Intent(WPDrawerActivity.this, EditPostActivity.class);
+                intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
+                        ? Constants.QUICK_POST_VIDEO_CAMERA
+                        : Constants.QUICK_POST_VIDEO_LIBRARY);
+                break;
+            default :
+                mShouldFinish = false;
+                intent = null;
+                break;
+        }
+
+        if (intent == null) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_generic);
+            return;
+        }
+
+        if (mShouldFinish) {
+            intent.putExtra(OPENED_FROM_DRAWER, true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+            // set the ActionBar title to that of the incoming activity
+            if (getSupportActionBar() != null) {
+                int titleResId = item.getTitleResId();
+                if (titleResId != 0) {
+                    getSupportActionBar().setTitle(getString(titleResId));
+                } else {
+                    getSupportActionBar().setTitle(null);
+                }
+            }
+
+            // fade out the activity container so it appears the current activity is going away
+            hideActivityContainer(true);
+
+            // start the new activity after a brief delay to give the drawer time to close
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    intent.putExtra(OPENED_FROM_DRAWER, true);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
+                }
+            }, OPENED_FROM_DRAWER_DELAY);
+        } else {
+            startActivity(intent);
+        }
+
+        closeDrawer();
     }
 
     protected ActionBarDrawerToggle getDrawerToggle() {
@@ -424,13 +523,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * Update all of the items in the menu drawer based on the current active blog.
      */
     public void updateMenuDrawer() {
-        List<MenuDrawerItem> visibleItems = new ArrayList<MenuDrawerItem>();
-        for (MenuDrawerItem item : mMenuItems) {
-            if (item.isVisible()) {
-                visibleItems.add(item);
-            }
-        }
-        mDrawerAdapter.setItems(visibleItems);
+        mDrawerAdapter.setItems(mDrawerItems.getVisibleItems());
     }
 
     /**
@@ -619,17 +712,14 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         WordPress.wpDB.updateLastBlogId(WordPress.getCurrentLocalTableBlogId());
         // the menu may have changed, we need to change the selection if the selected item
         // is not available in the menu anymore
-        for (MenuDrawerItem item : mMenuItems) {
+        for (DrawerItem item : mDrawerItems.getItems()) {
             // if the item is selected, but it's no longer visible we need to
             // select the first available item from the adapter
-            if (item.isSelected() && !item.isVisible()) {
+            if (item.isSelected(this) && !item.isVisible()) {
                 // then select the first item and activate it
                 if (mDrawerAdapter.getCount() > 0) {
-                    ((MenuDrawerItem) mDrawerAdapter.getItem(0)).selectItem();
-                }
-                // if it has an item id save it to the preferences
-                if (item.hasItemId()) {
-                    ActivityId.trackLastActivity(WPDrawerActivity.this, item.getItemId());
+                    DrawerItem drawerItem = (DrawerItem) mDrawerAdapter.getItem(0);
+                    drawerItemSelected(drawerItem);
                 }
                 break;
             }
@@ -666,319 +756,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * this to perform activity-specific cleanup upon signout
      */
     public void onSignout() {
-    }
-
-    /**
-     * called when user selects an item from the drawer
-     */
-    private void startDrawerActivity(ActivityId id) {
-        final Intent intent = WPActivityUtils.getIntentForActivityId(this, id);
-        if (intent == null) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_generic);
-            return;
-        }
-
-        // fade out the activity container so it appears the current activity is going away
-        hideActivityContainer(true);
-
-        // set the ActionBar title to that of the incoming activity
-        if (getSupportActionBar() != null) {
-            final int titleResId;
-            switch (id) {
-                case COMMENTS:
-                    titleResId = R.string.tab_comments;
-                    break;
-                case MEDIA:
-                    titleResId = R.string.media;
-                    break;
-                case NOTIFICATIONS:
-                    titleResId = R.string.notifications;
-                    break;
-                case PAGES:
-                    titleResId = R.string.pages;
-                    break;
-                case POSTS:
-                    titleResId = R.string.posts;
-                    break;
-                case READER:
-                    titleResId = 0;
-                    break;
-                case STATS:
-                    titleResId = R.string.stats;
-                    break;
-                case THEMES:
-                    titleResId = R.string.themes;
-                    break;
-                case VIEW_SITE:
-                    titleResId = R.string.view_site;
-                    break;
-                default:
-                    titleResId = 0;
-                    break;
-            }
-            if (titleResId != 0) {
-                getSupportActionBar().setTitle(getString(titleResId));
-            } else {
-                getSupportActionBar().setTitle(null);
-            }
-        }
-
-        // start the new activity after a brief delay to give the drawer time to close
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                intent.putExtra(OPENED_FROM_DRAWER, true);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
-            }
-        }, OPENED_FROM_DRAWER_DELAY);
-    }
-
-    private class ReaderMenuItem extends MenuDrawerItem {
-        ReaderMenuItem(){
-            super(ActivityId.READER, R.string.reader, R.drawable.noticon_reader_alt_black);
-        }
-
-        @Override
-        public boolean isVisible(){
-            return WordPress.hasValidWPComCredentials(WPDrawerActivity.this);
-        }
-
-        @Override
-        public boolean isSelected(){
-            return WPDrawerActivity.this instanceof ReaderPostListActivity;
-        }
-        @Override
-        public void onSelectItem(){
-            if (!isSelected())
-                mShouldFinish = true;
-            startDrawerActivity(getItemId());
-        }
-    }
-
-    private class PostsMenuItem extends MenuDrawerItem {
-        PostsMenuItem() {
-            super(ActivityId.POSTS, R.string.posts, R.drawable.dashicon_admin_post_black);
-        }
-
-        @Override
-        public boolean isSelected() {
-            WPDrawerActivity activity = WPDrawerActivity.this;
-            return (activity instanceof PostsActivity) && !(activity instanceof PagesActivity);
-        }
-
-        @Override
-        public void onSelectItem() {
-            if (!(WPDrawerActivity.this instanceof PostsActivity)
-                    || (WPDrawerActivity.this instanceof PagesActivity)) {
-                mShouldFinish = true;
-                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_POSTS);
-            }
-            startDrawerActivity(getItemId());
-        }
-        @Override
-        public boolean isVisible() {
-            return WordPress.wpDB.getNumVisibleAccounts() != 0;
-        }
-    }
-
-    private class MediaMenuItem extends MenuDrawerItem {
-        MediaMenuItem(){
-            super(ActivityId.MEDIA, R.string.media, R.drawable.dashicon_admin_media_black);
-        }
-        @Override
-        public boolean isSelected(){
-            return WPDrawerActivity.this instanceof MediaBrowserActivity;
-        }
-        @Override
-        public void onSelectItem(){
-            if (!(WPDrawerActivity.this instanceof MediaBrowserActivity)) {
-                mShouldFinish = true;
-                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
-            }
-            startDrawerActivity(getItemId());
-        }
-        @Override
-        public boolean isVisible() {
-            return WordPress.wpDB.getNumVisibleAccounts() != 0;
-        }
-    }
-
-    private class PagesMenuItem extends MenuDrawerItem {
-        PagesMenuItem(){
-            super(ActivityId.PAGES, R.string.pages, R.drawable.dashicon_admin_page_black);
-        }
-        @Override
-        public boolean isSelected(){
-            return WPDrawerActivity.this instanceof PagesActivity;
-        }
-        @Override
-        public void onSelectItem(){
-            if (WordPress.getCurrentBlog() == null)
-                return;
-            if (!(WPDrawerActivity.this instanceof PagesActivity)) {
-                mShouldFinish = true;
-                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_PAGES);
-            }
-            startDrawerActivity(getItemId());
-        }
-        @Override
-        public boolean isVisible() {
-            return WordPress.wpDB.getNumVisibleAccounts() != 0;
-        }
-    }
-
-    private class CommentsMenuItem extends MenuDrawerItem {
-        CommentsMenuItem(){
-            super(ActivityId.COMMENTS, R.string.tab_comments, R.drawable.dashicon_admin_comments_black);
-        }
-        @Override
-        public boolean isSelected(){
-            return WPDrawerActivity.this instanceof CommentsActivity;
-        }
-        @Override
-        public void onSelectItem(){
-            if (WordPress.getCurrentBlog() == null)
-                return;
-            if (!(WPDrawerActivity.this instanceof CommentsActivity)) {
-                mShouldFinish = true;
-                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_COMMENTS);
-            }
-            startDrawerActivity(getItemId());
-        }
-        @Override
-        public int getBadgeCount() {
-            return CommentTable.getUnmoderatedCommentCount(WordPress.getCurrentLocalTableBlogId());
-        }
-        @Override
-        public boolean isVisible() {
-            return WordPress.wpDB.getNumVisibleAccounts() != 0;
-        }
-    }
-
-    private class ThemesMenuItem extends MenuDrawerItem {
-        ThemesMenuItem(){
-            super(ActivityId.THEMES, R.string.themes, R.drawable.dashboard_icon_themes);
-        }
-        @Override
-        public boolean isSelected(){
-            return WPDrawerActivity.this instanceof ThemeBrowserActivity;
-        }
-        @Override
-        public void onSelectItem(){
-            if (!(WPDrawerActivity.this instanceof ThemeBrowserActivity))
-                mShouldFinish = true;
-            startDrawerActivity(getItemId());
-        }
-
-        @Override
-        public boolean isVisible() {
-            Blog blog = WordPress.getCurrentBlog();
-            return (blog != null && blog.isAdmin() && blog.isDotcomFlag());
-        }
-    }
-
-
-    private class StatsMenuItem extends MenuDrawerItem {
-        StatsMenuItem(){
-            super(ActivityId.STATS, R.string.tab_stats, R.drawable.noticon_milestone_black);
-        }
-        @Override
-        public boolean isSelected(){
-            return WPDrawerActivity.this instanceof StatsActivity;
-        }
-        @Override
-        public void onSelectItem(){
-            if (WordPress.getCurrentBlog() == null)
-                return;
-            if (!isSelected())
-                mShouldFinish = true;
-            startDrawerActivity(getItemId());
-        }
-        @Override
-        public boolean isVisible() {
-            return WordPress.wpDB.getNumVisibleAccounts() != 0;
-        }
-    }
-
-    private class QuickPhotoMenuItem extends MenuDrawerItem {
-        QuickPhotoMenuItem(){
-            super(R.string.quick_photo, R.drawable.dashicon_camera_black);
-        }
-        @Override
-        public void onSelectItem(){
-            mShouldFinish = false;
-            Intent intent = new Intent(WPDrawerActivity.this, EditPostActivity.class);
-            intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
-                    ? Constants.QUICK_POST_PHOTO_CAMERA
-                    : Constants.QUICK_POST_PHOTO_LIBRARY);
-            startActivity(intent);
-        }
-        @Override
-        public boolean isVisible() {
-            return WordPress.wpDB.getNumVisibleAccounts() != 0;
-        }
-    }
-
-    private class QuickVideoMenuItem extends MenuDrawerItem {
-        QuickVideoMenuItem(){
-            super(R.string.quick_video, R.drawable.dashicon_video_alt2_black);
-        }
-        @Override
-        public void onSelectItem(){
-            mShouldFinish = false;
-            Intent intent = new Intent(WPDrawerActivity.this, EditPostActivity.class);
-            intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
-                    ? Constants.QUICK_POST_VIDEO_CAMERA
-                    : Constants.QUICK_POST_VIDEO_LIBRARY);
-            startActivity(intent);
-        }
-        @Override
-        public boolean isVisible() {
-            return WordPress.wpDB.getNumVisibleAccounts() != 0;
-        }
-    }
-
-    private class ViewSiteMenuItem extends MenuDrawerItem {
-        ViewSiteMenuItem(){
-            super(ActivityId.VIEW_SITE, R.string.view_site, R.drawable.noticon_show_black);
-        }
-        @Override
-        public boolean isSelected(){
-            return WPDrawerActivity.this instanceof ViewSiteActivity;
-        }
-        @Override
-        public void onSelectItem(){
-            if (!(WPDrawerActivity.this instanceof ViewSiteActivity)) {
-                mShouldFinish = true;
-                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
-            }
-            startDrawerActivity(getItemId());
-        }
-        @Override
-        public boolean isVisible() {
-            return WordPress.wpDB.getNumVisibleAccounts() != 0;
-        }
-    }
-
-    private class NotificationsMenuItem extends MenuDrawerItem {
-        NotificationsMenuItem(){
-            super(ActivityId.NOTIFICATIONS, R.string.notifications, R.drawable.noticon_notification_black);
-        }
-        @Override
-        public boolean isVisible(){
-            return WordPress.hasValidWPComCredentials(WPDrawerActivity.this);
-        }
-        @Override
-        public boolean isSelected(){
-            return WPDrawerActivity.this instanceof NotificationsActivity;
-        }
-        @Override
-        public void onSelectItem(){
-            if (!(WPDrawerActivity.this instanceof NotificationsActivity))
-                mShouldFinish = true;
-            startDrawerActivity(getItemId());
-        }
     }
 
     /**
