@@ -52,7 +52,7 @@
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
 
-    <!-- left/right margin for posts reader detail -->
+    <!-- left/right margin for reader detail -->
     <dimen name="reader_detail_margin_normal">8dp</dimen>
     <dimen name="reader_detail_margin_normal_landscape">48dp</dimen>
     <dimen name="reader_detail_margin_tablet">48dp</dimen>

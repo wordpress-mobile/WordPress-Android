@@ -13,7 +13,6 @@ import org.wordpress.android.util.HtmlUtils;
  */
 class ReaderResourceVars {
     final int displayWidthPx;
-    final int actionBarHeightPx;
     final int likeAvatarSizePx;
     final int headerAvatarSizePx;
 
@@ -40,7 +39,6 @@ class ReaderResourceVars {
         Resources resources = context.getResources();
 
         displayWidthPx = DisplayUtils.getDisplayPixelWidth(context);
-        actionBarHeightPx = DisplayUtils.getActionBarHeight(context);
         likeAvatarSizePx = resources.getDimensionPixelSize(R.dimen.avatar_sz_small);
         headerAvatarSizePx = resources.getDimensionPixelSize(R.dimen.avatar_sz_medium);
         featuredImageHeightPx = resources.getDimensionPixelSize(R.dimen.reader_featured_image_height);

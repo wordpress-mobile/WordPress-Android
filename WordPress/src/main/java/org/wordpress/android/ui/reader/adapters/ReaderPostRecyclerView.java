@@ -36,8 +36,8 @@ public class ReaderPostRecyclerView extends RecyclerView {
             animator.setSupportsChangeAnimations(true);
             setItemAnimator(animator);
 
-            // use a standard list in portrait and a staggered grid in landscape
-            boolean isGridView = DisplayUtils.isLandscape(context);
+            // use a staggered grid rather than a list when in landscape or when using a large tablet
+            boolean isGridView = DisplayUtils.isLandscape(context) || DisplayUtils.isXLarge(context);
             if (isGridView) {
                 setLayoutManager(new StaggeredGridLayoutManager(GRID_SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL));
             } else {
