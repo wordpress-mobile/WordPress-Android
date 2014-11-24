@@ -27,9 +27,9 @@ import org.wordpress.android.util.AppLog;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Helper fragment for easy instantiation of common media sources. Will handle device sources
@@ -55,9 +55,6 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
     }
 
     public static final String FILTER_ARG = "KEY_FILTER";
-
-    private static final SimpleDateFormat DATE_DISPLAY_FORMAT_THIS_YEAR = new SimpleDateFormat("MMM dd");
-    private static final SimpleDateFormat DATE_DISPLAY_FORMAT_PREV_YEAR = new SimpleDateFormat("MMM dd, yyyy");
 
     // Bit flags for fragment filters
     public static final int NONE          = 0x00;
@@ -319,29 +316,49 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         }
     }
 
+    private Map<String, String> imageThumbnailMap() {
+        final Map<String, String> data = new HashMap<String, String>();
+        String[] thumbnailColumns = { MediaStore.Images.Thumbnails._ID,
+                                      MediaStore.Images.Thumbnails.DATA,
+                                      MediaStore.Images.Thumbnails.IMAGE_ID };
+        Cursor thumbnailCursor = MediaUtils.getDeviceMediaStoreImageThumbnails(getActivity().getContentResolver(), thumbnailColumns);
+
+        if (thumbnailCursor.moveToFirst()) {
+            do {
+                int thumbnailColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
+                int imageIdColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.IMAGE_ID);
+
+                if (thumbnailColumnIndex != -1 && imageIdColumnIndex != -1) {
+                    data.put(thumbnailCursor.getString(imageIdColumnIndex), thumbnailCursor.getString(thumbnailColumnIndex));
+                }
+            } while (thumbnailCursor.moveToNext());
+        }
+
+        thumbnailCursor.close();
+
+        return data;
+    }
+
     /** Helper method to load image and image thumbnail data to add device media content to the adapter. */
     private void addMediaStoreImages() {
         ContentResolver contentResolver = getActivity().getContentResolver();
         String[] imageColumns= { MediaStore.Images.Media._ID,
                                  MediaStore.Images.Media.DATA,
                                  MediaStore.Images.Media.DATE_TAKEN };
-        String[] thumbnailColumns = { MediaStore.Images.Thumbnails._ID,
-                                      MediaStore.Images.Thumbnails.DATA };
-        Cursor thumbCursor = MediaUtils.getDeviceMediaStoreImageThumbnails(contentResolver, thumbnailColumns);
         Cursor imageCursor = MediaUtils.getDeviceMediaStoreImages(contentResolver, imageColumns);
+        Map<String, String> thumbnailData = imageThumbnailMap();
 
-        if (imageCursor.moveToFirst() && thumbCursor.moveToFirst()) {
+        if (imageCursor.moveToFirst()) {
             do {
-                MediaContent newContent = imageContentFromQuery(imageCursor, thumbCursor);
+                MediaContent newContent = imageContentFromQuery(imageCursor, thumbnailData);
 
                 if (newContent != null && !mImageIds.contains(newContent.getContentId())) {
                     mAdapter.addContent(newContent);
                     mImageIds.add(newContent.getContentId());
                 }
-            } while(imageCursor.moveToNext() && thumbCursor.moveToNext());
+            } while(imageCursor.moveToNext());
         }
 
-        thumbCursor.close();
         imageCursor.close();
     }
 
@@ -390,7 +407,6 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
                 int attachmentIdColumnIndex = cursor.getColumnIndex("mediaId");
                 int fileUrlColumnIndex = cursor.getColumnIndex("fileURL");
                 int thumbnailColumnIndex = cursor.getColumnIndex("thumbnailURL");
-                int dateCreatedColumnIndex = cursor.getColumnIndex("date_created_gmt");
 
                 String id = "";
                 if (attachmentIdColumnIndex != -1) {
@@ -398,16 +414,13 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
                 }
                 MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.WEB_IMAGE);
                 newContent.setContentId(id);
+                newContent.setContentTitle("");
 
                 if (fileUrlColumnIndex != -1) {
                     String fileUrl = cursor.getString(fileUrlColumnIndex);
                     newContent.setContentUri(Uri.parse(fileUrl));
                 }
 
-                if (dateCreatedColumnIndex != -1) {
-                    String dateTaken = cursor.getString(dateCreatedColumnIndex);
-                    newContent.setContentTitle(formattedDateFromEpoch(Long.valueOf(dateTaken)));
-                }
                 if (thumbnailColumnIndex != -1) {
                     newContent.setContentPreviewUri(Uri.parse(cursor.getString(thumbnailColumnIndex)));
                 }
@@ -422,7 +435,6 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
                 int attachmentIdColumnIndex = cursor.getColumnIndex("mediaId");
                 int fileUrlColumnIndex = cursor.getColumnIndex("fileURL");
                 int thumbnailColumnIndex = cursor.getColumnIndex("thumbnailURL");
-                int dateCreatedColumnIndex = cursor.getColumnIndex("date_created_gmt");
 
                 String id = "";
                 if (attachmentIdColumnIndex != -1) {
@@ -430,16 +442,13 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
                 }
                 MediaContent newContent = new MediaContent(MediaContent.MEDIA_TYPE.WEB_VIDEO);
                 newContent.setContentId(id);
+                newContent.setContentTitle("");
 
                 if (fileUrlColumnIndex != -1) {
                     String fileUrl = cursor.getString(fileUrlColumnIndex);
                     newContent.setContentUri(Uri.parse(fileUrl));
                 }
 
-                if (dateCreatedColumnIndex != -1) {
-                    String dateTaken = cursor.getString(dateCreatedColumnIndex);
-                    newContent.setContentTitle(formattedDateFromEpoch(Long.valueOf(dateTaken)));
-                }
                 if (thumbnailColumnIndex != -1) {
                     newContent.setContentPreviewUri(Uri.parse(cursor.getString(thumbnailColumnIndex)));
                 }
@@ -450,78 +459,47 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         }
     }
 
-    private MediaContent imageContentFromQuery(Cursor imageCursor, Cursor thumbnailCursor) {
-        MediaContent content = null;
+    private MediaContent imageContentFromQuery(Cursor imageCursor, Map<String, String> thumbnailData) {
+        MediaContent newContent = null;
 
         int imageIdColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media._ID);
         int imageDataColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
-        int dateTakenColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN);
-        int thumbnailColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
 
         if (imageIdColumnIndex != -1) {
-            content = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_IMAGE);
-            content.setContentId(imageCursor.getString(imageIdColumnIndex));
+            newContent = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_IMAGE);
+            newContent.setContentId(imageCursor.getString(imageIdColumnIndex));
+            newContent.setContentTitle("");
 
             if (imageDataColumnIndex != -1) {
-                content.setContentUri(Uri.parse(imageCursor.getString(imageDataColumnIndex)));
+                newContent.setContentUri(Uri.parse(imageCursor.getString(imageDataColumnIndex)));
             }
-            if (dateTakenColumnIndex != -1) {
-                String dateTaken = imageCursor.getString(dateTakenColumnIndex);
-                content.setContentTitle(formattedDateFromEpoch(Long.valueOf(dateTaken)));
-            }
-            if (thumbnailColumnIndex != -1) {
-                content.setContentPreviewUri(Uri.parse(thumbnailCursor.getString(thumbnailColumnIndex)));
+            if (thumbnailData.containsKey(newContent.getContentId())) {
+                newContent.setContentPreviewUri(Uri.parse(thumbnailData.get(newContent.getContentId())));
+            } else {
+                return null;
             }
         }
 
-        return content;
+        return newContent;
     }
 
     private MediaContent videoContentFromQuery(Cursor videoCursor) {
-        MediaContent content = null;
+        MediaContent newContent = null;
 
         int videoIdColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media._ID);
         int videoDataColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATA);
-        int dateTakenColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATE_TAKEN);
 
         if (videoIdColumnIndex != -1) {
-            content = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_VIDEO);
-            content.setContentId(videoCursor.getString(videoIdColumnIndex));
+            newContent = new MediaContent(MediaContent.MEDIA_TYPE.DEVICE_VIDEO);
+            newContent.setContentId(videoCursor.getString(videoIdColumnIndex));
+            newContent.setContentTitle("");
 
             if (videoDataColumnIndex != -1) {
-                content.setContentUri(Uri.parse(videoCursor.getString(videoDataColumnIndex)));
-                content.setContentPreviewUri(content.getContentUri());
-            }
-            if (dateTakenColumnIndex != -1) {
-                String dateTaken = videoCursor.getString(dateTakenColumnIndex);
-                try {
-                    content.setContentTitle(formattedDateFromEpoch(Long.valueOf(dateTaken)));
-                } catch (NumberFormatException numberFormatException) {
-                    AppLog.d(AppLog.T.MEDIA, "Error formatting DATE_TAKEN(" + dateTaken + "): " + numberFormatException);
-                }
+                newContent.setContentUri(Uri.parse(videoCursor.getString(videoDataColumnIndex)));
+                newContent.setContentPreviewUri(newContent.getContentUri());
             }
         }
 
-        return content;
-    }
-
-    private String formattedDateFromEpoch(long timeSinceEpoch) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MONTH, 1);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-
-        long startOfThisYear = calendar.getTimeInMillis();
-
-        try {
-            if (timeSinceEpoch < startOfThisYear) {
-                return DATE_DISPLAY_FORMAT_PREV_YEAR.format(new Date(timeSinceEpoch));
-            } else {
-                return DATE_DISPLAY_FORMAT_THIS_YEAR.format(new Date(timeSinceEpoch));
-            }
-        } catch (NumberFormatException numberFormatException) {
-            AppLog.d(AppLog.T.MEDIA, "Error formatting DATE_TAKEN(" + timeSinceEpoch + "): " + numberFormatException);
-        }
-
-        return null;
+        return newContent;
     }
 }
