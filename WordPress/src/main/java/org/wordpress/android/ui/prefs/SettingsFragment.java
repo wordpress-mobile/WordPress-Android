@@ -39,6 +39,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPEditTextPreference;
 import org.wordpress.passcodelock.AppLockManager;
+import org.wordpress.passcodelock.PasscodePreferencesActivity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -79,6 +80,7 @@ public class SettingsFragment extends PreferenceFragment {
         findPreference("wp_pref_app_about").setOnPreferenceClickListener(launchActivitiyClickListener);
         findPreference("wp_pref_open_source_licenses").setOnPreferenceClickListener(launchActivitiyClickListener);
         findPreference("wp_pref_help_and_support").setOnPreferenceClickListener(launchActivitiyClickListener);
+        findPreference("wp_pref_passlock_enabled").setOnPreferenceChangeListener(passcodeCheckboxChangeListener);
         findPreference("wp_pref_sign_out").setOnPreferenceClickListener(signOutPreferenceClickListener);
         findPreference("wp_reset_share_pref").setOnPreferenceClickListener(resetAUtoSharePreferenceClickListener);
 
@@ -328,22 +330,22 @@ public class SettingsFragment extends PreferenceFragment {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
             dialogBuilder.setMessage(getString(R.string.sign_out_confirm));
             dialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // set the result code so caller knows the user signed out
-                            getActivity().setResult(SettingsActivity.RESULT_SIGNED_OUT);
-                            WordPress.signOutAsyncWithProgressBar(getActivity(), new SignOutCallback() {
-                                @Override
-                                public void onSignOut() {
-                                    getActivity().finish();
-                                }
-                            });
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // set the result code so caller knows the user signed out
+                    getActivity().setResult(SettingsActivity.RESULT_SIGNED_OUT);
+                    WordPress.signOutAsyncWithProgressBar(getActivity(), new SignOutCallback() {
+                        @Override
+                        public void onSignOut() {
+                            getActivity().finish();
                         }
                     });
+                }
+            });
             dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // Just close the window.
-                        }
-                    });
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Just close the window.
+                }
+            });
             dialogBuilder.setCancelable(true);
             dialogBuilder.create().show();
             return true;
@@ -354,9 +356,9 @@ public class SettingsFragment extends PreferenceFragment {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             getFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, new NotificationSettingsFragment())
-                                .addToBackStack(null)
-                                .commit();
+                    .replace(R.id.fragment_container, new NotificationSettingsFragment())
+                    .addToBackStack(null)
+                    .commit();
             return true;
         }
     };
@@ -373,6 +375,14 @@ public class SettingsFragment extends PreferenceFragment {
                 activityToStart = HelpActivity.class;
             }
             startActivity(new Intent(getActivity(), activityToStart));
+            return true;
+        }
+    };
+
+    private final OnPreferenceChangeListener passcodeCheckboxChangeListener = new OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            startActivity(new Intent(getActivity(), PasscodePreferencesActivity.class));
             return true;
         }
     };
