@@ -171,15 +171,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        if (mDrawerToggle != null) {
-            // Sync the toggle state after onRestoreInstanceState has occurred.
-            mDrawerToggle.syncState();
-        }
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver();
@@ -198,6 +189,10 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         super.onResume();
         registerReceiver();
         refreshMenuDrawer();
+        if (mDrawerToggle != null) {
+            // Sync the toggle state after onRestoreInstanceState has occurred.
+            mDrawerToggle.syncState();
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
