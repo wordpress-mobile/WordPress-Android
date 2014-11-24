@@ -285,7 +285,7 @@
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
     <string name="select_from_media_library">Select from media library</string>
-    <string name="edit_post_media_select_title">Add to Post</string>
+    <string name="edit_post_media_select_title">Add Media</string>
     <string name="default_content_selection_title">Select Content</string>
     <string name="media_selection_selected_text">" selected"</string>
 
