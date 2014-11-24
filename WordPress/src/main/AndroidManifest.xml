@@ -146,7 +146,8 @@
         <!-- Media Activities -->
         <activity
             android:name=".ui.media.MediaSelectActivity"
-            android:theme="@style/CalypsoTheme" >
+            android:theme="@style/CalypsoTheme"
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity android:name=".ui.media.MediaBrowserActivity"
                   android:theme="@style/CalypsoTheme" >
