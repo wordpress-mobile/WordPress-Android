@@ -402,31 +402,37 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             return;
         }
 
-        // set the ActionBar title to that of the incoming activity
-        if (getSupportActionBar() != null) {
-            int titleResId = item.getTitleResId();
-            if (titleResId != 0) {
-                getSupportActionBar().setTitle(getString(titleResId));
-            } else {
-                getSupportActionBar().setTitle(null);
+        if (mShouldFinish) {
+            // set the ActionBar title to that of the incoming activity
+            if (getSupportActionBar() != null) {
+                int titleResId = item.getTitleResId();
+                if (titleResId != 0) {
+                    getSupportActionBar().setTitle(getString(titleResId));
+                } else {
+                    getSupportActionBar().setTitle(null);
+                }
             }
+
+            // close the drawer and fade out the activity container so current activity appears to be going away
+            closeDrawer();
+            hideActivityContainer(true);
+
+            // start the new activity after a brief delay to give drawer time to close
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    intent.putExtra(OPENED_FROM_DRAWER, true);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.putExtra(OPENED_FROM_DRAWER, true);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
+                }
+            }, OPENED_FROM_DRAWER_DELAY);
+        } else {
+            // current activity isn't being finished, so just start the new activity
+            closeDrawer();
+            startActivity(intent);
         }
-
-        // close the drawer and fade out the activity container so current activity appears to be going away
-        closeDrawer();
-        hideActivityContainer(true);
-
-        // start the new activity after a brief delay to give drawer time to close
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                intent.putExtra(OPENED_FROM_DRAWER, true);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                intent.putExtra(OPENED_FROM_DRAWER, true);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
-            }
-        }, OPENED_FROM_DRAWER_DELAY);
     }
 
     protected ActionBarDrawerToggle getDrawerToggle() {
