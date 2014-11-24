@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -54,6 +55,7 @@ import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -350,7 +352,13 @@ public class ReaderPostListFragment extends Fragment {
 
         // assign the post list adapter
         boolean adapterAlreadyExists = hasPostRecycler();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // use a standard list in portrait and a staggered grid in landscape
+        if (DisplayUtils.isLandscape(getActivity())) {
+            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        } else {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        }
         mRecyclerView.setAdapter(getPostRecycler());
 
         // if adapter didn't already exist, populate it now then update the tag - this
