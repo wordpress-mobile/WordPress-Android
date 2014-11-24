@@ -20,8 +20,6 @@
 	<string name="preference_privacy">Integritet</string>
 	<string name="preference_send_usage_stats">Skicka statistik</string>
 	<string name="preference_send_usage_stats_summary">Skicka automatiskt användarstatistik för att hjälpa oss förbättra WordPress för Android</string>
-	<string name="reader_label_reached_last_post">Du har kommit till slutet</string>
-	<string name="reader_label_tap_to_dismiss">Knacka för att avfärda</string>
 	<string name="reader_hint_reblog_comment">Lägg till dina tankar (valfritt)</string>
 	<string name="reader_title_reblog">Blogga om detta inlägg</string>
 	<string name="reader_label_reblog_to">Blogga till</string>
@@ -66,8 +64,6 @@
 	<string name="ssl_certificate_do_not_trust">Tillåt inte</string>
 	<string name="load_settings">Du kan gå till inställningarna och ändra ditt användarnamn och lösenord.</string>
 	<string name="jetpack_stats_switch_user">Aktuellt WordPress.com konto (%s) har inte tillgång till statistiken för denna blogg. Vill du logga in med ett annat konto?</string>
-	<string name="username_or_password_incorrect_selfhosted_hint">Användarnamnet eller lösenordet du angav är inkorrekt. Har du en egen installation? Knacka på "%s" och lägg till adressen.</string>
-	<string name="nux_help_description">Besök supportavdelningen för att få svar på vanliga frågor, eller så kan du besöka forumet och ställa din specifika fråga</string>
 	<string name="ssl_certificate_details">Detaljer för certifikat</string>
 	<string name="ptr_tip_message">Tips: Dra ned för att uppdatera</string>
 	<string name="forums">Forum</string>
@@ -81,7 +77,6 @@
 	<string name="ssl_certificate_ask_trust">Om du vanligtvis kan nå denna webbplats utan problem kan felet betyda att någon försöker efterlikna webbplatsen och du borde inte fortsätta. Vill du lita på certifikatet ändå?</string>
 	<string name="reader_label_reblog_empty">Du har inga synliga WordPress.com-bloggar att reblogga detta inlägg till</string>
 	<string name="no_network_message">Inget nätverk tillgängligt</string>
-	<string name="reader_empty_followed_blogs_title">Du följer inga bloggar ännu</string>
 	<string name="mnu_comment_unspam">Inte skräppost</string>
 	<string name="comments_empty_list">Inga kommentarer</string>
 	<string name="mnu_comment_edit">Ändra</string>
@@ -99,9 +94,6 @@
 	<string name="error_upload">Ett fel uppstod vid uppladdning av %s</string>
 	<string name="invalid_email_message">Din epostadress är ogilltig</string>
 	<string name="invalid_password_message">Lösenord måste innehålla minst 4 tecken</string>
-	<string name="reader_empty_posts_liked">Du har inte gillat några inlägg</string>
-	<string name="reader_empty_posts_in_tag">Inga inlägg med denna etikett</string>
-	<string name="reader_empty_followed_tags">Du följer inga etiketter</string>
 	<string name="username_required">Ange ett användarnamn</string>
 	<string name="username_not_allowed">Användarnamnet är inte tillåtet</string>
 	<string name="username_must_be_at_least_four_characters">Användarnamnet måste vara minst 4 tecken</string>
@@ -117,7 +109,6 @@
 	<string name="cat_name_required">Kategorinamn måste anges</string>
 	<string name="category_automatically_renamed">Kategorinamn %1$s är ogiltigt. Har ändrats till %2$s.</string>
 	<string name="error_delete_post">Ett fel uppstod vid raderande av %s</string>
-	<string name="media_empty_list_custom_date">Ingen media för detta tidsintervall</string>
 	<string name="theme_fetch_failed">Misslyckades hämta teman</string>
 	<string name="wait_until_upload_completes">Vänta tills uppladdningen är klar</string>
 	<string name="stats_empty_geoviews">Inga inlägg visade</string>
@@ -154,7 +145,6 @@
 	<string name="auto_sharing_preference_reset">Inställningar för automatisk delning återställda</string>
 	<string name="sdcard_message">Ett SD-kort är nödvändigt för att ladda upp media</string>
 	<string name="stats_empty_tags_and_categories">Inga inlägg eller sidor med etiketter har visats än</string>
-	<string name="agree_terms_of_service">Genom att skapa ett konta godkänner du det fascinerande %1$sAnvändaravtalet%2$s</string>
 	<string name="username_only_lowercase_letters_and_numbers">Användarnamn får bara innehålla små bokstäver (a-z) och siffror</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Webbplatsadressen kan bara innehålla små bokstäver (a-z) och siffror</string>
 	<string name="notifications_empty_list">Inga notifieringar</string>
@@ -185,9 +175,7 @@
 	<string name="dlg_trashing_comments">Skicka till papperskorg</string>
 	<string name="comment_status_spam">Skräppost</string>
 	<string name="create_a_link">Skapa länk</string>
-	<string name="pages_empty_list">Inga sidor. Varför inte skapa en?</string>
 	<string name="upload_failed">Uppladdning misslyckades</string>
-	<string name="posts_empty_list">Inga inlägg ännu. Varför inte skapa ett?</string>
 	<string name="theme_current_theme">Nuvarande tema</string>
 	<string name="author_name">Författarnamn</string>
 	<string name="author_email">Författarepostadress</string>
@@ -199,7 +187,6 @@
 	<string name="remove_account">Radera blogg</string>
 	<string name="add_new_category">Lägg till ny kategori</string>
 	<string name="category_name">Kategorinamn</string>
-	<string name="select_a_blog">Välj blogg</string>
 	<string name="share_action_post">Nytt inlägg</string>
 	<string name="wpcom_blogs">WordPress.com bloggar</string>
 	<string name="stats_view_views_by_country">Visningar per land</string>
@@ -215,7 +202,6 @@
 	<string name="wordpress_blog">WordPress-blogg</string>
 	<string name="email_hint">Epostadress</string>
 	<string name="username_email">Användarnamn eller epost</string>
-	<string name="create_new_blog_wpcom">Skapa WordPress.com-blogg</string>
 	<string name="show_and_hide_blogs">Visa/dölj WordPress.com-bloggar</string>
 	<string name="link_enter_url_text">Länktext (valfritt)</string>
 	<string name="local_draft">Lokalt utkast</string>
@@ -297,12 +283,12 @@
 	<string name="creating_your_account">Skapar ditt konto</string>
 	<string name="creating_your_site">Skapar din webbplats</string>
 	<string name="reader_empty_posts_in_tag_updating">Hämtar inlägg...</string>
-	<string name="create_account_wpcom">Skapa ett konto på WordPress.com</string>
 	<string name="error_refresh_media">Ett fel uppstod när mediabiblioteket skulle uppdateras. Försök igen senare.</string>
 	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="reader_label_reply">Svara</string>
 	<string name="video">Video</string>
 	<string name="download">Laddar ner media</string>
+	<string name="comment_spammed">Kommentar markerad som skräppost</string>
 	<string name="share_preference_title">Dela till WordPress</string>
 	<string name="always_use_these_settings_to_share">Använd alltid dessa inställningar</string>
 	<string name="reader_likes_you_and_multi">Du och %,d andra gillar detta</string>
@@ -311,7 +297,6 @@
 	<string name="cant_share_no_visible_blog">Du kan inte dela på WordPress utan att ha en synlig blogg</string>
 	<string name="reset_auto_share_preference">Återställ inställningar för automatisk delning</string>
 	<string name="view_stats_activity">Visa statistik</string>
-	<string name="reader_empty_followed_blogs_description">Men oroa dig inte, tryck på etiketten och börja utforska!</string>
 	<string name="select_time">Välj tid</string>
 	<string name="add_self_hosted_blog">Lägg till egen installation</string>
 	<string name="pick_photo">Välj bild</string>
@@ -355,7 +340,9 @@
 	<string name="reader_toast_err_share_intent">Kunde inte dela</string>
 	<string name="reader_toast_err_view_image">Kunde inte visa bild</string>
 	<string name="reader_toast_err_url_intent">Kunde inte öppna %s</string>
+	<string name="reader_empty_followed_tags">Du följer inga ämnen</string>
 	<string name="reader_empty_popular_tags">Inga populära ämnen</string>
+	<string name="create_account_wpcom">Skapa ett konto på WordPress.com</string>
 	<string name="connecting_wpcom">Ansluter till WordPress.com</string>
 	<string name="username_invalid">Ogiltigt användarnamn</string>
 	<string name="limit_reached">Gräns nådd. Du kan försöka igen om 1 minut. Att försöka igen innan kommer bara öka tiden du måste vänta innan förbudet är upphävt. Vänligen kontakta support om du tror detta är ett fel.</string>
@@ -386,8 +373,6 @@
 	<string name="media_edit_description_hint">Skriv en beskrivning här</string>
 	<string name="media_edit_success">Uppdaterad</string>
 	<string name="media_edit_failure">Kunde inte uppdatera</string>
-	<string name="confirm_delete_media">Är du säker på att du vill ta bort detta medieobjekt?</string>
-	<string name="confirm_delete_multi_media">Är du säker på att du vill ta bort dessa medieobjekt?</string>
 	<string name="themes_details_label">Detaljer</string>
 	<string name="themes_features_label">Funktioner</string>
 	<string name="theme_activate_button">Aktivera</string>
@@ -455,16 +440,13 @@
 	<string name="passcode_preference_title">PIN-kodlås</string>
 	<string name="passcode_turn_off">Stäng av PIN-kodlås</string>
 	<string name="passcode_turn_on">Slå på PIN-kodlås</string>
-	<string name="remote_changes">Du har gjort ändringar i ett inlägg som inte har laddats upp än. Vill du fortsätta att uppdatera och skriva över dina ändringar?</string>
 	<string name="upload">Ladda upp</string>
 	<string name="manage">Hantera</string>
 	<string name="sign_in">Logga in</string>
 	<string name="sign_out">Logga ut</string>
-	<string name="attempting_configure">Loggar in...</string>
 	<string name="manage_notifications">Hantera notifikationer</string>
 	<string name="types">Typer</string>
 	<string name="options">Inställningar</string>
-	<string name="sign_out_confirm">Är du säker på att du vill logga ut?</string>
 	<string name="notifications_turn_off">Stäng av</string>
 	<string name="notifications_turn_off_1hr">Stäng av i 1 timma</string>
 	<string name="notifications_turn_off_8hr">Stäng av i 8 timmar</string>
@@ -533,8 +515,6 @@
 	<string name="tags_separate_with_commas">Etiketter (separera etiketter med kommatecken)</string>
 	<string name="categories">Kategorier</string>
 	<string name="tab_stats">Statistik</string>
-	<string name="delete_sure_post">Är du säker på att du vill ta bort inlägget</string>
-	<string name="delete_sure_page">Är du säker på att du vill radera sidan</string>
 	<string name="notification_vibrate">Vibrera</string>
 	<string name="notification_blink">Blinka notifieringslampa</string>
 	<string name="notification_sound">Spela notifieringsljud</string>
@@ -546,7 +526,6 @@
 	<string name="delete">Radera</string>
 	<string name="none">Ingen</string>
 	<string name="blogs">Bloggar</string>
-	<string name="sure_to_remove_account">Är du säker på att du vill ta bort den här bloggen?</string>
 	<string name="select_photo">Välj en bild från galleri</string>
 	<string name="tab_comments">Kommentarer</string>
 	<string name="reply">Svara</string>
@@ -554,7 +533,6 @@
 	<string name="save">Spara</string>
 	<string name="add">Lägg till</string>
 	<string name="category_refresh_error">Fel vid uppdatering av kategorier</string>
-	<string name="delete_sure">Är du säker på att du vill radera utkastet</string>
 	<string name="yes">Ja</string>
 	<string name="no">Nej</string>
 	<string name="error">Fel</string>
