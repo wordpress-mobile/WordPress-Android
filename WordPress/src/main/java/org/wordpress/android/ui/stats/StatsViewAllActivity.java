@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -10,9 +9,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,7 +24,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.stats.model.AuthorsModel;
 import org.wordpress.android.ui.stats.model.ClicksModel;
 import org.wordpress.android.ui.stats.model.CommentFollowersModel;
@@ -40,7 +39,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -51,17 +50,16 @@ import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  *  Single item details activity.
  */
-public class StatsViewAllActivity extends WPActionBarActivity
+public class StatsViewAllActivity extends ActionBarActivity
         implements StatsAuthorsFragment.OnAuthorsSectionChangeListener {
 
     private boolean mIsInFront;
     private boolean mIsUpdatingStats;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     private final Handler mHandler = new Handler();
 
@@ -86,7 +84,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
             // TODO: add analytics here
         }
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -94,12 +92,12 @@ public class StatsViewAllActivity extends WPActionBarActivity
         outerContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
 
         // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
-                new PullToRefreshHelper.RefreshListener() {
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
-                            mPullToRefreshHelper.setRefreshing(false);
+                            mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
                         refreshStats();
@@ -257,7 +255,6 @@ public class StatsViewAllActivity extends WPActionBarActivity
     @Override
     protected void onResume() {
         super.onResume();
-        mPullToRefreshHelper.registerReceiver(this);
         mIsInFront = true;
 
         if (mRestResponse == null) {
@@ -281,15 +278,17 @@ public class StatsViewAllActivity extends WPActionBarActivity
     protected void onPause() {
         super.onPause();
         mIsInFront = false;
-        mPullToRefreshHelper.unregisterReceiver(this);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.stats_details, menu);
-        return true;
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private String getRestPath(StatsService.StatsEndpointsEnum restEndpoint) {
@@ -379,7 +378,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
         }
 
         if (!NetworkUtils.isNetworkAvailable(this)) {
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(AppLog.T.STATS, getInnerFragmentTAG() + " > no connection, update canceled");
             return;
         }
@@ -396,7 +395,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
             AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + singlePostRestPath);
         }
 
-        mPullToRefreshHelper.setRefreshing(true);
+        mSwipeToRefreshHelper.setRefreshing(true);
         return;
     }
 
@@ -424,7 +423,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
                 return;
             }
             mIsUpdatingStats = false;
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             // single background thread used to parse the response in BG.
             ThreadPoolExecutor parseResponseExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
             parseResponseExecutor.submit(new Thread() {
@@ -461,7 +460,7 @@ public class StatsViewAllActivity extends WPActionBarActivity
                     mActivityRef.get().getString(R.string.error_refresh_stats),
                     ToastUtils.Duration.LONG);
             mIsUpdatingStats = false;
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             fragment.showEmptyUI(true); //FixME this could throws NPE
         }
 

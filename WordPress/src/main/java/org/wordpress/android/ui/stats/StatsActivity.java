@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -35,7 +35,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.WPActionBarActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -47,8 +48,8 @@ import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
-import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -59,15 +60,13 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-
 /**
  * The native stats activity, accessible via the menu drawer.
  * <p>
  * By pressing a spinner on the action bar, the user can select which timeframe they wish to see.
  * </p>
  */
-public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.ScrollViewListener,
+public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.ScrollViewListener,
         ActionBar.OnNavigationListener, StatsAuthorsFragment.OnAuthorsSectionChangeListener,
         StatsVisitorsAndViewsFragment.OnDateChangeListener{
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
@@ -90,7 +89,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     private StatsTimeframe mCurrentTimeframe = StatsTimeframe.DAY;
     private String mRequestedDate;
     private boolean mIsUpdatingStats;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
 
     private LinearLayout mFragmentContainer;
@@ -110,7 +109,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         }
 
         mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (mNoMenuDrawer) {
             setContentView(R.layout.stats_activity);
             if (actionBar != null) {
@@ -122,13 +121,12 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
-                            mPullToRefreshHelper.setRefreshing(false);
+                            mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
 
@@ -194,7 +192,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         if (needToRefreshStats) {
             refreshStats(mCurrentTimeframe, mRequestedDate, true);
-            mPullToRefreshHelper.setRefreshing(true);
+            mSwipeToRefreshHelper.setRefreshing(true);
         }
     }
 
@@ -207,7 +205,6 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     @Override
     protected void onResume() {
         super.onResume();
-        mPullToRefreshHelper.registerReceiver(this);
         mIsInFront = true;
         // register to receive broadcasts when StatsService starts/stops updating
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
@@ -221,8 +218,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         mIsUpdatingStats = false;
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
-        mPullToRefreshHelper.setRefreshing(false);
-        mPullToRefreshHelper.unregisterReceiver(this);
+        mSwipeToRefreshHelper.setRefreshing(false);
     }
 
     @Override
@@ -347,7 +343,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                                 AnalyticsTracker.track(
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
-                                    mPullToRefreshHelper.setRefreshing(true);
+                                    mSwipeToRefreshHelper.setRefreshing(true);
                                     refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDateTZ(mLocalBlogID), true);
                                 }
                             }
@@ -361,7 +357,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mPullToRefreshHelper.setRefreshing(false);
+                                    mSwipeToRefreshHelper.setRefreshing(false);
                                     ToastUtils.showToast(StatsActivity.this,
                                             StatsActivity.this.getString(R.string.error_refresh_stats),
                                             Duration.LONG);
@@ -372,7 +368,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                 } else {
                     refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID), true);
                 }
-                mPullToRefreshHelper.setRefreshing(true);
+                mSwipeToRefreshHelper.setRefreshing(true);
             }
         }
     }
@@ -394,14 +390,14 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             if (StatsUtils.getBlogId(mLocalBlogID) == null) {
                 // Blog has not returned a jetpack_client_id
                 stopStatsService();
-                mPullToRefreshHelper.setRefreshing(false);
+                mSwipeToRefreshHelper.setRefreshing(false);
                 showJetpackMissingAlert(this.mStatsActivityWeakRef.get());
             }
         }
 
         @Override
         public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             if (mStatsActivityWeakRef.get() == null || mStatsActivityWeakRef.get().isFinishing()
                     || !mStatsActivityWeakRef.get().mIsInFront) {
                 return;
@@ -507,7 +503,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         selectTimeframeInActionBar(mCurrentTimeframe);
         scrollToTop();
         loadStatsFragments(true, true);
-        mPullToRefreshHelper.setRefreshing(true);
+        mSwipeToRefreshHelper.setRefreshing(true);
         refreshStats(mCurrentTimeframe, mRequestedDate, true);
     }
 
@@ -534,12 +530,12 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         if (currentBlog == null) {
             AppLog.w(T.STATS, "Current blog is null. This should never happen here.");
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             return;
         }
 
         if (!NetworkUtils.isNetworkAvailable(this)) {
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(AppLog.T.STATS, "StatsActivity > no connection, update canceled");
             return;
         }
@@ -561,7 +557,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                     currentBlog.setDotcom_username(username);
                     currentBlog.setDotcom_password(password);
                     WordPress.wpDB.saveBlog(currentBlog);
-                    mPullToRefreshHelper.setRefreshing(true);
+                    mSwipeToRefreshHelper.setRefreshing(true);
                 } else {
                     startWPComLoginActivity();
                     return;
@@ -585,7 +581,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         if (!currentBlog.isDotcomFlag()
                 && !currentBlog.hasValidJetpackCredentials()
                 && !WordPress.hasValidWPComCredentials(this)) {
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
             return;
         }
@@ -603,7 +599,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         stopService(new Intent(this, StatsService.class));
         if (mIsUpdatingStats) {
             mIsUpdatingStats = false;
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
         }
     }
 
@@ -617,7 +613,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
             if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
                 mIsUpdatingStats = intent.getBooleanExtra(StatsService.EXTRA_IS_UPDATING, false);
-                mPullToRefreshHelper.setRefreshing(mIsUpdatingStats);
+                mSwipeToRefreshHelper.setRefreshing(mIsUpdatingStats);
 
                 // Check if there were errors
                 if (intent.getBooleanExtra(StatsService.EXTRA_IS_ERROR, false) && !isFinishing()
@@ -672,7 +668,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     * make sure the passed timeframe is the one selected in the actionbar
     */
     private void selectTimeframeInActionBar(final StatsTimeframe timeframe) {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) {
             return;
         }
@@ -769,7 +765,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
             loadStatsFragments(true, true);
             refreshStats(selectedTimeframe, date, true);
-            mPullToRefreshHelper.setRefreshing(true);
+            mSwipeToRefreshHelper.setRefreshing(true);
         }
 
         return true;
