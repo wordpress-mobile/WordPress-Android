@@ -403,10 +403,11 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         if (mShouldFinish) {
-            // set the ActionBar title to that of the incoming activity
+            // set the ActionBar title to that of the incoming activity - left blank for the
+            // reader since it shows a spinner in the toolbar
             if (getSupportActionBar() != null) {
                 int titleResId = item.getTitleResId();
-                if (titleResId != 0) {
+                if (titleResId != 0 && activityId != ActivityId.READER) {
                     getSupportActionBar().setTitle(getString(titleResId));
                 } else {
                     getSupportActionBar().setTitle(null);
