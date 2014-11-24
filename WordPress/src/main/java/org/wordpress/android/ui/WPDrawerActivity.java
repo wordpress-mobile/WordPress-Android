@@ -34,7 +34,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.MenuDrawerItems.DrawerItem;
-import org.wordpress.android.ui.MenuDrawerItems.DrawerItemId;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -86,7 +85,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private MenuDrawerAdapter mDrawerAdapter;
-    private final MenuDrawerItems mDrawerItems = new MenuDrawerItems();
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
 
@@ -104,19 +102,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         setSupportActionBar(getToolbar());
-
-        // configure all the available menu items
-        mDrawerItems.addItem(DrawerItemId.READER);
-        mDrawerItems.addItem(DrawerItemId.NOTIFICATIONS);
-        mDrawerItems.addItem(DrawerItemId.POSTS);
-        mDrawerItems.addItem(DrawerItemId.MEDIA);
-        mDrawerItems.addItem(DrawerItemId.PAGES);
-        mDrawerItems.addItem(DrawerItemId.COMMENTS);
-        mDrawerItems.addItem(DrawerItemId.THEMES);
-        mDrawerItems.addItem(DrawerItemId.STATS);
-        mDrawerItems.addItem(DrawerItemId.QUICK_PHOTO);
-        mDrawerItems.addItem(DrawerItemId.QUICK_VIDEO);
-        mDrawerItems.addItem(DrawerItemId.VIEW_SITE);
 
         // if this activity was opened from the drawer (ie: via startDrawerIntent() from another
         // drawer activity), hide the activity view then fade it in after a short delay
@@ -527,7 +512,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * Update all of the items in the menu drawer based on the current active blog.
      */
     public void updateMenuDrawer() {
-        mDrawerAdapter.setItems(mDrawerItems.getVisibleItems());
+        mDrawerAdapter.refresh();
     }
 
     /**
@@ -710,19 +695,12 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      */
     private void blogChanged() {
         WordPress.wpDB.updateLastBlogId(WordPress.getCurrentLocalTableBlogId());
-        // the menu may have changed, we need to change the selection if the selected item
-        // is not available in the menu anymore
-        for (DrawerItem item : mDrawerItems.getItems()) {
-            // if the item is selected, but it's no longer visible we need to
-            // select the first available item from the adapter
-            if (item.isSelected(this) && !item.isVisible()) {
-                // then select the first item and activate it
-                if (mDrawerAdapter.getCount() > 0) {
-                    DrawerItem drawerItem = (DrawerItem) mDrawerAdapter.getItem(0);
-                    drawerItemSelected(drawerItem);
-                }
-                break;
-            }
+
+        // the list of items in the drawer may have changed, so check if there's no longer any
+        // selected item and if so select the first one
+        if (mDrawerAdapter != null && !mDrawerAdapter.hasSelectedItem(this) && mDrawerAdapter.getCount() > 0) {
+            DrawerItem drawerItem = (DrawerItem) mDrawerAdapter.getItem(0);
+            drawerItemSelected(drawerItem);
         }
 
         refreshCurrentBlogContent();

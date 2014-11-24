@@ -17,9 +17,69 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 
 import java.util.ArrayList;
 
+/*
+ * used by MenuDrawerAdapter to maintain a list of items in the menu drawer
+ */
+
 public class MenuDrawerItems {
 
-    public enum DrawerItemId {
+    private final ArrayList<DrawerItem> mItems = new ArrayList<DrawerItem>();
+
+    public MenuDrawerItems() {
+        super();
+        refresh();
+    }
+
+    private void addIfVisible(DrawerItemId itemId) {
+        DrawerItem item = new DrawerItem(itemId);
+        if (item.isVisible()) {
+            mItems.add(item);
+        }
+    }
+
+    /*
+     * reset the item list and add all items that should be visible
+     */
+    void refresh() {
+        mItems.clear();
+
+        addIfVisible(DrawerItemId.READER);
+        addIfVisible(DrawerItemId.NOTIFICATIONS);
+        addIfVisible(DrawerItemId.POSTS);
+        addIfVisible(DrawerItemId.MEDIA);
+        addIfVisible(DrawerItemId.PAGES);
+        addIfVisible(DrawerItemId.COMMENTS);
+        addIfVisible(DrawerItemId.THEMES);
+        addIfVisible(DrawerItemId.STATS);
+        addIfVisible(DrawerItemId.QUICK_PHOTO);
+        addIfVisible(DrawerItemId.QUICK_VIDEO);
+        addIfVisible(DrawerItemId.VIEW_SITE);
+    }
+
+    int size() {
+        return mItems.size();
+    }
+
+    DrawerItem get(int position) {
+        if (position < 0 || position >= mItems.size()) {
+            return null;
+        }
+        return mItems.get(position);
+    }
+
+    boolean hasSelectedItem(Context context) {
+        for (DrawerItem item: mItems) {
+            if (item.isSelected(context)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*
+     *
+     */
+    enum DrawerItemId {
         READER,
         NOTIFICATIONS,
         POSTS,
@@ -32,7 +92,7 @@ public class MenuDrawerItems {
         QUICK_PHOTO,
         QUICK_VIDEO;
 
-        public ActivityId toActivityId() {
+        ActivityId toActivityId() {
             switch (this) {
                 case READER:
                     return ActivityId.READER;
@@ -65,18 +125,18 @@ public class MenuDrawerItems {
     /*
      *
      */
-    public static class DrawerItem {
+    static class DrawerItem {
         private final DrawerItemId mItemId;
 
-        public DrawerItem(DrawerItemId itemId) {
+        DrawerItem(DrawerItemId itemId) {
             mItemId = itemId;
         }
 
-        public DrawerItemId getDrawerItemId() {
+        DrawerItemId getDrawerItemId() {
             return mItemId;
         }
 
-        public int getTitleResId() {
+        int getTitleResId() {
             switch (mItemId) {
                 case READER:
                     return R.string.reader;
@@ -105,7 +165,7 @@ public class MenuDrawerItems {
             }
         }
 
-        public int getIconResId() {
+        int getIconResId() {
             switch (mItemId) {
                 case READER:
                     return R.drawable.noticon_reader_alt_black;
@@ -134,7 +194,7 @@ public class MenuDrawerItems {
             }
         }
 
-        public int getBadgeCount() {
+        int getBadgeCount() {
             if (mItemId == DrawerItemId.COMMENTS) {
                 return CommentTable.getUnmoderatedCommentCount(WordPress.getCurrentLocalTableBlogId());
             } else {
@@ -142,7 +202,7 @@ public class MenuDrawerItems {
             }
         }
 
-        public boolean isSelected(Context context) {
+        boolean isSelected(Context context) {
             switch (mItemId) {
                 case READER:
                     return context instanceof ReaderPostListActivity;
@@ -171,7 +231,7 @@ public class MenuDrawerItems {
             }
         }
 
-        public boolean isVisible() {
+        boolean isVisible() {
             switch (mItemId) {
                 case READER:
                     return WordPress.hasValidWPComCredentials(WordPress.getContext());
@@ -201,37 +261,4 @@ public class MenuDrawerItems {
             }
         }
     }
-
-    /*
-     *
-     */
-
-    private final ArrayList<DrawerItem> mItems = new ArrayList<DrawerItem>();
-
-    public void addItem(DrawerItemId itemId) {
-        mItems.add(new DrawerItem(itemId));
-    }
-
-    public int size() {
-        return mItems.size();
-    }
-
-    public DrawerItem get(int position) {
-        return mItems.get(position);
-    }
-
-    public ArrayList<DrawerItem> getItems() {
-        return mItems;
-    }
-
-    public MenuDrawerItems getVisibleItems() {
-        MenuDrawerItems visibleItems = new MenuDrawerItems();
-        for (MenuDrawerItems.DrawerItem item : mItems) {
-            if (item.isVisible()) {
-                visibleItems.addItem(item.getDrawerItemId());
-            }
-        }
-        return visibleItems;
-    }
-
 }

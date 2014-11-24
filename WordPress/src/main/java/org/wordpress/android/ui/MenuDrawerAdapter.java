@@ -9,11 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.MenuDrawerItems.DrawerItem;
 
 public class MenuDrawerAdapter extends BaseAdapter {
 
     private final LayoutInflater mInflater;
-    private MenuDrawerItems mItems = new MenuDrawerItems();
+    private final MenuDrawerItems mItems = new MenuDrawerItems();
 
     public MenuDrawerAdapter(Context context) {
         super();
@@ -27,9 +28,6 @@ public class MenuDrawerAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        if (position < 0 || position >= mItems.size()) {
-            return null;
-        }
         return mItems.get(position);
     }
 
@@ -38,9 +36,13 @@ public class MenuDrawerAdapter extends BaseAdapter {
         return position;
     }
 
-    void setItems(MenuDrawerItems items) {
-        mItems = items;
+    public void refresh() {
+        mItems.refresh();
         notifyDataSetChanged();
+    }
+
+    public boolean hasSelectedItem(Context context) {
+        return mItems.hasSelectedItem(context);
     }
 
     @Override
@@ -53,7 +55,7 @@ public class MenuDrawerAdapter extends BaseAdapter {
             holder = (DrawerViewHolder) convertView.getTag();
         }
 
-        MenuDrawerItems.DrawerItem item = mItems.get(position);
+        DrawerItem item = mItems.get(position);
         int badgeCount = item.getBadgeCount();
 
         holder.txtTitle.setText(item.getTitleResId());
