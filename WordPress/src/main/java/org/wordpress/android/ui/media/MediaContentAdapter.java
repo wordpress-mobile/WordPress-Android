@@ -2,6 +2,7 @@ package org.wordpress.android.ui.media;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.media.MediaUtils.BackgroundFetchThumbnail.THUMB_TYPE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -145,14 +148,21 @@ public class MediaContentAdapter extends BaseAdapter {
             if (contentImageView != null) {
                 contentImageView.setBackgroundColor(mResources.getColor(R.color.transparent));
 
-                if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
+                if (content.getContentUri() == null || content.getContentUri().toString().equals("")) {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
                 } else {
-                    contentImageView.setImageResource(R.drawable.media_image_placeholder);
-                    MediaUtils.BackgroundFetchThumbnail bgDownload =
-                            new MediaUtils.BackgroundFetchThumbnail(contentImageView, MediaUtils.BackgroundFetchThumbnail.THUMB_TYPE.IMAGE);
-                    contentImageView.setTag(bgDownload);
-                    bgDownload.execute(content.getContentUri());
+                    Bitmap bitmap = WordPress.getBitmapCache().getBitmap(content.getContentUri().toString());
+                    if (bitmap == null) {
+                        contentImageView.setImageResource(R.drawable.media_image_placeholder);
+                        MediaUtils.BackgroundFetchThumbnail bgDownload =
+                                new MediaUtils.BackgroundFetchThumbnail(contentImageView, THUMB_TYPE.IMAGE);
+                        contentImageView.setTag(bgDownload);
+                        bgDownload.execute(content.getContentUri());
+                    } else {
+                        MediaUtils.fadeInImage(contentImageView, bitmap);
+                        contentImageView.setTag(null);
+                        contentImageView.setImageBitmap(bitmap);
+                    }
                 }
             }
 
@@ -174,11 +184,18 @@ public class MediaContentAdapter extends BaseAdapter {
                 if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
                 } else {
-                    contentImageView.setImageResource(R.drawable.media_image_placeholder);
-                    MediaUtils.BackgroundFetchThumbnail bgDownload =
-                            new MediaUtils.BackgroundFetchThumbnail(contentImageView, MediaUtils.BackgroundFetchThumbnail.THUMB_TYPE.VIDEO);
-                    contentImageView.setTag(bgDownload);
-                    bgDownload.execute(content.getContentPreviewUri());
+                    Bitmap bitmap = WordPress.getBitmapCache().getBitmap(content.getContentPreviewUri().toString());
+                    if (bitmap == null) {
+                        contentImageView.setImageResource(R.drawable.media_image_placeholder);
+                        MediaUtils.BackgroundFetchThumbnail bgDownload =
+                                new MediaUtils.BackgroundFetchThumbnail(contentImageView, THUMB_TYPE.VIDEO);
+                        contentImageView.setTag(bgDownload);
+                        bgDownload.execute(content.getContentPreviewUri());
+                    } else {
+                        MediaUtils.fadeInImage(contentImageView, bitmap);
+                        contentImageView.setTag(null);
+                        contentImageView.setImageBitmap(bitmap);
+                    }
                 }
             }
 
@@ -199,10 +216,17 @@ public class MediaContentAdapter extends BaseAdapter {
                 if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
                 } else {
-                    contentImageView.setImageResource(R.drawable.media_image_placeholder);
-                    MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(contentImageView);
-                    contentImageView.setTag(bgDownload);
-                    bgDownload.execute(content.getContentPreviewUri());
+                    Bitmap bitmap = WordPress.getBitmapCache().getBitmap(content.getContentPreviewUri().toString());
+                    if (bitmap == null) {
+                        contentImageView.setImageResource(R.drawable.media_image_placeholder);
+                        MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(contentImageView);
+                        contentImageView.setTag(bgDownload);
+                        bgDownload.execute(content.getContentPreviewUri());
+                    } else {
+                        MediaUtils.fadeInImage(contentImageView, bitmap);
+                        contentImageView.setTag(null);
+                        contentImageView.setImageBitmap(bitmap);
+                    }
                 }
             }
 

@@ -549,6 +549,10 @@ public class MediaUtils {
         return MediaStore.Video.query(contentResolver, videoUri, columns);
     }
 
+    public static void fadeInImage(ImageView imageView, Bitmap image) {
+        fadeInImage(imageView, image, THUMBNAIL_FADEIN_DURATION_MS);
+    }
+
     public static void fadeInImage(ImageView imageView, Bitmap image, long duration) {
         if (imageView != null) {
             imageView.setImageBitmap(image);
@@ -573,14 +577,21 @@ public class MediaUtils {
 
         @Override
         protected Bitmap doInBackground(Uri... params) {
-            if (mType == THUMB_TYPE.IMAGE) {
-                Bitmap imageBitmap = BitmapFactory.decodeFile(params[0].toString());
-                return ThumbnailUtils.extractThumbnail(imageBitmap, 512, 384);
-            } else if (mType == THUMB_TYPE.VIDEO) {
-                return ThumbnailUtils.createVideoThumbnail(params[0].toString(), MediaStore.Video.Thumbnails.MINI_KIND);
-            } else {
-                return null;
+            String uri = params[0].toString();
+            Bitmap bitmap = WordPress.getBitmapCache().getBitmap(uri);
+
+            if (bitmap == null) {
+                if (mType == THUMB_TYPE.IMAGE) {
+                    Bitmap imageBitmap = BitmapFactory.decodeFile(uri);
+                    bitmap = ThumbnailUtils.extractThumbnail(imageBitmap, 312, 312);
+                    WordPress.getBitmapCache().put(uri, bitmap);
+                } else if (mType == THUMB_TYPE.VIDEO) {
+                    bitmap = ThumbnailUtils.createVideoThumbnail(uri, MediaStore.Video.Thumbnails.MINI_KIND);
+                    WordPress.getBitmapCache().put(uri, bitmap);
+                }
             }
+
+            return bitmap;
         }
 
         @Override
