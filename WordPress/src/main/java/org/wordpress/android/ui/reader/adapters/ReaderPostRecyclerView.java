@@ -31,6 +31,20 @@ public class ReaderPostRecyclerView extends RecyclerView {
         initialize(context);
     }
 
+    /*
+     * this works around a bug in the default canScrollVertically() that causes it
+     * to return false prematurely when checking whether the view can scroll up
+     * http://stackoverflow.com/a/25227797/1673548
+     */
+    @Override
+    public boolean canScrollVertically(int direction) {
+        if (direction < 0) {
+            boolean original = super.canScrollVertically(direction);
+            return !original && getChildAt(0) != null && getChildAt(0).getTop() < 0 || original;
+        }
+        return super.canScrollVertically(direction);
+    }
+
     private void initialize(Context context) {
         if (!isInEditMode()) {
             ItemAnimator animator = new DefaultItemAnimator();
@@ -41,20 +55,20 @@ public class ReaderPostRecyclerView extends RecyclerView {
             int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
             switch(screenSize) {
                 case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-                    // always use a staggered grid when running a large tablet
+                    // always use a grid when running a large tablet
                     isGridView = true;
                     break;
                 case Configuration.SCREENLAYOUT_SIZE_LARGE:
-                    // use a staggered grid on other tablets when in landscape
+                    // use a grid on other tablets when in landscape
                     isGridView = DisplayUtils.isLandscape(context);
                     break;
                 case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-                    // use a staggered grid on normal displays when in landscape if they're xhdpi+
+                    // use a grid on normal displays when in landscape if they're xhdpi+
                     float density = context.getResources().getDisplayMetrics().density;
                     isGridView = DisplayUtils.isLandscape(context) && (density >= 2.0f);
                     break;
                 default:
-                    // skip staggered grid for all other displays
+                    // skip grid and use a standard list for all other displays
                     isGridView = false;
                     break;
             }
