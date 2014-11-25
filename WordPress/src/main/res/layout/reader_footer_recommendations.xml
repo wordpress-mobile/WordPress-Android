@@ -16,6 +16,6 @@
         android:paddingTop="@dimen/margin_extra_large"
         android:paddingBottom="@dimen/margin_extra_large"
         android:gravity="center"
-        android:background="@drawable/reader_transparent_selector"
+        android:background="?android:selectableItemBackground"
         android:text="@string/reader_label_more_recommendations" />
 </RelativeLayout>

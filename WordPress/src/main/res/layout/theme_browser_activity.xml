@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/theme_browser_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <org.wordpress.android.ui.HorizontalTabView
-        android:id="@+id/horizontalTabView1"
+    <org.wordpress.android.widgets.SlidingTabLayout
+        android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:fillViewport="true"
-        android:scrollbars="none" />
+        android:background="@color/tab_background" />
 
-    <android.support.v4.view.ViewPager
+    <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/theme_browser_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/horizontalTabView1" />
+        android:layout_height="match_parent" />
 
-</RelativeLayout>
+</LinearLayout>

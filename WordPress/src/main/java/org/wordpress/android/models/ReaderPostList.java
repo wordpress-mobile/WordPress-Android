@@ -23,6 +23,11 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
         return posts;
     }
 
+    @Override
+    public Object clone() {
+        return super.clone();
+    }
+
     private int indexOfPost(long blogId, long postId) {
         for (int i = 0; i < size(); i++) {
             if (this.get(i).blogId == blogId && this.get(i).postId == postId) {
@@ -55,5 +60,18 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
         }
 
         return true;
+    }
+
+    /*
+     * returns posts in this list which are in the passed blog
+     */
+    public ReaderPostList getPostsInBlog(long blogId) {
+        ReaderPostList postsInBlog = new ReaderPostList();
+        for (ReaderPost post: this) {
+            if (post.blogId == blogId) {
+                postsInBlog.add(post);
+            }
+        }
+        return postsInBlog;
     }
 }

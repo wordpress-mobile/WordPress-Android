@@ -1,72 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content">
-  <RelativeLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:padding="10dp">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <!-- Category name -->
-    <EditText
-      android:id="@+id/category_name"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:hint="@string/category_name"
-      android:inputType="text" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_large">
 
-    <!-- Category slug -->
-    <EditText
-      android:id="@+id/category_slug"
-      android:hint="@string/category_slug"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/category_name"
-      android:inputType="text" />
+        <!-- Category name -->
+        <EditText
+            android:id="@+id/category_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/category_name"
+            android:inputType="text" />
 
-    <!-- Category description -->
-    <EditText
-      android:id="@+id/category_desc"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/category_slug"
-      android:inputType="text"
-      android:hint="@string/category_desc" />
+        <!-- Category slug -->
+        <EditText
+            android:id="@+id/category_slug"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/category_name"
+            android:hint="@string/category_slug"
+            android:inputType="text" />
 
-    <!--  Parent category -->
-    <TextView
-      android:id="@+id/parentDescLabel"
-      style="@style/WordPressSubHeader"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/category_desc"
-      android:text="@string/category_parent" />
-    <Spinner
-      android:id="@+id/parent_category"
-      android:layout_width="fill_parent"
-      android:layout_height="50dp"
-      android:layout_marginBottom="10dp"
-      android:layout_below="@id/parentDescLabel" />
+        <!-- Category description -->
+        <EditText
+            android:id="@+id/category_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/category_slug"
+            android:hint="@string/category_desc"
+            android:inputType="text" />
 
-    <Button
-      android:id="@+id/ok"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentRight="true"
-      android:layout_marginLeft="10dp"
-      android:textSize="20sp"
-      android:text="@string/ok"
-      android:layout_below="@id/parent_category" />
+        <!--  Parent category -->
+        <TextView
+            android:id="@+id/parentDescLabel"
+            style="@style/WordPressSubHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/category_desc"
+            android:text="@string/category_parent" />
 
-    <Button
-      android:id="@+id/cancel"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignTop="@id/ok"
-      android:layout_toLeftOf="@id/ok"
-      android:textSize="20sp"
-      android:text="@string/cancel" />
+        <Spinner
+            android:id="@+id/parent_category"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/parentDescLabel"
+            android:layout_marginBottom="@dimen/margin_large" />
 
-  </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/parent_category"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/ok"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ok" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 </ScrollView>

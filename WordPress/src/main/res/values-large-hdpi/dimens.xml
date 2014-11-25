@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="comment_detail_font_size">16dp</dimen>
-    <dimen name="chart_width">320dp</dimen>
-    <dimen name="chart_height">240dp</dimen>
     <dimen name="settings_padding">10dp</dimen>
     <dimen name="format_bar_height">40dp</dimen>
 </resources>

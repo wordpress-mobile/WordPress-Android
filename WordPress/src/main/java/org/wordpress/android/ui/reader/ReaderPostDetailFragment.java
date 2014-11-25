@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,7 +42,6 @@ import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClick
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -49,9 +49,9 @@ import org.wordpress.android.widgets.WPScrollView;
 
 public class ReaderPostDetailFragment extends Fragment
         implements WPScrollView.OnScrollDirectionListener,
-                   ReaderCustomViewListener,
-                   ReaderWebViewPageFinishedListener,
-                   ReaderWebViewUrlClickListener {
+        ReaderCustomViewListener,
+        ReaderWebViewPageFinishedListener,
+        ReaderWebViewUrlClickListener {
 
     private static final String ARG_DISABLE_BLOCK_BLOG = "disable_block_blog";
 
@@ -72,7 +72,6 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsBlockBlogDisabled;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
-    private ReaderInterfaces.FullScreenListener mFullScreenListener;
 
     private ReaderResourceVars mResourceVars;
 
@@ -116,13 +115,7 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         mResourceVars = new ReaderResourceVars(activity);
-
-        if (activity instanceof ReaderInterfaces.FullScreenListener) {
-            mFullScreenListener = (ReaderInterfaces.FullScreenListener) activity;
-        }
-
         if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
             mOnPopupListener = (ReaderInterfaces.OnPostPopupListener) activity;
         }
@@ -132,16 +125,8 @@ public class ReaderPostDetailFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
-        final View spacer = view.findViewById(R.id.spacer_actionbar);
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
-
-        if (isFullScreenSupported()) {
-            spacer.getLayoutParams().height = DisplayUtils.getActionBarHeight(container.getContext());
-            spacer.setVisibility(View.VISIBLE);
-            mScrollView.setOnScrollDirectionListener(this);
-        } else {
-            spacer.setVisibility(View.GONE);
-        }
+        mScrollView.setOnScrollDirectionListener(this);
 
         mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
@@ -170,25 +155,20 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollUp() {
-        // disable full screen when scrolling up
-        if (isFullScreen()) {
-            setIsFullScreen(false);
-        }
+        animateIconBar(true);
     }
 
     @Override
     public void onScrollDown() {
-        // enable full screen when scrolling down
-        if (!isFullScreen() && mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
-            setIsFullScreen(true);
+        if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
+            animateIconBar(false);
         }
     }
 
     @Override
     public void onScrollCompleted() {
-        // disable full screen if scroll has ended and user hit the bottom
-        if (isFullScreen() && !mScrollView.canScrollDown()) {
-            setIsFullScreen(false);
+        if (!mScrollView.canScrollDown()) {
+            animateIconBar(true);
         }
     }
 
@@ -226,26 +206,6 @@ public class ReaderPostDetailFragment extends Fragment
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /*
-     * full-screen mode hides the ActionBar and icon bar
-     */
-    private boolean isFullScreen() {
-        return (mFullScreenListener != null && mFullScreenListener.isFullScreen());
-    }
-
-    private boolean isFullScreenSupported() {
-        return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
-    }
-
-    private void setIsFullScreen(boolean enableFullScreen) {
-        // this tells the host activity to enable/disable fullscreen
-        if (mFullScreenListener != null && mFullScreenListener.onRequestFullScreen(enableFullScreen)) {
-            if (mPost.isWP()) {
-                animateIconBar(!enableFullScreen);
-            }
         }
     }
 
@@ -568,17 +528,17 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        final TextView txtCommentCount = (TextView) getView().findViewById(R.id.text_comment_count);
+        final Button btnCommentCount = (Button) getView().findViewById(R.id.button_comment_count);
         if (mPost.numReplies == 0) {
-            txtCommentCount.setVisibility(View.GONE);
+            btnCommentCount.setVisibility(View.GONE);
         } else {
-            txtCommentCount.setVisibility(View.VISIBLE);
+            btnCommentCount.setVisibility(View.VISIBLE);
             if (mPost.numReplies == 1) {
-                txtCommentCount.setText(getString(R.string.reader_label_comment_count_single));
+                btnCommentCount.setText(getString(R.string.reader_label_comment_count_single));
             } else {
-                txtCommentCount.setText(getString(R.string.reader_label_comment_count_multi, mPost.numReplies));
+                btnCommentCount.setText(getString(R.string.reader_label_comment_count_multi, mPost.numReplies));
             }
-            txtCommentCount.setOnClickListener(new View.OnClickListener() {
+            btnCommentCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ReaderActivityLauncher.showReaderComments(getActivity(), mPost);
@@ -785,22 +745,17 @@ public class ReaderPostDetailFragment extends Fragment
                 imgAvatar.setVisibility(View.GONE);
             }
 
-            // hide header if this fragment was shown from blog preview
+            // hide header if this fragment was shown from blog preview, otherwise tapping
+            // avatar in header shows blog preview unless this post is from an external feed
             if (isBlogPreview()) {
                 layoutDetailHeader.setVisibility(View.GONE);
-            } else {
-                // tapping header shows blog preview unless this post is from an external feed
-                if (!mPost.isExternal) {
-                    layoutDetailHeader.setEnabled(true);
-                    layoutDetailHeader.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId, mPost.getBlogUrl());
-                        }
-                    });
-                } else {
-                    layoutDetailHeader.setEnabled(false);
-                }
+            } else if (!mPost.isExternal) {
+                imgAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId, mPost.getBlogUrl());
+                    }
+                });
             }
 
             // enable reblogging wp posts
@@ -819,8 +774,8 @@ public class ReaderPostDetailFragment extends Fragment
 
             // external blogs (feeds) don't support action icons
             if (!mPost.isExternal && (mPost.isLikesEnabled
-                                   || mPost.canReblog()
-                                   || mPost.isCommentsOpen)) {
+                    || mPost.canReblog()
+                    || mPost.isCommentsOpen)) {
                 mLayoutIcons.setVisibility(View.VISIBLE);
             } else {
                 mLayoutIcons.setVisibility(View.GONE);
@@ -879,7 +834,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * return the container view that should host the fullscreen video
+     * return the container view that should host the full screen video
      */
     @Override
     public ViewGroup onRequestCustomView() {
@@ -891,7 +846,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * return the container view that should be hidden when fullscreen video is shown
+     * return the container view that should be hidden when full screen video is shown
      */
     @Override
     public ViewGroup onRequestContentView() {
@@ -904,7 +859,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onCustomViewShown() {
-        // fullscreen video has just been shown so hide the ActionBar
+        // full screen video has just been shown so hide the ActionBar
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.hide();
@@ -913,7 +868,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onCustomViewHidden() {
-        // user returned from fullscreen video so re-display the ActionBar
+        // user returned from full screen video so re-display the ActionBar
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.show();

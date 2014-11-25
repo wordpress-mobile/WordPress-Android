@@ -10,8 +10,7 @@
     android:baselineAligned="false"
     android:orientation="horizontal"
     android:showDividers="middle"
-    android:divider="?android:attr/dividerVertical"
-    android:background="@color/calypso_blue_light">
+    android:divider="?android:attr/dividerVertical">
         <fragment
             android:name="org.wordpress.android.ui.notifications.NotificationsListFragment"
             android:layout_width="match_parent"

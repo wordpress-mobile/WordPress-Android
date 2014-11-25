@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/image_mshot"
-            android:background="@drawable/reader_transparent_selector"
+            android:background="?android:selectableItemBackground"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/reader_hyperlink"
@@ -84,6 +84,7 @@
     </RelativeLayout>
 
     <View
+        android:id="@+id/divider_info_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_header_divider_height"
         android:background="@color/reader_divider_grey" />

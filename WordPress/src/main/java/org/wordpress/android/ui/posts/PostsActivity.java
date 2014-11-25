@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -12,9 +11,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -23,14 +21,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.MenuDrawerItem;
-import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -46,7 +40,7 @@ import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.IOException;
 
-public class PostsActivity extends WPActionBarActivity
+public class PostsActivity extends WPDrawerActivity
         implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
                    OnDetailPostActionListener, WPAlertDialogFragment.OnDialogConfirmListener {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
@@ -67,35 +61,11 @@ public class PostsActivity extends WPActionBarActivity
         super.onCreate(savedInstanceState);
         ProfilingUtils.split("PostsActivity.onCreate");
         ProfilingUtils.dump();
-        // Special check for a null database (see #507)
-        if (WordPress.wpDB == null) {
-            Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-
-        // Restore last selection on app creation
-        if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null &&
-                !(this instanceof PagesActivity)) {
-            WordPress.shouldRestoreSelectedActivity = false;
-            ActivityId lastActivity = ActivityId.getActivityIdFromName(AppPrefs.getLastActivityStr());
-            if (lastActivity.autoRestoreMapper() != ActivityId.UNKNOWN) {
-                for (MenuDrawerItem item : mMenuItems) {
-                    // if we have a matching item id, and it's not selected and it's visible, call it
-                    if (item.hasItemId() && item.getItemId() == lastActivity.autoRestoreMapper() && !item.isSelected()
-                            && item.isVisible()) {
-                        mFirstLaunch = true;
-                        item.selectItem();
-                        finish();
-                        return;
-                    }
-                }
-            }
-        }
 
         createMenuDrawer(R.layout.posts);
+        setSupportActionBar(getToolbar());
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
         }
@@ -111,9 +81,9 @@ public class PostsActivity extends WPActionBarActivity
         }
 
         if (mIsPage) {
-            setTitle(getString(R.string.pages));
+            getSupportActionBar().setTitle(getString(R.string.pages));
         } else {
-            setTitle(getString(R.string.posts));
+            getSupportActionBar().setTitle(getString(R.string.posts));
         }
 
         WordPress.currentPost = null;
@@ -163,8 +133,9 @@ public class PostsActivity extends WPActionBarActivity
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
-            if (getFragmentManager().getBackStackEntryCount() == 0)
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
+            if (getDrawerToggle() != null) {
+                getDrawerToggle().setDrawerIndicatorEnabled(getFragmentManager().getBackStackEntryCount() == 0);
+            }
         }
     };
 
@@ -181,6 +152,15 @@ public class PostsActivity extends WPActionBarActivity
             popPostDetail();
             mPostList.requestPosts(false);
             mPostList.setRefreshing(true);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            popPostDetail();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -224,17 +204,6 @@ public class PostsActivity extends WPActionBarActivity
         super.onPause();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.posts, menu);
-        if (mIsPage) {
-            menu.findItem(R.id.menu_new_post).setTitle(R.string.new_page);
-        }
-        return true;
-    }
-
     public void newPost() {
         if (WordPress.getCurrentBlog() == null) {
             if (!isFinishing())
@@ -253,11 +222,7 @@ public class PostsActivity extends WPActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_new_post) {
-            newPost();
-            return true;
-        } else if (itemId == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             FragmentManager fm = getFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 popPostDetail();
@@ -306,7 +271,6 @@ public class PostsActivity extends WPActionBarActivity
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
-                mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
                 viewPostFragment.loadPost(post);
             }

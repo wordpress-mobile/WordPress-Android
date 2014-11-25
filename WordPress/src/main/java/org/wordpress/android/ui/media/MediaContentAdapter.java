@@ -192,7 +192,7 @@ public class MediaContentAdapter extends BaseAdapter {
                 contentImageView.setBackgroundColor(mResources.getColor(R.color.transparent));
 
                 if (content.getContentPreviewUri() == null || content.getContentPreviewUri().getPath().equals("")) {
-                    contentImageView.setImageResource(R.drawable.ic_action_web_site);
+                    contentImageView.setImageResource(R.drawable.media_image_placeholder);
                 } else {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
                     MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(contentImageView);

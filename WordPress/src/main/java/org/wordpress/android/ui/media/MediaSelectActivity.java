@@ -1,18 +1,23 @@
 package org.wordpress.android.ui.media;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ActionMode;
+import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.MediaGallery;
-import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.widgets.WPViewPager;
+import org.wordpress.android.ui.WPDrawerActivity;
+import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.ui.media.MediaContentTabFragment.OnMediaContentSelected;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Allows users to select a variety of media content, videos and images.
@@ -28,7 +33,7 @@ import java.util.ArrayList;
  * on the users device.
  */
 
-public class MediaSelectActivity extends WPActionBarActivity implements OnMediaContentSelected {
+public class MediaSelectActivity extends WPDrawerActivity implements OnMediaContentSelected {
     public static final int    ACTIVITY_REQUEST_CODE_MEDIA_SELECTION = 6000;
     public static final int    ACTIVITY_RESULT_CODE_GALLERY_CREATED  = 6001;
     public static final String PARAMETER_REQUEST_KEY                 = "requestCode";
@@ -43,7 +48,8 @@ public class MediaSelectActivity extends WPActionBarActivity implements OnMediaC
     public static final String SELECTED_CONTENT_RESULTS_KEY          = "selected_content";
 
     private boolean                          mStartedForResult;
-    private WPViewPager                      mViewPager;
+    private SlidingTabLayout                 mTabLayout;
+    private ViewPager                        mViewPager;
     private MediaContentFragmentPagerAdapter mMediaSelectFragment;
 
     @Override
@@ -56,10 +62,10 @@ public class MediaSelectActivity extends WPActionBarActivity implements OnMediaC
         } else {
             setTitle(getString(R.string.default_content_selection_title));
         }
+
         mStartedForResult = intent != null && intent.getBooleanExtra(PARAMETER_REQUEST_KEY, false);
 
-        initializeContentView();
-        intializeTabs(intent);
+        initializeContentView(intent);
     }
 
     @Override
@@ -79,31 +85,17 @@ public class MediaSelectActivity extends WPActionBarActivity implements OnMediaC
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.fade_in_compat, R.anim.slide_down);
+        overridePendingTransition(R.anim.abc_fade_in, R.anim.slide_down);
     }
 
     @Override
-    public void onActionModeStarted(ActionMode mode) {
-        super.onActionModeStarted(mode);
-
-        mMediaSelectFragment.setActionMode(mode);
-    }
-
-    @Override
-    public void onActionModeFinished(ActionMode mode) {
-        super.onActionModeFinished(mode);
-
-        mMediaSelectFragment.setActionMode(null);
-    }
-
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onContextItemSelected(MenuItem item) {
         if (mStartedForResult && item.getItemId() == android.R.id.home) {
             finishWithNoResults();
             return true;
         }
 
-        return super.onMenuItemSelected(featureId, item);
+        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -133,21 +125,36 @@ public class MediaSelectActivity extends WPActionBarActivity implements OnMediaC
     }
 
     /** Helper method to conditionally initialize view depending on intended use of the class. */
-    private void initializeContentView() {
-        mViewPager = new WPViewPager(this, null);
-        mViewPager.setPagingEnabled(true);
-        mViewPager.setId(R.id.pager);
-
+    private void initializeContentView(Intent intent) {
         if (mStartedForResult) {
-            setContentView(mViewPager);
+            setContentView(R.layout.media_select_activity);
+        } else {
+            createMenuDrawer(R.layout.media_select_activity);
         }
-        else {
-            createMenuDrawer(mViewPager);
+
+        setSupportActionBar(getToolbar());
+
+        mMediaSelectFragment = new MediaContentFragmentPagerAdapter(this);
+        initializeTabs(intent);
+
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
         }
+
+        mViewPager = (ViewPager) findViewById(R.id.media_browser_pager);
+        mViewPager.setAdapter(mMediaSelectFragment);
+
+        mTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        mTabLayout.setCustomTabView(R.layout.tab_text, R.id.text_tab);
+        mTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.tab_indicator));
+        mTabLayout.setDistributeEvenly(true);
+        mTabLayout.setViewPager(mViewPager);
     }
 
     /** Helper method to conditionally setup the tabs based on Intent parameter. */
-    private void intializeTabs(Intent intent) {
+    private void initializeTabs(Intent intent) {
         if (intent == null) {
             setupTabs(null);
         }
@@ -158,8 +165,6 @@ public class MediaSelectActivity extends WPActionBarActivity implements OnMediaC
 
     /** Helper method to add tabs for Images and Videos. */
     private void setupTabs(String[] tabConfiguration) {
-        mMediaSelectFragment = new MediaContentFragmentPagerAdapter(this, mViewPager);
-
         if (tabConfiguration == null) {
             // Default configuration shows all filters
             int imageFilter = MediaContentTabFragment.CAPTURE_IMAGE |
@@ -237,5 +242,70 @@ public class MediaSelectActivity extends WPActionBarActivity implements OnMediaC
         result.putExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY, gallery);
         setResult(ACTIVITY_RESULT_CODE_GALLERY_CREATED, result);
         finish();
+    }
+
+    public class MediaContentFragmentPagerAdapter extends FragmentStatePagerAdapter {
+        private class TabInfo {
+            public Class<?> classType;
+            public Bundle args;
+            public String tabName;
+
+            public TabInfo(Class<?> classType, Bundle args, String name) {
+                this.classType = classType;
+                this.args = args;
+                this.tabName = name;
+            }
+        }
+
+        private Activity mActivity;
+        private List<TabInfo> mTabs;
+
+        private MediaContentFragmentPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+
+            mTabs = new ArrayList<TabInfo>();
+        }
+
+        public MediaContentFragmentPagerAdapter(Activity activity) {
+            this(activity.getFragmentManager());
+
+            mActivity = activity;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position < mTabs.size()) {
+                TabInfo tab = mTabs.get(position);
+                return Fragment.instantiate(mActivity, tab.classType.getName(), tab.args);
+            }
+
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return mTabs.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mTabs.get(position).tabName;
+        }
+
+        /** Used to add filtered {@link org.wordpress.android.ui.media.MediaContentTabFragment}'s. */
+        public void addTab(int filter, String tabName) {
+            if (filter > 0) {
+                Bundle tabArguments = new Bundle();
+                tabArguments.putInt(MediaContentTabFragment.FILTER_ARG, filter);
+                addTab(MediaContentTabFragment.class, tabName, tabArguments);
+            }
+        }
+
+        /** Used to add custom fragments as tabs. */
+        public void addTab(Class<?> fragmentClass, String tabName, Bundle args) {
+            if (fragmentClass != null) {
+                mTabs.add(new TabInfo(fragmentClass, args, tabName));
+            }
+        }
     }
 }

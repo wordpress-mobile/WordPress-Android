@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/reader_transparent_selector"
+    android:background="?android:selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/margin_medium"

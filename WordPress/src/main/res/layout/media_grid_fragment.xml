@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/background_grey">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/media_filter_spinner_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/md_list_selector"
+        android:background="@color/grey_extra_light"
         android:clickable="true"
         android:paddingLeft="8dp"
-        android:paddingRight="16dp" >
+        android:paddingRight="16dp">
 
         <org.wordpress.android.ui.CustomSpinner
             android:id="@+id/media_filter_spinner"
@@ -31,8 +31,7 @@
         android:padding="8dp"
         android:visibility="gone" />
 
-    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -43,35 +42,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:horizontalSpacing="@dimen/margin_small"
             android:numColumns="@integer/media_grid_num_columns"
-            android:scrollbarStyle="outsideOverlay"
-            android:stretchMode="columnWidth"
             android:paddingLeft="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small"
+            android:scrollbarStyle="outsideOverlay"
+            android:stretchMode="columnWidth"
             android:verticalSpacing="@dimen/margin_small"
-            android:horizontalSpacing="@dimen/margin_small"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-        <LinearLayout
-            android:id="@+id/empty_view"
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_below="@+id/media_filter_spinner_container"
-            android:gravity="center">
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/media_filter_spinner_container"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/empty_view_title"
-                style="@style/WordPress.EmptyList.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/media_empty_list_custom_date"
-                android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
-                android:layout_marginLeft="@dimen/empty_list_title_side_margin"
-                android:layout_marginRight="@dimen/empty_list_title_side_margin"
-                app:fixWidowWords="true"/>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/empty_view_title"
+            style="@style/WordPress.EmptyList.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+            android:layout_marginLeft="@dimen/empty_list_title_side_margin"
+            android:layout_marginRight="@dimen/empty_list_title_side_margin"
+            android:text="@string/media_empty_list_custom_date"
+            app:fixWidowWords="true" />
 
-        </LinearLayout>
-
-    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+    </LinearLayout>
 </RelativeLayout>

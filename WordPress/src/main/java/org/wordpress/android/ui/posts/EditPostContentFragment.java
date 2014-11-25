@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -16,6 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
@@ -147,8 +147,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 // Go to full screen editor when 'next' button is tapped on soft keyboard
-                if (actionId == EditorInfo.IME_ACTION_NEXT && mActivity.getActionBar() != null && mActivity
-                        .getActionBar().isShowing()) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT && mActivity.getSupportActionBar() != null && mActivity
+                        .getSupportActionBar().isShowing()) {
                     setContentEditingModeVisible(true);
                 }
                 return false;
@@ -187,8 +187,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             public void onImeBack(WPEditText ctrl, String text) {
                 // Go back to regular editor if IME keyboard is dismissed
                 // Bottom comparison is there to ensure that the keyboard is actually showing
-                if (mRootView.getBottom() < mFullViewBottom && mActivity.getActionBar() != null && !mActivity
-                        .getActionBar().isShowing()) {
+                if (mRootView.getBottom() < mFullViewBottom && mActivity.getSupportActionBar() != null && !mActivity
+                        .getSupportActionBar().isShowing()) {
                     setContentEditingModeVisible(false);
                 }
             }
@@ -269,7 +269,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     public void setContentEditingModeVisible(boolean isVisible) {
         if (mActivity == null)
             return;
-        ActionBar actionBar = mActivity.getActionBar();
+        ActionBar actionBar = mActivity.getSupportActionBar();
         if (isVisible) {
             Animation fadeAnimation = new AlphaAnimation(1, 0);
             fadeAnimation.setDuration(CONTENT_ANIMATION_DURATION);
@@ -1145,7 +1145,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             s.insert(selectionEnd + 1, "\n\n");
         }
         // Show the soft keyboard after adding media
-        if (mActivity != null && mActivity.getActionBar() != null && !mActivity.getActionBar().isShowing()) {
+        if (mActivity != null && mActivity.getSupportActionBar() != null && !mActivity.getSupportActionBar().isShowing()) {
             ((InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
                     InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
@@ -1333,7 +1333,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         mLastYPos = pos;
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (mActivity != null && mActivity.getActionBar() != null && mActivity.getActionBar().isShowing()) {
+            if (mActivity != null && mActivity.getSupportActionBar() != null && mActivity.getSupportActionBar().isShowing()) {
                 setContentEditingModeVisible(true);
                 return false;
             }

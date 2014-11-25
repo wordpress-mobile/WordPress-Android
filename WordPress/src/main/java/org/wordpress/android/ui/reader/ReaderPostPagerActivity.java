@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -9,12 +8,13 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
@@ -46,10 +46,10 @@ import javax.annotation.Nonnull;
  * posts with a specific tag or in a specific blog, but can also be used to show a single
  * post detail
  */
-public class ReaderPostPagerActivity extends Activity
-        implements ReaderInterfaces.FullScreenListener,
-                   ReaderInterfaces.OnPostPopupListener {
+public class ReaderPostPagerActivity extends ActionBarActivity
+        implements ReaderInterfaces.OnPostPopupListener {
 
+    private Toolbar mToolbar;
     private ReaderViewPager mViewPager;
     private ProgressBar mProgress;
 
@@ -58,7 +58,6 @@ public class ReaderPostPagerActivity extends Activity
     private long mPostId;
     private ReaderPostListType mPostListType;
 
-    private boolean mIsFullScreen;
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
 
@@ -66,18 +65,14 @@ public class ReaderPostPagerActivity extends Activity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (isFullScreenSupported()) {
-            getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        }
-
+        // TODO: investigate setHideOnContentScrollEnabled
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mViewPager = (ReaderViewPager) findViewById(R.id.viewpager);
         mProgress = (ProgressBar) findViewById(R.id.progress_loading);
@@ -119,7 +114,6 @@ public class ReaderPostPagerActivity extends Activity
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                onRequestFullScreen(false);
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
             }
 
@@ -127,10 +121,8 @@ public class ReaderPostPagerActivity extends Activity
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
                 if (state == ViewPager.SCROLL_STATE_DRAGGING) {
-                    // return from fullscreen and pause the active web view when the user
-                    // starts scrolling - important because otherwise embedded content in
-                    // the web view will continue to play
-                    onRequestFullScreen(false);
+                    // pause the active web view when the user starts scrolling - important
+                    // because otherwise embedded content in the web view will continue to play
                     ReaderPostDetailFragment fragment = getActiveDetailFragment();
                     if (fragment != null) {
                         fragment.pauseWebView();
@@ -201,13 +193,11 @@ public class ReaderPostPagerActivity extends Activity
     public void onBackPressed() {
         ReaderPostDetailFragment fragment = getActiveDetailFragment();
         if (fragment != null && fragment.isCustomViewShowing()) {
-            // if fullscreen video is showing, hide the custom view rather than navigate back
+            // if full screen video is showing, hide the custom view rather than navigate back
             fragment.hideCustomView();
         } else {
             super.onBackPressed();
-            if (isFullScreenSupported()) {
-                overridePendingTransition(R.anim.reader_activity_scale_in, R.anim.reader_activity_slide_out);
-            }
+            overridePendingTransition(R.anim.reader_activity_scale_in, R.anim.reader_activity_slide_out);
         }
     }
 
@@ -282,37 +272,8 @@ public class ReaderPostPagerActivity extends Activity
         }
     }
 
-    @Override
-    public boolean onRequestFullScreen(boolean enableFullScreen) {
-        if (!isFullScreenSupported() || enableFullScreen == mIsFullScreen) {
-            return false;
-        }
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            if (enableFullScreen) {
-                actionBar.hide();
-            } else {
-                actionBar.show();
-            }
-        }
-
-        mIsFullScreen = enableFullScreen;
-        return true;
-    }
-
     ReaderPostListType getPostListType() {
         return mPostListType;
-    }
-
-    @Override
-    public boolean isFullScreen() {
-        return mIsFullScreen;
-    }
-
-    @Override
-    public boolean isFullScreenSupported() {
-        return true;
     }
 
     private Fragment getActivePagerFragment() {

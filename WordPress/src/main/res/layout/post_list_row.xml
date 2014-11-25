@@ -7,7 +7,7 @@
     android:paddingRight="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_medium"
     android:paddingBottom="@dimen/margin_medium"
-    android:background="@drawable/list_bg_selector">
+    android:background="?android:selectableItemBackground">
 
     <LinearLayout
         android:layout_weight="1"

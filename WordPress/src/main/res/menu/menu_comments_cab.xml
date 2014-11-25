@@ -4,27 +4,28 @@
     Contextual ActionBar menu for comment list
 -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menu_approve"
-        android:icon="@drawable/ic_cab_approve"
-        android:showAsAction="always"
+        android:icon="@drawable/ic_thumb_up_white_24dp"
+        app:showAsAction="always"
         android:title="@string/mnu_comment_approve" />
     <item
         android:id="@+id/menu_unapprove"
-        android:icon="@drawable/ic_cab_unapprove"
-        android:showAsAction="always"
+        android:icon="@drawable/ic_thumb_down_white_24dp"
+        app:showAsAction="always"
         android:title="@string/mnu_comment_unapprove" />
     <item
         android:id="@+id/menu_spam"
-        android:icon="@drawable/ic_cab_spam"
-        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_report_white_24dp"
+        app:showAsAction="ifRoom"
         android:title="@string/mnu_comment_spam" />
     <item
         android:id="@+id/menu_trash"
-        android:icon="@drawable/ic_action_discard"
-        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_delete_white_24dp"
+        app:showAsAction="ifRoom"
         android:title="@string/mnu_comment_trash" />
 
 </menu>

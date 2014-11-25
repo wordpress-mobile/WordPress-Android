@@ -1,47 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="WordPress" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="ptrHeaderStyle">@style/Widget.Custom.PtrHeader</item>
+    <style name="WordPress" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Material theme -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="colorControlActivated">@color/color_control_activated</item>
+        <item name="colorControlHighlight">@color/color_control_highlight</item>
 
+        <item name="android:windowBackground">@color/calypso_blue_light</item>
         <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Dark.WordPress</item>
-        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
-        <item name="android:actionBarStyle">@style/ActionBar.Solid.WordPress</item>
-        <item name="android:actionModeCloseDrawable">@drawable/hs__action_cancel</item>
-        <item name="android:actionModeBackground">@drawable/cab_background_top_wordpress</item>
-        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_wordpress</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
+        <item name="windowActionModeOverlay">true</item>
 
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
-        <item name="menuDrawerStyle">@style/MenuDrawer</item>
+        <item name="swipeToRefreshStyle">@style/WordPress.SwipeToRefresh</item>
     </style>
 
     <style name="WordPress.DropDownListView.Light" parent="WordPress">
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
 
-    <style name="ActionBar.Solid.WordPress" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:icon">@drawable/dashicon_wordpress_alt</item>
-        <item name="android:background">@color/blue_new_kid</item>
-        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
-        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
-        <item name="android:progressBarStyle">@style/ProgressBar.WordPress</item>
-    </style>
-
-    <style name="ActionBar.Transparent.WordPress" parent="android:Widget.Holo.ActionBar">
-        <item name="android:background">@drawable/ab_transparent_wordpress</item>
-        <item name="android:progressBarStyle">@style/ProgressBar.WordPress</item>
-    </style>
-
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
-    <style name="Theme.WordPress.Widget" parent="android:Theme.Holo">
+    <style name="Theme.WordPress.Widget" parent="Theme.AppCompat">
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
@@ -49,11 +38,6 @@
     <style name="TabBarStyle.WordPress" parent="@android:style/Widget.Holo.ActionBar.TabBar">
         <item name="android:showDividers">middle</item>
         <item name="android:divider">@drawable/tab_divider_wordpress</item>
-    </style>
-
-    <!-- http://www.curious-creature.org/2009/03/04/speed-up-your-android-ui/ -->
-    <style name="WordPress.Theme.NoBackground" parent="WordPress">
-        <item name="android:windowBackground">@null</item>
     </style>
 
    <style name="PopupMenu.WordPress" parent="android:Widget.Holo.ListPopupWindow">
@@ -71,17 +55,12 @@
         <item name="android:fadeScrollbars">false</item>
     </style>
 
-    <style name="ActionBarTabStyle.WordPress" parent="android:Widget.Holo.ActionBar.TabView">
-        <item name="android:background">@drawable/tab_indicator_ab_wordpress</item>
-    </style>
-
     <style name="TabTextStyle.WordPress" parent="android:Widget.Holo.ActionBar.TabText">
         <item name="android:textColor">@color/grey_dark</item>
     </style>
 
     <style name="DropDownNav.WordPress" parent="android:Widget.Holo.Light.Spinner">
         <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_wordpress</item>
     </style>
 
@@ -134,27 +113,30 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="MenuDrawer" parent="Widget.MenuDrawer">
-        <item name="mdMenuSize">@dimen/menu_drawer_width</item>
-        <item name="mdContentBackground">@color/background_grey</item>
-    </style>
-
-    <style name="MenuDrawer.Button">
-        <item name="android:background">@drawable/md_list_selector</item>
+    <style name="MenuDrawerText">
         <item name="android:gravity">center_vertical</item>
-    </style>
-
-    <style name="MenuDrawer.Button.Text">
-        <item name="android:background">@android:color/transparent</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
-        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/md__text</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:clickable">false</item>
     </style>
 
-    <style name="MenuDrawer.CommentBadge">
+    <style name="MenuDrawerIcon">
+        <item name="android:layout_marginLeft">@dimen/margin_large</item>
+        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_height">@dimen/menu_drawer_icon_size</item>
+        <item name="android:layout_width">@dimen/menu_drawer_icon_size</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:clickable">false</item>
+    </style>
+
+    <style name="MenuDrawerBadge">
         <item name="android:background">@drawable/comment_badge_background</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:layout_height">@dimen/menu_drawer_badge_size</item>
+        <item name="android:layout_width">@dimen/menu_drawer_badge_size</item>
+        <item name="android:layout_marginRight">@dimen/margin_large</item>
         <item name="android:textSize">12sp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
@@ -234,7 +216,7 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="FloatingActivityTheme" parent="android:Theme.Holo.Light.NoActionBar">
+    <style name="FloatingActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:checkboxStyle">@style/FloatingActivityTheme.CheckBox</item>
@@ -258,9 +240,12 @@
     <style name="WordPress.NUXPrimaryButton">
         <item name="android:textColor">@color/nux_primary_button</item>
         <item name="android:layout_height">@dimen/nux_button_height</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:clickable">true</item>
         <item name="android:background">@drawable/nux_primary_button_selector</item>
+        <item name="android:stateListAnimator">@anim/raise</item>
     </style>
 
     <style name="WordPress.NUXWhiteButtonNoBg">
@@ -333,12 +318,15 @@
         <item name="android:background">@color/white</item>
     </style>
 
-    <!-- Pull to refresh -->
-    <style name="Widget.Custom.PtrHeader" parent="android:Widget">
-        <item name="ptrProgressBarColor">@color/blue_dark</item>
-        <item name="ptrProgressBarHeight">@dimen/progress_bar_height</item>
+    <!-- Dialog -->
+    <style name="WordPress.Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <!-- work around a bug that causes weird styling of the dialog title on Android 5 -->
+        <item name="android:windowNoTitle">false</item>
+        <item name="windowActionBar">false</item>
     </style>
 
-    <!-- Dialog -->
-    <style name="WordPress.Dialog" parent="android:Theme.Holo.Light.Dialog"/>
+    <style name="WordPress.SwipeToRefresh">
+        <item name="refreshIndicatorColor">@color/blue_new_kid</item>
+    </style>
+
 </resources>

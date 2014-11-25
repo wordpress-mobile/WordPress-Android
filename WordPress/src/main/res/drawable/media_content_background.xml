@@ -3,7 +3,7 @@
 
     <item
         android:state_checked="false"
-        android:drawable="@drawable/reader_transparent_selector" />
+        android:drawable="@drawable/selectable_background_wordpress" />
 
     <item
         android:state_checked="true"

@@ -2,16 +2,15 @@ package org.wordpress.android.ui.themes;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -19,7 +18,7 @@ import org.wordpress.android.WordPress;
 /**
  * A fragment for display the results of a theme search
  */
-public class ThemeSearchFragment extends ThemeTabFragment implements OnQueryTextListener, OnActionExpandListener {
+public class ThemeSearchFragment extends ThemeTabFragment implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
     public static final String TAG = ThemeSearchFragment.class.getName();
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
 
@@ -82,9 +81,9 @@ public class ThemeSearchFragment extends ThemeTabFragment implements OnQueryText
 
         mSearchMenuItem = menu.findItem(R.id.menu_theme_search);
         mSearchMenuItem.expandActionView();
-        mSearchMenuItem.setOnActionExpandListener(this);
+        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
 
-        mSearchView = (SearchView) mSearchMenuItem.getActionView();
+        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
         mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setQuery(mLastSearch, true);

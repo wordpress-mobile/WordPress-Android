@@ -113,8 +113,8 @@ public class EditPostSettingsFragment extends Fragment
 
         mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
-        Button mPubDateButton = (Button) rootView.findViewById(R.id.pubDateButton);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
+        mPubDateText.setOnClickListener(this);
         mStatusSpinner = (Spinner) rootView.findViewById(R.id.status);
         mStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -129,8 +129,6 @@ public class EditPostSettingsFragment extends Fragment
         });
         mTagsEditText = (EditText) rootView.findViewById(R.id.tags);
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
-
-        mPubDateButton.setOnClickListener(this);
 
         // Set header labels to upper case
         ((TextView) rootView.findViewById(R.id.categoryLabel)).setText(getResources().getString(R.string.categories).toUpperCase());
@@ -323,7 +321,7 @@ public class EditPostSettingsFragment extends Fragment
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.pubDateButton) {
+        if (id == R.id.pubDate) {
             showPostDateSelectionDialog();
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();

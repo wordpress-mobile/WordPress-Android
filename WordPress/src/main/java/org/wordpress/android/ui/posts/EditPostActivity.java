@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class EditPostActivity extends Activity {
+public class EditPostActivity extends ActionBarActivity {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -78,7 +78,7 @@ public class EditPostActivity extends Activity {
         setContentView(R.layout.activity_new_edit_post);
 
         // Set up the action bar.
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -377,8 +377,8 @@ public class EditPostActivity extends Activity {
             return;
         }
 
-        if (getActionBar() != null) {
-            if (getActionBar().isShowing()) {
+        if (getSupportActionBar() != null) {
+            if (getSupportActionBar().isShowing()) {
                 saveAndFinish();
             } else if (mEditPostContentFragment != null) {
                 mEditPostContentFragment.setContentEditingModeVisible(false);

@@ -10,7 +10,7 @@ import com.robotium.solo.Solo;
 
 import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.AppLog;
 
 public class ActivityRobotiumTestCase<T extends Activity> extends ActivityInstrumentationTestCase2<T> {
@@ -68,10 +68,10 @@ public class ActivityRobotiumTestCase<T extends Activity> extends ActivityInstru
     protected void forceLogInScreen() throws Exception {
         boolean isLoginScreenVisible = mSolo.searchText(mSolo.getString(R.string.username)) && mSolo.searchText(
                 mSolo.getString(R.string.password));
-        if (!isLoginScreenVisible && getActivity() instanceof WPActionBarActivity) {
-            WPActionBarActivity wpActionBarActivity = (WPActionBarActivity) getActivity();
+        if (!isLoginScreenVisible && getActivity() instanceof WPDrawerActivity) {
+            WPDrawerActivity wpDrawerActivity = (WPDrawerActivity) getActivity();
             TestUtils.clearApplicationState(mTargetContext);
-            wpActionBarActivity.setupCurrentBlog();
+            wpDrawerActivity.setupCurrentBlog();
         }
     }
 }

@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.comments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 import com.simperium.client.BucketObjectMissingException;
@@ -14,7 +14,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
 // simple wrapper activity for CommentDetailFragment
-public class CommentDetailActivity extends Activity {
+public class CommentDetailActivity extends ActionBarActivity {
 
     public static final String KEY_COMMENT_DETAIL_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
     public static final String KEY_COMMENT_DETAIL_COMMENT_ID = "comment_detail_comment_id";
@@ -32,8 +32,8 @@ public class CommentDetailActivity extends Activity {
 
         setTitle(R.string.comment);
 
-        if (getActionBar() != null) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         if (savedInstanceState == null) {

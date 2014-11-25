@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,7 +32,7 @@ import java.util.Locale;
 /**
  * Activity for configuring blog specific settings.
  */
-public class BlogPreferencesActivity extends Activity {
+public class BlogPreferencesActivity extends ActionBarActivity {
     private boolean mIsViewingAdmin;
 
     /** The blog this activity is managing settings for. */
@@ -61,9 +61,9 @@ public class BlogPreferencesActivity extends Activity {
             return;
         }
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(StringUtils.unescapeHTML(blog.getBlogName()));
+            actionBar.setTitle(StringUtils.unescapeHTML(blog.getNameOrHostUrl()));
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
