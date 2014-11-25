@@ -125,6 +125,7 @@ public class MediaContentAdapter extends BaseAdapter {
             if (contentImageView != null) {
                 contentImageView.setImageBitmap(null);
                 contentImageView.setBackgroundColor(mResources.getColor(R.color.grey_medium_light));
+                contentImageView.setTag(null);
             }
 
             String captureTitle = isVideo ? mResources.getString(R.string.media_add_popup_capture_video) :
@@ -150,6 +151,7 @@ public class MediaContentAdapter extends BaseAdapter {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
                     MediaUtils.BackgroundFetchThumbnail bgDownload =
                             new MediaUtils.BackgroundFetchThumbnail(contentImageView, MediaUtils.BackgroundFetchThumbnail.THUMB_TYPE.IMAGE);
+                    contentImageView.setTag(bgDownload);
                     bgDownload.execute(content.getContentUri());
                 }
             }
@@ -175,6 +177,7 @@ public class MediaContentAdapter extends BaseAdapter {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
                     MediaUtils.BackgroundFetchThumbnail bgDownload =
                             new MediaUtils.BackgroundFetchThumbnail(contentImageView, MediaUtils.BackgroundFetchThumbnail.THUMB_TYPE.VIDEO);
+                    contentImageView.setTag(bgDownload);
                     bgDownload.execute(content.getContentPreviewUri());
                 }
             }
@@ -198,6 +201,7 @@ public class MediaContentAdapter extends BaseAdapter {
                 } else {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
                     MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(contentImageView);
+                    contentImageView.setTag(bgDownload);
                     bgDownload.execute(content.getContentPreviewUri());
                 }
             }

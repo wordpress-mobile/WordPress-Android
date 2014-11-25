@@ -585,7 +585,13 @@ public class MediaUtils {
 
         @Override
         protected void onPostExecute(Bitmap result) {
-            fadeInImage(mReference.get(), result, THUMBNAIL_FADEIN_DURATION_MS);
+            ImageView imageView = mReference.get();
+
+            if (imageView != null) {
+                if (imageView.getTag() == this) {
+                    fadeInImage(imageView, result, THUMBNAIL_FADEIN_DURATION_MS);
+                }
+            }
         }
     }
 
@@ -617,7 +623,13 @@ public class MediaUtils {
 
         @Override
         protected void onPostExecute(Bitmap result) {
-            fadeInImage(mReference.get(), result, THUMBNAIL_FADEIN_DURATION_MS);
+            ImageView imageView = mReference.get();
+
+            if (imageView != null) {
+                if (imageView.getTag() == this) {
+                    fadeInImage(imageView, result, THUMBNAIL_FADEIN_DURATION_MS);
+                }
+            }
         }
     }
 }
