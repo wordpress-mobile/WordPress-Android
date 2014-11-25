@@ -7,18 +7,16 @@
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
     <dimen name="toolbar_height">48dp</dimen>
 
-    <dimen name="default_elevation_pressed">4dp</dimen>
-
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_padding">10dp</dimen>
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
     <dimen name="fab_elevation">2dp</dimen>
-    <dimen name="fab_elevation_pressed">@dimen/default_elevation_pressed</dimen>
+    <dimen name="fab_elevation_pressed">4dp</dimen>
 
-    <dimen name="card_elevation">@dimen/cardview_default_elevation</dimen>
-    <dimen name="card_elevation_pressed">@dimen/default_elevation_pressed</dimen>
+    <dimen name="card_elevation">1dp</dimen>
+    <dimen name="card_elevation_pressed">4dp</dimen>
 
     <dimen name="message_bar_elevation">2dp</dimen>
 
@@ -54,14 +52,15 @@
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
 
-    <!-- left/right margin for posts in both list and detail views -->
-    <dimen name="reader_list_margin_normal">8dp</dimen>
-    <dimen name="reader_list_margin_landscape">48dp</dimen>
-    <dimen name="reader_list_margin_tablet">48dp</dimen>
-    <dimen name="reader_list_margin_landscape_tablet">96dp</dimen>
-    <dimen name="reader_list_margin_tablet_large">96dp</dimen>
-    <dimen name="reader_list_margin_landscape_tablet_large">192dp</dimen>
-    <dimen name="reader_list_margin">@dimen/reader_list_margin_normal</dimen>
+    <!-- left/right margin for reader detail -->
+    <dimen name="reader_detail_margin_normal">8dp</dimen>
+    <dimen name="reader_detail_margin_normal_landscape">48dp</dimen>
+    <dimen name="reader_detail_margin_tablet">48dp</dimen>
+    <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
+    <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
+
+    <!-- spacing between posts in the card view -->
+    <dimen name="reader_card_spacing">12dp</dimen>
 
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>
