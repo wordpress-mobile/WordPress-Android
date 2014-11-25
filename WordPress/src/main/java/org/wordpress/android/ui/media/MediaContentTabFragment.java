@@ -25,7 +25,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

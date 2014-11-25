@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.media;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -17,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 
@@ -50,11 +52,13 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class MediaUtils {
+    private static final long THUMBNAIL_FADEIN_DURATION_MS = 250;
+
     public class RequestCode {
         public static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 1000;
-        public static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1100;
-        public static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 1200;
-        public static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 1300;
+        public static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO      = 1100;
+        public static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY   = 1200;
+        public static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO      = 1300;
     }
 
     public interface LaunchCameraCallback {
@@ -545,47 +549,42 @@ public class MediaUtils {
         return MediaStore.Video.query(contentResolver, videoUri, columns);
     }
 
-    public static class BackgroundFetchDeviceImage extends AsyncTask<Uri, String, Bitmap> {
-        WeakReference<ImageView> mReference;
-
-        public BackgroundFetchDeviceImage(ImageView resultStore) {
-            mReference = new WeakReference<ImageView>(resultStore);
-        }
-
-        @Override
-        protected Bitmap doInBackground(Uri... params) {
-            return BitmapFactory.decodeFile(params[0].getPath());
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            ImageView imageView = mReference.get();
-
-            if (imageView != null) {
-                imageView.setImageBitmap(result);
-            }
+    public static void fadeInImage(ImageView imageView, Bitmap image, long duration) {
+        if (imageView != null) {
+            imageView.setImageBitmap(image);
+            ObjectAnimator alpha = ObjectAnimator.ofFloat(imageView, View.ALPHA, 0.25f, 1f);
+            alpha.setDuration(duration);
+            alpha.start();
         }
     }
 
-    public static class BackgroundFetchVideoThumbnail extends AsyncTask<Uri, String, Bitmap> {
-        WeakReference<ImageView> mReference;
+    public static class BackgroundFetchThumbnail extends AsyncTask<Uri, String, Bitmap> {
+        public enum THUMB_TYPE {
+            IMAGE, VIDEO
+        }
 
-        public BackgroundFetchVideoThumbnail(ImageView resultStore) {
+        private WeakReference<ImageView> mReference;
+        private THUMB_TYPE mType;
+
+        public BackgroundFetchThumbnail(ImageView resultStore, THUMB_TYPE type) {
             mReference = new WeakReference<ImageView>(resultStore);
+            mType = type;
         }
 
         @Override
         protected Bitmap doInBackground(Uri... params) {
-            return ThumbnailUtils.createVideoThumbnail(params[0].toString(), MediaStore.Video.Thumbnails.MINI_KIND);
+            if (mType == THUMB_TYPE.IMAGE) {
+                return BitmapFactory.decodeFile(params[0].getPath());
+            } else if (mType == THUMB_TYPE.VIDEO) {
+                return ThumbnailUtils.createVideoThumbnail(params[0].toString(), MediaStore.Video.Thumbnails.MINI_KIND);
+            } else {
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(Bitmap result) {
-            ImageView imageView = mReference.get();
-
-            if (imageView != null) {
-                imageView.setImageBitmap(result);
-            }
+            fadeInImage(mReference.get(), result, THUMBNAIL_FADEIN_DURATION_MS);
         }
     }
 
@@ -617,16 +616,7 @@ public class MediaUtils {
 
         @Override
         protected void onPostExecute(Bitmap result) {
-            ImageView imageView = mReference.get();
-
-            if (imageView != null) {
-                if (result != null) {
-                    imageView.setImageBitmap(result);
-                }
-                else {
-                    imageView.setImageResource(R.drawable.media_image_placeholder);
-                }
-            }
+            fadeInImage(mReference.get(), result, THUMBNAIL_FADEIN_DURATION_MS);
         }
     }
 }

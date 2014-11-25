@@ -148,7 +148,8 @@ public class MediaContentAdapter extends BaseAdapter {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
                 } else {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
-                    MediaUtils.BackgroundFetchDeviceImage bgDownload = new MediaUtils.BackgroundFetchDeviceImage(contentImageView);
+                    MediaUtils.BackgroundFetchThumbnail bgDownload =
+                            new MediaUtils.BackgroundFetchThumbnail(contentImageView, MediaUtils.BackgroundFetchThumbnail.THUMB_TYPE.IMAGE);
                     bgDownload.execute(content.getContentPreviewUri());
                 }
             }
@@ -172,7 +173,8 @@ public class MediaContentAdapter extends BaseAdapter {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
                 } else {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
-                    MediaUtils.BackgroundFetchVideoThumbnail bgDownload = new MediaUtils.BackgroundFetchVideoThumbnail(contentImageView);
+                    MediaUtils.BackgroundFetchThumbnail bgDownload =
+                            new MediaUtils.BackgroundFetchThumbnail(contentImageView, MediaUtils.BackgroundFetchThumbnail.THUMB_TYPE.VIDEO);
                     bgDownload.execute(content.getContentPreviewUri());
                 }
             }
