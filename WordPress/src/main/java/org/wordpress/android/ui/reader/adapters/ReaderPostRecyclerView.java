@@ -97,9 +97,10 @@ public class ReaderPostRecyclerView extends RecyclerView {
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
+            // left, top, right, bottom
             super.getItemOffsets(outRect, view, parent, state);
             if (mIsGridView) {
-                outRect.set(mHalfSpacing, mHalfSpacing, mHalfSpacing, mHalfSpacing);
+                outRect.set(mHalfSpacing, mSpacing, mHalfSpacing, 0);
             } else {
                 outRect.set(mSpacing, mSpacing, mSpacing, 0);
             }
