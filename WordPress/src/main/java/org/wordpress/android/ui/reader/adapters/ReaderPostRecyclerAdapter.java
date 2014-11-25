@@ -281,7 +281,6 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
                 }
             });
         }
-        ;
     }
 
     // ********************************************************************************************

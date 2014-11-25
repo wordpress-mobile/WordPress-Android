@@ -53,14 +53,20 @@
     <dimen name="margin_extra_large">16dp</dimen>
 
     <!-- left/right margin for reader detail -->
-    <dimen name="reader_detail_margin_normal">8dp</dimen>
+    <dimen name="reader_detail_margin_normal">12dp</dimen>
     <dimen name="reader_detail_margin_normal_landscape">48dp</dimen>
     <dimen name="reader_detail_margin_tablet">48dp</dimen>
     <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
-    <!-- spacing between posts in the card view -->
-    <dimen name="reader_card_spacing">12dp</dimen>
+    <!-- left/right spacing between posts in the card view -->
+    <dimen name="reader_card_spacing_normal">12dp</dimen>
+    <dimen name="reader_card_spacing_landscape">48dp</dimen>
+    <dimen name="reader_card_spacing_tablet">48dp</dimen>
+    <dimen name="reader_card_spacing_tablet_landscape">96dp</dimen>
+    <dimen name="reader_card_spacing">@dimen/reader_card_spacing_normal</dimen>
+
+    <dimen name="reader_card_spacing_vertical">12dp</dimen>
 
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>
