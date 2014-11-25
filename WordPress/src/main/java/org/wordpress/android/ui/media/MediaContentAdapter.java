@@ -153,7 +153,7 @@ public class MediaContentAdapter extends BaseAdapter {
                 } else {
                     Bitmap bitmap = WordPress.getBitmapCache().getBitmap(content.getContentUri().toString());
                     if (bitmap == null) {
-                        contentImageView.setImageResource(R.drawable.media_image_placeholder);
+                        contentImageView.setImageResource(R.drawable.media_grid_placeholder_image);
                         MediaUtils.BackgroundFetchThumbnail bgDownload =
                                 new MediaUtils.BackgroundFetchThumbnail(contentImageView, THUMB_TYPE.IMAGE);
                         contentImageView.setTag(bgDownload);
@@ -186,7 +186,7 @@ public class MediaContentAdapter extends BaseAdapter {
                 } else {
                     Bitmap bitmap = WordPress.getBitmapCache().getBitmap(content.getContentPreviewUri().toString());
                     if (bitmap == null) {
-                        contentImageView.setImageResource(R.drawable.media_image_placeholder);
+                        contentImageView.setImageResource(R.drawable.media_grid_placeholder_image);
                         MediaUtils.BackgroundFetchThumbnail bgDownload =
                                 new MediaUtils.BackgroundFetchThumbnail(contentImageView, THUMB_TYPE.VIDEO);
                         contentImageView.setTag(bgDownload);
@@ -218,7 +218,7 @@ public class MediaContentAdapter extends BaseAdapter {
                 } else {
                     Bitmap bitmap = WordPress.getBitmapCache().getBitmap(content.getContentPreviewUri().toString());
                     if (bitmap == null) {
-                        contentImageView.setImageResource(R.drawable.media_image_placeholder);
+                        contentImageView.setImageResource(R.drawable.media_grid_placeholder_image);
                         MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(contentImageView);
                         contentImageView.setTag(bgDownload);
                         bgDownload.execute(content.getContentPreviewUri());
