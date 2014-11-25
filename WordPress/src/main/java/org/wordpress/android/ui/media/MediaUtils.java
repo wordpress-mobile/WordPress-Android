@@ -574,7 +574,8 @@ public class MediaUtils {
         @Override
         protected Bitmap doInBackground(Uri... params) {
             if (mType == THUMB_TYPE.IMAGE) {
-                return BitmapFactory.decodeFile(params[0].getPath());
+                Bitmap imageBitmap = BitmapFactory.decodeFile(params[0].toString());
+                return ThumbnailUtils.extractThumbnail(imageBitmap, 512, 384);
             } else if (mType == THUMB_TYPE.VIDEO) {
                 return ThumbnailUtils.createVideoThumbnail(params[0].toString(), MediaStore.Video.Thumbnails.MINI_KIND);
             } else {

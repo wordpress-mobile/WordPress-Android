@@ -150,7 +150,7 @@ public class MediaContentAdapter extends BaseAdapter {
                     contentImageView.setImageResource(R.drawable.media_image_placeholder);
                     MediaUtils.BackgroundFetchThumbnail bgDownload =
                             new MediaUtils.BackgroundFetchThumbnail(contentImageView, MediaUtils.BackgroundFetchThumbnail.THUMB_TYPE.IMAGE);
-                    bgDownload.execute(content.getContentPreviewUri());
+                    bgDownload.execute(content.getContentUri());
                 }
             }
 
