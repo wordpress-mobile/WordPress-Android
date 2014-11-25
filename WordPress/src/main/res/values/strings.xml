@@ -803,4 +803,5 @@
     <string name="hs__conversation_header">Support chat</string>
     <string name="hs__username_blank_error">Enter a valid name</string>
     <string name="hs__invalid_email_error">Enter a valid email address</string>
+    <string name="empty_media_content">No content to display</string>
 </resources>

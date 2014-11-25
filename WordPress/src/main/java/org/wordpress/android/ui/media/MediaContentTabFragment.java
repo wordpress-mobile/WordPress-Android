@@ -95,16 +95,22 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
 
         Bundle args = getArguments();
         mFilter = (args == null) ? NONE : args.getInt(FILTER_ARG);
-
-        layoutGridView();
-        applyFilters();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        return mGridView;
+        View view = inflater.inflate(R.layout.media_tab_fragment, container, false);
+
+        if (view != null) {
+            mGridView = (GridView) view.findViewById(R.id.mediaGridView);
+            layoutGridView();
+            applyFilters();
+            mGridView.setEmptyView(view.findViewById(android.R.id.empty));
+        }
+
+        return view;
     }
 
     @Override
@@ -199,17 +205,16 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         if (menuItem.getItemId() == R.id.menu_media_content_selection_gallery) {
             notifyGalleryCreated();
             mode.finish();
-            return true;
         } else if (menuItem.getItemId() == R.id.menu_media_content_selection_confirm) {
             if (mSelectedContent.size() > 0) {
                 notifyMediaSelectionConfirmed();
             }
             mode.finish();
-            return true;
         } else {
             notifyMediaSelectionConfirmed();
-            return true;
         }
+
+        return true;
     }
 
     @Override
@@ -264,19 +269,21 @@ public class MediaContentTabFragment extends Fragment implements OnItemClickList
         int columnSpacingY = Math.round(resources.getDimension(R.dimen.media_grid_column_spacing_vertical));
         int columnSpacingX = Math.round(resources.getDimension(R.dimen.media_grid_column_spacing_horizontal));
 
-        mAdapter = new MediaContentAdapter(getActivity());
-        mGridView = new GridView(activity);
-        mGridView.setBackgroundColor(getResources().getColor(R.color.grey_extra_light));
-        mGridView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-        mGridView.setMultiChoiceModeListener(this);
-        mGridView.setOnItemClickListener(this);
-        mGridView.setNumColumns(numColumns);
-        mGridView.setVerticalSpacing(columnSpacingY);
-        mGridView.setHorizontalSpacing(columnSpacingX);
-        mGridView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        mGridView.setPadding(gridPadding, gridPadding, gridPadding, gridPadding);
-        mGridView.setClipToPadding(false);
-        mGridView.setAdapter(mAdapter);
+        mAdapter = new MediaContentAdapter(activity);
+
+        if (mGridView != null) {
+            mGridView.setBackgroundColor(getResources().getColor(R.color.grey_extra_light));
+            mGridView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+            mGridView.setMultiChoiceModeListener(this);
+            mGridView.setOnItemClickListener(this);
+            mGridView.setNumColumns(numColumns);
+            mGridView.setVerticalSpacing(columnSpacingY);
+            mGridView.setHorizontalSpacing(columnSpacingX);
+            mGridView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+            mGridView.setPadding(gridPadding, gridPadding, gridPadding, gridPadding);
+            mGridView.setClipToPadding(false);
+            mGridView.setAdapter(mAdapter);
+        }
     }
 
     /** Helper method to add content to the adapter based on the currently set filters. */
