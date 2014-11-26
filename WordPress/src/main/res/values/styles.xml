@@ -216,19 +216,6 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="FloatingActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:checkboxStyle">@style/FloatingActivityTheme.CheckBox</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowFullscreen">false</item>
-    </style>
-
-    <style name="FloatingActivityTheme.CheckBox">
-        <item name="android:textColor">@color/blue_dark</item>
-        <item name="android:button">?android:attr/listChoiceIndicatorMultiple</item>
-    </style>
-
     <style name="EmptyListText">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
@@ -328,5 +315,4 @@
     <style name="WordPress.SwipeToRefresh">
         <item name="refreshIndicatorColor">@color/blue_new_kid</item>
     </style>
-
 </resources>

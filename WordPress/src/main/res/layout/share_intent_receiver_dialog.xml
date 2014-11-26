@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/dialog_full_holo_dark"
+    android:background="@drawable/dialog_full_holo_light"
     android:minWidth="@dimen/default_dialog_width"
     android:orientation="vertical">
 
@@ -26,15 +27,13 @@
                 android:padding="@dimen/margin_medium"
                 android:text="@string/select_a_blog"
                 android:textAllCaps="true"
-                android:textColor="@color/white"
                 android:textSize="@dimen/text_sz_small"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
-                android:background="?android:selectableItemBackground">
+                android:layout_marginRight="@dimen/margin_medium">
 
                 <Spinner
                     android:id="@+id/blog_spinner"
@@ -52,15 +51,13 @@
                 android:padding="@dimen/margin_medium"
                 android:text="@string/share_action_title"
                 android:textAllCaps="true"
-                android:textColor="@color/white"
                 android:textSize="@dimen/text_sz_small"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
-                android:background="?android:selectableItemBackground">
+                android:layout_marginRight="@dimen/margin_medium">
 
                 <Spinner
                     android:id="@+id/action_spinner"
@@ -75,14 +72,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/always_use_these_settings_to_share"
                 android:id="@+id/always_use_checkbox"
-                android:drawableLeft="@drawable/media_gallery_checkbox_selector"
-                android:drawableStart="@drawable/media_gallery_checkbox_selector"
                 android:clickable="true"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:textColor="@color/white"
-                android:gravity="center_vertical"/>
+                android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
+                android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
+                android:gravity="center_vertical"
+                tools:checked="true"/>
         </LinearLayout>
     </ScrollView>
 
