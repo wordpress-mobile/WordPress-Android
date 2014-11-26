@@ -75,6 +75,10 @@ public class MediaGalleryPickerActivity extends ActionBarActivity
         mGridView = (GridView) findViewById(R.id.media_gallery_picker_gridview);
         mGridView.setMultiChoiceModeListener(this);
         mGridView.setOnItemClickListener(this);
+        mGridAdapter = new MediaGridAdapter(this, null, 0, MediaImageLoader.getInstance());
+        mGridAdapter.setSelectedItems(selectedItems);
+        mGridAdapter.setCallback(this);
+        mGridView.setAdapter(mGridAdapter);
         if (mIsSelectOneItem) {
             setTitle(R.string.select_from_media_library);
             ActionBar actionBar = getSupportActionBar();
@@ -86,10 +90,6 @@ public class MediaGalleryPickerActivity extends ActionBarActivity
             mActionMode.setTitle(String.format(getString(R.string.cab_selected),
                     mGridAdapter.getSelectedItems().size()));
         }
-        mGridAdapter = new MediaGridAdapter(this, null, 0, MediaImageLoader.getInstance());
-        mGridAdapter.setSelectedItems(selectedItems);
-        mGridAdapter.setCallback(this);
-        mGridView.setAdapter(mGridAdapter);
     }
 
     @Override
