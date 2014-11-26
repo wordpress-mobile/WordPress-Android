@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
+import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.ClickGroupModel;
 import org.wordpress.android.ui.stats.model.ClicksModel;
@@ -109,14 +110,13 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
-            String name = children.getTitle();
-            int total = children.getTotals();
-
             // name, url
-            holder.setEntryTextOrLink(name, name);
+            holder.setEntryTextOrLink(children.getUrl(), children.getTitle());
 
             // totals
-            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(
+                    children.getTotals()
+            ));
 
             // no icon, make it invisible so children are indented
             holder.networkImageView.setVisibility(View.INVISIBLE);
@@ -176,10 +176,14 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // icon
-            holder.showNetworkImage(icon);
+            if (StringUtils.isNotBlank(icon)) {
+                holder.showNetworkImage(icon);
+            } else {
+                holder.networkImageView.setVisibility(View.GONE);
+            }
 
             // expand/collapse chevron
-            holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
+            holder.chevronImageView.setVisibility(children > 1 ? View.VISIBLE : View.GONE);
             return convertView;
         }
 

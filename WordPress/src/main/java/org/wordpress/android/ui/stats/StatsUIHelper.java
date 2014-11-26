@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.text.Spannable;
+import android.text.style.URLSpan;
 import android.util.SparseBooleanArray;
 import android.view.Display;
 import android.view.View;
@@ -63,7 +65,7 @@ public class StatsUIHelper {
         }
 
         int numExistingViews = linearLayout.getChildCount();
-        int altRowColor = ctx.getResources().getColor(R.color.stats_alt_row);
+       // int altRowColor = ctx.getResources().getColor(R.color.stats_alt_row);
 
         // remove excess views
         if (count < numExistingViews) {
@@ -72,8 +74,9 @@ public class StatsUIHelper {
             numExistingViews = count;
         }
 
+        int bgColor = Color.TRANSPARENT;
         for (int i = 0; i < count; i++) {
-            int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
+           // int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
             final View view;
             // reuse existing view when possible
             if (i < numExistingViews) {
@@ -116,7 +119,7 @@ public class StatsUIHelper {
         }
 
         int numExistingGroupViews = mLinearLayout.getChildCount();
-        int altRowColor = ctx.getResources().getColor(R.color.stats_alt_row);
+        //int altRowColor = ctx.getResources().getColor(R.color.stats_alt_row);
 
         // remove excess views
         if (groupCount < numExistingGroupViews) {
@@ -125,10 +128,12 @@ public class StatsUIHelper {
             numExistingGroupViews = groupCount;
         }
 
+        int bgColor = Color.TRANSPARENT;
+
         // add each group
         for (int i = 0; i < groupCount; i++) {
             boolean isExpanded = mGroupIdToExpandedMap.get(i);
-            int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
+            //int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
 
             // reuse existing view when possible
             final View groupView;
@@ -273,6 +278,27 @@ public class StatsUIHelper {
         }
 
         StatsUIHelper.setGroupChevron(true, groupView, animate);
+    }
+
+
+
+    /**
+     * Removes URL underlines in a string by replacing URLSpan occurrences by
+     * URLSpanNoUnderline objects.
+     *
+     * @param pText A Spannable object. For example, a TextView casted as
+     *               Spannable.
+     */
+    public static void removeUnderlines(Spannable pText) {
+        URLSpan[] spans = pText.getSpans(0, pText.length(), URLSpan.class);
+
+        for(URLSpan span:spans) {
+            int start = pText.getSpanStart(span);
+            int end = pText.getSpanEnd(span);
+            pText.removeSpan(span);
+            span = new URLSpanNoUnderline(span.getURL());
+            pText.setSpan(span, start, end, 0);
+        }
     }
 
 }

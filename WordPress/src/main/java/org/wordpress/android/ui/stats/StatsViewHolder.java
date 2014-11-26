@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.text.Html;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.util.Linkify;
 import android.view.View;
@@ -20,6 +21,7 @@ class StatsViewHolder {
     public final TextView totalsTextView;
     public final NetworkImageView networkImageView;
     public final ImageView chevronImageView;
+    public final ImageView imgMore;
 
     public StatsViewHolder(View view) {
         entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
@@ -30,6 +32,8 @@ class StatsViewHolder {
         networkImageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
         networkImageView.setErrorImageResId(R.drawable.stats_blank_image);
         networkImageView.setDefaultImageResId(R.drawable.stats_blank_image);
+
+        imgMore = (ImageView) view.findViewById(R.id.image_more);
     }
 
     /*
@@ -53,6 +57,8 @@ class StatsViewHolder {
         } else {
             entryTextView.setText(Html.fromHtml("<a href=\"" + linkUrl + "\">" + linkName + "</a>"));
         }
+
+        StatsUIHelper.removeUnderlines((Spannable) entryTextView.getText());
     }
 
     /*
@@ -67,5 +73,6 @@ class StatsViewHolder {
         } else {
             networkImageView.setImageResource(R.drawable.stats_blank_image);
         }
+        networkImageView.setVisibility(View.VISIBLE);
     }
 }

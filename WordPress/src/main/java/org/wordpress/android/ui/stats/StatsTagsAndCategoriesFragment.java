@@ -188,9 +188,6 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
-            // icon
-            holder.networkImageView.setImageResource(R.drawable.format_bar_button_link_selector);
-
             // expand/collapse chevron
             holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
             return convertView;

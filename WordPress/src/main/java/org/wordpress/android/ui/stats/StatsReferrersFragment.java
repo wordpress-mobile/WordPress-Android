@@ -2,11 +2,15 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.PopupMenu;
 
+import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.model.ReferrerGroupModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
 import org.wordpress.android.ui.stats.model.SingleItemModel;
@@ -130,6 +134,24 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             // no icon, make it invisible so children are indented
             holder.networkImageView.setVisibility(View.INVISIBLE);
 
+            if (StringUtils.isNotBlank(children.getUrl())) {
+                holder.imgMore.setVisibility(View.VISIBLE);
+                holder.imgMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        PopupMenu popup = new PopupMenu(activity, view);
+                        MenuItem menuItem = popup.getMenu().add(getString(R.string.view_in_browser));
+                        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                WPWebViewActivity.openURL(activity, children.getUrl());
+                                return true;
+                            }
+                        });
+                        popup.show();
+                    }
+                });
+            }
             return convertView;
         }
 

@@ -3,18 +3,27 @@ package org.wordpress.android.ui.stats;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.text.Spannable;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.PopupMenu;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.WebViewActivity;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.model.SingleItemModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.UrlUtils;
 
+import java.net.URL;
 import java.util.List;
 
 
@@ -88,26 +97,47 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
             StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
             // fill data
             // entries
-            holder.setEntryTextOrLink(currentRowData.getUrl(), currentRowData.getTitle());
+//            holder.setEntryTextOrLink(currentRowData.getUrl(), currentRowData.getTitle());
+  //          StatsUtils.removeUnderlines((Spannable)holder.entryTextView.getText());
+            holder.entryTextView.setText(currentRowData.getTitle());
+            holder.entryTextView.setTextColor(getResources().getColor(R.color.wordpress_blue));
+            holder.entryTextView.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            AppLog.w(AppLog.T.STATS, currentRowData.getItemID() + "");
+                            Intent statsPostViewIntent = new Intent(getActivity(), StatsSinglePostDetailsActivity.class);
+                            statsPostViewIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
+                            statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_ID, currentRowData.getItemID());
+                            getActivity().startActivity(statsPostViewIntent);
+                        }
+                    });
+
+            holder.entryTextView.setBackgroundResource(R.drawable.list_bg_selector);
+            holder.entryTextView.setTextColor(getResources().getColor(R.color.wordpress_blue));
+
+            holder.imgMore.setVisibility(View.VISIBLE);
+            holder.imgMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popup = new PopupMenu(context, view);
+                    MenuItem menuItem = popup.getMenu().add(getString(R.string.view_in_browser));
+                    menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            WPWebViewActivity.openURL(context, currentRowData.getUrl());
+                            return true;
+                        }
+                    });
+                    popup.show();
+                }
+            });
+
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));
 
-            holder.totalsTextView.setPaintFlags(holder.totalsTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-            holder.totalsTextView.setTextColor(getResources().getColor(R.color.wordpress_blue));
-            holder.totalsTextView.setOnClickListener(new
-                             View.OnClickListener() {
-                                 @Override
-                                 public void onClick(View view) {
-                                     AppLog.w(AppLog.T.STATS, currentRowData.getItemID() + "");
-                                     Intent statsPostViewIntent = new Intent(getActivity(), StatsSinglePostDetailsActivity.class);
-                                     statsPostViewIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
-                                     statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_ID, currentRowData.getItemID());
-                                     getActivity().startActivity(statsPostViewIntent);
-                                 }
-                             });
             // no icon
             holder.networkImageView.setVisibility(View.GONE);
-
             return rowView;
         }
     }

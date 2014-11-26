@@ -3,10 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="@dimen/margin_small"
-    android:paddingLeft="@dimen/margin_small"
-    android:paddingRight="@dimen/margin_small"
-    android:paddingBottom="@dimen/margin_small">
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingBottom="@dimen/margin_medium">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,8 +15,8 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/stats_list_cell_image"
-            android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_small"
+            android:visibility="gone"
             android:layout_width="24dp"
             android:layout_height="24dp" />
 
@@ -26,7 +24,6 @@
             android:id="@+id/stats_list_cell_chevron"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_marginLeft="@dimen/margin_extra_small"
             android:layout_marginRight="@dimen/margin_extra_small"
             android:visibility="gone"
             android:src="@drawable/stats_chevron_right" />
@@ -38,17 +35,28 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin_large"
             android:drawablePadding="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
             android:maxLines="3"
-            android:textColorLink="@color/wordpress_blue"
             android:autoLink="none"
+            android:textColorLink="@color/wordpress_blue"
             android:textSize="@dimen/text_sz_medium" />
+
+        <ImageView
+            android:id="@+id/image_more"
+            android:visibility="gone"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_large"
+            android:background="?android:selectableItemBackground"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
+            android:src="@drawable/ic_action_more" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_list_cell_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="@dimen/margin_small"
             android:textSize="@dimen/text_sz_medium" />
     </LinearLayout>
 
