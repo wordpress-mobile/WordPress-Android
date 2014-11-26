@@ -207,7 +207,11 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // icon
-            holder.showNetworkImage(icon);
+            if (StringUtils.isNotBlank(icon)) {
+                holder.showNetworkImage(icon);
+            } else {
+                holder.networkImageView.setVisibility(View.GONE);
+            }
 
             // expand/collapse chevron
             holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);

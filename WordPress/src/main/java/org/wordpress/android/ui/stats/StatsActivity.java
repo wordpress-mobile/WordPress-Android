@@ -16,15 +16,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,12 +71,14 @@ import java.util.Map;
  * </p>
  */
 public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.ScrollViewListener,
-        ActionBar.OnNavigationListener, StatsAuthorsFragment.OnAuthorsSectionChangeListener,
+        StatsAuthorsFragment.OnAuthorsSectionChangeListener,
         StatsVisitorsAndViewsFragment.OnDateChangeListener{
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
     private static final String SAVED_STATS_REQUESTED_DATE= "SAVED_STATS_REQUESTED_DATE";
+
+    private Spinner mSpinner;
 
     private static final int REQUEST_JETPACK = 7000;
 
@@ -176,16 +182,44 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             scrollView.setScrollViewListener(this);
         }
 
-        // only change if we're not in list navigation mode, since that means the actionBar
-        // is already correctly configured
-        if (!mNoMenuDrawer && actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
-            StatsTimeframe[] timeframes = {StatsTimeframe.DAY, StatsTimeframe.WEEK,
-                    StatsTimeframe.MONTH, StatsTimeframe.YEAR};
-            mTimeframeSpinnerAdapter =
-                    new TimeframeSpinnerAdapter(this, timeframes);
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-            actionBar.setListNavigationCallbacks(mTimeframeSpinnerAdapter, this);
+        if (!mNoMenuDrawer && actionBar != null && mSpinner == null) {
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                View view = View.inflate(this, R.layout.reader_spinner, toolbar);
+                mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
+
+                StatsTimeframe[] timeframes = {StatsTimeframe.DAY, StatsTimeframe.WEEK,
+                        StatsTimeframe.MONTH, StatsTimeframe.YEAR};
+                mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, timeframes);
+
+                actionBar.setDisplayShowTitleEnabled(false);
+                mSpinner.setAdapter(mTimeframeSpinnerAdapter);
+                mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        final StatsTimeframe selectedTimeframe =  (StatsTimeframe) mTimeframeSpinnerAdapter.getItem(position);
+
+                        if (mCurrentTimeframe == selectedTimeframe) {
+                            AppLog.d(T.STATS, "The selected TIME FRAME is already active: " + selectedTimeframe.getLabel());
+                            return;
+                        }
+
+                        AppLog.d(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
+                        mCurrentTimeframe = selectedTimeframe;
+                        if (NetworkUtils.isNetworkAvailable(StatsActivity.this)) {
+                            String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                            loadStatsFragments(true, true);
+                            refreshStats(selectedTimeframe, date, true);
+                            mSwipeToRefreshHelper.setRefreshing(true);
+                        }
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // nop
+                    }
+                });
+            }
         }
 
         selectTimeframeInActionBar(mCurrentTimeframe);
@@ -724,15 +758,39 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         public View getView(int position, View convertView, ViewGroup parent) {
             final View view;
             if (convertView == null) {
-                view = mInflater.inflate(R.layout.spinner_menu_dropdown_item, parent, false);
+                view = mInflater.inflate(R.layout.reader_spinner_item, parent, false);
             } else {
                 view = convertView;
             }
 
-            final TextView text = (TextView) view.findViewById(R.id.menu_text_dropdown);
+            final TextView text = (TextView) view.findViewById(R.id.text);
             StatsTimeframe selectedTimeframe = (StatsTimeframe)getItem(position);
             text.setText(selectedTimeframe.getLabel());
             return view;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            StatsTimeframe selectedTimeframe = (StatsTimeframe)getItem(position);
+            final TagViewHolder holder;
+
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.reader_spinner_dropdown_item, parent, false);
+                holder = new TagViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (TagViewHolder) convertView.getTag();
+            }
+
+            holder.textView.setText(selectedTimeframe.getLabel());
+            return convertView;
+        }
+
+        private class TagViewHolder {
+            private final TextView textView;
+            TagViewHolder(View view) {
+                textView = (TextView) view.findViewById(R.id.text);
+            }
         }
 
         public int getIndexOfTimeframe(StatsTimeframe tm) {
@@ -745,30 +803,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             }
             return pos;
         }
-    }
-
-    /*
-      * called when user selects a timeframe from the ActionBar dropdown
-      */
-    @Override
-    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-        final StatsTimeframe selectedTimeframe =  (StatsTimeframe) mTimeframeSpinnerAdapter.getItem(itemPosition);
-
-        if (mCurrentTimeframe == selectedTimeframe) {
-            AppLog.d(T.STATS, "The selected TIME FRAME is already active: " + selectedTimeframe.getLabel());
-            return true;
-        }
-
-        AppLog.d(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
-        mCurrentTimeframe = selectedTimeframe;
-        if (NetworkUtils.isNetworkAvailable(this)) {
-            String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-            loadStatsFragments(true, true);
-            refreshStats(selectedTimeframe, date, true);
-            mSwipeToRefreshHelper.setRefreshing(true);
-        }
-
-        return true;
     }
 
     @Override

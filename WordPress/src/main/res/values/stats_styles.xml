@@ -34,6 +34,17 @@
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
 
+    <style name="StatsViewAllButton">
+        <!-- item name="android:background">@drawable/stats_button_selector</item-->
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:button">@android:color/transparent</item>
+        <item name="android:minHeight">22dp</item>
+        <item name="android:textColor">@color/wordpress_blue</item>
+        <item name="android:paddingTop">@dimen/margin_medium</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
     <style name="StatsPagerTitle">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
@@ -46,7 +57,7 @@
     </style>
 
     <!-- TextViews -->
-    <style name="StatsTextView" parent="android:Widget.TextView">
+    <!-- style name="StatsTextView" parent="android:Widget.TextView">
         <item name="android:textColorLink">@color/reader_hyperlink</item>
     </style>
 
@@ -66,5 +77,5 @@
         <item name="android:layout_marginRight">@dimen/margin_medium</item>
         <item name="android:drawablePadding">0dp</item>
         <item name="android:text">View</item>
-    </style>
+    </style -->
 </resources>

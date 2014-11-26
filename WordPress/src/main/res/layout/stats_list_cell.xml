@@ -33,6 +33,7 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:minHeight="24dp"
             android:layout_marginRight="@dimen/margin_large"
             android:drawablePadding="@dimen/margin_small"
             android:maxLines="3"
