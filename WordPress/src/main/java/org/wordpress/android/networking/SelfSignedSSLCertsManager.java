@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.GenericCallback;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -58,6 +59,9 @@ public class SelfSignedSSLCertsManager {
                             AppLog.e(T.API, e);
                         } catch (IOException e) {
                             AppLog.e(T.API, e);
+                        }
+                        if (certificateTrusted != null) {
+                            certificateTrusted.callback(null);
                         }
                     }
                 }
@@ -148,7 +152,9 @@ public class SelfSignedSSLCertsManager {
         }
     }
 
-    //Create an empty trust store file if missing
+    /**
+     * Create an empty trust store file if missing
+     */
     private void createLocalKeyStoreFile() throws GeneralSecurityException, IOException {
         if (!mLocalTrustStoreFile.exists()) {
             FileOutputStream out = null;
@@ -158,7 +164,7 @@ public class SelfSignedSSLCertsManager {
                 localTrustStore.load(null, BuildConfig.DB_SECRET.toCharArray());
                 localTrustStore.store(out, BuildConfig.DB_SECRET.toCharArray());
             } finally {
-                if (out!=null){
+                if (out != null) {
                     try {
                         out.close();
                     } catch (IOException e) {
