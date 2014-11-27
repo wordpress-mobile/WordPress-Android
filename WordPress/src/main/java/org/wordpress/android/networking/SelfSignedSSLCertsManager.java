@@ -44,11 +44,11 @@ public class SelfSignedSSLCertsManager {
         mLocalKeyStore = loadTrustStore(ctx);
     }
 
-    public static void askForSslTrust(final Context ctx) {
+    public static void askForSslTrust(final Context ctx, final GenericCallback<Void> certificateTrusted) {
         AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
         alert.setTitle(ctx.getString(R.string.ssl_certificate_error));
         alert.setMessage(ctx.getString(R.string.ssl_certificate_ask_trust));
-        alert.setPositiveButton(R.string.ssl_certificate_trust, new DialogInterface.OnClickListener() {
+        alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         SelfSignedSSLCertsManager selfSignedSSLCertsManager;
                         try {
@@ -78,7 +78,7 @@ public class SelfSignedSSLCertsManager {
                 }
             }
         });
-        alert.setNegativeButton(R.string.ssl_certificate_do_not_trust, new DialogInterface.OnClickListener() {
+        alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
             }
         });
