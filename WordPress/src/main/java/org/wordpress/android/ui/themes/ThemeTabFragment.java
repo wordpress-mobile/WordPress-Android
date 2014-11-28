@@ -62,6 +62,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
     protected GridView mGridView;
+    protected TextView mEmptyView;
     protected TextView mNoResultText;
     protected ThemeTabAdapter mAdapter;
     protected ThemeTabFragmentCallback mCallback;
@@ -96,7 +97,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
         setRetainInstance(true);
 
         mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
-
+        mEmptyView = (TextView) view.findViewById(R.id.text_empty);
         mGridView = (GridView) view.findViewById(R.id.theme_gridview);
         mGridView.setRecyclerListener(this);
 
@@ -108,6 +109,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
                 public void onRefreshStarted() {
                     if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
                         mSwipeToRefreshHelper.setRefreshing(false);
+                        mEmptyView.setText(R.string.no_network_title);
                         return;
                     }
                     if (getActivity() instanceof ThemeBrowserActivity) {
@@ -155,11 +157,15 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
         if (getView() == null || !isAdded()) {
             return;
         }
-        View emptyView = getView().findViewById(R.id.text_empty);
-        if (emptyView != null) {
-            emptyView.setVisibility(visible ? View.VISIBLE : View.GONE);
-        }
+        mEmptyView.setVisibility(visible ? View.VISIBLE : View.GONE);
         mGridView.setVisibility(visible ? View.GONE : View.VISIBLE);
+        if (visible && !NetworkUtils.isNetworkAvailable(getActivity())) {
+            mEmptyView.setText(R.string.no_network_title);
+        }
+    }
+
+    public void setEmptyViewText(int stringId) {
+        mEmptyView.setText(stringId);
     }
 
     @Override
