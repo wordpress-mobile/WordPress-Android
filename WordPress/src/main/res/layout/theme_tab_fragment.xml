@@ -3,6 +3,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_empty"
+        style="@style/WordPress.EmptyList.Title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+        android:layout_marginLeft="@dimen/empty_list_title_side_margin"
+        android:layout_marginRight="@dimen/empty_list_title_side_margin"
+        android:gravity="center"
+        android:text="@string/empty_list_default"/>
+
     <TextView
         android:id="@+id/theme_no_search_result_text"
         android:layout_width="wrap_content"
@@ -10,7 +21,6 @@
         android:text="@string/theme_no_search_result_found"
         android:visibility="gone"
         android:layout_margin="16dp"/>
-
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

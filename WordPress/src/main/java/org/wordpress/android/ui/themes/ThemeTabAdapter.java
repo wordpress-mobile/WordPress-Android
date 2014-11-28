@@ -16,7 +16,6 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DisplayUtils;
 
 /**
@@ -52,6 +51,7 @@ public class ThemeTabAdapter extends CursorAdapter {
             themeAttr = (ImageView) view.findViewById(R.id.theme_grid_attributes);
         }
     }
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         View view = mInflater.inflate(R.layout.theme_grid_item, parent, false);

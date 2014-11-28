@@ -21,8 +21,8 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 
@@ -145,9 +145,21 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
             return;
         }
         mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
+        setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
         mGridView.setSelection(mSavedScrollPosition);
+    }
+
+    private void setEmptyViewVisible(boolean visible) {
+        if (getView() == null || !isAdded()) {
+            return;
+        }
+        View emptyView = getView().findViewById(R.id.text_empty);
+        if (emptyView != null) {
+            emptyView.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+        mGridView.setVisibility(visible ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -199,6 +211,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
             mNoResultText.setVisibility(View.GONE);
         }
         mAdapter.changeCursor(cursor);
+        setEmptyViewVisible(mAdapter.getCount() == 0);
     }
 
     @Override
