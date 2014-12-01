@@ -19,7 +19,7 @@ repositories {
 dependencies {
     compile 'commons-lang:commons-lang:2.6'
     compile 'com.mcxiaoke.volley:library:1.0.+'
-    compile 'com.android.support:support-v13:21.0.2'
+    compile 'com.android.support:support-v13:21.0.+'
 }
 
 android {

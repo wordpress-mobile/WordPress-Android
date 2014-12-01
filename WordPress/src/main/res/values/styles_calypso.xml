@@ -31,4 +31,11 @@
         <item name="android:textColor">@color/calypso_grey</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="Calypso.FloatingActivity" parent="Calypso.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
 </resources>
