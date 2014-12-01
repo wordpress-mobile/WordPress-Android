@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -31,6 +30,7 @@ import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionService;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
@@ -61,7 +61,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
-    private RecyclerView mRecyclerView;
+    private ReaderRecyclerView mRecyclerView;
     private SuggestionAutoCompleteText mEditComment;
     private ImageView mImgSubmitComment;
     private ViewGroup mCommentBox;
@@ -97,7 +97,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             }
         }
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);

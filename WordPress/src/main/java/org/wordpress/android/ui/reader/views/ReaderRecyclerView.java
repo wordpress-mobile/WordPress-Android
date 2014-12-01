@@ -1,23 +1,26 @@
-package org.wordpress.android.ui.reader.adapters;
+package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-public class ReaderPostRecyclerView extends RecyclerView {
+/*
+ * default recycler view used for reader cards
+ */
+public class ReaderRecyclerView extends RecyclerView {
 
-    public ReaderPostRecyclerView(Context context) {
+    public ReaderRecyclerView(Context context) {
         super(context);
         initialize();
     }
 
-    public ReaderPostRecyclerView(Context context, AttributeSet attrs) {
+    public ReaderRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize();
     }
 
-    public ReaderPostRecyclerView(Context context, AttributeSet attrs, int defStyle) {
+    public ReaderRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initialize();
     }

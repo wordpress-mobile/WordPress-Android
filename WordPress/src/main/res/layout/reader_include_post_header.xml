@@ -9,6 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
+    android:elevation="@dimen/card_elevation"
     android:orientation="vertical"
     android:paddingTop="@dimen/margin_large">
 

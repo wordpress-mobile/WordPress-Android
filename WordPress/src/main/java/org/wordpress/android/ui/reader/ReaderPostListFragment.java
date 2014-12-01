@@ -47,10 +47,10 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderPostRecyclerAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderPostRecyclerView;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -72,7 +72,7 @@ public class ReaderPostListFragment extends Fragment {
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
 
     private ReaderPostRecyclerAdapter mPostRecycler;
-    private ReaderPostRecyclerView mRecyclerView;
+    private ReaderRecyclerView mRecyclerView;
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
@@ -247,7 +247,7 @@ public class ReaderPostListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_cards, container, false);
-        mRecyclerView = (ReaderPostRecyclerView) rootView.findViewById(R.id.recycler_view);
+        mRecyclerView = (ReaderRecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) rootView.findViewById(R.id.text_new_posts);
