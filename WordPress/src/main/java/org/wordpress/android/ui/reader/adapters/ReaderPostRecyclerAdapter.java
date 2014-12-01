@@ -281,7 +281,6 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
                 }
             });
         }
-        ;
     }
 
     // ********************************************************************************************
@@ -294,8 +293,8 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        int listMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
-        mPhotonWidth = displayWidth - (listMargin * 2);
+        int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing);
+        mPhotonWidth = displayWidth - (cardSpacing * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
     }
 

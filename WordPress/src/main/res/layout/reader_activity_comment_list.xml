@@ -33,8 +33,8 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_bottom"
         android:layout_below="@+id/layout_post_header"
-        android:layout_marginLeft="@dimen/reader_list_margin"
-        android:layout_marginRight="@dimen/reader_list_margin"
+        android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginRight="@dimen/reader_detail_margin"
         android:divider="@null"
         android:dividerHeight="0dp"
         android:scrollbarStyle="outsideOverlay"
@@ -47,8 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/reader_list_margin"
-        android:layout_marginRight="@dimen/reader_list_margin">
+        android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginRight="@dimen/reader_detail_margin">
 
         <include
             android:id="@+id/layout_comment_box"
