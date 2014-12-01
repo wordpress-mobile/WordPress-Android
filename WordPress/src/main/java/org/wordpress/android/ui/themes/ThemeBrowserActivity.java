@@ -455,7 +455,6 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
                     }
                 }
         );
-
     }
 
     @Override

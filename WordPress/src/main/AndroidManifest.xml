@@ -152,6 +152,11 @@
         <activity android:name=".ui.stats.StatsDetailsActivity"/>
 
         <!-- Media Activities -->
+        <activity
+            android:name=".ui.media.MediaSelectActivity"
+            android:theme="@style/Calypso.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
         <activity android:name=".ui.media.MediaBrowserActivity"
                   android:theme="@style/Calypso.NoActionBar" >
         </activity>

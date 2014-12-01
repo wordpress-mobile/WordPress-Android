@@ -27,6 +27,10 @@
     <dimen name="menu_drawer_icon_size">28dp</dimen>
     <dimen name="menu_drawer_badge_size">24dp</dimen>
 
+    <dimen name="media_grid_padding">12dp</dimen>
+    <dimen name="media_grid_column_spacing_vertical">1dp</dimen>
+    <dimen name="media_grid_column_spacing_horizontal">1dp</dimen>
+    <dimen name="media_grid_item_content_inset">6dp</dimen>
 	<dimen name="media_grid_local_image_width">160dp</dimen>
 	<dimen name="media_grid_progress_height">50dp</dimen>
 
@@ -112,5 +116,6 @@
     <!-- stats -->
     <dimen name="stats_button_corner_radius">4dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
+    <dimen name="media_content_grid_item_height">148dp</dimen>
 
 </resources>

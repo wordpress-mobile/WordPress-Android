@@ -1,22 +1,30 @@
 package org.wordpress.android.ui.media;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -34,6 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -43,11 +52,13 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class MediaUtils {
+    private static final long THUMBNAIL_FADEIN_DURATION_MS = 250;
+
     public class RequestCode {
         public static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 1000;
-        public static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1100;
-        public static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 1200;
-        public static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 1300;
+        public static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO      = 1100;
+        public static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY   = 1200;
+        public static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO      = 1300;
     }
 
     public interface LaunchCameraCallback {
@@ -501,5 +512,135 @@ public class MediaUtils {
         }
 
         return fileExtensionFromMimeType.toLowerCase();
+    }
+
+    public static Cursor getWordPressMediaImages() {
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (blog == null) {
+            return null;
+        }
+
+        return WordPress.wpDB.getMediaImagesForBlog(String.valueOf(blog.getLocalTableBlogId()));
+    }
+
+    public static Cursor getWordPressMediaVideos() {
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (blog == null) {
+            return null;
+        }
+
+        return WordPress.wpDB.getMediaFilesForBlog(String.valueOf(blog.getLocalTableBlogId()));
+    }
+
+    public static Cursor getDeviceMediaStoreImageThumbnails(ContentResolver contentResolver, String[] columns) {
+        Uri thumbnailUri = MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI;
+        return MediaStore.Images.Thumbnails.query(contentResolver, thumbnailUri, columns);
+    }
+
+    public static Cursor getDeviceMediaStoreImages(ContentResolver contentResolver, String[] columns) {
+        Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        return MediaStore.Images.Media.query(contentResolver, imageUri, columns);
+    }
+
+    public static Cursor getDeviceMediaStoreVideos(ContentResolver contentResolver, String[] columns) {
+        Uri videoUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        return MediaStore.Video.query(contentResolver, videoUri, columns);
+    }
+
+    public static void fadeInImage(ImageView imageView, Bitmap image) {
+        fadeInImage(imageView, image, THUMBNAIL_FADEIN_DURATION_MS);
+    }
+
+    public static void fadeInImage(ImageView imageView, Bitmap image, long duration) {
+        if (imageView != null) {
+            imageView.setImageBitmap(image);
+            ObjectAnimator alpha = ObjectAnimator.ofFloat(imageView, View.ALPHA, 0.25f, 1f);
+            alpha.setDuration(duration);
+            alpha.start();
+        }
+    }
+
+    public static class BackgroundFetchThumbnail extends AsyncTask<Uri, String, Bitmap> {
+        public enum THUMB_TYPE {
+            IMAGE, VIDEO
+        }
+
+        private WeakReference<ImageView> mReference;
+        private THUMB_TYPE mType;
+
+        public BackgroundFetchThumbnail(ImageView resultStore, THUMB_TYPE type) {
+            mReference = new WeakReference<ImageView>(resultStore);
+            mType = type;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Uri... params) {
+            String uri = params[0].toString();
+            Bitmap bitmap = WordPress.getBitmapCache().getBitmap(uri);
+
+            if (bitmap == null) {
+                if (mType == THUMB_TYPE.IMAGE) {
+                    Bitmap imageBitmap = BitmapFactory.decodeFile(uri);
+                    bitmap = ThumbnailUtils.extractThumbnail(imageBitmap, 312, 312);
+                    WordPress.getBitmapCache().put(uri, bitmap);
+                } else if (mType == THUMB_TYPE.VIDEO) {
+                    bitmap = ThumbnailUtils.createVideoThumbnail(uri, MediaStore.Video.Thumbnails.MINI_KIND);
+                    WordPress.getBitmapCache().put(uri, bitmap);
+                }
+            }
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            ImageView imageView = mReference.get();
+
+            if (imageView != null) {
+                if (imageView.getTag() == this) {
+                    fadeInImage(imageView, result, THUMBNAIL_FADEIN_DURATION_MS);
+                }
+            }
+        }
+    }
+
+    public static class BackgroundDownloadWebImage extends AsyncTask<Uri, String, Bitmap> {
+        WeakReference<ImageView> mReference;
+
+        public BackgroundDownloadWebImage(ImageView resultStore) {
+            mReference = new WeakReference<ImageView>(resultStore);
+        }
+
+        @Override
+        protected Bitmap doInBackground(Uri... params) {
+            try {
+                String uri = params[0].toString();
+                Bitmap bitmap = WordPress.getBitmapCache().getBitmap(uri);
+
+                if (bitmap == null) {
+                    URL url = new URL(uri);
+                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    WordPress.getBitmapCache().put(uri, bitmap);
+                }
+
+                return bitmap;
+            }
+            catch(IOException notFoundException) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            ImageView imageView = mReference.get();
+
+            if (imageView != null) {
+                if (imageView.getTag() == this) {
+                    fadeInImage(imageView, result, THUMBNAIL_FADEIN_DURATION_MS);
+                }
+            }
+        }
     }
 }

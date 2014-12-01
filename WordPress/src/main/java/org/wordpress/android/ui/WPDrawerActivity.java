@@ -204,8 +204,12 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * @param contentViewId {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(int contentViewId) {
+        createMenuDrawer(getLayoutInflater().inflate(contentViewId, null));
+    }
+
+    protected void createMenuDrawer(View contentView) {
         ViewGroup layoutContainer = getActivityContainer();
-        layoutContainer.addView(getLayoutInflater().inflate(contentViewId, null));
+        layoutContainer.addView(contentView);
         initMenuDrawer();
     }
 

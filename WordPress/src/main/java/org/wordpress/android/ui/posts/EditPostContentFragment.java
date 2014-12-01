@@ -69,7 +69,9 @@ import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaSelectActivity;
 import org.wordpress.android.ui.media.MediaUtils;
+import org.wordpress.android.ui.media.MediaContent;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -94,8 +96,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class EditPostContentFragment extends Fragment implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
@@ -112,6 +112,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     private static final String TAG_FORMAT_BAR_BUTTON_UNDERLINE = "u";
     private static final String TAG_FORMAT_BAR_BUTTON_STRIKE = "strike";
     private static final String TAG_FORMAT_BAR_BUTTON_QUOTE = "blockquote";
+    private static final String IMAGES_TAB_TITLE = "Images";
+    private static final String VIDEOS_TAB_TITLE = "Videos";
 
     private static final int CONTENT_ANIMATION_DURATION = 250;
     private static final int MIN_THUMBNAIL_WIDTH = 200;
@@ -171,7 +173,12 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         Button linkButton = (Button) rootView.findViewById(R.id.link);
         Button moreButton = (Button) rootView.findViewById(R.id.more);
 
-        registerForContextMenu(mAddPictureButton);
+        mAddPictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startMediaSelection();
+            }
+        });
         mContentEditText.setOnSelectionChangedListener(this);
         mContentEditText.setOnTouchListener(this);
         mContentEditText.addTextChangedListener(this);
@@ -186,7 +193,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 }
             }
         });
-        mAddPictureButton.setOnClickListener(mFormatBarButtonClickListener);
         mBoldToggleButton.setOnClickListener(mFormatBarButtonClickListener);
         linkButton.setOnClickListener(mFormatBarButtonClickListener);
         mEmToggleButton.setOnClickListener(mFormatBarButtonClickListener);
@@ -333,9 +339,19 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
+        if (data != null || ((requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
+                              requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
             Bundle extras;
             switch (requestCode) {
+                case MediaSelectActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
+                    if (resultCode == MediaSelectActivity.ACTIVITY_RESULT_CODE_GALLERY_CREATED) {
+                        handleMediaGalleryResult(data);
+                    }
+
+                    if (data.hasExtra(MediaSelectActivity.SELECTED_CONTENT_RESULTS_KEY)) {
+                        handleMediaSelection(data);
+                    }
+                    break;
                 case MediaGalleryActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
                         handleMediaGalleryResult(data);
@@ -939,6 +955,23 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
 
+    private void startMediaSelection() {
+        Intent intent = new Intent(mActivity, MediaSelectActivity.class);
+        String[] tabConfig = {
+            IMAGES_TAB_TITLE + ";" + MediaSelectActivity.FILTER_CAPTURE_IMAGE + "|" +
+                                     MediaSelectActivity.FILTER_DEVICE_IMAGES + "|" +
+                                     MediaSelectActivity.FILTER_WP_IMAGES,
+            VIDEOS_TAB_TITLE + ";" + MediaSelectActivity.FILTER_CAPTURE_VIDEO + "|" +
+                                     MediaSelectActivity.FILTER_DEVICE_VIDEOS + "|" +
+                                     MediaSelectActivity.FILTER_WP_VIDEOS
+        };
+        intent.putExtra(MediaSelectActivity.PARAMETER_REQUEST_KEY, true);
+        intent.putExtra(MediaSelectActivity.PARAMETER_TAB_CONFIG_KEY, tabConfig);
+        intent.putExtra(MediaSelectActivity.PARAMETER_TITLE_KEY, mActivity.getString(R.string.edit_post_media_select_title));
+        startActivityForResult(intent, MediaSelectActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
+        mActivity.overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
+    }
+
     private void startMediaGalleryAddActivity() {
         Intent intent = new Intent(getActivity(), MediaGalleryPickerActivity.class);
         intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
@@ -952,6 +985,27 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
         String mediaId = ids.get(0);
         addExistingMediaToEditor(mediaId);
+    }
+
+    private void handleMediaSelection(Intent data) {
+        if (data != null) {
+            List<MediaContent> selectedContent = data.getParcelableArrayListExtra(MediaSelectActivity.SELECTED_CONTENT_RESULTS_KEY);
+
+            for (MediaContent selectedItem : selectedContent) {
+                MediaContent.MEDIA_TYPE type = selectedItem.getType();
+
+                if (type == MediaContent.MEDIA_TYPE.DEVICE_IMAGE) {
+                    if (!addMedia(selectedItem.getContentUri(), null, getActivity())) {
+                        Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
+                             .show();
+                    }
+                } else if(type == MediaContent.MEDIA_TYPE.WEB_IMAGE) {
+                    addExistingMediaToEditor(selectedItem.getContentId());
+                } else if(type == MediaContent.MEDIA_TYPE.DEVICE_VIDEO) {
+                } else if(type == MediaContent.MEDIA_TYPE.WEB_VIDEO) {
+                }
+            }
+        }
     }
 
     private void handleMediaGalleryResult(Intent data) {
@@ -1158,8 +1212,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     }
                 }
                 startActivityForResult(i, ACTIVITY_REQUEST_CODE_CREATE_LINK);
-            } else if (id == R.id.addPictureButton) {
-                mAddPictureButton.performLongClick();
             }
         }
     };

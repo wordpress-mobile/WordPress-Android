@@ -327,11 +327,11 @@ public class MediaGridAdapter extends CursorAdapter {
                 list.add(new BitmapReadyCallback() {
                     @Override
                     public void onBitmapReady(Bitmap bitmap) {
-                        if (imageView.getTag() instanceof String && imageView.getTag().equals(filePath))
+                        if (imageView.getTag() instanceof String && imageView.getTag().equals(filePath)) {
                             imageView.setImageBitmap(bitmap);
+                        }
                     }
                 });
-
 
                 if (shouldFetch) {
                     fetchBitmap(filePath);

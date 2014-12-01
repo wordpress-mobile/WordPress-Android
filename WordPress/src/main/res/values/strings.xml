@@ -75,6 +75,7 @@
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
+    <string name="add_media">Add Media</string>
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
@@ -87,6 +88,7 @@
     <string name="cab_selected">%d selected</string>
 
     <!-- Media Gallery -->
+    <string name="content_description_preview_image">Preview Image</string>
     <string name="all">All</string>
     <string name="images">Images</string>
     <string name="unattached">Unattached</string>
@@ -285,6 +287,9 @@
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
     <string name="select_from_media_library">Select from media library</string>
+    <string name="edit_post_media_select_title">Add Media</string>
+    <string name="default_content_selection_title">Select Content</string>
+    <string name="media_selection_selected_text">" selected"</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
@@ -798,4 +803,5 @@
     <string name="hs__conversation_header">Support chat</string>
     <string name="hs__username_blank_error">Enter a valid name</string>
     <string name="hs__invalid_email_error">Enter a valid email address</string>
+    <string name="empty_media_content">No content to display</string>
 </resources>
