@@ -2,9 +2,6 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,16 +11,12 @@ import android.widget.PopupMenu;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.WebViewActivity;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.model.SingleItemModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.UrlUtils;
 
-import java.net.URL;
 import java.util.List;
 
 
@@ -71,7 +64,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
 
     private class TopPostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
 
-        private final List<SingleItemModel> list;
+        private List<SingleItemModel> list;
         private final Activity context;
         private final LayoutInflater inflater;
 

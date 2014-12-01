@@ -87,16 +87,36 @@
                 android:id="@+id/btnViewAll"
                 android:visibility="gone"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:id="@+id/stats_pagination_container"
+                android:visibility="gone">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="&lt;"
+                    android:id="@+id/stats_pagination_go_back"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/stats_pagination_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_extra_large" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="&gt;"
+                    android:id="@+id/stats_pagination_go_forward"/>
+            </LinearLayout>
+
+
         </LinearLayout>
 
-        <!-- ExpandableListView
-            android:id="@+id/stats_list_listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbarStyle="outsideOverlay"
-            android:groupIndicator="@null"
-            android:visibility="gone" >
-        </ExpandableListView -->
+
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_list_empty_text"

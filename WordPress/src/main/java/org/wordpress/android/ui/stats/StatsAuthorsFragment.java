@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
-import com.android.volley.VolleyError;
-
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.AuthorModel;
 import org.wordpress.android.ui.stats.model.AuthorsModel;

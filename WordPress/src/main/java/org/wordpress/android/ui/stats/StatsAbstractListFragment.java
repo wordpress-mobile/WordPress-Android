@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +25,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Locale;
 
 
@@ -34,6 +34,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     // Used when the fragment has 2 pages/kind of stats in it. Not meaning the bottom pagination.
     protected static final String ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX = "ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX";
+    protected static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST = 1000;
 
     protected static final int NO_STRING_ID = -1;
 
@@ -46,6 +47,12 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected RadioGroup mTopPagerRadioGroup;
     protected int mTopPagerSelectedButtonIndex = 0;
 
+    protected LinearLayout mPaginationContainer;
+    protected Button mPaginationGoBackButton;
+    protected Button mPaginationGoForwardButton;
+    protected TextView mPaginationText;
+    protected OnRequestDataListener mMoreDataListener;
+
     protected SparseBooleanArray mGroupIdToExpandedMap;
 
     protected abstract int getEntryLabelResId();
@@ -56,6 +63,22 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract void updateUI();
     protected abstract boolean isExpandableList();
     protected abstract boolean isViewAllOptionAvailable();
+
+    // Container Activity must implement this interface
+    public interface OnRequestDataListener {
+        public void onRefreshRequested(StatsService.StatsEndpointsEnum[] endPointsNeedUpdate);
+        public void onMoreDataRequested(StatsService.StatsEndpointsEnum endPointNeedUpdate, int pageNumber);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mMoreDataListener = (OnRequestDataListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnRequestMoreDataListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,18 +100,20 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
         mTotalsLabel = (TextView) view.findViewById(R.id.stats_module_totals_label);
         mList = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
-        mList.setVisibility(View.VISIBLE);
         mListContainer = (LinearLayout) view.findViewById(R.id.stats_list_container);
         mViewAll = (Button) view.findViewById(R.id.btnViewAll);
         mTopPagerRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
-
+        mPaginationContainer = (LinearLayout) view.findViewById(R.id.stats_pagination_container);
+        mPaginationGoBackButton = (Button) view.findViewById(R.id.stats_pagination_go_back);
+        mPaginationGoForwardButton = (Button) view.findViewById(R.id.stats_pagination_go_forward);
+        mPaginationText = (TextView) view.findViewById(R.id.stats_pagination_text);
         return view;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppLog.d(AppLog.T.STATS, this.getTag() + " > onCreate");
+        //AppLog.d(AppLog.T.STATS, this.getTag() + " > onCreate");
         mGroupIdToExpandedMap = new SparseBooleanArray();
 
         if (savedInstanceState != null) {
@@ -101,7 +126,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
+        //AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
         outState.putSerializable(ARG_REST_RESPONSE, mDatamodels);
         super.onSaveInstanceState(outState);
     }
@@ -109,14 +134,14 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     @Override
     public void onPause() {
         super.onPause();
-        AppLog.d(AppLog.T.STATS, this.getTag() + " > onPause");
+        //AppLog.d(AppLog.T.STATS, this.getTag() + " > onPause");
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.unregisterReceiver(mReceiver);
     }
 
     @Override
     public void onResume() {
-        AppLog.d(AppLog.T.STATS, this.getTag() + " > onResume");
+        //AppLog.d(AppLog.T.STATS, this.getTag() + " > onResume");
         super.onResume();
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SECTION_UPDATED));
@@ -126,6 +151,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             updateUI();
         } else {
             showEmptyUI(true);
+            mMoreDataListener.onRefreshRequested(getSectionToUpdate());
         }
     }
 
@@ -149,14 +175,13 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         } else {
             mEmptyLabel.setVisibility(View.GONE);
             mListContainer.setVisibility(View.VISIBLE);
-            mList.setVisibility(View.VISIBLE);
+            mList.setVisibility(View.VISIBLE );
             if (!isSingleView() && isViewAllOptionAvailable()) {
                 // No view all button if already in single view
                 configureViewAllButton();
             } else {
                 mViewAll.setVisibility(View.GONE);
             }
-            //StatsUIHelper.reloadGroupViews(getActivity(), mAdapter, mGroupIdToExpandedMap, mList);
         }
     }
 
@@ -201,42 +226,33 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mViewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewAllButtonAction(mDatamodels);
+                if (isSingleView()) {
+                    return; // already in single view
+                }
+                AppLog.w(AppLog.T.STATS, "View All Tapped");
+
+                // Model cannot be null here
+                if (mDatamodels == null) {
+                    return;
+                }
+
+                Intent viewAllIntent = new Intent(getActivity(), StatsViewAllActivity.class);
+                viewAllIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
+                viewAllIntent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, getTimeframe());
+                viewAllIntent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, getViewType().ordinal());
+                viewAllIntent.putExtra(StatsAbstractFragment.ARGS_START_DATE, getStartDate());
+                viewAllIntent.putExtra(ARGS_IS_SINGLE_VIEW, true);
+                if (mTopPagerRadioGroup.getVisibility() == View.VISIBLE) {
+                    viewAllIntent.putExtra(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
+                }
+                //viewAllIntent.putExtra(StatsAbstractFragment.ARG_REST_RESPONSE, mDatamodels[mTopPagerSelectedButtonIndex]);
+                getActivity().startActivity(viewAllIntent);
             }
         });
     }
 
-    protected void viewAllButtonAction(Serializable[] restResponses) {
-        if (isSingleView()) {
-            return; // already in single view
-        }
-        AppLog.w(AppLog.T.STATS, "View All Tapped");
-
-        // Model cannot be null here
-        if (restResponses == null) {
-            return;
-        }
-
-        Intent viewAllIntent = new Intent(getActivity(), StatsViewAllActivity.class);
-        viewAllIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
-        viewAllIntent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, getTimeframe());
-        viewAllIntent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, getViewType().ordinal());
-        viewAllIntent.putExtra(StatsAbstractFragment.ARGS_START_DATE, getStartDate());
-        viewAllIntent.putExtra(ARGS_IS_SINGLE_VIEW, true);
-      //  viewAllIntent.putExtra(StatsAbstractFragment.ARG_REST_RESPONSE, restResponses);
-
-        if (mTopPagerRadioGroup.getVisibility() == View.VISIBLE) {
-           /* int radioButtonID = mTopPagerRadioGroup.getCheckedRadioButtonId();
-            View radioButton = mTopPagerRadioGroup.findViewById(radioButtonID);
-            int idx = mTopPagerRadioGroup.indexOfChild(radioButton);*/
-            viewAllIntent.putExtra(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
-        }
-
-        getActivity().startActivity(viewAllIntent);
-    }
-
     protected int getMaxNumberOfItemsToShowInList() {
-        return isSingleView() ? 100 : 10;
+        return isSingleView() ? MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST : 10;
     }
 
     /*

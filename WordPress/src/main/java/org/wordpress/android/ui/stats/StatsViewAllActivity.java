@@ -13,7 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
+import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -24,17 +24,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.ui.stats.model.AuthorsModel;
-import org.wordpress.android.ui.stats.model.ClicksModel;
-import org.wordpress.android.ui.stats.model.CommentFollowersModel;
-import org.wordpress.android.ui.stats.model.CommentsModel;
-import org.wordpress.android.ui.stats.model.FollowersModel;
-import org.wordpress.android.ui.stats.model.GeoviewsModel;
-import org.wordpress.android.ui.stats.model.PublicizeModel;
-import org.wordpress.android.ui.stats.model.ReferrersModel;
-import org.wordpress.android.ui.stats.model.TagsContainerModel;
-import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
-import org.wordpress.android.ui.stats.model.VideoPlaysModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -55,7 +44,8 @@ import java.util.concurrent.ThreadPoolExecutor;
  *  Single item details activity.
  */
 public class StatsViewAllActivity extends ActionBarActivity
-        implements StatsAuthorsFragment.OnAuthorsSectionChangeListener {
+        implements StatsAuthorsFragment.OnAuthorsSectionChangeListener,
+        StatsAbstractListFragment.OnRequestDataListener {
 
     private boolean mIsInFront;
     private boolean mIsUpdatingStats;
@@ -63,15 +53,16 @@ public class StatsViewAllActivity extends ActionBarActivity
 
     private final Handler mHandler = new Handler();
 
-    private LinearLayout outerContainer;
-    private StatsAbstractListFragment fragment;
+    private StatsAbstractListFragment mFragment;
 
     private int mLocalBlogID = -1;
     private StatsTimeframe mTimeframe;
     private StatsViewType mStatsViewType;
     private String mDate;
     private Serializable[] mRestResponse;
-    private int mOuterPagerSelectedButtonIndex = -1;
+    private int mOuterPagerSelectedButtonIndex = 0;
+    private static final int MAX_RESULT_PER_PAGE = 20; //The number of results to return per page. Numbers larger than 20 will default to 20 on the server.
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,8 +80,6 @@ public class StatsViewAllActivity extends ActionBarActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        outerContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
-
         // pull to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new SwipeToRefreshHelper.RefreshListener() {
@@ -105,38 +94,35 @@ public class StatsViewAllActivity extends ActionBarActivity
                 }
         );
 
-
-        setTitle(getString(R.string.stats));
-
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
             mRestResponse = (Serializable[]) savedInstanceState.getSerializable(StatsAbstractFragment.ARG_REST_RESPONSE);
             mTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
             mDate = savedInstanceState.getString(StatsAbstractFragment.ARGS_START_DATE);
-            int ordinal = savedInstanceState.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, -1);
+            int ordinal = savedInstanceState.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, 0);
             mStatsViewType = StatsViewType.values()[ordinal];
-            mOuterPagerSelectedButtonIndex = savedInstanceState.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, -1);
+            mOuterPagerSelectedButtonIndex = savedInstanceState.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mLocalBlogID = extras.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
             mTimeframe = (StatsTimeframe) extras.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
             mDate = extras.getString(StatsAbstractFragment.ARGS_START_DATE);
-           // mRestResponse = (Serializable[]) extras.getParcelableArray(StatsAbstractFragment.ARG_REST_RESPONSE);
-            int ordinal = extras.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, -1);
+            int ordinal = extras.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, 0);
             mStatsViewType = StatsViewType.values()[ordinal];
-            mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, -1);
-            refreshStats(); // refresh stats when launched for the first time
+            mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
         }
 
         TextView dateTextView = (TextView) findViewById(R.id.stats_summary_date);
-        dateTextView.setText(getDateForDisplayInLabels(mDate, mTimeframe));
+        dateTextView.setVisibility(View.GONE);
+
+        setTitle(getDateForDisplayInLabels(mDate, mTimeframe));
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-
-        if (fm.findFragmentByTag("ViewAll-"+getInnerFragmentTAG()) == null) {
-            fragment = getInnerFragment();
-            ft.replace(R.id.stats_single_view_fragment, fragment, "ViewAll-"+getInnerFragmentTAG());
+        mFragment = (StatsAbstractListFragment) fm.findFragmentByTag("ViewAll-"+getInnerFragmentTAG());
+        if (mFragment == null) {
+            mFragment = getInnerFragment();
+            ft.replace(R.id.stats_single_view_fragment, mFragment, "ViewAll-"+getInnerFragmentTAG());
             ft.commit();
         }
     }
@@ -211,6 +197,7 @@ public class StatsViewAllActivity extends ActionBarActivity
         args.putBoolean(StatsAbstractListFragment.ARGS_IS_SINGLE_VIEW, true); // Always true here
         args.putString(StatsAbstractFragment.ARGS_START_DATE, mDate);
         args.putInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mOuterPagerSelectedButtonIndex);
+        args.putSerializable(StatsAbstractFragment.ARG_REST_RESPONSE, mRestResponse);
         fragment.setArguments(args);
         return fragment;
     }
@@ -256,28 +243,14 @@ public class StatsViewAllActivity extends ActionBarActivity
     protected void onResume() {
         super.onResume();
         mIsInFront = true;
-
-        if (mRestResponse == null) {
-            refreshStats();
-        } else {
-            ThreadPoolExecutor parseResponseExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
-            parseResponseExecutor.submit(new Thread() {
-                @Override
-                public void run() {
-                    StatsService.StatsEndpointsEnum[] sections = getRestEndpointNames();
-                    for (int i = 0; i < sections.length; i++) {
-                        StatsService.StatsEndpointsEnum currentSection = sections[i];
-                        notifySectionUpdated(currentSection, mRestResponse[i]);
-                    }
-                }
-            });
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mIsInFront = false;
+        mIsUpdatingStats = false;
+        mSwipeToRefreshHelper.setRefreshing(false);
     }
 
     @Override
@@ -291,7 +264,7 @@ public class StatsViewAllActivity extends ActionBarActivity
         }
     }
 
-    private String getRestPath(StatsService.StatsEndpointsEnum restEndpoint) {
+    private String getRestPath(StatsService.StatsEndpointsEnum restEndpoint, int pageNumber) {
         final String blogId = StatsUtils.getBlogId(mLocalBlogID);
         String endpointPath = "";
         switch (restEndpoint) {
@@ -324,20 +297,22 @@ public class StatsViewAllActivity extends ActionBarActivity
                 break;
             case FOLLOWERS_WPCOM:
                 endpointPath = "followers";
-                return String.format("/sites/%s/stats/%s?type=wpcom&period=%s&date=%s&max=%s", blogId, endpointPath,
-                        mTimeframe.getLabelForRestCall(), mDate, 100);
+                return String.format("/sites/%s/stats/%s?type=wpcom&period=%s&date=%s&max=%s&page=%s", blogId, endpointPath,
+                        mTimeframe.getLabelForRestCall(), mDate, MAX_RESULT_PER_PAGE, pageNumber);
             case FOLLOWERS_EMAIL:
                 endpointPath = "followers";
-                return String.format("/sites/%s/stats/%s?type=email&period=%s&date=%s&max=%s", blogId, endpointPath,
-                        mTimeframe.getLabelForRestCall(), mDate, 100);
+                return String.format("/sites/%s/stats/%s?type=email&period=%s&date=%s&max=%s&page=%s", blogId, endpointPath,
+                        mTimeframe.getLabelForRestCall(), mDate, MAX_RESULT_PER_PAGE, pageNumber);
             case COMMENT_FOLLOWERS:
                 endpointPath = "comment-followers";
-                break;
-
+                return String.format("/sites/%s/stats/%s?period=%s&date=%s&max=%s&page=%s", blogId, endpointPath,
+                    mTimeframe.getLabelForRestCall(), mDate, MAX_RESULT_PER_PAGE, 1);
         }
 
+        // All other endpoints returns 1000 items in details view
+        int numberOfItemsToLoad = 1000;
         return String.format("/sites/%s/stats/%s?period=%s&date=%s&max=%s", blogId, endpointPath,
-                mTimeframe.getLabelForRestCall(), mDate, 100);
+                mTimeframe.getLabelForRestCall(), mDate, numberOfItemsToLoad);
     }
 
     private StatsService.StatsEndpointsEnum[] getRestEndpointNames() {
@@ -358,7 +333,7 @@ public class StatsViewAllActivity extends ActionBarActivity
                 return new StatsService.StatsEndpointsEnum[]{
                         StatsService.StatsEndpointsEnum.COMMENTS,
                         StatsService.StatsEndpointsEnum.COMMENT_FOLLOWERS
-               };
+                };
             case TAGS_AND_CATEGORIES:
                 return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.TAGS_AND_CATEGORIES};
             case PUBLICIZE:
@@ -383,20 +358,60 @@ public class StatsViewAllActivity extends ActionBarActivity
             return;
         }
 
+        mSwipeToRefreshHelper.setRefreshing(true);
         mIsUpdatingStats = true;
         final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
         final String blogId = StatsUtils.getBlogId(mLocalBlogID);
         StatsService.StatsEndpointsEnum[] sections = getRestEndpointNames();
         for (int i = 0; i < sections.length; i++) {
             StatsService.StatsEndpointsEnum currentSection = sections[i];
-            String singlePostRestPath = getRestPath(currentSection);
+            String singlePostRestPath = getRestPath(currentSection, 1);
             RestListener vListener = new RestListener(this, currentSection, blogId, mTimeframe);
             restClientUtils.get(singlePostRestPath, vListener, vListener);
             AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + singlePostRestPath);
         }
+    }
 
+    @Override
+    public void onMoreDataRequested(StatsService.StatsEndpointsEnum endPointNeedUpdate, int pageNumber) {
+        if (mFragment == null) {
+            return;
+        }
+
+        if (!mFragment.isAdded()) {
+            return;
+        }
+
+        if (mIsUpdatingStats) {
+            AppLog.d(AppLog.T.STATS, "Already loading data");
+            return;
+        }
+
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            mSwipeToRefreshHelper.setRefreshing(false);
+            AppLog.w(AppLog.T.STATS, getInnerFragmentTAG() + " > no connection, update canceled");
+            return;
+        }
+
+        mIsUpdatingStats = true;
         mSwipeToRefreshHelper.setRefreshing(true);
-        return;
+        final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
+        final String blogId = StatsUtils.getBlogId(mLocalBlogID);
+
+        String singlePostRestPath = getRestPath(endPointNeedUpdate, pageNumber);
+        RestListener vListener = new RestListener(this, endPointNeedUpdate, blogId, mTimeframe);
+        restClientUtils.get(singlePostRestPath, vListener, vListener);
+        AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + singlePostRestPath);
+    }
+
+    @Override
+    public void onRefreshRequested(StatsService.StatsEndpointsEnum[] endPointsNeedUpdate) {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshStats();
+            }
+        }, 75L);
     }
 
     @Override
@@ -422,6 +437,9 @@ public class StatsViewAllActivity extends ActionBarActivity
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
             }
+            if (!mFragment.isAdded()) {
+                return;
+            }
             mIsUpdatingStats = false;
             mSwipeToRefreshHelper.setRefreshing(false);
             // single background thread used to parse the response in BG.
@@ -432,8 +450,8 @@ public class StatsViewAllActivity extends ActionBarActivity
                     if (response != null) {
                         try {
                             AppLog.d(AppLog.T.STATS, response.toString());
-                            Serializable resp = parseResponse(response);
-                            notifySectionUpdated(mEndpointName, resp);
+                            final Serializable resp = StatsUtils.parseResponse(mEndpointName, mRequestBlogId, response);
+                            notifySectionUpdated(mEndpointName, resp); // FIXME: Store the new data received in the activity
                         } catch (JSONException e) {
                             AppLog.e(AppLog.T.STATS, e);
                         } catch (RemoteException e) {
@@ -455,57 +473,18 @@ public class StatsViewAllActivity extends ActionBarActivity
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
             }
+            if (!mFragment.isAdded()) {
+                return;
+            }
+
             resetModelVariables();
+            mFragment.showEmptyUI(true);
+
             ToastUtils.showToast(mActivityRef.get(),
                     mActivityRef.get().getString(R.string.error_refresh_stats),
                     ToastUtils.Duration.LONG);
             mIsUpdatingStats = false;
             mSwipeToRefreshHelper.setRefreshing(false);
-            fragment.showEmptyUI(true); //FixME this could throws NPE
-        }
-
-        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
-                OperationApplicationException {
-            Serializable model = null;
-            switch (mEndpointName) {
-                case TOP_POSTS:
-                    model = new TopPostsAndPagesModel(mRequestBlogId, response);
-                    break;
-                case REFERRERS:
-                    model = new ReferrersModel(mRequestBlogId, response);
-                    break;
-                case CLICKS:
-                    model = new ClicksModel(mRequestBlogId, response);
-                    break;
-                case GEO_VIEWS:
-                    model = new GeoviewsModel(mRequestBlogId, response);
-                    break;
-                case AUTHORS:
-                    model = new AuthorsModel(mRequestBlogId, response);
-                    break;
-                case VIDEO_PLAYS:
-                    model = new VideoPlaysModel(mRequestBlogId, response);
-                    break;
-                case COMMENTS:
-                    model = new CommentsModel(mRequestBlogId, response);
-                    break;
-                case COMMENT_FOLLOWERS:
-                    model = new CommentFollowersModel(mRequestBlogId, response);
-                    break;
-                case FOLLOWERS_WPCOM:
-                    model = new FollowersModel(mRequestBlogId, response);
-                    break;
-                case FOLLOWERS_EMAIL:
-                    model = new FollowersModel(mRequestBlogId, response);
-                    break;
-                case TAGS_AND_CATEGORIES:
-                    model = new TagsContainerModel(mRequestBlogId, response);
-                    break;
-                case PUBLICIZE:
-                    model = new PublicizeModel(mRequestBlogId, response);
-                    break;
-            }
-            return model;
         }
     }
 

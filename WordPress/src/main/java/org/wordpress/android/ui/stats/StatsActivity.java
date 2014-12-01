@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -16,7 +15,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,7 +39,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
-import android.support.v4.widget.SwipeRefreshLayout;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
@@ -72,7 +71,8 @@ import java.util.Map;
  */
 public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.ScrollViewListener,
         StatsAuthorsFragment.OnAuthorsSectionChangeListener,
-        StatsVisitorsAndViewsFragment.OnDateChangeListener{
+        StatsVisitorsAndViewsFragment.OnDateChangeListener,
+        StatsAbstractListFragment.OnRequestDataListener {
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
@@ -146,8 +146,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
         setTitle(R.string.stats);
 
-        boolean needToRefreshStats = false;
-
         if (savedInstanceState != null) {
             mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
             mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
@@ -155,7 +153,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
         } else if (getIntent() != null) {
-            needToRefreshStats = true; // refresh on new intent
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
@@ -209,9 +206,9 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                         mCurrentTimeframe = selectedTimeframe;
                         if (NetworkUtils.isNetworkAvailable(StatsActivity.this)) {
                             String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                            loadStatsFragments(true, true);
                             refreshStats(selectedTimeframe, date, true);
                             mSwipeToRefreshHelper.setRefreshing(true);
+                            loadStatsFragments(true, true);
                         }
                     }
                     @Override
@@ -223,11 +220,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
 
         selectTimeframeInActionBar(mCurrentTimeframe);
-
-        if (needToRefreshStats) {
-            refreshStats(mCurrentTimeframe, mRequestedDate, true);
-            mSwipeToRefreshHelper.setRefreshing(true);
-        }
     }
 
     @Override
@@ -270,12 +262,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
         StatsAbstractFragment fragment;
 
-      /*  if (fm.findFragmentByTag(StatsDateSelectorFragment.TAG) == null) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.TIMEFRAME_SELECTOR, mLocalBlogID);
-            ((StatsDateSelectorFragment)fragment).setTimeframeChangeListener(this);
-            ft.replace(R.id.stats_timeframe_selector, fragment, StatsDateSelectorFragment.TAG);
-        }
-*/
         if (includeBarGraphFragment) {
             if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
                 fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
@@ -342,6 +328,21 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         if (authorsContainer != null) {
             authorsContainer.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onMoreDataRequested(StatsService.StatsEndpointsEnum endPointNeedUpdate, int pageNumber) {
+        // nope
+    }
+
+    @Override
+    public void onRefreshRequested(StatsService.StatsEndpointsEnum[] endPointsNeedUpdate) {
+        if (mIsUpdatingStats) {
+            AppLog.d(T.STATS, "stats activity  > onRefreshRequested: already refreshing stats");
+            return;
+        }
+        mSwipeToRefreshHelper.setRefreshing(mIsUpdatingStats);
+        refreshStats(mCurrentTimeframe, mRequestedDate, true);
     }
 
     private void startWPComLoginActivity() {
@@ -536,18 +537,18 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
         selectTimeframeInActionBar(mCurrentTimeframe);
         scrollToTop();
-        loadStatsFragments(true, true);
         mSwipeToRefreshHelper.setRefreshing(true);
         refreshStats(mCurrentTimeframe, mRequestedDate, true);
+        loadStatsFragments(true, true);
     }
 
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
     @Override
     public void onDateChanged(String blogID, StatsTimeframe timeframe, String date, boolean updateGraph) {
         mRequestedDate = date;
+        refreshStats(timeframe, date, updateGraph);
         // Reload all fragments except the bar graph one
         loadStatsFragments(true, false);
-        refreshStats(timeframe, date, updateGraph);
     }
 
     /**
@@ -619,6 +620,8 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
             return;
         }
+
+        mIsUpdatingStats = true;
 
         // start service to get stats
         Intent intent = new Intent(this, StatsService.class);

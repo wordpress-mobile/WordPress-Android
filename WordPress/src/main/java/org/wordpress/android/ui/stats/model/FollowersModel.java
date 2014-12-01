@@ -62,4 +62,12 @@ public class FollowersModel implements Serializable {
     public int getTotalWPCom() {
         return mTotalWPCom;
     }
+
+    public int getPage() {
+        return mPage;
+    }
+
+    public int getPages() {
+        return mPages;
+    }
 }

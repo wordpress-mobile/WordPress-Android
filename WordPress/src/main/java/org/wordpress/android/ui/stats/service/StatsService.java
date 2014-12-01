@@ -17,18 +17,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
-import org.wordpress.android.ui.stats.model.AuthorsModel;
-import org.wordpress.android.ui.stats.model.ClicksModel;
-import org.wordpress.android.ui.stats.model.CommentFollowersModel;
-import org.wordpress.android.ui.stats.model.CommentsModel;
-import org.wordpress.android.ui.stats.model.FollowersModel;
-import org.wordpress.android.ui.stats.model.GeoviewsModel;
-import org.wordpress.android.ui.stats.model.PublicizeModel;
-import org.wordpress.android.ui.stats.model.ReferrersModel;
-import org.wordpress.android.ui.stats.model.TagsContainerModel;
-import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
-import org.wordpress.android.ui.stats.model.VideoPlaysModel;
-import org.wordpress.android.ui.stats.model.VisitsModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -280,7 +268,7 @@ public class StatsService extends Service {
                     if (response != null) {
                         try {
                             AppLog.d(T.STATS, response.toString());
-                            mResponseObjectModel = parseResponse(response);
+                            mResponseObjectModel = StatsUtils.parseResponse(mEndpointName, mRequestBlogId, response);
                         } catch (JSONException e) {
                             AppLog.e(AppLog.T.STATS, e);
                         } catch (RemoteException e) {
@@ -327,52 +315,7 @@ public class StatsService extends Service {
             LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
         }
 
-        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
-                OperationApplicationException {
-            Serializable model = null;
-            switch (mEndpointName) {
-                case VISITS:
-                    model = new VisitsModel(mRequestBlogId, response);
-                    break;
-                case TOP_POSTS:
-                    model = new TopPostsAndPagesModel(mRequestBlogId, response);
-                    break;
-                case REFERRERS:
-                    model = new ReferrersModel(mRequestBlogId, response);
-                    break;
-                case CLICKS:
-                    model = new ClicksModel(mRequestBlogId, response);
-                    break;
-                case GEO_VIEWS:
-                    model = new GeoviewsModel(mRequestBlogId, response);
-                    break;
-                case AUTHORS:
-                    model = new AuthorsModel(mRequestBlogId, response);
-                    break;
-                case VIDEO_PLAYS:
-                    model = new VideoPlaysModel(mRequestBlogId, response);
-                    break;
-                case COMMENTS:
-                    model = new CommentsModel(mRequestBlogId, response);
-                    break;
-                case FOLLOWERS_WPCOM:
-                    model = new FollowersModel(mRequestBlogId, response);
-                    break;
-                case FOLLOWERS_EMAIL:
-                    model = new FollowersModel(mRequestBlogId, response);
-                    break;
-                case COMMENT_FOLLOWERS:
-                    model = new CommentFollowersModel(mRequestBlogId, response);
-                    break;
-                case TAGS_AND_CATEGORIES:
-                    model = new TagsContainerModel(mRequestBlogId, response);
-                    break;
-                case PUBLICIZE:
-                    model = new PublicizeModel(mRequestBlogId, response);
-                    break;
-            }
-            return model;
-        }
+
     }
 
     private void stopService() {

@@ -122,35 +122,65 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             return;
         }
 
-        FollowersModel followersWPCOMModel = (FollowersModel) mDatamodels[0];
-        FollowersModel followersEmailModel = (FollowersModel) mDatamodels[1];
-        ArrayAdapter adapter = null;
-        if (mTopPagerSelectedButtonIndex == 0) {
-            if (followersWPCOMModel != null) {
-                List<FollowerModel> mSubscribers = followersWPCOMModel.getFollowers();
-                if (mSubscribers != null && mSubscribers.size() > 0) {
-                    adapter = new DotComFollowerAdapter(getActivity(), mSubscribers);
-                }
-            }
-        } else {
-            if (followersEmailModel != null) {
-                List<FollowerModel> mSubscribers = followersEmailModel.getFollowers();
-                if (mSubscribers != null && mSubscribers.size() > 0) {
-                    adapter = new DotComFollowerAdapter(getActivity(), mSubscribers);
-                }
-            }
-        }
-
-        if (adapter != null) {
+        final FollowersModel followersModel = (FollowersModel) mDatamodels[mTopPagerSelectedButtonIndex];
+        if (followersModel != null && followersModel.getFollowers() != null &&
+                followersModel.getFollowers().size() > 0) {
+            ArrayAdapter adapter = new DotComFollowerAdapter(getActivity(), followersModel.getFollowers());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showEmptyUI(false);
-            if ( mTopPagerSelectedButtonIndex == 0 ) {
-                mTotalsLabel.setText(getTotalFollowersLabel(followersWPCOMModel.getTotalWPCom()));
+            if (isSingleView()) {
+                if (followersModel.getPages() > 1) {
+                    mPaginationContainer.setVisibility(View.VISIBLE);
+                    mPaginationText.setText("Page " + followersModel.getPage() + " of " + followersModel.getPages());
+                    mPaginationGoBackButton.setEnabled(true);
+                    mPaginationGoForwardButton.setEnabled(true);
+
+                    if (followersModel.getPage() == 1) {
+                        mPaginationGoBackButton.setVisibility(View.GONE);
+                    } else {
+                        mPaginationGoBackButton.setVisibility(View.VISIBLE);
+                        mPaginationGoBackButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mPaginationGoBackButton.setEnabled(false);
+                                mPaginationGoForwardButton.setEnabled(false);
+                                mMoreDataListener.onMoreDataRequested(
+                                        getSectionToUpdate()[mTopPagerSelectedButtonIndex],
+                                        followersModel.getPage() - 1
+                                );
+                            }
+                        });
+                    }
+
+                    if (followersModel.getPage() == followersModel.getPages()) {
+                        mPaginationGoForwardButton.setVisibility(View.GONE);
+                    } else {
+                        mPaginationGoForwardButton.setVisibility(View.VISIBLE);
+                        mPaginationGoForwardButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mPaginationGoBackButton.setEnabled(false);
+                                mPaginationGoForwardButton.setEnabled(false);
+                                mMoreDataListener.onMoreDataRequested(
+                                        getSectionToUpdate()[mTopPagerSelectedButtonIndex],
+                                        followersModel.getPage() + 1
+                                );
+                            }
+                        });
+                    }
+                } else {
+                    mPaginationContainer.setVisibility(View.GONE);
+                }
+            }
+
+            if (mTopPagerSelectedButtonIndex == 0) {
+                mTotalsLabel.setText(getTotalFollowersLabel(followersModel.getTotalWPCom()));
             } else {
-                mTotalsLabel.setText(getTotalFollowersLabel(followersEmailModel.getTotalEmail()));
+                mTotalsLabel.setText(getTotalFollowersLabel(followersModel.getTotalEmail()));
             }
         } else {
             showEmptyUI(true);
+            mPaginationContainer.setVisibility(View.GONE);
             mTotalsLabel.setText(getTotalFollowersLabel(0));
         }
     }
@@ -237,10 +267,10 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
 
         private String getSinceLabel(String dataSubscribed) {
 
-            Date currentDateTime = new Date(StatsUtils.getCurrentDateTimeMsTZ(getLocalTableBlogID()));
+            Date currentDateTime = new Date();
 
             try {
-                SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
                 Date date = from.parse(dataSubscribed);
 
                 // See http://momentjs.com/docs/#/displaying/fromnow/

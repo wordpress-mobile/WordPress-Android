@@ -21,12 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.AppLog;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 public class StatsUIHelper {
     // Max number of rows to show in a stats fragment

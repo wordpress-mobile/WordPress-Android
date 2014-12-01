@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
+import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
 
 import org.json.JSONException;
@@ -10,9 +12,23 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.stats.model.AuthorsModel;
+import org.wordpress.android.ui.stats.model.ClicksModel;
+import org.wordpress.android.ui.stats.model.CommentFollowersModel;
+import org.wordpress.android.ui.stats.model.CommentsModel;
+import org.wordpress.android.ui.stats.model.FollowersModel;
+import org.wordpress.android.ui.stats.model.GeoviewsModel;
+import org.wordpress.android.ui.stats.model.PublicizeModel;
+import org.wordpress.android.ui.stats.model.ReferrersModel;
+import org.wordpress.android.ui.stats.model.TagsContainerModel;
+import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
+import org.wordpress.android.ui.stats.model.VideoPlaysModel;
+import org.wordpress.android.ui.stats.model.VisitsModel;
+import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -231,4 +247,53 @@ public class StatsUtils {
             return currentBlog.getApi_blogid();
         }
     }
+
+
+    public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
+            throws JSONException, RemoteException, OperationApplicationException {
+        Serializable model = null;
+        switch (endpointName) {
+            case VISITS:
+                model = new VisitsModel(blogID, response);
+                break;
+            case TOP_POSTS:
+                model = new TopPostsAndPagesModel(blogID, response);
+                break;
+            case REFERRERS:
+                model = new ReferrersModel(blogID, response);
+                break;
+            case CLICKS:
+                model = new ClicksModel(blogID, response);
+                break;
+            case GEO_VIEWS:
+                model = new GeoviewsModel(blogID, response);
+                break;
+            case AUTHORS:
+                model = new AuthorsModel(blogID, response);
+                break;
+            case VIDEO_PLAYS:
+                model = new VideoPlaysModel(blogID, response);
+                break;
+            case COMMENTS:
+                model = new CommentsModel(blogID, response);
+                break;
+            case FOLLOWERS_WPCOM:
+                model = new FollowersModel(blogID, response);
+                break;
+            case FOLLOWERS_EMAIL:
+                model = new FollowersModel(blogID, response);
+                break;
+            case COMMENT_FOLLOWERS:
+                model = new CommentFollowersModel(blogID, response);
+                break;
+            case TAGS_AND_CATEGORIES:
+                model = new TagsContainerModel(blogID, response);
+                break;
+            case PUBLICIZE:
+                model = new PublicizeModel(blogID, response);
+                break;
+        }
+        return model;
+    }
+
 }
