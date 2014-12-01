@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -15,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -30,7 +31,6 @@ import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionService;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
@@ -61,7 +61,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private SuggestionAutoCompleteText mEditComment;
     private ImageView mImgSubmitComment;
     private ViewGroup mCommentBox;
@@ -71,7 +71,6 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     private long mReplyToCommentId;
 
     private long mTopMostCommentId;
-    private int mTopMostCommentTop;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,7 +97,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             }
         }
 
-        mListView = (ListView) findViewById(android.R.id.list);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
@@ -109,11 +108,8 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             return;
         }
 
-        // add listView header to provide initial space between the post header and list content
-        int height = getResources().getDimensionPixelSize(R.dimen.margin_medium);
-        ReaderUtils.addListViewHeader(mListView, height);
-
-        mListView.setAdapter(getCommentAdapter());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(getCommentAdapter());
 
         if (savedInstanceState != null) {
             setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID));
@@ -166,7 +162,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             mEditComment.requestFocus();
             EditTextUtils.showSoftInput(mEditComment);
             getCommentAdapter().setHighlightCommentId(mReplyToCommentId, false);
-            mListView.postDelayed(new Runnable() {
+            mRecyclerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     scrollToCommentId(mReplyToCommentId);
@@ -270,6 +266,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                         } else if (mTopMostCommentId != 0) {
                             restoreTopmostComment();
                         }
+                        checkEmptyView();
                     }
                 }
             };
@@ -294,7 +291,10 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                 }
             };
             Context context = WPActivityUtils.getThemedContext(this);
-            mCommentAdapter = new ReaderCommentAdapter(context, getPost(), replyListener, dataLoadedListener, dataRequestedListener);
+            mCommentAdapter = new ReaderCommentAdapter(context, getPost());
+            mCommentAdapter.setReplyListener(replyListener);
+            mCommentAdapter.setDataLoadedListener(dataLoadedListener);
+            mCommentAdapter.setDataRequestedListener(dataRequestedListener);
         }
         return mCommentAdapter;
     }
@@ -351,14 +351,21 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                     if (result.isNewOrChanged()) {
                         retainTopmostComment();
                         refreshComments();
-                    } else {
-                        mListView.setEmptyView(findViewById(R.id.text_empty));
                     }
                 }
             }
         };
         AppLog.d(T.READER, "reader comments > updateComments, page " + pageNumber);
         ReaderCommentActions.updateCommentsForPost(getPost(), pageNumber, resultListener);
+    }
+
+    private void checkEmptyView() {
+        View txtEmpty = findViewById(R.id.text_empty);
+        if (hasCommentAdapter() && getCommentAdapter().isEmpty()) {
+            txtEmpty.setVisibility(View.VISIBLE);
+        } else {
+            txtEmpty.setVisibility(View.GONE);
+        }
     }
 
 
@@ -376,7 +383,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     private void scrollToCommentId(long commentId) {
         int position = getCommentAdapter().indexOfCommentId(commentId);
         if (position > -1) {
-            mListView.setSelectionFromTop(position + mListView.getHeaderViewsCount(), 0);
+            mRecyclerView.scrollToPosition(position);
         }
     }
 
@@ -414,7 +421,6 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                     // stop highlighting the fake comment and replace it with the real one
                     getCommentAdapter().setHighlightCommentId(0, false);
                     getCommentAdapter().replaceComment(fakeCommentId, newComment);
-                    mListView.invalidateViews();
                     setReplyToCommentId(0);
                 } else {
                     mEditComment.setText(commentText);
@@ -448,8 +454,6 @@ public class ReaderCommentListActivity extends ActionBarActivity {
      */
     private void retainTopmostComment() {
         mTopMostCommentId = getTopMostCommentId();
-        View view = mListView.getChildAt(0);
-        mTopMostCommentTop = (view != null ? view.getTop() : 0);
     }
 
     /*
@@ -459,10 +463,9 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         if (mTopMostCommentId != 0) {
             int position = getCommentAdapter().indexOfCommentId(mTopMostCommentId);
             if (position > -1) {
-                mListView.setSelectionFromTop(position + mListView.getHeaderViewsCount(), mTopMostCommentTop);
+                mRecyclerView.scrollToPosition(position);
             }
             mTopMostCommentId = 0;
-            mTopMostCommentTop = 0;
         }
     }
 
@@ -470,10 +473,9 @@ public class ReaderCommentListActivity extends ActionBarActivity {
      * returns the id of the first visible comment
      */
     private long getTopMostCommentId() {
-        int position = mListView.getFirstVisiblePosition();
-        int numHeaders = mListView.getHeaderViewsCount();
-        if (position > numHeaders && hasCommentAdapter()) {
-            return getCommentAdapter().getItemId(position - numHeaders);
+        if (hasCommentAdapter()) {
+            int position = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+            return getCommentAdapter().getItemId(position);
         } else {
             return 0;
         }
