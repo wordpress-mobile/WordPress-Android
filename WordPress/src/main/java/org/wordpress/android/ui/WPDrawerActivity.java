@@ -248,7 +248,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 }
             };
             mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
-            mDrawerLayout.setDrawerListener(mDrawerToggle);
         }
 
         // add listVew header containing spinner if it hasn't already been added - note that
