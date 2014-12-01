@@ -106,28 +106,31 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         // if this activity was opened from the drawer (ie: via startDrawerIntent() from another
         // drawer activity), hide the activity view then fade it in after a short delay
         if (getIntent() != null && getIntent().getBooleanExtra(OPENED_FROM_DRAWER, false)) {
-            hideActivityContainer(false);
+            hideActivityView(false);
             getIntent().putExtra(OPENED_FROM_DRAWER, false);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (!isFinishing()) {
-                        showActivityContainer(true);
+                        showActivityView(true);
                     }
                 }
             }, OPENED_FROM_DRAWER_DELAY);
         }
     }
 
-    /*
-     * returns the view containing the activity
-     */
-    private ViewGroup getActivityContainer() {
-        return (ViewGroup) findViewById(R.id.activity_container);
+    private View getActivityView() {
+        // activity_container is the parent view which contains the toolbar (first child) and
+        // the activity itself (second child)
+        ViewGroup container = (ViewGroup) findViewById(R.id.activity_container);
+        if (container == null || container.getChildCount() < 2) {
+            return null;
+        }
+        return container.getChildAt(1);
     }
 
-    private void hideActivityContainer(boolean animate) {
-        View activityView = getActivityContainer();
+    private void hideActivityView(boolean animate) {
+        View activityView = getActivityView();
         if (activityView == null || activityView.getVisibility() != View.VISIBLE) {
             return;
         }
@@ -137,8 +140,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             activityView.setVisibility(View.GONE);
         }
     }
-    private void showActivityContainer(boolean animate) {
-        View activityView = getActivityContainer();
+    private void showActivityView(boolean animate) {
+        View activityView = getActivityView();
         if (activityView == null || activityView.getVisibility() == View.VISIBLE) {
             return;
         }
@@ -204,8 +207,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * @param contentViewId {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(int contentViewId) {
-        ViewGroup layoutContainer = getActivityContainer();
-        layoutContainer.addView(getLayoutInflater().inflate(contentViewId, null));
+        ViewGroup container = (ViewGroup) findViewById(R.id.activity_container);
+        container.addView(getLayoutInflater().inflate(contentViewId, null));
         initMenuDrawer();
     }
 
@@ -416,7 +419,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
             // close the drawer and fade out the activity container so current activity appears to be going away
             closeDrawer();
-            hideActivityContainer(true);
+            hideActivityView(true);
 
             // start the new activity after a brief delay to give drawer time to close
             new Handler().postDelayed(new Runnable() {
