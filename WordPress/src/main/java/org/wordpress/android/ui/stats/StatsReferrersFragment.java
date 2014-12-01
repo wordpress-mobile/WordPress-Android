@@ -40,6 +40,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     private boolean hasReferrers() {
         return mDatamodels != null && mDatamodels[0] != null
+                && ((ReferrersModel) mDatamodels[0]).getGroups() != null
                 && ((ReferrersModel) mDatamodels[0]).getGroups().size() > 0;
     }
 

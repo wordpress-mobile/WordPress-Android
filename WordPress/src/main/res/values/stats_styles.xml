@@ -26,6 +26,14 @@
         <!--  item name="android:fontFamily">sans-serif-light</item -->
     </style>
 
+    <style name="StatsVisitorAndViewsRadioButton">
+        <item name="android:background">@drawable/stats_visitors_and_views_button_selector</item>
+        <item name="android:button">@android:color/transparent</item>
+        <item name="android:padding">@dimen/margin_medium</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
     <style name="StatsTabletRadioButton">
         <item name="android:background">@drawable/stats_button_selector</item>
         <item name="android:button">@android:color/transparent</item>

@@ -87,19 +87,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
         mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
 
-        int dp8 = DisplayUtils.dpToPx(view.getContext(), 8);
-        int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
-        int dp44 = DisplayUtils.dpToPx(view.getContext(), 44);
-
         for (int i = 0; i < overviewItems.length; i++) {
-            RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
-            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
-                    RadioGroup.LayoutParams.WRAP_CONTENT);
+            RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_visitors_and_views_radio_button, null, false);
+            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
+                    RadioGroup.LayoutParams.MATCH_PARENT,
+                    RadioGroup.LayoutParams.WRAP_CONTENT
+            );
             rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
-
-            params.setMargins(0, dp8, dp8, 0);
-            rb.setMinimumWidth(dp44);
-            rb.setGravity(Gravity.CENTER);
+          //  rb.setGravity(Gravity.LEFT);
             rb.setLayoutParams(params);
             rb.setText(overviewItems[i].getLabel());
             rb.setTag(overviewItems[i]);
@@ -287,16 +282,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
                 switch (overviewItem) {
                     case VIEWS:
-                        currentBtm.setText(overviewItem.getLabel() + "\n" +  modelTapped.getViews());
+                        currentBtm.setText(overviewItem.getLabel() + " " +  modelTapped.getViews());
                         break;
                     case VISITORS:
-                        currentBtm.setText(overviewItem.getLabel() + "\n" +  modelTapped.getVisitors());
+                        currentBtm.setText(overviewItem.getLabel() + " " +  modelTapped.getVisitors());
                         break;
                     case LIKES:
-                        currentBtm.setText(overviewItem.getLabel() + "\n" +  modelTapped.getLikes());
+                        currentBtm.setText(overviewItem.getLabel() + " " +  modelTapped.getLikes());
                         break;
                     case COMMENTS:
-                        currentBtm.setText(overviewItem.getLabel() + "\n" +  modelTapped.getComments());
+                        currentBtm.setText(overviewItem.getLabel() + " " +  modelTapped.getComments());
                         break;
                 }
             }
@@ -393,16 +388,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
                 switch (overviewItem) {
                     case VIEWS:
-                        currentBtm.setText(overviewItem.getLabel() + "\n" +  0);
+                        currentBtm.setText(overviewItem.getLabel() + " " +  0);
                         break;
                     case VISITORS:
-                        currentBtm.setText(overviewItem.getLabel() + "\n" + 0);
+                        currentBtm.setText(overviewItem.getLabel() + " " + 0);
                         break;
                     case LIKES:
-                        currentBtm.setText(overviewItem.getLabel() + "\n" +  0);
+                        currentBtm.setText(overviewItem.getLabel() + " " +  0);
                         break;
                     case COMMENTS:
-                        currentBtm.setText(overviewItem.getLabel() + "\n" +  0);
+                        currentBtm.setText(overviewItem.getLabel() + " " +  0);
                         break;
                 }
             }

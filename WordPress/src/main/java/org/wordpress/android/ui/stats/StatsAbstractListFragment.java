@@ -271,6 +271,10 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 return;
             }
 
+            if (!isAdded()) {
+                return;
+            }
+
             StatsService.StatsEndpointsEnum sectionToUpdate = (StatsService.StatsEndpointsEnum) intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_NAME);
             StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionToUpdate();
             int indexOfDatamodelMatch = -1;

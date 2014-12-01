@@ -97,8 +97,8 @@ class StatsBarGraph extends GraphView {
     }
 
     private void setProperties() {
-        getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK);
-        getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
+        getGraphViewStyle().setHorizontalLabelsColor(Color.parseColor("#93a6c0"));
+        getGraphViewStyle().setVerticalLabelsColor(Color.parseColor("#93a6c0"));
         getGraphViewStyle().setTextSize(getResources().getDimensionPixelSize(R.dimen.graph_font_size));
         getGraphViewStyle().setGridXColor(Color.TRANSPARENT);
         getGraphViewStyle().setGridYColor(getResources().getColor(R.color.stats_bar_graph_grid));
@@ -155,12 +155,7 @@ class StatsBarGraph extends GraphView {
 
             // Trick to redraw the tapped bar
             if (mBarPositionToHighlight == i) {
-                int color;
-                if (style.color == getResources().getColor(R.color.stats_bar_graph_views)) {
-                    color = getResources().getColor(R.color.stats_views_hover_color);
-                } else {
-                    color = getResources().getColor(R.color.stats_visitors_hover_color);
-                }
+                int color = getResources().getColor(R.color.stats_views_hover_color);
                 paint.setColor(color);
             } else {
                 paint.setColor(style.color);

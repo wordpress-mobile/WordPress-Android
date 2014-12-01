@@ -3,21 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_gravity="top">
+    android:layout_gravity="center"
+    android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/stats_white_background"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_large"
-        android:paddingBottom="@dimen/margin_large">
+        android:background="@color/white"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/stats_bar_chart_fragment_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin_large"
+            android:paddingRight="@dimen/margin_large"
             android:minHeight="@dimen/stats_barchart_height"
             android:orientation="vertical" />
 
@@ -26,19 +26,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginLeft="6dp"
-            android:orientation="horizontal"
-            android:gravity="center|top"
+            android:orientation="vertical"
             android:visibility="gone" >
         </RadioGroup>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/stats_summary_date"
-            android:textAppearance="?android:attr/textAppearance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Date"/>
-
     </LinearLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/stats_summary_date"
+        android:textAppearance="?android:attr/textAppearance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:text="Date"/>
 </LinearLayout>
