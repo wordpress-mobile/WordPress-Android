@@ -46,7 +46,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
-import org.wordpress.android.ui.reader.adapters.ReaderPostRecyclerAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
@@ -71,7 +71,7 @@ public class ReaderPostListFragment extends Fragment {
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
 
-    private ReaderPostRecyclerAdapter mPostRecycler;
+    private ReaderPostAdapter mPostRecycler;
     private ReaderRecyclerView mRecyclerView;
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
@@ -653,12 +653,12 @@ public class ReaderPostListFragment extends Fragment {
         }
     };
 
-    private ReaderPostRecyclerAdapter getPostRecycler() {
+    private ReaderPostAdapter getPostRecycler() {
         if (mPostRecycler == null) {
             AppLog.d(T.READER, "reader post list > creating post recycler");
 
             Context context = WPActivityUtils.getThemedContext(getActivity());
-            mPostRecycler = new ReaderPostRecyclerAdapter(context, getPostListType());
+            mPostRecycler = new ReaderPostAdapter(context, getPostListType());
 
             mPostRecycler.setOnPostSelectedListener(mPostSelectedListener);
             mPostRecycler.setOnDataLoadedListener(mDataLoadedListener);

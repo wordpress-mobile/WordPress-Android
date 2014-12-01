@@ -33,7 +33,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRecyclerAdapter.ReaderPostViewHolder> {
+public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.ReaderPostViewHolder> {
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
 
@@ -286,7 +286,7 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
 
     // ********************************************************************************************
 
-    public ReaderPostRecyclerAdapter(Context context, ReaderTypes.ReaderPostListType postListType) {
+    public ReaderPostAdapter(Context context, ReaderTypes.ReaderPostListType postListType) {
         super();
 
         mPostListType = postListType;
