@@ -789,7 +789,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE)) {
-                SelfSignedSSLCertsManager.askForSslTrust(WPDrawerActivity.this);
+                SelfSignedSSLCertsManager.askForSslTrust(WPDrawerActivity.this, null);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT)) {
                 ToastUtils.showToast(context, R.string.limit_reached, Duration.LONG);

@@ -34,8 +34,4 @@ public class SSLCertsViewActivity extends WebViewActivity {
             mWebView.loadDataWithBaseURL(null, sb.toString(), "text/html", "utf-8", null);
         }
     }
-
-    protected void refreshMenuDrawer(){
-        //No need to refresh menu drawer here. Also fix an issue where the login screen is force-pushed on the stack.
-    }
 }

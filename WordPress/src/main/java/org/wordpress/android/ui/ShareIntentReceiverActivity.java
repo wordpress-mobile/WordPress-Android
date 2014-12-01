@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -43,7 +43,7 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
     public static final int ADD_TO_MEDIA_LIBRARY = 1;
     private Spinner mBlogSpinner;
     private Spinner mActionSpinner;
-    private CheckedTextView mAlwaysUseCheckBox;
+    private CheckBox mAlwaysUseCheckBox;
     private int mAccountIDs[];
     private TextView mBlogSpinnerTitle;
     private int mActionIndex;
@@ -56,13 +56,7 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
 
         mBlogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
-        mAlwaysUseCheckBox = (CheckedTextView) findViewById(R.id.always_use_checkbox);
-        mAlwaysUseCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAlwaysUseCheckBox.setChecked(!mAlwaysUseCheckBox.isChecked());
-            }
-        });
+        mAlwaysUseCheckBox = (CheckBox) findViewById(R.id.always_use_checkbox);
         String[] blogNames = getBlogNames();
         if (blogNames == null) {
             finishIfNoVisibleBlogs();

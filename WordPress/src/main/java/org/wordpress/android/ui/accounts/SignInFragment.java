@@ -35,7 +35,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
@@ -50,13 +49,12 @@ import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.GenericCallback;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 import org.xmlrpc.android.ApiHelper;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -546,46 +544,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     public void askForSslTrust() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setTitle(getString(R.string.ssl_certificate_error));
-        alert.setMessage(getString(R.string.ssl_certificate_ask_trust));
-        alert.setPositiveButton(R.string.ssl_certificate_trust, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(
-                            getActivity());
-                    selfSignedSSLCertsManager.addCertificates(selfSignedSSLCertsManager.getLastFailureChain());
-                } catch (IOException e) {
-                    AppLog.e(T.NUX, e);
-                } catch (GeneralSecurityException e) {
-                    AppLog.e(T.NUX, e);
-                }
+        SelfSignedSSLCertsManager.askForSslTrust(getActivity(), new GenericCallback<Void>() {
+            @Override
+            public void callback(Void aVoid) {
                 // Try to signin again
                 signIn();
             }
         });
-        alert.setNeutralButton(R.string.ssl_certificate_details, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(getActivity(), SSLCertsViewActivity.class);
-                try {
-                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(
-                            getActivity());
-                    String lastFailureChainDesc = "URL: " + EditTextUtils.getText(mUrlEditText).trim() + "<br/><br/>"
-                                + selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
-                    intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDesc);
-                    getActivity().startActivityForResult(intent, SignInActivity.SHOW_CERT_DETAILS);
-                } catch (GeneralSecurityException e) {
-                    AppLog.e(T.NUX, e);
-                } catch (IOException e) {
-                    AppLog.e(T.NUX, e);
-                }
-            }
-        });
-        alert.setNegativeButton(R.string.ssl_certificate_do_not_trust, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alert.show();
         endProgress();
     }
 
