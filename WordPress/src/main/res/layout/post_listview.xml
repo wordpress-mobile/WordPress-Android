@@ -44,21 +44,23 @@
             android:layout_marginRight="@dimen/empty_list_description_side_margin" />
     </LinearLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/ptr_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ListView
-                android:id="@id/android:list"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/ptr_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawSelectorOnTop="false"
-                tools:listitem="@layout/post_list_row" />
+                android:layout_height="match_parent">
+
+                <ListView
+                    android:id="@id/android:list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="false"
+                    tools:listitem="@layout/post_list_row"/>
+            </android.support.v4.widget.SwipeRefreshLayout>
 
             <ImageButton
                 android:id="@+id/fab_button"
@@ -73,7 +75,6 @@
                 android:stateListAnimator="@anim/pressed_fab" />
 
         </FrameLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>
 
