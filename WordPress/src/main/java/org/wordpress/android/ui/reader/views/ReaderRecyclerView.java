@@ -10,9 +10,6 @@ import android.view.View;
 
 import org.wordpress.android.R;
 
-/*
- * default recycler view used for reader cards
- */
 public class ReaderRecyclerView extends RecyclerView {
 
     public ReaderRecyclerView(Context context) {
@@ -36,22 +33,24 @@ public class ReaderRecyclerView extends RecyclerView {
             animator.setSupportsChangeAnimations(true);
             setItemAnimator(animator);
             setLayoutManager(new LinearLayoutManager(context));
-            addItemDecoration(new DividerItemDecoration(context));
         }
     }
 
-    private class DividerItemDecoration extends RecyclerView.ItemDecoration {
+    /**
+     * dividers for reader post cards
+     */
+    public static class PostItemDecoration extends RecyclerView.ItemDecoration {
         private final int mSpacingHorizontal;
         private final int mSpacingVertical;
 
-        DividerItemDecoration(Context context) {
+        public PostItemDecoration(Context context) {
             super();
             mSpacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing);
             mSpacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing_vertical);
         }
 
         @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
             super.getItemOffsets(outRect, view, parent, state);
             outRect.set(mSpacingHorizontal, // left
                         mSpacingVertical,   // top
@@ -59,5 +58,4 @@ public class ReaderRecyclerView extends RecyclerView {
                         0);                 // bottom
         }
     }
-
 }
