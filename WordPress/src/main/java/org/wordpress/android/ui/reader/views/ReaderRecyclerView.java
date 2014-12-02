@@ -35,7 +35,7 @@ public class ReaderRecyclerView extends RecyclerView {
     }
 
     /**
-     * dividers for reader post cards
+     * dividers for reader cards
      */
     public static class ReaderItemDecoration extends RecyclerView.ItemDecoration {
         private final int mSpacingHorizontal;
