@@ -37,6 +37,7 @@ import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManag
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -98,6 +99,10 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         }
 
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
+        int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
+        int spacingVertical = DisplayUtils.dpToPx(this, 1);
+        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(spacingHorizontal, spacingVertical));
+
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);

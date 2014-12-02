@@ -8,8 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-import org.wordpress.android.R;
-
 public class ReaderRecyclerView extends RecyclerView {
 
     public ReaderRecyclerView(Context context) {
@@ -39,14 +37,14 @@ public class ReaderRecyclerView extends RecyclerView {
     /**
      * dividers for reader post cards
      */
-    public static class PostItemDecoration extends RecyclerView.ItemDecoration {
+    public static class ReaderItemDecoration extends RecyclerView.ItemDecoration {
         private final int mSpacingHorizontal;
         private final int mSpacingVertical;
 
-        public PostItemDecoration(Context context) {
+        public ReaderItemDecoration(int spacingHorizontal, int spacingVertical) {
             super();
-            mSpacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing);
-            mSpacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing_vertical);
+            mSpacingHorizontal = spacingHorizontal;
+            mSpacingVertical = spacingVertical;
         }
 
         @Override

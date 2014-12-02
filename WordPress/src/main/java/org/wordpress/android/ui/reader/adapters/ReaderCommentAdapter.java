@@ -166,7 +166,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
 
     @Override
     public CommentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_listitem_comment, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_comment, parent, false);
         return new CommentHolder(view);
     }
 

@@ -50,7 +50,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
-import org.wordpress.android.ui.reader.views.ReaderRecyclerView.PostItemDecoration;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView.ReaderItemDecoration;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -248,7 +248,11 @@ public class ReaderPostListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_cards, container, false);
         mRecyclerView = (ReaderRecyclerView) rootView.findViewById(R.id.recycler_view);
-        mRecyclerView.addItemDecoration(new PostItemDecoration(container.getContext()));
+
+        Context context = container.getContext();
+        int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing);
+        int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing_vertical);
+        mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) rootView.findViewById(R.id.text_new_posts);
@@ -276,7 +280,7 @@ public class ReaderPostListFragment extends Fragment {
 
             case BLOG_PREVIEW:
                 // inflate the blog info and make it full size
-                mBlogInfoView = new ReaderBlogInfoView(container.getContext());
+                mBlogInfoView = new ReaderBlogInfoView(context);
                 rootView.addView(mBlogInfoView);
                 ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, mBlogInfoView.getId());
                 // TODO: elevation doesn't work on the blog info header, not sure why
