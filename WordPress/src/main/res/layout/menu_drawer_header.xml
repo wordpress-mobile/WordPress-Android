@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_drawer_header"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/menu_drawer_header_size"
+        android:scaleType="centerCrop"
+        android:src="@drawable/drawer_header_bg" />
 
     <Spinner
         android:id="@+id/blog_spinner"
+        style="@style/DropDownNav.WordPress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_marginRight="@dimen/margin_large"
-        android:layout_marginTop="@dimen/margin_small" />
+        tools:listitem="@layout/spinner_textview_drawer"
+        tools:visibility="gone" />
 
-    <View
-        android:id="@+id/blog_spinner_divider"
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_header_blog_name"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginTop="@dimen/margin_small"
-        android:background="@color/md__divider" />
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_large"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_large"
+        android:visibility="gone"
+        tools:text="text_header_blog_name"
+        tools:visibility="visible" />
 
-</LinearLayout>
+</FrameLayout>

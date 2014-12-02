@@ -281,21 +281,29 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     /*
-     * setup the spinner in the drawer which shows a list of the user's blogs - only appears
-     * when the user has more than one visible blog
+     * setup the spinner in the drawer header which shows a list of the user's blogs
      */
     private void initBlogSpinner() {
+        TextView txtBlogName = (TextView) findViewById(R.id.text_header_blog_name);
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
-        View divider = findViewById(R.id.blog_spinner_divider);
         String[] blogNames = getBlogNames();
         if (blogNames.length > 1) {
+            // more than one blog so show spinner enabling user to choose
+            txtBlogName.setVisibility(View.GONE);
             mBlogSpinner.setVisibility(View.VISIBLE);
-            divider.setVisibility(View.VISIBLE);
             mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
             populateBlogSpinner(blogNames);
-        } else {
+        } else if (blogNames.length == 1) {
+            // only one blog so hide spinner and show name of blog
+            txtBlogName.setVisibility(View.VISIBLE);
+            txtBlogName.setText(blogNames[0]);
             mBlogSpinner.setVisibility(View.GONE);
-            divider.setVisibility(View.GONE);
+            mBlogSpinner.setOnItemSelectedListener(null);
+        } else {
+            // no blogs so hide spinner and blog name
+            txtBlogName.setVisibility(View.GONE);
+            mBlogSpinner.setVisibility(View.GONE);
+            mBlogSpinner.setOnItemSelectedListener(null);
         }
     }
 
@@ -503,6 +511,21 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            final View view;
+            if (convertView == null) {
+                view = mInflater.inflate(R.layout.spinner_textview_drawer, parent, false);
+            } else {
+                view = convertView;
+            }
+
+            final TextView text = (TextView) view.findViewById(android.R.id.text1);
+            text.setText((String) getItem(position));
+
+            return view;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
             final View view;
             if (convertView == null) {
                 view = mInflater.inflate(R.layout.spinner_menu_dropdown_item, parent, false);
