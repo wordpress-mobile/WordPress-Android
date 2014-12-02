@@ -7,5 +7,5 @@ wp.mixpanel_token = wordpress
 wp.simperium.app_secret = wordpress
 wp.simperium.app_name = wordpress
 wp.helpshift.api.key = wordpress
-wp.helpshift.api.domain = wordpress
+wp.helpshift.api.domain = wordpress.org
 wp.helpshift.api.id = wordpress
