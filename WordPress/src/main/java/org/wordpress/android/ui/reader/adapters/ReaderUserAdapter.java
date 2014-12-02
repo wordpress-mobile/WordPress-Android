@@ -134,8 +134,4 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
             }
         }.start();
     }
-
-    public int indexOfUserId(long userId) {
-        return (mUsers != null ? mUsers.indexOfUserId(userId) : -1);
-    }
 }

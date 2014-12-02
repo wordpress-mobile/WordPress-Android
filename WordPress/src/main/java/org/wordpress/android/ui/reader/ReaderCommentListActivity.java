@@ -259,12 +259,22 @@ public class ReaderCommentListActivity extends ActionBarActivity {
 
     private ReaderCommentAdapter getCommentAdapter() {
         if (mCommentAdapter == null) {
-            ReaderInterfaces.DataLoadedListener dataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
+            mCommentAdapter = new ReaderCommentAdapter(WPActivityUtils.getThemedContext(this), getPost());
+
+            // adapter calls this when user taps reply icon
+            mCommentAdapter.setReplyListener(new ReaderCommentAdapter.RequestReplyListener() {
+                @Override
+                public void onRequestReply(long commentId) {
+                    setReplyToCommentId(commentId);
+                }
+            });
+
+            // adapter calls this when data has been loaded & displayed
+            mCommentAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isFinishing()) {
                         if (isEmpty || !mHasUpdatedComments) {
-                            // request the first page of comments
                             updateComments(isEmpty, false);
                         } else if (mRestorePosition > 0) {
                             mRecyclerView.scrollToPosition(mRestorePosition);
@@ -273,19 +283,11 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                         checkEmptyView();
                     }
                 }
-            };
-
-            // adapter calls this when user taps reply icon
-            ReaderCommentAdapter.RequestReplyListener replyListener = new ReaderCommentAdapter.RequestReplyListener() {
-                @Override
-                public void onRequestReply(long commentId) {
-                    setReplyToCommentId(commentId);
-                }
-            };
+            });
 
             // adapter uses this to request more comments from server when it reaches the end and
             // detects that more comments exist on the server than are stored locally
-            ReaderActions.DataRequestedListener dataRequestedListener = new ReaderActions.DataRequestedListener() {
+            mCommentAdapter.setDataRequestedListener(new ReaderActions.DataRequestedListener() {
                 @Override
                 public void onRequestData() {
                     if (!mIsUpdatingComments) {
@@ -293,12 +295,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                         updateComments(true, true);
                     }
                 }
-            };
-            Context context = WPActivityUtils.getThemedContext(this);
-            mCommentAdapter = new ReaderCommentAdapter(context, getPost());
-            mCommentAdapter.setReplyListener(replyListener);
-            mCommentAdapter.setDataLoadedListener(dataLoadedListener);
-            mCommentAdapter.setDataRequestedListener(dataRequestedListener);
+            });
         }
         return mCommentAdapter;
     }
@@ -332,7 +329,6 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         }
 
         mIsUpdatingComments = true;
-        mHasUpdatedComments = true;
 
         int pageNumber;
         if (requestNextPage) {
@@ -350,11 +346,14 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 mIsUpdatingComments = false;
+                mHasUpdatedComments = true;
                 if (!isFinishing()) {
                     hideProgress();
                     if (result.isNewOrChanged()) {
                         mRestorePosition = getCurrentPosition();
                         refreshComments();
+                    } else {
+                        checkEmptyView();
                     }
                 }
             }
@@ -364,8 +363,13 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     }
 
     private void checkEmptyView() {
-        View txtEmpty = findViewById(R.id.text_empty);
-        if (hasCommentAdapter() && getCommentAdapter().isEmpty()) {
+        TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
+        boolean isEmpty = hasCommentAdapter() && getCommentAdapter().isEmpty();
+        if (isEmpty && !NetworkUtils.isNetworkAvailable(this)) {
+            txtEmpty.setText(R.string.no_network_message);
+            txtEmpty.setVisibility(View.VISIBLE);
+        } else if (isEmpty && mHasUpdatedComments) {
+            txtEmpty.setText(R.string.reader_empty_comments);
             txtEmpty.setVisibility(View.VISIBLE);
         } else {
             txtEmpty.setVisibility(View.GONE);

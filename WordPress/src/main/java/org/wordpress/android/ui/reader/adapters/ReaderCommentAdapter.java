@@ -159,14 +159,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
         return (getItemCount() == 0);
     }
 
-    ReaderComment getItem(int position) {
-        if (isValidPosition(position)) {
-            return mComments.get(position);
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public CommentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_comment, parent, false);
