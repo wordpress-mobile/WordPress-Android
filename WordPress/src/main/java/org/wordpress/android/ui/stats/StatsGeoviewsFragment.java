@@ -129,6 +129,6 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
     @Override
     public String getTitle() {
-        return getString(R.string.stats_view_views_by_country);
+        return getString(R.string.stats_view_countries);
     }
 }

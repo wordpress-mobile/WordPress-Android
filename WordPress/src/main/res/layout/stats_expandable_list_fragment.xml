@@ -2,127 +2,132 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_gravity="top">
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/stats_pager_title"
-        style="@style/StatsPagerTitle" />
+    android:layout_gravity="top"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/margin_medium"
-        android:paddingRight="@dimen/margin_medium"
-        android:paddingTop="@dimen/margin_small"
-        android:paddingBottom="@dimen/margin_small">
-
-        <RadioGroup
-            android:id="@+id/stats_pager_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:visibility="gone" >
-        </RadioGroup>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/stats_module_totals_label"
-            style="@style/StatsHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small"
-            android:visibility="gone"/>
+        android:background="@drawable/stats_white_background"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:id="@+id/stats_list_container">
+            android:paddingBottom="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_medium"
+            android:paddingRight="@dimen/margin_medium"
+            android:paddingTop="@dimen/margin_small">
 
-            <RelativeLayout
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/stats_pager_title"
+                style="@style/StatsPagerTitle" />
+
+            <RadioGroup
+                android:id="@+id/stats_pager_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/margin_small"
-                android:paddingBottom="@dimen/margin_small" >
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/stats_list_entry_label"
-                    style="@style/StatsHeader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:text="TITLE" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/stats_list_totals_label"
-                    style="@style/StatsHeader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:text="VIEWS" />
-            </RelativeLayout>
-
-
-            <LinearLayout
-                android:id="@+id/stats_list_linearlayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:scrollbarStyle="outsideOverlay"
-                android:visibility="gone" >
-            </LinearLayout>
-
-            <Button
-                style="@style/StatsViewAllButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="View All"
-                android:id="@+id/btnViewAll"
-                android:visibility="gone"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:id="@+id/stats_pagination_container"
-                android:visibility="gone">
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="&lt;"
-                    android:id="@+id/stats_pagination_go_back"/>
+                android:paddingBottom="@dimen/margin_small"
+                android:paddingTop="@dimen/margin_small"
+                android:visibility="gone"></RadioGroup>
 
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/stats_pagination_text"
-                    android:layout_width="wrap_content"
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/stats_module_totals_label"
+                style="@style/StatsHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_small"
+                android:paddingTop="@dimen/margin_small"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/stats_list_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/margin_extra_large" />
+                    android:paddingBottom="@dimen/margin_small"
+                    android:paddingTop="@dimen/margin_small">
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/stats_list_entry_label"
+                        style="@style/StatsHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="TITLE" />
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/stats_list_totals_label"
+                        style="@style/StatsHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="VIEWS" />
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/stats_list_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:visibility="gone"></LinearLayout>
 
                 <Button
+                    android:id="@+id/btnViewAll"
+                    style="@style/StatsViewAllButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="&gt;"
-                    android:id="@+id/stats_pagination_go_forward"/>
+                    android:text="@string/stats_view_all"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/stats_pagination_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <Button
+                        android:id="@+id/stats_pagination_go_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="&lt;" />
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/stats_pagination_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/margin_extra_large" />
+
+                    <Button
+                        android:id="@+id/stats_pagination_go_forward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="&gt;" />
+                </LinearLayout>
+
+
             </LinearLayout>
-
 
         </LinearLayout>
 
-
-
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_list_empty_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_extra_large"
+            android:background="#F4F8FA"
+            android:padding="@dimen/margin_large"
             android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

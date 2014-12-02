@@ -125,6 +125,6 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
 
     @Override
     public String getTitle() {
-        return getString(R.string.stats_view_video_plays);
+        return getString(R.string.stats_view_videos);
     }
 }

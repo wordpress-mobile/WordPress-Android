@@ -64,7 +64,6 @@
     <!-- Stats bar graph colors -->
     <color name="stats_bar_graph_views">#0085BF</color>
     <color name="stats_bar_graph_grid">#D9D9D9</color>
-    <color name="stats_visitors_and_views_buttons">#F4F8FA</color>
 
     <!-- Stats Tablet header -->
     <color name="stats_tablet_header_title">#434343</color>

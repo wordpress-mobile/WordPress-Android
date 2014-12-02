@@ -57,7 +57,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
     @Override
     protected int getEntryLabelResId() {
-        return R.string.stats_entry_clicks_url;
+        return R.string.stats_entry_clicks_link;
     }
     @Override
     protected int getTotalsLabelResId() {

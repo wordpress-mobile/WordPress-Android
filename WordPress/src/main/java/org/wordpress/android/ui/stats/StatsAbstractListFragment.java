@@ -160,9 +160,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             mGroupIdToExpandedMap.clear();
             String label;
             if (getEmptyLabelDescResId() == NO_STRING_ID) {
-                label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b>";
+                label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b><br/><br/>";
             } else {
-                label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b> " + getString(getEmptyLabelDescResId());
+                label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b><br/><br/>" + getString(getEmptyLabelDescResId());
             }
             if (label.contains("<")) {
                 mEmptyLabel.setText(Html.fromHtml(label));

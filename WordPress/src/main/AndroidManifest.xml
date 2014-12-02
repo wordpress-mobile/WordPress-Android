@@ -147,7 +147,8 @@
         <activity android:name=".ui.stats.StatsActivity"
                   android:theme="@style/Calypso.NoActionBar"/>
 
-        <activity android:name=".ui.stats.StatsViewAllActivity"/>
+        <activity android:name=".ui.stats.StatsViewAllActivity"
+                  android:theme="@style/CalypsoTheme"/>
 
         <activity android:name=".ui.stats.StatsSinglePostDetailsActivity"/>
 

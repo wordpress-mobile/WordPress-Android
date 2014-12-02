@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/StatsVisitorAndViewsRadioButton"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+    android:layout_height="wrap_content"
+    android:button="@android:color/transparent"
+    android:padding="@dimen/margin_medium"
+    android:background="@drawable/stats_visitors_and_views_button_background"
+    android:textColor="@drawable/stats_visitors_and_views_button_text_color"
+    android:textSize="@dimen/text_sz_medium"/>

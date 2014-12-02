@@ -1,0 +1,16 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/calypso_blue_light" />
+        </shape>
+    </item>
+
+    <item android:top="1dp">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+            <solid
+                android:color="@color/white"/>
+        </shape>
+    </item>
+</layer-list>
+
+

@@ -114,7 +114,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
                 @Override
                 public void onClick(View view) {
                     PopupMenu popup = new PopupMenu(context, view);
-                    MenuItem menuItem = popup.getMenu().add(getString(R.string.view_in_browser));
+                    MenuItem menuItem = popup.getMenu().add(getString(R.string.stats_view));
                     menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
