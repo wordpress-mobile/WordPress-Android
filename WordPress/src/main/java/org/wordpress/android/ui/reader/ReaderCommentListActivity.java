@@ -52,7 +52,6 @@ import javax.annotation.Nonnull;
 public class ReaderCommentListActivity extends ActionBarActivity {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
-    private static final String KEY_TOPMOST_COMMENT_ID = "topmost_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
 
     private long mPostId;
@@ -70,8 +69,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     private boolean mIsUpdatingComments;
     private boolean mHasUpdatedComments;
     private long mReplyToCommentId;
-
-    private long mTopMostCommentId;
+    private int mRestorePosition;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,7 +84,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            mTopMostCommentId = savedInstanceState.getLong(KEY_TOPMOST_COMMENT_ID);
+            mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS);
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
@@ -180,7 +178,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     public void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
-        outState.putLong(KEY_TOPMOST_COMMENT_ID, getTopMostCommentId());
+        outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
         outState.putBoolean(KEY_HAS_UPDATED_COMMENTS, mHasUpdatedComments);
 
@@ -268,9 +266,10 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                         if (isEmpty || !mHasUpdatedComments) {
                             // request the first page of comments
                             updateComments(isEmpty, false);
-                        } else if (mTopMostCommentId != 0) {
-                            restoreTopmostComment();
+                        } else if (mRestorePosition > 0) {
+                            mRecyclerView.scrollToPosition(mRestorePosition);
                         }
+                        mRestorePosition = 0;
                         checkEmptyView();
                     }
                 }
@@ -354,7 +353,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                 if (!isFinishing()) {
                     hideProgress();
                     if (result.isNewOrChanged()) {
-                        retainTopmostComment();
+                        mRestorePosition = getCurrentPosition();
                         refreshComments();
                     }
                 }
@@ -454,33 +453,9 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         }
     }
 
-    /*
-     * called before new comments are shown so the current topmost comment is remembered
-     */
-    private void retainTopmostComment() {
-        mTopMostCommentId = getTopMostCommentId();
-    }
-
-    /*
-     * called after new comments are shown so the previous topmost comment is scrolled to
-     */
-    private void restoreTopmostComment() {
-        if (mTopMostCommentId != 0) {
-            int position = getCommentAdapter().indexOfCommentId(mTopMostCommentId);
-            if (position > -1) {
-                mRecyclerView.scrollToPosition(position);
-            }
-            mTopMostCommentId = 0;
-        }
-    }
-
-    /*
-     * returns the id of the first visible comment
-     */
-    private long getTopMostCommentId() {
-        if (hasCommentAdapter()) {
-            int position = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-            return getCommentAdapter().getItemId(position);
+    private int getCurrentPosition() {
+        if (mRecyclerView != null && hasCommentAdapter()) {
+            return ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         } else {
             return 0;
         }

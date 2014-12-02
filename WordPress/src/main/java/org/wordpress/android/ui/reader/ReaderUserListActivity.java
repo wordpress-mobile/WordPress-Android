@@ -21,7 +21,6 @@ import org.wordpress.android.util.DisplayUtils;
  */
 public class ReaderUserListActivity extends ActionBarActivity {
 
-    private static final String KEY_RESTORE_POSITION = "restore_position";
     private ReaderRecyclerView mRecyclerView;
     private ReaderUserAdapter mAdapter;
     private int mRestorePosition;
@@ -39,7 +38,7 @@ public class ReaderUserListActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState != null) {
-            mRestorePosition = savedInstanceState.getInt(KEY_RESTORE_POSITION);
+            mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
         }
 
         int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
@@ -58,7 +57,7 @@ public class ReaderUserListActivity extends ActionBarActivity {
     protected void onSaveInstanceState(Bundle outState) {
         int position = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         if (position > 0) {
-            outState.putInt(KEY_RESTORE_POSITION, position);
+            outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, position);
         }
         super.onSaveInstanceState(outState);
     }
