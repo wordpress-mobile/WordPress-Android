@@ -21,6 +21,7 @@
     <color name="fab_color_selected">@color/calypso_orange</color>
 
     <color name="list_selected">@color/semi_transparent_blue_extra_light</color>
+    <color name="status_bar_translucent">#bf005082</color> <!-- color_primary_dark with alpha -->
 
     <!-- Default colors -->
     <color name="light_gray">#E5E5E5</color>

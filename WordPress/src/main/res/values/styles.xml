@@ -19,6 +19,9 @@
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
         <item name="windowActionModeOverlay">true</item>
 
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/status_bar_translucent</item>
+
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
