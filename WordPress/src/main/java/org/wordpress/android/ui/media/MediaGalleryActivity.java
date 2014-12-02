@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.media;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 /**
  * An activity where the user can manage a media gallery
  */
-public class MediaGalleryActivity extends Activity implements MediaGallerySettingsCallback {
+public class MediaGalleryActivity extends ActionBarActivity implements MediaGallerySettingsCallback {
     public static final int REQUEST_CODE = 3000;
 
     // params for the gallery
@@ -58,7 +58,7 @@ public class MediaGalleryActivity extends Activity implements MediaGallerySettin
 
         setContentView(R.layout.media_gallery_activity);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
         }

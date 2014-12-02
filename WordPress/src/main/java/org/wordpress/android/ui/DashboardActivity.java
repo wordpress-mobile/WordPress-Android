@@ -1,11 +1,11 @@
 
 package org.wordpress.android.ui;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,24 +31,24 @@ import java.net.URLEncoder;
 /**
  * Basic activity for displaying a WebView.
  */
-public class DashboardActivity extends Activity {
+public class DashboardActivity extends ActionBarActivity {
     /** Primary webview used to display content. */
-    protected WebView mWebView;
+    private WebView mWebView;
 
     /**
      * Blog for which this activity is loading content.
      */
-    protected Blog mBlog;
+    private Blog mBlog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_PROGRESS);
+        supportRequestWindowFeature(Window.FEATURE_PROGRESS);
 
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.webview);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         setTitle(R.string.view_admin);
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -112,7 +112,7 @@ public class DashboardActivity extends Activity {
      *
      * @return URL of the login page.
      */
-    protected String getLoginUrl() {
+    String getLoginUrl() {
         if (mBlog.getUrl().lastIndexOf("/") != -1) {
             return mBlog.getUrl().substring(0, mBlog.getUrl().lastIndexOf("/"))
                     + "/wp-login.php";
@@ -126,7 +126,7 @@ public class DashboardActivity extends Activity {
      *
      * @param url URL to be loaded in the webview.
      */
-    protected void loadAuthenticatedUrl(String url) {
+    void loadAuthenticatedUrl(String url) {
         try {
             String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
                     URLEncoder.encode(mBlog.getUsername(), "UTF-8"), URLEncoder.encode(mBlog.getPassword(), "UTF-8"),

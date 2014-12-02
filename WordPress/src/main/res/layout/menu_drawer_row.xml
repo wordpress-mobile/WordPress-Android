@@ -1,39 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/menu_posts_btn"
-    style="@style/MenuDrawer.Button"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="52dp"
-    android:orientation="horizontal"
-    android:paddingLeft="10dp"
-    android:gravity="center_vertical">
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/menu_row_icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:clickable="false"
-        android:contentDescription="@string/posts"
-        android:scaleType="centerInside"
-        android:src="@drawable/dashicon_admin_post_black"
-        android:tint="@color/md__iconTintColor" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/menu_drawer_row_height"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/menu_row_title"
-        style="@style/MenuDrawer.Button.Text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="false"
-        android:text="@string/posts"
-        android:layout_marginLeft="10dp"/>
+        <ImageView
+            android:id="@+id/menu_row_icon"
+            style="@style/MenuDrawerIcon"
+            android:tint="@color/md__icon_tint"
+            tools:src="@drawable/dashicon_admin_post_black" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/menu_row_badge"
-        style="@style/MenuDrawer.CommentBadge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="24dp"
-        android:minHeight="24dp"
-        android:visibility="gone" />
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/menu_row_title"
+            style="@style/MenuDrawerText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:text="Drawer row title" />
 
-</LinearLayout>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/menu_row_badge"
+            style="@style/MenuDrawerBadge"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+</FrameLayout>

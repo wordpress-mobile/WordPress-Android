@@ -1,8 +1,9 @@
 
 package org.wordpress.android.ui;
 
-import android.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -13,7 +14,7 @@ import org.wordpress.android.R;
 /**
  * Basic activity for displaying a WebView.
  */
-public abstract class WebViewActivity extends WPActionBarActivity {
+public abstract class WebViewActivity extends ActionBarActivity {
     /** Primary webview used to display content. */
 
     public static final String URL = "url";
@@ -22,7 +23,7 @@ public abstract class WebViewActivity extends WPActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_PROGRESS);
+        supportRequestWindowFeature(Window.FEATURE_PROGRESS);
 
         super.onCreate(savedInstanceState);
 
@@ -33,7 +34,7 @@ public abstract class WebViewActivity extends WPActionBarActivity {
 
         setContentView(R.layout.webview);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
             actionBar.setDisplayShowTitleEnabled(true);

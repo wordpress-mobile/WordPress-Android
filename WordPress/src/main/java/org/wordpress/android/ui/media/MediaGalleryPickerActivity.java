@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.media;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +27,7 @@ import java.util.List;
  * An activity where the user can add new images to their media gallery or where the user
  * can choose a single image to embed into their post.
  */
-public class MediaGalleryPickerActivity extends Activity
+public class MediaGalleryPickerActivity extends ActionBarActivity
         implements MultiChoiceModeListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
                    AdapterView.OnItemClickListener {
     private GridView mGridView;
@@ -75,9 +75,13 @@ public class MediaGalleryPickerActivity extends Activity
         mGridView = (GridView) findViewById(R.id.media_gallery_picker_gridview);
         mGridView.setMultiChoiceModeListener(this);
         mGridView.setOnItemClickListener(this);
+        mGridAdapter = new MediaGridAdapter(this, null, 0, MediaImageLoader.getInstance());
+        mGridAdapter.setSelectedItems(selectedItems);
+        mGridAdapter.setCallback(this);
+        mGridView.setAdapter(mGridAdapter);
         if (mIsSelectOneItem) {
             setTitle(R.string.select_from_media_library);
-            ActionBar actionBar = getActionBar();
+            ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
@@ -86,10 +90,6 @@ public class MediaGalleryPickerActivity extends Activity
             mActionMode.setTitle(String.format(getString(R.string.cab_selected),
                     mGridAdapter.getSelectedItems().size()));
         }
-        mGridAdapter = new MediaGridAdapter(this, null, 0, MediaImageLoader.getInstance());
-        mGridAdapter.setSelectedItems(selectedItems);
-        mGridAdapter.setCallback(this);
-        mGridView.setAdapter(mGridAdapter);
     }
 
     @Override

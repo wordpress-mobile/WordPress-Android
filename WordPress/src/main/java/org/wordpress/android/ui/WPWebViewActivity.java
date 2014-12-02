@@ -173,6 +173,7 @@ public class WPWebViewActivity extends WebViewActivity {
         if (extras == null) {
             AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity!!");
             finish();
+            return;
         }
 
         if (extras.getInt(LOCAL_BLOG_ID, -1) > -1) {

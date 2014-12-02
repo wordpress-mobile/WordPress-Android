@@ -32,15 +32,15 @@ android {
         exclude "META-INF/NOTICE.txt"
     }
 
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.4-rc-2"
-        versionCode 146
+        versionName "3.5-beta-2"
+        versionCode 153
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 21
 
         buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
         buildConfigField "String", "STATS_PROVIDER_AUTHORITY",
@@ -71,7 +71,10 @@ dependencies {
     // Provided by maven central
     compile 'com.google.code.gson:gson:2.2.2'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-    compile 'com.android.support:support-v13:19.1.0'
+    compile 'com.android.support:support-v13:21.0.2'
+    compile 'com.android.support:appcompat-v7:21.0.2'
+    compile 'com.android.support:cardview-v7:21.0.+'
+    compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.helpshift:android-aar:3.5.0'
     compile 'commons-lang:commons-lang:2.6'
@@ -81,7 +84,6 @@ dependencies {
         exclude group: 'commons-logging', module: 'commons-logging'
     }
 
-    compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
     compile 'com.mixpanel.android:mixpanel-android:4.3.0@aar'
     compile 'com.mcxiaoke.volley:library:1.0.+'
 
@@ -97,7 +99,7 @@ dependencies {
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
-    compile('com.simperium.android:simperium:0.4.12')
+    compile 'com.simperium.android:simperium:0.6.0'
 
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')

@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.comments;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -9,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.android.volley.VolleyError;
@@ -46,7 +45,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditCommentActivity extends Activity {
+public class EditCommentActivity extends ActionBarActivity {
     static final String ARG_LOCAL_BLOG_ID = "blog_id";
     static final String ARG_COMMENT_ID = "comment_id";
     static final String ARG_NOTE_ID = "note_id";
@@ -65,7 +64,7 @@ public class EditCommentActivity extends Activity {
         setContentView(R.layout.comment_edit_activity);
         setTitle(getString(R.string.edit_comment));
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);

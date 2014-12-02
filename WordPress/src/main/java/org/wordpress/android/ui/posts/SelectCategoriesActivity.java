@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,8 +27,8 @@ import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
-import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -39,15 +40,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-
-public class SelectCategoriesActivity extends ListActivity {
+public class SelectCategoriesActivity extends ActionBarActivity {
     String finalResult = "";
     private final Handler mHandler = new Handler();
     private Blog blog;
     private ListView mListView;
     private ListScrollPositionManager mListScrollPositionManager;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private HashSet<String> mSelectedCategories;
     private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
@@ -61,13 +60,13 @@ public class SelectCategoriesActivity extends ListActivity {
         setContentView(R.layout.select_categories);
         setTitle(getResources().getString(R.string.select_categories));
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mListView = getListView();
+        mListView = (ListView)findViewById(android.R.id.list);
         mListScrollPositionManager = new ListScrollPositionManager(mListView, false);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setItemsCanFocus(false);
@@ -104,13 +103,13 @@ public class SelectCategoriesActivity extends ListActivity {
             mSelectedCategories = new HashSet<String>();
         }
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
+        // swipe to refresh setup
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
-                            mPullToRefreshHelper.setRefreshing(false);
+                            mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
                         refreshCategories();
@@ -133,12 +132,11 @@ public class SelectCategoriesActivity extends ListActivity {
         }
 
         CategoryArrayAdapter categoryAdapter = new CategoryArrayAdapter(this, R.layout.categories_row, mCategoryLevels);
-        this.setListAdapter(categoryAdapter);
+        mListView.setAdapter(categoryAdapter);
         if (mSelectedCategories != null) {
-            ListView lv = getListView();
             for (String selectedCategory : mSelectedCategories) {
                 if (mCategoryNames.keySet().contains(selectedCategory)) {
-                    lv.setItemChecked(mCategoryNames.get(selectedCategory), true);
+                    mListView.setItemChecked(mCategoryNames.get(selectedCategory), true);
                 }
             }
         }
@@ -147,7 +145,7 @@ public class SelectCategoriesActivity extends ListActivity {
 
     final Runnable mUpdateResults = new Runnable() {
         public void run() {
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             if (finalResult.equals("addCategory_success")) {
                 populateCategoryList();
                 if (!isFinishing()) {
@@ -208,14 +206,6 @@ public class SelectCategoriesActivity extends ListActivity {
         return returnMessage;
     }
 
-    /**
-     * function addCategory
-     *
-     * @param String
-     *            category_name
-     * @return
-     * @description Adds a new category
-     */
     public String addCategory(final String category_name, String category_slug, String category_desc, int parent_id) {
         // Return string
         String returnString = "addCategory_failed";
@@ -295,7 +285,7 @@ public class SelectCategoriesActivity extends ListActivity {
 
                     // Check if the category name already exists
                     if (!mCategoryNames.keySet().contains(category_name)) {
-                        mPullToRefreshHelper.setRefreshing(true);
+                        mSwipeToRefreshHelper.setRefreshing(true);
                         Thread th = new Thread() {
                             public void run() {
                                 finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
@@ -331,10 +321,6 @@ public class SelectCategoriesActivity extends ListActivity {
         } else if (itemId == android.R.id.home) {
             saveAndFinish();
             return true;
-        } else if (item.getItemId()  == R.id.menu_refresh) {
-            // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
-            WordPress.sendLocalBroadcast(this, PullToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -364,7 +350,7 @@ public class SelectCategoriesActivity extends ListActivity {
     }
 
     private void refreshCategories() {
-        mPullToRefreshHelper.setRefreshing(true);
+        mSwipeToRefreshHelper.setRefreshing(true);
         mListScrollPositionManager.saveScrollOffset();
         updateSelectedCategoryList();
         Thread th = new Thread() {
@@ -386,18 +372,6 @@ public class SelectCategoriesActivity extends ListActivity {
     public void onBackPressed() {
         saveAndFinish();
         super.onBackPressed();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mPullToRefreshHelper.unregisterReceiver(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mPullToRefreshHelper.registerReceiver(this);
     }
 
     private void updateSelectedCategoryList() {

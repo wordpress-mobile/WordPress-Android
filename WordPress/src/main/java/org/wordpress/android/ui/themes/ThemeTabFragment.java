@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +23,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
-import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 
 /**
  * A fragment display the themes on a grid view.
@@ -68,7 +67,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
     protected ThemeTabFragmentCallback mCallback;
     protected int mSavedScrollPosition = 0;
     private boolean mShouldRefreshOnStart;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     public static ThemeTabFragment newInstance(ThemeSortType sort, int page) {
         ThemeTabFragment fragment = new ThemeTabFragment();
@@ -101,14 +100,14 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
         mGridView = (GridView) view.findViewById(R.id.theme_gridview);
         mGridView.setRecyclerListener(this);
 
-        // pull to refresh setup but not for the search view
+        // swipe to refresh setup but not for the search view
         if (!(this instanceof ThemeSearchFragment)) {
-            mPullToRefreshHelper = new PullToRefreshHelper(getActivity(), (PullToRefreshLayout) view.findViewById(
+            mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), (SwipeRefreshLayout) view.findViewById(
                     R.id.ptr_layout), new RefreshListener() {
                 @Override
-                public void onRefreshStarted(View view) {
+                public void onRefreshStarted() {
                     if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                        mPullToRefreshHelper.setRefreshing(false);
+                        mSwipeToRefreshHelper.setRefreshing(false);
                         return;
                     }
                     if (getActivity() instanceof ThemeBrowserActivity) {
@@ -116,7 +115,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
                     }
                 }
             });
-            mPullToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
+            mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
         }
         restoreState(savedInstanceState);
         return view;
@@ -124,8 +123,8 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
 
     public void setRefreshing(boolean refreshing) {
         mShouldRefreshOnStart = refreshing;
-        if (mPullToRefreshHelper != null) {
-            mPullToRefreshHelper.setRefreshing(refreshing);
+        if (mSwipeToRefreshHelper != null) {
+            mSwipeToRefreshHelper.setRefreshing(refreshing);
             if (!refreshing) {
                 refreshView();
             }
@@ -229,23 +228,6 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
                 });
                 container.cancelRequest();
             }
-        }
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // mPullToRefreshHelper is null when current fragment is a ThemeSearchFragment
-        if (mPullToRefreshHelper != null) {
-            mPullToRefreshHelper.registerReceiver(getActivity());
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (mPullToRefreshHelper != null) {
-            mPullToRefreshHelper.unregisterReceiver(getActivity());
         }
     }
 }

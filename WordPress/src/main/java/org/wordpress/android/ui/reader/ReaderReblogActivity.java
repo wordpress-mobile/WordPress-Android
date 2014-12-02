@@ -3,12 +3,13 @@ package org.wordpress.android.ui.reader;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,32 +17,35 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.prefs.PreferencesActivity;
+import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderReblogAdapter;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /*
  * displayed when user taps to reblog a post in the Reader
  */
-public class ReaderReblogActivity extends Activity {
+public class ReaderReblogActivity extends ActionBarActivity {
     private long mBlogId;
     private long mPostId;
     private ReaderPost mPost;
 
     private ReaderReblogAdapter mAdapter;
+    private Spinner mSpinner;
     private EditText mEditComment;
     private ViewGroup mLayoutExcerpt;
 
@@ -57,19 +61,24 @@ public class ReaderReblogActivity extends Activity {
 
         setContentView(R.layout.reader_activity_reblog);
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-            actionBar.setListNavigationCallbacks(getReblogAdapter(), new ActionBar.OnNavigationListener() {
-                @Override
-                public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                    mDestinationBlogId = itemId;
-                    return true;
-                }
-            });
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        View view = View.inflate(this, R.layout.reader_spinner, toolbar);
+        mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
+        mSpinner.setAdapter(getReblogAdapter());
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mDestinationBlogId = id;
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                mDestinationBlogId = 0;
+            }
+        });
 
         mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
         mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
@@ -118,7 +127,7 @@ public class ReaderReblogActivity extends Activity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState.containsKey(KEY_DESTINATION_BLOG_ID)) {
             mDestinationBlogId = savedInstanceState.getLong(KEY_DESTINATION_BLOG_ID);
@@ -188,7 +197,7 @@ public class ReaderReblogActivity extends Activity {
                         txtEmpty.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent i = new Intent(ReaderReblogActivity.this, PreferencesActivity.class);
+                                Intent i = new Intent(ReaderReblogActivity.this, SettingsActivity.class);
                                 startActivityForResult(i, INTENT_SETTINGS);
                             }
                         });
@@ -199,7 +208,7 @@ public class ReaderReblogActivity extends Activity {
 
                     // restore the previously selected destination blog id
                     if (!isEmpty && mDestinationBlogId != 0) {
-                        selectBlogInActionbar(mDestinationBlogId);
+                        selectBlog(mDestinationBlogId);
                     }
                 }
             });
@@ -208,16 +217,13 @@ public class ReaderReblogActivity extends Activity {
         return mAdapter;
     }
 
-    private void selectBlogInActionbar(long blogId) {
-        ActionBar actionBar = getActionBar();
-        if (!hasReblogAdapter() || actionBar == null) {
-            return;
-        }
-        int index = getReblogAdapter().indexOfBlogId(blogId);
-        if (index > -1
-                && index < actionBar.getNavigationItemCount()
-                && index != actionBar.getSelectedNavigationIndex()) {
-            actionBar.setSelectedNavigationItem(index);
+    private void selectBlog(long blogId) {
+        if (hasReblogAdapter()) {
+            int index = getReblogAdapter().indexOfBlogId(blogId);
+            if (index > -1) {
+                mSpinner.setSelection(index);
+                mDestinationBlogId = blogId;
+            }
         }
     }
 

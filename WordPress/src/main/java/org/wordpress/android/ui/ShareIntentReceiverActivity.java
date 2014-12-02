@@ -1,11 +1,11 @@
 package org.wordpress.android.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -33,7 +33,7 @@ import java.util.Map;
  * It lists what actions that the user can perform and redirects them to the activity,
  * along with the content passed in the intent
  */
-public class ShareIntentReceiverActivity extends Activity implements OnItemSelectedListener {
+public class ShareIntentReceiverActivity extends ActionBarActivity implements OnItemSelectedListener {
     public static final String SHARE_TEXT_BLOG_ID_KEY = "wp-settings-share-text-blogid";
     public static final String SHARE_IMAGE_BLOG_ID_KEY = "wp-settings-share-image-blogid";
     public static final String SHARE_IMAGE_ADDTO_KEY = "wp-settings-share-image-addto";

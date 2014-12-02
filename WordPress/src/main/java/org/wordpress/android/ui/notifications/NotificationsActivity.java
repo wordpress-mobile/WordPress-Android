@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.notifications;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -8,9 +7,8 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 
@@ -23,8 +21,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -40,7 +38,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
 
-public class NotificationsActivity extends WPActionBarActivity implements CommentActions.OnNoteCommentActionListener,
+public class NotificationsActivity extends WPDrawerActivity implements CommentActions.OnNoteCommentActionListener,
         CommentActions.OnCommentChangeListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
@@ -65,6 +63,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         super.onCreate(null);
         AppLog.i(T.NOTIFS, "Creating NotificationsActivity");
         createMenuDrawer(R.layout.notifications_activity);
+        setSupportActionBar(getToolbar());
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
@@ -76,11 +75,11 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
             mNotesListFragment = (NotificationsListFragment)fragmentManager.findFragmentByTag(TAG_LIST_VIEW);
         }
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(getResources().getString(R.string.notifications));
         }
-        setTitle(getResources().getString(R.string.notifications));
 
         fragmentManager.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mNotesListFragment.setOnNoteClickListener(new NoteClickListener());
@@ -107,9 +106,6 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         } else {
             launchWithNoteId();
         }
-
-        // remove window background since background color is set in fragment (reduces overdraw)
-        getWindow().setBackgroundDrawable(null);
 
         // Show an auth alert if we don't have an authorized Simperium user
         if (SimperiumUtils.isUserNotAuthorized()) {
@@ -157,23 +153,15 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.notifications, menu);
-        return true;
-    }
-
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
                     int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
-                    if (backStackEntryCount == 0) {
-                        mMenuDrawer.setDrawerIndicatorEnabled(true);
-                        setTitle(R.string.notifications);
-                    } else {
-                        mMenuDrawer.setDrawerIndicatorEnabled(false);
+                    if (getSupportActionBar() != null && backStackEntryCount == 0) {
+                        getSupportActionBar().setTitle(R.string.notifications);
+                    }
+                    if (getDrawerToggle() != null) {
+                        getDrawerToggle().setDrawerIndicatorEnabled(backStackEntryCount == 0);
                     }
                 }
             };
@@ -199,6 +187,15 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
             }
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, "Could not load notification from bucket.");
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            popNoteDetail();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -268,13 +265,13 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.hide(mNotesListFragment);
         ft.add(R.id.layout_fragment_container, mDetailFragment);
-        mMenuDrawer.setDrawerIndicatorEnabled(false);
+        //mMenuDrawer.setDrawerIndicatorEnabled(false);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
 
         // Update title
-        if (note.getFormattedSubject() != null) {
-            setTitle(note.getTitle());
+        if (getSupportActionBar() != null && note.getFormattedSubject() != null) {
+            getSupportActionBar().setTitle(note.getTitle());
         }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.comments;
 
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -8,8 +7,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.cocosw.undobar.UndoBarController;
@@ -20,7 +18,7 @@ import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
@@ -29,7 +27,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
 
-public class CommentsActivity extends WPActionBarActivity
+public class CommentsActivity extends WPDrawerActivity
         implements OnCommentSelectedListener,
                    NotificationFragment.OnPostClickListener,
                    CommentActions.OnCommentActionListener,
@@ -42,15 +40,18 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
+
         createMenuDrawer(R.layout.comment_activity);
-        ActionBar actionBar = getActionBar();
+        setSupportActionBar(getToolbar());
+
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(getString(R.string.tab_comments));
         }
 
         getFragmentManager().addOnBackStackChangedListener(mOnBackStackChangedListener);
 
-        setTitle(getString(R.string.tab_comments));
         restoreSavedInstance(savedInstanceState);
     }
 
@@ -68,6 +69,15 @@ public class CommentsActivity extends WPActionBarActivity
             if (selectedPostId != null) {
                 showReaderFragment(selectedPostId.getRemoteBlogId(), selectedPostId.getId());
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -92,14 +102,6 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.comments, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -116,11 +118,13 @@ public class CommentsActivity extends WPActionBarActivity
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
-                    int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
-                    if (backStackEntryCount == 0) {
-                        mMenuDrawer.setDrawerIndicatorEnabled(true);
-                    } else {
-                        mMenuDrawer.setDrawerIndicatorEnabled(false);
+                    if (getDrawerToggle() != null) {
+                        int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
+                        if (backStackEntryCount == 0) {
+                            getDrawerToggle().setDrawerIndicatorEnabled(true);
+                        } else {
+                            getDrawerToggle().setDrawerIndicatorEnabled(false);
+                        }
                     }
                 }
             };
@@ -196,7 +200,10 @@ public class CommentsActivity extends WPActionBarActivity
             ft.hide(listFragment);
         }
         ft.commitAllowingStateLoss();
-        mMenuDrawer.setDrawerIndicatorEnabled(false);
+
+        if (getDrawerToggle() != null) {
+            getDrawerToggle().setDrawerIndicatorEnabled(false);
+        }
     }
 
     /*

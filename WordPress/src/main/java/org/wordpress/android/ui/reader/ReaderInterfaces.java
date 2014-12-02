@@ -6,7 +6,7 @@ import org.wordpress.android.models.ReaderPost;
 
 public class ReaderInterfaces {
 
-    static interface OnPostSelectedListener {
+    public static interface OnPostSelectedListener {
         public void onPostSelected(long blogId, long postId);
     }
 
@@ -35,12 +35,4 @@ public class ReaderInterfaces {
         public void onRequestReblog(ReaderPost post, View sourceView);
     }
 
-    /*
-     * used by ReaderPostDetailFragment to enter/exit full screen mode
-     */
-    public static interface FullScreenListener {
-        boolean onRequestFullScreen(boolean enable);
-        boolean isFullScreen();
-        boolean isFullScreenSupported();
-    }
 }

@@ -51,7 +51,7 @@ public class ReaderIconCountView extends LinearLayout {
                     R.styleable.ReaderIconCountView,
                     0, 0);
             try {
-                int icon = a.getInteger(R.styleable.ReaderIconCountView_icon, ICON_LIKE);
+                int icon = a.getInteger(R.styleable.ReaderIconCountView_readerIcon, ICON_LIKE);
                 switch (icon) {
                     case ICON_LIKE :
                         mImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.reader_button_like));

@@ -11,7 +11,7 @@ notifications:
 
 android:
   components:
-    - build-tools-19.1.0
+    - build-tools-21.1.1
     - android-19
 
 env:

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.themes;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -9,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,10 +25,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Theme;
-import org.wordpress.android.ui.HorizontalTabView;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragmentCallback;
 import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragmentCallback;
@@ -38,8 +37,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
-import org.wordpress.android.analytics.AnalyticsTracker;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -47,12 +46,12 @@ import java.util.ArrayList;
 /**
  * The theme browser. Accessible via side menu drawer.
  */
-public class ThemeBrowserActivity extends WPActionBarActivity implements
-        ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback,
-        TabListener {
-    private HorizontalTabView mTabView;
+public class ThemeBrowserActivity extends WPDrawerActivity implements
+        ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback {
+
     private ThemePagerAdapter mThemePagerAdapter;
     private ViewPager mViewPager;
+    private SlidingTabLayout mTabLayout;
     private ThemeSearchFragment mSearchFragment;
     private ThemePreviewFragment mPreviewFragment;
     private ThemeDetailsFragment mDetailsFragment;
@@ -79,10 +78,11 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         setTitle(R.string.themes);
 
         createMenuDrawer(R.layout.theme_browser_activity);
+        setSupportActionBar(getToolbar());
 
         mThemePagerAdapter = new ThemePagerAdapter(getFragmentManager());
 
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setHomeButtonEnabled(true);
@@ -90,23 +90,12 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         mViewPager = (ViewPager) findViewById(R.id.theme_browser_pager);
         mViewPager.setAdapter(mThemePagerAdapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                mTabView.setSelectedTab(position);
-            }
-        });
 
-        mTabView = (HorizontalTabView) findViewById(R.id.horizontalTabView1);
-        mTabView.setTabListener(this);
-
-        int count = ThemeSortType.values().length;
-        for (int i = 0; i < count; i++) {
-            String title = ThemeSortType.values()[i].getTitle();
-
-            mTabView.addTab(mTabView.newTab().setText(title));
-        }
-        mTabView.setSelectedTab(0);
+        mTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        mTabLayout.setCustomTabView(R.layout.tab_text, R.id.text_tab);
+        mTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.tab_indicator));
+        mTabLayout.setDistributeEvenly(true);
+        mTabLayout.setViewPager(mViewPager);
 
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
@@ -121,7 +110,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag()) {
             Intent intent = new Intent(ThemeBrowserActivity.this, PostsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
+            startActivity(intent);
             return false;
         }
         return true;
@@ -134,14 +123,17 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     };
 
     private void setupBaseLayout() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            mMenuDrawer.setDrawerIndicatorEnabled(true);
+        int backstackCount = getFragmentManager().getBackStackEntryCount();
+        if (backstackCount == 0) {
             mViewPager.setVisibility(View.VISIBLE);
-            mTabView.setVisibility(View.VISIBLE);
+            mTabLayout.setVisibility(View.VISIBLE);
         } else {
-            mMenuDrawer.setDrawerIndicatorEnabled(false);
             mViewPager.setVisibility(View.GONE);
-            mTabView.setVisibility(View.GONE);
+            mTabLayout.setVisibility(View.GONE);
+        }
+
+        if (getDrawerToggle() != null) {
+            getDrawerToggle().setDrawerIndicatorEnabled(backstackCount == 0);
         }
     }
 
@@ -158,11 +150,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                 setRefreshing(true, mViewPager.getCurrentItem());
             }
         }
-    }
-
-    @Override
-    public void onTabSelected(HorizontalTabView.Tab tab) {
-        mViewPager.setCurrentItem(tab.getPosition());
     }
 
     public class ThemePagerAdapter extends FragmentStatePagerAdapter {
@@ -290,9 +277,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     @Override
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
-        if (mMenuDrawer.isMenuVisible()) {
-            super.onBackPressed();
-        } else if (fm.getBackStackEntryCount() > 0) {
+        if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
             setupBaseLayout();
         } else {

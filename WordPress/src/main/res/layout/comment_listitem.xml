@@ -29,7 +29,7 @@
                 android:layout_height="@dimen/avatar_sz_medium"
                 android:background="@color/blue_medium"
                 android:padding="@dimen/margin_medium"
-                android:src="@drawable/ic_action_accept"
+                android:src="@drawable/ic_check_white_24dp"
                 android:visibility="gone" />
 
             <LinearLayout

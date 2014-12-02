@@ -7,7 +7,8 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.ActionMode;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,12 +25,12 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.PullToRefreshHelper;
-import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
@@ -37,18 +38,15 @@ import org.xmlrpc.android.XMLRPCFault;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-
 public class CommentsListFragment extends Fragment {
     private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
     boolean mHasAutoRefreshedComments = false;
-    boolean mHasCheckedDeletedComments = false;
+    private boolean mHasCheckedDeletedComments = false;
 
     private ProgressBar mProgressLoadMore;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ListView mListView;
-    private View mEmptyView;
     private CommentAdapter mCommentAdapter;
     private ActionMode mActionMode;
 
@@ -72,11 +70,7 @@ public class CommentsListFragment extends Fragment {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isAdded())
                         return;
-                    if (isEmpty) {
-                        showEmptyView();
-                    } else {
-                        hideEmptyView();
-                    }
+                    showEmptyView(isEmpty);
                 }
             };
 
@@ -147,7 +141,7 @@ public class CommentsListFragment extends Fragment {
 
         if (!mHasAutoRefreshedComments) {
             updateComments(false);
-            mPullToRefreshHelper.setRefreshing(true);
+            mSwipeToRefreshHelper.setRefreshing(true);
             mHasAutoRefreshedComments = true;
         }
     }
@@ -176,20 +170,19 @@ public class CommentsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
 
         mListView = (ListView) view.findViewById(android.R.id.list);
-        mEmptyView = view.findViewById(android.R.id.empty);
 
         // progress bar that appears when loading more comments
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress_loading);
         mProgressLoadMore.setVisibility(View.GONE);
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
-                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+        // swipe to refresh setup
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
+                (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
-                    public void onRefreshStarted(View view) {
+                    public void onRefreshStarted() {
                         if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                            mPullToRefreshHelper.setRefreshing(false);
+                            mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
                         updateComments(false);
@@ -199,7 +192,7 @@ public class CommentsListFragment extends Fragment {
     }
 
     public void setRefreshing(boolean refreshing) {
-        mPullToRefreshHelper.setRefreshing(refreshing);
+        mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
     private void dismissDialog(int id) {
@@ -335,8 +328,8 @@ public class CommentsListFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // enable CAB if it's not already enabled
                 if (mActionMode == null) {
-                    if (getActivity() instanceof WPActionBarActivity) {
-                        ((WPActionBarActivity) getActivity()).startActionMode(new ActionModeCallback());
+                    if (getActivity() instanceof WPDrawerActivity) {
+                        ((WPDrawerActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
                         getCommentAdapter().setEnableSelection(true);
                         getCommentAdapter().setItemSelected(position, true, view);
                     }
@@ -413,7 +406,7 @@ public class CommentsListFragment extends Fragment {
                 mRetryOnCancelled = false;
                 updateComments(false);
             } else {
-                mPullToRefreshHelper.setRefreshing(false);
+                mSwipeToRefreshHelper.setRefreshing(false);
             }
         }
 
@@ -470,7 +463,7 @@ public class CommentsListFragment extends Fragment {
             if (mIsLoadingMore) {
                 hideLoadingProgress();
             }
-            mPullToRefreshHelper.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
 
             if (isCancelled()) {
                 return;
@@ -507,14 +500,14 @@ public class CommentsListFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void showEmptyView() {
-        if (mEmptyView != null)
-            mEmptyView.setVisibility(View.VISIBLE);
-    }
-
-    private void hideEmptyView() {
-        if (mEmptyView != null)
-            mEmptyView.setVisibility(View.GONE);
+    private void showEmptyView(boolean show) {
+        if (!isAdded()) {
+            return;
+        }
+        View emptyView = getView().findViewById(R.id.empty_view);
+        if (emptyView != null) {
+            emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
 
     /**
@@ -558,7 +551,7 @@ public class CommentsListFragment extends Fragment {
             mActionMode = actionMode;
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.menu_comments_cab, menu);
-            mPullToRefreshHelper.setEnabled(false);
+            mSwipeToRefreshHelper.setEnabled(false);
             return true;
         }
 
@@ -621,20 +614,8 @@ public class CommentsListFragment extends Fragment {
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             getCommentAdapter().setEnableSelection(false);
-            mPullToRefreshHelper.setEnabled(true);
+            mSwipeToRefreshHelper.setEnabled(true);
             mActionMode = null;
         }
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mPullToRefreshHelper.registerReceiver(getActivity());
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mPullToRefreshHelper.unregisterReceiver(getActivity());
     }
 }

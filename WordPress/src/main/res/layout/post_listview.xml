@@ -1,62 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_grey"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/empty_tags_box_top"
+            android:layout_width="112dp"
+            android:layout_height="86dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/penandink" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/title_empty"
+            style="@style/WordPress.EmptyList.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+            android:layout_marginLeft="@dimen/empty_list_title_side_margin"
+            android:layout_marginRight="@dimen/empty_list_title_side_margin"
+            android:text="@string/empty_list_default"
+            app:fixWidowWords="true" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/description_empty"
+            style="@style/WordPress.EmptyList.Description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/empty_list_description_bottom_margin"
+            android:layout_marginLeft="@dimen/empty_list_description_side_margin"
+            android:layout_marginRight="@dimen/empty_list_description_side_margin" />
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@id/android:list"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawSelectorOnTop="false"
-            android:listSelector="@drawable/reader_list_selector"/>
+            android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@id/android:empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:gravity="center"
-            android:background="@color/background_grey">
+            <ListView
+                android:id="@id/android:list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawSelectorOnTop="false"
+                tools:listitem="@layout/post_list_row" />
 
-            <ImageView
-                android:id="@+id/empty_tags_box_top"
-                android:layout_width="112dp"
-                android:layout_height="86dp"
-                android:src="@drawable/penandink"
-                android:layout_marginBottom="8dp"/>
+            <ImageButton
+                android:id="@+id/fab_button"
+                android:layout_width="@dimen/fab_size"
+                android:layout_height="@dimen/fab_size"
+                android:layout_gravity="end|bottom"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:background="@drawable/fab_background"
+                android:elevation="@dimen/fab_elevation"
+                android:src="@drawable/ic_create_white_24dp"
+                android:stateListAnimator="@anim/pressed_fab" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/title_empty"
-                style="@style/WordPress.EmptyList.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
-                android:layout_marginLeft="@dimen/empty_list_title_side_margin"
-                android:layout_marginRight="@dimen/empty_list_title_side_margin"
-                android:text="@string/empty_list_default"
-                app:fixWidowWords="true"/>
+        </FrameLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/description_empty"
-                style="@style/WordPress.EmptyList.Description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/empty_list_description_bottom_margin"
-                android:layout_marginLeft="@dimen/empty_list_description_side_margin"
-                android:layout_marginRight="@dimen/empty_list_description_side_margin"/>
-        </LinearLayout>
-    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
-
-</LinearLayout>
+</RelativeLayout>
 

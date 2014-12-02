@@ -50,41 +50,55 @@
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon">
 
+        <activity
+            android:name=".ui.WPLaunchActivity"
+            android:theme="@style/Calypso.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <!-- Account activities -->
         <activity
             android:name=".ui.accounts.SignInActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".ui.accounts.NewAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@android:style/Theme.Holo"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".ui.accounts.NewBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.accounts.HelpActivity"/>
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity
+            android:name=".ui.accounts.HelpActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <!-- Preferences activities -->
-        <activity android:name=".ui.prefs.AboutActivity" />
+        <activity
+            android:name=".ui.prefs.AboutActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@android:style/Theme.Holo.Light" />
-        <activity android:name=".ui.prefs.LicensesActivity" />
+            android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".ui.prefs.PreferencesActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@android:style/Theme.Holo.Light" />
-        <activity android:name=".ui.accounts.ManageBlogsActivity" />
-
-	<activity android:name=".networking.SSLCertsViewActivity" />
+            android:name=".ui.prefs.LicensesActivity"/>
+        <activity
+            android:name=".ui.prefs.SettingsActivity"/>
+        <activity
+            android:name=".ui.accounts.ManageBlogsActivity"/>
+        <activity
+            android:name=".networking.SSLCertsViewActivity"/>
 
         <!-- Comments activities -->
         <activity
             android:name=".ui.comments.CommentsActivity"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.comments.CommentDetailActivity"
             android:theme="@style/CalypsoTheme"
@@ -115,18 +129,15 @@
         <activity
             android:name=".ui.posts.PostsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/CalypsoTheme" >
+            android:theme="@style/Calypso.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.posts.PagesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
@@ -134,18 +145,15 @@
 
         <!-- Stats Activities -->
         <activity android:name=".ui.stats.StatsActivity"
-                  android:theme="@style/CalypsoTheme" >
-        </activity>
+                  android:theme="@style/Calypso.NoActionBar"/>
 
-        <activity android:name=".ui.WPWebViewActivity" >
-        </activity>
+        <activity android:name=".ui.WPWebViewActivity"/>
 
-        <activity android:name=".ui.stats.StatsDetailsActivity" >
-        </activity>
+        <activity android:name=".ui.stats.StatsDetailsActivity"/>
 
         <!-- Media Activities -->
         <activity android:name=".ui.media.MediaBrowserActivity"
-                  android:theme="@style/CalypsoTheme" >
+                  android:theme="@style/Calypso.NoActionBar" >
         </activity>
 
         <activity android:name=".ui.media.MediaGalleryActivity">
@@ -157,19 +165,17 @@
         <!-- Theme Activities -->
         <activity
             android:name=".ui.themes.ThemeBrowserActivity"
-            android:theme="@style/CalypsoTheme" >
+            android:theme="@style/Calypso.NoActionBar" >
         </activity>
 
         <!-- Deep Linking Activity -->
         <activity
             android:name=".ui.DeepLinkingIntentReceiverActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            android:theme="@style/Calypso.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="viewpost"
                     android:scheme="wordpress" >
@@ -180,14 +186,15 @@
         <!-- Reader Activities -->
         <activity
             android:name=".ui.reader.ReaderPostListActivity"
-            android:theme="@style/CalypsoTheme"
+            android:theme="@style/Calypso.NoActionBar"
             android:label="@string/reader" />
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
-            android:theme="@style/ReaderTheme"
+            android:theme="@style/Calypso.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.reader.ReaderCommentListActivity"
-            android:theme="@style/ReaderTheme"
+        <activity
+            android:name=".ui.reader.ReaderCommentListActivity"
+            android:theme="@style/Calypso.NoActionBar"
             android:label="@string/reader_title_comments"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
@@ -195,18 +202,20 @@
             android:label="@string/reader_title_applog" />
         <activity
             android:name=".ui.reader.ReaderUserListActivity"
-            android:theme="@style/ReaderTheme.PopupPanel" />
+            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
             android:label="@string/reader_title_subs"
-            android:theme="@style/ReaderTheme.TranslucentActivity"
+            android:theme="@style/Calypso.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderReblogActivity"
+            android:theme="@style/Calypso.NoActionBar"
             android:label="@string/reader_title_reblog"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.reader.ReaderPhotoViewerActivity" />
+            android:name=".ui.reader.ReaderPhotoViewerActivity"
+            android:theme="@style/ReaderPhotoViewerTheme" />
 
         <!-- Other activities -->
 
@@ -241,14 +250,14 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".ui.ViewSiteActivity"
-            android:theme="@style/CalypsoTheme"
+            android:theme="@style/Calypso.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
 
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsActivity"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/Calypso.NoActionBar" />
 
         <!--  Passcode lock activities -->
         <activity

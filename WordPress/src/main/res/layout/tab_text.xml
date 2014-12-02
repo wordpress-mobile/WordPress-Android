@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.wordpress.android.widgets.WPTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/text_tab"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/toolbar_height"
+    android:background="?android:selectableItemBackground"
+    android:gravity="center"
+    android:paddingLeft="@dimen/margin_large"
+    android:paddingRight="@dimen/margin_large"
+    android:textAllCaps="true"
+    android:textColor="@color/tab_text_color"
+    android:textSize="@dimen/text_sz_medium"
+    android:textStyle="bold"
+    tools:text="text_tab" />

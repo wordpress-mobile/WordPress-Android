@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -9,6 +8,9 @@ import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
@@ -21,15 +23,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
@@ -49,7 +49,7 @@ import java.util.Set;
  * The main activity in which the user can browse their media.
  * Accessible via the menu drawer as "Media"
  */
-public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener,
+public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback,
         MediaAddFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -70,19 +70,13 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (WordPress.wpDB == null) {
-            Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-
-        setTitle(R.string.media);
-
         createMenuDrawer(R.layout.media_browser_activity);
+        setSupportActionBar(getToolbar());
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(R.string.media);
         }
 
         FragmentManager fm = getFragmentManager();
@@ -149,10 +143,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     private void setupBaseLayout() {
         // hide access to the drawer when there are fragments in the back stack
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            mMenuDrawer.setDrawerIndicatorEnabled(true);
-        } else {
-            mMenuDrawer.setDrawerIndicatorEnabled(false);
+        if (getDrawerToggle() != null) {
+            getDrawerToggle().setDrawerIndicatorEnabled(getFragmentManager().getBackStackEntryCount() == 0);
         }
     }
 
@@ -306,12 +298,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             ft.hide(mMediaGridFragment);
             mMediaGridFragment.clearSelectedItems();
             setupBaseLayout();
-
             mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
             ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
             ft.addToBackStack(null);
             ft.commit();
-            mMenuDrawer.setDrawerIndicatorEnabled(false);
         }
     }
 
@@ -379,7 +369,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
                 ft.addToBackStack(null);
                 ft.commit();
-                mMenuDrawer.setDrawerIndicatorEnabled(false);
+                if (getDrawerToggle() != null) {
+                    getDrawerToggle().setDrawerIndicatorEnabled(false);
+                }
             } else {
                 // tablet layout: update edit fragment
                 mMediaEditFragment.loadMedia(mediaId);
@@ -493,9 +485,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
-        if (mMenuDrawer.isMenuVisible()) {
-            super.onBackPressed();
-        } else if (fm.getBackStackEntryCount() > 0) {
+        if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
             setupBaseLayout();
         } else {

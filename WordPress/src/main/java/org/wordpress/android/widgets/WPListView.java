@@ -12,6 +12,8 @@ import android.widget.ListView;
 public class WPListView extends ListView {
     private float mLastMotionY;
     private boolean mIsMoving;
+    private int mInitialScrollCheckY;
+    private static final int SCROLL_CHECK_DELAY = 100;
 
     // use this listener to detect when list is scrolled, even during a fling - note that
     // this may fire very frequently, so make sure code inside listener is optimized
@@ -21,6 +23,7 @@ public class WPListView extends ListView {
     public interface OnScrollDirectionListener {
         public void onScrollUp();
         public void onScrollDown();
+        public void onScrollCompleted();
     }
     private OnScrollDirectionListener mOnScrollDirectionListener;
 
@@ -59,9 +62,12 @@ public class WPListView extends ListView {
         }
     }
 
+    public boolean isScrolledToTop() {
+        return (getChildCount() == 0 || getVerticalScrollOffset() == 0);
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // detect when scrolling up/down if a direction listener is assigned
         if (mOnScrollDirectionListener != null) {
             int action = event.getAction() & MotionEvent.ACTION_MASK;
 
@@ -81,6 +87,13 @@ public class WPListView extends ListView {
                     }
                     break;
 
+                case MotionEvent.ACTION_UP:
+                    if (mIsMoving) {
+                        mIsMoving = false;
+                        startScrollCheck();
+                    }
+                    break;
+
                 default :
                     mIsMoving = false;
                     break;
@@ -90,9 +103,24 @@ public class WPListView extends ListView {
         return super.onTouchEvent(event);
     }
 
-    public boolean isScrolledToTop() {
-        return (getChildCount() == 0 || getVerticalScrollOffset() == 0);
+    private void startScrollCheck() {
+        mInitialScrollCheckY = getScrollY();
+        post(mScrollTask);
     }
+
+    private final Runnable mScrollTask = new Runnable() {
+        @Override
+        public void run() {
+            if (mInitialScrollCheckY == getScrollY()) {
+                if (mOnScrollDirectionListener != null) {
+                    mOnScrollDirectionListener.onScrollCompleted();
+                }
+            } else {
+                mInitialScrollCheckY = getScrollY();
+                postDelayed(mScrollTask, SCROLL_CHECK_DELAY);
+            }
+        }
+    };
 
     /*
      * returns true if the listView can scroll up/down vertically
