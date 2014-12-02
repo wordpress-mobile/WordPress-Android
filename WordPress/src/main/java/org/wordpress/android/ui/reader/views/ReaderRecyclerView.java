@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -27,9 +26,6 @@ public class ReaderRecyclerView extends RecyclerView {
 
     private void initialize(Context context) {
         if (!isInEditMode()) {
-            ItemAnimator animator = new DefaultItemAnimator();
-            animator.setSupportsChangeAnimations(true);
-            setItemAnimator(animator);
             setLayoutManager(new LinearLayoutManager(context));
         }
     }
