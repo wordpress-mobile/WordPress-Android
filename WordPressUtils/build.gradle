@@ -19,16 +19,14 @@ repositories {
 dependencies {
     compile 'commons-lang:commons-lang:2.6'
     compile 'com.mcxiaoke.volley:library:1.0.+'
-    compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
-    compile 'org.wordpress:pulltorefresh-main:0.9.7@aar' // org.wordpress version includes some fixes
-    compile 'com.android.support:support-v13:19.1.0'
+    compile 'com.android.support:support-v13:21.0.2'
 }
 
 android {
     publishNonDefault true
 
     compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         applicationId "org.wordpress.android.util"
