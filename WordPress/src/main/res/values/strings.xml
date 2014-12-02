@@ -771,9 +771,7 @@
     <string name="nux_welcome_create_account">Create account</string>
     <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
     <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
-    <string name="ssl_certificate_trust">Trust</string>
-    <string name="ssl_certificate_details">Certificate Details</string>
-    <string name="ssl_certificate_do_not_trust">Don\'t trust</string>
+    <string name="ssl_certificate_details">Details</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ptr_tip_message">Tip: Pull down to refresh</string>
