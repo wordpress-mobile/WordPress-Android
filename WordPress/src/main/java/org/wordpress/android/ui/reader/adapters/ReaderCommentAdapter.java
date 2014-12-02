@@ -65,6 +65,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
     private ReaderActions.DataRequestedListener mDataRequestedListener;
 
     class CommentHolder extends RecyclerView.ViewHolder {
+        private final ViewGroup container;
         private final TextView txtAuthor;
         private final TextView txtText;
         private final TextView txtDate;
@@ -83,6 +84,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
 
         public CommentHolder(View view) {
             super(view);
+
+            container = (ViewGroup) view.findViewById(R.id.layout_container);
 
             txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
             txtText = (TextView) view.findViewById(R.id.text_comment_text);
@@ -208,14 +211,14 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
 
         if (mHighlightCommentId == comment.commentId) {
             // different background for highlighted comment, with optional progress bar
-            holder.itemView.setBackgroundColor(mBgColorHighlight);
+            holder.container.setBackgroundColor(mBgColorHighlight);
             holder.progress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
         } else if (comment.authorId == mPost.authorId) {
             // different background color for comments from the post's author
-            holder.itemView.setBackgroundColor(mBgColorHighlight);
+            holder.container.setBackgroundColor(mBgColorHighlight);
             holder.progress.setVisibility(View.GONE);
         } else {
-            holder.itemView.setBackgroundColor(mBgColorNormal);
+            holder.container.setBackgroundColor(mBgColorNormal);
             holder.progress.setVisibility(View.GONE);
         }
 
