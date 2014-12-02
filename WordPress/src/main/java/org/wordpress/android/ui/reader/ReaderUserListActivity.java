@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
@@ -14,43 +12,21 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
+import org.wordpress.android.util.DisplayUtils;
 
 /*
  * displays a list of users who like a specific reader post
  */
 public class ReaderUserListActivity extends ActionBarActivity {
-    private static final String LIST_STATE = "list_state";
-    private Parcelable mListState = null;
-    private ListView mListView;
-
-    private ListView getListView() {
-        if (mListView == null) {
-            mListView = (ListView) findViewById(android.R.id.list);
-        }
-        return mListView;
-    }
 
     private ReaderUserAdapter mAdapter;
     private ReaderUserAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ReaderUserAdapter(this, mDataLoadedListener);
+            mAdapter = new ReaderUserAdapter(this);
         }
         return mAdapter;
     }
-
-    /*
-     * called by adapter when data has been loaded
-     */
-    private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
-        @Override
-        public void onDataLoaded(boolean isEmpty) {
-            // restore listView state so user returns to the previously scrolled-to item
-            if (!isEmpty && mListState != null) {
-                getListView().onRestoreInstanceState(mListState);
-                mListState = null;
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,20 +44,13 @@ public class ReaderUserListActivity extends ActionBarActivity {
         long postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
         long commentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
 
-        if (savedInstanceState != null) {
-            mListState = savedInstanceState.getParcelable(LIST_STATE);
-        }
+        ReaderRecyclerView recyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
+        int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
+        int spacingVertical = DisplayUtils.dpToPx(this, 1);
+        recyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(spacingHorizontal, spacingVertical));
 
-        getListView().setAdapter(getAdapter());
+        recyclerView.setAdapter(getAdapter());
         loadUsers(blogId, postId, commentId);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        if (getListView().getFirstVisiblePosition() > 0) {
-            outState.putParcelable(LIST_STATE, getListView().onSaveInstanceState());
-        }
-        super.onSaveInstanceState(outState);
     }
 
     @Override
