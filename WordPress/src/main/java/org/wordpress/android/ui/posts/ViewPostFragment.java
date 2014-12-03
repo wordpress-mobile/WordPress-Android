@@ -6,8 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -37,8 +35,8 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionService;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
@@ -57,7 +55,6 @@ public class ViewPostFragment extends Fragment {
     private SuggestionAutoCompleteText mEditComment;
     private ImageButton mAddCommentButton, mShareUrlButton, mViewPostButton;
     private TextView mTitleTextView, mContentTextView;
-    private boolean mShouldLoadPost = true;
 
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
@@ -65,7 +62,6 @@ public class ViewPostFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-
     }
 
     @Override
@@ -131,6 +127,10 @@ public class ViewPostFragment extends Fragment {
         mLayoutCommentBox = (ViewGroup) v.findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mLayoutCommentBox.findViewById(R.id.edit_comment);
         mEditComment.setHint(R.string.reader_hint_comment_on_post);
+        if (WordPress.currentPost != null && WordPress.getCurrentRemoteBlogId() != -1) {
+            mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%d%s", WordPress.getCurrentRemoteBlogId(),
+                    WordPress.currentPost.getRemotePostId()));
+        }
 
         // button listeners here
         ImageButton editPostButton = (ImageButton) v.findViewById(R.id.editPost);
@@ -185,7 +185,6 @@ public class ViewPostFragment extends Fragment {
         setupSuggestionServiceAndAdapter();
 
         return v;
-
     }
 
     private void setupSuggestionServiceAndAdapter() {
