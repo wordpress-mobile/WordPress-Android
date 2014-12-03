@@ -214,7 +214,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
-        mEditReply.setUniqueId(String.format("%d%d", getRemoteBlogId(), getCommentId()));
+        mEditReply.getAutoSaveTextHelper().setUniqueId(String.format("%d%d", getRemoteBlogId(), getCommentId()));
 
         mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
 
