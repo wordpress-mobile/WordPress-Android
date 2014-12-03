@@ -41,8 +41,10 @@ public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
             return;
         }
         String text = getAutoSaveTextHelper().loadString(this);
-        setText(text);
-        setSelection(text.length());
+        if (!text.isEmpty()) {
+            setText(text);
+            setSelection(text.length());
+        }
     }
 
     @Override
