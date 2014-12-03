@@ -741,6 +741,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     if (succeeded) {
                         ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
                         mEditReply.setText(null);
+                        mEditReply.getAutoSaveTextHelper().clearSavedText(getActivity(), mEditReply);
                     } else {
                         ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
                         // refocus editor on failure and show soft keyboard
