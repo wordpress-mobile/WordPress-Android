@@ -12,6 +12,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.stats.adapters.PostsAndPagesAdapter;
 import org.wordpress.android.ui.stats.model.AuthorModel;
 import org.wordpress.android.ui.stats.model.CommentFollowersModel;
 import org.wordpress.android.ui.stats.model.CommentsModel;
@@ -131,7 +132,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         if (mTopPagerSelectedButtonIndex == 0 && hasAuthors()) {
             adapter = new AuthorsAdapter(getActivity(), getAuthors());
         } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts()) {
-            adapter = new TopPostsAndPagesAdapter(getActivity(), getPosts());
+            adapter = new PostsAndPagesAdapter(getActivity(), getLocalTableBlogID(), getPosts());
         }
 
         if (adapter != null) {
@@ -181,45 +182,6 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
     @Override
     protected boolean isExpandableList() {
         return false;
-    }
-
-    private class TopPostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
-
-        private final List<SingleItemModel> list;
-        private final Activity context;
-        private final LayoutInflater inflater;
-
-        public TopPostsAndPagesAdapter(Activity context, List<SingleItemModel> list) {
-            super(context, R.layout.stats_list_cell, list);
-            this.context = context;
-            this.list = list;
-            inflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View rowView = convertView;
-            // reuse views
-            if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, null);
-                // configure view holder
-                StatsViewHolder viewHolder = new StatsViewHolder(rowView);
-                rowView.setTag(viewHolder);
-            }
-
-            final SingleItemModel currentRowData = list.get(position);
-            StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
-            // fill data
-            // entries
-            holder.setEntryTextOrLink(currentRowData.getUrl(), currentRowData.getTitle());
-            // totals
-            holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));
-
-            // no icon
-            holder.networkImageView.setVisibility(View.GONE);
-
-            return rowView;
-        }
     }
 
     private class AuthorsAdapter extends ArrayAdapter<AuthorModel> {

@@ -16,7 +16,7 @@ import org.wordpress.android.WordPress;
 /**
  * View holder for stats_list_cell layout
  */
-class StatsViewHolder {
+public class StatsViewHolder {
     public final TextView entryTextView;
     public final TextView totalsTextView;
     public final NetworkImageView networkImageView;
