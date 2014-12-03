@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.model;
+package org.wordpress.android.ui.stats.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,17 +19,19 @@ public class AuthorModel implements Serializable {
     private String mName;
     private String mAvatar;
     private int mViews;
-    private String mFollowData;
+    private FollowDataModel mFollowData;
     private List<SingleItemModel> mPosts;
 
-    public AuthorModel(String mBlogId, String date, String mGroupId, String mName, String mAvatar, int mViews, String mFollowData) {
+    public AuthorModel(String mBlogId, String date, String mGroupId, String mName, String mAvatar, int mViews, JSONObject followData) throws JSONException {
         this.mBlogId = mBlogId;
         setDate(StatsUtils.toMs(date));
         this.mGroupId = mGroupId;
         this.mName = mName;
         this.mAvatar = mAvatar;
         this.mViews = mViews;
-        this.mFollowData = mFollowData;
+        if (followData != null) {
+            this.mFollowData = new FollowDataModel(followData);
+        }
     }
 
     public AuthorModel(String blogId, String date, JSONObject authorJSON) throws JSONException {
@@ -45,7 +47,9 @@ public class AuthorModel implements Serializable {
 
         // Follow data could return a boolean false
         JSONObject followData = authorJSON.optJSONObject("follow_data");
-        setFollowData((followData != null) ? followData.toString() : null);
+        if (followData != null) {
+            this.mFollowData = new FollowDataModel(followData);
+        }
 
         JSONArray postsJSON = authorJSON.getJSONArray("posts");
         mPosts = new ArrayList<SingleItemModel>(authorJSON.length());
@@ -100,12 +104,8 @@ public class AuthorModel implements Serializable {
         this.mViews = total;
     }
 
-    public String getFollowData() {
+    public FollowDataModel getFollowData() {
         return mFollowData;
-    }
-
-    public void setFollowData(String followData) {
-        this.mFollowData = followData;
     }
 
     public String getAvatar() {

@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.stats.model.PublicizeModel;
-import org.wordpress.android.ui.stats.model.SingleItemModel;
+import org.wordpress.android.ui.stats.models.PublicizeModel;
+import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;

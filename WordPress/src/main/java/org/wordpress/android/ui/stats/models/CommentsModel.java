@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.model;
+package org.wordpress.android.ui.stats.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +54,8 @@ public class CommentsModel implements Serializable {
                 int comments = currentAuthorJSON.getInt("comments");
                 String url = currentAuthorJSON.getString("link");
                 String gravatar = currentAuthorJSON.getString("gravatar");
-                AuthorModel currentAuthor = new AuthorModel(blogID, mDate, url, name, gravatar, comments, null);
+                JSONObject followData = currentAuthorJSON.optJSONObject("follow_data");
+                AuthorModel currentAuthor = new AuthorModel(blogID, mDate, url, name, gravatar, comments, followData);
                 mAuthors.add(currentAuthor);
             }
         }

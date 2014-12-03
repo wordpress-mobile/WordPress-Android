@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.stats.model.TagModel;
-import org.wordpress.android.ui.stats.model.TagsContainerModel;
-import org.wordpress.android.ui.stats.model.TagsModel;
+import org.wordpress.android.ui.stats.models.TagModel;
+import org.wordpress.android.ui.stats.models.TagsContainerModel;
+import org.wordpress.android.ui.stats.models.TagsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 

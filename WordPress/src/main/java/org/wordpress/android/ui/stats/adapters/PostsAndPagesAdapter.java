@@ -14,7 +14,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsSinglePostDetailsActivity;
 import org.wordpress.android.ui.stats.StatsViewHolder;
-import org.wordpress.android.ui.stats.model.SingleItemModel;
+import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
 

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.model;
+package org.wordpress.android.ui.stats.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +10,7 @@ public class FollowerModel implements Serializable {
     private String mLabel;
     private String mAvatar;
     private String mUrl;
-    private String mFollowData;
+    private FollowDataModel mFollowData;
     private String mDateSubscribed;
 
     public FollowerModel(String mBlogId, JSONObject followerJSONData) throws JSONException{
@@ -21,9 +21,11 @@ public class FollowerModel implements Serializable {
         }
         this.mUrl = followerJSONData.optString("url");
         this.mDateSubscribed = followerJSONData.getString("date_subscribed");
-        // Follow data could return a boolean false
+
         JSONObject followData = followerJSONData.optJSONObject("follow_data");
-        setFollowData((followData != null) ? followData.toString() : null);
+        if (followData != null) {
+            this.mFollowData = new FollowDataModel(followData);
+        }
     }
 
     public String getBlogId() {
@@ -42,12 +44,8 @@ public class FollowerModel implements Serializable {
         return mUrl;
     }
 
-    public String getFollowData() {
+    public FollowDataModel getFollowData() {
         return mFollowData;
-    }
-
-    public void setFollowData(String followData) {
-        this.mFollowData = followData;
     }
 
     public String getAvatar() {

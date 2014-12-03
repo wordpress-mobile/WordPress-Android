@@ -349,6 +349,8 @@
     <string name="view_stats_full_site">View full site</string>
     <string name="stats_view_all">View all</string>
     <string name="stats_view">View</string>
+    <string name="stats_follow">Follow</string>
+    <string name="stats_unfollow">Unfollow</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>

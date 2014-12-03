@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.stats.model.GeoviewModel;
-import org.wordpress.android.ui.stats.model.GeoviewsModel;
+import org.wordpress.android.ui.stats.models.GeoviewModel;
+import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 

@@ -2,16 +2,20 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.PopupMenu;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.stats.model.AuthorModel;
-import org.wordpress.android.ui.stats.model.AuthorsModel;
-import org.wordpress.android.ui.stats.model.SingleItemModel;
+import org.wordpress.android.ui.stats.models.AuthorModel;
+import org.wordpress.android.ui.stats.models.AuthorsModel;
+import org.wordpress.android.ui.stats.models.FollowDataModel;
+import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
 
@@ -204,6 +208,21 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
             // icon
             holder.showNetworkImage(icon);
+
+            final FollowDataModel followData = group.getFollowData();
+            if (followData == null) {
+                holder.imgMore.setVisibility(View.GONE);
+                holder.imgMore.setOnClickListener(null);
+            } else {
+                holder.imgMore.setVisibility(View.VISIBLE);
+                holder.imgMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        FollowHelper fh = new FollowHelper(activity);
+                        fh.showPopup(holder.imgMore, followData);
+                    }
+                });
+            }
 
             // expand/collapse chevron
             holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);

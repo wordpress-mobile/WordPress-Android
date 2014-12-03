@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.model;
+package org.wordpress.android.ui.stats.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,15 +11,15 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class ClicksModel implements Serializable {
+public class ReferrersModel implements Serializable {
     private String mPeriod;
     private String mDate;
     private String mBlogID;
-    private int mOtherClicks;
-    private int mTotalClicks;
-    private List<ClickGroupModel> mClickGroups;
+    private int mOtherViews;
+    private int mTotalViews;
+    private List<ReferrerGroupModel> mGroups;
 
-    public ClicksModel(String blogID, JSONObject response) throws JSONException {
+    public ReferrersModel(String blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mPeriod = response.getString("period");
         this.mDate = response.getString("date");
@@ -29,24 +29,24 @@ public class ClicksModel implements Serializable {
             throw new JSONException("Invalid document returned from the REST API");
         }
 
-        JSONArray jClickGroupsArray;
+        JSONArray jGroupsArray;
         // Read the first day
         Iterator<String> keys = jDaysObject.keys();
         String key = keys.next();
         JSONObject firstDayObject = jDaysObject.getJSONObject(key);
-        this.mOtherClicks = firstDayObject.getInt("other_clicks");
-        this.mTotalClicks = firstDayObject.getInt("total_clicks");
-        jClickGroupsArray = firstDayObject.optJSONArray("clicks");
+        this.mOtherViews = firstDayObject.optInt("other_views");
+        this.mTotalViews = firstDayObject.optInt("total_views");
+        jGroupsArray = firstDayObject.optJSONArray("groups");
 
-        if (jClickGroupsArray != null) {
-            mClickGroups = new ArrayList<ClickGroupModel>(jClickGroupsArray.length());
-            for (int i = 0; i < jClickGroupsArray.length(); i++) {
+        if (jGroupsArray != null) {
+            mGroups = new ArrayList<ReferrerGroupModel>(jGroupsArray.length());
+            for (int i = 0; i < jGroupsArray.length(); i++) {
                 try {
-                    JSONObject currentGroupJSON = jClickGroupsArray.getJSONObject(i);
-                    ClickGroupModel currentGroupModel = new ClickGroupModel(blogID, mDate, currentGroupJSON);
-                    mClickGroups.add(currentGroupModel);
+                    JSONObject currentGroupJSON = jGroupsArray.getJSONObject(i);
+                    ReferrerGroupModel currentGroupModel = new ReferrerGroupModel(blogID, mDate, currentGroupJSON);
+                    mGroups.add(currentGroupModel);
                 } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Unexpected ClickGroupModel object " +
+                    AppLog.e(AppLog.T.STATS, "Unexpected ReferrerGroupModel object " +
                             "at position " + i + " Response: " + response.toString(), e);
                 }
             }
@@ -77,15 +77,7 @@ public class ClicksModel implements Serializable {
         this.mPeriod = period;
     }
 
-    public List<ClickGroupModel> getClickGroups() {
-        return this.mClickGroups;
-    }
-
-    public int getOtherClicks() {
-        return mOtherClicks;
-    }
-
-    public int getTotalClicks() {
-        return mTotalClicks;
+    public List<ReferrerGroupModel> getGroups() {
+        return this.mGroups;
     }
 }

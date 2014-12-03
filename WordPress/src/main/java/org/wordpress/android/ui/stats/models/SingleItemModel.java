@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.model;
+package org.wordpress.android.ui.stats.models;
 
 import org.wordpress.android.ui.stats.StatsUtils;
 

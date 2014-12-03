@@ -1,22 +1,12 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.PopupMenu;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.adapters.PostsAndPagesAdapter;
-import org.wordpress.android.ui.stats.model.SingleItemModel;
-import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
+import org.wordpress.android.ui.stats.models.SingleItemModel;
+import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.FormatUtils;
 
 import java.util.List;
 

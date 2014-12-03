@@ -4,16 +4,19 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.PopupMenu;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.stats.model.FollowerModel;
-import org.wordpress.android.ui.stats.model.FollowersModel;
+import org.wordpress.android.ui.stats.models.FollowDataModel;
+import org.wordpress.android.ui.stats.models.FollowerModel;
+import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -238,7 +241,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             }
 
             final FollowerModel currentRowData = list.get(position);
-            StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
+            final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
             // entries
             if (mTopPagerSelectedButtonIndex == 0) {
@@ -253,6 +256,21 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
 
             // Avatar
             holder.showNetworkImage(currentRowData.getAvatar());
+
+            final FollowDataModel followData = currentRowData.getFollowData();
+            if (followData == null) {
+                holder.imgMore.setVisibility(View.GONE);
+                holder.imgMore.setOnClickListener(null);
+            } else {
+                holder.imgMore.setVisibility(View.VISIBLE);
+                holder.imgMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        FollowHelper fh = new FollowHelper(context);
+                        fh.showPopup(holder.imgMore, followData);
+                    }
+                });
+            }
 
             // no icon
             holder.networkImageView.setVisibility(View.VISIBLE);

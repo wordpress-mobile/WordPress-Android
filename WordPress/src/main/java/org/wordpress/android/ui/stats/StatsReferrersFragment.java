@@ -11,9 +11,9 @@ import android.widget.PopupMenu;
 import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.stats.model.ReferrerGroupModel;
-import org.wordpress.android.ui.stats.model.ReferrersModel;
-import org.wordpress.android.ui.stats.model.SingleItemModel;
+import org.wordpress.android.ui.stats.models.ReferrerGroupModel;
+import org.wordpress.android.ui.stats.models.ReferrersModel;
+import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 

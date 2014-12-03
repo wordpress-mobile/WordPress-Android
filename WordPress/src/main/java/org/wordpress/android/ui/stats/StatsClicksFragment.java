@@ -8,9 +8,9 @@ import android.widget.BaseExpandableListAdapter;
 
 import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
-import org.wordpress.android.ui.stats.model.ClickGroupModel;
-import org.wordpress.android.ui.stats.model.ClicksModel;
-import org.wordpress.android.ui.stats.model.SingleItemModel;
+import org.wordpress.android.ui.stats.models.ClickGroupModel;
+import org.wordpress.android.ui.stats.models.ClicksModel;
+import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 

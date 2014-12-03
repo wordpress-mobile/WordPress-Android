@@ -8,6 +8,7 @@ import android.text.Spannable;
 import android.text.style.URLSpan;
 import android.util.SparseBooleanArray;
 import android.view.Display;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -20,7 +21,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.ui.stats.models.FollowDataModel;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ToastUtils;
+
+import java.lang.ref.WeakReference;
 
 public class StatsUIHelper {
     // Max number of rows to show in a stats fragment

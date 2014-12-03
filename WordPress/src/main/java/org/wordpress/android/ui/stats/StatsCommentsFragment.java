@@ -1,29 +1,47 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.content.OperationApplicationException;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.PopupMenu;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.adapters.PostsAndPagesAdapter;
-import org.wordpress.android.ui.stats.model.AuthorModel;
-import org.wordpress.android.ui.stats.model.CommentFollowersModel;
-import org.wordpress.android.ui.stats.model.CommentsModel;
-import org.wordpress.android.ui.stats.model.SingleItemModel;
+import org.wordpress.android.ui.stats.models.AuthorModel;
+import org.wordpress.android.ui.stats.models.CommentFollowersModel;
+import org.wordpress.android.ui.stats.models.CommentsModel;
+import org.wordpress.android.ui.stats.models.FollowDataModel;
+import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
+import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class StatsCommentsFragment extends StatsAbstractListFragment implements RadioGroup.OnCheckedChangeListener {
@@ -209,14 +227,30 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
             }
 
             final AuthorModel currentRowData = list.get(position);
-            StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
-            // fill data
+            final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
+
             // entries
             holder.entryTextView.setText(currentRowData.getName());
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
 
+            // avatar
             holder.showNetworkImage(currentRowData.getAvatar());
+
+            final FollowDataModel followData = currentRowData.getFollowData();
+            if (followData == null) {
+                holder.imgMore.setVisibility(View.GONE);
+                holder.imgMore.setOnClickListener(null);
+            } else {
+                holder.imgMore.setVisibility(View.VISIBLE);
+                holder.imgMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        FollowHelper fh = new FollowHelper(context);
+                        fh.showPopup(holder.imgMore, followData);
+                    }
+                });
+            }
 
             // no icon
             holder.networkImageView.setVisibility(View.VISIBLE);
