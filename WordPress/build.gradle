@@ -36,8 +36,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.5-beta-2"
-        versionCode 153
+        versionName "3.5-rc-1"
+        versionCode 154
         minSdkVersion 14
         targetSdkVersion 21
 
@@ -70,8 +70,8 @@ dependencies {
     // Provided by maven central
     compile 'com.google.code.gson:gson:2.2.2'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-    compile 'com.android.support:support-v13:21.0.2'
-    compile 'com.android.support:appcompat-v7:21.0.2'
+    compile 'com.android.support:support-v13:21.0.+'
+    compile 'com.android.support:appcompat-v7:21.0.+'
     compile 'com.android.support:cardview-v7:21.0.+'
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'

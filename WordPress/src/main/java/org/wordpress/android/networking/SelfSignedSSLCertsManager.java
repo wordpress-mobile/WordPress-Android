@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.GenericCallback;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -44,11 +45,11 @@ public class SelfSignedSSLCertsManager {
         mLocalKeyStore = loadTrustStore(ctx);
     }
 
-    public static void askForSslTrust(final Context ctx) {
+    public static void askForSslTrust(final Context ctx, final GenericCallback<Void> certificateTrusted) {
         AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
         alert.setTitle(ctx.getString(R.string.ssl_certificate_error));
         alert.setMessage(ctx.getString(R.string.ssl_certificate_ask_trust));
-        alert.setPositiveButton(R.string.ssl_certificate_trust, new DialogInterface.OnClickListener() {
+        alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         SelfSignedSSLCertsManager selfSignedSSLCertsManager;
                         try {
@@ -58,6 +59,9 @@ public class SelfSignedSSLCertsManager {
                             AppLog.e(T.API, e);
                         } catch (IOException e) {
                             AppLog.e(T.API, e);
+                        }
+                        if (certificateTrusted != null) {
+                            certificateTrusted.callback(null);
                         }
                     }
                 }
@@ -78,7 +82,7 @@ public class SelfSignedSSLCertsManager {
                 }
             }
         });
-        alert.setNegativeButton(R.string.ssl_certificate_do_not_trust, new DialogInterface.OnClickListener() {
+        alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
             }
         });
@@ -148,7 +152,9 @@ public class SelfSignedSSLCertsManager {
         }
     }
 
-    //Create an empty trust store file if missing
+    /**
+     * Create an empty trust store file if missing
+     */
     private void createLocalKeyStoreFile() throws GeneralSecurityException, IOException {
         if (!mLocalTrustStoreFile.exists()) {
             FileOutputStream out = null;
@@ -158,7 +164,7 @@ public class SelfSignedSSLCertsManager {
                 localTrustStore.load(null, BuildConfig.DB_SECRET.toCharArray());
                 localTrustStore.store(out, BuildConfig.DB_SECRET.toCharArray());
             } finally {
-                if (out!=null){
+                if (out != null) {
                     try {
                         out.close();
                     } catch (IOException e) {

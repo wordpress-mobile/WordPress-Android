@@ -222,13 +222,11 @@
 
         <!-- Other activities -->
 
-        <activity android:name=".ui.ShareIntentReceiverActivity" android:theme="@style/FloatingActivityTheme">
+        <activity android:name=".ui.ShareIntentReceiverActivity" android:theme="@style/Calypso.FloatingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="text/plain" />
                 <data android:mimeType="image/*" />
                 <data android:mimeType="video/*" />
