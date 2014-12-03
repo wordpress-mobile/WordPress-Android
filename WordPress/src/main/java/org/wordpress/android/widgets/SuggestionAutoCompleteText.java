@@ -9,6 +9,8 @@ import android.widget.MultiAutoCompleteTextView;
 import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
 
 public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
+    String mUniqueId;
+
     public SuggestionAutoCompleteText(Context context) {
         super(context, null);
         TypefaceCache.setCustomTypeface(context, this, null);
@@ -30,6 +32,10 @@ public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
         this.setThreshold(1);
     }
 
+    public void setUniqueId(String uniqueId) {
+        mUniqueId = uniqueId;
+    }
+
     private String getViewPathId(View view) {
         StringBuilder sb = new StringBuilder();
         for (View currentView = view; currentView != null && currentView.getParent() != null
@@ -39,21 +45,42 @@ public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
         return sb.toString();
     }
 
+    public void clearSavedText() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("TODO", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(getViewPathId(this) + mUniqueId);
+        editor.apply();
+    }
+
+    private void loadText() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("TODO", Context.MODE_PRIVATE);
+        String text = sharedPreferences.getString(getViewPathId(this) + mUniqueId, "");
+        setText(text);
+        setSelection(text.length());
+    }
+
+    private void saveText() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("TODO", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(getViewPathId(this) + mUniqueId, getText().toString());
+        editor.apply();
+    }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("TODO", Context.MODE_PRIVATE);
-        String text = sharedPreferences.getString(getViewPathId(this), "");
-        setText(text);
-        setSelection(text.length());
+        if (mUniqueId == null) {
+            return;
+        }
+        loadText();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("TODO", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(getViewPathId(this), getText().toString());
-        editor.apply();
+        if (mUniqueId == null) {
+            return;
+        }
+        saveText();
     }
 }

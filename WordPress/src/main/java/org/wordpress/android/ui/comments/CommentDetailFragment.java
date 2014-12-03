@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
@@ -215,6 +214,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
+        mEditReply.setUniqueId(String.format("%d%d", getRemoteBlogId(), getCommentId()));
+
         mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
 
         // hide comment like button until we know it can be enabled in showCommentForNote()
