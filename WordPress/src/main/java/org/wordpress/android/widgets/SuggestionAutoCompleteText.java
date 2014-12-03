@@ -40,7 +40,7 @@ public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
         if (getAutoSaveTextHelper().getUniqueId() == null) {
             return;
         }
-        String text = getAutoSaveTextHelper().loadString(getContext(), this);
+        String text = getAutoSaveTextHelper().loadString(this);
         setText(text);
         setSelection(text.length());
     }
@@ -51,6 +51,6 @@ public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
         if (getAutoSaveTextHelper().getUniqueId() == null) {
             return;
         }
-        getAutoSaveTextHelper().saveString(getContext(), this, getText().toString());
+        getAutoSaveTextHelper().saveString(this, getText().toString());
     }
 }

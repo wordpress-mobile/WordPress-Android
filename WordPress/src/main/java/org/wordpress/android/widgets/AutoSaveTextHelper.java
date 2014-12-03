@@ -25,20 +25,23 @@ public class AutoSaveTextHelper {
         return sb.toString();
     }
 
-    public void clearSavedText(Context context, View view) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+    public void clearSavedText(View view) {
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(PREFERENCES_NAME,
+                Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(getViewPathId(view) + mUniqueId);
         editor.apply();
     }
 
-    public String loadString(Context context, View view) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+    public String loadString(View view) {
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(PREFERENCES_NAME,
+                Context.MODE_PRIVATE);
         return sharedPreferences.getString(getViewPathId(view) + mUniqueId, "");
     }
 
-    public void saveString(Context context, View view, String text) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+    public void saveString(View view, String text) {
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(PREFERENCES_NAME,
+                Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(getViewPathId(view) + mUniqueId, text);
         editor.apply();
