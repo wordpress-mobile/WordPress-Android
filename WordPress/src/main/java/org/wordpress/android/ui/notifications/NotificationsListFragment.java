@@ -213,7 +213,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
             return RecyclerView.NO_POSITION;
         }
 
-        return mLinearLayoutManager.findFirstCompletelyVisibleItemPosition();
+        return mLinearLayoutManager.findFirstVisibleItemPosition();
     }
 
     public void setRestoredListPosition(int listPosition) {
