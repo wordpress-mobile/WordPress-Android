@@ -24,8 +24,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@+id/layout_drawer_footer"
-        android:layout_marginTop="@dimen/drawer_divider_margin"
         android:layout_marginBottom="@dimen/drawer_divider_margin"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:background="@color/drawer_divider" />
 
     <LinearLayout
@@ -36,17 +36,17 @@
         android:layout_marginBottom="@dimen/drawer_divider_margin"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/settings_row"
             android:layout_width="match_parent"
             android:layout_height="@dimen/drawer_row_height"
-            android:background="?android:selectableItemBackground"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:background="?android:selectableItemBackground">
 
             <ImageView
                 android:id="@+id/settings_icon"
                 style="@style/DrawerIcon"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/drawer_row_keyline"
                 android:src="@drawable/ic_settings_grey600_24dp" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -54,8 +54,10 @@
                 style="@style/DrawerText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/drawer_text_keyline"
                 android:text="@string/settings" />
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

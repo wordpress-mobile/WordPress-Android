@@ -70,9 +70,9 @@ public class DrawerAdapter extends BaseAdapter {
         }
 
         if (item.isSelected(parent.getContext())) {
-            convertView.setBackgroundResource(R.color.drawer_background_selected);
+            holder.content.setBackgroundResource(R.color.drawer_background_selected);
         } else {
-            convertView.setBackgroundResource(0);
+            holder.content.setBackgroundResource(0);
         }
 
         return convertView;
@@ -83,11 +83,13 @@ public class DrawerAdapter extends BaseAdapter {
         final TextView txtBadge;
         final ImageView imgIcon;
         final View divider;
+        final ViewGroup content;
 
         DrawerViewHolder(View view) {
             txtTitle = (TextView) view.findViewById(R.id.drawer_row_title);
             txtBadge = (TextView) view.findViewById(R.id.drawer_row_badge);
             imgIcon = (ImageView) view.findViewById(R.id.drawer_row_icon);
+            content = (ViewGroup) view.findViewById(R.id.drawer_row_content);
             divider = view.findViewById(R.id.drawer_row_divider);
         }
     }
