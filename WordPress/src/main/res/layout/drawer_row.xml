@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/drawer_row_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/drawer_row_height">
+
+        <ImageView
+            android:id="@+id/drawer_row_icon"
+            style="@style/DrawerIcon"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/drawer_row_keyline"
+            tools:src="@drawable/dashicon_admin_post_black" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/drawer_row_title"
+            style="@style/DrawerText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/drawer_text_keyline"
+            android:layout_marginRight="@dimen/drawer_row_keyline"
+            android:layout_toLeftOf="@+id/drawer_row_badge"
+            tools:text="Drawer row title" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/drawer_row_badge"
+            style="@style/DrawerBadge"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/drawer_row_keyline"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/drawer_row_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/drawer_divider_margin"
+        android:layout_marginTop="@dimen/drawer_divider_margin"
+        android:background="@color/drawer_divider"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</LinearLayout>
