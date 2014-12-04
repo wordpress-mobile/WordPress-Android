@@ -1,13 +1,13 @@
-package org.wordpress.android.ui.notifications;
+package org.wordpress.android.ui.notifications.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.simperium.client.Bucket;
@@ -17,6 +17,7 @@ import com.simperium.client.Query;
 import org.wordpress.android.R;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
@@ -26,7 +27,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-class NotesAdapter extends CursorAdapter {
+public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteViewHolder> {
 
     private final int mAvatarSz;
     private final Query mQuery;
@@ -36,9 +37,14 @@ class NotesAdapter extends CursorAdapter {
     private final List<String> mHiddenNoteIds = new ArrayList<String>();
     private final List<String> mModeratingNoteIds = new ArrayList<String>();
 
-    NotesAdapter(Context context, Bucket<Note> bucket) {
-        super(context, null, 0x0);
+    private Context mContext;
 
+    NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
+
+    public NotesAdapter(Context context, Bucket<Note> bucket) {
+        super(context, null);
+
+        mContext = context;
         mNotesBucket = bucket;
         // build a query that sorts by timestamp descending
         mQuery = bucket.query()
@@ -52,7 +58,6 @@ class NotesAdapter extends CursorAdapter {
                         Note.Schema.IS_UNAPPROVED_INDEX,
                         Note.Schema.LOCAL_STATUS)
                 .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
-
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.avatar_sz_large);
         mReadBackgroundResId = R.drawable.list_bg_selector;
@@ -109,25 +114,55 @@ class NotesAdapter extends CursorAdapter {
         notifyDataSetChanged();
     }
 
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.notifications_list_item, parent, false);
-        NoteViewHolder holder = new NoteViewHolder(view);
-        view.setTag(holder);
+    private String getStringForColumnName(Cursor cursor, String columnName) {
+        if (columnName == null || cursor == null || cursor.getColumnIndex(columnName) == -1) {
+            return "";
+        }
 
-        return view;
+        return StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex(columnName)));
+    }
+
+    private int getIntForColumnName(Cursor cursor, String columnName) {
+        if (columnName == null || cursor == null || cursor.getColumnIndex(columnName) == -1) {
+            return -1;
+        }
+
+        return cursor.getInt(cursor.getColumnIndex(columnName));
+    }
+
+    private long getLongForColumnName(Cursor cursor, String columnName) {
+        if (columnName == null || cursor == null || cursor.getColumnIndex(columnName) == -1) {
+            return -1;
+        }
+
+        return cursor.getLong(cursor.getColumnIndex(columnName));
+    }
+
+    public boolean isModeratingNote(String noteId) {
+        return mModeratingNoteIds.contains(noteId);
+    }
+
+    public int getCount() {
+        if (getCursor() != null) {
+            return getCursor().getCount();
+        }
+
+        return 0;
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        if (cursor.isClosed())
-            return;
+    public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notifications_list_item, parent, false);
 
-        Bucket.ObjectCursor<Note> objectCursor = (Bucket.ObjectCursor<Note>) cursor;
+        return new NoteViewHolder(view);
+    }
 
-        final NoteViewHolder noteViewHolder = (NoteViewHolder) view.getTag();
+    @Override
+    public void onBindViewHolder(NoteViewHolder noteViewHolder, Cursor cursor) {
+        final Bucket.ObjectCursor<Note> objectCursor = (Bucket.ObjectCursor<Note>) cursor;
+        final String noteId = objectCursor.getSimperiumKey();
 
-        // Display group header
+                // Display group header
         Note.NoteTimeGroup timeGroup = Note.getTimeGroupForTimestamp(getLongForColumnName(objectCursor, Note.Schema.TIMESTAMP_INDEX));
 
         Note.NoteTimeGroup previousTimeGroup = null;
@@ -140,15 +175,15 @@ class NotesAdapter extends CursorAdapter {
             noteViewHolder.headerView.setVisibility(View.GONE);
         } else {
             if (timeGroup == Note.NoteTimeGroup.GROUP_TODAY) {
-                noteViewHolder.headerText.setText(context.getString(R.string.stats_timeframe_today).toUpperCase());
+                noteViewHolder.headerText.setText(mContext.getString(R.string.stats_timeframe_today).toUpperCase());
             } else if (timeGroup == Note.NoteTimeGroup.GROUP_YESTERDAY) {
-                noteViewHolder.headerText.setText(context.getString(R.string.stats_timeframe_yesterday).toUpperCase());
+                noteViewHolder.headerText.setText(mContext.getString(R.string.stats_timeframe_yesterday).toUpperCase());
             } else if (timeGroup == Note.NoteTimeGroup.GROUP_OLDER_TWO_DAYS) {
-                noteViewHolder.headerText.setText(context.getString(R.string.older_two_days).toUpperCase());
+                noteViewHolder.headerText.setText(mContext.getString(R.string.older_two_days).toUpperCase());
             } else if (timeGroup == Note.NoteTimeGroup.GROUP_OLDER_WEEK) {
-                noteViewHolder.headerText.setText(context.getString(R.string.older_last_week).toUpperCase());
+                noteViewHolder.headerText.setText(mContext.getString(R.string.older_last_week).toUpperCase());
             } else {
-                noteViewHolder.headerText.setText(context.getString(R.string.older_month).toUpperCase());
+                noteViewHolder.headerText.setText(mContext.getString(R.string.older_month).toUpperCase());
             }
 
             noteViewHolder.headerView.setVisibility(View.VISIBLE);
@@ -161,11 +196,11 @@ class NotesAdapter extends CursorAdapter {
         }
 
         CommentStatus commentStatus = CommentStatus.UNKNOWN;
-        if (SqlUtils.sqlToBool(getIntForColumnName(cursor, Note.Schema.IS_UNAPPROVED_INDEX))) {
+        if (SqlUtils.sqlToBool(getIntForColumnName(objectCursor, Note.Schema.IS_UNAPPROVED_INDEX))) {
             commentStatus = CommentStatus.UNAPPROVED;
         }
 
-        String localStatus = getStringForColumnName(cursor, Note.Schema.LOCAL_STATUS);
+        String localStatus = getStringForColumnName(objectCursor, Note.Schema.LOCAL_STATUS);
         if (!TextUtils.isEmpty(localStatus)) {
             commentStatus = CommentStatus.fromString(localStatus);
         }
@@ -214,41 +249,41 @@ class NotesAdapter extends CursorAdapter {
         }
 
         if (isUnread) {
-            view.setBackgroundResource(mUnreadBackgroundResId);
+            noteViewHolder.itemView.setBackgroundResource(mUnreadBackgroundResId);
         } else {
-            view.setBackgroundResource(mReadBackgroundResId);
-        }
-    }
-
-    private String getStringForColumnName(Cursor cursor, String columnName) {
-        if (columnName == null || cursor == null || cursor.getColumnIndex(columnName) == -1) {
-            return "";
+            noteViewHolder.itemView.setBackgroundResource(mReadBackgroundResId);
         }
 
-        return StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex(columnName)));
+        noteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnNoteClickListener != null) {
+                    mOnNoteClickListener.onClickNote(noteId);
+                }
+            }
+        });
     }
 
-    private int getIntForColumnName(Cursor cursor, String columnName) {
-        if (columnName == null || cursor == null || cursor.getColumnIndex(columnName) == -1) {
-            return -1;
+    public int getPositionForNote(String noteId) {
+        Bucket.ObjectCursor<Note> cursor = (Bucket.ObjectCursor<Note>) getCursor();
+        if (cursor != null) {
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToPosition(i);
+                String noteKey = cursor.getSimperiumKey();
+                if (noteKey != null && noteKey.equals(noteId)) {
+                    return i;
+                }
+            }
         }
 
-        return cursor.getInt(cursor.getColumnIndex(columnName));
+        return -1;
     }
 
-    private long getLongForColumnName(Cursor cursor, String columnName) {
-        if (columnName == null || cursor == null || cursor.getColumnIndex(columnName) == -1) {
-            return -1;
-        }
-
-        return cursor.getLong(cursor.getColumnIndex(columnName));
+    public void setOnNoteClickListener(NotificationsListFragment.OnNoteClickListener mNoteClickListener) {
+        mOnNoteClickListener = mNoteClickListener;
     }
 
-    public boolean isModeratingNote(String noteId) {
-        return mModeratingNoteIds.contains(noteId);
-    }
-
-    public static class NoteViewHolder {
+    public static class NoteViewHolder extends RecyclerView.ViewHolder {
         private final View headerView;
         private final View contentView;
         private final TextView headerText;
@@ -259,7 +294,8 @@ class NotesAdapter extends CursorAdapter {
         private final NoticonTextView noteIcon;
         private final View progressBar;
 
-        NoteViewHolder(View view) {
+        public NoteViewHolder(View view) {
+            super(view);
             headerView = view.findViewById(R.id.time_header);
             contentView = view.findViewById(R.id.note_content_container);
             headerText = (TextView)view.findViewById(R.id.header_date_text);

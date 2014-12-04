@@ -1,13 +1,15 @@
 package org.wordpress.android.ui.notifications;
 
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.simperium.client.Bucket;
@@ -16,6 +18,7 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
@@ -23,12 +26,15 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 
 import javax.annotation.Nonnull;
 
-public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
+public class NotificationsListFragment extends Fragment implements Bucket.Listener<Note> {
+
     private SwipeToRefreshHelper mFauxSwipeToRefreshHelper;
     private NotesAdapter mNotesAdapter;
-    private OnNoteClickListener mNoteClickListener;
+    private LinearLayoutManager mLinearLayoutManager;
+    private RecyclerView mRecyclerView;
+    private TextView mEmptyTextView;
 
-    private int mRestoredListPosition;
+    private int mRestoredScrollPosition;
 
     private Bucket<Note> mBucket;
 
@@ -36,12 +42,35 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
      * For responding to tapping of notes
      */
     public interface OnNoteClickListener {
-        public void onClickNote(Note note);
+        public void onClickNote(String noteId);
     }
 
     @Override
     public View onCreateView(@Nonnull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
+        View view = inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notes);
+        RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
+        animator.setSupportsChangeAnimations(true);
+        mRecyclerView.setItemAnimator(animator);
+        mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+        // setup the initial notes adapter, starts listening to the bucket
+        mBucket = SimperiumUtils.getNotesBucket();
+        if (mBucket != null) {
+            if (mNotesAdapter == null) {
+                mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
+            }
+
+            mRecyclerView.setAdapter(mNotesAdapter);
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
+        }
+
+        mEmptyTextView = (TextView) view.findViewById(R.id.empty_view);
+
+        return view;
     }
 
     @Override
@@ -49,29 +78,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         super.onActivityCreated(savedInstanceState);
 
         initSwipeToRefreshHelper();
-
-        // setup the initial notes adapter, starts listening to the bucket
-        mBucket = SimperiumUtils.getNotesBucket();
-        if (mBucket == null) {
-            ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
-            return;
-        }
-
-        ListView listView = getListView();
-        listView.setDivider(null);
-        listView.setDividerHeight(0);
-
-        if (mNotesAdapter == null) {
-            mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
-        }
-
-        setListAdapter(mNotesAdapter);
-
-        // Set empty text if no notifications
-        TextView textview = (TextView) listView.getEmptyView();
-        if (textview != null) {
-            textview.setText(getText(R.string.notifications_empty_list));
-        }
     }
 
     @Override
@@ -124,23 +130,10 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                 });
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        if (!isAdded()) return;
-
-        Note note = mNotesAdapter.getNote(position);
-
-        if (mNotesAdapter.isModeratingNote(note.getId())) {
-            return;
-        }
-
-        if (mNoteClickListener != null) {
-            mNoteClickListener.onClickNote(note);
-        }
-    }
-
     public void setOnNoteClickListener(OnNoteClickListener listener) {
-        mNoteClickListener = listener;
+        if (mNotesAdapter != null) {
+            mNotesAdapter.setOnNoteClickListener(listener);
+        }
     }
 
     public void setNoteIsHidden(String noteId, boolean isHidden) {
@@ -191,16 +184,18 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                 updateLastSeenTime();
 
                 restoreListScrollPosition();
+
+                mEmptyTextView.setVisibility(mNotesAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
             }
         });
     }
 
     private void restoreListScrollPosition() {
-        if (isAdded() && getListView() != null && mRestoredListPosition != ListView.INVALID_POSITION
-                && mRestoredListPosition < mNotesAdapter.getCount()) {
+        if (isAdded() && mRecyclerView != null && mRestoredScrollPosition != RecyclerView.NO_POSITION
+                && mRestoredScrollPosition < mNotesAdapter.getCount()) {
             // Restore scroll position in list
-            getListView().setSelectionFromTop(mRestoredListPosition, 0);
-            mRestoredListPosition = ListView.INVALID_POSITION;
+            mLinearLayoutManager.scrollToPosition(mRestoredScrollPosition);
+            mRestoredScrollPosition = RecyclerView.NO_POSITION;
         }
     }
 
@@ -214,32 +209,39 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     }
 
     public int getScrollPosition() {
-        if (!isAdded() || getListView() == null) {
-            return ListView.INVALID_POSITION;
+        if (!isAdded() || mRecyclerView == null) {
+            return RecyclerView.NO_POSITION;
         }
 
-        return getListView().getFirstVisiblePosition();
+        return mLinearLayoutManager.findFirstCompletelyVisibleItemPosition();
     }
 
     public void setRestoredListPosition(int listPosition) {
-        mRestoredListPosition = listPosition;
+        mRestoredScrollPosition = listPosition;
     }
 
     /**
      * Simperium bucket listener methods
      */
     @Override
-    public void onSaveObject(Bucket<Note> bucket, Note object) {
+    public void onSaveObject(Bucket<Note> bucket, final Note object) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mNotesAdapter.notifyItemInserted(mNotesAdapter.getPositionForNote(object.getSimperiumKey()));
+            }
+        });
+
         refreshNotes();
     }
 
     @Override
-    public void onDeleteObject(Bucket<Note> bucket, Note object) {
+    public void onDeleteObject(Bucket<Note> bucket, final Note object) {
         refreshNotes();
     }
 
     @Override
-    public void onChange(Bucket<Note> bucket, Bucket.ChangeType type, String key) {
+    public void onChange(Bucket<Note> bucket, Bucket.ChangeType type, final String key) {
         if (type == Bucket.ChangeType.MODIFY) {
             // Reset the note's local status when a change is received
             try {
@@ -248,9 +250,38 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                     note.setLocalStatus(null);
                     note.save();
                 }
+
+                final int position = mNotesAdapter.getPositionForNote(key);
+                if (position >= 0) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mNotesAdapter.notifyItemChanged(position);
+                        }
+                    });
+                } else {
+                    refreshNotes();
+                }
+
+                return;
             } catch (BucketObjectMissingException e) {
                 AppLog.e(AppLog.T.NOTIFS, "Could not create note after receiving change.");
             }
+        } else if (type == Bucket.ChangeType.REMOVE) {
+            final int position = mNotesAdapter.getPositionForNote(key);
+
+            if (position >= 0) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mNotesAdapter.notifyItemRemoved(position);
+                    }
+                });
+            } else {
+                refreshNotes();
+            }
+
+            return;
         }
 
         refreshNotes();
