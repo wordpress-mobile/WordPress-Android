@@ -37,6 +37,7 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_module_totals_label"
+                android:textColor="@color/stats_module_content_list_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/margin_small"
@@ -80,14 +81,6 @@
                     android:scrollbarStyle="outsideOverlay"
                     android:visibility="gone"></LinearLayout>
 
-                <Button
-                    android:id="@+id/btnViewAll"
-                    style="@style/StatsViewAllButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/stats_view_all"
-                    android:visibility="gone" />
-
                 <LinearLayout
                     android:id="@+id/stats_pagination_container"
                     android:layout_width="match_parent"
@@ -117,7 +110,16 @@
 
 
             </LinearLayout>
+
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btnViewAll"
+            style="@style/StatsViewAllButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/stats_view_all"
+            android:visibility="gone" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_list_empty_text"

@@ -6,8 +6,9 @@
     </style>
 
     <style name="StatsHeader">
-        <item name="android:textColor">@color/gray</item>
+        <item name="android:textColor">@color/stats_module_content_list_header</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:textStyle">bold</item>
         <!--  item name="android:textAllCaps">true</item -->
     </style>
 
@@ -36,11 +37,12 @@
 
     <style name="StatsViewAllButton">
         <item name="android:gravity">left</item>
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:background">@drawable/stats_view_all_button_background</item>
         <item name="android:button">@android:color/transparent</item>
         <item name="android:minHeight">22dp</item>
         <item name="android:textColor">@color/wordpress_blue</item>
         <item name="android:paddingTop">@dimen/margin_medium</item>
+        <item name="android:paddingLeft">@dimen/margin_medium</item>
         <item name="android:paddingBottom">@dimen/margin_medium</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>

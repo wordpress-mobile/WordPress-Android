@@ -41,7 +41,10 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
 
         //String[] titles = getTabTitles();
 
-        String[] titles = {"WordPress.com", "Email"};
+        String[] titles = {
+                getResources().getString(R.string.stats_followers_wpcom_selector),
+                getResources().getString(R.string.stats_followers_email_selector),
+        };
 
         for (int i = 0; i < titles.length; i++) {
             RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
@@ -64,7 +67,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
         mTopPagerRadioGroup.setOnCheckedChangeListener(this);
 
         mTotalsLabel.setVisibility(View.VISIBLE);
-        mTotalsLabel.setText("Total comment followers: 0");
+        mTotalsLabel.setText("");
 
         return view;
     }
@@ -204,10 +207,10 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
 
     private String getTotalFollowersLabel(int total) {
         if ( mTopPagerSelectedButtonIndex == 0 ) {
-            return "Total WordPress.com Followers: " + total;
+            return getString(R.string.stats_followers_total_wpcom) + " " + total;
         }
 
-        return "Total Email Followers: " + total;
+        return  getString(R.string.stats_followers_total_email) + " "  + total;
     }
 
 

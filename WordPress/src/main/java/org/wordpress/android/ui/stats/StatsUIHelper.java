@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.os.Build;
 import android.text.Spannable;
 import android.text.style.URLSpan;
 import android.util.SparseBooleanArray;
@@ -20,6 +21,7 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -287,6 +289,18 @@ public class StatsUIHelper {
         StatsUIHelper.setGroupChevron(true, groupView, animate);
     }
 
+
+    @SuppressWarnings("all")
+    public static void setEntryTextViewClickListener(final View parent, final TextView textview){
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            textview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    parent.callOnClick();
+                }
+            });
+        }
+    }
 
 
     /**

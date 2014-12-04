@@ -392,10 +392,8 @@
     <string name="stats_entry_tags_and_categories">Topic</string>
     <string name="stats_entry_authors">Author</string>
     <string name="stats_entry_referrers">Referrer</string>
-    <string name="stats_entry_video_plays">Video name</string>
-    <string name="stats_entry_top_commenter">Commenter</string>
-    <string name="stats_entry_most_commented">Posts</string>
-    <string name="stats_entry_search_engine_terms">Search</string>
+    <string name="stats_entry_video_plays">Video</string>
+    <string name="stats_entry_top_commenter">Author</string>
     <string name="stats_entry_publicize">Service</string>
     <string name="stats_entry_followers">Follower</string>
 
@@ -437,6 +435,17 @@
     <string name="stats_visitors_and_views_header_today">Today</string>
     <string name="stats_visitors_and_views_header_best_ever">Best ever</string>
     <string name="stats_visitors_and_views_header_all_time">All time</string>
+
+    <!-- stats: comments -->
+    <string name="stats_comments_by_authors">By Authors</string>
+    <string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
+    <string name="stats_comments_total_comments_followers">Total comment followers:</string>
+
+    <!-- stats: followers -->
+    <string name="stats_followers_wpcom_selector">WordPress.com</string>
+    <string name="stats_followers_email_selector">Email</string>
+    <string name="stats_followers_total_wpcom">Total WordPress.com Followers:</string>
+    <string name="stats_followers_total_email">Total Email Followers:</string>
 
     <!-- invalid_url -->
     <string name="invalid_url_message">Check that the blog URL entered is valid</string>

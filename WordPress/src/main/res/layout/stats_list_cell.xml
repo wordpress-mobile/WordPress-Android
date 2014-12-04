@@ -38,7 +38,8 @@
             android:drawablePadding="@dimen/margin_small"
             android:maxLines="3"
             android:autoLink="none"
-            android:textColorLink="@color/wordpress_blue"
+            android:textColor="@color/stats_text_color"
+            android:textColorLink="@color/stats_link_text_color"
             android:textSize="@dimen/text_sz_medium" />
 
         <ImageView
@@ -58,6 +59,7 @@
             android:id="@+id/stats_list_cell_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/stats_text_color"
             android:textSize="@dimen/text_sz_medium" />
     </LinearLayout>
 

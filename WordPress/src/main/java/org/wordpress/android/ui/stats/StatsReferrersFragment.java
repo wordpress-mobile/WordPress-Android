@@ -1,12 +1,18 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.os.Build;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
@@ -16,6 +22,7 @@ import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
 
@@ -184,7 +191,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         }
 
         @Override
-        public View getGroupView(int groupPosition, boolean isExpanded,
+        public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
 
             if (convertView == null) {
@@ -202,7 +209,17 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             String icon = group.getIcon();
             int children = getChildrenCount(groupPosition);
 
-            holder.setEntryTextOrLink(url, name);
+            if (children > 0) {
+                holder.entryTextView.setText(name);
+                //FIXME: Ugly hack. for some reason the TextView is probably intercepting/eating the click event and not passing it the parent.
+                StatsUIHelper.setEntryTextViewClickListener(convertView, holder.entryTextView);
+            } else {
+                holder.entryTextView.setOnClickListener(null);
+                holder.setEntryTextOrLink(url, name);
+            }
+
+            // The main text is always blue in this module
+            holder.entryTextView.setTextColor(getResources().getColor(R.color.stats_link_text_color));
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));

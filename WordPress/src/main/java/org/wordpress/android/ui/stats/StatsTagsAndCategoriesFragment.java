@@ -123,6 +123,9 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             // name, url
             holder.entryTextView.setText(name);
 
+            // The main text is always blue in this module
+            holder.entryTextView.setTextColor(getResources().getColor(R.color.stats_link_text_color));
+
             // totals
             holder.totalsTextView.setText("");
 
@@ -184,6 +187,16 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             int children = getChildrenCount(groupPosition);
 
             holder.entryTextView.setText(groupName);
+
+            if (children > 0) {
+                //FIXME: Ugly hack. for some reason the TextView is probably intercepting/eating the click event and not passing it the parent.
+                StatsUIHelper.setEntryTextViewClickListener(convertView, holder.entryTextView);
+            } else {
+                holder.entryTextView.setOnClickListener(null);
+            }
+
+            // The main text is always blue in this module
+            holder.entryTextView.setTextColor(getResources().getColor(R.color.stats_link_text_color));
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));

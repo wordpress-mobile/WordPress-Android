@@ -47,7 +47,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class StatsCommentsFragment extends StatsAbstractListFragment implements RadioGroup.OnCheckedChangeListener {
     public static final String TAG = StatsCommentsFragment.class.getSimpleName();
 
-    private static String mTotalLabel = "Total comment followers: ";
+    private static String mTotalLabel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,9 +56,12 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         int dp8 = DisplayUtils.dpToPx(view.getContext(), 8);
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
 
-        //String[] titles = getTabTitles();
+        String[] titles = {
+                getResources().getString(R.string.stats_comments_by_authors),
+                getResources().getString(R.string.stats_comments_by_posts_and_pages),
+        };
 
-        String[] titles = {"By Authors", "By Posts & Pages"};
+        mTotalLabel = getResources().getString(R.string.stats_comments_total_comments_followers);
 
         for (int i = 0; i < titles.length; i++) {
             RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
@@ -140,7 +143,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
         if (mDatamodels[1] != null) { // check if comment-followers is already here
             mTotalsLabel.setVisibility(View.VISIBLE);
-            mTotalsLabel.setText(mTotalLabel + ((CommentFollowersModel)mDatamodels[1]).getTotal());
+            mTotalsLabel.setText(mTotalLabel + " " + ((CommentFollowersModel)mDatamodels[1]).getTotal());
         } else {
             mTotalsLabel.setVisibility(View.GONE);
         }

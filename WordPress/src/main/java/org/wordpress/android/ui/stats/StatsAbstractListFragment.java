@@ -172,6 +172,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             mEmptyLabel.setVisibility(View.VISIBLE);
             mListContainer.setVisibility(View.GONE);
             mList.setVisibility(View.GONE);
+            mViewAll.setVisibility(View.GONE);
+            mPaginationContainer.setVisibility(View.GONE);
         } else {
             mEmptyLabel.setVisibility(View.GONE);
             mListContainer.setVisibility(View.VISIBLE);
