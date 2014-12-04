@@ -25,7 +25,6 @@
     -->
     <declare-styleable name="AutoSaveEditText">
         <attr name="autoSaveEnabled" format="boolean"/>
-        <attr name="autoSaveGroup" format="string"/>
     </declare-styleable>
 
     <!--

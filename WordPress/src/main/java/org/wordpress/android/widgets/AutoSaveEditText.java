@@ -76,8 +76,6 @@ public class AutoSaveEditText extends EditText {
         TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.AutoSaveEditText, 0, 0);
         if (array != null) {
             mEnabled = array.getBoolean(R.styleable.AutoSaveEditText_autoSaveEnabled, false);
-            String groupIdentifier = array.getString(R.styleable.AutoSaveEditText_autoSaveGroup);
-            getAutoSaveTextHelper().setGroupIdentifier(groupIdentifier);
         }
     }
 }

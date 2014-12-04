@@ -182,7 +182,9 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             intent.putExtra("username", username);
             activity.setResult(NewAccountActivity.RESULT_OK, intent);
             activity.finish();
-            AutoSaveTextHelper.clearGroup(getActivity(), getString(R.string.create_user_autosave_group));
+            AutoSaveTextHelper.clearSavedText(mEmailTextField, null);
+            AutoSaveTextHelper.clearSavedText(mUsernameTextField, null);
+            AutoSaveTextHelper.clearSavedText(mSiteUrlTextField, null);
         }
     }
 
