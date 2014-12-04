@@ -60,6 +60,7 @@ public class MenuDrawerAdapter extends BaseAdapter {
 
         holder.txtTitle.setText(item.getTitleResId());
         holder.imgIcon.setImageResource(item.getIconResId());
+        holder.divider.setVisibility(item.hasDivider() ? View.VISIBLE : View.GONE);
 
         if (badgeCount > 0) {
             holder.txtBadge.setVisibility(View.VISIBLE);
@@ -81,11 +82,13 @@ public class MenuDrawerAdapter extends BaseAdapter {
         final TextView txtTitle;
         final TextView txtBadge;
         final ImageView imgIcon;
+        final View divider;
 
         DrawerViewHolder(View view) {
             txtTitle = (TextView) view.findViewById(R.id.menu_row_title);
             txtBadge = (TextView) view.findViewById(R.id.menu_row_badge);
             imgIcon = (ImageView) view.findViewById(R.id.menu_row_icon);
+            divider = view.findViewById(R.id.divider_drawer_row);
         }
     }
 }

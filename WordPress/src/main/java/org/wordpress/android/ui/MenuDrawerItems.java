@@ -260,5 +260,12 @@ public class MenuDrawerItems {
                     return false;
             }
         }
+
+        /*
+         * returns true if the item should have a divider beneath it
+         */
+        boolean hasDivider() {
+            return (mItemId == DrawerItemId.NOTIFICATIONS);
+        }
     }
 }
