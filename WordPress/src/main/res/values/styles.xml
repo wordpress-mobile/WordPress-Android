@@ -125,8 +125,6 @@
     </style>
 
     <style name="DrawerIcon">
-        <item name="android:layout_marginLeft">@dimen/margin_large</item>
-        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
         <item name="android:layout_height">@dimen/drawer_icon_size</item>
         <item name="android:layout_width">@dimen/drawer_icon_size</item>
         <item name="android:scaleType">centerInside</item>
@@ -139,7 +137,6 @@
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
         <item name="android:layout_height">@dimen/drawer_badge_size</item>
         <item name="android:layout_width">@dimen/drawer_badge_size</item>
-        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
         <item name="android:textSize">12sp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
@@ -147,7 +144,6 @@
         <item name="android:paddingBottom">2dp</item>
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingRight">4dp</item>
-        <item name="android:layout_marginLeft">10dp</item>
     </style>
 
     <style name="WordPressWelcomeStyle">
