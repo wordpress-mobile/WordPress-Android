@@ -37,7 +37,7 @@
         <LinearLayout
             android:id="@+id/settings_row"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/menu_drawer_row_height"
+            android:layout_height="@dimen/drawer_row_height"
             android:background="?android:selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal">

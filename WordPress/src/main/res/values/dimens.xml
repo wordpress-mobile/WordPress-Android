@@ -20,13 +20,14 @@
 
     <dimen name="message_bar_elevation">2dp</dimen>
 
-    <dimen name="menu_drawer_width_static">300dp</dimen>
-    <dimen name="menu_drawer_row_height">40dp</dimen>
-    <dimen name="menu_drawer_icon_size">28dp</dimen>
-    <dimen name="menu_drawer_badge_size">24dp</dimen>
-    <dimen name="menu_drawer_header_size">@dimen/menu_drawer_header_size_normal</dimen>
-    <dimen name="menu_drawer_header_size_normal">96dp</dimen>
-    <dimen name="menu_drawer_header_size_tablet">128dp</dimen>
+    <dimen name="drawer_width_static">300dp</dimen>
+    <dimen name="drawer_row_height">40dp</dimen>
+    <dimen name="drawer_icon_size">28dp</dimen>
+    <dimen name="drawer_badge_size">24dp</dimen>
+    <dimen name="drawer_divider_margin">8dp</dimen>
+    <dimen name="drawer_header_size">@dimen/drawer_header_size_normal</dimen>
+    <dimen name="drawer_header_size_normal">96dp</dimen>
+    <dimen name="drawer_header_size_tablet">128dp</dimen>
 
 	<dimen name="media_grid_local_image_width">160dp</dimen>
 	<dimen name="media_grid_progress_height">50dp</dimen>

@@ -63,7 +63,7 @@ class ReaderResourceVars {
                 (context instanceof WPDrawerActivity)
                         && (((WPDrawerActivity) context).isStaticMenuDrawer());
         if (hasStaticMenuDrawer) {
-            int drawerWidth = resources.getDimensionPixelOffset(R.dimen.menu_drawer_width_static);
+            int drawerWidth = resources.getDimensionPixelOffset(R.dimen.drawer_width_static);
             imageWidth -= drawerWidth;
         }
         fullSizeImageWidthPx = imageWidth;

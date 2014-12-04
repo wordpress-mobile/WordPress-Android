@@ -7,7 +7,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/menu_drawer_header_size"
+        android:layout_height="@dimen/drawer_header_size"
         android:scaleType="centerCrop"
         android:src="@drawable/drawer_header_bg" />
 

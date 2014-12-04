@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/menu_drawer_row_height"
+        android:layout_height="@dimen/drawer_row_height"
         android:background="?android:selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -39,8 +39,8 @@
         android:id="@+id/divider_drawer_row"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/drawer_divider_margin"
+        android:layout_marginTop="@dimen/drawer_divider_margin"
         android:background="@color/md__divider"
         android:visibility="gone"
         tools:visibility="visible" />
