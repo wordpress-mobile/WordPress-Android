@@ -20,7 +20,7 @@
 
     <dimen name="message_bar_elevation">2dp</dimen>
 
-    <dimen name="menu_drawer_width">250dp</dimen>
+    <dimen name="menu_drawer_width_static">300dp</dimen>
     <dimen name="menu_drawer_row_height">40dp</dimen>
     <dimen name="menu_drawer_icon_size">28dp</dimen>
     <dimen name="menu_drawer_badge_size">24dp</dimen>
