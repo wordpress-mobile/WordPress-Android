@@ -715,6 +715,7 @@
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
     <string name="fragment_tag_reader_task" translatable="false">fragment_tag_reader_task</string>
     <string name="dual_pane_mode" translatable="false">dual_pane_mode</string>
+    <string name="create_user_autosave_group" translatable="false">create_user_autosave_group</string>
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on WordPress.com</string>

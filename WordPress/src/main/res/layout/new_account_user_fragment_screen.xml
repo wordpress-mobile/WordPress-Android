@@ -58,7 +58,9 @@
                     android:layout_height="wrap_content"
                     style="@style/WordPress.NUXEditText"
                     android:hint="@string/email_hint"
-                    android:inputType="textEmailAddress"/>
+                    android:inputType="textEmailAddress"
+                    app:autoSaveEnabled="true"
+                    app:autoSaveGroup="@string/create_user_autosave_group"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -86,7 +88,9 @@
                     android:layout_height="wrap_content"
                     style="@style/WordPress.NUXEditText"
                     android:inputType="textUri"
-                    android:hint="@string/username"/>
+                    android:hint="@string/username"
+                    app:autoSaveEnabled="true"
+                    app:autoSaveGroup="@string/create_user_autosave_group"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -160,7 +164,9 @@
                     android:paddingTop="12dp"
                     android:paddingRight="0dp"
                     android:paddingBottom="12dp"
-                    android:layout_toLeftOf="@+id/textView"/>
+                    android:layout_toLeftOf="@+id/textView"
+                    app:autoSaveEnabled="true"
+                    app:autoSaveGroup="@string/create_user_autosave_group"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"

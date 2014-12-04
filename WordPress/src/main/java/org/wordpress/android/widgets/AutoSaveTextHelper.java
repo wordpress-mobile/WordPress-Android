@@ -5,7 +5,8 @@ import android.content.SharedPreferences;
 import android.view.View;
 
 public class AutoSaveTextHelper {
-    public static final String PREFERENCES_NAME = "AutoSaveTextHelperPrefs";
+    public static final String PREFERENCES_PREFIX = "AutoSaveTextHelperPrefs";
+    private String mPreferencesName = PREFERENCES_PREFIX;
     private String mUniqueId;
 
     public void setUniqueId(String uniqueId) {
@@ -25,8 +26,12 @@ public class AutoSaveTextHelper {
         return sb.toString();
     }
 
+    public void setGroupIdentifier(String groupIdentifier) {
+        mPreferencesName = PREFERENCES_PREFIX + groupIdentifier;
+    }
+
     public void clearSavedText(View view) {
-        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(PREFERENCES_NAME,
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(mPreferencesName,
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(getViewPathId(view) + mUniqueId);
@@ -34,16 +39,24 @@ public class AutoSaveTextHelper {
     }
 
     public String loadString(View view) {
-        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(PREFERENCES_NAME,
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(mPreferencesName,
                 Context.MODE_PRIVATE);
         return sharedPreferences.getString(getViewPathId(view) + mUniqueId, "");
     }
 
     public void saveString(View view, String text) {
-        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(PREFERENCES_NAME,
+        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(mPreferencesName,
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(getViewPathId(view) + mUniqueId, text);
+        editor.apply();
+    }
+
+    public static void clearGroup(Context context, String preferenceName) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_PREFIX + preferenceName,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
         editor.apply();
     }
 }

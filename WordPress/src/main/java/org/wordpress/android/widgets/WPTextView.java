@@ -35,7 +35,6 @@ public class WPTextView extends TextView {
         readCustomAttrs(context, attrs);
     }
 
-
     public void setFixWidowWord(boolean enabled) {
         mFixWidowWordEnabled = enabled;
     }
