@@ -26,7 +26,7 @@
 
         <include
             layout="@layout/menu_drawer"
-            android:layout_width="@dimen/menu_drawer_width"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent" />
     </org.wordpress.android.widgets.ScrimInsetsFrameLayout>
 
