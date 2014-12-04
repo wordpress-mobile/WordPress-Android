@@ -2,10 +2,11 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 
-import org.wordpress.android.WordPress;
+import org.wordpress.android.*;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ViewSiteActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -78,6 +79,22 @@ public class WPActivityUtils {
         }
 
         return intent;
+    }
+
+    /*
+     * returns the optimal pixel width to use for the menu drawer according to the specs
+     * http://www.google.com/design/spec/layout/structure.html#structure-side-nav
+     * but note that as of this writing the specs are wonky, so adjust based on
+     * https://medium.com/sebs-top-tips/material-navigation-drawer-sizing-558aea1ad266
+     */
+    public static int getOptimalDrawerWidth(Context context) {
+        Point size = DisplayUtils.getDisplayPixelSize(context);
+        int screenWidth = Math.min(size.x, size.y);
+        int appBarHeight = context.getResources().getDimensionPixelSize(org.wordpress.android.R.dimen.toolbar_height);
+        int drawerWidth = screenWidth - appBarHeight;
+        int maxDp = (DisplayUtils.isXLarge(context) ? 400 : 320);
+        int maxPx = DisplayUtils.dpToPx(context, maxDp);
+        return Math.min(drawerWidth, maxPx);
     }
 
 }
