@@ -4,7 +4,7 @@
     android:id="@+id/left_drawer"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@color/md__background"
+    android:background="@color/drawer_background"
     android:orientation="vertical">
 
     <ListView
@@ -25,7 +25,7 @@
         android:layout_height="1dp"
         android:layout_above="@+id/layout_drawer_footer"
         android:layout_marginTop="@dimen/margin_extra_small"
-        android:background="@color/md__divider" />
+        android:background="@color/drawer_divider" />
 
     <LinearLayout
         android:id="@+id/layout_drawer_footer"

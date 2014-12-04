@@ -16,7 +16,7 @@
         <ImageView
             android:id="@+id/menu_row_icon"
             style="@style/MenuDrawerIcon"
-            android:tint="@color/md__icon_tint"
+            android:tint="@color/drawer_icon_tint"
             tools:src="@drawable/dashicon_admin_post_black" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -41,7 +41,7 @@
         android:layout_height="1dp"
         android:layout_marginBottom="@dimen/drawer_divider_margin"
         android:layout_marginTop="@dimen/drawer_divider_margin"
-        android:background="@color/md__divider"
+        android:background="@color/drawer_divider"
         android:visibility="gone"
         tools:visibility="visible" />
 </LinearLayout>

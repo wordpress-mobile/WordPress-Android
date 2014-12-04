@@ -34,11 +34,11 @@
     <color name="background_grey">@color/grey_extra_light</color>
 
     <!-- Colors for menu drawer. -->
-    <color name="md__background">@color/white</color>
-    <color name="md__background_selected">@color/translucent_grey_light</color>
-    <color name="md__icon_tint">@color/grey_medium_dark</color>
-    <color name="md__text">@color/grey_extra_dark</color>
-    <color name="md__divider">@color/grey_light</color>
+    <color name="drawer_background">@color/white</color>
+    <color name="drawer_background_selected">@color/translucent_grey_light</color>
+    <color name="drawer_icon_tint">@color/grey_medium_dark</color>
+    <color name="drawer_text">@color/grey_extra_dark</color>
+    <color name="drawer_divider">@color/grey_light</color>
 
     <color name="wordpress_blue">#21759B</color>
 

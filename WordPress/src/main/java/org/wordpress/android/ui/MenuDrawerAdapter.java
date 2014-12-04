@@ -70,7 +70,7 @@ public class MenuDrawerAdapter extends BaseAdapter {
         }
 
         if (item.isSelected(parent.getContext())) {
-            convertView.setBackgroundResource(R.color.md__background_selected);
+            convertView.setBackgroundResource(R.color.drawer_background_selected);
         } else {
             convertView.setBackgroundResource(0);
         }
