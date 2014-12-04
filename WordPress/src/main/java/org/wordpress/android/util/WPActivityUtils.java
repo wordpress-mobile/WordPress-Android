@@ -82,16 +82,16 @@ public class WPActivityUtils {
     }
 
     /*
-     * returns the optimal pixel width to use for the menu drawer according to the specs
+     * returns the optimal pixel width to use for the menu drawer based on:
      * http://www.google.com/design/spec/layout/structure.html#structure-side-nav
-     * but note that as of this writing the specs are wonky, so adjust based on
+     * http://www.google.com/design/spec/patterns/navigation-drawer.html
+     * http://android-developers.blogspot.co.uk/2014/10/material-design-on-android-checklist.html
      * https://medium.com/sebs-top-tips/material-navigation-drawer-sizing-558aea1ad266
      */
     public static int getOptimalDrawerWidth(Context context) {
-        Point size = DisplayUtils.getDisplayPixelSize(context);
-        int screenWidth = Math.min(size.x, size.y);
+        Point displaySize = DisplayUtils.getDisplayPixelSize(context);
         int appBarHeight = DisplayUtils.getActionBarHeight(context);
-        int drawerWidth = screenWidth - appBarHeight;
+        int drawerWidth = Math.min(displaySize.x, displaySize.y) - appBarHeight;
         int maxDp = (DisplayUtils.isXLarge(context) ? 400 : 320);
         int maxPx = DisplayUtils.dpToPx(context, maxDp);
         return Math.min(drawerWidth, maxPx);
