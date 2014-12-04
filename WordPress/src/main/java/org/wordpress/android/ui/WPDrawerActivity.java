@@ -33,7 +33,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.ui.MenuDrawerItems.DrawerItem;
+import org.wordpress.android.ui.DrawerItems.DrawerItem;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -84,7 +84,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private MenuDrawerAdapter mDrawerAdapter;
+    private DrawerAdapter mDrawerAdapter;
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
 
@@ -265,7 +265,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         // initBlogSpinner() will setup the spinner
         mDrawerListView = (ListView) findViewById(R.id.drawer_list);
         if (mDrawerListView.getHeaderViewsCount() == 0) {
-            View view = getLayoutInflater().inflate(R.layout.menu_drawer_header, mDrawerListView, false);
+            View view = getLayoutInflater().inflate(R.layout.drawer_header, mDrawerListView, false);
             mDrawerListView.addHeaderView(view, null, false);
         }
 
@@ -277,7 +277,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             }
         });
 
-        mDrawerAdapter = new MenuDrawerAdapter(this);
+        mDrawerAdapter = new DrawerAdapter(this);
         mDrawerListView.setAdapter(mDrawerAdapter);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

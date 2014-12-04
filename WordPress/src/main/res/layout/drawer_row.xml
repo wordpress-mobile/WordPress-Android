@@ -14,13 +14,13 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/menu_row_icon"
+            android:id="@+id/drawer_row_icon"
             style="@style/MenuDrawerIcon"
             android:tint="@color/drawer_icon_tint"
             tools:src="@drawable/dashicon_admin_post_black" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/menu_row_title"
+            android:id="@+id/drawer_row_title"
             style="@style/MenuDrawerText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             tools:text="Drawer row title" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/menu_row_badge"
+            android:id="@+id/drawer_row_badge"
             style="@style/MenuDrawerBadge"
             android:visibility="gone"
             tools:visibility="visible" />
@@ -36,7 +36,7 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/divider_drawer_row"
+        android:id="@+id/drawer_row_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="@dimen/drawer_divider_margin"

@@ -18,14 +18,14 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import java.util.ArrayList;
 
 /*
- * used by MenuDrawerAdapter to maintain a list of items in the menu drawer
+ * used by DrawerAdapter to maintain a list of items in the drawer
  */
 
-public class MenuDrawerItems {
+public class DrawerItems {
 
     private final ArrayList<DrawerItem> mItems = new ArrayList<DrawerItem>();
 
-    public MenuDrawerItems() {
+    public DrawerItems() {
         super();
         refresh();
     }

@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <include
-            layout="@layout/menu_drawer"
+            layout="@layout/drawer"
             android:layout_width="@dimen/drawer_width_static"
             android:layout_height="match_parent" />
 

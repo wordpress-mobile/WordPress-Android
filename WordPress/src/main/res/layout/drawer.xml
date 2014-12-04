@@ -16,8 +16,8 @@
         android:divider="@null"
         android:dividerHeight="0dp"
         android:drawSelectorOnTop="false"
-        tools:listheader="@layout/menu_drawer_header"
-        tools:listitem="@layout/menu_drawer_row" />
+        tools:listheader="@layout/drawer_header"
+        tools:listitem="@layout/drawer_row" />
 
     <View
         android:id="@+id/divider_drawer_footer"
