@@ -58,18 +58,14 @@ public class AutoSaveEditText extends EditText {
         if (!mEnabled) {
             return;
         }
-        String text = getAutoSaveTextHelper().loadString(this);
-        if (!text.isEmpty()) {
-            setText(text);
-            setSelection(text.length());
-        }
+        getAutoSaveTextHelper().loadString(this);
     }
 
     private void save() {
-        if (!mEnabled || getText() == null) {
+        if (!mEnabled) {
             return;
         }
-        getAutoSaveTextHelper().saveString(this, getText().toString());
+        getAutoSaveTextHelper().saveString(this);
     }
 
     private void readCustomAttrs(Context context, AttributeSet attrs) {

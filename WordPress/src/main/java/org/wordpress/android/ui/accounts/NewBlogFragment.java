@@ -248,6 +248,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         mSiteTitleTextField = (EditText) rootView.findViewById(R.id.site_title);
         mSiteTitleTextField.addTextChangedListener(this);
         mSiteTitleTextField.addTextChangedListener(mSiteTitleWatcher);
+
         return rootView;
     }
 

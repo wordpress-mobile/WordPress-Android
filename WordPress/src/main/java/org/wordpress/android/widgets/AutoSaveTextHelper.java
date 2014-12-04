@@ -3,6 +3,7 @@ package org.wordpress.android.widgets;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
+import android.widget.EditText;
 
 public class AutoSaveTextHelper {
     public static final String PREFERENCES_NAME = "AutoSaveTextHelperPrefs";
@@ -29,17 +30,24 @@ public class AutoSaveTextHelper {
         clearSavedText(view, mUniqueId);
     }
 
-    public String loadString(View view) {
-        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(PREFERENCES_NAME,
+    public void loadString(EditText editText) {
+        SharedPreferences sharedPreferences = editText.getContext().getSharedPreferences(PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
-        return sharedPreferences.getString(getViewPathId(view) + mUniqueId, "");
+        String text = sharedPreferences.getString(getViewPathId(editText) + mUniqueId, "");
+        if (!text.isEmpty()) {
+            editText.setText(text);
+            editText.setSelection(text.length());
+        }
     }
 
-    public void saveString(View view, String text) {
-        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(PREFERENCES_NAME,
+    public void saveString(EditText editText) {
+        if (editText.getText() == null) {
+            return;
+        }
+        SharedPreferences sharedPreferences = editText.getContext().getSharedPreferences(PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(getViewPathId(view) + mUniqueId, text);
+        editor.putString(getViewPathId(editText) + mUniqueId, editText.getText().toString());
         editor.apply();
     }
 
