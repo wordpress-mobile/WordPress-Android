@@ -232,6 +232,16 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         // locate the drawer layout - note that it will not exist on landscape tablets
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null) {
+            int drawerWidth =
+                    isStaticMenuDrawer() ?
+                            getResources().getDimensionPixelSize(R.dimen.menu_drawer_width_static) :
+                            WPActivityUtils.getOptimalDrawerWidth(this);
+            ViewGroup leftDrawer = (ViewGroup) mDrawerLayout.findViewById(R.id.left_drawer);
+            leftDrawer.getLayoutParams().width = drawerWidth;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.color_primary_dark));
+            }
             mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
             mDrawerToggle = new ActionBarDrawerToggle(
                     this,
