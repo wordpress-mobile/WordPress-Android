@@ -53,7 +53,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        int dp8 = DisplayUtils.dpToPx(view.getContext(), 8);
+        int dp4 = DisplayUtils.dpToPx(view.getContext(), 4);
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
 
         String[] titles = {
@@ -65,11 +65,15 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
         for (int i = 0; i < titles.length; i++) {
             RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
-            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
+            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
                     RadioGroup.LayoutParams.WRAP_CONTENT);
+            params.weight = 1;
             rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
-
-            params.setMargins(0, 0, dp8, 0);
+            if (i == 0) {
+                params.setMargins(0, 0, dp4, 0);
+            } else {
+                params.setMargins(dp4, 0, 0, 0);
+            }
             rb.setMinimumWidth(dp80);
             rb.setGravity(Gravity.CENTER);
             rb.setLayoutParams(params);

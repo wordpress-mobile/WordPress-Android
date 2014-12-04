@@ -12,6 +12,7 @@
         <!--  item name="android:textAllCaps">true</item -->
     </style>
 
+    <!-- Used in activity details -->
     <style name="StatsHeaderTotals">
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
         <item name="android:layout_centerHorizontal">true</item>
@@ -27,11 +28,11 @@
         <!--  item name="android:fontFamily">sans-serif-light</item -->
     </style>
 
-    <style name="StatsTabletRadioButton">
+    <style name="StatsTopModuleRadioButton">
         <item name="android:background">@drawable/stats_button_selector</item>
         <item name="android:button">@android:color/transparent</item>
         <item name="android:padding">@dimen/margin_medium</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/stats_text_color</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
 
@@ -47,7 +48,7 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
-    <style name="StatsPagerTitle">
+    <style name="StatsModuleTitle">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/wordpress_blue</item>

@@ -56,7 +56,7 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_months_years_title"
-                style="@style/StatsPagerTitle"
+                style="@style/StatsModuleTitle"
                 android:text="Months and Years"
                 />
 
@@ -83,7 +83,7 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_averages_title"
-                style="@style/StatsPagerTitle"
+                style="@style/StatsModuleTitle"
                 android:text="Averages per Day"
                 />
 

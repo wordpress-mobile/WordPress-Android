@@ -89,7 +89,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             view = inflater.inflate(R.layout.stats_list_fragment, container, false);
         }
 
-        TextView titleTextView = (TextView) view.findViewById(R.id.stats_pager_title);
+        TextView titleTextView = (TextView) view.findViewById(R.id.stats_module_title);
         titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
 
         TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);

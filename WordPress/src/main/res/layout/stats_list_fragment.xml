@@ -21,8 +21,8 @@
             android:paddingTop="@dimen/margin_small">
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/stats_pager_title"
-                style="@style/StatsPagerTitle" />
+                android:id="@+id/stats_module_title"
+                style="@style/StatsModuleTitle" />
 
             <RadioGroup
                 android:id="@+id/stats_pager_tabs"

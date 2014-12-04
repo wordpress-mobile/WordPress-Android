@@ -6,10 +6,10 @@
         </shape>
     </item>
 
-    <!-- item android:top="1dp" android:bottom="1dp" android:left="1dp" android:right="1dp">
-        <shape android:shape="rectangle" android:innerRadius="@dimen/stats_button_corner_radius">
-            <solid
-                android:color="@color/white"/>
+    <item android:top="2dp" android:bottom="2dp" android:left="2dp" android:right="2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/stats_button_corner_radius" />
+            <solid android:color="@color/white"/>
         </shape>
-    </item -->
+    </item>
 </layer-list>
