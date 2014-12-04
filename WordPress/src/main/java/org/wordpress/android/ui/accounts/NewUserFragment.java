@@ -44,7 +44,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     private RelativeLayout mProgressBarSignIn;
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
-    private boolean mAutoCompleteUrl = true;
+    private boolean mAutoCompleteUrl;
 
     public NewUserFragment() {
         mEmailChecker = new EmailChecker();
@@ -359,6 +359,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mSiteUrlTextField.addTextChangedListener(this);
         mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);
         mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
+
         mUsernameTextField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -375,6 +376,15 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+        mUsernameTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    mAutoCompleteUrl = EditTextUtils.getText(mUsernameTextField)
+                            .equals(EditTextUtils.getText(mSiteUrlTextField))
+                            || EditTextUtils.isEmpty(mSiteUrlTextField);
+                }
             }
         });
 
