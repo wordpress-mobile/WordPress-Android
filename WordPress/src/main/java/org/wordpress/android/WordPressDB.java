@@ -13,6 +13,7 @@ import android.util.Base64;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
+import org.wordpress.android.datasets.AutoSaveTextTable;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;
@@ -51,7 +52,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 27;
+    private static final int DATABASE_VERSION = 28;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -245,6 +246,9 @@ public class WordPressDB {
             case 26:
                 // Drop the notes table, no longer needed with Simperium.
                 db.execSQL("DROP TABLE IF EXISTS notes;");
+                currentVersion++;
+            case 27:
+                AutoSaveTextTable.reset(db);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);

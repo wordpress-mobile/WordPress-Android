@@ -1,12 +1,11 @@
 package org.wordpress.android.widgets;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.EditText;
 
+import org.wordpress.android.datasets.AutoSaveTextTable;
+
 public class AutoSaveTextHelper {
-    public static final String PREFERENCES_NAME = "AutoSaveTextHelperPrefs";
     private String mUniqueId;
 
     public void setUniqueId(String uniqueId) {
@@ -31,9 +30,7 @@ public class AutoSaveTextHelper {
     }
 
     public void loadString(EditText editText) {
-        SharedPreferences sharedPreferences = editText.getContext().getSharedPreferences(PREFERENCES_NAME,
-                Context.MODE_PRIVATE);
-        String text = sharedPreferences.getString(getViewPathId(editText) + mUniqueId, "");
+        String text = AutoSaveTextTable.get(getViewPathId(editText) + mUniqueId, "");
         if (!text.isEmpty()) {
             editText.setText(text);
             editText.setSelection(text.length());
@@ -44,18 +41,10 @@ public class AutoSaveTextHelper {
         if (editText.getText() == null) {
             return;
         }
-        SharedPreferences sharedPreferences = editText.getContext().getSharedPreferences(PREFERENCES_NAME,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(getViewPathId(editText) + mUniqueId, editText.getText().toString());
-        editor.apply();
+        AutoSaveTextTable.put(getViewPathId(editText) + mUniqueId, editText.getText().toString());
     }
 
     public static void clearSavedText(View view, String uniqueId) {
-        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(PREFERENCES_NAME,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(getViewPathId(view) + uniqueId);
-        editor.apply();
+        AutoSaveTextTable.remove(getViewPathId(view) + uniqueId);
     }
 }
