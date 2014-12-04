@@ -15,13 +15,13 @@
 
         <ImageView
             android:id="@+id/drawer_row_icon"
-            style="@style/MenuDrawerIcon"
+            style="@style/DrawerIcon"
             android:tint="@color/drawer_icon_tint"
             tools:src="@drawable/dashicon_admin_post_black" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/drawer_row_title"
-            style="@style/MenuDrawerText"
+            style="@style/DrawerText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -29,7 +29,7 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/drawer_row_badge"
-            style="@style/MenuDrawerBadge"
+            style="@style/DrawerBadge"
             android:visibility="gone"
             tools:visibility="visible" />
 
