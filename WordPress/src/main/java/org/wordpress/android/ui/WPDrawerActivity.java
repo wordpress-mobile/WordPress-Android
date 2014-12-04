@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -225,6 +226,22 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             && DisplayUtils.isXLarge(this);
     }
 
+    /*
+     * returns the optimal pixel width to use for the menu drawer according to the specs
+     * http://www.google.com/design/spec/layout/structure.html#structure-side-nav
+     * but note that as of this writing the specs are wonky, so adjust based on
+     * https://medium.com/sebs-top-tips/material-navigation-drawer-sizing-558aea1ad266
+     */
+    private static int getOptimalDrawerWidth(Context context) {
+        Point size = DisplayUtils.getDisplayPixelSize(context);
+        int screenWidth = Math.min(size.x, size.y);
+        int appBarHeight = context.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+        int drawerWidth = screenWidth - appBarHeight;
+        int maxDp = (DisplayUtils.isXLarge(context) ? 400 : 320);
+        int maxPx = DisplayUtils.dpToPx(context, maxDp);
+        return Math.min(drawerWidth, maxPx);
+    }
+
     /**
      * Create menu drawer ListView and listeners
      */
@@ -232,6 +249,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         // locate the drawer layout - note that it will not exist on landscape tablets
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null) {
+            ViewGroup leftDrawer = (ViewGroup) mDrawerLayout.findViewById(R.id.left_drawer);
+            leftDrawer.getLayoutParams().width = getOptimalDrawerWidth(this);
+
             mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
             mDrawerToggle = new ActionBarDrawerToggle(
                     this,
