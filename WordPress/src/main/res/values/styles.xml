@@ -116,30 +116,28 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="MenuDrawerText">
+    <style name="DrawerText">
         <item name="android:gravity">center_vertical</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
-        <item name="android:textColor">@color/md__text</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textColor">@color/drawer_text</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:clickable">false</item>
     </style>
 
-    <style name="MenuDrawerIcon">
-        <item name="android:layout_marginLeft">@dimen/margin_large</item>
-        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
-        <item name="android:layout_height">@dimen/menu_drawer_icon_size</item>
-        <item name="android:layout_width">@dimen/menu_drawer_icon_size</item>
+    <style name="DrawerIcon">
+        <item name="android:layout_height">@dimen/drawer_icon_size</item>
+        <item name="android:layout_width">@dimen/drawer_icon_size</item>
         <item name="android:scaleType">centerInside</item>
         <item name="android:clickable">false</item>
+        <item name="android:tint">@color/drawer_icon_tint</item>
     </style>
 
-    <style name="MenuDrawerBadge">
+    <style name="DrawerBadge">
         <item name="android:background">@drawable/comment_badge_background</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
-        <item name="android:layout_height">@dimen/menu_drawer_badge_size</item>
-        <item name="android:layout_width">@dimen/menu_drawer_badge_size</item>
-        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_height">@dimen/drawer_badge_size</item>
+        <item name="android:layout_width">@dimen/drawer_badge_size</item>
         <item name="android:textSize">12sp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
@@ -147,7 +145,6 @@
         <item name="android:paddingBottom">2dp</item>
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingRight">4dp</item>
-        <item name="android:layout_marginLeft">10dp</item>
     </style>
 
     <style name="WordPressWelcomeStyle">
