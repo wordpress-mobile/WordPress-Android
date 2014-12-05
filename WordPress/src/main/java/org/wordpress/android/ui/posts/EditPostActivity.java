@@ -8,6 +8,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -258,35 +259,53 @@ public class EditPostActivity extends ActionBarActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
+    private Map<String, Object> getWordCountTrackingProperties() {
+        Map<String, Object> properties = new HashMap<String, Object>();
+        String text = Html.fromHtml(mPost.getContent().replaceAll("<img[^>]*>", "")).toString();
+        properties.put("word_count", text.split("\\s+").length);
+        return properties;
+    }
+
+    private void trackSavePostAnalytics() {
+        PostStatus status = mPost.getStatusEnum();
+        switch (status) {
+            case PUBLISHED:
+                if (mPost.isUploaded()) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
+                } else {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST,
+                            getWordCountTrackingProperties());
+                }
+                break;
+            case SCHEDULED:
+                if (mPost.isUploaded()) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
+                } else {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST,
+                            getWordCountTrackingProperties());
+                }
+                break;
+            case DRAFT:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT);
+                break;
+            default:
+                // No-op
+        }
+    }
+
     // Menu actions
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_save_post) {
-            PostStatus status = mPost.getStatusEnum();
-            switch (status) {
-                case PUBLISHED:
-                    if (mPost.isUploaded()) {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
-                    } else {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST);
-                    }
-                    break;
-                case DRAFT:
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT);
-                    break;
-                default:
-                    // No-op
-            }
-
             // If the post is new and there are no changes, don't publish
             updatePostObject(false);
             if (!mPost.isPublishable()) {
                 ToastUtils.showToast(this, R.string.error_publish_empty_post, Duration.SHORT);
                 return false;
             }
-
             savePost(false, false);
+            trackSavePostAnalytics();
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();

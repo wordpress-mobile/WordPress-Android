@@ -46,10 +46,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.ui.media.MediaUtils;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtil;
@@ -425,7 +424,6 @@ public class EditPostSettingsFragment extends Fragment
                             mIsCustomPubDate = true;
 
                             updatePostSettingsAndSaveButton();
-                            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST);
                         } catch (RuntimeException e) {
                             AppLog.e(T.POSTS, e);
                         }
