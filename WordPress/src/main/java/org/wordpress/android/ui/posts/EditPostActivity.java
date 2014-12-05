@@ -298,16 +298,14 @@ public class EditPostActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_save_post) {
-            trackSavePostAnalytics();
-
             // If the post is new and there are no changes, don't publish
             updatePostObject(false);
             if (!mPost.isPublishable()) {
                 ToastUtils.showToast(this, R.string.error_publish_empty_post, Duration.SHORT);
                 return false;
             }
-
             savePost(false, false);
+            trackSavePostAnalytics();
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();
