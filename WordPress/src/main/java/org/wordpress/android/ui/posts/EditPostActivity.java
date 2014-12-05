@@ -259,7 +259,7 @@ public class EditPostActivity extends ActionBarActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private Map<String, Object> getWordCoundTrackingProperties() {
+    private Map<String, Object> getWordCountTrackingProperties() {
         Map<String, Object> properties = new HashMap<String, Object>();
         String text = Html.fromHtml(mPost.getContent()).toString();
         properties.put("word_count", text.split("\\s+").length);
@@ -274,7 +274,7 @@ public class EditPostActivity extends ActionBarActivity {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST,
-                            getWordCoundTrackingProperties());
+                            getWordCountTrackingProperties());
                 }
                 break;
             case SCHEDULED:
@@ -282,7 +282,7 @@ public class EditPostActivity extends ActionBarActivity {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST,
-                            getWordCoundTrackingProperties());
+                            getWordCountTrackingProperties());
                 }
                 break;
             case DRAFT:
