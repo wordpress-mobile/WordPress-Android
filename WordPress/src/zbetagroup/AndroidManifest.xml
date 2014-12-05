@@ -13,12 +13,6 @@
 
     <application>
 
-        <provider
-            android:name=".providers.StatsContentProvider"
-            android:authorities="org.wordpress.android.providers.StatsContentProviderBeta"
-            android:exported="false"
-            tools:replace="android:authorities" />
-
         <!-- We've used a custom receiver here. The one that is bundled in GCM API wasn't able to start the service. -->
         <receiver
             android:name="org.wordpress.android.GCMReceiver"
