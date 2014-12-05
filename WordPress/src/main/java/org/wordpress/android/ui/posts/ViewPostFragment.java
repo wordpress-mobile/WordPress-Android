@@ -6,8 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -37,8 +35,8 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionService;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
@@ -106,9 +104,10 @@ public class ViewPostFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        if (mSuggestionServiceConnectionManager != null) {
+            mSuggestionServiceConnectionManager.unbindFromService();
+        }
         super.onDestroy();
-
-        mSuggestionServiceConnectionManager.unbindFromService();
     }
 
     @Override

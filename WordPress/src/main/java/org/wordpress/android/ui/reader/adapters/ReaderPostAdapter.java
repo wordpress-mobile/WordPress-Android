@@ -502,9 +502,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
 
         // update post in array and on screen
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
-        mPosts.set(position, updatedPost);
-        holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
-        showCounts(holder, updatedPost, true);
+        if (updatedPost != null) {
+            mPosts.set(position, updatedPost);
+            holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
+            showCounts(holder, updatedPost, true);
+        }
     }
 
     /*

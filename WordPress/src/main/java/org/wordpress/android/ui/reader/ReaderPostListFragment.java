@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -89,6 +90,7 @@ public class ReaderPostListFragment extends Fragment {
     private long mCurrentBlogId;
     private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
+    private int mRestorePosition;
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
@@ -192,6 +194,7 @@ public class ReaderPostListFragment extends Fragment {
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
                 mTagPreviewHistory.restoreInstance(savedInstanceState);
             }
+            mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
         }
     }
@@ -239,9 +242,18 @@ public class ReaderPostListFragment extends Fragment {
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putString(ReaderConstants.ARG_BLOG_URL, mCurrentBlogUrl);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
+        outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
         super.onSaveInstanceState(outState);
+    }
+
+    private int getCurrentPosition() {
+        if (mRecyclerView != null && hasPostRecycler()) {
+            return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+        } else {
+            return 0;
+        }
     }
 
     @Override
@@ -608,7 +620,11 @@ public class ReaderPostListFragment extends Fragment {
                 mEmptyView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.GONE);
+                if (mRestorePosition > 0) {
+                    mRecyclerView.scrollToPosition(mRestorePosition);
+                }
             }
+            mRestorePosition = 0;
         }
     };
 
