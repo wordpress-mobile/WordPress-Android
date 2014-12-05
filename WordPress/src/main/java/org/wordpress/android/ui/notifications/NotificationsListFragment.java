@@ -225,13 +225,6 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
      */
     @Override
     public void onSaveObject(Bucket<Note> bucket, final Note object) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mNotesAdapter.notifyItemInserted(mNotesAdapter.getPositionForNote(object.getSimperiumKey()));
-            }
-        });
-
         refreshNotes();
     }
 
@@ -241,9 +234,10 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     }
 
     @Override
-    public void onNetworkChange(Bucket<Note> bucket, Bucket.ChangeType type, final String key) {
+    public void onNetworkChange(Bucket<Note> bucket, final Bucket.ChangeType type, final String key) {
+
+        // Reset the note's local status when a remote change is received
         if (type == Bucket.ChangeType.MODIFY) {
-            // Reset the note's local status when a change is received
             try {
                 Note note = bucket.get(key);
                 if (note.isCommentType()) {
@@ -251,37 +245,10 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
                     note.save();
                 }
 
-                final int position = mNotesAdapter.getPositionForNote(key);
-                if (position >= 0) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mNotesAdapter.notifyItemChanged(position);
-                        }
-                    });
-                } else {
-                    refreshNotes();
-                }
-
                 return;
             } catch (BucketObjectMissingException e) {
                 AppLog.e(AppLog.T.NOTIFS, "Could not create note after receiving change.");
             }
-        } else if (type == Bucket.ChangeType.REMOVE) {
-            final int position = mNotesAdapter.getPositionForNote(key);
-
-            if (position >= 0) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mNotesAdapter.notifyItemRemoved(position);
-                    }
-                });
-            } else {
-                refreshNotes();
-            }
-
-            return;
         }
 
         refreshNotes();

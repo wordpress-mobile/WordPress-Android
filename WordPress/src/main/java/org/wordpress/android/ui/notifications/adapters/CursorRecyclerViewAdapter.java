@@ -9,11 +9,8 @@ import android.support.v7.widget.RecyclerView;
 
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
     private Cursor mCursor;
-
     private boolean mDataValid;
-
     private int mRowIdColumn;
-
     private DataSetObserver mDataSetObserver;
 
     public CursorRecyclerViewAdapter(Context context, Cursor cursor) {
