@@ -9,7 +9,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
 public class AutoSaveTextTable {
-    public static final int MAX_ENTRIES = 100;
+    private static final int MAX_ENTRIES = 100;
     private static final String AUTOSAVETEXT_TABLE = "autosavetext";
 
     public static void reset(SQLiteDatabase db) {
