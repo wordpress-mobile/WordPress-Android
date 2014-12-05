@@ -225,6 +225,7 @@ public class StatsUIHelper {
             return;
         }
 
+        chevron.clearAnimation(); // Remove any other prev animations set on the chevron
         if (animate) {
             // make sure we start with the correct chevron for the prior state before animating it
             chevron.setImageResource(isGroupExpanded ? R.drawable.stats_chevron_right : R.drawable.stats_chevron_down);
