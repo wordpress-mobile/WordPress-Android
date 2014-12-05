@@ -241,7 +241,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     }
 
     @Override
-    public void onChange(Bucket<Note> bucket, Bucket.ChangeType type, final String key) {
+    public void onNetworkChange(Bucket<Note> bucket, Bucket.ChangeType type, final String key) {
         if (type == Bucket.ChangeType.MODIFY) {
             // Reset the note's local status when a change is received
             try {

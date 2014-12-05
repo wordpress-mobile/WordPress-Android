@@ -352,7 +352,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     }
 
     @Override
-    public void onChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String noteId) {
+    public void onNetworkChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String noteId) {
         // We're not interested in INDEX events here
         if (changeType == Bucket.ChangeType.INDEX) return;
 
