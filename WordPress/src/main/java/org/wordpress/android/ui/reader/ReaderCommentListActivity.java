@@ -249,9 +249,10 @@ public class ReaderCommentListActivity extends ActionBarActivity {
 
     @Override
     public void onDestroy() {
+        if (mSuggestionServiceConnectionManager != null) {
+            mSuggestionServiceConnectionManager.unbindFromService();
+        }
         super.onDestroy();
-
-        mSuggestionServiceConnectionManager.unbindFromService();
     }
 
     private boolean hasCommentAdapter() {
