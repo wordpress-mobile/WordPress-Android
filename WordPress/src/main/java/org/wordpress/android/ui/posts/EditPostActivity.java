@@ -261,7 +261,7 @@ public class EditPostActivity extends ActionBarActivity {
 
     private Map<String, Object> getWordCountTrackingProperties() {
         Map<String, Object> properties = new HashMap<String, Object>();
-        String text = Html.fromHtml(mPost.getContent()).toString();
+        String text = Html.fromHtml(mPost.getContent().replaceAll("<img[^>]*>", "")).toString();
         properties.put("word_count", text.split("\\s+").length);
         return properties;
     }
