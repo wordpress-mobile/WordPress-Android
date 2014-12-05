@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@+id/layout_drawer_footer"
-        android:layout_marginBottom="@dimen/drawer_divider_margin"
+        android:layout_marginBottom="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_extra_small"
         android:background="@color/drawer_divider" />
 
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/drawer_divider_margin"
+        android:layout_marginBottom="@dimen/margin_small"
         android:orientation="vertical">
 
         <RelativeLayout
