@@ -1,6 +1,7 @@
 
 package org.wordpress.android.ui;
 
+import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
@@ -39,7 +41,6 @@ import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -103,22 +104,24 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         setSupportActionBar(getToolbar());
     }
 
-    private View getActivityView() {
+    /*
+     * fade out the view containing the current drawer activity
+     */
+    private void hideActivityView() {
         // activity_container is the parent view which contains the toolbar (first child) and
         // the activity itself (second child)
         ViewGroup container = (ViewGroup) findViewById(R.id.activity_container);
         if (container == null || container.getChildCount() < 2) {
-            return null;
+            return;
         }
-        return container.getChildAt(1);
-    }
-
-    private void hideActivityView() {
-        View activityView = getActivityView();
+        final View activityView = container.getChildAt(1);
         if (activityView == null || activityView.getVisibility() != View.VISIBLE) {
             return;
         }
-        ReaderAnim.fadeOut(activityView, ReaderAnim.Duration.SHORT);
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(activityView, View.ALPHA, 1.0f, 0.0f);
+        fadeOut.setDuration(OPENED_FROM_DRAWER_DELAY);
+        fadeOut.setInterpolator(new AccelerateInterpolator());
+        fadeOut.start();
     }
 
     @Override
