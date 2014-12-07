@@ -253,6 +253,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
+        outState.putString(SAVED_STATS_REQUESTED_DATE, mRequestedDate);
         super.onSaveInstanceState(outState);
     }
 
