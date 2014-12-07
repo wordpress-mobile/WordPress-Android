@@ -88,7 +88,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
 
-    private static final String OPENED_FROM_DRAWER = "opened_from_drawer";
     private static final int OPENED_FROM_DRAWER_DELAY = 250;
 
     @Override
@@ -102,21 +101,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         setSupportActionBar(getToolbar());
-
-        // if this activity was opened from the drawer (ie: via startDrawerIntent() from another
-        // drawer activity), hide the activity view then fade it in after a short delay
-        if (getIntent() != null && getIntent().getBooleanExtra(OPENED_FROM_DRAWER, false)) {
-            hideActivityView(false);
-            getIntent().putExtra(OPENED_FROM_DRAWER, false);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!isFinishing()) {
-                        showActivityView(true);
-                    }
-                }
-            }, OPENED_FROM_DRAWER_DELAY);
-        }
     }
 
     private View getActivityView() {
@@ -129,27 +113,12 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         return container.getChildAt(1);
     }
 
-    private void hideActivityView(boolean animate) {
+    private void hideActivityView() {
         View activityView = getActivityView();
         if (activityView == null || activityView.getVisibility() != View.VISIBLE) {
             return;
         }
-        if (animate) {
-            ReaderAnim.fadeOut(activityView, ReaderAnim.Duration.SHORT);
-        } else {
-            activityView.setVisibility(View.GONE);
-        }
-    }
-    private void showActivityView(boolean animate) {
-        View activityView = getActivityView();
-        if (activityView == null || activityView.getVisibility() == View.VISIBLE) {
-            return;
-        }
-        if (animate) {
-            ReaderAnim.fadeIn(activityView, ReaderAnim.Duration.SHORT);
-        } else {
-            activityView.setVisibility(View.VISIBLE);
-        }
+        ReaderAnim.fadeOut(activityView, ReaderAnim.Duration.SHORT);
     }
 
     @Override
@@ -437,13 +406,12 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
             // close the drawer and fade out the activity container so current activity appears to be going away
             closeDrawer();
-            hideActivityView(true);
+            hideActivityView();
 
             // start the new activity after a brief delay to give drawer time to close
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    intent.putExtra(OPENED_FROM_DRAWER, true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(intent);
                 }
