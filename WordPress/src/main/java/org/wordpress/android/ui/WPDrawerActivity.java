@@ -445,8 +445,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 public void run() {
                     intent.putExtra(OPENED_FROM_DRAWER, true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    intent.putExtra(OPENED_FROM_DRAWER, true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(intent);
                 }
             }, OPENED_FROM_DRAWER_DELAY);
