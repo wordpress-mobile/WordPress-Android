@@ -436,6 +436,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         public void onReceive(Context context, Intent intent) {
             String action = StringUtils.notNullStr(intent.getAction());
 
+            if (!isAdded()) {
+                return;
+            }
+
             if (!action.equals(StatsService.ACTION_STATS_SECTION_UPDATED)) {
                 return;
             }
