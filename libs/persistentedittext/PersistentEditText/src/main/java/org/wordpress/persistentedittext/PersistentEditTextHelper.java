@@ -6,10 +6,10 @@ import android.widget.EditText;
 
 public class PersistentEditTextHelper {
     private String mUniqueId;
-    private PersistentTextDatabase mPersistentTextDatabase;
+    private PersistentEditTextDatabase mPersistentEditTextDatabase;
 
     public PersistentEditTextHelper(Context context) {
-        mPersistentTextDatabase = new PersistentTextDatabase(context);
+        mPersistentEditTextDatabase = new PersistentEditTextDatabase(context);
     }
 
     public void setUniqueId(String uniqueId) {
@@ -34,7 +34,7 @@ public class PersistentEditTextHelper {
     }
 
     public void loadString(EditText editText) {
-        String text = mPersistentTextDatabase.get(getViewPathId(editText) + mUniqueId, "");
+        String text = mPersistentEditTextDatabase.get(getViewPathId(editText) + mUniqueId, "");
         if (!text.isEmpty()) {
             editText.setText(text);
             editText.setSelection(text.length());
@@ -45,10 +45,10 @@ public class PersistentEditTextHelper {
         if (editText.getText() == null) {
             return;
         }
-        mPersistentTextDatabase.put(getViewPathId(editText) + mUniqueId, editText.getText().toString());
+        mPersistentEditTextDatabase.put(getViewPathId(editText) + mUniqueId, editText.getText().toString());
     }
 
     public void clearSavedText(View view, String uniqueId) {
-        mPersistentTextDatabase.remove(getViewPathId(view) + uniqueId);
+        mPersistentEditTextDatabase.remove(getViewPathId(view) + uniqueId);
     }
 }

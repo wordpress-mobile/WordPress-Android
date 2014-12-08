@@ -7,14 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class PersistentTextDatabase extends SQLiteOpenHelper {
-    public static final String TAG = "PersistentEditText";
+public class PersistentEditTextDatabase extends SQLiteOpenHelper {
+    private static final String TAG = "PersistentEditText";
     private static final int MAX_ENTRIES = 100;
     private static final String DATABASE_NAME = "persistentedittext.db";
     private static final int DATABASE_VERSION = 1;
     private static final String PERSISTENTEDITTEXT_TABLE = "persistentedittext";
 
-    public PersistentTextDatabase(Context context) {
+    public PersistentEditTextDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
