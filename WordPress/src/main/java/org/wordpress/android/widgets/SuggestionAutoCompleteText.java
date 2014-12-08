@@ -5,10 +5,10 @@ import android.util.AttributeSet;
 import android.widget.MultiAutoCompleteTextView;
 
 import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
-import org.wordpress.persistentedittext.AutoSaveTextHelper;
+import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
 public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
-    AutoSaveTextHelper mAutoSaveTextHelper;
+    PersistentEditTextHelper mPersistentEditTextHelper;
 
     public SuggestionAutoCompleteText(Context context) {
         super(context, null);
@@ -29,11 +29,11 @@ public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
         TypefaceCache.setCustomTypeface(context, this, attrs);
         setTokenizer(new SuggestionTokenizer());
         setThreshold(1);
-        mAutoSaveTextHelper = new AutoSaveTextHelper(context);
+        mPersistentEditTextHelper = new PersistentEditTextHelper(context);
     }
 
-    public AutoSaveTextHelper getAutoSaveTextHelper() {
-        return mAutoSaveTextHelper;
+    public PersistentEditTextHelper getAutoSaveTextHelper() {
+        return mPersistentEditTextHelper;
     }
 
     @Override

@@ -27,7 +27,7 @@ import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.UserEmail;
-import org.wordpress.persistentedittext.AutoSaveTextHelper;
+import org.wordpress.persistentedittext.PersistentEditTextHelper;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 
@@ -182,10 +182,10 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             intent.putExtra("username", username);
             activity.setResult(NewAccountActivity.RESULT_OK, intent);
             activity.finish();
-            AutoSaveTextHelper autoSaveTextHelper = new AutoSaveTextHelper(getActivity());
-            autoSaveTextHelper.clearSavedText(mEmailTextField, null);
-            autoSaveTextHelper.clearSavedText(mUsernameTextField, null);
-            autoSaveTextHelper.clearSavedText(mSiteUrlTextField, null);
+            PersistentEditTextHelper persistentEditTextHelper = new PersistentEditTextHelper(getActivity());
+            persistentEditTextHelper.clearSavedText(mEmailTextField, null);
+            persistentEditTextHelper.clearSavedText(mUsernameTextField, null);
+            persistentEditTextHelper.clearSavedText(mSiteUrlTextField, null);
         }
     }
 
