@@ -405,13 +405,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                         ? Constants.QUICK_POST_PHOTO_CAMERA
                         : Constants.QUICK_POST_PHOTO_LIBRARY);
                 break;
-            case QUICK_VIDEO:
-                mShouldFinish = false;
-                intent = new Intent(WPDrawerActivity.this, EditPostActivity.class);
-                intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
-                        ? Constants.QUICK_POST_VIDEO_CAMERA
-                        : Constants.QUICK_POST_VIDEO_LIBRARY);
-                break;
             default :
                 mShouldFinish = false;
                 intent = null;

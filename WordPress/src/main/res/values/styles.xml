@@ -120,7 +120,7 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
         <item name="android:textColor">@color/drawer_text</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:clickable">false</item>
     </style>
 
