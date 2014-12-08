@@ -138,10 +138,6 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         return cursor.getLong(cursor.getColumnIndex(columnName));
     }
 
-    public boolean isModeratingNote(String noteId) {
-        return mModeratingNoteIds.contains(noteId);
-    }
-
     public int getCount() {
         if (getCursor() != null) {
             return getCursor().getCount();

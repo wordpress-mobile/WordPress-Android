@@ -371,7 +371,7 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
                         }
 
                         @Override
-                        public void onClear(Parcelable[] token) {
+                        public void onClear(@Nonnull Parcelable[] token) {
                             //noop
                         }
 
