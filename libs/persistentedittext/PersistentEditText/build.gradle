@@ -1,0 +1,47 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.14.0'
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
+
+android {
+    publishNonDefault true
+
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
+
+    defaultConfig {
+        applicationId "org.wordpress.persistentedittext"
+        versionName "1.0"
+        minSdkVersion 9
+        targetSdkVersion 21
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            def repo_url = ""
+            if (project.hasProperty("repository")) {
+                repo_url = project.repository
+            }
+            repository(url: repo_url)
+            pom.version = android.defaultConfig.versionName
+            pom.groupId = "org.wordpress"
+            pom.artifactId = "persistentedittext"
+        }
+    }
+}
