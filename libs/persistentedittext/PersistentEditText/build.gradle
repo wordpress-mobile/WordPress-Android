@@ -9,6 +9,7 @@ buildscript {
 
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 repositories {
     mavenCentral()
@@ -25,23 +26,63 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.persistentedittext"
+        versionCode 1
         versionName "1.0"
         minSdkVersion 9
         targetSdkVersion 21
     }
 }
 
+signing {
+    sign configurations.archives
+}
+
+version android.defaultConfig.versionName
+group = "org.wordpress"
+archivesBaseName = "persistentedittext"
+
+// http://central.sonatype.org/pages/gradle.html
+
 uploadArchives {
     repositories {
         mavenDeployer {
-            def repo_url = ""
-            if (project.hasProperty("repository")) {
-                repo_url = project.repository
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
             }
-            repository(url: repo_url)
-            pom.version = android.defaultConfig.versionName
-            pom.groupId = "org.wordpress"
-            pom.artifactId = "persistentedittext"
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'PersistentEditText'
+                packaging 'aar'
+                description 'Android EditText subclass with persistence'
+                url 'https://github.com/wordpress-mobile/PersistentEditText'
+                scm {
+                    connection 'scm:git:https://github.com/wordpress-mobile/PersistentEditText.git'
+                    developerConnection 'scm:git:https://github.com/wordpress-mobile/PersistentEditText.git'
+                    url 'https://github.com/wordpress-mobile/PersistentEditText'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)'
+                        url 'http://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'maxme'
+                        name 'Maxime Biais'
+                        email 'maxime@automattic.com'
+                    }
+
+                }
+            }
         }
     }
 }
