@@ -43,7 +43,7 @@
                     style="@style/WordPress.NUXEditText"
                     android:inputType="textCapSentences"
                     android:hint="@string/title"
-                    app:autoSaveEnabled="true"/>
+                    app:persistenceEnabled="true"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
                     android:paddingRight="0dp"
                     android:paddingBottom="12dp"
                     android:layout_toLeftOf="@+id/textView"
-                    app:autoSaveEnabled="true"/>
+                    app:persistenceEnabled="true"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"

@@ -59,7 +59,7 @@
                     style="@style/WordPress.NUXEditText"
                     android:hint="@string/email_hint"
                     android:inputType="textEmailAddress"
-                    app:autoSaveEnabled="true"/>
+                    app:persistenceEnabled="true"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -88,7 +88,7 @@
                     style="@style/WordPress.NUXEditText"
                     android:inputType="textUri"
                     android:hint="@string/username"
-                    app:autoSaveEnabled="true"/>
+                    app:persistenceEnabled="true"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -163,7 +163,7 @@
                     android:paddingRight="0dp"
                     android:paddingBottom="12dp"
                     android:layout_toLeftOf="@+id/textView"
-                    app:autoSaveEnabled="true"/>
+                    app:persistenceEnabled="true"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"

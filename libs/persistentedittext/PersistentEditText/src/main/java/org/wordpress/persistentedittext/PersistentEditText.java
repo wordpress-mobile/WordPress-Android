@@ -72,7 +72,7 @@ public class PersistentEditText extends EditText {
     private void readCustomAttrs(Context context, AttributeSet attrs) {
         TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PersistentEditText, 0, 0);
         if (array != null) {
-            mEnabled = array.getBoolean(R.styleable.PersistentEditText_autoSaveEnabled, false);
+            mEnabled = array.getBoolean(R.styleable.PersistentEditText_persistenceEnabled, false);
         }
     }
 }
