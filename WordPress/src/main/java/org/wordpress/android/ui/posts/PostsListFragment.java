@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +29,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.widgets.FloatingActionButton;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
@@ -45,6 +45,7 @@ public class PostsListFragment extends ListFragment
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnSinglePostLoadedListener mOnSinglePostLoadedListener;
     private PostsListAdapter mPostsListAdapter;
+    private FloatingActionButton mFabButton;
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
     private View mProgressFooterView;
@@ -220,8 +221,8 @@ public class PostsListFragment extends ListFragment
         initSwipeToRefreshHelper();
         WordPress.setOnPostUploadedListener(this);
 
-        ImageButton fabButton = (ImageButton) getView().findViewById(R.id.fab_button);
-        fabButton.setOnClickListener(new View.OnClickListener() {
+        mFabButton = (FloatingActionButton) getView().findViewById(R.id.fab_button);
+        mFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 newPost();
@@ -260,6 +261,14 @@ public class PostsListFragment extends ListFragment
             }
 
             getPostListAdapter().loadPosts();
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (mFabButton != null) {
+            mFabButton.setVisibility(hidden ? View.GONE : View.VISIBLE);
         }
     }
 
