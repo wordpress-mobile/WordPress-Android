@@ -85,7 +85,7 @@
                     android:layout_width="@dimen/avatar_sz_medium"
                     android:layout_height="@dimen/avatar_sz_medium"
                     android:layout_marginTop="@dimen/margin_small"
-                    android:background="@color/translucent"
+                    android:background="@drawable/shape_oval_translucent"
                     android:gravity="center"
                     android:padding="@dimen/margin_large"
                     android:visibility="gone"

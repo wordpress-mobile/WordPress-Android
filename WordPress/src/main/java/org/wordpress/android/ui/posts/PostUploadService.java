@@ -191,12 +191,6 @@ public class PostUploadService extends Service {
                 mPost.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
             }
 
-            boolean isFirstTimePublishing = false;
-            if (mPost.hasChangedFromLocalDraftToPublished() ||
-                    (!mPost.isUploaded() && mPost.getStatusEnum() == PostStatus.PUBLISHED)) {
-                isFirstTimePublishing = true;
-            }
-
             String descriptionContent = processPostMedia(mPost.getDescription());
 
             String moreContent = "";
@@ -371,22 +365,7 @@ public class PostUploadService extends Service {
                 mPost.setUploaded(true);
                 mPost.setLocalChange(false);
                 WordPress.wpDB.updatePost(mPost);
-
-                if (isFirstTimePublishing) {
-                    if (mHasImage) {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_PHOTO);
-                    }
-                    if (mHasVideo) {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_VIDEO);
-                    }
-                    if (mHasCategory) {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_CATEGORIES);
-                    }
-                    if (!TextUtils.isEmpty(mPost.getKeywords())) {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_TAGS);
-                    }
-                }
-
+                trackUploadAnalytics();
                 return true;
             } catch (final XMLRPCException e) {
                 setUploadPostErrorMessage(e);
@@ -397,6 +376,31 @@ public class PostUploadService extends Service {
             }
 
             return false;
+        }
+
+        private void trackUploadAnalytics() {
+            mPost.getStatusEnum();
+
+            boolean isFirstTimePublishing = false;
+            if (mPost.hasChangedFromLocalDraftToPublished() ||
+                    (!mPost.isUploaded() && mPost.getStatusEnum() == PostStatus.PUBLISHED)) {
+                isFirstTimePublishing = true;
+            }
+
+            if (isFirstTimePublishing) {
+                if (mHasImage) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_PHOTO);
+                }
+                if (mHasVideo) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_VIDEO);
+                }
+                if (mHasCategory) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_CATEGORIES);
+                }
+                if (!TextUtils.isEmpty(mPost.getKeywords())) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_TAGS);
+                }
+            }
         }
 
         /**
