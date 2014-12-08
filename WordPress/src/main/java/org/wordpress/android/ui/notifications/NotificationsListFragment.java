@@ -235,7 +235,6 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
 
     @Override
     public void onNetworkChange(Bucket<Note> bucket, final Bucket.ChangeType type, final String key) {
-
         // Reset the note's local status when a remote change is received
         if (type == Bucket.ChangeType.MODIFY) {
             try {
@@ -244,8 +243,6 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
                     note.setLocalStatus(null);
                     note.save();
                 }
-
-                return;
             } catch (BucketObjectMissingException e) {
                 AppLog.e(AppLog.T.NOTIFS, "Could not create note after receiving change.");
             }
