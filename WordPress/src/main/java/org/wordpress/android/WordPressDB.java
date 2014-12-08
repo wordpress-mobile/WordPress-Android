@@ -13,7 +13,7 @@ import android.util.Base64;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
-import org.wordpress.android.datasets.AutoSaveTextTable;
+import org.wordpress.persistentedittext.AutoSaveTextTable;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;

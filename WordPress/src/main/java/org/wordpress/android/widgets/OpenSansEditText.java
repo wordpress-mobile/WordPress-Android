@@ -3,6 +3,8 @@ package org.wordpress.android.widgets;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import org.wordpress.persistentedittext.AutoSaveEditText;
+
 public class OpenSansEditText extends AutoSaveEditText {
     public OpenSansEditText(Context context) {
         super(context, null);

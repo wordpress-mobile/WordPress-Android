@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.widget.MultiAutoCompleteTextView;
 
 import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
+import org.wordpress.persistentedittext.AutoSaveTextHelper;
 
 public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
     AutoSaveTextHelper mAutoSaveTextHelper = new AutoSaveTextHelper();

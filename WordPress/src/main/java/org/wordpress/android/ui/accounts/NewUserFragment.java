@@ -27,7 +27,7 @@ import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.UserEmail;
-import org.wordpress.android.widgets.AutoSaveTextHelper;
+import org.wordpress.persistentedittext.AutoSaveTextHelper;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 
