@@ -21,13 +21,6 @@
     </declare-styleable>
 
     <!--
-        AutoSaveEditText attribute to enable auto save
-    -->
-    <declare-styleable name="AutoSaveEditText">
-        <attr name="autoSaveEnabled" format="boolean"/>
-    </declare-styleable>
-
-    <!--
         WPLinearLayoutSizeBound attributes
     -->
     <declare-styleable name="WPLinearLayoutSizeBound">

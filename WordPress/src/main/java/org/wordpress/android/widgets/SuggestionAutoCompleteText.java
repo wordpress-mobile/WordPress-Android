@@ -8,27 +8,28 @@ import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
 import org.wordpress.persistentedittext.AutoSaveTextHelper;
 
 public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
-    AutoSaveTextHelper mAutoSaveTextHelper = new AutoSaveTextHelper();
+    AutoSaveTextHelper mAutoSaveTextHelper;
 
     public SuggestionAutoCompleteText(Context context) {
         super(context, null);
-        TypefaceCache.setCustomTypeface(context, this, null);
-        this.setTokenizer(new SuggestionTokenizer());
-        this.setThreshold(1);
+        init(context, null);
     }
 
     public SuggestionAutoCompleteText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypefaceCache.setCustomTypeface(context, this, attrs);
-        this.setTokenizer(new SuggestionTokenizer());
-        this.setThreshold(1);
+        init(context, attrs);
     }
 
     public SuggestionAutoCompleteText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init(context, attrs);
+    }
+
+    private void init(Context context, AttributeSet attrs) {
         TypefaceCache.setCustomTypeface(context, this, attrs);
-        this.setTokenizer(new SuggestionTokenizer());
-        this.setThreshold(1);
+        setTokenizer(new SuggestionTokenizer());
+        setThreshold(1);
+        mAutoSaveTextHelper = new AutoSaveTextHelper(context);
     }
 
     public AutoSaveTextHelper getAutoSaveTextHelper() {
