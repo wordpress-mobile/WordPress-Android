@@ -17,7 +17,6 @@ public class Post implements Serializable {
     static final long serialVersionUID  = 2L;
 
     public static String QUICK_MEDIA_TYPE_PHOTO = "QuickPhoto";
-    public static String QUICK_MEDIA_TYPE_VIDEO = "QuickVideo";
 
     private long localTablePostId;
     private int localTableBlogId;
