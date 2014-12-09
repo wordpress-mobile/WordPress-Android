@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.14.0'
+        classpath 'com.android.tools.build:gradle:1.0.0'
     }
 }
 
@@ -25,7 +25,6 @@ android {
     buildToolsVersion "21.1.1"
 
     defaultConfig {
-        applicationId "org.wordpress.persistentedittext"
         versionCode 1
         versionName "1.0"
         minSdkVersion 9
