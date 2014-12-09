@@ -142,6 +142,13 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         if (isHidden) {
             mNotesAdapter.addHiddenNoteId(noteId);
         } else {
+            // Scroll the row into view if it isn't visible so the animation can be seen
+            int notePosition = mNotesAdapter.getPositionForNote(noteId);
+            if (notePosition != RecyclerView.NO_POSITION &&
+                    mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() > notePosition) {
+                mLinearLayoutManager.scrollToPosition(notePosition);
+            }
+
             mNotesAdapter.removeHiddenNoteId(noteId);
         }
     }
