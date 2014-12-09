@@ -44,6 +44,8 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
     public NotesAdapter(Context context, Bucket<Note> bucket) {
         super(context, null);
 
+        setHasStableIds(true);
+
         mContext = context;
         mNotesBucket = bucket;
         // build a query that sorts by timestamp descending
