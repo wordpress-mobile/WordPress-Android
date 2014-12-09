@@ -117,6 +117,9 @@ public abstract class AbstractFragment extends Fragment {
     }
 
     protected void showError(int messageId) {
+        if (!isAdded()) {
+            return;
+        }
         if (specificShowError(messageId)) {
             return;
         }

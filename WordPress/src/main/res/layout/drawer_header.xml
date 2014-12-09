@@ -7,7 +7,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/menu_drawer_header_size"
+        android:layout_height="@dimen/drawer_header_size"
         android:scaleType="centerCrop"
         android:src="@drawable/drawer_header_bg" />
 
@@ -17,20 +17,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_marginRight="@dimen/margin_large"
-        tools:listitem="@layout/spinner_textview_drawer"
-        tools:visibility="gone" />
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginLeft="@dimen/drawer_row_keyline"
+        android:layout_marginRight="@dimen/drawer_row_keyline"
+        tools:listitem="@layout/spinner_textview_drawer"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_header_blog_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/margin_large"
-        android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_marginRight="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_marginLeft="@dimen/drawer_row_keyline"
+        android:layout_marginRight="@dimen/drawer_row_keyline"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_large"
         android:visibility="gone"
