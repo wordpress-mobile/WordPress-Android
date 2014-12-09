@@ -296,6 +296,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing);
         mPhotonWidth = displayWidth - (cardSpacing * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
+
+        setHasStableIds(true);
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
