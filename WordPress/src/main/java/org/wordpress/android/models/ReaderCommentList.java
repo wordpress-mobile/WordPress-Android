@@ -31,14 +31,18 @@ public class ReaderCommentList extends ArrayList<ReaderComment> {
         return true;
     }
 
-    public boolean replaceComment(long commentId, ReaderComment comment) {
-        if (comment==null)
-            return false;
+    public int replaceComment(long commentId, ReaderComment comment) {
+        if (comment == null) {
+            return -1;
+        }
+
         int index = indexOfCommentId(commentId);
-        if (index == -1)
-            return false;
+        if (index == -1) {
+            return -1;
+        }
+
         this.set(index, comment);
-        return true;
+        return index;
     }
 
     /*
