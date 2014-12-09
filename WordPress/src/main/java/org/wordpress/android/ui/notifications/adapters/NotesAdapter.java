@@ -189,6 +189,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
 
         if (mHiddenNoteIds.size() > 0 && mHiddenNoteIds.contains(objectCursor.getSimperiumKey())) {
             noteViewHolder.contentView.setVisibility(View.GONE);
+            noteViewHolder.headerView.setVisibility(View.GONE);
         } else {
             noteViewHolder.contentView.setVisibility(View.VISIBLE);
         }
