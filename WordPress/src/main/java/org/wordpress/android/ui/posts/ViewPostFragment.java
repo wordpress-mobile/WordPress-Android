@@ -55,7 +55,6 @@ public class ViewPostFragment extends Fragment {
     private SuggestionAutoCompleteText mEditComment;
     private ImageButton mAddCommentButton, mShareUrlButton, mViewPostButton;
     private TextView mTitleTextView, mContentTextView;
-    private boolean mShouldLoadPost = true;
 
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
@@ -63,7 +62,6 @@ public class ViewPostFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-
     }
 
     @Override
@@ -130,6 +128,11 @@ public class ViewPostFragment extends Fragment {
         mLayoutCommentBox = (ViewGroup) v.findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mLayoutCommentBox.findViewById(R.id.edit_comment);
         mEditComment.setHint(R.string.reader_hint_comment_on_post);
+        if (WordPress.currentPost != null && WordPress.getCurrentRemoteBlogId() != -1) {
+            mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%s",
+                    WordPress.getLoggedInUsername(getActivity(), WordPress.getCurrentBlog()),
+                    WordPress.getCurrentRemoteBlogId(), WordPress.currentPost.getRemotePostId()));
+        }
 
         // button listeners here
         ImageButton editPostButton = (ImageButton) v.findViewById(R.id.editPost);
@@ -184,7 +187,6 @@ public class ViewPostFragment extends Fragment {
         setupSuggestionServiceAndAdapter();
 
         return v;
-
     }
 
     private void setupSuggestionServiceAndAdapter() {

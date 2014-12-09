@@ -80,7 +80,8 @@
                     android:layout_height="wrap_content"
                     style="@style/WordPress.NUXEditText"
                     android:hint="@string/username_email"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    app:persistenceEnabled="true"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -150,7 +151,8 @@
                     android:layout_height="wrap_content"
                     style="@style/WordPress.NUXEditText"
                     android:inputType="textUri"
-                    android:hint="@string/site_address"/>
+                    android:hint="@string/site_address"
+                    app:persistenceEnabled="true"/>
 
                 <ImageView
                     android:layout_width="wrap_content"

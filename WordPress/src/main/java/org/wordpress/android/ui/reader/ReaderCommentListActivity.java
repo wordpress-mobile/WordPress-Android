@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -101,6 +102,8 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         mListView = (ListView) findViewById(android.R.id.list);
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
+        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%r%d%d", WordPress.getLoggedInUsername(this,
+                null), mPostId, mBlogId));
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
 
         if (!loadPost()) {
@@ -121,8 +124,9 @@ public class ReaderCommentListActivity extends ActionBarActivity {
 
         refreshComments();
 
-        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, (int)mBlogId);
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions((int)mBlogId, this, mSuggestionServiceConnectionManager, mPost.isWP());
+        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, (int) mBlogId);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions((int) mBlogId, this, mSuggestionServiceConnectionManager,
+                mPost.isWP());
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
         }
@@ -417,6 +421,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                     getCommentAdapter().replaceComment(fakeCommentId, newComment);
                     mListView.invalidateViews();
                     setReplyToCommentId(0);
+                    mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
                 } else {
                     mEditComment.setText(commentText);
                     getCommentAdapter().removeComment(fakeCommentId);
