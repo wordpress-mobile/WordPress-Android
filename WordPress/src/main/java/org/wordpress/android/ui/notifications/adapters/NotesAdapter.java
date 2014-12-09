@@ -98,22 +98,22 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
 
     public void addHiddenNoteId(String noteId) {
         mHiddenNoteIds.add(noteId);
-        notifyItemRemoved(getPositionForNote(noteId));
+        notifyDataSetChanged();
     }
 
     public void removeHiddenNoteId(String noteId) {
         mHiddenNoteIds.remove(noteId);
-        notifyItemInserted(getPositionForNote(noteId));
+        notifyDataSetChanged();
     }
 
     public void addModeratingNoteId(String noteId) {
         mModeratingNoteIds.add(noteId);
-        notifyItemChanged(getPositionForNote(noteId));
+        notifyDataSetChanged();
     }
 
     public void removeModeratingNoteId(String noteId) {
         mModeratingNoteIds.remove(noteId);
-        notifyItemChanged(getPositionForNote(noteId));
+        notifyDataSetChanged();
     }
 
     private String getStringForColumnName(Cursor cursor, String columnName) {
