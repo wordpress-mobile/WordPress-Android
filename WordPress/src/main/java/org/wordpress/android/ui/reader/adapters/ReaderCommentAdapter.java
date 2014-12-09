@@ -129,6 +129,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
         mLikedByYou = context.getString(R.string.reader_label_liked_by_you);
         mLikesSingle = context.getString(R.string.reader_likes_one_short);
         mLikesMulti = context.getString(R.string.reader_likes_multi_short);
+
+        setHasStableIds(true);
     }
 
     public void setReplyListener(RequestReplyListener replyListener) {
