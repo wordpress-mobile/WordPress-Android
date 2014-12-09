@@ -94,8 +94,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class EditPostContentFragment extends Fragment implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
@@ -216,30 +214,22 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
         // Check for Android share action
         String action = mActivity.getIntent().getAction();
-        if (mActivity.getIntent().getExtras() != null)
-            mQuickMediaType = mActivity.getIntent().getExtras().getInt("quick-media", -1);
-        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))
+        mQuickMediaType = mActivity.getIntent().getIntExtra("quick-media", -1);
+        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             setPostContentFromShareAction();
-        else if (NEW_MEDIA_GALLERY.equals(action))
+        } else if (NEW_MEDIA_GALLERY.equals(action)) {
             prepareMediaGallery();
-        else if (NEW_MEDIA_POST.equals(action))
+        } else if (NEW_MEDIA_POST.equals(action)) {
             prepareMediaPost();
-        else if (mQuickMediaType >= 0) {
-            // User selected a 'Quick (media type)' option in the menu drawer
-            if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA)
+        } else if (mQuickMediaType >= 0) {
+            // User selected 'Quick Photo' in the menu drawer
+            if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA) {
                 launchCamera();
-            else if (mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
+            } else if (mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY) {
                 launchPictureLibrary();
-            else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA)
-                launchVideoCamera();
-            else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
-                launchVideoLibrary();
-
+            }
             if (post != null) {
-                if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
-                    post.setQuickPostType(Post.QUICK_MEDIA_TYPE_PHOTO);
-                else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
-                    post.setQuickPostType(Post.QUICK_MEDIA_TYPE_VIDEO);
+                post.setQuickPostType(Post.QUICK_MEDIA_TYPE_PHOTO);
             }
         }
 

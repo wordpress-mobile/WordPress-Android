@@ -102,9 +102,10 @@ public class ViewPostFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        if (mSuggestionServiceConnectionManager != null) {
+            mSuggestionServiceConnectionManager.unbindFromService();
+        }
         super.onDestroy();
-
-        mSuggestionServiceConnectionManager.unbindFromService();
     }
 
     @Override
