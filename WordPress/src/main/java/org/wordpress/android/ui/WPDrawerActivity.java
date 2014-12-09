@@ -368,6 +368,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 break;
             case VIEW_SITE:
                 mShouldFinish = true;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
                 intent = WPActivityUtils.getIntentForActivityId(this, activityId);
                 break;
             case QUICK_PHOTO:
