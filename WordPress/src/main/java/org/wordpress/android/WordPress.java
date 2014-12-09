@@ -490,6 +490,16 @@ public class WordPress extends Application {
         return WordPress.wpDB.getNumVisibleAccounts() != 0;
     }
 
+    public static String getLoggedInUserId(Context context, Blog blog) {
+        if (hasValidWPComCredentials(context)) {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+            return settings.getString(WPCOM_USERNAME_PREFERENCE, null);
+        } else if (blog != null) {
+            return blog.getUsername();
+        }
+        return "";
+    }
+
     /**
      * Returns WordPress.com Auth Token
      *

@@ -129,8 +129,9 @@ public class ViewPostFragment extends Fragment {
         mEditComment = (SuggestionAutoCompleteText) mLayoutCommentBox.findViewById(R.id.edit_comment);
         mEditComment.setHint(R.string.reader_hint_comment_on_post);
         if (WordPress.currentPost != null && WordPress.getCurrentRemoteBlogId() != -1) {
-            mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%d%s", WordPress.getCurrentRemoteBlogId(),
-                    WordPress.currentPost.getRemotePostId()));
+            mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%s",
+                    WordPress.getLoggedInUserId(getActivity(), WordPress.getCurrentBlog()),
+                    WordPress.getCurrentRemoteBlogId(), WordPress.currentPost.getRemotePostId()));
         }
 
         // button listeners here

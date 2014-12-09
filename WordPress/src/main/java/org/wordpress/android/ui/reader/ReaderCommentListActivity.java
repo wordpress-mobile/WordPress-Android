@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -101,7 +102,8 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         mListView = (ListView) findViewById(android.R.id.list);
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
-        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%d%d", mPostId, mBlogId));
+        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%r%d%d", WordPress.getLoggedInUserId(this,
+                null), mPostId, mBlogId));
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
 
         if (!loadPost()) {
