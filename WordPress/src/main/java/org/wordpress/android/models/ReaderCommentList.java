@@ -31,8 +31,8 @@ public class ReaderCommentList extends ArrayList<ReaderComment> {
         return true;
     }
 
-    public int replaceComment(long commentId, ReaderComment comment) {
-        if (comment == null) {
+    public int replaceComment(long commentId, ReaderComment newComment) {
+        if (newComment == null) {
             return -1;
         }
 
@@ -41,7 +41,10 @@ public class ReaderCommentList extends ArrayList<ReaderComment> {
             return -1;
         }
 
-        this.set(index, comment);
+        // make sure the new comment has the same level as the old one
+        newComment.level = this.get(index).level;
+
+        this.set(index, newComment);
         return index;
     }
 
