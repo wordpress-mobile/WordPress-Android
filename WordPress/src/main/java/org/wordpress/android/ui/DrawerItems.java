@@ -52,7 +52,6 @@ public class DrawerItems {
         addIfVisible(DrawerItemId.THEMES);
         addIfVisible(DrawerItemId.STATS);
         addIfVisible(DrawerItemId.QUICK_PHOTO);
-        addIfVisible(DrawerItemId.QUICK_VIDEO);
         addIfVisible(DrawerItemId.VIEW_SITE);
     }
 
@@ -89,8 +88,7 @@ public class DrawerItems {
         THEMES,
         STATS,
         VIEW_SITE,
-        QUICK_PHOTO,
-        QUICK_VIDEO;
+        QUICK_PHOTO;
 
         ActivityId toActivityId() {
             switch (this) {
@@ -113,8 +111,6 @@ public class DrawerItems {
                 case VIEW_SITE:
                     return ActivityId.VIEW_SITE;
                 case QUICK_PHOTO:
-                    return ActivityId.UNKNOWN;
-                case QUICK_VIDEO:
                     return ActivityId.UNKNOWN;
                 default :
                     return ActivityId.UNKNOWN;
@@ -158,8 +154,6 @@ public class DrawerItems {
                     return R.string.view_site;
                 case QUICK_PHOTO:
                     return R.string.quick_photo;
-                case QUICK_VIDEO:
-                    return R.string.quick_video;
                 default :
                     return 0;
             }
@@ -187,8 +181,6 @@ public class DrawerItems {
                     return R.drawable.noticon_show_black;
                 case QUICK_PHOTO:
                     return R.drawable.dashicon_camera_black;
-                case QUICK_VIDEO:
-                    return R.drawable.dashicon_video_alt2_black;
                 default :
                     return 0;
             }
@@ -224,8 +216,6 @@ public class DrawerItems {
                     return context instanceof ViewSiteActivity;
                 case QUICK_PHOTO:
                     return false;
-                case QUICK_VIDEO:
-                    return false;
                 default :
                     return false;
             }
@@ -253,8 +243,6 @@ public class DrawerItems {
                 case VIEW_SITE:
                     return WordPress.wpDB.getNumVisibleAccounts() != 0;
                 case QUICK_PHOTO:
-                    return WordPress.wpDB.getNumVisibleAccounts() != 0;
-                case QUICK_VIDEO:
                     return WordPress.wpDB.getNumVisibleAccounts() != 0;
                 default :
                     return false;
