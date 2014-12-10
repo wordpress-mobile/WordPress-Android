@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <ListView
-        android:id="@id/android:list"
+    <org.wordpress.android.ui.reader.views.ReaderRecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/reader_listitem_user" />
+        android:scrollbars="vertical"
+        tools:listitem="@layout/reader_cardview_user" />
 
 </LinearLayout>

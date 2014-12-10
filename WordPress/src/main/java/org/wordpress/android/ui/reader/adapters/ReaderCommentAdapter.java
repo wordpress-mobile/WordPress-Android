@@ -2,10 +2,10 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -32,8 +32,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-public class ReaderCommentAdapter extends BaseAdapter {
-    private final LayoutInflater mInflater;
+public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdapter.CommentHolder> {
     private final ReaderPost mPost;
     private boolean mMoreCommentsExist;
 
@@ -43,6 +42,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
     private long mHighlightCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
+    private final boolean mIsPrivatePost;
 
     private final int mBgColorNormal;
     private final int mBgColorHighlight;
@@ -60,21 +60,61 @@ public class ReaderCommentAdapter extends BaseAdapter {
     }
 
     private ReaderCommentList mComments = new ReaderCommentList();
-    private final RequestReplyListener mReplyListener;
-    private final ReaderInterfaces.DataLoadedListener mDataLoadedListener;
-    private final ReaderActions.DataRequestedListener mDataRequestedListener;
+    private RequestReplyListener mReplyListener;
+    private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
+    private ReaderActions.DataRequestedListener mDataRequestedListener;
 
-    public ReaderCommentAdapter(Context context,
-                                ReaderPost post,
-                                RequestReplyListener replyListener,
-                                ReaderInterfaces.DataLoadedListener dataLoadedListener,
-                                ReaderActions.DataRequestedListener dataRequestedListener) {
+    class CommentHolder extends RecyclerView.ViewHolder {
+        private final ViewGroup container;
+        private final TextView txtAuthor;
+        private final TextView txtText;
+        private final TextView txtDate;
+
+        private final WPNetworkImageView imgAvatar;
+        private final View spacerIndent;
+        private final ProgressBar progress;
+
+        private final TextView txtReply;
+        private final ImageView imgReply;
+
+        private final ViewGroup layoutLikes;
+        private final ImageView imgLike;
+        private final TextView txtLike;
+        private final TextView txtLikeCount;
+
+        public CommentHolder(View view) {
+            super(view);
+
+            container = (ViewGroup) view.findViewById(R.id.layout_container);
+
+            txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
+            txtText = (TextView) view.findViewById(R.id.text_comment_text);
+            txtDate = (TextView) view.findViewById(R.id.text_comment_date);
+
+            txtReply = (TextView) view.findViewById(R.id.text_comment_reply);
+            imgReply = (ImageView) view.findViewById(R.id.image_comment_reply);
+
+            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_comment_avatar);
+            spacerIndent = view.findViewById(R.id.spacer_comment_indent);
+            progress = (ProgressBar) view.findViewById(R.id.progress_comment);
+
+            layoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
+            imgLike = (ImageView) layoutLikes.findViewById(R.id.image_comment_like);
+            txtLike = (TextView) layoutLikes.findViewById(R.id.text_comment_like);
+            txtLikeCount = (TextView) view.findViewById(R.id.text_comment_like_count);
+
+            txtText.setLinksClickable(true);
+            txtText.setMovementMethod(ReaderLinkMovementMethod.getInstance(mIsPrivatePost));
+        }
+    }
+
+    /**
+     *
+     */
+    public ReaderCommentAdapter(Context context, ReaderPost post) {
         mPost = post;
-        mReplyListener = replyListener;
-        mDataLoadedListener = dataLoadedListener;
-        mDataRequestedListener = dataRequestedListener;
+        mIsPrivatePost = (post != null && post.isPrivate);
 
-        mInflater = LayoutInflater.from(context);
         mIndentPerLevel = (context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level) / 2);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
 
@@ -89,6 +129,20 @@ public class ReaderCommentAdapter extends BaseAdapter {
         mLikedByYou = context.getString(R.string.reader_label_liked_by_you);
         mLikesSingle = context.getString(R.string.reader_likes_one_short);
         mLikesMulti = context.getString(R.string.reader_likes_multi_short);
+
+        setHasStableIds(true);
+    }
+
+    public void setReplyListener(RequestReplyListener replyListener) {
+        mReplyListener = replyListener;
+    }
+
+    public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener dataLoadedListener) {
+        mDataLoadedListener = dataLoadedListener;
+    }
+
+    public void setDataRequestedListener(ReaderActions.DataRequestedListener dataRequestedListener) {
+        mDataRequestedListener = dataRequestedListener;
     }
 
     public void refreshComments() {
@@ -99,56 +153,27 @@ public class ReaderCommentAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return mComments.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return mComments.get(position);
+    public boolean isEmpty() {
+        return (getItemCount() == 0);
     }
 
     @Override
-    public long getItemId(int position) {
-        // this MUST return the comment id in order for comment list activity to enable replying
-        // to an individual comment when clicked - note that while the commentId isn't unique in our
-        // database, it will be unique here since we're only showing comments on a specific post
-        if (isValidPosition(position)) {
-            return mComments.get(position).commentId;
-        } else {
-            return 0;
-        }
-    }
-
-    private boolean isValidPosition(int position) {
-        return (position > 0 && position < mComments.size());
+    public CommentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_comment, parent, false);
+        return new CommentHolder(view);
     }
 
     @Override
-    public boolean hasStableIds() {
-        return true;
-    }
-
-    private boolean isPrivatePost() {
-        return (mPost != null && mPost.isPrivate);
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public void onBindViewHolder(CommentHolder holder, int position) {
         final ReaderComment comment = mComments.get(position);
-        final CommentHolder holder;
-
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.reader_listitem_comment, parent, false);
-            holder = new CommentHolder(convertView, isPrivatePost());
-            convertView.setTag(holder);
-        } else {
-            holder = (CommentHolder) convertView.getTag();
-        }
 
         holder.txtAuthor.setText(comment.getAuthorName());
         holder.imgAvatar.setImageUrl(PhotonUtils.fixAvatar(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-        CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), parent.getWidth());
+        CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), holder.itemView.getWidth());
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
@@ -180,14 +205,14 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         if (mHighlightCommentId == comment.commentId) {
             // different background for highlighted comment, with optional progress bar
-            convertView.setBackgroundColor(mBgColorHighlight);
+            holder.container.setBackgroundColor(mBgColorHighlight);
             holder.progress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
         } else if (comment.authorId == mPost.authorId) {
             // different background color for comments from the post's author
-            convertView.setBackgroundColor(mBgColorHighlight);
+            holder.container.setBackgroundColor(mBgColorHighlight);
             holder.progress.setVisibility(View.GONE);
         } else {
-            convertView.setBackgroundColor(mBgColorNormal);
+            holder.container.setBackgroundColor(mBgColorNormal);
             holder.progress.setVisibility(View.GONE);
         }
 
@@ -207,51 +232,24 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         // if we're nearing the end of the comments and we know more exist on the server,
         // fire request to load more
-        if (mMoreCommentsExist && mDataRequestedListener != null && (position >= getCount()-1)) {
+        if (mMoreCommentsExist && mDataRequestedListener != null && (position >= getItemCount()-1)) {
             mDataRequestedListener.onRequestData();
         }
-
-        return convertView;
     }
 
-    private static class CommentHolder {
-        private final TextView txtAuthor;
-        private final TextView txtText;
-        private final TextView txtDate;
-
-        private final WPNetworkImageView imgAvatar;
-        private final View spacerIndent;
-        private final ProgressBar progress;
-
-        private final TextView txtReply;
-        private final ImageView imgReply;
-
-        private final ViewGroup layoutLikes;
-        private final ImageView imgLike;
-        private final TextView txtLike;
-        private final TextView txtLikeCount;
-
-        CommentHolder(View view, boolean isPrivatePost) {
-            txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
-            txtText = (TextView) view.findViewById(R.id.text_comment_text);
-            txtDate = (TextView) view.findViewById(R.id.text_comment_date);
-
-            txtReply = (TextView) view.findViewById(R.id.text_comment_reply);
-            imgReply = (ImageView) view.findViewById(R.id.image_comment_reply);
-
-            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_comment_avatar);
-            spacerIndent = view.findViewById(R.id.spacer_comment_indent);
-            progress = (ProgressBar) view.findViewById(R.id.progress_comment);
-
-            layoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
-            imgLike = (ImageView) layoutLikes.findViewById(R.id.image_comment_like);
-            txtLike = (TextView) layoutLikes.findViewById(R.id.text_comment_like);
-            txtLikeCount = (TextView) view.findViewById(R.id.text_comment_like_count);
-
-            txtText.setLinksClickable(true);
-            txtText.setMovementMethod(ReaderLinkMovementMethod.getInstance(isPrivatePost));
+    @Override
+    public long getItemId(int position) {
+        if (isValidPosition(position)) {
+            return mComments.get(position).commentId;
+        } else {
+            return 0;
         }
     }
+
+    private boolean isValidPosition(int position) {
+        return (position > 0 && position < mComments.size());
+    }
+
 
     private void showLikeStatus(final CommentHolder holder,
                                 final ReaderComment comment,
@@ -363,7 +361,10 @@ public class ReaderCommentAdapter extends BaseAdapter {
      * after a comment is submitted to replace the "fake" comment with the real one
      */
     public void replaceComment(long commentId, ReaderComment comment) {
-        mComments.replaceComment(commentId, comment);
+        int position = mComments.replaceComment(commentId, comment);
+        if (position > -1) {
+            notifyItemChanged(position);
+        }
     }
 
     /*

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -15,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -31,13 +31,14 @@ import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionService;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -52,7 +53,6 @@ import javax.annotation.Nonnull;
 public class ReaderCommentListActivity extends ActionBarActivity {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
-    private static final String KEY_TOPMOST_COMMENT_ID = "topmost_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
 
     private long mPostId;
@@ -62,7 +62,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
-    private ListView mListView;
+    private ReaderRecyclerView mRecyclerView;
     private SuggestionAutoCompleteText mEditComment;
     private ImageView mImgSubmitComment;
     private ViewGroup mCommentBox;
@@ -70,9 +70,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     private boolean mIsUpdatingComments;
     private boolean mHasUpdatedComments;
     private long mReplyToCommentId;
-
-    private long mTopMostCommentId;
-    private int mTopMostCommentTop;
+    private int mRestorePosition;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +85,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            mTopMostCommentId = savedInstanceState.getLong(KEY_TOPMOST_COMMENT_ID);
+            mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS);
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
@@ -99,10 +97,14 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             }
         }
 
-        mListView = (ListView) findViewById(android.R.id.list);
+        mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
+        int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
+        int spacingVertical = DisplayUtils.dpToPx(this, 1);
+        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(spacingHorizontal, spacingVertical));
+
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
-        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%r%d%d", WordPress.getLoggedInUsername(this,
+        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d", WordPress.getLoggedInUsername(this,
                 null), mPostId, mBlogId));
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
 
@@ -112,11 +114,8 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             return;
         }
 
-        // add listView header to provide initial space between the post header and list content
-        int height = getResources().getDimensionPixelSize(R.dimen.margin_medium);
-        ReaderUtils.addListViewHeader(mListView, height);
-
-        mListView.setAdapter(getCommentAdapter());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(getCommentAdapter());
 
         if (savedInstanceState != null) {
             setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID));
@@ -170,7 +169,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             mEditComment.requestFocus();
             EditTextUtils.showSoftInput(mEditComment);
             getCommentAdapter().setHighlightCommentId(mReplyToCommentId, false);
-            mListView.postDelayed(new Runnable() {
+            mRecyclerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     scrollToCommentId(mReplyToCommentId);
@@ -183,7 +182,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     public void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
-        outState.putLong(KEY_TOPMOST_COMMENT_ID, getTopMostCommentId());
+        outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
         outState.putBoolean(KEY_HAS_UPDATED_COMMENTS, mHasUpdatedComments);
 
@@ -265,31 +264,35 @@ public class ReaderCommentListActivity extends ActionBarActivity {
 
     private ReaderCommentAdapter getCommentAdapter() {
         if (mCommentAdapter == null) {
-            ReaderInterfaces.DataLoadedListener dataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    if (!isFinishing()) {
-                        if (isEmpty || !mHasUpdatedComments) {
-                            // request the first page of comments
-                            updateComments(isEmpty, false);
-                        } else if (mTopMostCommentId != 0) {
-                            restoreTopmostComment();
-                        }
-                    }
-                }
-            };
+            mCommentAdapter = new ReaderCommentAdapter(WPActivityUtils.getThemedContext(this), getPost());
 
             // adapter calls this when user taps reply icon
-            ReaderCommentAdapter.RequestReplyListener replyListener = new ReaderCommentAdapter.RequestReplyListener() {
+            mCommentAdapter.setReplyListener(new ReaderCommentAdapter.RequestReplyListener() {
                 @Override
                 public void onRequestReply(long commentId) {
                     setReplyToCommentId(commentId);
                 }
-            };
+            });
+
+            // adapter calls this when data has been loaded & displayed
+            mCommentAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
+                @Override
+                public void onDataLoaded(boolean isEmpty) {
+                    if (!isFinishing()) {
+                        if (isEmpty || !mHasUpdatedComments) {
+                            updateComments(isEmpty, false);
+                        } else if (mRestorePosition > 0) {
+                            mRecyclerView.scrollToPosition(mRestorePosition);
+                        }
+                        mRestorePosition = 0;
+                        checkEmptyView();
+                    }
+                }
+            });
 
             // adapter uses this to request more comments from server when it reaches the end and
             // detects that more comments exist on the server than are stored locally
-            ReaderActions.DataRequestedListener dataRequestedListener = new ReaderActions.DataRequestedListener() {
+            mCommentAdapter.setDataRequestedListener(new ReaderActions.DataRequestedListener() {
                 @Override
                 public void onRequestData() {
                     if (!mIsUpdatingComments) {
@@ -297,9 +300,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                         updateComments(true, true);
                     }
                 }
-            };
-            Context context = WPActivityUtils.getThemedContext(this);
-            mCommentAdapter = new ReaderCommentAdapter(context, getPost(), replyListener, dataLoadedListener, dataRequestedListener);
+            });
         }
         return mCommentAdapter;
     }
@@ -333,7 +334,6 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         }
 
         mIsUpdatingComments = true;
-        mHasUpdatedComments = true;
 
         int pageNumber;
         if (requestNextPage) {
@@ -351,19 +351,34 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 mIsUpdatingComments = false;
+                mHasUpdatedComments = true;
                 if (!isFinishing()) {
                     hideProgress();
                     if (result.isNewOrChanged()) {
-                        retainTopmostComment();
+                        mRestorePosition = getCurrentPosition();
                         refreshComments();
                     } else {
-                        mListView.setEmptyView(findViewById(R.id.text_empty));
+                        checkEmptyView();
                     }
                 }
             }
         };
         AppLog.d(T.READER, "reader comments > updateComments, page " + pageNumber);
         ReaderCommentActions.updateCommentsForPost(getPost(), pageNumber, resultListener);
+    }
+
+    private void checkEmptyView() {
+        TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
+        boolean isEmpty = hasCommentAdapter() && getCommentAdapter().isEmpty();
+        if (isEmpty && !NetworkUtils.isNetworkAvailable(this)) {
+            txtEmpty.setText(R.string.no_network_message);
+            txtEmpty.setVisibility(View.VISIBLE);
+        } else if (isEmpty && mHasUpdatedComments) {
+            txtEmpty.setText(R.string.reader_empty_comments);
+            txtEmpty.setVisibility(View.VISIBLE);
+        } else {
+            txtEmpty.setVisibility(View.GONE);
+        }
     }
 
 
@@ -381,7 +396,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     private void scrollToCommentId(long commentId) {
         int position = getCommentAdapter().indexOfCommentId(commentId);
         if (position > -1) {
-            mListView.setSelectionFromTop(position + mListView.getHeaderViewsCount(), 0);
+            mRecyclerView.scrollToPosition(position);
         }
     }
 
@@ -419,7 +434,6 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                     // stop highlighting the fake comment and replace it with the real one
                     getCommentAdapter().setHighlightCommentId(0, false);
                     getCommentAdapter().replaceComment(fakeCommentId, newComment);
-                    mListView.invalidateViews();
                     setReplyToCommentId(0);
                     mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
                 } else {
@@ -449,37 +463,9 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         }
     }
 
-    /*
-     * called before new comments are shown so the current topmost comment is remembered
-     */
-    private void retainTopmostComment() {
-        mTopMostCommentId = getTopMostCommentId();
-        View view = mListView.getChildAt(0);
-        mTopMostCommentTop = (view != null ? view.getTop() : 0);
-    }
-
-    /*
-     * called after new comments are shown so the previous topmost comment is scrolled to
-     */
-    private void restoreTopmostComment() {
-        if (mTopMostCommentId != 0) {
-            int position = getCommentAdapter().indexOfCommentId(mTopMostCommentId);
-            if (position > -1) {
-                mListView.setSelectionFromTop(position + mListView.getHeaderViewsCount(), mTopMostCommentTop);
-            }
-            mTopMostCommentId = 0;
-            mTopMostCommentTop = 0;
-        }
-    }
-
-    /*
-     * returns the id of the first visible comment
-     */
-    private long getTopMostCommentId() {
-        int position = mListView.getFirstVisiblePosition();
-        int numHeaders = mListView.getHeaderViewsCount();
-        if (position > numHeaders && hasCommentAdapter()) {
-            return getCommentAdapter().getItemId(position - numHeaders);
+    private int getCurrentPosition() {
+        if (mRecyclerView != null && hasCommentAdapter()) {
+            return ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         } else {
             return 0;
         }

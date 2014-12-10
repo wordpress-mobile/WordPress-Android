@@ -16,6 +16,14 @@ public class ReaderUserList extends ArrayList<ReaderUser> {
         return ids;
     }
 
+    public int indexOfUserId(long userId) {
+        for (int i = 0; i < this.size(); i++) {
+            if (userId == this.get(i).userId) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     /*
      * passed json is response from getting likes for a post
