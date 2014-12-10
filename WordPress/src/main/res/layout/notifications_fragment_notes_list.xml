@@ -10,16 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@id/android:list"
-            style="@style/WordPress.BorderedBackground"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_notes"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollbars="vertical" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@id/android:empty"
+        android:id="@+id/empty_view"
         style="@style/WordPress.EmptyList.Title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,7 +27,7 @@
         android:layout_marginLeft="@dimen/empty_list_title_side_margin"
         android:layout_marginRight="@dimen/empty_list_title_side_margin"
         android:gravity="center"
-        android:text="@string/empty_list_default"
+        android:text="@string/notifications_empty_list"
         android:visibility="gone"
         tools:visibility="visible" />
 </RelativeLayout>

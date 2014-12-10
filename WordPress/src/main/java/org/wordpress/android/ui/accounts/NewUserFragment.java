@@ -27,6 +27,7 @@ import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.UserEmail;
+import org.wordpress.persistentedittext.PersistentEditTextHelper;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 
@@ -43,7 +44,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     private RelativeLayout mProgressBarSignIn;
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
-    private boolean mAutoCompleteUrl = true;
+    private boolean mAutoCompleteUrl;
 
     public NewUserFragment() {
         mEmailChecker = new EmailChecker();
@@ -181,6 +182,10 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             intent.putExtra("username", username);
             activity.setResult(NewAccountActivity.RESULT_OK, intent);
             activity.finish();
+            PersistentEditTextHelper persistentEditTextHelper = new PersistentEditTextHelper(getActivity());
+            persistentEditTextHelper.clearSavedText(mEmailTextField, null);
+            persistentEditTextHelper.clearSavedText(mUsernameTextField, null);
+            persistentEditTextHelper.clearSavedText(mSiteUrlTextField, null);
         }
     }
 
@@ -355,6 +360,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mSiteUrlTextField.addTextChangedListener(this);
         mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);
         mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
+
         mUsernameTextField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -371,6 +377,15 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+        mUsernameTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    mAutoCompleteUrl = EditTextUtils.getText(mUsernameTextField)
+                            .equals(EditTextUtils.getText(mSiteUrlTextField))
+                            || EditTextUtils.isEmpty(mSiteUrlTextField);
+                }
             }
         });
 

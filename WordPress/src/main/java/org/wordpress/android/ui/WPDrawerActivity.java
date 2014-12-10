@@ -1,6 +1,7 @@
 
 package org.wordpress.android.ui;
 
+import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
@@ -39,7 +41,6 @@ import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -88,7 +89,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
 
-    private static final String OPENED_FROM_DRAWER = "opened_from_drawer";
     private static final int OPENED_FROM_DRAWER_DELAY = 250;
 
     @Override
@@ -102,54 +102,26 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         setSupportActionBar(getToolbar());
-
-        // if this activity was opened from the drawer (ie: via startDrawerIntent() from another
-        // drawer activity), hide the activity view then fade it in after a short delay
-        if (getIntent() != null && getIntent().getBooleanExtra(OPENED_FROM_DRAWER, false)) {
-            hideActivityView(false);
-            getIntent().putExtra(OPENED_FROM_DRAWER, false);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!isFinishing()) {
-                        showActivityView(true);
-                    }
-                }
-            }, OPENED_FROM_DRAWER_DELAY);
-        }
     }
 
-    private View getActivityView() {
+    /*
+     * fade out the view containing the current drawer activity
+     */
+    private void hideActivityView() {
         // activity_container is the parent view which contains the toolbar (first child) and
         // the activity itself (second child)
         ViewGroup container = (ViewGroup) findViewById(R.id.activity_container);
         if (container == null || container.getChildCount() < 2) {
-            return null;
+            return;
         }
-        return container.getChildAt(1);
-    }
-
-    private void hideActivityView(boolean animate) {
-        View activityView = getActivityView();
+        final View activityView = container.getChildAt(1);
         if (activityView == null || activityView.getVisibility() != View.VISIBLE) {
             return;
         }
-        if (animate) {
-            ReaderAnim.fadeOut(activityView, ReaderAnim.Duration.SHORT);
-        } else {
-            activityView.setVisibility(View.GONE);
-        }
-    }
-    private void showActivityView(boolean animate) {
-        View activityView = getActivityView();
-        if (activityView == null || activityView.getVisibility() == View.VISIBLE) {
-            return;
-        }
-        if (animate) {
-            ReaderAnim.fadeIn(activityView, ReaderAnim.Duration.SHORT);
-        } else {
-            activityView.setVisibility(View.VISIBLE);
-        }
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(activityView, View.ALPHA, 1.0f, 0.0f);
+        fadeOut.setDuration(OPENED_FROM_DRAWER_DELAY);
+        fadeOut.setInterpolator(new AccelerateInterpolator());
+        fadeOut.start();
     }
 
     @Override
@@ -396,6 +368,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 break;
             case VIEW_SITE:
                 mShouldFinish = true;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
                 intent = WPActivityUtils.getIntentForActivityId(this, activityId);
                 break;
             case QUICK_PHOTO:
@@ -430,15 +403,12 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
             // close the drawer and fade out the activity container so current activity appears to be going away
             closeDrawer();
-            hideActivityView(true);
+            hideActivityView();
 
             // start the new activity after a brief delay to give drawer time to close
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    intent.putExtra(OPENED_FROM_DRAWER, true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    intent.putExtra(OPENED_FROM_DRAWER, true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(intent);
                 }
