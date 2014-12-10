@@ -58,10 +58,9 @@ public class PostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        AppLog.w(AppLog.T.STATS, currentRowData.getItemID() + "");
                         Intent statsPostViewIntent = new Intent(context, StatsSinglePostDetailsActivity.class);
                         statsPostViewIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
-                        statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_ID, currentRowData.getItemID());
+                        statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_OBJECT, currentRowData);
                         context.startActivity(statsPostViewIntent);
                     }
                 });

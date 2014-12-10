@@ -25,9 +25,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
+import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -47,7 +47,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class StatsSinglePostDetailsActivity extends ActionBarActivity
         implements StatsBarGraph.OnGestureListener{
-    public static final String ARG_REMOTE_POST_ID = "ARG_REMOTE_POST_ID";
+    public static final String ARG_REMOTE_POST_OBJECT = "ARG_REMOTE_POST_OBJECT";
     public static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
 
@@ -61,13 +61,13 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     private StatsBarGraph mGraphView;
     private GraphViewSeries mCurrentSeriesOnScreen;
     private TextView mWholeResponse;
-    private TextView mStatsDateTextView;
-    private TextView mStatsViewsCountTextView;
+    private TextView mStatsViewsLabel;
+    private TextView mStatsViewsTotals;
     private LinearLayout mMonthsAndYearsList;
     private LinearLayout mAveragesList;
 
     private int mLocalBlogID = -1;
-    private String mRemotePostID = null; // This is a string since postID could be very looong.
+    private SingleItemModel mRemotePostItem; // The original item returned from TopPostsAndPages endpoint
     private PostViewsModel mRestResponseParsed;
     private int mSelectedBarGraphIndex = -1;
 
@@ -75,14 +75,12 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.stats_activity_details);
+        setContentView(R.layout.stats_activity_single_post_details);
 
         if (savedInstanceState == null) {
             // AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
             // TODO: add analytics here
         }
-
-       // mAltRowColor = getResources().getColor(R.color.stats_alt_row);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -105,39 +103,33 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
         mGraphContainer = (LinearLayout) findViewById(R.id.stats_bar_chart_fragment_container);
         mWholeResponse = (TextView) findViewById(R.id.stats_all_response);
-        mStatsDateTextView = (TextView) findViewById(R.id.stats_summary_date);
-        mStatsViewsCountTextView = (TextView) findViewById(R.id.stats_visitors_and_views_best_ever_views_count);
+        mStatsViewsLabel = (TextView) findViewById(R.id.stats_views_label);
+        mStatsViewsTotals = (TextView) findViewById(R.id.stats_views_totals);
         mMonthsAndYearsList = (LinearLayout) findViewById(R.id.stats_months_years_list_linearlayout);
         mAveragesList = (LinearLayout) findViewById(R.id.stats_averages_list_linearlayout);
 
-        setTitle(getString(R.string.stats));
-
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
-            mRemotePostID = savedInstanceState.getString(ARG_REMOTE_POST_ID, null);
+            mRemotePostItem = (SingleItemModel) savedInstanceState.getSerializable(ARG_REMOTE_POST_OBJECT);
             mRestResponseParsed = (PostViewsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mLocalBlogID = extras.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
-            mRemotePostID = extras.getString(ARG_REMOTE_POST_ID, null);
+            mRemotePostItem = (SingleItemModel) extras.getSerializable(ARG_REMOTE_POST_OBJECT);
             mRestResponseParsed = (PostViewsModel) extras.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = extras.getInt(ARG_SELECTED_GRAPH_BAR, -1);
         }
 
-        if (mRestResponseParsed == null) {
-            setupEmptyUI(true);
-            refreshStats();
-        } else {
-            updateUI();
-        }
+        String prefix = getString(R.string.stats_for);
+        setTitle(String.format(prefix, mRemotePostItem.getTitle()));
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphIndex);
-        outState.putString(ARG_REMOTE_POST_ID, mRemotePostID);
+        outState.putSerializable(ARG_REMOTE_POST_OBJECT, mRemotePostItem);
         outState.putSerializable(ARG_REST_RESPONSE, mRestResponseParsed);
         super.onSaveInstanceState(outState);
     }
@@ -146,6 +138,17 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     protected void onResume() {
         super.onResume();
         mIsInFront = true;
+        if (mRestResponseParsed == null) {
+            setupEmptyUI(true);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshStats();
+                }
+            }, 75L);
+        } else {
+            updateUI();
+        }
     }
 
     @Override
@@ -166,32 +169,29 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     }
 
     private void refreshStats() {
+        final String remotePostID = mRemotePostItem.getItemID();
         if (mIsUpdatingStats) {
             AppLog.w(AppLog.T.STATS, "stats details are already updating for the following postID "
-                    + mRemotePostID + ", refresh cancelled.");
+                    + mRemotePostItem.getItemID() + ", refresh cancelled.");
             return;
         }
 
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-
-        if (mRemotePostID == null || currentBlog == null || !NetworkUtils.isNetworkAvailable(this)) {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            int errorMessageId = (mRemotePostID == null || currentBlog == null) ? R.string.error_refresh_stats
-                    : R.string.connection_error;
-            ToastUtils.showToast(this, this.getString(errorMessageId), ToastUtils.Duration.LONG);
+            ToastUtils.showToast(this, this.getString(R.string.connection_error), ToastUtils.Duration.LONG);
             return;
         }
 
         final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
-        final String blogId = StatsUtils.getBlogId(mLocalBlogID);
+        final String blogId = mRemotePostItem.getBlogID();
 
         // View and visitor counts for a site
         final String singlePostRestPath = String.format(
-                "/sites/%s/stats/post/%s", blogId, mRemotePostID);
+                "/sites/%s/stats/post/%s", blogId, remotePostID);
 
         AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + singlePostRestPath);
 
-        RestBatchCallListener vListener = new RestBatchCallListener(this, blogId, mRemotePostID);
+        RestBatchCallListener vListener = new RestBatchCallListener(this, blogId, remotePostID);
         restClientUtils.get(singlePostRestPath, vListener, vListener);
 
         mIsUpdatingStats = true;
@@ -199,7 +199,6 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
         mMonthsAndYearsList.setVisibility(View.GONE);
         mAveragesList.setVisibility(View.GONE);
-
 
         return;
     }
@@ -209,18 +208,18 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         if (context != null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View emptyBarGraphView = inflater.inflate(R.layout.stats_bar_graph_empty, mGraphContainer, false);
-            if (isLoading) {
+            /*if (isLoading) {
                 final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
                 emptyLabel.setText("Loading...");
-            }
+            }*/
             if (emptyBarGraphView != null) {
                 mGraphContainer.removeAllViews();
                 mGraphContainer.addView(emptyBarGraphView);
             }
         }
         mWholeResponse.setText("");
-        mStatsDateTextView.setText("");
-        mStatsViewsCountTextView.setText("0");
+        mStatsViewsLabel.setText("");
+        mStatsViewsTotals.setText("");
         mMonthsAndYearsList.setVisibility(View.GONE);
         mAveragesList.setVisibility(View.GONE);
         return;
@@ -303,8 +302,8 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mSelectedBarGraphIndex = (mSelectedBarGraphIndex != -1) ? mSelectedBarGraphIndex : dataToShowOnGraph.length - 1;
         mGraphView.highlightBar(mSelectedBarGraphIndex);
 
-        mStatsDateTextView.setText(StatsUtils.parseDate(mStatsDate[mSelectedBarGraphIndex], "yyyy-MM-dd", "MMM d"));
-        mStatsViewsCountTextView.setText(dataToShowOnGraph[mSelectedBarGraphIndex].getViews() + "");
+        setMainViewsLabel(StatsUtils.parseDate(mStatsDate[mSelectedBarGraphIndex], "yyyy-MM-dd", "MMM d"),
+                dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
 
         if (mRestResponseParsed.getOriginalResponse() != null) {
             mWholeResponse.setText(mRestResponseParsed.getOriginalResponse().toString());
@@ -342,8 +341,14 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             }
         }
         StatsUIHelper.reloadLinearLayout(this, new TemporaryAdapter(this, allAverages, mRestResponseParsed.getHighestDayAverage()), mAveragesList, allAverages.length);
-
     }
+
+    private void setMainViewsLabel(String dateFormatted, int totals) {
+        mStatsViewsLabel.setText(getString(R.string.stats_views) + ": "
+                + dateFormatted);
+        mStatsViewsTotals.setText(String.valueOf(totals));
+    }
+
 
     public class TemporaryAdapter extends ArrayAdapter<Integer> {
 
@@ -469,8 +474,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph();
         String currentItemStatsDate = dataToShowOnGraph[mSelectedBarGraphIndex].getPeriod();
         currentItemStatsDate = StatsUtils.parseDate(currentItemStatsDate, "yyyy-MM-dd", "MMM d");
-        mStatsDateTextView.setText(currentItemStatsDate);
-        mStatsViewsCountTextView.setText(dataToShowOnGraph[mSelectedBarGraphIndex].getViews() + "");
+        setMainViewsLabel(currentItemStatsDate, dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
     }
 
 }

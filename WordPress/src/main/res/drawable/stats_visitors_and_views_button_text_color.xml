@@ -3,10 +3,10 @@
 
     <!-- Not Pressed -->
     <item android:state_checked="false" android:state_pressed="false"  android:state_enabled="true" android:color="#587295" />
-    <item android:state_checked="true"  android:state_pressed="false"  android:color="@color/stats_text_color" />
+    <item android:state_checked="true"  android:state_pressed="false"  android:color="@color/calypso_blue_dark" />
 
     <!-- Pressed -->
     <item android:state_checked="false" android:state_pressed="true" android:color="#587295" />
-    <item android:state_checked="true"  android:state_pressed="true" android:color="@color/stats_text_color" />
+    <item android:state_checked="true"  android:state_pressed="true" android:color="@color/calypso_blue_dark" />
 
 </selector>

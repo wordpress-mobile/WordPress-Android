@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
@@ -189,16 +190,20 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     protected void showErrorUI(Serializable error) {
         mGroupIdToExpandedMap.clear();
-        String volleyErrorMsg = null;
-        if (error instanceof VolleyError) {
-            volleyErrorMsg =   ((VolleyError)error).getMessage();
+        String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
+
+        if (error instanceof NoConnectionError) {
+            label += "<br/>" + getString(R.string.no_network_message);
         }
-        String label;
-        if (volleyErrorMsg == null) {
-            label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
-        } else {
-            label = "<b>" + getString(R.string.error_refresh_stats) + "</b> " + getString(getEmptyLabelDescResId());
-        }
+
+        // No need to show detailed error messages to the user
+        /*else if (error instanceof VolleyError) {
+            String volleyErrorMsg =   ((VolleyError)error).getMessage();
+            if (org.apache.commons.lang.StringUtils.isNotBlank(volleyErrorMsg)){
+                label += volleyErrorMsg;
+            }
+        }*/
+
         if (label.contains("<")) {
             mEmptyLabel.setText(Html.fromHtml(label));
         } else {

@@ -298,7 +298,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     private String getDateForDisplayInLabels(String date, StatsTimeframe timeframe) {
-        String prefix = "Stats for %s";
+        String prefix = getString(R.string.stats_for);
         switch (timeframe) {
             case DAY:
                 return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM d"));
