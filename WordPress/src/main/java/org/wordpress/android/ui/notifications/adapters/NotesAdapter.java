@@ -238,7 +238,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
             if (commentStatus == CommentStatus.UNAPPROVED) {
                 noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_orange);
             } else if (isUnread) {
-                noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_blue);
+                noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_blue_white_stroke);
             } else {
                 noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_grey);
             }
