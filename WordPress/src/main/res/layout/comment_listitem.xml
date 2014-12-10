@@ -37,7 +37,7 @@
                 android:layout_width="@dimen/avatar_sz_medium"
                 android:layout_height="@dimen/avatar_sz_medium"
                 android:padding="@dimen/margin_large"
-                android:background="@color/translucent"
+                android:background="@drawable/shape_oval_translucent"
                 android:gravity="center"
                 android:visibility="gone"
                 tools:visibility="visible">
