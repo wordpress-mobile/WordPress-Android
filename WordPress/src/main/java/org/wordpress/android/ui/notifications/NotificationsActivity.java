@@ -8,9 +8,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import com.cocosw.undobar.UndoBarController;
 import com.simperium.client.Bucket;
@@ -46,7 +46,7 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
 
     private static final String KEY_INITIAL_UPDATE = "initialUpdate";
     private static final String KEY_REPLY_TEXT = "replyText";
-    private static final String KEY_LIST_POSITION = "listPosition";
+    private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
 
     private static final String TAG_LIST_VIEW = "notificationsList";
     private static final String TAG_TABLET_DETAIL_VIEW = "notificationsTabletDetail";
@@ -98,9 +98,9 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
                 openNoteForNoteId(savedInstanceState.getString(NOTE_ID_EXTRA));
             }
 
-            if (savedInstanceState.containsKey(KEY_LIST_POSITION)) {
+            if (savedInstanceState.containsKey(KEY_LIST_SCROLL_POSITION)) {
                 mNotesListFragment.setRestoredListPosition(
-                        savedInstanceState.getInt(KEY_LIST_POSITION, ListView.INVALID_POSITION)
+                        savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION)
                 );
             }
         } else {
@@ -371,7 +371,7 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
                         }
 
                         @Override
-                        public void onClear(Parcelable[] token) {
+                        public void onClear(@Nonnull Parcelable[] token) {
                             //noop
                         }
 
@@ -397,13 +397,20 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
 
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
-        public void onClickNote(Note note) {
-            if (note == null) return;
+        public void onClickNote(String noteId) {
+            if (TextUtils.isEmpty(noteId)) return;
 
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNote(note);
+            if (SimperiumUtils.getNotesBucket() != null) {
+                try {
+                    Note note = SimperiumUtils.getNotesBucket().get(noteId);
+                    openNote(note);
+                } catch (BucketObjectMissingException e) {
+                    AppLog.e(T.NOTIFS, "Note could not be found.");
+                }
+            }
         }
     }
 
@@ -437,7 +444,7 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
 
         // Save list view scroll position
         if (mNotesListFragment != null) {
-            outState.putInt(KEY_LIST_POSITION, mNotesListFragment.getScrollPosition());
+            outState.putInt(KEY_LIST_SCROLL_POSITION, mNotesListFragment.getScrollPosition());
         }
 
         super.onSaveInstanceState(outState);
