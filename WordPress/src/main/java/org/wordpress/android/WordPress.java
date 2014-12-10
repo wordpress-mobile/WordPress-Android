@@ -343,6 +343,10 @@ public class WordPress extends Application {
             // GCMRegistrar.checkManifest or GCMRegistrar.register throws an IllegalStateException if Manifest
             // configuration is incorrect (missing a permission for instance) or if GCM dependencies are missing
             AppLog.e(T.NOTIFS, "APK (manifest error or dependency missing) doesn't support GCM: " + e.getMessage());
+        } catch (Exception e) {
+            // SecurityException can happen on some devices without Google services (these devices probably strip
+            // the AndroidManifest.xml and remove unsupported permissions).
+            AppLog.e(T.NOTIFS, e);
         }
         return regId;
     }
