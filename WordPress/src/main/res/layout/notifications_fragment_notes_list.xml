@@ -14,8 +14,7 @@
             android:id="@+id/recycler_view_notes"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:scrollbars="vertical"
-            android:background="@color/white"/>
+            android:scrollbars="vertical" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
