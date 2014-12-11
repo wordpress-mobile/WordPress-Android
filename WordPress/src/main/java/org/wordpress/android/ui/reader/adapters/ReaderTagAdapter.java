@@ -3,10 +3,10 @@ package org.wordpress.android.ui.reader.adapters;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -26,13 +26,12 @@ import org.wordpress.android.util.ToastUtils;
 
 import java.lang.ref.WeakReference;
 
-public class ReaderTagAdapter extends BaseAdapter {
+public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagViewHolder> {
     public interface TagActionListener {
         public void onTagAction(ReaderTag tag, TagAction action);
     }
 
     private final WeakReference<Context> mWeakContext;
-    private final LayoutInflater mInflater;
     private ReaderTagList mTags = new ReaderTagList();
     private final TagActionListener mTagListener;
     private final ReaderTagType mTagType;
@@ -42,12 +41,12 @@ public class ReaderTagAdapter extends BaseAdapter {
 
     public ReaderTagAdapter(Context context, ReaderTagType tagType, TagActionListener tagListener) {
         super();
-        mInflater = LayoutInflater.from(context);
+        setHasStableIds(true);
         mTagListener = tagListener;
         mTagType = tagType;
         mDrawableAdd = context.getResources().getDrawable(R.drawable.ic_add_grey600_24dp);
         mDrawableRemove = context.getResources().getDrawable(R.drawable.ic_close_grey600_24dp);
-        mWeakContext = new WeakReference<Context>(context);
+        mWeakContext = new WeakReference<>(context);
     }
 
     private boolean hasContext() {
@@ -76,13 +75,12 @@ public class ReaderTagAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return mTags.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return mTags.get(position);
+    boolean isEmpty() {
+        return (getItemCount() == 0);
     }
 
     @Override
@@ -91,24 +89,14 @@ public class ReaderTagAdapter extends BaseAdapter {
     }
 
     @Override
-    public boolean hasStableIds() {
-        return true;
+    public TagViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_tag, parent, false);
+        return new TagViewHolder(view);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final ReaderTag tag = (ReaderTag) getItem(position);
-        TagViewHolder holder;
-        if (convertView==null) {
-            convertView = mInflater.inflate(R.layout.reader_listitem_tag, parent, false);
-            holder = new TagViewHolder();
-            holder.txtTagName = (TextView) convertView.findViewById(R.id.text_topic);
-            holder.btnAddRemove = (ImageButton) convertView.findViewById(R.id.btn_add_remove);
-            convertView.setTag(holder);
-        } else {
-            holder = (TagViewHolder) convertView.getTag();
-        }
-
+    public void onBindViewHolder(TagViewHolder holder, int position) {
+        final ReaderTag tag = mTags.get(position);
         holder.txtTagName.setText(tag.getCapitalizedTagName());
 
         switch (tag.tagType) {
@@ -142,8 +130,6 @@ public class ReaderTagAdapter extends BaseAdapter {
                 break;
 
         }
-
-        return convertView;
     }
 
     private void performTagAction(final TagAction action, String tagName) {
@@ -187,9 +173,15 @@ public class ReaderTagAdapter extends BaseAdapter {
         }
     }
 
-    private static class TagViewHolder {
-        private TextView txtTagName;
-        private ImageButton btnAddRemove;
+    class TagViewHolder extends RecyclerView.ViewHolder {
+        private final TextView txtTagName;
+        private final ImageButton btnAddRemove;
+
+        public TagViewHolder(View view) {
+            super(view);
+            txtTagName = (TextView) view.findViewById(R.id.text_topic);
+            btnAddRemove = (ImageButton) view.findViewById(R.id.btn_add_remove);
+        }
     }
 
     /*

@@ -3,12 +3,11 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -17,14 +16,16 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListener;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 /*
  * fragment hosted by ReaderSubsActivity which shows either followed or popular tags
  */
 public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagActionListener {
-    private ListView mListView;
+    private ReaderRecyclerView mRecyclerView;
     private ReaderTagAdapter mTagAdapter;
     private ReaderTagType mTagType;
     private static final String ARG_TAG_TYPE = "tag_type";
@@ -67,7 +68,11 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
-        mListView = (ListView) view.findViewById(android.R.id.list);
+        final Context context = container.getContext();
+
+        mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(0, DisplayUtils.dpToPx(context, 1)));
 
         final TextView emptyView = (TextView)view.findViewById(R.id.text_empty);
         switch (getTagType()) {
@@ -79,7 +84,8 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
                 break;
         }
 
-        mListView.setEmptyView(view.findViewById(R.id.text_empty));
+        // TODO:
+        //mListView.setEmptyView(view.findViewById(R.id.text_empty));
 
         return view;
     }
@@ -87,7 +93,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mListView.setAdapter(getTagAdapter());
+        mRecyclerView.setAdapter(getTagAdapter());
         getTagAdapter().refresh();
     }
 
@@ -100,7 +106,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
     private void scrollToTagName(String tagName) {
         int index = getTagAdapter().indexOfTagName(tagName);
         if (index > -1) {
-            mListView.smoothScrollToPosition(index);
+            mRecyclerView.scrollToPosition(index);
         }
     }
 
@@ -163,19 +169,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
 
         int index = getTagAdapter().indexOfTagName(tag.getTagName());
         if (animateRemoval && index > -1) {
-            Animation.AnimationListener aniListener = new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) { }
-                @Override
-                public void onAnimationRepeat(Animation animation) { }
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    refresh();
-                }
-            };
-            ReaderAnim.AnimateListItemStyle animStyle =
-                    (action == TagAction.ADD ? ReaderAnim.AnimateListItemStyle.ADD : ReaderAnim.AnimateListItemStyle.REMOVE);
-            ReaderAnim.animateListItem(mListView, index, animStyle, aniListener);
+            getTagAdapter().notifyItemRemoved(index);
         } else {
             refresh();
         }

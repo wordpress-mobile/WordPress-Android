@@ -2,10 +2,10 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -33,7 +33,7 @@ import java.util.Comparator;
 /*
  * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
  */
-public class ReaderBlogAdapter extends BaseAdapter {
+public class ReaderBlogAdapter extends RecyclerView.Adapter<ReaderBlogAdapter.BlogViewHolder> {
     public enum ReaderBlogType {RECOMMENDED, FOLLOWED}
 
     public interface BlogFollowChangeListener {
@@ -49,6 +49,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
 
     public ReaderBlogAdapter(Context context, ReaderBlogType blogType) {
         super();
+        setHasStableIds(false);
         mInflater = LayoutInflater.from(context);
         mBlogType = blogType;
     }
@@ -87,8 +88,11 @@ public class ReaderBlogAdapter extends BaseAdapter {
         return mBlogType;
     }
 
+    public boolean isEmpty() {
+        return (getItemCount() == 0);
+    }
     @Override
-    public int getCount() {
+    public int getItemCount() {
         switch (getBlogType()) {
             case RECOMMENDED:
                 return mRecommendedBlogs.size();
@@ -99,7 +103,6 @@ public class ReaderBlogAdapter extends BaseAdapter {
         }
     }
 
-    @Override
     public Object getItem(int position) {
         switch (getBlogType()) {
             case RECOMMENDED:
@@ -112,30 +115,17 @@ public class ReaderBlogAdapter extends BaseAdapter {
     }
 
     private boolean isPositionValid(int position) {
-        return (position >= 0 && position < getCount());
+        return (position >= 0 && position < getItemCount());
     }
 
     @Override
-    public boolean hasStableIds() {
-        return false;
+    public BlogViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_blog, parent, false);
+        return new BlogViewHolder(view);
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(final int position, View convertView, final ViewGroup parent) {
-        final BlogViewHolder holder;
-        if (convertView == null || !(convertView.getTag() instanceof BlogViewHolder)) {
-            convertView = mInflater.inflate(R.layout.reader_listitem_blog, parent, false);
-            holder = new BlogViewHolder(convertView);
-            convertView.setTag(holder);
-        } else {
-            holder = (BlogViewHolder) convertView.getTag();
-        }
-
+    public void onBindViewHolder(final BlogViewHolder holder, final int position) {
         final boolean isFollowing;
         switch (getBlogType()) {
             case RECOMMENDED:
@@ -174,18 +164,23 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 changeFollowStatus(holder.txtFollow, position, !isFollowing);
             }
         });
-
-        return convertView;
     }
 
-    private class BlogViewHolder {
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    class BlogViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtTitle;
         private final TextView txtDescription;
         private final TextView txtUrl;
         private final TextView txtFollow;
         private final WPNetworkImageView imgBlog;
 
-        BlogViewHolder(View view) {
+        public BlogViewHolder(View view) {
+            super(view);
+
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtDescription = (TextView) view.findViewById(R.id.text_description);
             txtUrl = (TextView) view.findViewById(R.id.text_url);

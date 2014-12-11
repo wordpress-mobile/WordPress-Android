@@ -3,12 +3,12 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -18,7 +18,9 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.BlogFollowChangeListener;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 /*
@@ -26,8 +28,8 @@ import org.wordpress.android.util.WPActivityUtils;
  */
 public class ReaderBlogFragment extends Fragment
         implements BlogFollowChangeListener,
-        AdapterView.OnItemClickListener {
-    private ListView mListView;
+                   AdapterView.OnItemClickListener {
+    private ReaderRecyclerView mRecyclerView;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
     private boolean mWasPaused;
@@ -60,21 +62,25 @@ public class ReaderBlogFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
-        mListView = (ListView) view.findViewById(android.R.id.list);
+        final Context context = container.getContext();
+
+        mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(0, DisplayUtils.dpToPx(context, 1)));
 
         final TextView emptyView = (TextView)view.findViewById(R.id.text_empty);
         switch (getBlogType()) {
             case RECOMMENDED:
                 emptyView.setText(R.string.reader_empty_recommended_blogs);
-                // add footer to load more recommendations
-                ViewGroup footerLoadMore = (ViewGroup) inflater.inflate(R.layout.reader_footer_recommendations, mListView, false);
+                // TODO: add footer to load more recommendations
+                /*ViewGroup footerLoadMore = (ViewGroup) inflater.inflate(R.layout.reader_footer_recommendations, mListView, false);
                 mListView.addFooterView(footerLoadMore);
                 footerLoadMore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         loadMoreRecommendations();
                     }
-                });
+                });*/
                 break;
 
             case FOLLOWED:
@@ -82,7 +88,8 @@ public class ReaderBlogFragment extends Fragment
                 break;
         }
 
-        mListView.setEmptyView(emptyView);
+        // TODO:
+        //mListView.setEmptyView(emptyView);
 
         return view;
     }
@@ -90,8 +97,9 @@ public class ReaderBlogFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mListView.setOnItemClickListener(this);
-        mListView.setAdapter(getBlogAdapter());
+        // TODO:
+        //mListView.setOnItemClickListener(this);
+        mRecyclerView.setAdapter(getBlogAdapter());
         refresh();
     }
 
