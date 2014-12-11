@@ -78,9 +78,9 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void refresh() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "load blogs task is already running");
-        } else {
-            new LoadBlogsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            return;
         }
+        new LoadBlogsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*
@@ -113,18 +113,11 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public int getItemCount() {
         switch (getBlogType()) {
             case RECOMMENDED:
-                return mRecommendedBlogs.size() + 1; // +1 for the footer
-            case FOLLOWED:
-                return mFollowedBlogs.size();
-            default:
-                return 0;
-        }
-    }
-
-    private int getBlogCount() {
-        switch (getBlogType()) {
-            case RECOMMENDED:
-                return mRecommendedBlogs.size();
+                if (mRecommendedBlogs.size() == 0) {
+                    return 0;
+                } else {
+                    return mRecommendedBlogs.size() + 1; // +1 for the footer
+                }
             case FOLLOWED:
                 return mFollowedBlogs.size();
             default:
@@ -225,6 +218,9 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    /*
+     * holder used for followed/recommended blogs
+     */
     class BlogViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtTitle;
         private final TextView txtDescription;
@@ -253,6 +249,9 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    /*
+     * holder used for the "More recommendations" footer
+     */
     class FooterViewHolder extends RecyclerView.ViewHolder {
         public FooterViewHolder(View view) {
             super(view);
@@ -268,7 +267,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void changeFollowStatus(final TextView textView,
                                     final int position,
                                     final boolean isAskingToFollow) {
-        if (position >= getBlogCount()) {
+        if (getItemViewType(position) != VIEW_TYPE_ITEM) {
             return;
         }
 
