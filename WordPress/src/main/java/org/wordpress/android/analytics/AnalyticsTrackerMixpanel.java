@@ -518,16 +518,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
                                 "number_of_notifications_flagged_as_spam");
                 break;
-            case NOTIFICATION_FOLLOW_ACTION:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Notifications - Followed User");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_followed_user_from_notification");
-                break;
-            case NOTIFICATION_UNFOLLOW_ACTION:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Notifications - Unfollowed User");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_unfollowed_user_from_notification");
-                break;
             case NOTIFICATION_LIKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notifications - Liked Comment");
