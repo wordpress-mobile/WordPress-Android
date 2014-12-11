@@ -35,6 +35,7 @@ import java.util.Comparator;
  * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
  */
 public class ReaderBlogAdapter extends RecyclerView.Adapter<ReaderBlogAdapter.BlogViewHolder> {
+
     public enum ReaderBlogType {RECOMMENDED, FOLLOWED}
 
     public interface BlogFollowChangeListener {
@@ -172,13 +173,12 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<ReaderBlogAdapter.Bl
                 break;
         }
 
-        // show the correct following status
         ReaderUtils.showFollowStatus(holder.txtFollow, isFollowing);
         holder.txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                ReaderAnim.animateFollowButton(holder.txtFollow);
-                changeFollowStatus(holder.txtFollow, position, !isFollowing);
+            public void onClick(View view) {
+                ReaderAnim.animateFollowButton(view);
+                changeFollowStatus((TextView) view, position, !isFollowing);
             }
         });
 
@@ -220,7 +220,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<ReaderBlogAdapter.Bl
         }
     }
 
-    private void changeFollowStatus(final TextView txtFollow,
+    private void changeFollowStatus(final TextView textView,
                                     final int position,
                                     final boolean isAskingToFollow) {
         if (!isPositionValid(position)) {
@@ -247,21 +247,21 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<ReaderBlogAdapter.Bl
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                Context context = txtFollow.getContext();
+                Context context = textView.getContext();
                 if (!succeeded && context != null) {
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(context, resId);
-                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
+                    ReaderUtils.showFollowStatus(textView, !isAskingToFollow);
                     checkFollowStatus();
                 }
             }
         };
+
         if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, actionListener)) {
             if (getBlogType() == ReaderBlogType.FOLLOWED) {
                 mFollowedBlogs.get(position).isFollowing = isAskingToFollow;
             }
-            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
-            notifyDataSetChanged(); // <-- required for getView() to know correct follow status
+            notifyItemChanged(position);
             if (mFollowListener != null) {
                 mFollowListener.onFollowBlogChanged();
             }

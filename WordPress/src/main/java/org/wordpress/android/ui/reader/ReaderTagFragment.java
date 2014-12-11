@@ -70,7 +70,6 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
         final Context context = container.getContext();
 
         mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(0, DisplayUtils.dpToPx(context, 1)));
 
         return view;
