@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -28,7 +27,7 @@ import org.wordpress.android.util.WPActivityUtils;
  */
 public class ReaderBlogFragment extends Fragment
         implements BlogFollowChangeListener,
-                   AdapterView.OnItemClickListener {
+                   ReaderBlogAdapter.BlogClickListener {
     private ReaderRecyclerView mRecyclerView;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
@@ -68,30 +67,37 @@ public class ReaderBlogFragment extends Fragment
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(0, DisplayUtils.dpToPx(context, 1)));
 
-        final TextView emptyView = (TextView)view.findViewById(R.id.text_empty);
-        switch (getBlogType()) {
-            case RECOMMENDED:
-                emptyView.setText(R.string.reader_empty_recommended_blogs);
-                // TODO: add footer to load more recommendations
-                /*ViewGroup footerLoadMore = (ViewGroup) inflater.inflate(R.layout.reader_footer_recommendations, mListView, false);
-                mListView.addFooterView(footerLoadMore);
-                footerLoadMore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        loadMoreRecommendations();
-                    }
-                });*/
-                break;
-
-            case FOLLOWED:
-                emptyView.setText(R.string.reader_empty_followed_blogs_title);
-                break;
+        if (getBlogType() == ReaderBlogType.RECOMMENDED) {
+            // TODO: add footer to load more recommendations
+            /*ViewGroup footerLoadMore = (ViewGroup) inflater.inflate(R.layout.reader_footer_recommendations, mListView, false);
+            mListView.addFooterView(footerLoadMore);
+            footerLoadMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadMoreRecommendations();
+                }
+            });*/
         }
 
-        // TODO:
-        //mListView.setEmptyView(emptyView);
-
         return view;
+    }
+
+    void showEmptyView(boolean show) {
+        if (!isAdded()) {
+            return;
+        }
+        TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
+        if (show) {
+            switch (getBlogType()) {
+                case RECOMMENDED:
+                    emptyView.setText(R.string.reader_empty_recommended_blogs);
+                    break;
+                case FOLLOWED:
+                    emptyView.setText(R.string.reader_empty_followed_blogs_title);
+                    break;
+            }
+        }
+        emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -175,6 +181,14 @@ public class ReaderBlogFragment extends Fragment
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mAdapter = new ReaderBlogAdapter(context, getBlogType());
             mAdapter.setFollowChangeListener(this);
+            mAdapter.setBlogClickListener(this);
+            mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
+                @Override
+                public void onDataLoaded(boolean isEmpty) {
+                    showEmptyView(isEmpty);
+                }
+            });
+
         }
         return mAdapter;
     }
@@ -194,10 +208,9 @@ public class ReaderBlogFragment extends Fragment
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onBlogClicked(Object item) {
         final long blogId;
         final String blogUrl;
-        Object item = getBlogAdapter().getItem(position);
         if (item instanceof ReaderRecommendedBlog) {
             ReaderRecommendedBlog blog = (ReaderRecommendedBlog) item;
             blogId = blog.blogId;
@@ -212,7 +225,7 @@ public class ReaderBlogFragment extends Fragment
 
         // make sure we have either the blog id or url
         if (blogId != 0 || !TextUtils.isEmpty(blogUrl)) {
-            ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), blogId, blogUrl);
+            ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId, blogUrl);
         }
     }
 }

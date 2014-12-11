@@ -33,20 +33,27 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
 
     private final WeakReference<Context> mWeakContext;
     private ReaderTagList mTags = new ReaderTagList();
-    private final TagActionListener mTagListener;
+    private TagActionListener mTagListener;
     private final ReaderTagType mTagType;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private final Drawable mDrawableAdd;
     private final Drawable mDrawableRemove;
 
-    public ReaderTagAdapter(Context context, ReaderTagType tagType, TagActionListener tagListener) {
+    public ReaderTagAdapter(Context context, ReaderTagType tagType) {
         super();
         setHasStableIds(true);
-        mTagListener = tagListener;
         mTagType = tagType;
         mDrawableAdd = context.getResources().getDrawable(R.drawable.ic_add_grey600_24dp);
         mDrawableRemove = context.getResources().getDrawable(R.drawable.ic_close_grey600_24dp);
         mWeakContext = new WeakReference<>(context);
+    }
+
+    public void setTagActionListener(TagActionListener listener) {
+        mTagListener = listener;
+    }
+
+    public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
+        mDataLoadedListener = listener;
     }
 
     private boolean hasContext() {
@@ -57,17 +64,12 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         return mWeakContext.get();
     }
 
-    public void refresh(ReaderInterfaces.DataLoadedListener dataListener) {
+    public void refresh() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "tag task is already running");
+            return;
         }
-
-        mDataLoadedListener = dataListener;
         new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    public void refresh() {
-        refresh(null);
     }
 
     public int indexOfTagName(final String tagName) {
@@ -168,8 +170,15 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
                 break;
         }
 
-        if (success && mTagListener != null) {
-            mTagListener.onTagAction(tag, action);
+        if (success) {
+            int index = mTags.indexOfTagName(tagName);
+            if (index > -1) {
+                mTags.remove(index);
+                notifyItemRemoved(index);
+            }
+            if (mTagListener != null) {
+                mTagListener.onTagAction(tag, action);
+            }
         }
     }
 

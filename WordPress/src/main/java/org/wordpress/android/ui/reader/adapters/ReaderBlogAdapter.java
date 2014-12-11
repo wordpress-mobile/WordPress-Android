@@ -17,6 +17,7 @@ import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -39,10 +40,14 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<ReaderBlogAdapter.Bl
     public interface BlogFollowChangeListener {
         public void onFollowBlogChanged();
     }
+    public interface BlogClickListener {
+        public void onBlogClicked(Object blog);
+    }
 
-    private final LayoutInflater mInflater;
     private final ReaderBlogType mBlogType;
     private BlogFollowChangeListener mFollowListener;
+    private BlogClickListener mClickListener;
+    private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogList mFollowedBlogs = new ReaderBlogList();
@@ -50,12 +55,19 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<ReaderBlogAdapter.Bl
     public ReaderBlogAdapter(Context context, ReaderBlogType blogType) {
         super();
         setHasStableIds(false);
-        mInflater = LayoutInflater.from(context);
         mBlogType = blogType;
     }
 
     public void setFollowChangeListener(BlogFollowChangeListener listener) {
         mFollowListener = listener;
+    }
+
+    public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
+        mDataLoadedListener = listener;
+    }
+
+    public void setBlogClickListener(BlogClickListener listener) {
+        mClickListener = listener;
     }
 
     public void refresh() {
@@ -114,6 +126,11 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<ReaderBlogAdapter.Bl
         }
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     private boolean isPositionValid(int position) {
         return (position >= 0 && position < getItemCount());
     }
@@ -164,11 +181,15 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<ReaderBlogAdapter.Bl
                 changeFollowStatus(holder.txtFollow, position, !isFollowing);
             }
         });
-    }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
+        if (mClickListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mClickListener.onBlogClicked(getItem(position));
+                }
+            });
+        }
     }
 
     class BlogViewHolder extends RecyclerView.ViewHolder {
@@ -310,6 +331,10 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<ReaderBlogAdapter.Bl
             }
 
             mIsTaskRunning = false;
+
+            if (mDataLoadedListener != null) {
+                mDataLoadedListener.onDataLoaded(isEmpty());
+            }
         }
 
         private String getBlogNameForComparison(ReaderBlog blog) {
