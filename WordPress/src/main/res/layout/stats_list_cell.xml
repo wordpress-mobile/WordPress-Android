@@ -3,7 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/margin_medium">
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingBottom="@dimen/margin_medium"
+    android:paddingRight="@dimen/margin_large"
+    android:paddingLeft="@dimen/margin_large">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +27,7 @@
             android:id="@+id/stats_list_cell_chevron"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_marginRight="@dimen/margin_extra_small"
+            android:layout_marginRight="@dimen/margin_large"
             android:visibility="gone"
             android:src="@drawable/stats_chevron_right" />
 
@@ -65,8 +68,10 @@
 
     <LinearLayout
         android:orientation="vertical"
+        android:layout_marginTop="@dimen/margin_medium"
         android:id="@+id/layout_child_container"
         android:visibility="gone"
+        android:background="@color/stats_lists_background_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

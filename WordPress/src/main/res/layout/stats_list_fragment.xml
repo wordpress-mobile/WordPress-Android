@@ -20,8 +20,8 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_module_title"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
                 style="@style/StatsModuleTitle" />
 
             <RadioGroup
@@ -33,8 +33,8 @@
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingTop="@dimen/margin_small"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
                 android:visibility="gone"></RadioGroup>
 
             <org.wordpress.android.widgets.WPTextView
@@ -44,8 +44,8 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingTop="@dimen/margin_small"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -57,8 +57,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_medium"
-                    android:layout_marginRight="@dimen/margin_medium"
+                    android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginRight="@dimen/margin_large"
                     android:paddingBottom="@dimen/margin_small"
                     android:paddingTop="@dimen/margin_small">
 
@@ -91,8 +91,8 @@
                     android:id="@+id/stats_pagination_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_medium"
-                    android:layout_marginRight="@dimen/margin_medium"
+                    android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginRight="@dimen/margin_large"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:visibility="gone">
@@ -133,7 +133,7 @@
             android:id="@+id/stats_list_empty_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#F4F8FA"
+            android:background="@color/stats_lists_background_color"
             android:padding="@dimen/margin_large"
             android:visibility="gone" />
     </LinearLayout>

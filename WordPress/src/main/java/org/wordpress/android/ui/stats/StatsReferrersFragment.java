@@ -142,8 +142,8 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
-            // no icon, make it invisible so children are indented
-            holder.networkImageView.setVisibility(View.INVISIBLE);
+            // no icon
+            holder.networkImageView.setVisibility(View.GONE);
 
             if (StringUtils.isNotBlank(children.getUrl())) {
                 holder.imgMore.setVisibility(View.VISIBLE);

@@ -121,8 +121,8 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
                     children.getTotals()
             ));
 
-            // no icon, make it invisible so children are indented
-            holder.networkImageView.setVisibility(View.INVISIBLE);
+            // no icon
+            holder.networkImageView.setVisibility(View.GONE);
 
             return convertView;
         }

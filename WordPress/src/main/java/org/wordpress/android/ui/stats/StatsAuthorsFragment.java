@@ -152,8 +152,8 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
-            // no icon, make it invisible so children are indented
-            holder.networkImageView.setVisibility(View.INVISIBLE);
+            // no icon
+            holder.networkImageView.setVisibility(View.GONE);
 
             return convertView;
         }

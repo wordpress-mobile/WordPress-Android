@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Spannable;
 import android.text.style.URLSpan;
 import android.util.SparseBooleanArray;
 import android.view.Display;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -24,19 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.ui.stats.models.FollowDataModel;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ToastUtils;
-
-import java.lang.ref.WeakReference;
 
 public class StatsUIHelper {
     // Max number of rows to show in a stats fragment
@@ -90,11 +76,11 @@ public class StatsUIHelper {
                 View convertView = linearLayout.getChildAt(i);
                 view = adapter.getView(i, convertView, linearLayout);
                 view.setBackgroundColor(bgColor);
-                setViewBackgroundWithoutResettingPadding(view, i == 0 ? 0 : R.drawable.stats_list_item_odd_background);
+                setViewBackgroundWithoutResettingPadding(view, i == 0 ? 0 : R.drawable.stats_list_item_background);
             } else {
                 view = adapter.getView(i, null, linearLayout);
                 view.setBackgroundColor(bgColor);
-                setViewBackgroundWithoutResettingPadding(view, i == 0 ? 0 : R.drawable.stats_list_item_odd_background);
+                setViewBackgroundWithoutResettingPadding(view, i == 0 ? 0 : R.drawable.stats_list_item_background);
                 linearLayout.addView(view);
             }
         }
@@ -166,11 +152,11 @@ public class StatsUIHelper {
                 View convertView = mLinearLayout.getChildAt(i);
                 groupView = mAdapter.getGroupView(i, isExpanded, convertView, mLinearLayout);
                 groupView.setBackgroundColor(bgColor);
-                setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_odd_background);
+                setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_background);
             } else {
                 groupView = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
                 groupView.setBackgroundColor(bgColor);
-                setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_odd_background);                mLinearLayout.addView(groupView);
+                setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_background);                mLinearLayout.addView(groupView);
             }
 
             // add children if this group is expanded
@@ -191,7 +177,7 @@ public class StatsUIHelper {
                     if (shouldExpand) {
                         StatsUIHelper.showChildViews(mAdapter, mLinearLayout, groupPosition, groupView, true);
                     } else {
-                        StatsUIHelper.hideChildViews(groupView, true);
+                        StatsUIHelper.hideChildViews(groupView, groupPosition, true);
                     }
                 }
             });
@@ -205,11 +191,12 @@ public class StatsUIHelper {
         return new AccelerateInterpolator();
     }
 
-    public static void hideChildViews(View groupView, boolean animate) {
+    public static void hideChildViews(View groupView, int groupPosition,  boolean animate) {
         final ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
         if (childContainer == null) {
             return;
         }
+
         if (childContainer.getVisibility() != View.GONE) {
             if (animate) {
                 Animation expand = new ScaleAnimation(1.0f, 1.0f, 1.0f, 0.0f);
@@ -230,16 +217,22 @@ public class StatsUIHelper {
                 childContainer.setVisibility(View.GONE);
             }
         }
-        StatsUIHelper.setGroupChevron(false, groupView, animate);
+        StatsUIHelper.setGroupChevron(false, groupView, groupPosition, animate);
     }
 
     /*
      * shows the correct up/down chevron for the passed group
      */
-    public static void setGroupChevron(final boolean isGroupExpanded, View groupView, boolean animate) {
+    public static void setGroupChevron(final boolean isGroupExpanded, View groupView, int groupPosition, boolean animate) {
         final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
         if (chevron == null) {
             return;
+        }
+        if (isGroupExpanded) {
+            // change the background of the parent
+            setViewBackgroundWithoutResettingPadding(groupView, R.drawable.stats_list_item_expanded_background);
+        } else {
+            setViewBackgroundWithoutResettingPadding(groupView, groupPosition == 0 ? 0 : R.drawable.stats_list_item_background);
         }
 
         chevron.clearAnimation(); // Remove any other prev animations set on the chevron
@@ -285,11 +278,12 @@ public class StatsUIHelper {
                 mAdapter.getChildView(groupPosition, i, isLastChild, convertView, mLinearLayout);
             } else {
                 View childView = mAdapter.getChildView(groupPosition, i, isLastChild, null, mLinearLayout);
-                // remove the right padding so the child total aligns with the group total
-                childView.setPadding(childView.getPaddingLeft(),
+                // remove the right/left padding so the child total aligns to left
+                childView.setPadding(0,
                         childView.getPaddingTop(),
                         0,
-                        childView.getPaddingBottom());
+                        isLastChild ? 0 : childView.getPaddingBottom()); // No padding bottom on last child
+                setViewBackgroundWithoutResettingPadding(childView, R.drawable.stats_list_item_child_background);
                 childContainer.addView(childView);
             }
         }
@@ -304,7 +298,7 @@ public class StatsUIHelper {
             childContainer.setVisibility(View.VISIBLE);
         }
 
-        StatsUIHelper.setGroupChevron(true, groupView, animate);
+        StatsUIHelper.setGroupChevron(true, groupView, groupPosition, animate);
     }
 
 

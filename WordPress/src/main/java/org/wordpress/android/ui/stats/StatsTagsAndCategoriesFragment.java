@@ -11,6 +11,7 @@ import org.wordpress.android.ui.stats.models.TagModel;
 import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TagsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 
 import java.util.List;
@@ -113,24 +114,27 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(convertView);
+
+                //Make the picture smaller (same size of the chevron) only for tag
+                ViewGroup.LayoutParams params = viewHolder.networkImageView.getLayoutParams();
+                params.width = DisplayUtils.dpToPx(convertView.getContext(), 12);
+                params.height = params.width;
+                viewHolder.networkImageView.setLayoutParams(params);
+
                 convertView.setTag(viewHolder);
             }
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
-            String name = children.getName();
-
             // name, url
-            holder.entryTextView.setText(name);
-
-            // The main text is always blue in this module
-            holder.entryTextView.setTextColor(getResources().getColor(R.color.stats_link_text_color));
+            holder.setEntryTextOrLink(children.getLink(), children.getName());
 
             // totals
             holder.totalsTextView.setText("");
 
-            // icon
-            holder.networkImageView.setVisibility(View.INVISIBLE);
+            // icon.
+            holder.networkImageView.setVisibility(View.VISIBLE);
+            holder.networkImageView.setImageDrawable(getResources().getDrawable(R.drawable.stats_icon_tags));
 
             return convertView;
         }
@@ -138,11 +142,11 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
         @Override
         public int getChildrenCount(int groupPosition) {
             TagsModel currentGroup = groups.get(groupPosition);
-            List<TagModel> referrals = currentGroup.getTags();
-            if (referrals == null || referrals.size() == 1 ) {
+            List<TagModel> tags = currentGroup.getTags();
+            if (tags == null || tags.size() == 1 ) {
                 return 0;
             } else {
-                return referrals.size();
+                return tags.size();
             }
         }
 
@@ -168,7 +172,15 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
-                convertView.setTag(new StatsViewHolder(convertView));
+                // configure view holder
+                StatsViewHolder viewHolder = new StatsViewHolder(convertView);
+                convertView.setTag(viewHolder);
+
+                //Make the picture smaller (same size of the chevron) only for tag
+                ViewGroup.LayoutParams params = viewHolder.networkImageView.getLayoutParams();
+                params.width = DisplayUtils.dpToPx(convertView.getContext(), 12);
+                params.height = params.width;
+                viewHolder.networkImageView.setLayoutParams(params);
             }
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
@@ -187,12 +199,15 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             int children = getChildrenCount(groupPosition);
 
             holder.entryTextView.setText(groupName);
+            holder.entryTextView.setOnClickListener(null);
 
             if (children > 0) {
                 //FIXME: Ugly hack. for some reason the TextView is probably intercepting/eating the click event and not passing it the parent.
                 StatsUIHelper.setEntryTextViewClickListener(convertView, holder.entryTextView);
             } else {
-                holder.entryTextView.setOnClickListener(null);
+                if (tags != null || tags.size() == 1 ) {
+                    holder.setEntryTextOrLink(tags.get(0).getLink(), groupName.toString());
+                }
             }
 
             // The main text is always blue in this module
@@ -203,6 +218,16 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
             // expand/collapse chevron
             holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
+
+
+            // icon
+            if ( children == 0 ) {
+                holder.networkImageView.setVisibility(View.VISIBLE);
+                int drawableResource = groupName.toString().equalsIgnoreCase("uncategorized") ? R.drawable.stats_icon_categories
+                        : R.drawable.stats_icon_tags;
+                holder.networkImageView.setImageDrawable(getResources().getDrawable(drawableResource));
+            }
+
             return convertView;
         }
 
