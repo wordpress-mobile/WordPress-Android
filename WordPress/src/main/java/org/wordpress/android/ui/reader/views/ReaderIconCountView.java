@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -64,6 +65,10 @@ public class ReaderIconCountView extends LinearLayout {
             } finally {
                 a.recycle();
             }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mImageView.setBackgroundResource(R.drawable.ripple_oval);
         }
     }
 
