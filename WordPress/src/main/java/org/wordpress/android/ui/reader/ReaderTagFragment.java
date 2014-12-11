@@ -65,21 +65,19 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
-        final Context context = container.getContext();
-
+        View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
         mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
-        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(0, DisplayUtils.dpToPx(context, 1)));
-
+        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(0, DisplayUtils.dpToPx(container.getContext(), 1)));
         return view;
     }
 
-    void showEmptyView(boolean show) {
+    void checkEmptyView() {
         if (!isAdded()) {
             return;
         }
+        boolean isEmpty = hasTagAdapter() && getTagAdapter().isEmpty();
         TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
-        if (show) {
+        if (isEmpty) {
             switch (getTagType()) {
                 case FOLLOWED:
                     emptyView.setText(R.string.reader_empty_followed_tags);
@@ -89,7 +87,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
                     break;
             }
         }
-        emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -123,7 +121,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
             mTagAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    showEmptyView(isEmpty);
+                    checkEmptyView();
                 }
             });
         }
@@ -140,6 +138,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
      */
     @Override
     public void onTagAction(ReaderTag tag, TagAction action) {
+        checkEmptyView();
         // let the host activity know about the change
         if (getActivity() instanceof TagActionListener) {
             ((TagActionListener) getActivity()).onTagAction(tag, action);

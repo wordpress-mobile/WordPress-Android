@@ -72,16 +72,12 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public int indexOfTagName(final String tagName) {
-        return mTags.indexOfTagName(tagName);
-    }
-
     @Override
     public int getItemCount() {
         return mTags.size();
     }
 
-    boolean isEmpty() {
+    public boolean isEmpty() {
         return (getItemCount() == 0);
     }
 

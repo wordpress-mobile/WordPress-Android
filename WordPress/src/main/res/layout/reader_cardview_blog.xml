@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!---
     card which shows a recommended or followed blog - see ReaderBlogAdapter
 -->
@@ -7,6 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:stateListAnimator="@anim/pressed_card"
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="0dp">
 

@@ -64,12 +64,13 @@ public class ReaderBlogFragment extends Fragment
         return view;
     }
 
-    void showEmptyView(boolean show) {
+    void checkEmptyView() {
         if (!isAdded()) {
             return;
         }
+        boolean isEmpty = hasBlogAdapter() && getBlogAdapter().isEmpty();
         TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
-        if (show) {
+        if (isEmpty) {
             switch (getBlogType()) {
                 case RECOMMENDED:
                     emptyView.setText(R.string.reader_empty_recommended_blogs);
@@ -79,7 +80,7 @@ public class ReaderBlogFragment extends Fragment
                     break;
             }
         }
-        emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -144,7 +145,7 @@ public class ReaderBlogFragment extends Fragment
             mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    showEmptyView(isEmpty);
+                    checkEmptyView();
                 }
             });
 

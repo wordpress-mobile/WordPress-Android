@@ -112,14 +112,12 @@
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:minWidth">90dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:drawableLeft">@drawable/note_icon_follow</item>
         <item name="android:background">@drawable/reader_button_follow</item>
         <item name="android:textColor">@color/reader_follow_text</item>
         <item name="android:paddingLeft">@dimen/margin_small</item>
         <item name="android:paddingTop">@dimen/margin_small</item>
         <item name="android:paddingBottom">@dimen/margin_small</item>
         <item name="android:paddingRight">@dimen/margin_medium</item>
-        <item name="android:drawablePadding">0dp</item>
         <item name="android:text">@string/reader_btn_follow</item>
     </style>
 

@@ -105,7 +105,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mBlogType;
     }
 
-    boolean isEmpty() {
+    public boolean isEmpty() {
         return (getItemCount() == 0);
     }
 
