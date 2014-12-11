@@ -16,6 +16,7 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.BlogFollowChangeListener;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPActivityUtils;
@@ -24,7 +25,8 @@ import org.wordpress.android.util.WPActivityUtils;
  * fragment hosted by ReaderSubsActivity which shows either recommended blogs and followed blogs
  */
 public class ReaderBlogFragment extends Fragment
-        implements AdapterView.OnItemClickListener {
+        implements BlogFollowChangeListener,
+        AdapterView.OnItemClickListener {
     private ListView mListView;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
@@ -164,12 +166,23 @@ public class ReaderBlogFragment extends Fragment
         if (mAdapter == null) {
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mAdapter = new ReaderBlogAdapter(context, getBlogType());
+            mAdapter.setFollowChangeListener(this);
         }
         return mAdapter;
     }
 
     public ReaderBlogType getBlogType() {
         return mBlogType;
+    }
+
+    /*
+     * called from the adapter when a blog is followed or unfollowed - note that the network
+     * request has already occurred by the time this is called
+     */
+    public void onFollowBlogChanged() {
+        if (getActivity() instanceof BlogFollowChangeListener) {
+            ((BlogFollowChangeListener) getActivity()).onFollowBlogChanged();
+        }
     }
 
     @Override
