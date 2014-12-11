@@ -15,15 +15,10 @@ import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -36,13 +31,8 @@ import java.util.Comparator;
 public class ReaderBlogAdapter extends BaseAdapter {
     public enum ReaderBlogType {RECOMMENDED, FOLLOWED}
 
-    public interface BlogFollowChangeListener {
-        public void onFollowBlogChanged();
-    }
-
     private final LayoutInflater mInflater;
     private final ReaderBlogType mBlogType;
-    private BlogFollowChangeListener mFollowListener;
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogList mFollowedBlogs = new ReaderBlogList();
@@ -51,10 +41,6 @@ public class ReaderBlogAdapter extends BaseAdapter {
         super();
         mInflater = LayoutInflater.from(context);
         mBlogType = blogType;
-    }
-
-    public void setFollowChangeListener(BlogFollowChangeListener listener) {
-        mFollowListener = listener;
     }
 
     public void refresh() {
@@ -111,10 +97,6 @@ public class ReaderBlogAdapter extends BaseAdapter {
         }
     }
 
-    private boolean isPositionValid(int position) {
-        return (position >= 0 && position < getCount());
-    }
-
     @Override
     public boolean hasStableIds() {
         return false;
@@ -136,11 +118,9 @@ public class ReaderBlogAdapter extends BaseAdapter {
             holder = (BlogViewHolder) convertView.getTag();
         }
 
-        final boolean isFollowing;
         switch (getBlogType()) {
             case RECOMMENDED:
                 final ReaderRecommendedBlog blog = (ReaderRecommendedBlog) getItem(position);
-                isFollowing = ReaderBlogTable.isFollowedBlog(blog.blogId, blog.getBlogUrl());
                 holder.txtTitle.setText(blog.getTitle());
                 holder.txtDescription.setText(blog.getReason());
                 holder.txtUrl.setText(UrlUtils.getDomainFromUrl(blog.getBlogUrl()));
@@ -149,7 +129,6 @@ public class ReaderBlogAdapter extends BaseAdapter {
 
             case FOLLOWED:
                 final ReaderBlog blogInfo = (ReaderBlog) getItem(position);
-                isFollowing = blogInfo.isFollowing;
                 String domain = UrlUtils.getDomainFromUrl(blogInfo.getUrl());
                 if (blogInfo.hasName()) {
                     holder.txtTitle.setText(blogInfo.getName());
@@ -159,21 +138,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 holder.txtUrl.setText(domain);
                 holder.imgBlog.setImageUrl(blogInfo.getImageUrl(), WPNetworkImageView.ImageType.SITE_AVATAR);
                 break;
-
-            default:
-                isFollowing = false;
-                break;
         }
-
-        // show the correct following status
-        ReaderUtils.showFollowStatus(holder.txtFollow, isFollowing);
-        holder.txtFollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ReaderAnim.animateFollowButton(holder.txtFollow);
-                changeFollowStatus(holder.txtFollow, position, !isFollowing);
-            }
-        });
 
         return convertView;
     }
@@ -182,14 +147,12 @@ public class ReaderBlogAdapter extends BaseAdapter {
         private final TextView txtTitle;
         private final TextView txtDescription;
         private final TextView txtUrl;
-        private final TextView txtFollow;
         private final WPNetworkImageView imgBlog;
 
         BlogViewHolder(View view) {
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtDescription = (TextView) view.findViewById(R.id.text_description);
             txtUrl = (TextView) view.findViewById(R.id.text_url);
-            txtFollow = (TextView) view.findViewById(R.id.text_follow);
             imgBlog = (WPNetworkImageView) view.findViewById(R.id.image_blog);
 
             // followed blogs don't have a description
@@ -200,54 +163,6 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 case RECOMMENDED:
                     txtDescription.setVisibility(View.VISIBLE);
                     break;
-            }
-        }
-    }
-
-    private void changeFollowStatus(final TextView txtFollow,
-                                    final int position,
-                                    final boolean isAskingToFollow) {
-        if (!isPositionValid(position)) {
-            return;
-        }
-
-        final long blogId;
-        final String blogUrl;
-        switch (getBlogType()) {
-            case RECOMMENDED:
-                ReaderRecommendedBlog blog = mRecommendedBlogs.get(position);
-                blogId = blog.blogId;
-                blogUrl = blog.getBlogUrl();
-                break;
-            case FOLLOWED:
-                ReaderBlog info = mFollowedBlogs.get(position);
-                blogId = info.blogId;
-                blogUrl = info.getUrl();
-                break;
-            default:
-                return;
-        }
-
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                Context context = txtFollow.getContext();
-                if (!succeeded && context != null) {
-                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
-                    ToastUtils.showToast(context, resId);
-                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
-                    checkFollowStatus();
-                }
-            }
-        };
-        if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, actionListener)) {
-            if (getBlogType() == ReaderBlogType.FOLLOWED) {
-                mFollowedBlogs.get(position).isFollowing = isAskingToFollow;
-            }
-            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
-            notifyDataSetChanged(); // <-- required for getView() to know correct follow status
-            if (mFollowListener != null) {
-                mFollowListener.onFollowBlogChanged();
             }
         }
     }
