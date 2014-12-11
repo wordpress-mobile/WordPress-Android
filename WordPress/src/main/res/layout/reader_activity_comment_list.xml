@@ -9,6 +9,22 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
+    <include
+        android:id="@+id/layout_post_header"
+        layout="@layout/reader_include_post_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar" />
+
+    <org.wordpress.android.ui.reader.views.ReaderRecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_bottom"
+        android:layout_below="@+id/layout_post_header"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/reader_listitem_comment" />
+
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
         style="@style/ReaderTextView.EmptyList"
@@ -18,37 +34,14 @@
         android:text="@string/reader_empty_comments"
         android:textColor="@color/grey_medium"
         android:visibility="gone"
-        app:fixWidowWords="true" />
-
-    <include
-        android:id="@+id/layout_post_header"
-        layout="@layout/reader_include_post_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar" />
-
-    <org.wordpress.android.widgets.WPListView
-        android:id="@id/android:list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/layout_bottom"
-        android:layout_below="@+id/layout_post_header"
-        android:layout_marginLeft="@dimen/reader_list_margin"
-        android:layout_marginRight="@dimen/reader_list_margin"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"
-        android:smoothScrollbar="true"
-        tools:listitem="@layout/reader_listitem_comment" />
+        app:fixWidowWords="true"
+        tools:visibility="visible" />
 
     <RelativeLayout
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/reader_list_margin"
-        android:layout_marginRight="@dimen/reader_list_margin">
+        android:layout_alignParentBottom="true">
 
         <include
             android:id="@+id/layout_comment_box"

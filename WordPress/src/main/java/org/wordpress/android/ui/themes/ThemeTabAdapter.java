@@ -117,8 +117,9 @@ public class ThemeTabAdapter extends CursorAdapter {
         // = width of entire screen (phone and tablet portrait)
         // = width of entire screen - menu drawer width (tablet landscape)
         int maxWidth = context.getResources().getDisplayMetrics().widthPixels;
-        if (DisplayUtils.isXLarge(context) && DisplayUtils.isLandscape(context))
-            maxWidth -= context.getResources().getDimensionPixelSize(R.dimen.menu_drawer_width);
+        if (DisplayUtils.isXLarge(context) && DisplayUtils.isLandscape(context)) {
+            maxWidth -= context.getResources().getDimensionPixelSize(R.dimen.drawer_width_static);
+        }
 
         return (maxWidth - padding) / columnCount;
     }

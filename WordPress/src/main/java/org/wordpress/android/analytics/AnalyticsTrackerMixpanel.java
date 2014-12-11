@@ -467,40 +467,31 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 break;
             case OPENED_POSTS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_posts", AnalyticsTracker.Stat.APPLICATION_CLOSED);
+                        mixpanelInstructionsForEventName("Site Menu - Opened Posts");
                 break;
             case OPENED_PAGES:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_pages", AnalyticsTracker.Stat.APPLICATION_CLOSED);
+                        mixpanelInstructionsForEventName("Site Menu - Opened Pages");
                 break;
             case OPENED_COMMENTS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_comments", AnalyticsTracker.Stat.APPLICATION_CLOSED);
+                        mixpanelInstructionsForEventName("Site Menu - Opened Comments");
                 break;
             case OPENED_VIEW_SITE:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_view_site", AnalyticsTracker.Stat.APPLICATION_CLOSED);
+                        mixpanelInstructionsForEventName("Site Menu - Opened View Site");
                 break;
             case OPENED_VIEW_ADMIN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_view_admin", AnalyticsTracker.Stat.APPLICATION_CLOSED);
-                instructions.
-                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_view_admin");
+                        mixpanelInstructionsForEventName("Site Menu - Opened View Admin");
                 break;
             case OPENED_MEDIA_LIBRARY:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_media_library", AnalyticsTracker.Stat.APPLICATION_CLOSED);
+                        mixpanelInstructionsForEventName("Site Menu - Opened Media Library");
                 break;
             case OPENED_SETTINGS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_settings", AnalyticsTracker.Stat.APPLICATION_CLOSED);
+                        mixpanelInstructionsForEventName("Site Menu - Opened Settings");
                 break;
             case CREATED_ACCOUNT:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

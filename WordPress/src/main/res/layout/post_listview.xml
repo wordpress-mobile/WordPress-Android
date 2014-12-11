@@ -44,12 +44,13 @@
             android:layout_marginRight="@dimen/empty_list_description_side_margin" />
     </LinearLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/ptr_layout"
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -59,21 +60,18 @@
                 android:layout_height="match_parent"
                 android:drawSelectorOnTop="false"
                 tools:listitem="@layout/post_list_row" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
-            <ImageButton
-                android:id="@+id/fab_button"
-                android:layout_width="@dimen/fab_size"
-                android:layout_height="@dimen/fab_size"
-                android:layout_gravity="end|bottom"
-                android:layout_marginBottom="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:background="@drawable/fab_background"
-                android:elevation="@dimen/fab_elevation"
-                android:src="@drawable/ic_create_white_24dp"
-                android:stateListAnimator="@anim/pressed_fab" />
+        <org.wordpress.android.widgets.FloatingActionButton
+            android:id="@+id/fab_button"
+            android:layout_width="@dimen/fab_size"
+            android:layout_height="@dimen/fab_size"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:src="@drawable/ic_create_white_24dp" />
 
-        </FrameLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </FrameLayout>
 
 </RelativeLayout>
 

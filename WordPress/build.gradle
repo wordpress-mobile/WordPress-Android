@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.14.0'
+        classpath 'com.android.tools.build:gradle:1.0.0'
         classpath 'com.github.nrudenko:gradle-android-cq-plugin:0.1+'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:+'
     }
@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.5-beta-2"
-        versionCode 153
+        versionName "3.5-rc-2"
+        versionCode 155
         minSdkVersion 14
         targetSdkVersion 21
 
@@ -100,7 +100,7 @@ dependencies {
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
-    compile 'com.simperium.android:simperium:0.6.0'
+    compile 'com.simperium.android:simperium:0.6.2'
 
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
@@ -110,6 +110,8 @@ dependencies {
     debugCompile project(path:':libs:wpcomrest:WordPressComRest', configuration: 'debug')
     releaseCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'release')
     debugCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'debug')
+    releaseCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'release')
+    debugCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'debug')
 }
 
 

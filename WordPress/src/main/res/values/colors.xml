@@ -18,8 +18,6 @@
     <color name="color_control_highlight">@color/blue_extra_light</color>
 
     <color name="fab_color">@color/color_accent</color>
-    <color name="fab_color_selected">@color/calypso_orange</color>
-
     <color name="list_selected">@color/semi_transparent_blue_extra_light</color>
 
     <!-- Default colors -->
@@ -34,11 +32,11 @@
     <color name="background_grey">@color/grey_extra_light</color>
 
     <!-- Colors for menu drawer. -->
-    <color name="md__background">@color/white</color>
-    <color name="md__background_selected">@color/background_material_light</color>
-    <color name="md__icon_tint">@color/grey_medium_dark</color>
-    <color name="md__text">@color/grey_extra_dark</color>
-    <color name="md__divider">@color/grey_light</color>
+    <color name="drawer_background">@color/white</color>
+    <color name="drawer_background_selected">@color/translucent_grey_light</color>
+    <color name="drawer_icon_tint">@color/grey_medium_dark</color>
+    <color name="drawer_text">@color/grey_extra_dark</color>
+    <color name="drawer_divider">@color/grey_light</color>
 
     <color name="wordpress_blue">#21759B</color>
 
@@ -91,6 +89,9 @@
 
     <color name="semi_transparent_blue_extra_light">#ccc8eefc</color>
     <color name="translucent_grey_extra_dark">#80222222</color>
+    <color name="translucent_grey_light">#80dddddd</color>
+    <color name="translucent_grey_extra_light">#80eeeeee</color>
+    <color name="translucent_grey_medium_light">#80bbbbbb</color>
 
     <!-- native reader colors -->
     <color name="reader_divider_grey">@color/grey_extra_light</color>

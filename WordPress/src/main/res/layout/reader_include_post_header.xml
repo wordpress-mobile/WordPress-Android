@@ -9,14 +9,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
+    android:elevation="@dimen/card_elevation"
     android:orientation="vertical"
     android:paddingTop="@dimen/margin_large">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/reader_list_margin"
-        android:layout_marginRight="@dimen/reader_list_margin"
+        android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginRight="@dimen/reader_detail_margin"
         android:paddingLeft="@dimen/margin_large"
         android:paddingRight="@dimen/margin_medium">
 

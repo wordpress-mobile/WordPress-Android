@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.format.DateFormat;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,11 +49,10 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * The grid displaying the media items.
@@ -487,11 +485,9 @@ public class MediaGridFragment extends Fragment
         if (cursor != null && cursor.moveToFirst()) {
             mResultView.setVisibility(View.VISIBLE);
             setEmptyViewVisible(false);
-            SimpleDateFormat fmt = new SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(),
-                    "yyyy/MM/dd"));
-            fmt.setCalendar(startDate);
-            String formattedStart = fmt.format(startDate.getTime());
-            String formattedEnd = fmt.format(endDate.getTime());
+            DateFormat format = DateFormat.getDateInstance();
+            String formattedStart = format.format(startDate.getTime());
+            String formattedEnd = format.format(endDate.getTime());
             mResultView.setText(String.format(getString(R.string.media_gallery_date_range), formattedStart,
                     formattedEnd));
             return cursor;

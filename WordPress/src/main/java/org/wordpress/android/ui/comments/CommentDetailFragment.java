@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
@@ -188,9 +187,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     @Override
     public void onDestroy() {
+        if (mSuggestionServiceConnectionManager != null) {
+            mSuggestionServiceConnectionManager.unbindFromService();
+        }
         super.onDestroy();
-
-        mSuggestionServiceConnectionManager.unbindFromService();
     }
 
     @Override
@@ -215,6 +215,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
+        mEditReply.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d",
+                WordPress.getLoggedInUsername(getActivity(), WordPress.getCurrentBlog()),
+                getRemoteBlogId(), getCommentId()));
+
         mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
 
         // hide comment like button until we know it can be enabled in showCommentForNote()
@@ -740,6 +744,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     if (succeeded) {
                         ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
                         mEditReply.setText(null);
+                        mEditReply.getAutoSaveTextHelper().clearSavedText(mEditReply);
                     } else {
                         ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
                         // refocus editor on failure and show soft keyboard

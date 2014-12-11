@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
@@ -14,43 +13,17 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
+import org.wordpress.android.util.DisplayUtils;
 
 /*
  * displays a list of users who like a specific reader post
  */
 public class ReaderUserListActivity extends ActionBarActivity {
-    private static final String LIST_STATE = "list_state";
-    private Parcelable mListState = null;
-    private ListView mListView;
 
-    private ListView getListView() {
-        if (mListView == null) {
-            mListView = (ListView) findViewById(android.R.id.list);
-        }
-        return mListView;
-    }
-
+    private ReaderRecyclerView mRecyclerView;
     private ReaderUserAdapter mAdapter;
-    private ReaderUserAdapter getAdapter() {
-        if (mAdapter == null) {
-            mAdapter = new ReaderUserAdapter(this, mDataLoadedListener);
-        }
-        return mAdapter;
-    }
-
-    /*
-     * called by adapter when data has been loaded
-     */
-    private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
-        @Override
-        public void onDataLoaded(boolean isEmpty) {
-            // restore listView state so user returns to the previously scrolled-to item
-            if (!isEmpty && mListState != null) {
-                getListView().onRestoreInstanceState(mListState);
-                mListState = null;
-            }
-        }
-    };
+    private int mRestorePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,24 +37,46 @@ public class ReaderUserListActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        if (savedInstanceState != null) {
+            mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
+        }
+
+        int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
+        int spacingVertical = DisplayUtils.dpToPx(this, 1);
+        mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(spacingHorizontal, spacingVertical));
+
         long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
         long postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
         long commentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
-
-        if (savedInstanceState != null) {
-            mListState = savedInstanceState.getParcelable(LIST_STATE);
-        }
-
-        getListView().setAdapter(getAdapter());
         loadUsers(blogId, postId, commentId);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (getListView().getFirstVisiblePosition() > 0) {
-            outState.putParcelable(LIST_STATE, getListView().onSaveInstanceState());
+        int position = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+        if (position > 0) {
+            outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, position);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    private ReaderUserAdapter getAdapter() {
+        if (mAdapter == null) {
+            mAdapter = new ReaderUserAdapter(this);
+            mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
+                @Override
+                public void onDataLoaded(boolean isEmpty) {
+                    if (!isEmpty && mRestorePosition > 0) {
+                        mRecyclerView.scrollToPosition(mRestorePosition);
+                    }
+                    mRestorePosition = 0;
+                }
+            });
+            mRecyclerView.setAdapter(mAdapter);
+        }
+        return mAdapter;
     }
 
     @Override

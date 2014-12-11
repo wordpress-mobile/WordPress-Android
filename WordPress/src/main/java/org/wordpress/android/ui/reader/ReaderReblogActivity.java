@@ -364,8 +364,8 @@ public class ReaderReblogActivity extends ActionBarActivity {
                 boolean isLandscape = DisplayUtils.isLandscape(ReaderReblogActivity.this);
                 if (!isLandscape && mPost.hasFeaturedImage()) {
                     int displayWidth = DisplayUtils.getDisplayPixelWidth(ReaderReblogActivity.this);
-                    int listMargin = getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
-                    int photonWidth = displayWidth - (listMargin * 2);
+                    int margin = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
+                    int photonWidth = displayWidth - (margin * 2);
                     int photonHeight = getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
                     final String imageUrl = mPost.getFeaturedImageForDisplay(photonWidth, photonHeight);
                     imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);

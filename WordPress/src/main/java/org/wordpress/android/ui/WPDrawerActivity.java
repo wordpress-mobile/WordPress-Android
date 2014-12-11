@@ -1,6 +1,7 @@
 
 package org.wordpress.android.ui;
 
+import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
@@ -33,13 +35,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.ui.MenuDrawerItems.DrawerItem;
+import org.wordpress.android.ui.DrawerItems.DrawerItem;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -84,11 +85,10 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private MenuDrawerAdapter mDrawerAdapter;
+    private DrawerAdapter mDrawerAdapter;
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
 
-    private static final String OPENED_FROM_DRAWER = "opened_from_drawer";
     private static final int OPENED_FROM_DRAWER_DELAY = 250;
 
     @Override
@@ -102,51 +102,26 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         setSupportActionBar(getToolbar());
-
-        // if this activity was opened from the drawer (ie: via startDrawerIntent() from another
-        // drawer activity), hide the activity view then fade it in after a short delay
-        if (getIntent() != null && getIntent().getBooleanExtra(OPENED_FROM_DRAWER, false)) {
-            hideActivityContainer(false);
-            getIntent().putExtra(OPENED_FROM_DRAWER, false);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!isFinishing()) {
-                        showActivityContainer(true);
-                    }
-                }
-            }, OPENED_FROM_DRAWER_DELAY);
-        }
     }
 
     /*
-     * returns the view containing the activity
+     * fade out the view containing the current drawer activity
      */
-    private ViewGroup getActivityContainer() {
-        return (ViewGroup) findViewById(R.id.activity_container);
-    }
-
-    private void hideActivityContainer(boolean animate) {
-        View activityView = getActivityContainer();
+    private void hideActivityView() {
+        // activity_container is the parent view which contains the toolbar (first child) and
+        // the activity itself (second child)
+        ViewGroup container = (ViewGroup) findViewById(R.id.activity_container);
+        if (container == null || container.getChildCount() < 2) {
+            return;
+        }
+        final View activityView = container.getChildAt(1);
         if (activityView == null || activityView.getVisibility() != View.VISIBLE) {
             return;
         }
-        if (animate) {
-            ReaderAnim.fadeOut(activityView, ReaderAnim.Duration.SHORT);
-        } else {
-            activityView.setVisibility(View.GONE);
-        }
-    }
-    private void showActivityContainer(boolean animate) {
-        View activityView = getActivityContainer();
-        if (activityView == null || activityView.getVisibility() == View.VISIBLE) {
-            return;
-        }
-        if (animate) {
-            ReaderAnim.fadeIn(activityView, ReaderAnim.Duration.SHORT);
-        } else {
-            activityView.setVisibility(View.VISIBLE);
-        }
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(activityView, View.ALPHA, 1.0f, 0.0f);
+        fadeOut.setDuration(OPENED_FROM_DRAWER_DELAY);
+        fadeOut.setInterpolator(new AccelerateInterpolator());
+        fadeOut.start();
     }
 
     @Override
@@ -204,8 +179,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * @param contentViewId {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(int contentViewId) {
-        ViewGroup layoutContainer = getActivityContainer();
-        layoutContainer.addView(getLayoutInflater().inflate(contentViewId, null));
+        ViewGroup container = (ViewGroup) findViewById(R.id.activity_container);
+        container.addView(getLayoutInflater().inflate(contentViewId, null));
         initMenuDrawer();
     }
 
@@ -229,6 +204,16 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         // locate the drawer layout - note that it will not exist on landscape tablets
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null) {
+            int drawerWidth =
+                    isStaticMenuDrawer() ?
+                            getResources().getDimensionPixelSize(R.dimen.drawer_width_static) :
+                            WPActivityUtils.getOptimalDrawerWidth(this);
+            ViewGroup leftDrawer = (ViewGroup) mDrawerLayout.findViewById(R.id.left_drawer);
+            leftDrawer.getLayoutParams().width = drawerWidth;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.color_primary_dark));
+            }
             mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
             mDrawerToggle = new ActionBarDrawerToggle(
                     this,
@@ -252,7 +237,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         // initBlogSpinner() will setup the spinner
         mDrawerListView = (ListView) findViewById(R.id.drawer_list);
         if (mDrawerListView.getHeaderViewsCount() == 0) {
-            View view = getLayoutInflater().inflate(R.layout.menu_drawer_header, mDrawerListView, false);
+            View view = getLayoutInflater().inflate(R.layout.drawer_header, mDrawerListView, false);
             mDrawerListView.addHeaderView(view, null, false);
         }
 
@@ -264,7 +249,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             }
         });
 
-        mDrawerAdapter = new MenuDrawerAdapter(this);
+        mDrawerAdapter = new DrawerAdapter(this);
         mDrawerListView.setAdapter(mDrawerAdapter);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -279,21 +264,29 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     /*
-     * setup the spinner in the drawer which shows a list of the user's blogs - only appears
-     * when the user has more than one visible blog
+     * setup the spinner in the drawer header which shows a list of the user's blogs
      */
     private void initBlogSpinner() {
+        TextView txtBlogName = (TextView) findViewById(R.id.text_header_blog_name);
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
-        View divider = findViewById(R.id.blog_spinner_divider);
         String[] blogNames = getBlogNames();
         if (blogNames.length > 1) {
+            // more than one blog so show spinner enabling user to choose
+            txtBlogName.setVisibility(View.GONE);
             mBlogSpinner.setVisibility(View.VISIBLE);
-            divider.setVisibility(View.VISIBLE);
             mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
             populateBlogSpinner(blogNames);
-        } else {
+        } else if (blogNames.length == 1) {
+            // only one blog so hide spinner and show name of blog
+            txtBlogName.setVisibility(View.VISIBLE);
+            txtBlogName.setText(blogNames[0]);
             mBlogSpinner.setVisibility(View.GONE);
-            divider.setVisibility(View.GONE);
+            mBlogSpinner.setOnItemSelectedListener(null);
+        } else {
+            // no blogs so hide spinner and blog name
+            txtBlogName.setVisibility(View.GONE);
+            mBlogSpinner.setVisibility(View.GONE);
+            mBlogSpinner.setOnItemSelectedListener(null);
         }
     }
 
@@ -375,6 +368,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 break;
             case VIEW_SITE:
                 mShouldFinish = true;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
                 intent = WPActivityUtils.getIntentForActivityId(this, activityId);
                 break;
             case QUICK_PHOTO:
@@ -383,13 +377,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
                         ? Constants.QUICK_POST_PHOTO_CAMERA
                         : Constants.QUICK_POST_PHOTO_LIBRARY);
-                break;
-            case QUICK_VIDEO:
-                mShouldFinish = false;
-                intent = new Intent(WPDrawerActivity.this, EditPostActivity.class);
-                intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
-                        ? Constants.QUICK_POST_VIDEO_CAMERA
-                        : Constants.QUICK_POST_VIDEO_LIBRARY);
                 break;
             default :
                 mShouldFinish = false;
@@ -416,15 +403,12 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
             // close the drawer and fade out the activity container so current activity appears to be going away
             closeDrawer();
-            hideActivityContainer(true);
+            hideActivityView();
 
             // start the new activity after a brief delay to give drawer time to close
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    intent.putExtra(OPENED_FROM_DRAWER, true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    intent.putExtra(OPENED_FROM_DRAWER, true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(intent);
                 }
@@ -501,6 +485,21 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            final View view;
+            if (convertView == null) {
+                view = mInflater.inflate(R.layout.spinner_textview_drawer, parent, false);
+            } else {
+                view = convertView;
+            }
+
+            final TextView text = (TextView) view.findViewById(android.R.id.text1);
+            text.setText((String) getItem(position));
+
+            return view;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
             final View view;
             if (convertView == null) {
                 view = mInflater.inflate(R.layout.spinner_menu_dropdown_item, parent, false);
@@ -789,7 +788,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE)) {
-                SelfSignedSSLCertsManager.askForSslTrust(WPDrawerActivity.this);
+                SelfSignedSSLCertsManager.askForSslTrust(WPDrawerActivity.this, null);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT)) {
                 ToastUtils.showToast(context, R.string.limit_reached, Duration.LONG);
