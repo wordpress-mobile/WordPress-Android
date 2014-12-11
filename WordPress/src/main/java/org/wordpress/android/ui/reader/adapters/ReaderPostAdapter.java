@@ -33,7 +33,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRecyclerAdapter.ReaderPostViewHolder> {
+public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.ReaderPostViewHolder> {
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
 
@@ -101,8 +101,8 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
     }
 
     @Override
-    public ReaderPostViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.reader_cardview_post, viewGroup, false);
+    public ReaderPostViewHolder onCreateViewHolder(ViewGroup parent, int position) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_post, parent, false);
         return new ReaderPostViewHolder(view);
     }
 
@@ -285,7 +285,7 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
 
     // ********************************************************************************************
 
-    public ReaderPostRecyclerAdapter(Context context, ReaderTypes.ReaderPostListType postListType) {
+    public ReaderPostAdapter(Context context, ReaderTypes.ReaderPostListType postListType) {
         super();
 
         mPostListType = postListType;
@@ -296,6 +296,8 @@ public class ReaderPostRecyclerAdapter extends RecyclerView.Adapter<ReaderPostRe
         int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing);
         mPhotonWidth = displayWidth - (cardSpacing * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
+
+        setHasStableIds(true);
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {

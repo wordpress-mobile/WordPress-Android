@@ -5,26 +5,52 @@ import android.util.AttributeSet;
 import android.widget.MultiAutoCompleteTextView;
 
 import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
+import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
 public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
+    PersistentEditTextHelper mPersistentEditTextHelper;
+
     public SuggestionAutoCompleteText(Context context) {
         super(context, null);
-        TypefaceCache.setCustomTypeface(context, this, null);
-        this.setTokenizer(new SuggestionTokenizer());
-        this.setThreshold(1);
+        init(context, null);
     }
 
     public SuggestionAutoCompleteText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypefaceCache.setCustomTypeface(context, this, attrs);
-        this.setTokenizer(new SuggestionTokenizer());
-        this.setThreshold(1);
+        init(context, attrs);
     }
 
     public SuggestionAutoCompleteText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init(context, attrs);
+    }
+
+    private void init(Context context, AttributeSet attrs) {
         TypefaceCache.setCustomTypeface(context, this, attrs);
-        this.setTokenizer(new SuggestionTokenizer());
-        this.setThreshold(1);
+        setTokenizer(new SuggestionTokenizer());
+        setThreshold(1);
+        mPersistentEditTextHelper = new PersistentEditTextHelper(context);
+    }
+
+    public PersistentEditTextHelper getAutoSaveTextHelper() {
+        return mPersistentEditTextHelper;
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (getAutoSaveTextHelper().getUniqueId() == null) {
+            return;
+        }
+        getAutoSaveTextHelper().loadString(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (getAutoSaveTextHelper().getUniqueId() == null) {
+            return;
+        }
+        getAutoSaveTextHelper().saveString(this);
     }
 }

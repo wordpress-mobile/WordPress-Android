@@ -38,7 +38,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private WPTextView mCancelButton;
     private RelativeLayout mProgressBarSignIn;
     private boolean mSignoutOnCancelMode;
-    private boolean mAutoCompleteUrl = true;
+    private boolean mAutoCompleteUrl;
 
     public NewBlogFragment() {
     }
@@ -248,6 +248,15 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         mSiteTitleTextField = (EditText) rootView.findViewById(R.id.site_title);
         mSiteTitleTextField.addTextChangedListener(this);
         mSiteTitleTextField.addTextChangedListener(mSiteTitleWatcher);
+        mSiteTitleTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    mAutoCompleteUrl = EditTextUtils.getText(mSiteTitleTextField)
+                            .equals(EditTextUtils.getText(mSiteUrlTextField))
+                            || EditTextUtils.isEmpty(mSiteUrlTextField);
+                }
+            }
+        });
         return rootView;
     }
 

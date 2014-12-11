@@ -275,7 +275,9 @@ public class CommentsActivity extends WPDrawerActivity
                     new CommentActions.CommentActionListener() {
                 @Override
                 public void onActionResult(boolean succeeded) {
-                    if (isFinishing()) return;
+                    if (isFinishing() || !hasListFragment()) {
+                        return;
+                    }
 
                     getListFragment().setCommentIsModerating(comment.commentID, false);
 
@@ -304,7 +306,9 @@ public class CommentsActivity extends WPDrawerActivity
                                     new CommentActions.CommentActionListener() {
                                 @Override
                                 public void onActionResult(boolean succeeded) {
-                                    if (isFinishing()) return;
+                                    if (isFinishing() || !hasListFragment()) {
+                                        return;
+                                    }
 
                                     getListFragment().setCommentIsModerating(comment.commentID, false);
 

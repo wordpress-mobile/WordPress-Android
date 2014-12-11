@@ -2,10 +2,10 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -22,58 +22,44 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * owner must call setUsers() with the list of
  * users to display
  */
-public class ReaderUserAdapter extends BaseAdapter {
-    private final LayoutInflater mInflater;
+public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.UserViewHolder> {
     private ReaderUserList mUsers = new ReaderUserList();
-    private final DataLoadedListener mDataLoadedListener;
+    private DataLoadedListener mDataLoadedListener;
     private final int mAvatarSz;
 
-    public ReaderUserAdapter(Context context, DataLoadedListener dataLoadedListener) {
+    public ReaderUserAdapter(Context context) {
         super();
-        mInflater = LayoutInflater.from(context);
-        mDataLoadedListener = dataLoadedListener;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
     }
 
-    @Override
-    public boolean hasStableIds() {
-        return true;
+    public void setDataLoadedListener(DataLoadedListener listener) {
+        mDataLoadedListener = listener;
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return mUsers.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return mUsers.get(position);
+    boolean isEmpty() {
+        return (getItemCount() == 0);
     }
 
     @Override
-    public long getItemId(int position) {
-        return mUsers.get(position).userId;
+    public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_user, parent, false);
+        return new UserViewHolder(view);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public void onBindViewHolder(UserViewHolder holder, int position) {
         final ReaderUser user = mUsers.get(position);
-        final UserViewHolder holder;
-
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.reader_listitem_user, parent, false);
-            holder = new UserViewHolder(convertView);
-            convertView.setTag(holder);
-        } else {
-            holder = (UserViewHolder) convertView.getTag();
-        }
 
         holder.txtName.setText(user.getDisplayName());
         if (user.hasUrl()) {
             holder.txtUrl.setVisibility(View.VISIBLE);
             holder.txtUrl.setText(user.getUrlDomain());
-            convertView.setEnabled(true);
-            convertView.setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (user.hasBlogId()) {
@@ -83,21 +69,24 @@ public class ReaderUserAdapter extends BaseAdapter {
             });
         } else {
             holder.txtUrl.setVisibility(View.GONE);
-            convertView.setOnClickListener(null);
-            convertView.setEnabled(false);
+            holder.itemView.setOnClickListener(null);
         }
 
         holder.imgAvatar.setImageUrl(user.getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
-
-        return convertView;
     }
 
-    private static class UserViewHolder {
+    @Override
+    public long getItemId(int position) {
+        return mUsers.get(position).userId;
+    }
+
+    class UserViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtName;
         private final TextView txtUrl;
         private final WPNetworkImageView imgAvatar;
 
-        UserViewHolder(View view) {
+        public UserViewHolder(View view) {
+            super(view);
             txtName = (TextView) view.findViewById(R.id.text_name);
             txtUrl = (TextView) view.findViewById(R.id.text_url);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);

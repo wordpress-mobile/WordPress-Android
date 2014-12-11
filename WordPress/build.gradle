@@ -95,7 +95,7 @@ dependencies {
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
-    compile 'com.simperium.android:simperium:0.6.1'
+    compile 'com.simperium.android:simperium:0.6.2'
 
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
@@ -105,6 +105,8 @@ dependencies {
     debugCompile project(path:':libs:wpcomrest:WordPressComRest', configuration: 'debug')
     releaseCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'release')
     debugCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'debug')
+    releaseCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'release')
+    debugCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'debug')
 }
 
 
