@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderRecommendedBlog;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.BlogFollowChangeListener;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
@@ -60,24 +58,9 @@ public class ReaderBlogFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
-        final Context context = container.getContext();
-
+        View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
         mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
-        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(0, DisplayUtils.dpToPx(context, 1)));
-
-        if (getBlogType() == ReaderBlogType.RECOMMENDED) {
-            // TODO: add footer to load more recommendations
-            /*ViewGroup footerLoadMore = (ViewGroup) inflater.inflate(R.layout.reader_footer_recommendations, mListView, false);
-            mListView.addFooterView(footerLoadMore);
-            footerLoadMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    loadMoreRecommendations();
-                }
-            });*/
-        }
-
+        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(0, DisplayUtils.dpToPx(container.getContext(), 1)));
         return view;
     }
 
@@ -102,8 +85,6 @@ public class ReaderBlogFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // TODO:
-        //mListView.setOnItemClickListener(this);
         mRecyclerView.setAdapter(getBlogAdapter());
         refresh();
     }
@@ -142,27 +123,6 @@ public class ReaderBlogFragment extends Fragment
                 getBlogAdapter().checkFollowStatus();
             }
         }
-    }
-
-    /*
-     * user tapped to view more recommended blogs - increase the offset when requesting
-     * recommendations from local db and refresh the adapter
-     */
-    private void loadMoreRecommendations() {
-        if (!hasBlogAdapter() || getBlogAdapter().isEmpty()) {
-            return;
-        }
-
-        int currentOffset = AppPrefs.getReaderRecommendedBlogOffset();
-        int newOffset = currentOffset + ReaderConstants.READER_MAX_RECOMMENDED_TO_DISPLAY;
-
-        // start over if we've reached the max
-        if (newOffset >= ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST) {
-            newOffset = 0;
-        }
-
-        AppPrefs.setReaderRecommendedBlogOffset(newOffset);
-        refresh();
     }
 
     void refresh() {

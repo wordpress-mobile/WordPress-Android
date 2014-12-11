@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,13 +103,6 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(ARG_TAG_TYPE, getTagType());
         super.onSaveInstanceState(outState);
-    }
-
-    private void scrollToTagName(String tagName) {
-        int index = getTagAdapter().indexOfTagName(tagName);
-        if (index > -1) {
-            mRecyclerView.scrollToPosition(index);
-        }
     }
 
     void refresh() {
