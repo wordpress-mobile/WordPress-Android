@@ -496,22 +496,47 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case NOTIFICATION_APPROVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_times_notifications_approved");
+                                "number_of_notifications_approved");
+                break;
+            case NOTIFICATION_UNAPPROVED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
+                                "number_of_notifications_unapproved");
                 break;
             case NOTIFICATION_REPLIED_TO:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_times_notifications_replied_to");
+                                "number_of_notifications_replied_to");
                 break;
             case NOTIFICATION_TRASHED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_times_notifications_trashed");
+                                "number_of_notifications_trashed");
                 break;
             case NOTIFICATION_FLAGGED_AS_SPAM:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_times_notifications_flagged_as_spam");
+                                "number_of_notifications_flagged_as_spam");
+                break;
+            case NOTIFICATION_FOLLOW_ACTION:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Followed User");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_followed_user_from_notification");
+                break;
+            case NOTIFICATION_UNFOLLOW_ACTION:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Unfollowed User");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_unfollowed_user_from_notification");
+                break;
+            case NOTIFICATION_LIKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Liked Comment");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_comment_likes_from_notification");
+                break;
+            case NOTIFICATION_UNLIKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Unliked Comment");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_comment_unlikes_from_notification");
                 break;
             case OPENED_POSTS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
