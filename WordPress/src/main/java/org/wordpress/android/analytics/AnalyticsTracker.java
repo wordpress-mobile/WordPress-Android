@@ -77,6 +77,7 @@ public final class AnalyticsTracker {
         APPLICATION_STARTED,
         MEMORY_TRIMMED_COMPLETE,
         PUSH_NOTIFICATION_RECEIVED,
+        SUPPORT_OPENED_HELPSHIFT_SCREEN,
     }
 
     public interface Tracker {
