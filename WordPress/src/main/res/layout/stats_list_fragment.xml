@@ -16,12 +16,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_medium"
-            android:paddingRight="@dimen/margin_medium"
             android:paddingTop="@dimen/margin_small">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_module_title"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
                 style="@style/StatsModuleTitle" />
 
             <RadioGroup
@@ -33,6 +33,8 @@
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingTop="@dimen/margin_small"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
                 android:visibility="gone"></RadioGroup>
 
             <org.wordpress.android.widgets.WPTextView
@@ -42,6 +44,8 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingTop="@dimen/margin_small"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -53,6 +57,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:layout_marginRight="@dimen/margin_medium"
                     android:paddingBottom="@dimen/margin_small"
                     android:paddingTop="@dimen/margin_small">
 
@@ -85,6 +91,8 @@
                     android:id="@+id/stats_pagination_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:layout_marginRight="@dimen/margin_medium"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:visibility="gone">

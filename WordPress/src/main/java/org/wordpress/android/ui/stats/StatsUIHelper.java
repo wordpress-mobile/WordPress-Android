@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Spannable;
 import android.text.style.URLSpan;
@@ -74,8 +75,6 @@ public class StatsUIHelper {
         }
 
         int numExistingViews = linearLayout.getChildCount();
-       // int altRowColor = ctx.getResources().getColor(R.color.stats_alt_row);
-
         // remove excess views
         if (count < numExistingViews) {
             int numToRemove = numExistingViews - count;
@@ -85,20 +84,39 @@ public class StatsUIHelper {
 
         int bgColor = Color.TRANSPARENT;
         for (int i = 0; i < count; i++) {
-           // int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
             final View view;
             // reuse existing view when possible
             if (i < numExistingViews) {
                 View convertView = linearLayout.getChildAt(i);
                 view = adapter.getView(i, convertView, linearLayout);
                 view.setBackgroundColor(bgColor);
+                setViewBackgroundWithoutResettingPadding(view, i == 0 ? 0 : R.drawable.stats_list_item_odd_background);
             } else {
                 view = adapter.getView(i, null, linearLayout);
                 view.setBackgroundColor(bgColor);
+                setViewBackgroundWithoutResettingPadding(view, i == 0 ? 0 : R.drawable.stats_list_item_odd_background);
                 linearLayout.addView(view);
             }
         }
         linearLayout.invalidate();
+    }
+
+    /**
+     *
+     * Padding information are reset when changing the background Drawable on a View.
+     * The reason why setting an image resets the padding is because 9-patch images can encode padding.
+     *
+     * See http://stackoverflow.com/a/10469121 and
+     * http://www.mail-archive.com/android-developers@googlegroups.com/msg09595.html
+     *
+     * @param v
+     * @param backgroundResId
+     */
+    private static void setViewBackgroundWithoutResettingPadding(final View v, final int backgroundResId) {
+        final int paddingBottom = v.getPaddingBottom(), paddingLeft = v.getPaddingLeft();
+        final int paddingRight = v.getPaddingRight(), paddingTop = v.getPaddingTop();
+        v.setBackgroundResource(backgroundResId);
+        v.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
     }
 
     public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout) {
@@ -128,7 +146,6 @@ public class StatsUIHelper {
         }
 
         int numExistingGroupViews = mLinearLayout.getChildCount();
-        //int altRowColor = ctx.getResources().getColor(R.color.stats_alt_row);
 
         // remove excess views
         if (groupCount < numExistingGroupViews) {
@@ -142,7 +159,6 @@ public class StatsUIHelper {
         // add each group
         for (int i = 0; i < groupCount; i++) {
             boolean isExpanded = mGroupIdToExpandedMap.get(i);
-            //int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
 
             // reuse existing view when possible
             final View groupView;
@@ -150,10 +166,11 @@ public class StatsUIHelper {
                 View convertView = mLinearLayout.getChildAt(i);
                 groupView = mAdapter.getGroupView(i, isExpanded, convertView, mLinearLayout);
                 groupView.setBackgroundColor(bgColor);
+                setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_odd_background);
             } else {
                 groupView = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
                 groupView.setBackgroundColor(bgColor);
-                mLinearLayout.addView(groupView);
+                setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_odd_background);                mLinearLayout.addView(groupView);
             }
 
             // add children if this group is expanded

@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="@dimen/margin_medium"
-    android:paddingBottom="@dimen/margin_medium">
+    android:padding="@dimen/margin_medium">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/layout_content"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/stats_list_cell_image"
@@ -35,8 +35,8 @@
             android:layout_height="wrap_content"
             android:minHeight="24dp"
             android:layout_marginRight="@dimen/margin_large"
-            android:drawablePadding="@dimen/margin_small"
             android:maxLines="3"
+            android:gravity="center_vertical"
             android:autoLink="none"
             android:textColor="@color/stats_text_color"
             android:textColorLink="@color/stats_link_text_color"
