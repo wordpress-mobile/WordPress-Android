@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
@@ -95,7 +96,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));
 
             // image
-            holder.showNetworkImage(getServiceImage(serviceName));
+            holder.networkImageView.setImageUrl(getServiceImage(serviceName), WPNetworkImageView.ImageType.STATS_SITE_AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             return rowView;
@@ -103,31 +104,25 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     }
 
     private String getServiceImage(String service) {
+        String serviceIconURL;
+
         if (service.equals("facebook")) {
-            return "https://secure.gravatar.com/blavatar/2343ec78a04c6ea9d80806345d31fd78?s=128";
+            serviceIconURL = "https://secure.gravatar.com/blavatar/2343ec78a04c6ea9d80806345d31fd78?s=";
+        } else if (service.equals("twitter")) {
+            serviceIconURL = "https://secure.gravatar.com/blavatar/7905d1c4e12c54933a44d19fcd5f9356?s=";
+        } else if (service.equals("tumblr")) {
+            serviceIconURL = "https://secure.gravatar.com/blavatar/84314f01e87cb656ba5f382d22d85134?s=";
+        } else if (service.equals("google_plus")) {
+            serviceIconURL = "https://secure.gravatar.com/blavatar/4a4788c1dfc396b1f86355b274cc26b3?s=";
+        } else if (service.equals("linkedin")) {
+            serviceIconURL = "https://secure.gravatar.com/blavatar/f54db463750940e0e7f7630fe327845e?s=";
+        } else if (service.equals("path")) {
+            serviceIconURL = "https://secure.gravatar.com/blavatar/3a03c8ce5bf1271fb3760bb6e79b02c1?s=";
+        } else {
+            return null;
         }
 
-        if (service.equals("twitter")) {
-            return "https://secure.gravatar.com/blavatar/7905d1c4e12c54933a44d19fcd5f9356?s=128";
-        }
-
-        if (service.equals("tumblr")) {
-            return "https://secure.gravatar.com/blavatar/84314f01e87cb656ba5f382d22d85134?s=128";
-        }
-
-        if (service.equals("google_plus")) {
-            return "https://secure.gravatar.com/blavatar/4a4788c1dfc396b1f86355b274cc26b3?s=128";
-        }
-
-        if (service.equals("linkedin")) {
-            return "https://secure.gravatar.com/blavatar/f54db463750940e0e7f7630fe327845e?s=128";
-        }
-
-        if (service.equals("path")) {
-            return "https://secure.gravatar.com/blavatar/3a03c8ce5bf1271fb3760bb6e79b02c1?s=128";
-        }
-
-        return null;
+        return serviceIconURL + mResourceVars.headerAvatarSizePx;
     }
 
     private String getServiceName(String service) {

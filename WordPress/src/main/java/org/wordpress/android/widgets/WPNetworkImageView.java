@@ -40,7 +40,8 @@ public class WPNetworkImageView extends ImageView {
                                   MSHOT,
                                   VIDEO,
                                   AVATAR,
-                             SITE_AVATAR}
+                             SITE_AVATAR,
+                       STATS_SITE_AVATAR}
 
     private ImageType mImageType = ImageType.NONE;
     private String mUrl;
@@ -305,6 +306,9 @@ public class WPNetworkImageView extends ImageView {
                 // Grey circle for avatars
                 setImageResource(R.drawable.shape_oval_grey_light);
                 break;
+            case STATS_SITE_AVATAR:
+                setImageDrawable(new ColorDrawable(getColorRes(R.color.calypso_blue_border)));
+                break;
             default :
                 // light grey box for all others
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
@@ -328,6 +332,9 @@ public class WPNetworkImageView extends ImageView {
             case SITE_AVATAR:
                 // square "mystery man" for failed site avatars
                 setImageResource(R.drawable.gravatar_placeholder);
+                break;
+            case STATS_SITE_AVATAR:
+                setImageDrawable(new ColorDrawable(getColorRes(R.color.calypso_blue_border)));
                 break;
             default :
                 // medium grey box for all others

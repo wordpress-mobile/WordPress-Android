@@ -13,12 +13,12 @@
         android:id="@+id/layout_content"
         android:gravity="center_vertical">
 
-        <com.android.volley.toolbox.NetworkImageView
+        <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/stats_list_cell_image"
-            android:layout_marginRight="@dimen/margin_small"
-            android:visibility="gone"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
+            android:layout_width="@dimen/avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
+            android:layout_marginRight="@dimen/margin_large"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/stats_list_cell_chevron"

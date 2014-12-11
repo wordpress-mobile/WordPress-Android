@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
@@ -185,12 +188,8 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
-            // icon
-            if (StringUtils.isNotBlank(icon)) {
-                holder.showNetworkImage(icon);
-            } else {
-                holder.networkImageView.setVisibility(View.GONE);
-            }
+            holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(icon, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.STATS_SITE_AVATAR);
+            holder.networkImageView.setVisibility(View.VISIBLE);
 
             // expand/collapse chevron
             holder.chevronImageView.setVisibility(children > 1 ? View.VISIBLE : View.GONE);

@@ -20,7 +20,9 @@ import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.TypefaceCache;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -262,7 +264,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             holder.totalsTextView.setText(getSinceLabel(currentRowData.getDateSubscribed()));
 
             // Avatar
-            holder.showNetworkImage(currentRowData.getAvatar());
+            holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
+            holder.networkImageView.setVisibility(View.VISIBLE);
 
             final FollowDataModel followData = currentRowData.getFollowData();
             if (followData == null) {

@@ -11,6 +11,8 @@ import org.wordpress.android.ui.stats.models.GeoviewModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
@@ -94,7 +96,10 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // image (country flag)
-            holder.showNetworkImage(imageUrl);
+            //holder.showNetworkImage(imageUrl);
+
+            holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(imageUrl, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.SITE_AVATAR);
+            holder.networkImageView.setVisibility(View.VISIBLE);
 
             return rowView;
         }

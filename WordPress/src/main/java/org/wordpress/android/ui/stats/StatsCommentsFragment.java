@@ -34,8 +34,10 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.TypefaceCache;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -242,7 +244,8 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
 
             // avatar
-            holder.showNetworkImage(currentRowData.getAvatar());
+            holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
+            holder.networkImageView.setVisibility(View.VISIBLE);
 
             final FollowDataModel followData = currentRowData.getFollowData();
             if (followData == null) {

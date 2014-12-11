@@ -65,6 +65,10 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract boolean isExpandableList();
     protected abstract boolean isViewAllOptionAvailable();
 
+
+    protected StatsResourceVars mResourceVars;
+
+
     // Container Activity must implement this interface
     public interface OnRequestDataListener {
         public void onRefreshRequested(StatsService.StatsEndpointsEnum[] endPointsNeedUpdate);
@@ -74,6 +78,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        mResourceVars = new StatsResourceVars(activity);
         try {
             mMoreDataListener = (OnRequestDataListener) activity;
         } catch (ClassCastException e) {

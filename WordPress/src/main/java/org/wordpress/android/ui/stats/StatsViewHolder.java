@@ -12,6 +12,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
  * View holder for stats_list_cell layout
@@ -19,7 +20,7 @@ import org.wordpress.android.WordPress;
 public class StatsViewHolder {
     public final TextView entryTextView;
     public final TextView totalsTextView;
-    public final NetworkImageView networkImageView;
+    public final WPNetworkImageView networkImageView;
     public final ImageView chevronImageView;
     public final ImageView imgMore;
 
@@ -29,9 +30,7 @@ public class StatsViewHolder {
         totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
         chevronImageView = (ImageView) view.findViewById(R.id.stats_list_cell_chevron);
 
-        networkImageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
-        networkImageView.setErrorImageResId(R.drawable.stats_blank_image);
-        networkImageView.setDefaultImageResId(R.drawable.stats_blank_image);
+        networkImageView = (WPNetworkImageView) view.findViewById(R.id.stats_list_cell_image);
 
         imgMore = (ImageView) view.findViewById(R.id.image_more);
     }
@@ -63,16 +62,16 @@ public class StatsViewHolder {
 
     /*
      * used by stats fragments to show a downloadable icon or default image
-     */
+
     public void showNetworkImage(String imageUrl) {
         if (networkImageView == null) {
             return;
         }
         if (imageUrl != null && imageUrl.startsWith("http")) {
-            networkImageView.setImageUrl(imageUrl, WordPress.imageLoader);
+            networkImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.SITE_AVATAR);
         } else {
             networkImageView.setImageResource(R.drawable.stats_blank_image);
         }
         networkImageView.setVisibility(View.VISIBLE);
-    }
+    } */
 }
