@@ -610,6 +610,14 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Support - Opened Helpshift Screen");
                 break;
+            case LOGIN_FAILED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Failed Login");
+                break;
+            case LOGIN_FAILED_TO_GUESS_XMLRPC:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Failed To Guess XMLRPC");
+                break;
             default:
                 instructions = null;
                 break;

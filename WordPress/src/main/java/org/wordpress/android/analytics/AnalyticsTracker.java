@@ -78,6 +78,8 @@ public final class AnalyticsTracker {
         MEMORY_TRIMMED_COMPLETE,
         PUSH_NOTIFICATION_RECEIVED,
         SUPPORT_OPENED_HELPSHIFT_SCREEN,
+        LOGIN_FAILED,
+        LOGIN_FAILED_TO_GUESS_XMLRPC
     }
 
     public interface Tracker {
