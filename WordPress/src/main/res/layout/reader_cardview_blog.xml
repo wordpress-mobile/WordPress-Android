@@ -8,7 +8,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:stateListAnimator="@anim/pressed_card"
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="0dp">
 
@@ -18,10 +17,10 @@
         android:background="?android:selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_large"
         android:paddingLeft="@dimen/margin_extra_large"
         android:paddingRight="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_medium">
+        android:paddingTop="@dimen/margin_large">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_blog"
