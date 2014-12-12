@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.reader;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -17,7 +19,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -348,9 +352,20 @@ public class ReaderPostListFragment extends Fragment {
             @Override
             public void run() {
                 if (isAdded()) {
-                    final ViewGroup header = (ViewGroup) getView().findViewById(R.id.frame_header);
-                    AniUtils.startAnimation(header, R.anim.reader_top_bar_in);
+                    ViewGroup header = (ViewGroup) getView().findViewById(R.id.frame_header);
                     header.setVisibility(View.VISIBLE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Animator animator = ViewAnimationUtils.createCircularReveal(
+                                header,
+                                header.getWidth() / 2,
+                                0,
+                                0,
+                                (float) Math.hypot(header.getWidth(), header.getHeight()));
+                        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animator.start();
+                    } else {
+                        AniUtils.startAnimation(header, R.anim.reader_top_bar_in);
+                    }
                 }
             }
         }, 250);
