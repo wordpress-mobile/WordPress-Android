@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.utils;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;

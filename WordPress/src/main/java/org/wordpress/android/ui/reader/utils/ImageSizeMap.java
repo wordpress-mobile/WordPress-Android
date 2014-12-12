@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.UrlUtils;
@@ -17,9 +16,9 @@ import java.util.Iterator;
  * of the post endpoints
  */
 public class ImageSizeMap extends HashMap<String, ImageSizeMap.ImageSize> {
-
+    private static final String EMPTY_JSON = "{}";
     public ImageSizeMap(String jsonString) {
-        if (TextUtils.isEmpty(jsonString)) {
+        if (TextUtils.isEmpty(jsonString) || jsonString.equals(EMPTY_JSON)) {
             return;
         }
 
