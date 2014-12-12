@@ -17,10 +17,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/reader_card_spacing"
         android:layout_marginRight="@dimen/reader_card_spacing"
-        android:paddingTop="@dimen/margin_small"
         android:paddingBottom="@dimen/margin_large"
         android:paddingLeft="@dimen/margin_large"
         android:paddingRight="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_small"
         android:visibility="invisible"
         tools:visibility="visible">
 
@@ -47,7 +47,7 @@
             android:layout_toLeftOf="@+id/image_mshot"
             android:ellipsize="end"
             android:maxLines="3"
-            android:textColor="@color/grey_light"
+            android:textColor="@color/blue_extra_light"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_blog_description" />
 
@@ -62,7 +62,7 @@
             android:layout_toRightOf="@+id/text_follow_blog"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/grey_light"
+            android:textColor="@color/blue_extra_light"
             tools:text="followers" />
 
         <org.wordpress.android.widgets.WPTextView

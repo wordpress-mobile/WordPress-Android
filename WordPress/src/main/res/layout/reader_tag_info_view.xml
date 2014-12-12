@@ -32,7 +32,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/grey_light"
+            android:textColor="@color/blue_extra_light"
             android:textSize="@dimen/text_sz_large"
             tools:text="@string/reader_label_tag_preview" />
 
