@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -340,18 +341,19 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     /*
-     * animate in the blog/tag header
+     * animate in the blog/tag info header after a brief delay
      */
     private void animateHeader() {
-        if (!isAdded()) {
-            return;
-        }
-        ViewGroup header = (ViewGroup) getView().findViewById(R.id.frame_header);
-        if (header.getVisibility() == View.VISIBLE) {
-            return;
-        }
-        AniUtils.startAnimation(header, R.anim.reader_top_bar_in);
-        header.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded()) {
+                    final ViewGroup header = (ViewGroup) getView().findViewById(R.id.frame_header);
+                    AniUtils.startAnimation(header, R.anim.reader_top_bar_in);
+                    header.setVisibility(View.VISIBLE);
+                }
+            }
+        }, 250);
     }
 
     @Override
@@ -929,7 +931,6 @@ public class ReaderPostListFragment extends Fragment {
                         && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
                         && updateAction == RequestDataAction.LOAD_NEWER
                         && !isListScrolledToTop();
-
                 if (showNewPostsBar) {
                     showNewPostsBar();
                 } else if (result.isNewOrChanged()) {
