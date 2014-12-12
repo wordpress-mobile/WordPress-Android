@@ -150,8 +150,6 @@
         <activity android:name=".ui.stats.StatsViewAllActivity"
                   android:theme="@style/CalypsoTheme"/>
 
-        <activity android:name=".ui.stats.StatsSinglePostDetailsActivity"/>
-
         <activity android:name=".ui.WPWebViewActivity"/>
 
         <!-- Media Activities -->

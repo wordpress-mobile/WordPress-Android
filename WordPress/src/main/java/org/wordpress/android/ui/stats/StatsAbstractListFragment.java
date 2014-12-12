@@ -125,7 +125,10 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         if (savedInstanceState != null) {
             AppLog.d(AppLog.T.STATS, this.getTag() + " > restoring instance state");
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
-                mDatamodels = (Serializable[]) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+                Serializable oldData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+                if (oldData != null && oldData instanceof Serializable[]) {
+                    mDatamodels = (Serializable[]) oldData;
+                }
             }
         }
     }
@@ -241,7 +244,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 if (isSingleView()) {
                     return; // already in single view
                 }
-                AppLog.w(AppLog.T.STATS, "View All Tapped");
 
                 // Model cannot be null here
                 if (mDatamodels == null) {

@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
-import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
-import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.ClickGroupModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;

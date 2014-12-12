@@ -1,19 +1,12 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListAdapter;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 
 import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
@@ -24,7 +17,6 @@ import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;

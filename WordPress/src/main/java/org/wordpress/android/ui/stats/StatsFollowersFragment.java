@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.PopupMenu;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -40,8 +38,6 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
 
         int dp4 = DisplayUtils.dpToPx(view.getContext(), 4);
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
-
-        //String[] titles = getTabTitles();
 
         String[] titles = {
                 getResources().getString(R.string.stats_followers_wpcom_selector),
@@ -94,7 +90,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
+        //AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
         outState.putInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
         super.onSaveInstanceState(outState);
     }
@@ -143,12 +139,18 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             if (isSingleView()) {
                 if (followersModel.getPages() > 1) {
                     mPaginationContainer.setVisibility(View.VISIBLE);
-                    mPaginationText.setText("Page " + followersModel.getPage() + " of " + followersModel.getPages());
+                    mPaginationText.setText(
+                            String.format(
+                                    getString(R.string.stats_pagination_label),
+                                    followersModel.getPage(),
+                                    followersModel.getPages()
+                            )
+                    );
                     mPaginationGoBackButton.setEnabled(true);
                     mPaginationGoForwardButton.setEnabled(true);
 
                     if (followersModel.getPage() == 1) {
-                        mPaginationGoBackButton.setVisibility(View.GONE);
+                        mPaginationGoBackButton.setVisibility(View.INVISIBLE);
                     } else {
                         mPaginationGoBackButton.setVisibility(View.VISIBLE);
                         mPaginationGoBackButton.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +167,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
                     }
 
                     if (followersModel.getPage() == followersModel.getPages()) {
-                        mPaginationGoForwardButton.setVisibility(View.GONE);
+                        mPaginationGoForwardButton.setVisibility(View.INVISIBLE);
                     } else {
                         mPaginationGoForwardButton.setVisibility(View.VISIBLE);
                         mPaginationGoForwardButton.setOnClickListener(new View.OnClickListener() {
@@ -181,7 +183,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
                         });
                     }
                 } else {
-                    mPaginationContainer.setVisibility(View.GONE);
+                    mPaginationContainer.setVisibility(View.INVISIBLE);
                 }
             }
 

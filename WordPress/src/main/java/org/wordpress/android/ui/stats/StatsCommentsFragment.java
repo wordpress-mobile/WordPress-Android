@@ -1,29 +1,17 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
-import android.content.OperationApplicationException;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.PopupMenu;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.adapters.PostsAndPagesAdapter;
 import org.wordpress.android.ui.stats.models.AuthorModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
@@ -35,15 +23,10 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.io.Serializable;
-import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class StatsCommentsFragment extends StatsAbstractListFragment implements RadioGroup.OnCheckedChangeListener {
@@ -108,7 +91,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
+        //AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
         outState.putInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
         super.onSaveInstanceState(outState);
     }

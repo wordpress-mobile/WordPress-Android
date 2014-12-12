@@ -134,7 +134,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > saving instance state");
+        //AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > saving instance state");
 
         outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
@@ -281,16 +281,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
                 switch (overviewItem) {
                     case VIEWS:
-                        currentBtm.setText(overviewItem.getLabel() + " " +  modelTapped.getViews());
+                        currentBtm.setText(overviewItem.getLabel() + ": " +  modelTapped.getViews());
                         break;
                     case VISITORS:
-                        currentBtm.setText(overviewItem.getLabel() + " " +  modelTapped.getVisitors());
+                        currentBtm.setText(overviewItem.getLabel() + ": " +  modelTapped.getVisitors());
                         break;
                     case LIKES:
-                        currentBtm.setText(overviewItem.getLabel() + " " +  modelTapped.getLikes());
+                        currentBtm.setText(overviewItem.getLabel() + ": " +  modelTapped.getLikes());
                         break;
                     case COMMENTS:
-                        currentBtm.setText(overviewItem.getLabel() + " " +  modelTapped.getComments());
+                        currentBtm.setText(overviewItem.getLabel() + ": " +  modelTapped.getComments());
                         break;
                 }
             }
@@ -366,10 +366,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (context != null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View emptyBarGraphView = inflater.inflate(R.layout.stats_bar_graph_empty, mGraphContainer, false);
+          /*
+          We could show loading indicator here
             if (isLoading) {
-                //final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
-                //emptyLabel.setText("Loading...");
+                final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
+                emptyLabel.setText("Loading...");
             }
+            */
             if (emptyBarGraphView != null) {
                 mGraphContainer.removeAllViews();
                 mGraphContainer.addView(emptyBarGraphView);
@@ -387,16 +390,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
                 switch (overviewItem) {
                     case VIEWS:
-                        currentBtm.setText(overviewItem.getLabel() + " " +  0);
+                        currentBtm.setText(overviewItem.getLabel() + ": " +  0);
                         break;
                     case VISITORS:
-                        currentBtm.setText(overviewItem.getLabel() + " " + 0);
+                        currentBtm.setText(overviewItem.getLabel() + ": " + 0);
                         break;
                     case LIKES:
-                        currentBtm.setText(overviewItem.getLabel() + " " +  0);
+                        currentBtm.setText(overviewItem.getLabel() + ": " +  0);
                         break;
                     case COMMENTS:
-                        currentBtm.setText(overviewItem.getLabel() + " " +  0);
+                        currentBtm.setText(overviewItem.getLabel() + ": " +  0);
                         break;
                 }
             }
@@ -414,14 +417,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
         */
     }
-
-   /* private int getNumOfHorizontalLabels(int numPoints) {
-        if (getTimeframe() == StatsTimeframe.DAY) {
-            return numPoints / 2;
-        } else {
-            return numPoints / 3;
-        }
-    }*/
 
     @Override
     protected String getTitle() {
@@ -449,17 +444,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
 
             StatsService.StatsEndpointsEnum sectionToUpdate = (StatsService.StatsEndpointsEnum) intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_NAME);
-            if (/*sectionToUpdate != StatsService.StatsSectionEnum.SUMMARY && */ sectionToUpdate != StatsService.StatsEndpointsEnum.VISITS) {
+            if (sectionToUpdate != StatsService.StatsEndpointsEnum.VISITS) {
                 return;
             }
 
             if (action.equals(StatsService.ACTION_STATS_SECTION_UPDATED)) {
                 Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_DATA);
 
-                /*if (dataObj == null || dataObj instanceof VolleyError) {
-                    //TODO: show the error on the section ???
-                    return;
-                }*/
                 mVisitsData = (dataObj == null || dataObj instanceof VolleyError) ? null : (VisitsModel) dataObj;
                 mSelectedBarGraphBarIndex = -1;
                 mSelectedOverviewItemIndex = 0;
@@ -476,11 +467,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     @Override
     public void onBarTapped(int tappedBar) {
-        AppLog.d(AppLog.T.STATS, " Tapped bar date " + mStatsDate[tappedBar]);
+        //AppLog.d(AppLog.T.STATS, " Tapped bar date " + mStatsDate[tappedBar]);
         mSelectedBarGraphBarIndex = tappedBar;
         updateUIBelowTheGraph(tappedBar);
 
-        //TODO: move this code in utility stats. See activity that has similar code.
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             return;
         }
@@ -582,22 +572,5 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
             return titles;
         }
-
-        // Field name as returned from the REST API
-       /* public String getRestApiFieldName() {
-            switch (this) {
-                case VIEWS:
-                    return "views";
-                case VISITORS:
-                    return "visitors";
-                case LIKES:
-                    return "likes";
-                case REBLOGS:
-                    return "reblogs";
-                case COMMENTS:
-                    return "comments";
-            }
-            return "";
-        } */
     }
 }

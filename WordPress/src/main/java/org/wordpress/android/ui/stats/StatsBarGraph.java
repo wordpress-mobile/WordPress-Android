@@ -80,7 +80,7 @@ class StatsBarGraph extends GraphView {
 
         private void highlightBarAndBroadcastDate() {
             int tappedBar = getTappedBar();
-            AppLog.d(AppLog.T.STATS, this.getClass().getName() + " Tapped bar " + tappedBar);
+            //AppLog.d(AppLog.T.STATS, this.getClass().getName() + " Tapped bar " + tappedBar);
             if (tappedBar >= 0) {
                 highlightBar(tappedBar);
                 if (mGestureListener != null) {

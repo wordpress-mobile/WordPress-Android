@@ -8,10 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**

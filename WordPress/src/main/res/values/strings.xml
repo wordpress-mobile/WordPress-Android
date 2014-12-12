@@ -352,6 +352,7 @@
     <string name="stats_view">View</string>
     <string name="stats_follow">Follow</string>
     <string name="stats_unfollow">Unfollow</string>
+    <string name="stats_pagination_label">Page %1$s of %2$s</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
@@ -368,8 +369,6 @@
     <string name="stats_reblogs">Reblogs</string>
     <string name="stats_comments">Comments</string>
 
-
-    <!-- VERIFY the STATS strings BELOW!!! -->
 
     <!-- stats: labels for the views -->
     <string name="stats_view_visitors_and_views">Visitors and Views</string>

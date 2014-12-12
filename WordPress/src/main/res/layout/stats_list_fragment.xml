@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small">
 
             <org.wordpress.android.widgets.WPTextView
@@ -35,7 +34,7 @@
                 android:paddingTop="@dimen/margin_small"
                 android:layout_marginLeft="@dimen/margin_large"
                 android:layout_marginRight="@dimen/margin_large"
-                android:visibility="gone"></RadioGroup>
+                android:visibility="gone"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_module_totals_label"
@@ -85,14 +84,14 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:scrollbarStyle="outsideOverlay"
-                    android:visibility="gone"></LinearLayout>
+                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:id="@+id/stats_pagination_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_large"
-                    android:layout_marginRight="@dimen/margin_large"
+                    android:layout_gravity="center"
+                    android:background="@drawable/stats_view_all_button_background"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:visibility="gone">

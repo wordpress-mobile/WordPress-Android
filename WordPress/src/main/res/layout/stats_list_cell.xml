@@ -66,17 +66,15 @@
             android:textSize="@dimen/text_sz_medium" />
     </LinearLayout>
 
+
+    <!-- expanded children will be inserted here -->
     <LinearLayout
+        android:id="@+id/layout_child_container"
         android:orientation="vertical"
         android:layout_marginTop="@dimen/margin_medium"
-        android:id="@+id/layout_child_container"
         android:visibility="gone"
         android:background="@color/stats_lists_background_color"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <!-- expanded children will be inserted here -->
-
-    </LinearLayout>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

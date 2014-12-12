@@ -339,7 +339,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     @Override
     public void onRefreshRequested(StatsService.StatsEndpointsEnum[] endPointsNeedUpdate) {
         if (mIsUpdatingStats) {
-            AppLog.d(T.STATS, "stats activity  > onRefreshRequested: already refreshing stats");
             return;
         }
         mSwipeToRefreshHelper.setRefreshing(mIsUpdatingStats);

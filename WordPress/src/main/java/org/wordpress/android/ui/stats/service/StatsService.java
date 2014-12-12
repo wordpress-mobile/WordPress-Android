@@ -267,7 +267,7 @@ public class StatsService extends Service {
                     // do other stuff here
                     if (response != null) {
                         try {
-                            AppLog.d(T.STATS, response.toString());
+                            //AppLog.d(T.STATS, response.toString());
                             mResponseObjectModel = StatsUtils.parseResponse(mEndpointName, mRequestBlogId, response);
                         } catch (JSONException e) {
                             AppLog.e(AppLog.T.STATS, e);

@@ -96,7 +96,10 @@ public class StatsViewAllActivity extends ActionBarActivity
 
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
-            mRestResponse = (Serializable[]) savedInstanceState.getSerializable(StatsAbstractFragment.ARG_REST_RESPONSE);
+            Serializable oldData = savedInstanceState.getSerializable(StatsAbstractFragment.ARG_REST_RESPONSE);
+            if (oldData != null && oldData instanceof Serializable[]) {
+                mRestResponse = (Serializable[]) oldData;
+            }
             mTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
             mDate = savedInstanceState.getString(StatsAbstractFragment.ARGS_START_DATE);
             int ordinal = savedInstanceState.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, 0);
@@ -449,9 +452,9 @@ public class StatsViewAllActivity extends ActionBarActivity
                 public void run() {
                     if (response != null) {
                         try {
-                            AppLog.d(AppLog.T.STATS, response.toString());
+                            //AppLog.d(AppLog.T.STATS, response.toString());
                             final Serializable resp = StatsUtils.parseResponse(mEndpointName, mRequestBlogId, response);
-                            notifySectionUpdated(mEndpointName, resp); // FIXME: Store the new data received in the activity
+                            notifySectionUpdated(mEndpointName, resp);
                         } catch (JSONException e) {
                             AppLog.e(AppLog.T.STATS, e);
                         } catch (RemoteException e) {
