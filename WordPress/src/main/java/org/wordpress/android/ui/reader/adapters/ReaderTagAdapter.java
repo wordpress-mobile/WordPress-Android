@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.adapters;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -186,6 +187,9 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             super(view);
             txtTagName = (TextView) view.findViewById(R.id.text_topic);
             btnAddRemove = (ImageButton) view.findViewById(R.id.btn_add_remove);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                btnAddRemove.setBackgroundResource(R.drawable.ripple_oval);
+            }
         }
     }
 
