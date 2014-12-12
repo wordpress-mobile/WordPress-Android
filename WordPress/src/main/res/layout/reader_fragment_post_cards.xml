@@ -18,6 +18,14 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <FrameLayout
+        android:id="@+id/footer_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:elevation="@dimen/message_bar_elevation"
+        android:visibility="gone" />
+
     <include
         android:id="@+id/empty_view"
         layout="@layout/reader_empty_view" />
