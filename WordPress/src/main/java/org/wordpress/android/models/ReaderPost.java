@@ -3,6 +3,8 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -141,7 +143,7 @@ public class ReaderPost {
             // suitable as a featured image
             if (!post.hasFeaturedImage()) {
                 ReaderImageScanner scanner = new ReaderImageScanner(post.text, post.isPrivate);
-                post.featuredImage = scanner.getBestFeaturedImage();
+                post.featuredImage = scanner.getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
             }
         }
 
@@ -158,10 +160,13 @@ public class ReaderPost {
         // parse the tags section
         assignTagsFromJson(post, json.optJSONObject("tags"));
 
-        // parse the attachments
+        // parse the attachments, and use them to assign the featured image if one isn't already assigned
         JSONObject jsonAttachments = json.optJSONObject("attachments");
-        if (jsonAttachments != null) {
+        if (jsonAttachments != null && jsonAttachments.length() > 0) {
             post.attachmentsJson = jsonAttachments.toString();
+            if (!post.hasFeaturedImage()) {
+                post.featuredImage = new ImageSizeMap(post.attachmentsJson).getLargestImageUrl(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
+            }
         }
 
         // site metadata - returned when ?meta=site was added to the request

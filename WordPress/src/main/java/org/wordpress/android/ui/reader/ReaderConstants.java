@@ -10,6 +10,8 @@ public class ReaderConstants {
     public static final int  READER_MAX_RECOMMENDED_TO_REQUEST = 40;     // max # of recommended blogs to request
     public static final int  READER_MAX_RECOMMENDED_TO_DISPLAY = 4;      // max # of recommended blogs to display
 
+    public static final int MIN_FEATURED_IMAGE_WIDTH = 500;              // min width for an image to be suitable featured image
+
     // intent IDs
     static final int INTENT_READER_SUBS        = 1000;
     static final int INTENT_READER_REBLOG      = 1001;
