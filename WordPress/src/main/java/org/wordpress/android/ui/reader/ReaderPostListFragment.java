@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -277,20 +276,19 @@ public class ReaderPostListFragment extends Fragment {
             }
         });
 
-        ViewGroup footerContainer = (ViewGroup) rootView.findViewById(R.id.footer_container);
+        // add the tag/blog header - note that this remains invisible until animated in
+        ViewGroup header = (ViewGroup) rootView.findViewById(R.id.frame_header);
         switch (getPostListType()) {
-            case TAG_FOLLOWED:
-                // this is the default, nothing extra needed
-                break;
-
             case TAG_PREVIEW:
                 mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_info_view, container, false);
-                footerContainer.addView(mTagInfoView);
+                header.addView(mTagInfoView);
+                header.setVisibility(View.INVISIBLE);
                 break;
 
             case BLOG_PREVIEW:
                 mBlogInfoView = new ReaderBlogInfoView(context);
-                footerContainer.addView(mBlogInfoView);
+                header.addView(mBlogInfoView);
+                header.setVisibility(View.INVISIBLE);
                 break;
         }
 
@@ -342,23 +340,18 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     /*
-     * animated in the blog/tag footer after a short delay
+     * animate in the blog/tag header
      */
-    private void animateFooter() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isAdded()) {
-                    return;
-                }
-                ViewGroup footer = (ViewGroup) getView().findViewById(R.id.footer_container);
-                if (footer.getVisibility() == View.VISIBLE) {
-                    return;
-                }
-                AniUtils.startAnimation(footer, R.anim.reader_message_bar_in);
-                footer.setVisibility(View.VISIBLE);
-            }
-        }, 500);
+    private void animateHeader() {
+        if (!isAdded()) {
+            return;
+        }
+        ViewGroup header = (ViewGroup) getView().findViewById(R.id.frame_header);
+        if (header.getVisibility() == View.VISIBLE) {
+            return;
+        }
+        AniUtils.startAnimation(header, R.anim.reader_top_bar_in);
+        header.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -385,11 +378,11 @@ public class ReaderPostListFragment extends Fragment {
         switch (getPostListType()) {
             case BLOG_PREVIEW:
                 loadBlogInfo();
-                animateFooter();
+                animateHeader();
                 break;
             case TAG_PREVIEW:
-                updateTagPreviewFooter();
-                animateFooter();
+                updateTagPreviewHeader();
+                animateHeader();
                 break;
         }
 
@@ -760,7 +753,7 @@ public class ReaderPostListFragment extends Fragment {
         getPostRecycler().setCurrentTag(tag);
         hideNewPostsBar();
         hideUndoBar();
-        updateTagPreviewFooter();
+        updateTagPreviewHeader();
         showLoadingProgress(false);
 
         // update posts in this tag if it's time to do so
@@ -792,10 +785,10 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     /*
-     * if we're previewing a tag, show the current tag name in the footer and update the
+     * if we're previewing a tag, show the current tag name in the header and update the
      * follow button to show the correct follow state for the tag
      */
-    private void updateTagPreviewFooter() {
+    private void updateTagPreviewHeader() {
         if (mTagInfoView == null) {
             return;
         }
