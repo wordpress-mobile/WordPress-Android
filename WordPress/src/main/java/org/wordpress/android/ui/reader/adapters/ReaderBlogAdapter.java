@@ -148,7 +148,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_ITEM:
-                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_blog, parent, false);
+                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_listitem_blog, parent, false);
                 return new BlogViewHolder(itemView);
             case VIEW_TYPE_FOOTER:
                 View footerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_footer_recommendations, parent, false);

@@ -16,7 +16,6 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListener;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 /*
@@ -67,7 +66,6 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
         mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
-        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(0, DisplayUtils.dpToPx(container.getContext(), 1)));
         return view;
     }
 

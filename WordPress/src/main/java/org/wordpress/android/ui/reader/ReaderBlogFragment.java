@@ -17,7 +17,6 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.BlogFollowChan
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 /*
@@ -60,7 +59,6 @@ public class ReaderBlogFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
         mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
-        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(0, DisplayUtils.dpToPx(container.getContext(), 1)));
         return view;
     }
 
