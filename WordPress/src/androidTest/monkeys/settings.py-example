@@ -1,2 +1,3 @@
 username = "wordpress"
 password = "wordpress"
+languages = ("en", "fr")

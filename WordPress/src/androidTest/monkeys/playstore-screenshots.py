@@ -4,6 +4,7 @@ import sys
 import os
 import time
 import settings
+from subprocess import Popen, PIPE
 from com.dtmilano.android.viewclient import ViewClient
 
 # App actions
@@ -139,15 +140,39 @@ def run_tests_for_device_and_lang(device, serialno, viewclient, filename, lang, 
     action_open_media(device, serialno)
     take_screenshot(serialno, lang + "-media-" + filename)
 
-def main():
-    if len(sys.argv) < 5:
-        sys.exit("usage: %s filename.png serialno packagename apk" % sys.argv[0])
-    filename = sys.argv.pop(1)
-    serialno = sys.argv.pop(1)
-    packagename = sys.argv.pop(1)
-    apk = sys.argv.pop(1)
+def list_devices():
+    devices = []
+    process = Popen(["adb", "devices", "-l"], stdout=PIPE)
+    for line in iter(process.stdout.readline, ''):
+        split = line.split()
+        if len(split) <= 1 or split[0] == "List":
+            continue
+        devices.append({"name": split[3].replace("model:", ""), "serialno": split[0]})
+    process.communicate()
+    return devices
+
+def run_tests_on_device(packagename, apk, serialno, name, lang):
     device, serialno = ViewClient.connectToDeviceOrExit(verbose=False, serialno=serialno)
     viewclient = ViewClient(device, serialno)
-    run_tests_for_device_and_lang(device, serialno, viewclient, filename, "fr", packagename, apk)
+    filename = name + ".png"
+    run_tests_for_device_and_lang(device, serialno, viewclient, filename, lang, packagename, apk)
+
+def run_tests_on_all_devices(packagename, apk, lang):
+    for device in list_devices():
+        print("Running on %s - language: %s" % (device, lang))
+        run_tests_on_device(packagename, apk, device["serialno"], device["name"], lang)
+    else:
+        print("No device found")
+
+def run_tests_on_all_devices_for_all_languages(packagename, apk):
+    for lang in settings.languages:
+        run_tests_on_all_devices(packagename, apk, lang)
+
+def main():
+    if len(sys.argv) < 3:
+        sys.exit("usage: %s packagename apk" % sys.argv[0])
+    packagename = sys.argv.pop(1)
+    apk = sys.argv.pop(1)
+    run_tests_on_all_devices_for_all_languages(packagename, apk)
 
 main()
