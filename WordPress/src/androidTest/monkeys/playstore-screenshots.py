@@ -69,6 +69,20 @@ def action_open_reader_posts_i_like(device, viewclient, serialno):
     time.sleep(10)
     lose_focus(serialno)
 
+# Menu drawer should be opened when calling this
+def action_open_media(device, serialno):
+    print("open media")
+    # Open the reader
+    for i in range(3):
+        device.press('KEYCODE_DPAD_UP')
+    device.press('KEYCODE_DPAD_DOWN')
+    device.press('KEYCODE_DPAD_DOWN')
+    device.press('KEYCODE_DPAD_DOWN')
+    device.press('KEYCODE_DPAD_DOWN')
+    device.press('KEYCODE_ENTER')
+    # Wait for the reader to load articles / pictures
+    time.sleep(10)
+
 # Utilities
 
 def lose_focus(serialno):
@@ -121,6 +135,9 @@ def run_tests_for_device_and_lang(device, serialno, viewclient, filename, lang, 
     action_open_drawer(device, serialno)
     action_open_reader_posts_i_like(device, viewclient, serialno)
     take_screenshot(serialno, lang + "-reader-" + filename)
+    action_open_drawer(device, serialno)
+    action_open_media(device, serialno)
+    take_screenshot(serialno, lang + "-media-" + filename)
 
 def main():
     if len(sys.argv) < 5:
