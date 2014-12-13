@@ -43,6 +43,8 @@ public class PostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
         StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
         holder.setEntryTextOrLink(currentRowData.getUrl(), currentRowData.getTitle());
 
+        holder.imgMore.setVisibility(View.GONE);
+
         // totals
         holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));
 
