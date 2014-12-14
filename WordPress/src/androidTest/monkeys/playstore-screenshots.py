@@ -25,6 +25,7 @@ def action_open_drawer(device, serialno):
     print("open drawer")
     for i in range(5):
         device.press('KEYCODE_DPAD_UP')
+        device.press('KEYCODE_DPAD_LEFT')
     device.press('KEYCODE_ENTER')
     # Wait for the animation to finish
     time.sleep(1)
@@ -44,7 +45,7 @@ def action_open_notifications(device, serialno):
     time.sleep(10)
 
 # Menu drawer should be opened when calling this
-def action_open_reader_posts_i_like(device, viewclient, serialno):
+def action_open_reader_posts_i_like(device, serialno):
     print("open reader")
     # Open the reader
     for i in range(3):
@@ -84,6 +85,33 @@ def action_open_media(device, serialno):
     # Wait for the reader to load articles / pictures
     time.sleep(10)
 
+# Menu drawer should be opened when calling this
+def action_open_editor_and_type_text(device, serialno):
+    print("open editor")
+    # Open Posts
+    for i in range(3):
+        device.press('KEYCODE_DPAD_UP')
+    device.press('KEYCODE_DPAD_DOWN')
+    device.press('KEYCODE_DPAD_DOWN')
+    device.press('KEYCODE_DPAD_DOWN')
+    device.press('KEYCODE_ENTER')
+    time.sleep(1)
+    # Open editor
+    device.press('KEYCODE_DPAD_RIGHT')
+    device.press('KEYCODE_ENTER')
+    time.sleep(1)
+    device.press('KEYCODE_TAB')
+    device.press('KEYCODE_DPAD_DOWN')
+    # Type a sample text (spaces can't be entered via device.type())
+    for word in settings.example_post_content.split():
+        device.type(word)
+        device.press('KEYCODE_SPACE')
+    # Open virtual keyboard by touching the screen
+    viewclient = ViewClient(device, serialno)
+    view = viewclient.findViewWithText(settings.example_post_content)
+    view.touch()
+    time.sleep(1)
+
 # Utilities
 
 def lose_focus(serialno):
@@ -120,9 +148,12 @@ def reinstall_apk(serialno, packagename, apk):
     os.popen("adb -s '%s' uninstall '%s'" % (serialno, packagename))
     os.popen("adb -s '%s' install '%s'" % (serialno, apk))
 
+def back(device):
+    device.press('KEYCODE_BACK')
+
 # Main scenario + screenshots
 
-def run_tests_for_device_and_lang(device, serialno, viewclient, filename, lang, packagename, apk):
+def run_tests_for_device_and_lang(device, serialno, filename, lang, packagename, apk):
     reinstall_apk(serialno, packagename, apk)
     change_lang_settings(serialno, lang)
     launch_activity(device, packagename, "org.wordpress.android.ui.WPLaunchActivity")
@@ -134,11 +165,17 @@ def run_tests_for_device_and_lang(device, serialno, viewclient, filename, lang, 
     action_open_notifications(device, serialno)
     take_screenshot(serialno, lang + "-notifications-" + filename)
     action_open_drawer(device, serialno)
-    action_open_reader_posts_i_like(device, viewclient, serialno)
+    action_open_reader_posts_i_like(device, serialno)
     take_screenshot(serialno, lang + "-reader-" + filename)
     action_open_drawer(device, serialno)
     action_open_media(device, serialno)
     take_screenshot(serialno, lang + "-media-" + filename)
+    action_open_drawer(device, serialno)
+    action_open_editor_and_type_text(device, serialno)
+    take_screenshot(serialno, lang + "-editor-" + filename)
+    # Close virtual keyboard and editor
+    back(device)
+    back(device)
 
 def list_devices():
     devices = []
@@ -153,16 +190,17 @@ def list_devices():
 
 def run_tests_on_device(packagename, apk, serialno, name, lang):
     device, serialno = ViewClient.connectToDeviceOrExit(verbose=False, serialno=serialno)
-    viewclient = ViewClient(device, serialno)
     filename = name + ".png"
-    run_tests_for_device_and_lang(device, serialno, viewclient, filename, lang, packagename, apk)
+    run_tests_for_device_and_lang(device, serialno, filename, lang, packagename, apk)
 
 def run_tests_on_all_devices(packagename, apk, lang):
-    for device in list_devices():
+    devices = list_devices()
+    if not devices:
+        print("No device found")
+        return
+    for device in devices:
         print("Running on %s - language: %s" % (device, lang))
         run_tests_on_device(packagename, apk, device["serialno"], device["name"], lang)
-    else:
-        print("No device found")
 
 def run_tests_on_all_devices_for_all_languages(packagename, apk):
     for lang in settings.languages:
