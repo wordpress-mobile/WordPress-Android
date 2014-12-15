@@ -6,6 +6,7 @@ import time
 import settings
 from subprocess import Popen, PIPE
 from com.dtmilano.android.viewclient import ViewClient
+from multiprocessing.pool import ThreadPool
 
 # App actions
 
@@ -193,18 +194,25 @@ def run_tests_on_device(packagename, apk, serialno, name, lang):
     filename = name + ".png"
     run_tests_for_device_and_lang(device, serialno, filename, lang, packagename, apk)
 
-def run_tests_on_all_devices(packagename, apk, lang):
+def run_tests_all_languagues(packagename, apk, serialno, name):
+    for lang in settings.languages:
+        print("Running on %s - language: %s" % (device, lang))
+        run_tests_on_device(packagename, apk, serialno, name, lang)
+
+def run_tests_all_languagues(packagename, apk):
+    def _run_tests_all_languagues(device):
+        for lang in settings.languages:
+            print("Running on %s - language: %s" % (device, lang))
+            run_tests_on_device(packagename, apk, device["serialno"], device["name"], lang)
+    return _run_tests_all_languagues
+
+def run_tests_on_all_devices_for_all_languages(packagename, apk):
     devices = list_devices()
     if not devices:
         print("No device found")
         return
-    for device in devices:
-        print("Running on %s - language: %s" % (device, lang))
-        run_tests_on_device(packagename, apk, device["serialno"], device["name"], lang)
-
-def run_tests_on_all_devices_for_all_languages(packagename, apk):
-    for lang in settings.languages:
-        run_tests_on_all_devices(packagename, apk, lang)
+    pool = ThreadPool(10)
+    pool.map(run_tests_all_languagues(packagename, apk), devices)
 
 def main():
     if len(sys.argv) < 3:
