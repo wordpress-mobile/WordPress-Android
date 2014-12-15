@@ -10,7 +10,7 @@ Install dependencies: Python 2.x and easy_install, then you have to install Andr
 
 Then edit the `settings.py` file. Copy the example file and edit it. Change the username / password, languages and sample text.
 
-	$ cp settings.py-example settings.gy
+	$ cp settings.py-example settings.py
 
 ## Example usage
 
