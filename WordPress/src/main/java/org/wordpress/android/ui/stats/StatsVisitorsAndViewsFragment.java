@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.widgets.TextDrawable;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
@@ -93,7 +95,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     RadioGroup.LayoutParams.WRAP_CONTENT
             );
             rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
-          //  rb.setGravity(Gravity.LEFT);
             rb.setLayoutParams(params);
             rb.setText(overviewItems[i].getLabel());
             rb.setTag(overviewItems[i]);
@@ -278,21 +279,31 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 if (i == mSelectedOverviewItemIndex) {
                    currentBtm.setChecked(true);
                 }
+
+                TextDrawable currentTextDrawable = new TextDrawable(getActivity());
                 OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
                 switch (overviewItem) {
                     case VIEWS:
-                        currentBtm.setText(overviewItem.getLabel() + ": " +  modelTapped.getViews());
+                        currentTextDrawable.setText(modelTapped.getViews());
                         break;
                     case VISITORS:
-                        currentBtm.setText(overviewItem.getLabel() + ": " +  modelTapped.getVisitors());
+                        currentTextDrawable.setText(modelTapped.getVisitors());
                         break;
                     case LIKES:
-                        currentBtm.setText(overviewItem.getLabel() + ": " +  modelTapped.getLikes());
+                        currentTextDrawable.setText(modelTapped.getLikes());
                         break;
                     case COMMENTS:
-                        currentBtm.setText(overviewItem.getLabel() + ": " +  modelTapped.getComments());
+                        currentTextDrawable.setText(modelTapped.getComments());
                         break;
                 }
+
+                currentTextDrawable.setTextColor(getResources().getColorStateList(R.color.stats_visitors_and_views_button_text_color));
+                currentTextDrawable.setTypeface((TypefaceCache.getTypeface(getActivity())));
+                currentTextDrawable.setTextSize(
+                        TypedValue.COMPLEX_UNIT_PX,
+                        getResources().getDimensionPixelSize(R.dimen.text_sz_medium)
+                );
+                currentBtm.setCompoundDrawablesWithIntrinsicBounds(null, null, currentTextDrawable, null);
             }
         }
     }
@@ -387,21 +398,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 if (i == mSelectedOverviewItemIndex) {
                     currentBtm.setChecked(true);
                 }
-                OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
-                switch (overviewItem) {
-                    case VIEWS:
-                        currentBtm.setText(overviewItem.getLabel() + ": " +  0);
-                        break;
-                    case VISITORS:
-                        currentBtm.setText(overviewItem.getLabel() + ": " + 0);
-                        break;
-                    case LIKES:
-                        currentBtm.setText(overviewItem.getLabel() + ": " +  0);
-                        break;
-                    case COMMENTS:
-                        currentBtm.setText(overviewItem.getLabel() + ": " +  0);
-                        break;
-                }
+                currentBtm.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             }
         }
         return;
