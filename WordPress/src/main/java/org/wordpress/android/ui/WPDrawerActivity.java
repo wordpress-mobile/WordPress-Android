@@ -710,10 +710,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         refreshCurrentBlogContent();
-        if (shouldUpdateCurrentBlogStatsInBackground()) {
-            WordPress.sUpdateCurrentBlogStats.forceRun();
-        }
-
+        
         if (WordPress.getCurrentBlog() != null) {
             onBlogChanged();
         }
@@ -725,14 +722,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
      * this to perform activity-specific updates upon blog change
      */
     protected void onBlogChanged() {
-    }
-
-    /**
-     * this method is called when the user switch blog - descendants should override
-     * if want to stop refreshing of Stats when switching blog.
-     */
-    protected boolean shouldUpdateCurrentBlogStatsInBackground() {
-        return true;
     }
 
     /**

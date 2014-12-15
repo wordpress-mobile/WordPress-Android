@@ -120,34 +120,6 @@ public class WordPress extends Application {
     };
 
     /**
-     *  Updates the stats of the current blog in background. There is a timeout of 30 minutes that limits
-     *  too frequent refreshes.
-     *  User is not notified in case of errors.
-     */
-    public static RateLimitedTask sUpdateCurrentBlogStats = new RateLimitedTask(SECONDS_BETWEEN_STATS_UPDATE) {
-        protected boolean run() {
-         /*   Blog currentBlog = WordPress.getCurrentBlog();
-            if (currentBlog != null) {
-                String blogID = null;
-                if (currentBlog.isDotcomFlag()) {
-                    blogID = String.valueOf(currentBlog.getRemoteBlogId());
-                } else if (currentBlog.isJetpackPowered() && currentBlog.hasValidJetpackCredentials()) {
-                    blogID = currentBlog.getApi_blogid(); // Can return null
-                }
-                if (blogID != null) {
-                    // start service to get stats
-                    Intent intent = new Intent(mContext, StatsService.class);
-                    intent.putExtra(StatsService.ARG_BLOG_ID, blogID);
-                    intent.putExtra(StatsService.ARG_DATE, StatsUtils.getCurrentDate());
-                    mContext.startService(intent);
-                    return true;
-                }
-            }*/
-            return false;
-        }
-    };
-
-    /**
      *  Update blog list in a background task. Broadcast WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED if the
      *  list changed.
      */
@@ -793,9 +765,6 @@ public class WordPress extends Application {
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
-
-                // Rate limited Stats Update
-                sUpdateCurrentBlogStats.runIfNotLimited();
 
                 // Rate limited WPCom blog list Update
                 sUpdateWordPressComBlogList.runIfNotLimited();

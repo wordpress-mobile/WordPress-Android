@@ -551,15 +551,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         loadStatsFragments(true, false);
     }
 
-    /**
-     * Do not refresh Stats in BG when user switch between blogs since the refresh
-     * is already started in foreground at this point.
-     */
-    @Override
-    protected boolean shouldUpdateCurrentBlogStatsInBackground() {
-        return false;
-    }
-
     private void refreshStats(StatsTimeframe timeframe, String date, boolean updateGraph) {
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
