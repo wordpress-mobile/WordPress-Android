@@ -1,0 +1,4 @@
+username = "wordpress"
+password = "wordpress"
+languages = ("en", "fr")
+example_post_content = "Content"
