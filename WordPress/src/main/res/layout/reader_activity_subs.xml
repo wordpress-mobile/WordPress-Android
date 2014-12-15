@@ -48,8 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_marginRight="@dimen/margin_medium"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_extra_large"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
@@ -65,6 +65,7 @@
 
         <ImageButton
             android:id="@+id/btn_add"
+            android:padding="@dimen/margin_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
