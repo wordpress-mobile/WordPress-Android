@@ -179,7 +179,7 @@ def run_tests_for_device_and_lang(device, serialno, filename, lang, packagename,
 
 def list_devices():
     devices = []
-    process = Popen(["adb", "devices", "-l"], stdout=PIPE)
+    process = Popen("adb devices -l", stdout=PIPE, shell=True)
     for line in iter(process.stdout.readline, ''):
         split = line.split()
         if len(split) <= 1 or split[0] == "List":
