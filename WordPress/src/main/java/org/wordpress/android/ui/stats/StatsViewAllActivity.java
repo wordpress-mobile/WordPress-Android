@@ -312,8 +312,8 @@ public class StatsViewAllActivity extends ActionBarActivity
                     mTimeframe.getLabelForRestCall(), mDate, MAX_RESULT_PER_PAGE, 1);
         }
 
-        // All other endpoints returns 1000 items in details view
-        int numberOfItemsToLoad = 1000;
+        // All other endpoints returns 100 items in details view
+        int numberOfItemsToLoad = 100;
         return String.format("/sites/%s/stats/%s?period=%s&date=%s&max=%s", blogId, endpointPath,
                 mTimeframe.getLabelForRestCall(), mDate, numberOfItemsToLoad);
     }
