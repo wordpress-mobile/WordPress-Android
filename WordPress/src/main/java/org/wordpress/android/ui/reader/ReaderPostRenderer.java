@@ -3,12 +3,11 @@ package org.wordpress.android.ui.reader;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
-import android.text.TextUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.utils.ImageSizeMap;
+import org.wordpress.android.ui.reader.utils.ImageSizeMap.ImageSize;
 import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils;
 import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
@@ -16,14 +15,10 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.UrlUtils;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * generates and displays the HTML for post detail content - main purpose is to assign the
@@ -392,7 +387,7 @@ class ReaderPostRenderer {
         if (mAttachmentSizes == null) {
             mAttachmentSizes = new ImageSizeMap(mPost.getAttachmentsJson());
         }
-        return mAttachmentSizes.getAttachmentSize(imageUrl);
+        return mAttachmentSizes.getImageSize(imageUrl);
     }
 
     private ImageSize getImageSizeFromQueryParams(final String imageUrl) {
@@ -437,52 +432,7 @@ class ReaderPostRenderer {
         return mPost.isWP() && !mPost.isJetpack;
     }
 
-    /*
-     * hash map of sizes of attachments in the current post for quick lookup - created from
-     * the json "attachments" section of the post endpoints
-     */
-    class ImageSizeMap extends HashMap<String, ImageSize> {
-        ImageSizeMap(String jsonString) {
-            if (TextUtils.isEmpty(jsonString)) {
-                return;
-            }
 
-            try {
-                JSONObject json = new JSONObject(jsonString);
-                Iterator<String> it = json.keys();
-                if (!it.hasNext()) {
-                    return;
-                }
 
-                while (it.hasNext()) {
-                    JSONObject jsonAttach = json.optJSONObject(it.next());
-                    if (jsonAttach != null && JSONUtil.getString(jsonAttach, "mime_type").startsWith("image")) {
-                        String normUrl = UrlUtils.normalizeUrl(UrlUtils.removeQuery(JSONUtil.getString(json, "URL")));
-                        int width = jsonAttach.optInt("width");
-                        int height = jsonAttach.optInt("height");
-                        this.put(normUrl, new ImageSize(width, height));
-                    }
-                }
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.READER, e);
-            }
-        }
 
-        ImageSize getAttachmentSize(final String imageUrl) {
-            if (imageUrl == null) {
-                return null;
-            } else {
-                return super.get(UrlUtils.normalizeUrl(UrlUtils.removeQuery(imageUrl)));
-            }
-        }
-    }
-
-    static class ImageSize {
-        final int width;
-        final int height;
-        ImageSize(int width, int height) {
-            this.width = width;
-            this.height = height;
-        }
-    }
 }
