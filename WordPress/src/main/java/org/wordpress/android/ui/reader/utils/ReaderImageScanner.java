@@ -14,7 +14,6 @@ public class ReaderImageScanner {
     private final String mContent;
     private final boolean mIsPrivate;
     private final boolean mContentContainsImages;
-    private static final int MIN_FEATURED_IMAGE_WIDTH = 500;
 
     private static final Pattern IMG_TAG_PATTERN = Pattern.compile(
             "<img(\\s+.*?)(?:src\\s*=\\s*(?:'|\")(.*?)(?:'|\"))(.*?)>",
@@ -74,13 +73,13 @@ public class ReaderImageScanner {
      * used when a post doesn't have a featured image assigned, searches post's content
      * for an image that may be large enough to be suitable as a featured image
      */
-    public String getBestFeaturedImage() {
+    public String getLargestImage(int minImageWidth) {
         if (!mContentContainsImages) {
             return null;
         }
 
         String currentImageUrl = null;
-        int currentMaxWidth = MIN_FEATURED_IMAGE_WIDTH;
+        int currentMaxWidth = minImageWidth;
 
         Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
         while (imgMatcher.find()) {
