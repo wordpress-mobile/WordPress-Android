@@ -115,7 +115,7 @@
             android:layout_below="@+id/text_tag"
             android:layout_marginLeft="@dimen/reader_card_padding"
             android:layout_marginRight="@dimen/reader_card_padding"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_medium"
             android:background="@color/reader_divider_grey" />
 
         <LinearLayout

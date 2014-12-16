@@ -8,7 +8,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/margin_large">
+    android:paddingBottom="@dimen/margin_large"
+    android:paddingLeft="@dimen/reader_card_padding"
+    android:paddingRight="@dimen/reader_card_padding"
+    android:paddingTop="@dimen/margin_large">
 
     <LinearLayout
         android:id="@+id/layout_detail_header"

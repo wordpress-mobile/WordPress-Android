@@ -49,7 +49,7 @@
     <style name="ReaderTextView.Post.Tag" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textColor">@color/reader_hyperlink</item>
         <item name="android:background">?android:selectableItemBackground</item>
         <item name="android:maxLines">1</item>
