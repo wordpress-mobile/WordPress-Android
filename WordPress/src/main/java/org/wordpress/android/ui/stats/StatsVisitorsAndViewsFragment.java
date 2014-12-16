@@ -363,7 +363,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 // ex: 2013W07W22 = July 22, 2013
                 return StatsUtils.parseDate(dateToFormat, "yyyy'W'MM'W'dd", "MMM d");
             case MONTH:
-                return StatsUtils.parseDate(dateToFormat, "yyyy-MM", "MMM yyyy");
+                return StatsUtils.parseDate(dateToFormat, "yyyy-MM", "MMM");
             case YEAR:
                 return StatsUtils.parseDate(dateToFormat, "yyyy-MM-dd", "yyyy");
             default:

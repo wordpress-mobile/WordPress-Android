@@ -97,8 +97,8 @@ class StatsBarGraph extends GraphView {
     }
 
     private void setProperties() {
-        getGraphViewStyle().setHorizontalLabelsColor(Color.parseColor("#93a6c0"));
-        getGraphViewStyle().setVerticalLabelsColor(Color.parseColor("#93a6c0"));
+        getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.blue_dark));
+        getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.stats_bar_graph_vertical_label));
         getGraphViewStyle().setTextSize(getResources().getDimensionPixelSize(R.dimen.graph_font_size));
         getGraphViewStyle().setGridXColor(Color.TRANSPARENT);
         getGraphViewStyle().setGridYColor(getResources().getColor(R.color.stats_bar_graph_grid));
