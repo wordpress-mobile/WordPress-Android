@@ -3,6 +3,8 @@ package org.wordpress.android.ui.stats;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.support.v4.view.GestureDetectorCompat;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -13,7 +15,6 @@ import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.util.LinkedList;
@@ -153,14 +154,6 @@ class StatsBarGraph extends GraphView {
                 paint.setColor(style.getValueDependentColor().get(values[i]));
             }
 
-            // Trick to redraw the tapped bar
-            if (mBarPositionToHighlight == i) {
-                int color = getResources().getColor(R.color.stats_views_hover_color);
-                paint.setColor(color);
-            } else {
-                paint.setColor(style.color);
-            }
-
             float pad = style.padding;
 
             float left = (i * colwidth) + horstart;
@@ -168,7 +161,30 @@ class StatsBarGraph extends GraphView {
             float right = left + colwidth;
             float bottom = graphheight + border - 1;
 
-            canvas.drawRect(left + pad, top, right - pad, bottom, paint);
+            if ((top - bottom) == 1) {
+                // draw a placeholder
+                if (mBarPositionToHighlight == i) {
+                    paint.setColor(getResources().getColor(R.color.stats_views_hover_color));
+                    paint.setAlpha(75);
+                    canvas.drawRect(left + pad, 10f, right - pad, bottom, paint);
+                } else {
+                    paint.setColor(style.color);
+                    paint.setAlpha(25);
+                    Shader shader = new LinearGradient(left + pad, bottom - 50, left + pad, bottom, Color.WHITE, Color.BLACK, Shader.TileMode.CLAMP);
+                    paint.setShader(shader);
+                    canvas.drawRect(left + pad, bottom - 50, right - pad, bottom, paint);
+                    paint.setShader(null);
+                }
+            } else {
+                // draw a real bar
+                if (mBarPositionToHighlight == i) {
+                    paint.setColor(getResources().getColor(R.color.stats_views_hover_color));
+                } else {
+                    paint.setColor(style.color);
+                }
+                canvas.drawRect(left + pad, top, right - pad, bottom, paint);
+            }
+
             barChartRects.add(new BarChartRect(left + pad, top, right - pad, bottom));
         }
         mSeriesRectsDrawedOnScreen.add(barChartRects);
@@ -281,7 +297,6 @@ class StatsBarGraph extends GraphView {
         public boolean isPointInside(float x, float y) {
             if (x >= this.mLeft
                     && x <= this.mRight
-                    && (this.mBottom - this.mTop) > 1f
                     ) {
                 return true;
             }
