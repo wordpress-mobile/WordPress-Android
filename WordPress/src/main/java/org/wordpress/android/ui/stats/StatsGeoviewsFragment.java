@@ -31,9 +31,9 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
         if (hasCountries()) {
             ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), getCountries());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
-            showEmptyUI(false);
+            showHideNoResultsUI(false);
         } else {
-            showEmptyUI(true);
+            showHideNoResultsUI(true);
         }
     }
 

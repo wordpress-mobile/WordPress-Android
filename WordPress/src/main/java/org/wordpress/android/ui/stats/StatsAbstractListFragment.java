@@ -39,6 +39,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     protected static final int NO_STRING_ID = -1;
 
+    protected TextView mModuleTitleTextView;
+    protected TextView mModuleTitleTextPlaceholderTextView;
     protected TextView mEmptyLabel;
     protected TextView mTotalsLabel;
     protected LinearLayout mListContainer;
@@ -95,8 +97,11 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             view = inflater.inflate(R.layout.stats_list_fragment, container, false);
         }
 
-        TextView titleTextView = (TextView) view.findViewById(R.id.stats_module_title);
-        titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
+        mModuleTitleTextView = (TextView) view.findViewById(R.id.stats_module_title);
+        mModuleTitleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
+
+        mModuleTitleTextPlaceholderTextView = (TextView) view.findViewById(R.id.stats_module_title_placeholder);
+        mModuleTitleTextPlaceholderTextView.setText("               ");
 
         TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
         entryLabel.setText(getEntryLabelResId());
@@ -113,6 +118,19 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mPaginationGoBackButton = (Button) view.findViewById(R.id.stats_pagination_go_back);
         mPaginationGoForwardButton = (Button) view.findViewById(R.id.stats_pagination_go_forward);
         mPaginationText = (TextView) view.findViewById(R.id.stats_pagination_text);
+
+        // Change module title text color for all time fragments
+        switch (getViewType()) {
+            case COMMENTS:
+            case TAGS_AND_CATEGORIES:
+            case PUBLICIZE:
+            case FOLLOWERS:
+                mModuleTitleTextView.setTextColor(getResources().getColor(R.color.stats_text_color));
+                break;
+            default:
+                break;
+        }
+
         return view;
     }
 
@@ -159,13 +177,29 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         if (mDatamodels != null) {
             updateUI();
         } else {
-            showEmptyUI(true);
+            //showHideNoResultsUI(true);
+            showEmptyUI();
             mMoreDataListener.onRefreshRequested(getSectionToUpdate());
         }
     }
 
-    protected void showEmptyUI(boolean show) {
-        if (show) {
+    protected void showEmptyUI() {
+        mModuleTitleTextPlaceholderTextView.setVisibility(View.VISIBLE);
+        mTopPagerRadioGroup.setVisibility(View.GONE);
+        mModuleTitleTextView.setVisibility(View.GONE);
+        mEmptyLabel.setVisibility(View.GONE);
+        mListContainer.setVisibility(View.GONE);
+        mList.setVisibility(View.GONE);
+        mViewAll.setVisibility(View.GONE);
+        mPaginationContainer.setVisibility(View.GONE);
+        return;
+    }
+
+    protected void showHideNoResultsUI(boolean showNoResultsUI) {
+        mModuleTitleTextPlaceholderTextView.setVisibility(View.GONE);
+        mModuleTitleTextView.setVisibility(View.VISIBLE);
+
+        if (showNoResultsUI) {
             mGroupIdToExpandedMap.clear();
             String label;
             if (getEmptyLabelDescResId() == NO_STRING_ID) {
@@ -198,6 +232,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     protected void showErrorUI(Serializable error) {
         mGroupIdToExpandedMap.clear();
+        mModuleTitleTextPlaceholderTextView.setVisibility(View.GONE);
+        mModuleTitleTextView.setVisibility(View.VISIBLE);
+
         String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
 
         if (error instanceof NoConnectionError) {

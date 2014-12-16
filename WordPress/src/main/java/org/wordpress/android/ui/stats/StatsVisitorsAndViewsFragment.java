@@ -67,7 +67,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     // Container Activity must implement this interface
     public interface OnDateChangeListener {
-        public void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate, boolean updateGraph);
+        public void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (mVisitsData != null) {
             updateUI();
         } else {
-            setupEmptyUI(false);
+            setupNoResultsUI(true);
         }
         mRadioGroup.setOnCheckedChangeListener(this);
 
@@ -188,18 +188,18 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     private void updateUI() {
         if (mVisitsData == null) {
-            setupEmptyUI(false);
+            setupNoResultsUI(false);
             return;
         }
 
         if( mVisitsData instanceof VolleyError) {
-            setupEmptyUI(false);
+            setupNoResultsUI(false);
             return;
         }
 
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph((VisitsModel)mVisitsData);
         if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
-            setupEmptyUI(false);
+            setupNoResultsUI(false);
             return;
         }
 
@@ -371,19 +371,19 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
     }
 
-    private void setupEmptyUI(boolean isLoading) {
+    private void setupNoResultsUI(boolean isLoading) {
         mSelectedBarGraphBarIndex = -1;
         Context context = mGraphContainer.getContext();
         if (context != null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View emptyBarGraphView = inflater.inflate(R.layout.stats_bar_graph_empty, mGraphContainer, false);
-          /*
-          We could show loading indicator here
+
+          // We could show loading indicator here
             if (isLoading) {
                 final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
-                emptyLabel.setText("Loading...");
+                emptyLabel.setText("");
             }
-            */
+
             if (emptyBarGraphView != null) {
                 mGraphContainer.removeAllViews();
                 mGraphContainer.addView(emptyBarGraphView);
@@ -538,7 +538,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (mListener!= null) {
             // Should never be null
             final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
-            mListener.onDateChanged(blogId, getTimeframe(), calculatedDate, false);
+            mListener.onDateChanged(blogId, getTimeframe(), calculatedDate);
         }
     }
 

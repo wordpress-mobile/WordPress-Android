@@ -34,9 +34,9 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         if (hasReferrers()) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), getReferrersGroups());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
-            showEmptyUI(false);
+            showHideNoResultsUI(false);
         } else {
-            showEmptyUI(true);
+            showHideNoResultsUI(true);
         }
     }
 

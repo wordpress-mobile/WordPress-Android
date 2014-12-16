@@ -28,9 +28,9 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
         if (hasTags()) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), getTags());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
-            showEmptyUI(false);
+            showHideNoResultsUI(false);
         } else {
-            showEmptyUI(true);
+            showHideNoResultsUI(true);
         }
     }
 

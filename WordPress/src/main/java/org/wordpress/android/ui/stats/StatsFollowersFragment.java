@@ -120,7 +120,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
         mTotalsLabel.setVisibility(View.VISIBLE);
 
         if (mDatamodels == null) {
-            showEmptyUI(true);
+            showHideNoResultsUI(true);
             mTotalsLabel.setText(getTotalFollowersLabel(0));
             return;
         }
@@ -135,7 +135,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
                 followersModel.getFollowers().size() > 0) {
             ArrayAdapter adapter = new DotComFollowerAdapter(getActivity(), followersModel.getFollowers());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
-            showEmptyUI(false);
+            showHideNoResultsUI(false);
             if (isSingleView()) {
                 if (followersModel.getPages() > 1) {
                     mPaginationContainer.setVisibility(View.VISIBLE);
@@ -193,7 +193,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
                 mTotalsLabel.setText(getTotalFollowersLabel(followersModel.getTotalEmail()));
             }
         } else {
-            showEmptyUI(true);
+            showHideNoResultsUI(true);
             mPaginationContainer.setVisibility(View.GONE);
             mTotalsLabel.setText(getTotalFollowersLabel(0));
         }

@@ -35,7 +35,7 @@ public class StatsService extends Service {
     public static final String ARG_BLOG_ID = "blog_id";
     public static final String ARG_PERIOD = "stats_period";
     public static final String ARG_DATE = "stats_date";
-    public static final String ARG_UPDATE_GRAPH = "stats_update_graph";
+    public static final String ARG_UPDATE_ALLTIME_STATS = "ARG_UPDATE_ALLTIME_STATS";
     public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS,
         VIDEO_PLAYS, COMMENTS, FOLLOWERS_WPCOM, FOLLOWERS_EMAIL, COMMENT_FOLLOWERS, TAGS_AND_CATEGORIES, PUBLICIZE}
 
@@ -106,10 +106,10 @@ public class StatsService extends Service {
         }
 
         // True when the network call to update the graph is needed
-        boolean updateGraph = intent.getBooleanExtra(ARG_UPDATE_GRAPH, true);
+        boolean updateAlltimeStats = intent.getBooleanExtra(ARG_UPDATE_ALLTIME_STATS, true);
 
         if (mServiceBlogId == null) {
-            startTasks(blogId, period, requestedDate, updateGraph, startId);
+            startTasks(blogId, period, requestedDate, updateAlltimeStats, startId);
         } else if (blogId.equals(mServiceBlogId) && mServiceRequestedTimeframe == period
                 && requestedDate.equals(mServiceRequestedDate)) {
             // already running on the same blogID, same period
@@ -119,7 +119,7 @@ public class StatsService extends Service {
         } else {
             // stats is running on a different blogID
             stopRefresh();
-            startTasks(blogId, period, requestedDate, updateGraph, startId);
+            startTasks(blogId, period, requestedDate, updateAlltimeStats, startId);
         }
         // Always update the startId. Always.
         this.mServiceStartId = startId;
@@ -143,7 +143,7 @@ public class StatsService extends Service {
     }
 
     private void startTasks(final String blogId, final StatsTimeframe timeframe, final String date,
-                            final boolean updateGraph, final int startId) {
+                            final boolean updateAlltimeStats, final int startId) {
         this.mServiceBlogId = blogId;
         this.mServiceRequestedTimeframe = timeframe;
         this.mServiceRequestedDate = date;
@@ -166,7 +166,7 @@ public class StatsService extends Service {
                 final String summaryPath = String.format("/sites/%s/stats/summary?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(summaryPath, sListener, sListener));
 */
-                if (updateGraph) {
+                if (updateAlltimeStats) {
                     // Visits call: The Graph and the section just below the graph
                     RestListener vListener = new RestListener(StatsEndpointsEnum.VISITS, mServiceBlogId, mServiceRequestedTimeframe);
                     final String visitsPath = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", mServiceBlogId, period, mServiceRequestedDate);
@@ -203,36 +203,37 @@ public class StatsService extends Service {
                 final String videoPlaysPath = String.format("/sites/%s/stats/video-plays?period=%s&date=%s&max=%s", mServiceBlogId, period, mServiceRequestedDate, 12);
                 statsNetworkRequests.add(restClientUtils.get(videoPlaysPath, videoPlaysListener, videoPlaysListener));
 
-                // Comments
-                RestListener commentsListener = new RestListener(StatsEndpointsEnum.COMMENTS, mServiceBlogId, mServiceRequestedTimeframe);
-                final String commentsPath = String.format("/sites/%s/stats/comments", mServiceBlogId); // No max parameter available
-                statsNetworkRequests.add(restClientUtils.get(commentsPath, commentsListener, commentsListener));
+                if (updateAlltimeStats) {
+                    // Comments
+                    RestListener commentsListener = new RestListener(StatsEndpointsEnum.COMMENTS, mServiceBlogId, mServiceRequestedTimeframe);
+                    final String commentsPath = String.format("/sites/%s/stats/comments", mServiceBlogId); // No max parameter available
+                    statsNetworkRequests.add(restClientUtils.get(commentsPath, commentsListener, commentsListener));
 
-                // Comments Followers
-                RestListener commentFollowersListener = new RestListener(StatsEndpointsEnum.COMMENT_FOLLOWERS, mServiceBlogId, mServiceRequestedTimeframe);
-                final String commentFollowersPath = String.format("/sites/%s/stats/comment-followers?max=%s", mServiceBlogId, 12);
-                statsNetworkRequests.add(restClientUtils.get(commentFollowersPath, commentFollowersListener, commentFollowersListener));
+                    // Comments Followers
+                    RestListener commentFollowersListener = new RestListener(StatsEndpointsEnum.COMMENT_FOLLOWERS, mServiceBlogId, mServiceRequestedTimeframe);
+                    final String commentFollowersPath = String.format("/sites/%s/stats/comment-followers?max=%s", mServiceBlogId, 12);
+                    statsNetworkRequests.add(restClientUtils.get(commentFollowersPath, commentFollowersListener, commentFollowersListener));
 
-                // Followers WPCOM
-                RestListener followersListener = new RestListener(StatsEndpointsEnum.FOLLOWERS_WPCOM, mServiceBlogId, mServiceRequestedTimeframe);
-                final String followersPath = String.format("/sites/%s/stats/followers?type=wpcom&max=%s", mServiceBlogId, 12);
-                statsNetworkRequests.add(restClientUtils.get(followersPath, followersListener, followersListener));
+                    // Followers WPCOM
+                    RestListener followersListener = new RestListener(StatsEndpointsEnum.FOLLOWERS_WPCOM, mServiceBlogId, mServiceRequestedTimeframe);
+                    final String followersPath = String.format("/sites/%s/stats/followers?type=wpcom&max=%s", mServiceBlogId, 12);
+                    statsNetworkRequests.add(restClientUtils.get(followersPath, followersListener, followersListener));
 
-                // Followers EMAIL
-                RestListener followersEmailListener = new RestListener(StatsEndpointsEnum.FOLLOWERS_EMAIL, mServiceBlogId, mServiceRequestedTimeframe);
-                final String followersEmailPath = String.format("/sites/%s/stats/followers?type=email&max=%s", mServiceBlogId, 12);
-                statsNetworkRequests.add(restClientUtils.get(followersEmailPath, followersEmailListener, followersEmailListener));
+                    // Followers EMAIL
+                    RestListener followersEmailListener = new RestListener(StatsEndpointsEnum.FOLLOWERS_EMAIL, mServiceBlogId, mServiceRequestedTimeframe);
+                    final String followersEmailPath = String.format("/sites/%s/stats/followers?type=email&max=%s", mServiceBlogId, 12);
+                    statsNetworkRequests.add(restClientUtils.get(followersEmailPath, followersEmailListener, followersEmailListener));
 
-                // Tags and Categories
-                RestListener tagsListener = new RestListener(StatsEndpointsEnum.TAGS_AND_CATEGORIES, mServiceBlogId, mServiceRequestedTimeframe);
-                final String tagsPath = String.format("/sites/%s/stats/tags?max=%s", mServiceBlogId, 12);
-                statsNetworkRequests.add(restClientUtils.get(tagsPath, tagsListener, tagsListener));
+                    // Tags and Categories
+                    RestListener tagsListener = new RestListener(StatsEndpointsEnum.TAGS_AND_CATEGORIES, mServiceBlogId, mServiceRequestedTimeframe);
+                    final String tagsPath = String.format("/sites/%s/stats/tags?max=%s", mServiceBlogId, 12);
+                    statsNetworkRequests.add(restClientUtils.get(tagsPath, tagsListener, tagsListener));
 
-                // Publicize
-                RestListener publicizeListener = new RestListener(StatsEndpointsEnum.PUBLICIZE, mServiceBlogId, mServiceRequestedTimeframe);
-                final String publicizePath = String.format("/sites/%s/stats/publicize?max=%s", mServiceBlogId, 12);
-                statsNetworkRequests.add(restClientUtils.get(publicizePath, publicizeListener, publicizeListener));
-
+                    // Publicize
+                    RestListener publicizeListener = new RestListener(StatsEndpointsEnum.PUBLICIZE, mServiceBlogId, mServiceRequestedTimeframe);
+                    final String publicizePath = String.format("/sites/%s/stats/publicize?max=%s", mServiceBlogId, 12);
+                    statsNetworkRequests.add(restClientUtils.get(publicizePath, publicizeListener, publicizeListener));
+                }
                 numberOfNetworkCalls = statsNetworkRequests.size();
             } // end run
         } .start();

@@ -27,9 +27,9 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
         if (hasVideoplays()) {
             ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), getVideoplays());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
-            showEmptyUI(false);
+            showHideNoResultsUI(false);
         } else {
-            showEmptyUI(true);
+            showHideNoResultsUI(true);
         }
     }
 

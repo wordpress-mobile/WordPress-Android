@@ -120,7 +120,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         mTopPagerRadioGroup.setVisibility(View.VISIBLE);
 
         if (mDatamodels == null) {
-            showEmptyUI(true);
+            showHideNoResultsUI(true);
             mTotalsLabel.setVisibility(View.GONE);
             return;
         }
@@ -147,9 +147,9 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
         if (adapter != null) {
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
-            showEmptyUI(false);
+            showHideNoResultsUI(false);
         } else {
-            showEmptyUI(true);
+            showHideNoResultsUI(true);
         }
     }
 

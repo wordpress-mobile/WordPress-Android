@@ -31,9 +31,9 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
         if (hasPublicize()) {
             ArrayAdapter adapter = new PublicizeAdapter(getActivity(), getPublicize());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
-            showEmptyUI(false);
+            showHideNoResultsUI(false);
         } else {
-            showEmptyUI(true);
+            showHideNoResultsUI(true);
         }
     }
 

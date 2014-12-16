@@ -499,7 +499,7 @@ public class StatsViewAllActivity extends ActionBarActivity
             }
 
             resetModelVariables();
-            mFragment.showEmptyUI(true);
+            mFragment.showHideNoResultsUI(true);
 
             ToastUtils.showToast(mActivityRef.get(),
                     mActivityRef.get().getString(R.string.error_refresh_stats),

@@ -140,6 +140,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                             AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
                             return;
                         }
+                        loadStatsFragments(true, true, true);
                         refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID), true);
                     }
                 });
@@ -172,7 +173,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             return;
         }
 
-        loadStatsFragments(false, true);
+        loadStatsFragments(false, true, true);
 
         ScrollViewExt scrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
         if (scrollView != null) {
@@ -206,9 +207,9 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                         mCurrentTimeframe = selectedTimeframe;
                         if (NetworkUtils.isNetworkAvailable(StatsActivity.this)) {
                             String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                            refreshStats(selectedTimeframe, date, true);
                             mSwipeToRefreshHelper.setRefreshing(true);
-                            loadStatsFragments(true, true);
+                            refreshStats(selectedTimeframe, date, true);
+                            loadStatsFragments(true, true, false);
                         }
                     }
                     @Override
@@ -257,13 +258,13 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         super.onSaveInstanceState(outState);
     }
 
-    private void loadStatsFragments(boolean forceRecreationOfFragments, boolean includeBarGraphFragment) {
+    private void loadStatsFragments(boolean forceRecreationOfFragments, boolean loadGraphFragment, boolean loadAlltimeFragmets) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
         StatsAbstractFragment fragment;
 
-        if (includeBarGraphFragment) {
+        if (loadGraphFragment) {
             if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
                 fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
@@ -300,24 +301,26 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
         }
 
-        if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
-        }
+        if (loadAlltimeFragmets) {
+            if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsPublicizeFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsPublicizeFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
+            if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
+            }
         }
 
         ft.commit();
@@ -539,19 +542,18 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         scrollToTop();
         mSwipeToRefreshHelper.setRefreshing(true);
         refreshStats(mCurrentTimeframe, mRequestedDate, true);
-        loadStatsFragments(true, true);
+        loadStatsFragments(true, true, true);
     }
 
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
     @Override
-    public void onDateChanged(String blogID, StatsTimeframe timeframe, String date, boolean updateGraph) {
+    public void onDateChanged(String blogID, StatsTimeframe timeframe, String date) {
         mRequestedDate = date;
-        refreshStats(timeframe, date, updateGraph);
-        // Reload all fragments except the bar graph one
-        loadStatsFragments(true, false);
+        refreshStats(timeframe, date, false);
+        loadStatsFragments(true, false, false);
     }
 
-    private void refreshStats(StatsTimeframe timeframe, String date, boolean updateGraph) {
+    private void refreshStats(StatsTimeframe timeframe, String date, boolean updateAlltimeStats) {
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
         if (currentBlog == null) {
@@ -619,7 +621,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
         intent.putExtra(StatsService.ARG_PERIOD, timeframe);
         intent.putExtra(StatsService.ARG_DATE, date);
-        intent.putExtra(StatsService.ARG_UPDATE_GRAPH, updateGraph);
+        intent.putExtra(StatsService.ARG_UPDATE_ALLTIME_STATS, updateAlltimeStats);
         startService(intent);
     }
 

@@ -45,7 +45,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         }
 
         if (mDatamodels == null || mDatamodels[0] == null) {
-            showEmptyUI(true);
+            showHideNoResultsUI(true);
             mListener.onAuthorsVisibilityChange(true); // Hide the authors section if completely empty
             return;
         }
@@ -53,14 +53,14 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         List<AuthorModel> authors = ((AuthorsModel) mDatamodels[0]).getAuthors();
         // Do not show the authors section if there is one author only
         if (authors == null || authors.size() <= 1) {
-            showEmptyUI(true);
+            showHideNoResultsUI(true);
             mListener.onAuthorsVisibilityChange(true);
             return;
         }
 
         BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), authors);
         StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
-        showEmptyUI(false);
+        showHideNoResultsUI(false);
         mListener.onAuthorsVisibilityChange(false);
     }
 
