@@ -61,7 +61,12 @@ public class StatsViewAllActivity extends ActionBarActivity
     private String mDate;
     private Serializable[] mRestResponse;
     private int mOuterPagerSelectedButtonIndex = 0;
-    private static final int MAX_RESULT_PER_PAGE = 20; //The number of results to return per page. Numbers larger than 20 will default to 20 on the server.
+
+    // The number of results to return per page for Paged REST endpoints. Numbers larger than 20 will default to 20 on the server.
+    private static final int MAX_RESULTS_PER_PAGE = 20;
+
+    // The number of results to return for NON Paged REST endpoints.
+    private static final int MAX_RESULTS_REQUESTED = 100;
 
 
     @Override
@@ -115,10 +120,24 @@ public class StatsViewAllActivity extends ActionBarActivity
             mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
         }
 
+        // Setup the top date label. It's available on those fragment that are affected by the top date selector.
         TextView dateTextView = (TextView) findViewById(R.id.stats_summary_date);
-        dateTextView.setVisibility(View.GONE);
+        switch (mStatsViewType) {
+            case TOP_POSTS_AND_PAGES:
+            case REFERRERS:
+            case CLICKS:
+            case GEOVIEWS:
+            case AUTHORS:
+            case VIDEO_PLAYS:
+                dateTextView.setText(getDateForDisplayInLabels(mDate, mTimeframe));
+                dateTextView.setVisibility(View.VISIBLE);
+                break;
+            default:
+                dateTextView.setVisibility(View.GONE);
+                break;
+        }
 
-        setTitle(getDateForDisplayInLabels(mDate, mTimeframe));
+        setTitle(R.string.stats);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -301,21 +320,20 @@ public class StatsViewAllActivity extends ActionBarActivity
             case FOLLOWERS_WPCOM:
                 endpointPath = "followers";
                 return String.format("/sites/%s/stats/%s?type=wpcom&period=%s&date=%s&max=%s&page=%s", blogId, endpointPath,
-                        mTimeframe.getLabelForRestCall(), mDate, MAX_RESULT_PER_PAGE, pageNumber);
+                        mTimeframe.getLabelForRestCall(), mDate, MAX_RESULTS_PER_PAGE, pageNumber);
             case FOLLOWERS_EMAIL:
                 endpointPath = "followers";
                 return String.format("/sites/%s/stats/%s?type=email&period=%s&date=%s&max=%s&page=%s", blogId, endpointPath,
-                        mTimeframe.getLabelForRestCall(), mDate, MAX_RESULT_PER_PAGE, pageNumber);
+                        mTimeframe.getLabelForRestCall(), mDate, MAX_RESULTS_PER_PAGE, pageNumber);
             case COMMENT_FOLLOWERS:
                 endpointPath = "comment-followers";
                 return String.format("/sites/%s/stats/%s?period=%s&date=%s&max=%s&page=%s", blogId, endpointPath,
-                    mTimeframe.getLabelForRestCall(), mDate, MAX_RESULT_PER_PAGE, 1);
+                    mTimeframe.getLabelForRestCall(), mDate, MAX_RESULTS_PER_PAGE, 1);
         }
 
         // All other endpoints returns 100 items in details view
-        int numberOfItemsToLoad = 100;
         return String.format("/sites/%s/stats/%s?period=%s&date=%s&max=%s", blogId, endpointPath,
-                mTimeframe.getLabelForRestCall(), mDate, numberOfItemsToLoad);
+                mTimeframe.getLabelForRestCall(), mDate, MAX_RESULTS_REQUESTED);
     }
 
     private StatsService.StatsEndpointsEnum[] getRestEndpointNames() {
