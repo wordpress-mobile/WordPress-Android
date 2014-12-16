@@ -30,6 +30,7 @@ public class TestUtils {
     private static String DATABASE_NAME = "wordpress";
 
     public static SQLiteDatabase loadDBFromDump(Context targetContext, Context testContext, String filename) {
+        targetContext.deleteDatabase(DATABASE_NAME);
         WordPress.wpDB = new WordPressDB(targetContext);
 
         Field dbField;
@@ -39,10 +40,6 @@ public class TestUtils {
             SQLiteDatabase db = (SQLiteDatabase) dbField.get(WordPress.wpDB);
             assertNotNull(db);
 
-            // delete and recreate DB
-            targetContext.deleteDatabase(DATABASE_NAME);
-            targetContext.openOrCreateDatabase(DATABASE_NAME, 0, null);
-
             // Load file
             InputStream is = testContext.getAssets().open(filename);
             InputStreamReader inputStreamReader = new InputStreamReader(is);
@@ -51,7 +48,7 @@ public class TestUtils {
                 if (TextUtils.isEmpty(line)) continue;
                 try {
                     db.execSQL(line);
-                } catch (android.database.sqlite.SQLiteException e ) {
+                } catch (android.database.sqlite.SQLiteException e) {
                     // ignore import errors
                 }
             }
