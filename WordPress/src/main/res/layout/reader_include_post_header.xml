@@ -18,8 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/reader_detail_margin"
         android:layout_marginRight="@dimen/reader_detail_margin"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_medium">
+        android:paddingLeft="@dimen/reader_card_padding"
+        android:paddingRight="@dimen/reader_card_padding">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_post_avatar"

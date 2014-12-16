@@ -24,15 +24,17 @@
             android:id="@+id/layout_post_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/margin_large">
+            android:paddingBottom="@dimen/margin_large"
+            android:paddingLeft="@dimen/reader_card_padding"
+            android:paddingRight="@dimen/reader_card_padding">
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_avatar"
                 style="@style/ReaderImageView.Avatar"
-                android:layout_marginLeft="@dimen/margin_large"
-                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_large"
                 android:layout_marginTop="@dimen/margin_large"
-                android:background="?android:selectableItemBackground" />
+                android:background="?android:selectableItemBackground"
+                tools:src="@drawable/gravatar_placeholder" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_blog_name"
@@ -66,7 +68,6 @@
                 android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/margin_large"
                 android:paddingLeft="@dimen/margin_large"
-                android:paddingRight="@dimen/margin_large"
                 android:paddingTop="@dimen/margin_large"
                 android:src="@drawable/ic_action_more" />
 
@@ -81,8 +82,8 @@
             android:id="@+id/text_title"
             style="@style/ReaderTextView.Post.Title"
             android:layout_below="@+id/image_featured"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginLeft="@dimen/reader_card_padding"
+            android:layout_marginRight="@dimen/reader_card_padding"
             android:layout_marginTop="@dimen/margin_large"
             tools:text="text_title" />
 
@@ -91,8 +92,8 @@
             style="@style/ReaderTextView.Post.Excerpt"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_title"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginLeft="@dimen/reader_card_padding"
+            android:layout_marginRight="@dimen/reader_card_padding"
             android:layout_marginTop="@dimen/margin_medium"
             tools:text="text_excerpt" />
 
@@ -100,7 +101,7 @@
             android:id="@+id/text_tag"
             style="@style/ReaderTextView.Post.Tag"
             android:layout_below="@+id/text_excerpt"
-            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginLeft="@dimen/reader_card_padding"
             android:layout_marginTop="@dimen/margin_small"
             android:paddingBottom="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small"
@@ -112,8 +113,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/text_tag"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginLeft="@dimen/reader_card_padding"
+            android:layout_marginRight="@dimen/reader_card_padding"
             android:layout_marginTop="@dimen/margin_large"
             android:background="@color/reader_divider_grey" />
 
@@ -122,8 +123,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/divider"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginLeft="@dimen/reader_card_padding"
+            android:layout_marginRight="@dimen/reader_card_padding"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 

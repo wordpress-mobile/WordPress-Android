@@ -20,8 +20,8 @@
         android:layout_marginTop="@dimen/margin_small"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_large"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_large"
+        android:paddingLeft="@dimen/reader_card_padding"
+        android:paddingRight="@dimen/reader_card_padding"
         android:paddingTop="@dimen/margin_small">
 
         <org.wordpress.android.widgets.WPTextView

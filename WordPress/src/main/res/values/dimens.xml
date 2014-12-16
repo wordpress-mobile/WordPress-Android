@@ -72,6 +72,9 @@
 
     <dimen name="reader_card_spacing_vertical">12dp</dimen>
 
+    <!-- padding inside the card (space between card border and card content) -->
+    <dimen name="reader_card_padding">8dp</dimen>
+
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>
     <dimen name="text_sz_large">16sp</dimen>
