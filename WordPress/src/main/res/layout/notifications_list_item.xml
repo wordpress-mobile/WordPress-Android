@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -84,7 +85,7 @@
                     android:layout_width="@dimen/avatar_sz_medium"
                     android:layout_height="@dimen/avatar_sz_medium"
                     android:layout_marginTop="@dimen/margin_small"
-                    android:background="@color/translucent"
+                    android:background="@drawable/shape_oval_translucent"
                     android:gravity="center"
                     android:padding="@dimen/margin_large"
                     android:visibility="gone"
@@ -103,7 +104,7 @@
                     android:layout_height="@dimen/note_icon_sz"
                     android:layout_marginLeft="31dp"
                     android:layout_marginTop="35dp"
-                    android:background="@drawable/shape_oval_blue"
+                    android:background="@drawable/shape_oval_blue_white_stroke"
                     android:gravity="center"
                     android:textColor="@color/white"
                     android:textSize="14sp"

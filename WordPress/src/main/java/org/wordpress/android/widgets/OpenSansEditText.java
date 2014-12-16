@@ -2,9 +2,10 @@ package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.EditText;
 
-public class OpenSansEditText extends EditText {
+import org.wordpress.persistentedittext.PersistentEditText;
+
+public class OpenSansEditText extends PersistentEditText {
     public OpenSansEditText(Context context) {
         super(context, null);
         TypefaceCache.setCustomTypeface(context, this, null);

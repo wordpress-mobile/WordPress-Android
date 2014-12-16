@@ -259,7 +259,9 @@ public class SettingsFragment extends PreferenceFragment {
 
             PreferenceScreen rootScreen = (PreferenceScreen) findPreference("wp_pref_root");
             PreferenceGroup notificationsGroup = (PreferenceGroup) findPreference("wp_pref_notifications_category");
-            rootScreen.removePreference(notificationsGroup);
+            if (notificationsGroup != null) {
+                rootScreen.removePreference(notificationsGroup);
+            }
         }
     }
 

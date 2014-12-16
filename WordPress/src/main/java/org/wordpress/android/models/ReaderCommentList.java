@@ -31,14 +31,21 @@ public class ReaderCommentList extends ArrayList<ReaderComment> {
         return true;
     }
 
-    public boolean replaceComment(long commentId, ReaderComment comment) {
-        if (comment==null)
-            return false;
+    public int replaceComment(long commentId, ReaderComment newComment) {
+        if (newComment == null) {
+            return -1;
+        }
+
         int index = indexOfCommentId(commentId);
-        if (index == -1)
-            return false;
-        this.set(index, comment);
-        return true;
+        if (index == -1) {
+            return -1;
+        }
+
+        // make sure the new comment has the same level as the old one
+        newComment.level = this.get(index).level;
+
+        this.set(index, newComment);
+        return index;
     }
 
     /*

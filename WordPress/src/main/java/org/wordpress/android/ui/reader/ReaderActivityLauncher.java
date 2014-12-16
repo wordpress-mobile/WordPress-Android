@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -29,7 +30,16 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(activity, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-        intent.putExtra(ReaderConstants.ARG_TITLE, activity.getTitle());
+
+        // For ActionBarActivity subclasses, we need to pull the title from the Toolbar
+        CharSequence title;
+        if (activity instanceof ActionBarActivity && ((ActionBarActivity) activity).getSupportActionBar() != null) {
+            title = ((ActionBarActivity) activity).getSupportActionBar().getTitle();
+        } else {
+            title = activity.getTitle();
+        }
+
+        intent.putExtra(ReaderConstants.ARG_TITLE, title);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         showReaderPostPager(activity, intent);
     }

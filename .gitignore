@@ -42,3 +42,7 @@ WordPress/src/main/res/values/com_crashlytics_export_strings.xml
 
 # Silver Searcher ignore file
 .agignore
+
+# Monkey runner settings
+WordPress/src/androidTest/monkeys/settings.py
+*.pyc

@@ -1,3 +1,4 @@
 <resources>
-    <dimen name="reader_list_margin">@dimen/reader_list_margin_landscape</dimen>
+    <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal_landscape</dimen>
+    <dimen name="reader_card_spacing">@dimen/reader_card_spacing_landscape</dimen>
 </resources>

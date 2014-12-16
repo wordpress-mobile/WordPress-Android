@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.14.0'
+        classpath 'com.android.tools.build:gradle:1.0.0'
     }
 }
 
@@ -19,7 +19,7 @@ repositories {
 dependencies {
     compile 'commons-lang:commons-lang:2.6'
     compile 'com.mcxiaoke.volley:library:1.0.+'
-    compile 'com.android.support:support-v13:21.0.2'
+    compile 'com.android.support:support-v13:21.0.+'
 }
 
 android {
@@ -29,7 +29,6 @@ android {
     buildToolsVersion "21.1.1"
 
     defaultConfig {
-        applicationId "org.wordpress.android.util"
         versionName "1.2.0"
         minSdkVersion 14
         targetSdkVersion 19

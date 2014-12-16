@@ -17,7 +17,6 @@ public class Post implements Serializable {
     static final long serialVersionUID  = 2L;
 
     public static String QUICK_MEDIA_TYPE_PHOTO = "QuickPhoto";
-    public static String QUICK_MEDIA_TYPE_VIDEO = "QuickVideo";
 
     private long localTablePostId;
     private int localTableBlogId;
@@ -463,12 +462,14 @@ public class Post implements Serializable {
     public String getContent() {
         String postContent;
         if (!TextUtils.isEmpty(getMoreText())) {
-            if (isLocalDraft())
+            if (isLocalDraft()) {
                 postContent = getDescription() + "\n&lt;!--more--&gt;\n" + getMoreText();
-            else
+            } else {
                 postContent = getDescription() + "\n<!--more-->\n" + getMoreText();
-        } else
+            }
+        } else {
             postContent = getDescription();
+        }
 
         return postContent;
     }

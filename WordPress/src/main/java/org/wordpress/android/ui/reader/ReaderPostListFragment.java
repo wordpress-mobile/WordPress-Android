@@ -46,11 +46,12 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
-import org.wordpress.android.ui.reader.adapters.ReaderPostRecyclerAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderPostRecyclerView;
+import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView.ReaderItemDecoration;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -71,8 +72,8 @@ public class ReaderPostListFragment extends Fragment {
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
 
-    private ReaderPostRecyclerAdapter mPostRecycler;
-    private ReaderPostRecyclerView mRecyclerView;
+    private ReaderPostAdapter mPostRecycler;
+    private ReaderRecyclerView mRecyclerView;
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
@@ -89,6 +90,7 @@ public class ReaderPostListFragment extends Fragment {
     private long mCurrentBlogId;
     private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
+    private int mRestorePosition;
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
@@ -192,6 +194,7 @@ public class ReaderPostListFragment extends Fragment {
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
                 mTagPreviewHistory.restoreInstance(savedInstanceState);
             }
+            mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
         }
     }
@@ -239,15 +242,29 @@ public class ReaderPostListFragment extends Fragment {
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putString(ReaderConstants.ARG_BLOG_URL, mCurrentBlogUrl);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
+        outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
         super.onSaveInstanceState(outState);
     }
 
+    private int getCurrentPosition() {
+        if (mRecyclerView != null && hasPostRecycler()) {
+            return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+        } else {
+            return 0;
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_cards, container, false);
-        mRecyclerView = (ReaderPostRecyclerView) rootView.findViewById(R.id.recycler_view);
+        mRecyclerView = (ReaderRecyclerView) rootView.findViewById(R.id.recycler_view);
+
+        Context context = container.getContext();
+        int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing);
+        int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing_vertical);
+        mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) rootView.findViewById(R.id.text_new_posts);
@@ -275,7 +292,7 @@ public class ReaderPostListFragment extends Fragment {
 
             case BLOG_PREVIEW:
                 // inflate the blog info and make it full size
-                mBlogInfoView = new ReaderBlogInfoView(container.getContext());
+                mBlogInfoView = new ReaderBlogInfoView(context);
                 rootView.addView(mBlogInfoView);
                 ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, mBlogInfoView.getId());
                 // TODO: elevation doesn't work on the blog info header, not sure why
@@ -348,9 +365,7 @@ public class ReaderPostListFragment extends Fragment {
         setHasOptionsMenu(true);
         setupActionBar();
 
-        // assign the post list adapter
         boolean adapterAlreadyExists = hasPostRecycler();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(getPostRecycler());
 
         // if adapter didn't already exist, populate it now then update the tag - this
@@ -605,7 +620,11 @@ public class ReaderPostListFragment extends Fragment {
                 mEmptyView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.GONE);
+                if (mRestorePosition > 0) {
+                    mRecyclerView.scrollToPosition(mRestorePosition);
+                }
             }
+            mRestorePosition = 0;
         }
     };
 
@@ -653,12 +672,12 @@ public class ReaderPostListFragment extends Fragment {
         }
     };
 
-    private ReaderPostRecyclerAdapter getPostRecycler() {
+    private ReaderPostAdapter getPostRecycler() {
         if (mPostRecycler == null) {
             AppLog.d(T.READER, "reader post list > creating post recycler");
 
             Context context = WPActivityUtils.getThemedContext(getActivity());
-            mPostRecycler = new ReaderPostRecyclerAdapter(context, getPostListType());
+            mPostRecycler = new ReaderPostAdapter(context, getPostListType());
 
             mPostRecycler.setOnPostSelectedListener(mPostSelectedListener);
             mPostRecycler.setOnDataLoadedListener(mDataLoadedListener);
@@ -1124,4 +1143,5 @@ public class ReaderPostListFragment extends Fragment {
             );
         }
     }
+
 }

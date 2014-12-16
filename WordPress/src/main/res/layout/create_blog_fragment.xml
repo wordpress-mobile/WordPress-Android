@@ -42,7 +42,8 @@
                     android:layout_height="wrap_content"
                     style="@style/WordPress.NUXEditText"
                     android:inputType="textCapSentences"
-                    android:hint="@string/title" />
+                    android:hint="@string/title"
+                    app:persistenceEnabled="true"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -76,7 +77,8 @@
                     android:paddingTop="12dp"
                     android:paddingRight="0dp"
                     android:paddingBottom="12dp"
-                    android:layout_toLeftOf="@+id/textView"/>
+                    android:layout_toLeftOf="@+id/textView"
+                    app:persistenceEnabled="true"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
