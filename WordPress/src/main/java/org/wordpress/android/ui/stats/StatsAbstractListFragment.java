@@ -119,18 +119,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mPaginationGoForwardButton = (Button) view.findViewById(R.id.stats_pagination_go_forward);
         mPaginationText = (TextView) view.findViewById(R.id.stats_pagination_text);
 
-        // Change module title text color for all time fragments
-        switch (getViewType()) {
-            case COMMENTS:
-            case TAGS_AND_CATEGORIES:
-            case PUBLICIZE:
-            case FOLLOWERS:
-                mModuleTitleTextView.setTextColor(getResources().getColor(R.color.stats_text_color));
-                break;
-            default:
-                break;
-        }
-
         return view;
     }
 
