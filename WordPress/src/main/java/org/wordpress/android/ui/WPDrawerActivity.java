@@ -208,7 +208,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                     isStaticMenuDrawer() ?
                             getResources().getDimensionPixelSize(R.dimen.drawer_width_static) :
                             WPActivityUtils.getOptimalDrawerWidth(this);
-            ViewGroup leftDrawer = (ViewGroup) mDrawerLayout.findViewById(R.id.left_drawer);
+            ViewGroup leftDrawer = (ViewGroup) mDrawerLayout.findViewById(R.id.capture_insets_frame_layout);
             leftDrawer.getLayoutParams().width = drawerWidth;
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

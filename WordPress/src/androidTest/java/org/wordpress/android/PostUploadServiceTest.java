@@ -22,7 +22,9 @@ public class PostUploadServiceTest extends ServiceTestCase<PostUploadService> {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        testContext = getContext().createPackageContext("org.wordpress.android.test", Context.CONTEXT_IGNORE_SECURITY);
+        String namespace = BuildConfig.FLAVOR.equals("zbetagroup") ? "org.wordpress.android.beta"
+                : "org.wordpress.android";
+        testContext = getContext().createPackageContext(namespace, Context.CONTEXT_IGNORE_SECURITY);
         targetContext = new RenamingDelegatingContext(getContext(), "test_");
 
         // Init contexts
