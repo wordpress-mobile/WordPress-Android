@@ -107,6 +107,16 @@
                 android:layout_marginRight="@dimen/margin_medium"
                 />
 
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/stats_other_recent_stats_label"
+                android:textAppearance="?android:attr/textAppearance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:textColor="#587295"
+                android:gravity="center"
+                android:text="@string/stats_other_recent_stats_label"/>
+
             <FrameLayout
                 android:id="@+id/stats_comments_container"
                 android:layout_width="match_parent"
