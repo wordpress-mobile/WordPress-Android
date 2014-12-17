@@ -127,34 +127,17 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             String name = children.getTitle();
             int total = children.getTotals();
+            String icon = children.getIcon();
 
             // name, url
-            holder.setEntryTextOrLink(name, name);
-
+            holder.setEntryTextOrLink(children.getUrl(), name);
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
-            // no icon
             holder.networkImageView.setVisibility(View.GONE);
+            // no more btm
+            holder.imgMore.setVisibility(View.GONE);
 
-            if (StringUtils.isNotBlank(children.getUrl())) {
-                holder.imgMore.setVisibility(View.VISIBLE);
-                holder.imgMore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        PopupMenu popup = new PopupMenu(activity, view);
-                        MenuItem menuItem = popup.getMenu().add(getString(R.string.view_in_browser));
-                        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                WPWebViewActivity.openURL(activity, children.getUrl());
-                                return true;
-                            }
-                        });
-                        popup.show();
-                    }
-                });
-            }
             return convertView;
         }
 

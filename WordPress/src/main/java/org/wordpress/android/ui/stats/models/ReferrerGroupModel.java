@@ -7,6 +7,7 @@ import org.wordpress.android.ui.stats.StatsUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,17 +39,39 @@ public class ReferrerGroupModel implements Serializable {
         if (groupJSON.has("url") && !groupJSON.getString("url").equals("null")) {
             setUrl(groupJSON.getString("url"));
         } else {
+            // Referrers is a 3-levels depth structure. We don't have 3 levels UI for now. Unfold childs here.
             JSONArray resultsJSON = groupJSON.getJSONArray("results");
-            mResults = new ArrayList<SingleItemModel>(resultsJSON.length());
+            mResults = new ArrayList<>();
             for (int i = 0; i < resultsJSON.length(); i++) {
                 JSONObject currentResultJSON = resultsJSON.getJSONObject(i);
-                String name = currentResultJSON.getString("name");
-                int totals = currentResultJSON.getInt("views");
-                String icon = currentResultJSON.optString("icon");
-                SingleItemModel rm = new SingleItemModel(blogId, date, null, name, totals, null, icon );
-                mResults.add(rm);
+                if (currentResultJSON.has("children")) {
+                    JSONArray currentResultChildensJSON = currentResultJSON.getJSONArray("children");
+                    for (int j = 0; j < currentResultChildensJSON.length(); j++) {
+                        JSONObject currentChild = currentResultChildensJSON.getJSONObject(j);
+                        mResults.add(getChildren(blogId, date, currentChild));
+                    }
+                } else {
+                    mResults.add(getChildren(blogId, date, currentResultJSON));
+                }
             }
+
+            // Sort the childs by views.
+            Collections.sort(mResults, new java.util.Comparator<SingleItemModel>() {
+                public int compare(SingleItemModel o1, SingleItemModel o2) {
+                    // descending order
+                    return o2.getTotals() - o1.getTotals();
+                }
+            });
+
         }
+    }
+
+    private SingleItemModel getChildren(String blogId, String date, JSONObject child) throws JSONException {
+        String name = child.getString("name");
+        int totals = child.getInt("views");
+        String icon = child.optString("icon");
+        String url = child.optString("url");
+        return new SingleItemModel(blogId, date, null, name, totals, url, icon);
     }
 
     public String getBlogId() {
