@@ -3,6 +3,8 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -119,32 +121,6 @@ public class ReaderPost {
             post.timestamp = DateTimeUtils.iso8601ToTimestamp(post.published);
         }
 
-        // if there's no featured thumbnail, check if featured media has been set - this is sometimes
-        // a YouTube or Vimeo video, in which case store it as the featured video so we can treat
-        // it as a video
-        if (!post.hasFeaturedImage()) {
-            JSONObject jsonMedia = json.optJSONObject("featured_media");
-            if (jsonMedia != null) {
-                String mediaUrl = JSONUtil.getString(jsonMedia, "uri");
-                if (!TextUtils.isEmpty(mediaUrl)) {
-                    String type = JSONUtil.getString(jsonMedia, "type");
-                    boolean isVideo = (type != null && type.equals("video"));
-                    if (isVideo) {
-                        post.featuredVideo = mediaUrl;
-                    } else {
-                        post.featuredImage = mediaUrl;
-                    }
-                }
-            }
-
-            // if we still don't have a featured image, parse the content for an image that's
-            // suitable as a featured image
-            if (!post.hasFeaturedImage()) {
-                ReaderImageScanner scanner = new ReaderImageScanner(post.text, post.isPrivate);
-                post.featuredImage = scanner.getBestFeaturedImage();
-            }
-        }
-
         // if the post is untitled, make up a title from the excerpt
         if (!post.hasTitle() && post.hasExcerpt()) {
             post.title = extractTitle(post.excerpt, 50);
@@ -160,7 +136,7 @@ public class ReaderPost {
 
         // parse the attachments
         JSONObject jsonAttachments = json.optJSONObject("attachments");
-        if (jsonAttachments != null) {
+        if (jsonAttachments != null && jsonAttachments.length() > 0) {
             post.attachmentsJson = jsonAttachments.toString();
         }
 
@@ -173,6 +149,37 @@ public class ReaderPost {
             post.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtil.getBool(jsonSite, "jetpack");
+        }
+
+        // if there's no featured image, check if featured media has been set - this is sometimes
+        // a YouTube or Vimeo video, in which case store it as the featured video so we can treat
+        // it as a video
+        if (!post.hasFeaturedImage()) {
+            JSONObject jsonMedia = json.optJSONObject("featured_media");
+            if (jsonMedia != null && jsonMedia.length() > 0) {
+                String mediaUrl = JSONUtil.getString(jsonMedia, "uri");
+                if (!TextUtils.isEmpty(mediaUrl)) {
+                    String type = JSONUtil.getString(jsonMedia, "type");
+                    boolean isVideo = (type != null && type.equals("video"));
+                    if (isVideo) {
+                        post.featuredVideo = mediaUrl;
+                    } else {
+                        post.featuredImage = mediaUrl;
+                    }
+                }
+            }
+        }
+        // if the post still doesn't have a featured image but we have attachment data, check whether
+        // we can find a suitable featured image from the attachments
+        if (!post.hasFeaturedImage() && post.hasAttachments()) {
+            post.featuredImage = new ImageSizeMap(post.attachmentsJson)
+                    .getLargestImageUrl(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
+        }
+        // if we *still* don't have a featured image but the text contains an IMG tag, check whether
+        // we can find a suitable image from the text
+        if (!post.hasFeaturedImage() && post.hasText() && post.text.contains("<img")) {
+            post.featuredImage = new ReaderImageScanner(post.text, post.isPrivate)
+                    .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
         }
 
         return post;
@@ -386,7 +393,9 @@ public class ReaderPost {
     public void setAttachmentsJson(String json) {
         attachmentsJson = StringUtils.notNullStr(json);
     }
-
+    boolean hasAttachments() {
+        return !TextUtils.isEmpty(attachmentsJson);
+    }
 
     public boolean hasText() {
         return !TextUtils.isEmpty(text);
