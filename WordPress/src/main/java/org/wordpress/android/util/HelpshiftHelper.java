@@ -12,6 +12,8 @@ import com.helpshift.Helpshift;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,6 +85,7 @@ public class HelpshiftHelper {
      * Automatically add default metadata to this conversation
      */
     public void showConversation(Activity activity) {
+        AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN);
         HashMap config = getHelpshiftConfig(activity);
         Helpshift.showConversation(activity, config);
     }
@@ -92,6 +95,7 @@ public class HelpshiftHelper {
      * Automatically add default metadata to this conversation (users can start a conversation from FAQ screen).
      */
     public void showFAQ(Activity activity) {
+        AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN);
         HashMap config = getHelpshiftConfig(activity);
         Helpshift.showFAQs(activity, config);
     }

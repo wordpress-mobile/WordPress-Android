@@ -2,6 +2,8 @@ package org.wordpress.android.ui.accounts.helpers;
 
 import android.webkit.URLUtil;
 
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BlogUtils;
@@ -199,6 +201,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             xmlRpcUrl = guessURL;
             return xmlRpcUrl;
         } catch (XMLRPCException e) {
+            AnalyticsTracker.track(Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
             AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
         } catch (SSLHandshakeException e) {
             if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
@@ -213,8 +216,10 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
             return null;
         } catch (IOException e) {
+            AnalyticsTracker.track(Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
             AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
         } catch (XmlPullParserException e) {
+            AnalyticsTracker.track(Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
             AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
         }
 

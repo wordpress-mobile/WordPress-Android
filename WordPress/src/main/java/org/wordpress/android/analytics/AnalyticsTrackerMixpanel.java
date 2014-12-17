@@ -432,6 +432,54 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                               "number_of_posts_published_with_tags");
                 instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_tags");
                 break;
+            case EDITOR_TAPPED_BLOCKQUOTE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Blockquote Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_blockquote");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_blockquote_in_editor");
+                break;
+            case EDITOR_TAPPED_BOLD:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Bold Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_bold");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_bold_in_editor");
+                break;
+            case EDITOR_TAPPED_IMAGE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Image Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_image");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_image_in_editor");
+                break;
+            case EDITOR_TAPPED_ITALIC:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Italics Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_italic");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_italic_in_editor");
+                break;
+            case EDITOR_TAPPED_LINK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Link Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_link");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_link_in_editor");
+                break;
+            case EDITOR_TAPPED_MORE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped More Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_more");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_more_in_editor");
+                break;
+            case EDITOR_TAPPED_STRIKETHROUGH:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Strikethrough Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_strikethrough");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_strikethrough_in_editor");
+                break;
+            case EDITOR_TAPPED_UNDERLINE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Underline Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_underline");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_underline_in_editor");
+                break;
             case NOTIFICATIONS_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notifications - Accessed");
@@ -448,22 +496,37 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case NOTIFICATION_APPROVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_times_notifications_approved");
+                                "number_of_notifications_approved");
+                break;
+            case NOTIFICATION_UNAPPROVED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
+                                "number_of_notifications_unapproved");
                 break;
             case NOTIFICATION_REPLIED_TO:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_times_notifications_replied_to");
+                                "number_of_notifications_replied_to");
                 break;
             case NOTIFICATION_TRASHED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_times_notifications_trashed");
+                                "number_of_notifications_trashed");
                 break;
             case NOTIFICATION_FLAGGED_AS_SPAM:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_times_notifications_flagged_as_spam");
+                                "number_of_notifications_flagged_as_spam");
+                break;
+            case NOTIFICATION_LIKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Liked Comment");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_comment_likes_from_notification");
+                break;
+            case NOTIFICATION_UNLIKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Unliked Comment");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_comment_unlikes_from_notification");
                 break;
             case OPENED_POSTS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -557,6 +620,19 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case PUSH_NOTIFICATION_RECEIVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Push Notification Received");
+                break;
+            case SUPPORT_OPENED_HELPSHIFT_SCREEN:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Support - Opened Helpshift Screen");
+                instructions.addSuperPropertyToFlag("opened_helpshift_screen");
+                break;
+            case LOGIN_FAILED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Failed Login");
+                break;
+            case LOGIN_FAILED_TO_GUESS_XMLRPC:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Failed To Guess XMLRPC");
                 break;
             default:
                 instructions = null;
