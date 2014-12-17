@@ -223,6 +223,9 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
             // entries
             holder.entryTextView.setText(currentRowData.getName());
+            holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_text_color));
+            holder.entryTextView.setOnClickListener(null);
+
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
 

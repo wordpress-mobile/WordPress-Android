@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.stats.models.FollowDataModel;
 import org.wordpress.android.ui.stats.models.FollowerModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
@@ -19,6 +21,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -254,15 +257,33 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             final FollowerModel currentRowData = list.get(position);
             final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
+            holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_text_color));
+            holder.entryTextView.setOnClickListener(null);
+
             // entries
             if (mTopPagerSelectedButtonIndex == 0) {
-                holder.setEntryTextOrLink(currentRowData.getURL(), currentRowData.getLabel());
+                // WPCOM followers
+                holder.entryTextView.setText(currentRowData.getLabel());
+                if (!TextUtils.isEmpty(currentRowData.getURL()) && UrlUtils.isValidUrlAndHostNotNull(currentRowData.getURL())) {
+                    holder.entryTextView.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    ReaderActivityLauncher.showReaderBlogPreview(
+                                            context,
+                                            0L,
+                                            currentRowData.getURL()
+                                    );
+                                }
+                            });
+                    holder.entryTextView.setTextColor(context.getResources().getColor(R.color.wordpress_blue));
+                }
             } else {
+                // Email followers.
                 holder.entryTextView.setText(currentRowData.getLabel());
             }
 
             // since date
-
             holder.totalsTextView.setText(getSinceLabel(currentRowData.getDateSubscribed()));
 
             // Avatar

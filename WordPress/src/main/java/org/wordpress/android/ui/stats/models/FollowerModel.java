@@ -19,7 +19,11 @@ public class FollowerModel implements Serializable {
         if (followerJSONData.has("avatar") && !followerJSONData.getString("avatar").equals("null")) {
             setAvatar(followerJSONData.getString("avatar"));
         }
-        this.mUrl = followerJSONData.optString("url");
+
+        if (followerJSONData.has("url") && !followerJSONData.getString("url").equals("null")) {
+            this.mUrl = followerJSONData.optString("url");
+        }
+
         this.mDateSubscribed = followerJSONData.getString("date_subscribed");
 
         JSONObject followData = followerJSONData.optJSONObject("follow_data");

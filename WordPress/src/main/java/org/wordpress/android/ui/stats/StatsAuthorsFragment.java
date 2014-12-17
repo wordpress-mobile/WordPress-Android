@@ -139,14 +139,11 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
-            String name = children.getTitle();
-            int total = children.getTotals();
-            String url = children.getUrl();
-
             // name, url
-            holder.setEntryTextOrLink(url, name);
+            holder.setEntryTextOpenInreader(activity, children);
 
             // totals
+            int total = children.getTotals();
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // no icon

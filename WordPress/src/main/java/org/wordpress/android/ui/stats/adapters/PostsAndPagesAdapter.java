@@ -41,7 +41,9 @@ public class PostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
 
         final SingleItemModel currentRowData = list.get(position);
         StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
-        holder.setEntryTextOrLink(currentRowData.getUrl(), currentRowData.getTitle());
+
+        // Entry
+        holder.setEntryTextOpenInreader(context, currentRowData);
 
         holder.imgMore.setVisibility(View.GONE);
 

@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Activity;
+import android.content.Context;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -9,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -56,6 +60,45 @@ public class StatsViewHolder {
 
         StatsUIHelper.removeUnderlines((Spannable) entryTextView.getText());
     }
+
+
+    /*
+     * used by stats fragments to set the entry text, opening it with reader if possible
+     */
+    public void setEntryTextOpenInreader(final Activity ctx, SingleItemModel currentItem) {
+        if (entryTextView == null) {
+            return;
+        }
+
+        String name = currentItem.getTitle();
+        final String url = currentItem.getUrl();
+        final long blogID = Long.parseLong(currentItem.getBlogID());
+        final long itemID = Long.parseLong(currentItem.getItemID());
+        entryTextView.setText(name);
+        entryTextView.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // If the post/page has ID == 0 is the home page, and we need to load the blog preview,
+                        // otherwise 404 is returned if we try to show the post in the reader
+                        if (itemID == 0) {
+                            ReaderActivityLauncher.showReaderBlogPreview(
+                                    ctx,
+                                    blogID,
+                                    url
+                            );
+                        } else {
+                            ReaderActivityLauncher.showReaderPostDetail(
+                                    ctx,
+                                    blogID,
+                                    itemID
+                            );
+                        }
+                    }
+                });
+        entryTextView.setTextColor(ctx.getResources().getColor(R.color.wordpress_blue));
+    }
+
 
     /*
      * used by stats fragments to show a downloadable icon or default image

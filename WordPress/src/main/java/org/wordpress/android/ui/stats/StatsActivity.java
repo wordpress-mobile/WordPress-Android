@@ -698,26 +698,15 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     * make sure the passed timeframe is the one selected in the actionbar
     */
     private void selectTimeframeInActionBar(final StatsTimeframe timeframe) {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) {
-            return;
-        }
-
-        if (mTimeframeSpinnerAdapter == null) {
+        if (mTimeframeSpinnerAdapter == null || mSpinner == null) {
             return;
         }
 
         int position = mTimeframeSpinnerAdapter.getIndexOfTimeframe(mCurrentTimeframe);
-        if (position == -1 || position == actionBar.getSelectedNavigationIndex()) {
-            return;
-        }
 
-        if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
-            AppLog.w(T.STATS, "stats activity  > unexpected ActionBar navigation mode");
-            return;
+        if (position > -1 && position != mSpinner.getSelectedItemPosition()) {
+            mSpinner.setSelection(position);
         }
-
-        actionBar.setSelectedNavigationItem(position);
     }
 
     /*

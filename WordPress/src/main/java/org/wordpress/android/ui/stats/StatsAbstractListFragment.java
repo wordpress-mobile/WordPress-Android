@@ -26,7 +26,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 
 public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
@@ -98,7 +97,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         }
 
         mModuleTitleTextView = (TextView) view.findViewById(R.id.stats_module_title);
-        mModuleTitleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
+        mModuleTitleTextView.setText(getTitle());
 
         mModuleTitleTextPlaceholderTextView = (TextView) view.findViewById(R.id.stats_module_title_placeholder);
         mModuleTitleTextPlaceholderTextView.setText("               ");
