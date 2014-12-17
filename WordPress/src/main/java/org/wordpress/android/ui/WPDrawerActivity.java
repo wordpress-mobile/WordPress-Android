@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -48,6 +49,7 @@ import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
@@ -62,6 +64,7 @@ import java.util.Map;
  */
 public abstract class WPDrawerActivity extends ActionBarActivity {
     public static final int NEW_BLOG_CANCELED = 10;
+    public static final String SCROLL_POSITION_ID = "WPDrawerActivity";
 
     /**
      * AuthenticatorRequest code used when no accounts exist, and user is prompted to add an
@@ -88,6 +91,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private DrawerAdapter mDrawerAdapter;
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
+    private ListScrollPositionManager mScrollPositionManager;
 
     private static final int OPENED_FROM_DRAWER_DELAY = 250;
 
@@ -136,6 +140,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             overridePendingTransition(0, 0);
             finish();
         }
+        mScrollPositionManager.saveToPreferences(this, SCROLL_POSITION_ID);
     }
 
     @Override
@@ -147,6 +152,11 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             // Sync the toggle state after onRestoreInstanceState has occurred.
             mDrawerToggle.syncState();
         }
+        mScrollPositionManager.restoreFromPreferences(this, SCROLL_POSITION_ID);
+    }
+
+    @Override public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -240,7 +250,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             View view = getLayoutInflater().inflate(R.layout.drawer_header, mDrawerListView, false);
             mDrawerListView.addHeaderView(view, null, false);
         }
-
+        mScrollPositionManager = new ListScrollPositionManager(mDrawerListView, false);
         View settingsRow = findViewById(R.id.settings_row);
         settingsRow.setOnClickListener(new View.OnClickListener() {
             @Override
