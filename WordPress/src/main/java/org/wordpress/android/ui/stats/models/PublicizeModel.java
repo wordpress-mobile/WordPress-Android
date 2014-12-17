@@ -17,7 +17,7 @@ public class PublicizeModel implements Serializable {
         this.mBlogID = blogID;
         this.mDate = null;
         JSONArray services = response.getJSONArray("services");
-        if (services != null || services.length() > 0) {
+        if (services.length() > 0) {
             mServices = new ArrayList<SingleItemModel>(services.length());
             for (int i = 0; i < services.length(); i++) {
                 JSONObject current = services.getJSONObject(i);
@@ -41,4 +41,7 @@ public class PublicizeModel implements Serializable {
         this.mBlogID = blogId;
     }
 
+    public String getDate() {
+        return mDate;
+    }
 }

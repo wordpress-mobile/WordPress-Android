@@ -24,7 +24,7 @@ public class FollowHelper {
     private final WeakReference<Activity> mActivityRef;
 
     public FollowHelper(Activity activity) {
-        mActivityRef = new WeakReference<Activity>(activity);;
+        mActivityRef = new WeakReference<Activity>(activity);
     }
 
 
@@ -40,7 +40,7 @@ public class FollowHelper {
         final PopupMenu popup = new PopupMenu(mActivityRef.get(), anchor);
         final MenuItem menuItem;
 
-        if (followData.isRestCallInProgress == true) {
+        if (followData.isRestCallInProgress) {
             menuItem = popup.getMenu().add(workingText);
         } else {
             menuItem = popup.getMenu().add(followData.isFollowing() ? unfollowText : followText);

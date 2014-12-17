@@ -8,13 +8,13 @@ import java.io.Serializable;
 * A model to represent a SINGLE stats item
 */
 public class SingleItemModel implements Serializable {
-    private String mBlogID;
-    private String mItemID;
-    private long mDate;
-    private String mTitle;
-    private int mTotals;
-    private String mUrl;
-    private String mIcon;
+    private final String mBlogID;
+    private final String mItemID;
+    private final long mDate;
+    private final String mTitle;
+    private final int mTotals;
+    private final String mUrl;
+    private final String mIcon;
 
     public SingleItemModel(String blogId, String date, String itemID, String title, int totals, String url, String icon) {
        this(blogId, StatsUtils.toMs(date), itemID, title, totals, url, icon);

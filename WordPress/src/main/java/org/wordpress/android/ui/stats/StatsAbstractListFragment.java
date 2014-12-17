@@ -179,7 +179,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mList.setVisibility(View.GONE);
         mViewAll.setVisibility(View.GONE);
         mPaginationContainer.setVisibility(View.GONE);
-        return;
     }
 
     protected void showHideNoResultsUI(boolean showNoResultsUI) {
@@ -339,8 +338,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 mDatamodels[indexOfDatamodelMatch] = dataObj;
                 updateUI();
             }
-
-            return;
         }
     };
 }

@@ -52,4 +52,13 @@ public class CommentFollowersModel implements Serializable {
     public int getTotal() {
         return mTotal;
     }
+
+    public int getPage() {
+        return mPage;
+    }
+
+    public int getPages() {
+        return mPages;
+    }
+
 }

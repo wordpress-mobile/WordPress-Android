@@ -22,11 +22,6 @@ public class FollowDataModel implements Serializable {
 
     private String type;
     private String followText;
-
-    public String getFollowingText() {
-        return followingText;
-    }
-
     private String followingText;
     private String followingHoverText;
     private boolean isFollowing;
@@ -74,4 +69,19 @@ public class FollowDataModel implements Serializable {
         return followingHoverText;
     }
 
+    public String getFollowingText() {
+        return followingText;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getStatsSource() {
+        return statsSource;
+    }
+
+    public String getBlogDomain() {
+        return blogDomain;
+    }
 }

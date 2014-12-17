@@ -80,11 +80,28 @@ public class CommentsModel implements Serializable {
     public List<SingleItemModel> getPosts() {
         return this.mPosts;
     }
+
     public List<AuthorModel> getAuthors() {
         return this.mAuthors;
     }
 
     public int getTotalComments() {
         return mTotalComments;
+    }
+
+    public int getMonthlyComments() {
+        return mMonthlyComments;
+    }
+
+    public String getMostActiveDay() {
+        return mMostActiveDay;
+    }
+
+    public String getMostActiveTime() {
+        return mMostActiveTime;
+    }
+
+    public SingleItemModel getMostCommentedPost() {
+        return mMostCommentedPost;
     }
 }

@@ -115,8 +115,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         public Object getChild(int groupPosition, int childPosition) {
             AuthorModel currentGroup = authors.get(groupPosition);
             List<SingleItemModel> posts = currentGroup.getPosts();
-            SingleItemModel currentRes = posts.get(childPosition);
-            return currentRes;
+            return posts.get(childPosition);
         }
 
         @Override

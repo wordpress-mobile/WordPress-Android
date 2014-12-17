@@ -449,11 +449,15 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     }
 
     private void showJetpackMissingAlert(final Activity currentActivity) {
+        if (isFinishing()) {
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(currentActivity);
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-        if (currentBlog == null && !isFinishing()) {
+        if (currentBlog == null) {
             AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
             Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            return;
         }
         if (currentBlog.isAdmin()) {
             builder.setMessage(getString(R.string.jetpack_message))
@@ -793,7 +797,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     @Override
     public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
         // We take the last son in the scrollview
-        View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
+        View view = scrollView.getChildAt(scrollView.getChildCount() - 1);
         int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY() + view.getTop()));
 
         // if diff is zero, then the bottom has been reached

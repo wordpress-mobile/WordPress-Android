@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
-import android.content.Context;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.TextUtils;

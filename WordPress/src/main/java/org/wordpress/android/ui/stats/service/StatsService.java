@@ -2,9 +2,7 @@ package org.wordpress.android.ui.stats.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.OperationApplicationException;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.android.volley.Request;
@@ -271,10 +269,6 @@ public class StatsService extends Service {
                             //AppLog.d(T.STATS, response.toString());
                             mResponseObjectModel = StatsUtils.parseResponse(mEndpointName, mRequestBlogId, response);
                         } catch (JSONException e) {
-                            AppLog.e(AppLog.T.STATS, e);
-                        } catch (RemoteException e) {
-                            AppLog.e(AppLog.T.STATS, e);
-                        } catch (OperationApplicationException e) {
                             AppLog.e(AppLog.T.STATS, e);
                         }
                     }

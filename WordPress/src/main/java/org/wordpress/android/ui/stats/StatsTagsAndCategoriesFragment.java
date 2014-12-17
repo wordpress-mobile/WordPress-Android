@@ -82,9 +82,9 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     }
 
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
-        public LayoutInflater inflater;
-        public Activity activity;
-        private List<TagsModel> groups;
+        public final LayoutInflater inflater;
+        public final Activity activity;
+        private final List<TagsModel> groups;
 
         public MyExpandableListAdapter(Activity act, List<TagsModel> groups) {
             this.activity = act;
@@ -205,9 +205,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
                 //FIXME: Ugly hack. for some reason the TextView is probably intercepting/eating the click event and not passing it the parent.
                 StatsUIHelper.setEntryTextViewClickListener(convertView, holder.entryTextView);
             } else {
-                if (tags != null || tags.size() == 1 ) {
-                    holder.setEntryTextOrLink(tags.get(0).getLink(), groupName.toString());
-                }
+                holder.setEntryTextOrLink(tags.get(0).getLink(), groupName.toString());
             }
 
             // The main text is always blue in this module

@@ -295,12 +295,8 @@ class StatsBarGraph extends GraphView {
          * height for the Y coordinate. This is a fix to make very small bars tappable.
          */
         public boolean isPointInside(float x, float y) {
-            if (x >= this.mLeft
-                    && x <= this.mRight
-                    ) {
-                return true;
-            }
-            return false;
+            return x >= this.mLeft
+                    && x <= this.mRight;
         }
     }
 

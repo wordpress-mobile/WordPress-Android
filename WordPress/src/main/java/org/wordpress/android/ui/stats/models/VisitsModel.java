@@ -42,16 +42,17 @@ public class VisitsModel implements Serializable {
             final JSONArray fieldsJSON = getFieldsJSON();
             if (fieldsJSON == null || fieldsJSON.length() == 0) {
                 mVisits =  new ArrayList<VisitModel>(0);
-            }
-            try {
-                for (int i = 0; i < fieldsJSON.length(); i++) {
-                    final String field = fieldsJSON.getString(i);
-                    columnsMapping.put(field, i);
+            } else {
+                try {
+                    for (int i = 0; i < fieldsJSON.length(); i++) {
+                        final String field = fieldsJSON.getString(i);
+                        columnsMapping.put(field, i);
+                    }
+                } catch (JSONException e) {
+                    AppLog.e(AppLog.T.STATS, "Cannot read the parameter fields from the JSON response." +
+                            "Response: " + response.toString(), e);
+                    mVisits = new ArrayList<VisitModel>(0);
                 }
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, "Cannot read the parameter fields from the JSON response." +
-                        "Response: " + response.toString(), e);
-                mVisits =  new ArrayList<VisitModel>(0);
             }
 
             int viewsColumnIndex = columnsMapping.get("views");
@@ -110,7 +111,7 @@ public class VisitsModel implements Serializable {
     }
 
     private JSONArray getFieldsJSON() {
-        JSONArray jArray = null;
+        JSONArray jArray;
         try {
             String categories = StringUtils.unescapeHTML(this.getFields() != null ? this.getFields() : "[]");
             if (TextUtils.isEmpty(categories)) {

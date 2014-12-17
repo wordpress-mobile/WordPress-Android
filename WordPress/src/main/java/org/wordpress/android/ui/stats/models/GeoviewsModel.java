@@ -52,6 +52,7 @@ public class GeoviewsModel implements Serializable {
                 }
                 GeoviewModel m = new GeoviewModel(currentCountryCode, countryFullName, currentCountryViews, flagIcon);
                 countries.add(m);
+
             }
 
             // Sort the countries by views.
@@ -82,5 +83,13 @@ public class GeoviewsModel implements Serializable {
 
     public List<GeoviewModel> getCountries() {
         return this.countries;
+    }
+
+    public int getOtherViews() {
+        return otherViews;
+    }
+
+    public int getTotalViews() {
+        return totalViews;
     }
 }

@@ -95,8 +95,8 @@ public class StatsUIHelper {
      * See http://stackoverflow.com/a/10469121 and
      * http://www.mail-archive.com/android-developers@googlegroups.com/msg09595.html
      *
-     * @param v
-     * @param backgroundResId
+     * @param v The view to apply the background resource
+     * @param backgroundResId The resource ID
      */
     private static void setViewBackgroundWithoutResettingPadding(final View v, final int backgroundResId) {
         final int paddingBottom = v.getPaddingBottom(), paddingLeft = v.getPaddingLeft();

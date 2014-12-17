@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
-import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
-import android.os.RemoteException;
 import android.preference.PreferenceManager;
 
 import org.json.JSONException;
@@ -212,7 +210,8 @@ public class StatsUtils {
     }
 
     public static class StatsCredentials {
-        private String mUsername, mPassword;
+        private final String mUsername;
+        private final String mPassword;
 
         public StatsCredentials(String username, String password) {
             this.mUsername = username;
@@ -250,7 +249,7 @@ public class StatsUtils {
 
 
     public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
-            throws JSONException, RemoteException, OperationApplicationException {
+            throws JSONException {
         Serializable model = null;
         switch (endpointName) {
             case VISITS:

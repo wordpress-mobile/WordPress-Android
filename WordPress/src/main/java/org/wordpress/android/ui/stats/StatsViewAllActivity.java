@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.OperationApplicationException;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -441,7 +439,7 @@ public class StatsViewAllActivity extends ActionBarActivity
     }
 
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
-        private String mRequestBlogId;
+        private final String mRequestBlogId;
         private final StatsTimeframe mTimeframe;
         private final StatsService.StatsEndpointsEnum mEndpointName;
         private final WeakReference<Activity> mActivityRef;
@@ -474,10 +472,6 @@ public class StatsViewAllActivity extends ActionBarActivity
                             final Serializable resp = StatsUtils.parseResponse(mEndpointName, mRequestBlogId, response);
                             notifySectionUpdated(mEndpointName, resp);
                         } catch (JSONException e) {
-                            AppLog.e(AppLog.T.STATS, e);
-                        } catch (RemoteException e) {
-                            AppLog.e(AppLog.T.STATS, e);
-                        } catch (OperationApplicationException e) {
                             AppLog.e(AppLog.T.STATS, e);
                         }
                     }

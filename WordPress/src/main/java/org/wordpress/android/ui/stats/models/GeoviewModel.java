@@ -6,8 +6,8 @@ import java.io.Serializable;
  * A model to represent a geoview stat.
  */
 public class GeoviewModel implements Serializable {
-    private String mCountryShortName;
-    private String mCountryFullName;
+    private final String mCountryShortName;
+    private final String mCountryFullName;
     private int mViews;
     private String mImageUrl;
 

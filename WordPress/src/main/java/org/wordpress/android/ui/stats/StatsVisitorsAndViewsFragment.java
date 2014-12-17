@@ -57,7 +57,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     private OnDateChangeListener mListener;
 
-    OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
+    final OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
             OverviewLabel.COMMENTS};
 
     // Restore the following variables on restart
@@ -122,7 +122,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (savedInstanceState != null) {
             AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > restoring instance state");
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
-                mVisitsData = (VisitsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+                mVisitsData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             }
             if (savedInstanceState.containsKey(ARG_SELECTED_OVERVIEW_ITEM)) {
                 mSelectedOverviewItemIndex = savedInstanceState.getInt(ARG_SELECTED_OVERVIEW_ITEM, 0);
@@ -401,7 +401,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 currentBtm.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             }
         }
-        return;
     }
 
     private int getNumOfPoints() {

@@ -15,7 +15,7 @@ public class AuthorsModel implements Serializable {
     private String mPeriod;
     private String mDate;
     private String mBlogID;
-    private int otherViews;
+    private int mOtherViews;
     private List<AuthorModel> mAuthors;
 
     public AuthorsModel(String blogID, JSONObject response) throws JSONException {
@@ -33,7 +33,7 @@ public class AuthorsModel implements Serializable {
         Iterator<String> keys = jDaysObject.keys();
         String key = keys.next();
         JSONObject firstDayObject = jDaysObject.getJSONObject(key);
-        this.otherViews = firstDayObject.optInt("other_views");
+        this.mOtherViews = firstDayObject.optInt("other_views");
         authorsJSONArray = firstDayObject.optJSONArray("authors");
 
         if (authorsJSONArray != null) {
@@ -77,5 +77,9 @@ public class AuthorsModel implements Serializable {
 
     public List<AuthorModel> getAuthors() {
         return this.mAuthors;
+    }
+
+    public int getOtherViews() {
+        return mOtherViews;
     }
 }

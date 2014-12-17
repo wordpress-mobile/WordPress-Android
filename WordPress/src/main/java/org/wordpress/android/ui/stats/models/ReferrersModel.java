@@ -80,4 +80,12 @@ public class ReferrersModel implements Serializable {
     public List<ReferrerGroupModel> getGroups() {
         return this.mGroups;
     }
+
+    public int getOtherViews() {
+        return mOtherViews;
+    }
+
+    public int getTotalViews() {
+        return mTotalViews;
+    }
 }

@@ -77,4 +77,12 @@ public class VideoPlaysModel implements Serializable {
     public List<SingleItemModel> getPlays() {
         return this.mPlays;
     }
+
+    public int getOtherPlays() {
+        return mOtherPlays;
+    }
+
+    public int getTotalPlays() {
+        return mTotalPlays;
+    }
 }

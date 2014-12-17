@@ -38,4 +38,7 @@ public class TagsContainerModel implements Serializable {
         this.mBlogID = blogId;
     }
 
+    public String getDate() {
+        return mDate;
+    }
 }

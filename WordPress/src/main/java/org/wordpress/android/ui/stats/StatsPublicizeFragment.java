@@ -106,20 +106,27 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     private String getServiceImage(String service) {
         String serviceIconURL;
 
-        if (service.equals("facebook")) {
-            serviceIconURL = "https://secure.gravatar.com/blavatar/2343ec78a04c6ea9d80806345d31fd78?s=";
-        } else if (service.equals("twitter")) {
-            serviceIconURL = "https://secure.gravatar.com/blavatar/7905d1c4e12c54933a44d19fcd5f9356?s=";
-        } else if (service.equals("tumblr")) {
-            serviceIconURL = "https://secure.gravatar.com/blavatar/84314f01e87cb656ba5f382d22d85134?s=";
-        } else if (service.equals("google_plus")) {
-            serviceIconURL = "https://secure.gravatar.com/blavatar/4a4788c1dfc396b1f86355b274cc26b3?s=";
-        } else if (service.equals("linkedin")) {
-            serviceIconURL = "https://secure.gravatar.com/blavatar/f54db463750940e0e7f7630fe327845e?s=";
-        } else if (service.equals("path")) {
-            serviceIconURL = "https://secure.gravatar.com/blavatar/3a03c8ce5bf1271fb3760bb6e79b02c1?s=";
-        } else {
-            return null;
+        switch (service) {
+            case "facebook":
+                serviceIconURL = "https://secure.gravatar.com/blavatar/2343ec78a04c6ea9d80806345d31fd78?s=";
+                break;
+            case "twitter":
+                serviceIconURL = "https://secure.gravatar.com/blavatar/7905d1c4e12c54933a44d19fcd5f9356?s=";
+                break;
+            case "tumblr":
+                serviceIconURL = "https://secure.gravatar.com/blavatar/84314f01e87cb656ba5f382d22d85134?s=";
+                break;
+            case "google_plus":
+                serviceIconURL = "https://secure.gravatar.com/blavatar/4a4788c1dfc396b1f86355b274cc26b3?s=";
+                break;
+            case "linkedin":
+                serviceIconURL = "https://secure.gravatar.com/blavatar/f54db463750940e0e7f7630fe327845e?s=";
+                break;
+            case "path":
+                serviceIconURL = "https://secure.gravatar.com/blavatar/3a03c8ce5bf1271fb3760bb6e79b02c1?s=";
+                break;
+            default:
+                return null;
         }
 
         return serviceIconURL + mResourceVars.headerAvatarSizePx;

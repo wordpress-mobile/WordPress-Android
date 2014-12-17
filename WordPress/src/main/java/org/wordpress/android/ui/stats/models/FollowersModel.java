@@ -70,4 +70,8 @@ public class FollowersModel implements Serializable {
     public int getPages() {
         return mPages;
     }
+
+    public int getTotal() {
+        return mTotal;
+    }
 }

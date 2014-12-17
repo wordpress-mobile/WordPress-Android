@@ -208,12 +208,9 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             return false;
         }
         FollowersModel followersModel = (FollowersModel) mDatamodels[mTopPagerSelectedButtonIndex];
-        if (followersModel == null || followersModel.getFollowers() == null
-                || followersModel.getFollowers().size() < 10) {
-            return false;
-        }
+        return !(followersModel == null || followersModel.getFollowers() == null
+                || followersModel.getFollowers().size() < 10);
 
-        return true;
     }
 
     private String getTotalFollowersLabel(int total) {

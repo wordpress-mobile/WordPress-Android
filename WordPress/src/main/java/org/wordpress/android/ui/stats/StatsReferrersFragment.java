@@ -88,9 +88,9 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     }
 
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
-        public LayoutInflater inflater;
-        public Activity activity;
-        private List<ReferrerGroupModel> groups;
+        public final LayoutInflater inflater;
+        public final Activity activity;
+        private final List<ReferrerGroupModel> groups;
 
         public MyExpandableListAdapter(Activity act, List<ReferrerGroupModel> groups) {
             this.activity = act;

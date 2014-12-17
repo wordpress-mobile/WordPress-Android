@@ -23,6 +23,10 @@ public class PostViewsModel implements Serializable {
     private List<Average> mAverages;
     private List<Week> mWeeks;
 
+    public String getDate() {
+        return mDate;
+    }
+
     public String getOriginalResponse() {
         return mOriginalResponse;
     }
@@ -150,8 +154,7 @@ public class PostViewsModel implements Serializable {
 
                 JSONObject months = currentYearObj.getJSONObject("months");
                 String[] orderedMonthsKeys = orderKeys(months.keys(), months.length());
-                for (int i = 0; i < orderedMonthsKeys.length; i++) {
-                    String currentMonthKey = orderedMonthsKeys[i];
+                for (String currentMonthKey : orderedMonthsKeys) {
                     int currentMonthVisits = months.getInt(currentMonthKey);
                     int currentMonthIndex = Integer.parseInt(currentMonthKey) - 1;
                     currentYear.getMonths()[currentMonthIndex] = currentMonthVisits;
@@ -170,9 +173,8 @@ public class PostViewsModel implements Serializable {
             // Keys could not be ordered fine. Reordering them.
             String[] orderedKeys = orderKeys(averagesJSON.keys(), averagesJSON.length());
 
-            for (int j = 0; j < orderedKeys.length; j++) {
+            for (String currentJSONKey : orderedKeys) {
                 Average currentAverage = new Average();
-                String currentJSONKey = orderedKeys[j];
                 currentAverage.setLabel(currentJSONKey);
 
                 JSONObject currentAverageJSONObj = averagesJSON.getJSONObject(currentJSONKey);
@@ -180,8 +182,7 @@ public class PostViewsModel implements Serializable {
 
                 JSONObject monthsJSON = currentAverageJSONObj.getJSONObject("months");
                 String[] orderedMonthsKeys = orderKeys(monthsJSON.keys(), monthsJSON.length());
-                for (int i = 0; i < orderedMonthsKeys.length; i++) {
-                    String currentMonthKey = orderedMonthsKeys[i];
+                for (String currentMonthKey : orderedMonthsKeys) {
                     int currentMonthVisits = monthsJSON.getInt(currentMonthKey);
                     int currentMonthIndex = Integer.parseInt(currentMonthKey) - 1;
                     currentAverage.getMonths()[currentMonthIndex] = currentMonthVisits;
