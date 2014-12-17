@@ -64,7 +64,7 @@
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
     <!-- left/right spacing between posts in the card view -->
-    <dimen name="reader_card_spacing_normal">12dp</dimen>
+    <dimen name="reader_card_spacing_normal">8dp</dimen>
     <dimen name="reader_card_spacing_landscape">48dp</dimen>
     <dimen name="reader_card_spacing_tablet">48dp</dimen>
     <dimen name="reader_card_spacing_tablet_landscape">96dp</dimen>

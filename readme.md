@@ -22,7 +22,7 @@ test the project:
     $ ./gradlew assembleVanillaDebug # assemble the debug .apk
     $ ./gradlew installVanillaDebug  # install the debug .apk if you have an
                                      # emulator or an Android device connected
-    $ ./gradlew cAT                  # assemble, install and run unit tests
+    $ ./gradlew WordPress:cAT        # assemble, install and run unit tests
 
 You can use [Android Studio][3] by importing the project as a Gradle project.
 
