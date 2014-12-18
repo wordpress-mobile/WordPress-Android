@@ -109,7 +109,9 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
                 public void onRefreshStarted() {
                     if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
                         mSwipeToRefreshHelper.setRefreshing(false);
-                        mEmptyView.setText(R.string.no_network_title);
+                        if (getActivity() != null) {
+                            mEmptyView.setText(R.string.no_network_title);
+                        }
                         return;
                     }
                     if (getActivity() instanceof ThemeBrowserActivity) {
