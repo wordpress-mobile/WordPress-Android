@@ -5,4 +5,6 @@
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
     android:id="@+id/categoryButton"
-    android:drawableRight="@drawable/ic_close_grey600_24dp" android:paddingEnd="5dp"/>
+    android:drawableRight="@drawable/ic_close_grey600_24dp"
+    android:paddingEnd="5dp"
+    android:paddingRight="5dp"/>
