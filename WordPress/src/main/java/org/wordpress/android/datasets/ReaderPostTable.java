@@ -37,28 +37,29 @@ public class ReaderPostTable {
           + "text,"                 // 7
           + "excerpt,"              // 8
           + "url,"                  // 9
-          + "blog_url,"             // 10
-          + "blog_name,"            // 11
-          + "featured_image,"       // 12
-          + "featured_video,"       // 13
-          + "post_avatar,"          // 14
-          + "timestamp,"            // 15
-          + "published,"            // 16
-          + "num_replies,"          // 17
-          + "num_likes,"            // 18
-          + "is_liked,"             // 19
-          + "is_followed,"          // 20
-          + "is_comments_open,"     // 21
-          + "is_reblogged,"         // 22
-          + "is_external,"          // 23
-          + "is_private,"           // 24
-          + "is_videopress,"        // 25
-          + "is_jetpack,"           // 26
-          + "primary_tag,"          // 27
-          + "secondary_tag,"        // 28
-          + "is_likes_enabled,"     // 29
-          + "is_sharing_enabled,"   // 30
-          + "attachments_json";     // 31
+          + "short_url,"            // 10
+          + "blog_url,"             // 11
+          + "blog_name,"            // 12
+          + "featured_image,"       // 13
+          + "featured_video,"       // 14
+          + "post_avatar,"          // 15
+          + "timestamp,"            // 16
+          + "published,"            // 17
+          + "num_replies,"          // 18
+          + "num_likes,"            // 19
+          + "is_liked,"             // 20
+          + "is_followed,"          // 21
+          + "is_comments_open,"     // 22
+          + "is_reblogged,"         // 23
+          + "is_external,"          // 24
+          + "is_private,"           // 25
+          + "is_videopress,"        // 26
+          + "is_jetpack,"           // 27
+          + "primary_tag,"          // 28
+          + "secondary_tag,"        // 29
+          + "is_likes_enabled,"     // 30
+          + "is_sharing_enabled,"   // 31
+          + "attachments_json";     // 32
 
     // used when querying multiple rows and skipping tbl_posts.text
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -74,24 +75,25 @@ public class ReaderPostTable {
           + "tbl_posts.featured_video,"       // 10
           + "tbl_posts.title,"                // 11
           + "tbl_posts.url,"                  // 12
-          + "tbl_posts.post_avatar,"          // 13
-          + "tbl_posts.timestamp,"            // 14
-          + "tbl_posts.published,"            // 15
-          + "tbl_posts.num_replies,"          // 16
-          + "tbl_posts.num_likes,"            // 17
-          + "tbl_posts.is_liked,"             // 18
-          + "tbl_posts.is_followed,"          // 19
-          + "tbl_posts.is_comments_open,"     // 20
-          + "tbl_posts.is_reblogged,"         // 21
-          + "tbl_posts.is_external,"          // 22
-          + "tbl_posts.is_private,"           // 23
-          + "tbl_posts.is_videopress,"        // 24
-          + "tbl_posts.is_jetpack,"           // 25
-          + "tbl_posts.primary_tag,"          // 26
-          + "tbl_posts.secondary_tag,"        // 27
-          + "tbl_posts.is_likes_enabled,"     // 28
-          + "tbl_posts.is_sharing_enabled,"   // 29
-          + "tbl_posts.attachments_json";     // 30
+          + "tbl_posts.short_url,"            // 13
+          + "tbl_posts.post_avatar,"          // 14
+          + "tbl_posts.timestamp,"            // 15
+          + "tbl_posts.published,"            // 16
+          + "tbl_posts.num_replies,"          // 17
+          + "tbl_posts.num_likes,"            // 18
+          + "tbl_posts.is_liked,"             // 19
+          + "tbl_posts.is_followed,"          // 20
+          + "tbl_posts.is_comments_open,"     // 21
+          + "tbl_posts.is_reblogged,"         // 22
+          + "tbl_posts.is_external,"          // 23
+          + "tbl_posts.is_private,"           // 24
+          + "tbl_posts.is_videopress,"        // 25
+          + "tbl_posts.is_jetpack,"           // 26
+          + "tbl_posts.primary_tag,"          // 27
+          + "tbl_posts.secondary_tag,"        // 28
+          + "tbl_posts.is_likes_enabled,"     // 29
+          + "tbl_posts.is_sharing_enabled,"   // 30
+          + "tbl_posts.attachments_json";     // 31
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -104,6 +106,7 @@ public class ReaderPostTable {
                 + "	text                TEXT,"
                 + "	excerpt             TEXT,"
                 + " url                 TEXT,"
+                + " short_url           TEXT,"
                 + " blog_url            TEXT,"
                 + " blog_name           TEXT,"
                 + " featured_image      TEXT,"
@@ -461,7 +464,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5)");
 
@@ -478,28 +481,29 @@ public class ReaderPostTable {
                 stmtPosts.bindString(7,  maxText(post));
                 stmtPosts.bindString(8,  post.getExcerpt());
                 stmtPosts.bindString(9,  post.getUrl());
-                stmtPosts.bindString(10, post.getBlogUrl());
-                stmtPosts.bindString(11, post.getBlogName());
-                stmtPosts.bindString(12, post.getFeaturedImage());
-                stmtPosts.bindString(13, post.getFeaturedVideo());
-                stmtPosts.bindString(14, post.getPostAvatar());
-                stmtPosts.bindLong  (15, post.timestamp);
-                stmtPosts.bindString(16, post.getPublished());
-                stmtPosts.bindLong  (17, post.numReplies);
-                stmtPosts.bindLong  (18, post.numLikes);
-                stmtPosts.bindLong  (19, SqlUtils.boolToSql(post.isLikedByCurrentUser));
-                stmtPosts.bindLong  (20, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
-                stmtPosts.bindLong  (21, SqlUtils.boolToSql(post.isCommentsOpen));
-                stmtPosts.bindLong  (22, SqlUtils.boolToSql(post.isRebloggedByCurrentUser));
-                stmtPosts.bindLong  (23, SqlUtils.boolToSql(post.isExternal));
-                stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isPrivate));
-                stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isVideoPress));
-                stmtPosts.bindLong  (26, SqlUtils.boolToSql(post.isJetpack));
-                stmtPosts.bindString(27, post.getPrimaryTag());
-                stmtPosts.bindString(28, post.getSecondaryTag());
-                stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isLikesEnabled));
-                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isSharingEnabled));
-                stmtPosts.bindString(31, post.getAttachmentsJson());
+                stmtPosts.bindString(10, post.getShortUrl());
+                stmtPosts.bindString(11, post.getBlogUrl());
+                stmtPosts.bindString(12, post.getBlogName());
+                stmtPosts.bindString(13, post.getFeaturedImage());
+                stmtPosts.bindString(14, post.getFeaturedVideo());
+                stmtPosts.bindString(15, post.getPostAvatar());
+                stmtPosts.bindLong  (16, post.timestamp);
+                stmtPosts.bindString(17, post.getPublished());
+                stmtPosts.bindLong  (18, post.numReplies);
+                stmtPosts.bindLong  (19, post.numLikes);
+                stmtPosts.bindLong  (20, SqlUtils.boolToSql(post.isLikedByCurrentUser));
+                stmtPosts.bindLong  (21, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
+                stmtPosts.bindLong  (22, SqlUtils.boolToSql(post.isCommentsOpen));
+                stmtPosts.bindLong  (23, SqlUtils.boolToSql(post.isRebloggedByCurrentUser));
+                stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isExternal));
+                stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isPrivate));
+                stmtPosts.bindLong  (26, SqlUtils.boolToSql(post.isVideoPress));
+                stmtPosts.bindLong  (27, SqlUtils.boolToSql(post.isJetpack));
+                stmtPosts.bindString(28, post.getPrimaryTag());
+                stmtPosts.bindString(29, post.getSecondaryTag());
+                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isLikesEnabled));
+                stmtPosts.bindLong  (31, SqlUtils.boolToSql(post.isSharingEnabled));
+                stmtPosts.bindString(32, post.getAttachmentsJson());
                 stmtPosts.execute();
             }
 
@@ -685,6 +689,7 @@ public class ReaderPostTable {
 
         post.setTitle(c.getString(c.getColumnIndex("title")));
         post.setUrl(c.getString(c.getColumnIndex("url")));
+        post.setShortUrl(c.getString(c.getColumnIndex("short_url")));
         post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
 
         post.timestamp = c.getLong(c.getColumnIndex("timestamp"));
