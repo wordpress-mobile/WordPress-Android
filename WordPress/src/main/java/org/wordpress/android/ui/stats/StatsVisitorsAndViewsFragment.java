@@ -100,7 +100,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             rb.setText(overviewItems[i].getLabel());
             rb.setTag(overviewItems[i]);
             mRadioGroup.addView(rb);
-
             if (i == mSelectedOverviewItemIndex) {
                 rb.setChecked(true);
             }

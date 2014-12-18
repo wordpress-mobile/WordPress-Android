@@ -28,8 +28,16 @@
         <!--  item name="android:fontFamily">sans-serif-light</item -->
     </style>
 
+    <style name="StatsVisitsAndViewRadioButton">
+        <item name="android:background">@drawable/stats_visitors_and_views_button_selector</item>
+        <item name="android:button">@android:color/transparent</item>
+        <item name="android:padding">@dimen/margin_medium</item>
+        <item name="android:textColor">@color/stats_visitors_and_views_button_text_color</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
     <style name="StatsTopModuleRadioButton">
-        <item name="android:background">@drawable/stats_button_selector</item>
+        <item name="android:background">@drawable/stats_top_pager_button_selector</item>
         <item name="android:button">@android:color/transparent</item>
         <item name="android:padding">@dimen/margin_medium</item>
         <item name="android:textColor">@color/stats_text_color</item>
@@ -38,7 +46,7 @@
 
     <style name="StatsViewAllButton">
         <item name="android:gravity">left</item>
-        <item name="android:background">@drawable/stats_view_all_button_background</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:button">@android:color/transparent</item>
         <item name="android:minHeight">22dp</item>
         <item name="android:textColor">@color/wordpress_blue</item>

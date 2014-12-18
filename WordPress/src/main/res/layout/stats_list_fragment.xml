@@ -131,13 +131,19 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnViewAll"
-            style="@style/StatsViewAllButton"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/stats_view_all"
-            android:visibility="gone" />
+            android:orientation="vertical"
+            android:background="@drawable/stats_view_all_button_background">
+            <Button
+                android:id="@+id/btnViewAll"
+                style="@style/StatsViewAllButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_view_all"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_list_empty_text"
