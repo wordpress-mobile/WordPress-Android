@@ -267,7 +267,7 @@ public class ReaderPostListFragment extends Fragment {
 
         Context context = container.getContext();
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing);
-        int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing_vertical);
+        int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
 
         // bar that appears at top when new posts are downloaded

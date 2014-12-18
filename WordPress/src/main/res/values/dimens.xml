@@ -70,10 +70,11 @@
     <dimen name="reader_card_spacing_tablet_landscape">96dp</dimen>
     <dimen name="reader_card_spacing">@dimen/reader_card_spacing_normal</dimen>
 
-    <dimen name="reader_card_spacing_vertical">12dp</dimen>
+    <!-- height of divider between cards -->
+    <dimen name="reader_card_gutters">8dp</dimen>
 
     <!-- padding inside the card (space between card border and card content) -->
-    <dimen name="reader_card_padding">8dp</dimen>
+    <dimen name="reader_card_content_padding">16dp</dimen>
 
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>

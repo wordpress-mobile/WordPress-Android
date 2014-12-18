@@ -18,8 +18,8 @@
         android:layout_marginLeft="@dimen/reader_card_spacing"
         android:layout_marginRight="@dimen/reader_card_spacing"
         android:paddingBottom="@dimen/margin_large"
-        android:paddingLeft="@dimen/reader_card_padding"
-        android:paddingRight="@dimen/reader_card_padding"
+        android:paddingLeft="@dimen/reader_card_content_padding"
+        android:paddingRight="@dimen/reader_card_content_padding"
         android:paddingTop="@dimen/margin_small"
         android:visibility="invisible"
         tools:visibility="visible">

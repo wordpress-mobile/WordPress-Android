@@ -25,8 +25,8 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/margin_large"
-            android:paddingLeft="@dimen/reader_card_padding"
-            android:paddingRight="@dimen/reader_card_padding">
+            android:paddingLeft="@dimen/reader_card_content_padding"
+            android:paddingRight="@dimen/reader_card_content_padding">
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_avatar"
@@ -53,8 +53,8 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
             style="@style/ReaderTextView.Post.Title"
-            android:layout_marginLeft="@dimen/reader_card_padding"
-            android:layout_marginRight="@dimen/reader_card_padding"
+            android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginRight="@dimen/reader_card_content_padding"
             android:maxLines="2"
             tools:text="text_title" />
 
@@ -63,8 +63,8 @@
             style="@style/ReaderTextView.Post.Excerpt"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginLeft="@dimen/reader_card_padding"
-            android:layout_marginRight="@dimen/reader_card_padding"
+            android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginRight="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_medium"
             android:maxLines="3"
             tools:text="text_excerpt" />
