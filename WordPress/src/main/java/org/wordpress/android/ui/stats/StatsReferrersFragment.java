@@ -2,15 +2,11 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.PopupMenu;
 
-import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.models.ReferrerGroupModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
@@ -26,8 +22,12 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (isErrorResponse(0)) {
-            showErrorUI(mDatamodels[0]);
+        if (!isAdded()) {
+            return;
+        }
+
+        if (isErrorResponse()) {
+            showErrorUI();
             return;
         }
 
@@ -41,7 +41,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasReferrers() {
-        return mDatamodels != null && mDatamodels[0] != null
+        return !isDataEmpty()
                 && ((ReferrersModel) mDatamodels[0]).getGroups() != null
                 && ((ReferrersModel) mDatamodels[0]).getGroups().size() > 0;
     }
@@ -55,7 +55,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return hasReferrers() && getReferrersGroups().size() > 10;
+        return hasReferrers() && getReferrersGroups().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
     @Override
@@ -89,11 +89,9 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
-        public final Activity activity;
         private final List<ReferrerGroupModel> groups;
 
         public MyExpandableListAdapter(Activity act, List<ReferrerGroupModel> groups) {
-            this.activity = act;
             this.groups = groups;
             this.inflater = act.getLayoutInflater();
         }

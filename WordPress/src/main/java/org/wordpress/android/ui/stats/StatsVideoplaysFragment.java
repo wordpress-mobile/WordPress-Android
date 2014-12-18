@@ -20,10 +20,15 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (isErrorResponse(0)) {
-            showErrorUI(mDatamodels[0]);
+        if (!isAdded()) {
             return;
         }
+
+        if (isErrorResponse()) {
+            showErrorUI();
+            return;
+        }
+
         if (hasVideoplays()) {
             ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), getVideoplays());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
@@ -34,7 +39,7 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasVideoplays() {
-        return mDatamodels != null &&  mDatamodels[0] != null
+        return !isDataEmpty()
                 && ((VideoPlaysModel) mDatamodels[0]).getPlays() != null
                 && ((VideoPlaysModel) mDatamodels[0]).getPlays().size() > 0;
     }
@@ -48,7 +53,7 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return hasVideoplays() && getVideoplays().size() > 10;
+        return hasVideoplays() && getVideoplays().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
     @Override

@@ -39,12 +39,16 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (isErrorResponse(0)) {
-            showErrorUI(mDatamodels[0]);
+        if (!isAdded()) {
             return;
         }
 
-        if (mDatamodels == null || mDatamodels[0] == null) {
+        if (isErrorResponse()) {
+            showErrorUI();
+            return;
+        }
+
+        if (isDataEmpty()) {
             showHideNoResultsUI(true);
             mListener.onAuthorsVisibilityChange(true); // Hide the authors section if completely empty
             return;
@@ -68,7 +72,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
     protected boolean isViewAllOptionAvailable() {
         return (mDatamodels != null && mDatamodels[0] != null
                 && ((AuthorsModel) mDatamodels[0]).getAuthors() != null
-                && ((AuthorsModel) mDatamodels[0]).getAuthors().size() > 10);
+                && ((AuthorsModel) mDatamodels[0]).getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
     }
 
     @Override

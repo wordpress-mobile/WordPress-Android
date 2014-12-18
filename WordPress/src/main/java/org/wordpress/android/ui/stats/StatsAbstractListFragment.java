@@ -34,7 +34,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     // Used when the fragment has 2 pages/kind of stats in it. Not meaning the bottom pagination.
     protected static final String ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX = "ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX";
-    protected static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST = 1000;
+    protected static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST = 1000;
+    protected static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST = 10;
 
     protected static final int NO_STRING_ID = -1;
 
@@ -206,7 +207,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         } else {
             mEmptyLabel.setVisibility(View.GONE);
             mListContainer.setVisibility(View.VISIBLE);
-            mList.setVisibility(View.VISIBLE );
+            mList.setVisibility(View.VISIBLE);
             if (!isSingleView() && isViewAllOptionAvailable()) {
                 // No view all button if already in single view
                 configureViewAllButton();
@@ -216,7 +217,18 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         }
     }
 
+    protected void showErrorUI() {
+        if (!isAdded()) {
+            return;
+        }
+        showErrorUI(mDatamodels[mTopPagerSelectedButtonIndex]);
+    }
+
     protected void showErrorUI(Serializable error) {
+        if (!isAdded()) {
+            return;
+        }
+
         mGroupIdToExpandedMap.clear();
         mModuleTitleTextPlaceholderTextView.setVisibility(View.GONE);
         mModuleTitleTextView.setVisibility(View.VISIBLE);
@@ -243,6 +255,19 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mEmptyLabel.setVisibility(View.VISIBLE);
         mListContainer.setVisibility(View.GONE);
         mList.setVisibility(View.GONE);
+    }
+
+    protected boolean isDataEmpty() {
+        return mDatamodels == null || mDatamodels[mTopPagerSelectedButtonIndex] == null;
+    }
+
+    /**
+     * Check if the current datamodel is an error response.
+     *
+     * @return true if it is a Volley Error
+     */
+    protected boolean isErrorResponse() {
+        return isErrorResponse(mTopPagerSelectedButtonIndex);
     }
 
     protected boolean isErrorResponse(int index) {
@@ -289,7 +314,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     }
 
     protected int getMaxNumberOfItemsToShowInList() {
-        return isSingleView() ? MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST : 10;
+        return isSingleView() ? MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST : MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
     /*

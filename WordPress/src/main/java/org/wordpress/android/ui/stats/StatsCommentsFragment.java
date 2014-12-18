@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,8 +33,6 @@ import java.util.List;
 public class StatsCommentsFragment extends StatsAbstractListFragment implements RadioGroup.OnCheckedChangeListener {
     public static final String TAG = StatsCommentsFragment.class.getSimpleName();
 
-    private static String mTotalLabel;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -41,12 +40,12 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
         int dp4 = DisplayUtils.dpToPx(view.getContext(), 4);
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
 
-        String[] titles = {
-                getResources().getString(R.string.stats_comments_by_authors),
-                getResources().getString(R.string.stats_comments_by_posts_and_pages),
-        };
+        Resources res = container.getContext().getResources();
 
-        mTotalLabel = getResources().getString(R.string.stats_comments_total_comments_followers);
+        String[] titles = {
+                res.getString(R.string.stats_comments_by_authors),
+                res.getString(R.string.stats_comments_by_posts_and_pages),
+        };
 
         for (int i = 0; i < titles.length; i++) {
             RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
@@ -98,6 +97,10 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
+        if (!isAdded()) {
+            return;
+        }
+
         // checkedId will be -1 when the selection is cleared
         if (checkedId == -1)
             return;
@@ -117,6 +120,10 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
     @Override
     protected void updateUI() {
+        if (!isAdded()) {
+            return;
+        }
+
         mTopPagerRadioGroup.setVisibility(View.VISIBLE);
 
         if (mDatamodels == null) {
@@ -125,14 +132,20 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
             return;
         }
 
-        if (isErrorResponse(mTopPagerSelectedButtonIndex)) {
-            showErrorUI(mDatamodels[mTopPagerSelectedButtonIndex]);
+        if (isErrorResponse()) {
+            showErrorUI();
             return;
         }
 
         if (mDatamodels[1] != null) { // check if comment-followers is already here
             mTotalsLabel.setVisibility(View.VISIBLE);
-            mTotalsLabel.setText(mTotalLabel + " " + ((CommentFollowersModel)mDatamodels[1]).getTotal());
+            int totalNumberOfFollowers = ((CommentFollowersModel) mDatamodels[1]).getTotal();
+            mTotalsLabel.setText(
+                    getString(
+                            R.string.stats_comments_total_comments_followers,
+                            FormatUtils.formatDecimal(totalNumberOfFollowers)
+                    )
+            );
         } else {
             mTotalsLabel.setVisibility(View.GONE);
         }
@@ -181,9 +194,9 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        if (mTopPagerSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > 10) {
+        if (mTopPagerSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
-        } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > 10) {
+        } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
         }
         return false;
@@ -247,9 +260,6 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
                     }
                 });
             }
-
-            // no icon
-            holder.networkImageView.setVisibility(View.VISIBLE);
 
             return rowView;
         }

@@ -22,13 +22,16 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (isErrorResponse(0)) {
-            showErrorUI(mDatamodels[0]);
+        if (!isAdded()) {
             return;
         }
 
-        if (mDatamodels != null && mDatamodels[0] != null
-                && ((ClicksModel) mDatamodels[0]).getClickGroups().size() > 0) {
+        if (isErrorResponse()) {
+            showErrorUI();
+            return;
+        }
+
+        if (!isDataEmpty() && ((ClicksModel) mDatamodels[0]).getClickGroups().size() > 0) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((ClicksModel) mDatamodels[0]).getClickGroups());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
@@ -41,7 +44,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
     protected boolean isViewAllOptionAvailable() {
         return (mDatamodels != null && mDatamodels[0] != null
                 && ((ClicksModel) mDatamodels[0]).getClickGroups() != null
-                && ((ClicksModel) mDatamodels[0]).getClickGroups().size() > 10);
+                && ((ClicksModel) mDatamodels[0]).getClickGroups().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
     }
 
     @Override
@@ -190,7 +193,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             // expand/collapse chevron
-            holder.chevronImageView.setVisibility(children > 1 ? View.VISIBLE : View.GONE);
+            holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
             return convertView;
         }
 

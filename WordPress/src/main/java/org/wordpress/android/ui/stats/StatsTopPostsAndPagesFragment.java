@@ -16,8 +16,12 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (isErrorResponse(0)) {
-            showErrorUI(mDatamodels[0]);
+        if (!isAdded()) {
+            return;
+        }
+
+        if (isErrorResponse()) {
+            showErrorUI();
             return;
         }
 
@@ -32,8 +36,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasTopPostsAndPages() {
-        return mDatamodels != null && mDatamodels[0] != null
-                && ((TopPostsAndPagesModel) mDatamodels[0]).hasTopPostsAndPages();
+        return !isDataEmpty() && ((TopPostsAndPagesModel) mDatamodels[0]).hasTopPostsAndPages();
     }
 
     private List<SingleItemModel> getTopPostsAndPages() {
@@ -45,7 +48,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return hasTopPostsAndPages() && getTopPostsAndPages().size() > 10;
+        return hasTopPostsAndPages() && getTopPostsAndPages().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
     @Override

@@ -28,6 +28,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.TextDrawable;
@@ -284,16 +285,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
                 switch (overviewItem) {
                     case VIEWS:
-                        currentTextDrawable.setText(modelTapped.getViews());
+                        currentTextDrawable.setText(FormatUtils.formatDecimal(modelTapped.getViews()));
                         break;
                     case VISITORS:
-                        currentTextDrawable.setText(modelTapped.getVisitors());
+                        currentTextDrawable.setText(FormatUtils.formatDecimal(modelTapped.getVisitors()));
                         break;
                     case LIKES:
-                        currentTextDrawable.setText(modelTapped.getLikes());
+                        currentTextDrawable.setText(FormatUtils.formatDecimal(modelTapped.getLikes()));
                         break;
                     case COMMENTS:
-                        currentTextDrawable.setText(modelTapped.getComments());
+                        currentTextDrawable.setText(FormatUtils.formatDecimal(modelTapped.getComments()));
                         break;
                 }
 

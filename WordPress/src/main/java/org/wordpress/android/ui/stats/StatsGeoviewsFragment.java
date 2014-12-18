@@ -22,9 +22,12 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
+        if (!isAdded()) {
+            return;
+        }
 
-        if (isErrorResponse(0)) {
-            showErrorUI(mDatamodels[0]);
+        if (isErrorResponse()) {
+            showErrorUI();
             return;
         }
 
@@ -38,8 +41,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasCountries() {
-        return mDatamodels != null && mDatamodels[0] != null &&
-                ((GeoviewsModel) mDatamodels[0]).getCountries() != null;
+        return !isDataEmpty() && ((GeoviewsModel) mDatamodels[0]).getCountries() != null;
     }
 
     private List<GeoviewModel> getCountries() {
@@ -51,9 +53,9 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (mDatamodels != null && mDatamodels[0] != null
+        return (!isDataEmpty()
                 && ((GeoviewsModel) mDatamodels[0]).getCountries() != null
-                && ((GeoviewsModel) mDatamodels[0]).getCountries().size() > 10);
+                && ((GeoviewsModel) mDatamodels[0]).getCountries().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
     }
 
     @Override

@@ -21,10 +21,15 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (isErrorResponse(0)) {
-            showErrorUI(mDatamodels[0]);
+        if (!isAdded()) {
             return;
         }
+
+        if (isErrorResponse()) {
+            showErrorUI();
+            return;
+        }
+
         if (hasTags()) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), getTags());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
@@ -35,7 +40,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasTags() {
-        return mDatamodels != null && mDatamodels[0] != null
+        return !isDataEmpty()
                 && ((TagsContainerModel) mDatamodels[0]).getTags() != null
                 && (((TagsContainerModel) mDatamodels[0]).getTags()).size() > 0;
     }
@@ -49,7 +54,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return hasTags() && getTags().size() > 10;
+        return hasTags() && getTags().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -20,8 +21,8 @@ import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -42,9 +43,11 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
         int dp4 = DisplayUtils.dpToPx(view.getContext(), 4);
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
 
+        Resources res = container.getContext().getResources();
+
         String[] titles = {
-                getResources().getString(R.string.stats_followers_wpcom_selector),
-                getResources().getString(R.string.stats_followers_email_selector),
+                res.getString(R.string.stats_followers_wpcom_selector),
+                res.getString(R.string.stats_followers_email_selector),
         };
 
         for (int i = 0; i < titles.length; i++) {
@@ -100,6 +103,9 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
+        if (!isAdded()) {
+            return;
+        }
         // checkedId will be -1 when the selection is cleared
         if (checkedId == -1)
             return;
@@ -119,6 +125,10 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
 
     @Override
     protected void updateUI() {
+        if (!isAdded()) {
+            return;
+        }
+
         mTopPagerRadioGroup.setVisibility(View.VISIBLE);
         mTotalsLabel.setVisibility(View.VISIBLE);
 
@@ -128,8 +138,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             return;
         }
 
-        if (isErrorResponse(mTopPagerSelectedButtonIndex)) {
-            showErrorUI(mDatamodels[mTopPagerSelectedButtonIndex]);
+        if (isErrorResponse()) {
+            showErrorUI();
             return;
         }
 
@@ -209,16 +219,16 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
         }
         FollowersModel followersModel = (FollowersModel) mDatamodels[mTopPagerSelectedButtonIndex];
         return !(followersModel == null || followersModel.getFollowers() == null
-                || followersModel.getFollowers().size() < 10);
+                || followersModel.getFollowers().size() < MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
 
     }
 
     private String getTotalFollowersLabel(int total) {
         if ( mTopPagerSelectedButtonIndex == 0 ) {
-            return getString(R.string.stats_followers_total_wpcom) + " " + total;
+            return getString(R.string.stats_followers_total_wpcom, FormatUtils.formatDecimal(total));
         }
 
-        return  getString(R.string.stats_followers_total_email) + " "  + total;
+        return  getString(R.string.stats_followers_total_email, FormatUtils.formatDecimal(total));
     }
 
 
@@ -302,9 +312,6 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
                 });
             }
 
-            // no icon
-            holder.networkImageView.setVisibility(View.VISIBLE);
-
             return rowView;
         }
 
@@ -327,63 +334,78 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
                 );
 
                 if (currentDifference <= 45 ) {
-                    return "seconds ago";
+                    return getString(R.string.stats_followers_seconds_ago);
                 }
                 if (currentDifference < 90 ) {
-                    return "a minute ago";
+                    return getString(R.string.stats_followers_a_minute_ago);
                 }
 
                 // 90 seconds to 45 minutes
                 if (currentDifference <= 2700 ) {
                     long minutes = this.roundUp(currentDifference, 60);
-                    return minutes + " minutes";
+                    return getString(
+                            R.string.stats_followers_minutes,
+                            minutes
+                    );
                 }
 
                 // 45 to 90 minutes
                 if (currentDifference <= 5400 ) {
-                    return "an hour ago";
+                    return getString(R.string.stats_followers_an_hour_ago);
                 }
 
                 // 90 minutes to 22 hours
                 if (currentDifference <= 79200 ) {
                     long hours = this.roundUp(currentDifference, 60*60);
-                    return hours + " hours";
+                    return getString(
+                            R.string.stats_followers_hours,
+                            hours
+                    );
                 }
 
                 // 22 to 36 hours
                 if (currentDifference <= 129600 ) {
-                    return "A day";
+                    return getString(R.string.stats_followers_a_day);
                 }
 
                 // 36 hours to 25 days
                 // 86400 secs in a day -  2160000 secs in 25 days
                 if (currentDifference <= 2160000 ) {
                     long days = this.roundUp(currentDifference, 86400);
-                    return days + " days";
+                    return getString(
+                            R.string.stats_followers_days,
+                            days
+                    );
                 }
 
                 // 25 to 45 days
                 // 3888000 secs in 45 days
                 if (currentDifference <= 3888000 ) {
-                    return "A month";
+                    return getString(R.string.stats_followers_a_month);
                 }
 
                 // 45 to 345 days
                 // 2678400 secs in a month - 29808000 secs in 345 days
                 if (currentDifference <= 29808000 ) {
                     long months = this.roundUp(currentDifference, 2678400);
-                    return months + " months";
+                    return getString(
+                            R.string.stats_followers_months,
+                            months
+                    );
                 }
 
                 // 345 to 547 days (1.5 years)
                 if (currentDifference <= 47260800 ) {
-                    return  "A year";
+                    return getString(R.string.stats_followers_a_year);
                 }
 
                 // 548 days+
                 // 31536000 secs in a year
                 long years = this.roundUp(currentDifference, 31536000);
-                return years + " years";
+                return getString(
+                        R.string.stats_followers_years,
+                        years
+                );
 
             } catch (ParseException e) {
                 AppLog.e(AppLog.T.STATS, e);

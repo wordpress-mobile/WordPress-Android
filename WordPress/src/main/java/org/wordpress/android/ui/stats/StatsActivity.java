@@ -792,6 +792,9 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
         // We take the last son in the scrollview
         View view = scrollView.getChildAt(scrollView.getChildCount() - 1);
+        if (view == null) {
+            return;
+        }
         int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY() + view.getTop()));
 
         // if diff is zero, then the bottom has been reached

@@ -22,9 +22,12 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
+        if (!isAdded()) {
+            return;
+        }
 
-        if (isErrorResponse(0)) {
-            showErrorUI(mDatamodels[0]);
+        if (isErrorResponse()) {
+            showErrorUI();
             return;
         }
 
@@ -38,7 +41,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasPublicize() {
-        return mDatamodels != null && mDatamodels[0] != null
+        return !isDataEmpty()
                 && ((PublicizeModel) mDatamodels[0]).getServices() != null
                 && ((PublicizeModel) mDatamodels[0]).getServices().size() > 0;
     }
@@ -63,12 +66,10 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     private class PublicizeAdapter extends ArrayAdapter<SingleItemModel> {
 
         private final List<SingleItemModel> list;
-        private final Activity context;
         private final LayoutInflater inflater;
 
         public PublicizeAdapter(Activity context, List<SingleItemModel> list) {
             super(context, R.layout.stats_list_cell, list);
-            this.context = context;
             this.list = list;
             inflater = LayoutInflater.from(context);
         }

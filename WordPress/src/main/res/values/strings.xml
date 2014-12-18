@@ -440,13 +440,25 @@
     <!-- stats: comments -->
     <string name="stats_comments_by_authors">By Authors</string>
     <string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
-    <string name="stats_comments_total_comments_followers">Total comment followers:</string>
+    <string name="stats_comments_total_comments_followers">Total comment followers: %1$s</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
     <string name="stats_followers_email_selector">Email</string>
-    <string name="stats_followers_total_wpcom">Total WordPress.com Followers:</string>
-    <string name="stats_followers_total_email">Total Email Followers:</string>
+    <string name="stats_followers_total_wpcom">Total WordPress.com Followers: %1$s</string>
+    <string name="stats_followers_total_email">Total Email Followers: %1$s</string>
+    <string name="stats_followers_seconds_ago">seconds ago</string>
+    <string name="stats_followers_a_minute_ago">a minute ago</string>
+    <string name="stats_followers_minutes">%1$d minutes</string>
+    <string name="stats_followers_an_hour_ago">an hour ago</string>
+    <string name="stats_followers_hours">%1$d hours</string>
+    <string name="stats_followers_a_day">A day</string>
+    <string name="stats_followers_days">%1$d days</string>
+    <string name="stats_followers_a_month">A month</string>
+    <string name="stats_followers_months">%1$d months</string>
+    <string name="stats_followers_a_year">A year</string>
+    <string name="stats_followers_years">%1$d years</string>
+
 
     <!-- invalid_url -->
     <string name="invalid_url_message">Check that the blog URL entered is valid</string>
