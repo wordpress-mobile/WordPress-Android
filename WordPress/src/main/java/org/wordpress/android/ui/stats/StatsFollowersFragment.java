@@ -261,7 +261,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment implements
             if (mTopPagerSelectedButtonIndex == 0) {
                 // WPCOM followers
                 holder.entryTextView.setText(currentRowData.getLabel());
-                if (!TextUtils.isEmpty(currentRowData.getURL()) && UrlUtils.isValidUrlAndHostNotNull(currentRowData.getURL())) {
+                if (!TextUtils.isEmpty(currentRowData.getURL())) {
                     holder.entryTextView.setOnClickListener(
                             new View.OnClickListener() {
                                 @Override

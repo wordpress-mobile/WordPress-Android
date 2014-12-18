@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.stats.models;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.stats.StatsUtils;
+import org.wordpress.android.util.JSONUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,13 +33,11 @@ public class ClickGroupModel implements Serializable {
         setGroupId(clickGroupJSON.getString("name"));
         setName(clickGroupJSON.getString("name"));
         setViews(clickGroupJSON.getInt("views"));
-        if (clickGroupJSON.has("icon") && !clickGroupJSON.getString("icon").equals("null")) {
-            setIcon(clickGroupJSON.getString("icon"));
-        }
+        setIcon(JSONUtil.getString(clickGroupJSON, "icon"));
 
         // if URL is set in the response there is one result only. No need to unfold "results"
-        if (clickGroupJSON.has("url") && !clickGroupJSON.getString("url").equals("null")) {
-            setUrl(clickGroupJSON.getString("url"));
+        if (!TextUtils.isEmpty(JSONUtil.getString(clickGroupJSON, "url"))) {
+            setUrl(JSONUtil.getString(clickGroupJSON, "url"));
         } else {
             JSONArray childrenJSON = clickGroupJSON.getJSONArray("children");
             mClicks = new ArrayList<SingleItemModel>(childrenJSON.length());

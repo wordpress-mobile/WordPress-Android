@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.stats.models;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.stats.StatsUtils;
+import org.wordpress.android.util.JSONUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,13 +34,11 @@ public class ReferrerGroupModel implements Serializable {
         setGroupId(groupJSON.getString("group"));
         setName(groupJSON.getString("name"));
         setTotal(groupJSON.getInt("total"));
-        if (groupJSON.has("icon") && !groupJSON.getString("icon").equals("null")) {
-            setIcon(groupJSON.getString("icon"));
-        }
+        setIcon(JSONUtil.getString(groupJSON, "icon"));
 
         // if URL is set in the response there is one result only. No need to unfold "results"
-        if (groupJSON.has("url") && !groupJSON.getString("url").equals("null")) {
-            setUrl(groupJSON.getString("url"));
+        if (!TextUtils.isEmpty(JSONUtil.getString(groupJSON, "url"))) {
+            setUrl(JSONUtil.getString(groupJSON, "url"));
         } else {
             // Referrers is a 3-levels depth structure. We don't have 3 levels UI for now. Unfold childs here.
             JSONArray resultsJSON = groupJSON.getJSONArray("results");

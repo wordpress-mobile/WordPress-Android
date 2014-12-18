@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.stats.StatsUtils;
+import org.wordpress.android.util.JSONUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,9 +42,7 @@ public class AuthorModel implements Serializable {
         setGroupId(authorJSON.getString("name"));
         setName(authorJSON.getString("name"));
         setViews(authorJSON.getInt("views"));
-        if (authorJSON.has("avatar") && !authorJSON.getString("avatar").equals("null")) {
-            setAvatar(authorJSON.getString("avatar"));
-        }
+        setAvatar(JSONUtil.getString(authorJSON, "avatar"));
 
         // Follow data could return a boolean false
         JSONObject followData = authorJSON.optJSONObject("follow_data");

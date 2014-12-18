@@ -1,7 +1,11 @@
 package org.wordpress.android.ui.stats.models;
 
+import android.text.TextUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.UrlUtils;
 
 import java.io.Serializable;
 
@@ -16,13 +20,9 @@ public class FollowerModel implements Serializable {
     public FollowerModel(String mBlogId, JSONObject followerJSONData) throws JSONException{
         this.mBlogId = mBlogId;
         this.mLabel = followerJSONData.getString("label");
-        if (followerJSONData.has("avatar") && !followerJSONData.getString("avatar").equals("null")) {
-            setAvatar(followerJSONData.getString("avatar"));
-        }
 
-        if (followerJSONData.has("url") && !followerJSONData.getString("url").equals("null")) {
-            this.mUrl = followerJSONData.optString("url");
-        }
+        setAvatar(JSONUtil.getString(followerJSONData, "avatar"));
+        setURL(JSONUtil.getString(followerJSONData, "url"));
 
         this.mDateSubscribed = followerJSONData.getString("date_subscribed");
 
@@ -48,6 +48,14 @@ public class FollowerModel implements Serializable {
         return mUrl;
     }
 
+    public boolean setURL(String URL) {
+        if (!TextUtils.isEmpty(URL) && UrlUtils.isValidUrlAndHostNotNull(URL)) {
+            this.mUrl = URL;
+            return true;
+        }
+        return false;
+    }
+
     public FollowDataModel getFollowData() {
         return mFollowData;
     }
@@ -55,6 +63,9 @@ public class FollowerModel implements Serializable {
     public String getAvatar() {
         return mAvatar;
     }
+
+
+
 
     public void setAvatar(String icon) {
         this.mAvatar = icon;
