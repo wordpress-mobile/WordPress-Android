@@ -33,6 +33,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
@@ -670,6 +671,23 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
+    private void trackModerationFromNotification(final CommentStatus newStatus) {
+        switch (newStatus) {
+            case APPROVED:
+                AnalyticsTracker.track(Stat.NOTIFICATION_APPROVED);
+                break;
+            case UNAPPROVED:
+                AnalyticsTracker.track(Stat.NOTIFICATION_UNAPPROVED);
+                break;
+            case SPAM:
+                AnalyticsTracker.track(Stat.NOTIFICATION_FLAGGED_AS_SPAM);
+                break;
+            case TRASH:
+                AnalyticsTracker.track(Stat.NOTIFICATION_TRASHED);
+                break;
+        }
+    }
+
     /*
      * approve, unapprove, spam, or trash the current comment
      */
@@ -682,6 +700,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // Fire the appropriate listener if we have one
         if (mNote != null && mOnNoteCommentActionListener != null) {
             mOnNoteCommentActionListener.onModerateCommentForNote(mNote, newStatus);
+            trackModerationFromNotification(newStatus);
             return;
         } else if (mOnCommentActionListener != null) {
             mOnCommentActionListener.onModerateComment(mLocalBlogId, mComment, newStatus);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
-    <issue id="MissingTranslation">
-        <ignore path="res\values\strings.xml" />
-    </issue>
+    <issue id="MissingTranslation" severity="ignore" />
+    <issue id="ExtraTranslation" severity="ignore" />
+    <issue id="RtlCompat" severity="warning" />
 </lint>

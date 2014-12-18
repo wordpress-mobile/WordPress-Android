@@ -22,11 +22,6 @@ apply plugin: 'android-cq'
 apply plugin: 'crashlytics'
 
 android {
-    lintOptions {
-        quiet true
-        abortOnError false
-    }
-
     packagingOptions {
         exclude "META-INF/LICENSE.txt"
         exclude "META-INF/NOTICE.txt"
