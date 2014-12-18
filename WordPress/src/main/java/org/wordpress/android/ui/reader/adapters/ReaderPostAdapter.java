@@ -134,7 +134,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleFollow(holder, position);
+                    toggleFollow((TextView) v, position);
                 }
             });
 
@@ -514,23 +514,22 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     /*
      * triggered when user taps the follow button
      */
-    private void toggleFollow(final ReaderPostViewHolder holder, int position) {
+    private void toggleFollow(final TextView txtFollow, int position) {
         ReaderPost post = getItem(position);
         if (post == null) {
             return;
         }
 
-        ReaderAnim.animateFollowButton(holder.txtFollow);
         final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
+        ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded) {
-                    Context context = holder.txtTitle.getContext();
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
-                    ToastUtils.showToast(context, resId);
-                    ReaderUtils.showFollowStatus(holder.txtFollow, !isAskingToFollow);
+                    ToastUtils.showToast(txtFollow.getContext(), resId);
+                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
                 }
             }
         };
@@ -544,7 +543,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             mPosts.set(position, updatedPost);
         }
 
-        ReaderUtils.showFollowStatus(holder.txtFollow, isAskingToFollow);
+        ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
         updateFollowStatusOnPostsForBlog(post.blogId, post.getBlogUrl(), isAskingToFollow);
     }
 

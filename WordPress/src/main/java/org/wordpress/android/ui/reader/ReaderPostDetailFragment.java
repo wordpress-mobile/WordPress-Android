@@ -342,7 +342,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
         final TextView txtFollow = (TextView) getView().findViewById(R.id.text_follow);
-        ReaderAnim.animateFollowButton(txtFollow);
+        ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override

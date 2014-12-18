@@ -170,8 +170,10 @@ public class ReaderBlogAdapter extends BaseAdapter {
         holder.txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReaderAnim.animateFollowButton(holder.txtFollow);
-                changeFollowStatus(holder.txtFollow, position, !isFollowing);
+                boolean isAskingToFollow = !isFollowing;
+                TextView txtFollow = (TextView) v;
+                ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
+                changeFollowStatus(txtFollow, position, isAskingToFollow);
             }
         });
 
