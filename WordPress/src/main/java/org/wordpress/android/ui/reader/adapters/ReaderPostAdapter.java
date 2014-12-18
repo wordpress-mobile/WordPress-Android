@@ -406,12 +406,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     }
 
     /*
-     * sets the follow status of each post in the passed blog
+     * copy the follow status from the passed post to other posts in the same blog
      */
-    void updateFollowStatusOnPostsForBlog(long blogId, String blogUrl, boolean followStatus) {
-        if (isEmpty()) {
+    private void copyBlogFollowStatus(final ReaderPost post) {
+        if (isEmpty() || post == null) {
             return;
         }
+
+        long blogId = post.blogId;
+        String blogUrl = post.getBlogUrl();
 
         boolean hasBlogId = (blogId != 0);
         boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
@@ -419,16 +422,23 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             return;
         }
 
-        boolean isChanged = false;
-        for (ReaderPost post : mPosts) {
-            boolean isMatched = (hasBlogId ? (blogId == post.blogId) : blogUrl.equals(post.getBlogUrl()));
-            if (isMatched) {
-                post.isFollowedByCurrentUser = followStatus;
-                isChanged = true;
+        long skipPostId = post.postId;
+        boolean followStatus = post.isFollowedByCurrentUser;
+        boolean isMatched;
+
+        for (ReaderPost thisPost : mPosts) {
+            if (hasBlogId) {
+                isMatched = (blogId == thisPost.blogId && skipPostId != thisPost.postId);
+            } else {
+                isMatched = blogUrl.equals(thisPost.getBlogUrl());
             }
-        }
-        if (isChanged) {
-            notifyDataSetChanged();
+            if (isMatched && thisPost.isFollowedByCurrentUser != followStatus) {
+                thisPost.isFollowedByCurrentUser = followStatus;
+                int position = mPosts.indexOfPost(thisPost);
+                if (position > -1) {
+                    notifyItemChanged(position);
+                }
+            }
         }
     }
 
@@ -534,17 +544,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             }
         };
 
-        if (!ReaderBlogActions.performFollowAction(post, isAskingToFollow, actionListener)) {
-            return;
+        if (ReaderBlogActions.performFollowAction(post, isAskingToFollow, actionListener)) {
+            ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
+            if (updatedPost != null) {
+                mPosts.set(position, updatedPost);
+                copyBlogFollowStatus(updatedPost);
+            }
         }
-
-        ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
-        if (updatedPost != null) {
-            mPosts.set(position, updatedPost);
-        }
-
-        ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
-        updateFollowStatusOnPostsForBlog(post.blogId, post.getBlogUrl(), isAskingToFollow);
     }
 
     private void showReblogStatus(ImageView imgBtnReblog, boolean isRebloggedByCurrentUser) {

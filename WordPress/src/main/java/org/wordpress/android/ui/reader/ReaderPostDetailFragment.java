@@ -359,7 +359,6 @@ public class ReaderPostDetailFragment extends Fragment
         // action returns before api call completes, but local post will have been changed
         if (ReaderBlogActions.performFollowAction(mPost, isAskingToFollow, actionListener)) {
             mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
-            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
         }
     }
 

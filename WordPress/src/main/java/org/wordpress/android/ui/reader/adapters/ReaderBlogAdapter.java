@@ -170,10 +170,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
         holder.txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isAskingToFollow = !isFollowing;
-                TextView txtFollow = (TextView) v;
-                ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
-                changeFollowStatus(txtFollow, position, isAskingToFollow);
+                changeFollowStatus((TextView) v, position, !isFollowing);
             }
         });
 
@@ -242,11 +239,13 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 }
             }
         };
+
+        ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
+
         if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, actionListener)) {
             if (getBlogType() == ReaderBlogType.FOLLOWED) {
                 mFollowedBlogs.get(position).isFollowing = isAskingToFollow;
             }
-            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
             notifyDataSetChanged(); // <-- required for getView() to know correct follow status
             if (mFollowListener != null) {
                 mFollowListener.onFollowBlogChanged();

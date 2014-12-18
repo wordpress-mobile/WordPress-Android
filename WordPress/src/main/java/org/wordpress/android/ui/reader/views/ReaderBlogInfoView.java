@@ -228,7 +228,6 @@ public class ReaderBlogInfoView extends LinearLayout {
             mBlogInfo.isFollowing = isAskingToFollow;
             mBlogInfo.numSubscribers = newCount;
             showFollowerCount(newCount);
-            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
         }
     }
 

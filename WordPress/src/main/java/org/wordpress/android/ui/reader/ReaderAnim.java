@@ -14,8 +14,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 
 public class ReaderAnim {
 
@@ -227,22 +229,34 @@ public class ReaderAnim {
     /*
      * animation when user taps a follow button
      */
-    public static void animateFollowButton(final View target, boolean isAskingToFollow) {
-        if (target == null) {
+    public static void animateFollowButton(final TextView txtFollow,
+                                           final boolean isAskingToFollow) {
+        if (txtFollow == null) {
             return;
         }
 
-        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 0.75f);
+        ObjectAnimator animX = ObjectAnimator.ofFloat(txtFollow, View.SCALE_X, 1f, 0.75f);
         animX.setRepeatMode(ValueAnimator.REVERSE);
         animX.setRepeatCount(1);
 
-        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 0.75f);
+        ObjectAnimator animY = ObjectAnimator.ofFloat(txtFollow, View.SCALE_Y, 1f, 0.75f);
         animY.setRepeatMode(ValueAnimator.REVERSE);
         animY.setRepeatCount(1);
 
+        ObjectAnimator fade = ObjectAnimator.ofFloat(txtFollow, View.ALPHA, 1.0f, 0.5f);
+        fade.setRepeatMode(ValueAnimator.REVERSE);
+        fade.setRepeatCount(1);
+        fade.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                // change the button text and selection state before fading back in
+                ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
+            }
+        });
+
+        long durationMillis = Duration.SHORT.toMillis(txtFollow.getContext());
         AnimatorSet set = new AnimatorSet();
-        set.play(animX).with(animY);
-        long durationMillis = Duration.SHORT.toMillis(target.getContext());
+        set.play(animX).with(animY).with(fade);
         set.setDuration(durationMillis / 2);
         set.setInterpolator(new AccelerateDecelerateInterpolator());
 

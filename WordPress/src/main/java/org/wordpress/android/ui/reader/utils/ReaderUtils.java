@@ -23,21 +23,14 @@ public class ReaderUtils {
      * used with TextViews that have the ReaderTextView.Follow style to show
      * the passed follow state
      */
-    public static void showFollowStatus(final TextView txtFollow, boolean isFollowed) {
-        // selected state is same as followed state, so do nothing if they already match
+    public static void showFollowStatus(TextView txtFollow, boolean isFollowed) {
         if (txtFollow == null || txtFollow.isSelected() == isFollowed) {
             return;
         }
-
-        if (isFollowed) {
-            txtFollow.setText(txtFollow.getContext().getString(R.string.reader_btn_unfollow));
-        } else {
-            txtFollow.setText(txtFollow.getContext().getString(R.string.reader_btn_follow));
-        }
-
+        int textId = (isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
         int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
+        txtFollow.setText(txtFollow.getContext().getString(textId));
         txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
-
         txtFollow.setSelected(isFollowed);
     }
 
