@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -338,6 +339,7 @@ public class ReaderPostListFragment extends Fragment {
     /*
      * for info headers, use elevation rather than a divider on SDK 21+
      */
+    @SuppressLint("NewApi")
     private void setHeaderViewElevation(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             float elevation = view.getContext().getResources().getDimension(R.dimen.card_elevation);

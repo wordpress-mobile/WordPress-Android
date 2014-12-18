@@ -1,5 +1,6 @@
 package org.wordpress.android.analytics;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -43,6 +44,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     }
 
     @SuppressWarnings("deprecation")
+    @SuppressLint("NewApi")
     public static void showNotification(Context context, PendingIntent intent, int notificationIcon, CharSequence title,
                                         CharSequence message) {
         final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

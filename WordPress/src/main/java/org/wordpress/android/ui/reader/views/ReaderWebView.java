@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -68,6 +69,7 @@ public class ReaderWebView extends WebView {
         init();
     }
 
+    @SuppressLint("NewApi")
     private void init() {
         if (!isInEditMode()) {
             mReaderChromeClient = new ReaderWebChromeClient(this);
