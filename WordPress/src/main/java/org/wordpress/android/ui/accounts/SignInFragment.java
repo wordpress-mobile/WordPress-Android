@@ -34,6 +34,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
@@ -141,8 +142,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         initPasswordVisibilityButton(rootView, mPasswordEditText);
         initInfoButtons(rootView);
         moveBottomButtons();
-
-
 
         return rootView;
     }
@@ -629,6 +628,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void signInError(int messageId) {
+        AnalyticsTracker.track(Stat.LOGIN_FAILED);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert;
         if (messageId == org.wordpress.android.R.string.account_two_step_auth_enabled) {

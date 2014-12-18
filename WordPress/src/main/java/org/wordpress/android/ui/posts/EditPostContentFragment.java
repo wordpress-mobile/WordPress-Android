@@ -63,6 +63,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.MediaGallery;
@@ -332,7 +333,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     }
                     break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
+                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
                     if (resultCode == Activity.RESULT_OK) {
                         handleMediaGalleryPickerResult(data);
                     }
@@ -340,7 +341,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     fetchMedia(imageUri);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                     break;
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -351,7 +352,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                                 Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                             getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                                     + Environment.getExternalStorageDirectory())));
-                            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+                            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                         } catch (RuntimeException e) {
                             AppLog.e(T.POSTS, e);
                         } catch (OutOfMemoryError e) {
@@ -1114,16 +1115,22 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         public void onClick(View v) {
             int id = v.getId();
             if (id == R.id.bold) {
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BOLD);
                 onFormatButtonClick(mBoldToggleButton, TAG_FORMAT_BAR_BUTTON_STRONG);
             } else if (id == R.id.em) {
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ITALIC);
                 onFormatButtonClick(mEmToggleButton, TAG_FORMAT_BAR_BUTTON_EM);
             } else if (id == R.id.underline) {
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDERLINE);
                 onFormatButtonClick(mUnderlineToggleButton, TAG_FORMAT_BAR_BUTTON_UNDERLINE);
             } else if (id == R.id.strike) {
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_STRIKETHROUGH);
                 onFormatButtonClick(mStrikeToggleButton, TAG_FORMAT_BAR_BUTTON_STRIKE);
             } else if (id == R.id.bquote) {
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BLOCKQUOTE);
                 onFormatButtonClick(mBquoteToggleButton, TAG_FORMAT_BAR_BUTTON_QUOTE);
             } else if (id == R.id.more) {
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_MORE);
                 mSelectionEnd = mContentEditText.getSelectionEnd();
                 Editable str = mContentEditText.getText();
                 if (str != null) {
@@ -1132,6 +1139,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     str.insert(mSelectionEnd, "\n<!--more-->\n");
                 }
             } else if (id == R.id.link) {
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK);
                 mSelectionStart = mContentEditText.getSelectionStart();
                 mStyleStart = mSelectionStart;
                 mSelectionEnd = mContentEditText.getSelectionEnd();
@@ -1149,6 +1157,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 }
                 startActivityForResult(i, ACTIVITY_REQUEST_CODE_CREATE_LINK);
             } else if (id == R.id.addPictureButton) {
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
                 mAddPictureButton.performLongClick();
             }
         }
