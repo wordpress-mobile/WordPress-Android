@@ -330,34 +330,34 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * change the follow state of the blog the passed post is in
+     * change the follow state of the blog the current post is in
      */
-    private void togglePostFollowed(ReaderPost post, View followButton) {
-        boolean isSelected = followButton.isSelected();
-        followButton.setSelected(!isSelected);
-        ReaderAnim.animateFollowButton(followButton);
+    private void togglePostFollowed() {
+        if (!isAdded() || !hasPost()) {
+            return;
+        }
 
-        final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
+        final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
+        final TextView txtFollow = (TextView) getView().findViewById(R.id.text_follow);
+        ReaderAnim.animateFollowButton(txtFollow);
+
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && isAdded()) {
+                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(getActivity(), resId);
                 }
             }
         };
-        if (!ReaderBlogActions.performFollowAction(post, isAskingToFollow, actionListener)) {
-            followButton.setSelected(isSelected);
-            return;
+
+
+        // action returns before api call completes, but local post will have been changed
+        if (ReaderBlogActions.performFollowAction(mPost, isAskingToFollow, actionListener)) {
+            mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
+            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
         }
-
-        // get the post again, since it has changed
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
-
-        // call returns before api completes, but local version of post will have been changed
-        // so refresh to show those changes
-        refreshFollowed();
     }
 
     /*
@@ -547,20 +547,6 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    /*
-     * refresh the follow button based on whether this is a followed blog
-     */
-    private void refreshFollowed() {
-        if (!isAdded()) {
-            return;
-        }
-
-        final TextView txtFollow = (TextView) getView().findViewById(R.id.text_follow);
-        final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
-
-        ReaderUtils.showFollowStatus(txtFollow, isFollowed);
-    }
-
     private boolean showPhotoViewer(String imageUrl, View sourceView, int startX, int startY) {
         if (!isAdded() || TextUtils.isEmpty(imageUrl)) {
             return false;
@@ -714,7 +700,7 @@ public class ReaderPostDetailFragment extends Fragment
             txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    togglePostFollowed(mPost, txtFollow);
+                    togglePostFollowed();
                 }
             });
 
