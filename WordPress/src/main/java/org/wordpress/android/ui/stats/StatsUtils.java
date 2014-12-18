@@ -82,6 +82,19 @@ public class StatsUtils {
     }
 
     /**
+     * Get the current datetime of the blog *
+     */
+    public static String getCurrentDateTimeTZ(int localTableBlogID) {
+        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
+        if (timezone == null) {
+            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
+            return getCurrentDatetime();
+        }
+        String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
+        return getCurrentDateTimeTZ(timezone, pattern);
+    }
+
+    /**
      * Get the current datetime of the blog in Ms *
      */
     public static long getCurrentDateTimeMsTZ(int localTableBlogID) {
@@ -99,6 +112,15 @@ public class StatsUtils {
      */
     private static String getCurrentDate() {
         String pattern = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        return sdf.format(new Date());
+    }
+
+    /**
+     * Get the current date in the form of "yyyy-MM-dd HH:mm:ss"
+     */
+    private static String getCurrentDatetime() {
+        String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         return sdf.format(new Date());
     }
@@ -132,17 +154,37 @@ public class StatsUtils {
             return gmtDf.format(date);
         }
 
-        if (blogTimeZoneOption.equals("0")) {
-            gmtDf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        } else if (blogTimeZoneOption.startsWith("-")) {
-            gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOption));
+        /*
+        Convert the timezone to a form that is compatible with Java TimeZone class
+        WordPress returns something like the following:
+           UTC+0:30   ---->  0.5
+           UTC+1      ---->  1.0
+           UTC-0:30   ----> -1.0
+        */
+
+        AppLog.d(T.STATS, "Parsing the following Timezone received from WP: " + blogTimeZoneOption);
+        String timezoneNormalized;
+        if (blogTimeZoneOption.equals("0") || blogTimeZoneOption.equals("0.0")) {
+            timezoneNormalized = "GMT";
         } else {
-            if (blogTimeZoneOption.startsWith("+")) {
-                gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOption));
+            String[] timezoneSplitted = org.apache.commons.lang.StringUtils.split(blogTimeZoneOption, ".");
+            timezoneNormalized = timezoneSplitted[0];
+            if(timezoneSplitted.length > 1 && timezoneSplitted[1].equals("5")){
+                timezoneNormalized += ":30";
+            }
+            if (timezoneNormalized.startsWith("-")) {
+                timezoneNormalized = "GMT" + timezoneNormalized;
             } else {
-                gmtDf.setTimeZone(TimeZone.getTimeZone("GMT+" + blogTimeZoneOption));
+                if (timezoneNormalized.startsWith("+")) {
+                    timezoneNormalized = "GMT" + timezoneNormalized;
+                } else {
+                    timezoneNormalized = "GMT+" + timezoneNormalized;
+                }
             }
         }
+
+        AppLog.d(T.STATS, "Setting the following Timezone: " + timezoneNormalized);
+        gmtDf.setTimeZone(TimeZone.getTimeZone(timezoneNormalized));
         return gmtDf.format(date);
     }
 

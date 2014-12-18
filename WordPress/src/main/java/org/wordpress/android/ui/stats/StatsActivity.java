@@ -138,8 +138,10 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                             AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
                             return;
                         }
+
+                        mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
                         loadStatsFragments(true, true, true);
-                        refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID), true);
+                        refreshStats(mCurrentTimeframe, mRequestedDate, true);
                     }
                 });
 
