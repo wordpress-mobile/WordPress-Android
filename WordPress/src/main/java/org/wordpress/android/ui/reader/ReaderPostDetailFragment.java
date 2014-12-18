@@ -394,14 +394,34 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * display the standard Android share chooser to share a link to this post
+     * display the standard Android share chooser to share this post
      */
+    private static final int MAX_SHARE_TITLE_LEN = 200;
     private void sharePage() {
-        if (!isAdded() || !hasPost())
+        if (!isAdded() || !hasPost()) {
             return;
+        }
+
+        final String url = (mPost.hasShortUrl() ? mPost.getShortUrl() : mPost.getUrl());
+        final String shareText;
+
+        if (mPost.hasTitle()) {
+            final String title;
+            // we don't know where the user will choose to share, so enforce a max title length
+            // in order to fit a tweet
+            if (mPost.getTitle().length() > MAX_SHARE_TITLE_LEN) {
+                title = mPost.getTitle().substring(0, MAX_SHARE_TITLE_LEN).trim();
+            } else {
+                title = mPost.getTitle().trim();
+            }
+            shareText = title + " - " + url;
+        } else {
+            shareText = url;
+        }
+
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, mPost.getUrl());
+        intent.putExtra(Intent.EXTRA_TEXT, shareText);
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.reader_share_subject, getString(R.string.app_name)));
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.reader_share_link)));
