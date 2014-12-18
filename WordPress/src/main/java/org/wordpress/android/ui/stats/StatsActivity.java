@@ -412,16 +412,9 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     }
 
     private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
-        private final WeakReference<StatsActivity> mStatsActivityWeakRef;
-
-        public VerifyJetpackSettingsCallback(StatsActivity refActivity) {
-            this.mStatsActivityWeakRef = new WeakReference<StatsActivity>(refActivity);
-        }
-
         @Override
         public void onSuccess() {
-            if (mStatsActivityWeakRef.get() == null || mStatsActivityWeakRef.get().isFinishing()
-                    || !mStatsActivityWeakRef.get().mIsInFront) {
+            if (isFinishing() || !mIsInFront) {
                 return;
             }
 
@@ -429,30 +422,29 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                 // Blog has not returned a jetpack_client_id
                 stopStatsService();
                 mSwipeToRefreshHelper.setRefreshing(false);
-                showJetpackMissingAlert(this.mStatsActivityWeakRef.get());
+                showJetpackMissingAlert();
             }
         }
 
         @Override
         public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            if (mStatsActivityWeakRef.get() == null || mStatsActivityWeakRef.get().isFinishing()
-                    || !mStatsActivityWeakRef.get().mIsInFront) {
+            if (isFinishing() || !mIsInFront) {
                 return;
             }
             if (mSignInDialog != null && mSignInDialog.isShowing()) {
                 return;
             }
             stopStatsService();
-            Toast.makeText(mStatsActivityWeakRef.get(), R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
+            Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
         }
     }
 
-    private void showJetpackMissingAlert(final Activity currentActivity) {
+    private void showJetpackMissingAlert() {
         if (isFinishing()) {
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(currentActivity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
         if (currentBlog == null) {
             AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
@@ -468,7 +460,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                             + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com"
                             + "&plugin-search-input=Search+Plugins";
                     String authURL = WPWebViewActivity.getBlogLoginUrl(currentBlog);
-                    Intent jetpackIntent = new Intent(currentActivity, WPWebViewActivity.class);
+                    Intent jetpackIntent = new Intent(StatsActivity.this, WPWebViewActivity.class);
                     jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, currentBlog.getUsername());
                     jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, currentBlog.getPassword());
                     jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
