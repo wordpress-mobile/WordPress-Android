@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentManager;
@@ -59,7 +58,6 @@ import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.Serializable;
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -220,7 +218,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             }
         }
 
-        selectTimeframeInActionBar(mCurrentTimeframe);
+        selectCurrentTimeframeInActionBar();
     }
 
     @Override
@@ -496,7 +494,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         if (item.getItemId() == R.id.menu_view_stats_full_site) {
             final String blogId = StatsUtils.getBlogId(mLocalBlogID);
             if (blogId == null) {
-                showJetpackMissingAlert(this);
+                showJetpackMissingAlert();
                 return true;
             }
 
@@ -534,7 +532,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         mLocalBlogID = WordPress.getCurrentBlog().getLocalTableBlogId();
         mCurrentTimeframe = StatsTimeframe.DAY;
         mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-        selectTimeframeInActionBar(mCurrentTimeframe);
+        selectCurrentTimeframeInActionBar();
         scrollToTop();
         mSwipeToRefreshHelper.setRefreshing(true);
         refreshStats(mCurrentTimeframe, mRequestedDate, true);
@@ -592,7 +590,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             if (!currentBlog.isDotcomFlag()) {
                 // Refresh blog settings/options that includes 'jetpack_client_id'needed here
                 new ApiHelper.RefreshBlogContentTask(currentBlog,
-                        new VerifyJetpackSettingsCallback(StatsActivity.this)).execute(false);
+                        new VerifyJetpackSettingsCallback()).execute(false);
             } else {
                 // blodID cannot be null on dotcom blogs.
                 Toast.makeText(this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
@@ -693,7 +691,11 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     /*
     * make sure the passed timeframe is the one selected in the actionbar
     */
-    private void selectTimeframeInActionBar(final StatsTimeframe timeframe) {
+    private void selectCurrentTimeframeInActionBar() {
+        if (isFinishing()) {
+            return;
+        }
+
         if (mTimeframeSpinnerAdapter == null || mSpinner == null) {
             return;
         }
