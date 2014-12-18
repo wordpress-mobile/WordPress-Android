@@ -307,15 +307,18 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * changes the like on the passed post
      */
-    private void togglePostLike(ReaderPost post, ReaderIconCountView likeCount) {
-        boolean isSelected = likeCount.isSelected();
-        likeCount.setSelected(!isSelected);
+    private void togglePostLike() {
+        if (!isAdded() || !hasPost()) {
+            return;
+        }
 
-        boolean isAskingToLike = !post.isLikedByCurrentUser;
+        boolean isAskingToLike = !mPost.isLikedByCurrentUser;
+        ReaderIconCountView likeCount = (ReaderIconCountView) getView().findViewById(R.id.count_likes);
+        likeCount.setSelected(isAskingToLike);
         ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
 
-        if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
-            likeCount.setSelected(isSelected);
+        if (!ReaderPostActions.performLikeAction(mPost, isAskingToLike)) {
+            likeCount.setSelected(!isAskingToLike);
             return;
         }
 
@@ -472,7 +475,7 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    togglePostLike(mPost, countLikes);
+                    togglePostLike();
                 }
             });
             // if we know refreshLikes() is going to show the liking layout, force it to take up
