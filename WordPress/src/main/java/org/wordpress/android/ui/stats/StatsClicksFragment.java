@@ -176,10 +176,8 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
             if (children > 0) {
                 holder.entryTextView.setText(name);
-                //FIXME: Ugly hack. for some reason the TextView is probably intercepting/eating the click event and not passing it the parent.
-                StatsUIHelper.setEntryTextViewClickListener(convertView, holder.entryTextView);
+                holder.entryTextView.setMovementMethod(null);
             } else {
-                holder.entryTextView.setOnClickListener(null);
                 holder.setEntryTextOrLink(url, name);
             }
 

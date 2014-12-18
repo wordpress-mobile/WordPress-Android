@@ -203,12 +203,9 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             int total = group.getViews();
             int children = getChildrenCount(groupPosition);
 
-            holder.entryTextView.setText(groupName);
-            holder.entryTextView.setOnClickListener(null);
-
             if (children > 0) {
-                //FIXME: Ugly hack. for some reason the TextView is probably intercepting/eating the click event and not passing it the parent.
-                StatsUIHelper.setEntryTextViewClickListener(convertView, holder.entryTextView);
+                holder.entryTextView.setText(groupName);
+                holder.entryTextView.setMovementMethod(null);
             } else {
                 holder.setEntryTextOrLink(tags.get(0).getLink(), groupName.toString());
             }

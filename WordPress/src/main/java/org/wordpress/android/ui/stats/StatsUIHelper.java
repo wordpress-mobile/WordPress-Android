@@ -301,20 +301,6 @@ public class StatsUIHelper {
         StatsUIHelper.setGroupChevron(true, groupView, groupPosition, animate);
     }
 
-
-    @SuppressWarnings("all")
-    public static void setEntryTextViewClickListener(final View parent, final TextView textview){
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            textview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    parent.callOnClick();
-                }
-            });
-        }
-    }
-
-
     /**
      * Removes URL underlines in a string by replacing URLSpan occurrences by
      * URLSpanNoUnderline objects.

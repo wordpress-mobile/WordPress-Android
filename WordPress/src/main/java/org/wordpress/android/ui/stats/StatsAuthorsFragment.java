@@ -200,10 +200,8 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
             String icon = group.getAvatar();
             int children = getChildrenCount(groupPosition);
 
-
             holder.entryTextView.setText(name);
-            //FIXME: Ugly hack. for some reason the TextView is intercepting/eating the click event and not passing it the parent.
-            StatsUIHelper.setEntryTextViewClickListener(convertView, holder.entryTextView);
+            holder.entryTextView.setMovementMethod(null);
             // The main text is always blue in this module
             holder.entryTextView.setTextColor(getResources().getColor(R.color.stats_link_text_color));
 

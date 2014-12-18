@@ -42,19 +42,20 @@ public class StatsViewHolder {
         if (entryTextView == null) {
             return;
         }
-
+        boolean isLink = false;
         if (TextUtils.isEmpty(linkUrl)) {
             entryTextView.setText(linkName);
-            if (linkName != null && linkName.startsWith("http")) {
-                Linkify.addLinks(entryTextView, Linkify.WEB_URLS);
-            }
+            isLink = (linkName != null && linkName.startsWith("http"));
         } else if (TextUtils.isEmpty(linkName)) {
             entryTextView.setText(linkUrl);
-            if (linkUrl != null && linkUrl.startsWith("http")) {
-                Linkify.addLinks(entryTextView, Linkify.WEB_URLS);
-            }
+            isLink = (linkUrl != null && linkUrl.startsWith("http"));
         } else {
             entryTextView.setText(Html.fromHtml("<a href=\"" + linkUrl + "\">" + linkName + "</a>"));
+        }
+
+        if (isLink) {
+            entryTextView.setMovementMethod(StatsWPLinkMovementMethod.getInstance());
+            Linkify.addLinks(entryTextView, Linkify.WEB_URLS);
         }
 
         StatsUIHelper.removeUnderlines((Spannable) entryTextView.getText());
