@@ -29,7 +29,7 @@ public class FollowersModel implements Serializable {
 
         JSONArray subscribersJSONArray = response.optJSONArray("subscribers");
         if (subscribersJSONArray != null) {
-            mSubscribers = new ArrayList<FollowerModel>(subscribersJSONArray.length());
+            mSubscribers = new ArrayList<>(subscribersJSONArray.length());
             for (int i = 0; i < subscribersJSONArray.length(); i++) {
                 JSONObject currentAuthorJSON = subscribersJSONArray.getJSONObject(i);
                 try {

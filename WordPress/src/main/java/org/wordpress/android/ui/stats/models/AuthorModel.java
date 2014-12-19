@@ -51,7 +51,7 @@ public class AuthorModel implements Serializable {
         }
 
         JSONArray postsJSON = authorJSON.getJSONArray("posts");
-        mPosts = new ArrayList<SingleItemModel>(authorJSON.length());
+        mPosts = new ArrayList<>(authorJSON.length());
         for (int i = 0; i < postsJSON.length(); i++) {
             JSONObject currentPostJSON = postsJSON.getJSONObject(i);
             String postId = String.valueOf(currentPostJSON.getInt("id"));

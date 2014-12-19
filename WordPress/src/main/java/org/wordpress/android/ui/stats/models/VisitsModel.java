@@ -35,13 +35,13 @@ public class VisitsModel implements Serializable {
         }
 
         if (dataJSON == null || dataJSON.length() == 0) {
-            mVisits =  new ArrayList<VisitModel>(0);
+            mVisits =  new ArrayList<>(0);
         } else {
             // Read the position/index of each field in the response
-            HashMap<String, Integer> columnsMapping = new HashMap<String, Integer>(6);
+            HashMap<String, Integer> columnsMapping = new HashMap<>(6);
             final JSONArray fieldsJSON = getFieldsJSON();
             if (fieldsJSON == null || fieldsJSON.length() == 0) {
-                mVisits =  new ArrayList<VisitModel>(0);
+                mVisits =  new ArrayList<>(0);
             } else {
                 try {
                     for (int i = 0; i < fieldsJSON.length(); i++) {
@@ -51,7 +51,7 @@ public class VisitsModel implements Serializable {
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.STATS, "Cannot read the parameter fields from the JSON response." +
                             "Response: " + response.toString(), e);
-                    mVisits = new ArrayList<VisitModel>(0);
+                    mVisits = new ArrayList<>(0);
                 }
             }
 
@@ -62,7 +62,7 @@ public class VisitsModel implements Serializable {
             int periodColumnIndex = columnsMapping.get("period");
 
             int numPoints = dataJSON.length();
-            mVisits = new ArrayList<VisitModel>(numPoints);
+            mVisits = new ArrayList<>(numPoints);
 
             for (int i = 0; i < numPoints; i++) {
                 try {

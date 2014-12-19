@@ -39,7 +39,7 @@ public class ClicksModel implements Serializable {
         jClickGroupsArray = firstDayObject.optJSONArray("clicks");
 
         if (jClickGroupsArray != null) {
-            mClickGroups = new ArrayList<ClickGroupModel>(jClickGroupsArray.length());
+            mClickGroups = new ArrayList<>(jClickGroupsArray.length());
             for (int i = 0; i < jClickGroupsArray.length(); i++) {
                 try {
                     JSONObject currentGroupJSON = jClickGroupsArray.getJSONObject(i);

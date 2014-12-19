@@ -37,7 +37,7 @@ public class VideoPlaysModel implements Serializable {
         JSONArray playsJSONArray = firstDayObject.optJSONArray("plays");
 
         if (playsJSONArray != null) {
-            mPlays = new ArrayList<SingleItemModel>(playsJSONArray.length());
+            mPlays = new ArrayList<>(playsJSONArray.length());
             for (int i = 0; i < playsJSONArray.length(); i++) {
                 JSONObject currentVideoplaysJSON = playsJSONArray.getJSONObject(i);
                 String postId = String.valueOf(currentVideoplaysJSON.getInt("post_id"));

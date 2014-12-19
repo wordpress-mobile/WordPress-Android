@@ -80,16 +80,16 @@ public class PostViewsModel implements Serializable {
         mHighestDayAverage = response.getInt("highest_day_average");
         mHighestWeekAverage = response.getInt("highest_week_average");
         mHighestMonth = response.getInt("highest_month");
-        mYears = new LinkedList<Year>();
-        mAverages = new LinkedList<Average>();
-        mWeeks = new LinkedList<Week>();
+        mYears = new LinkedList<>();
+        mAverages = new LinkedList<>();
+        mWeeks = new LinkedList<>();
 
         JSONArray dataJSON =  response.getJSONArray("data");
         if (dataJSON != null) {
             // Read the position/index of each field in the response
             JSONArray fieldsJSON = response.getJSONArray("fields");
             try {
-                fieldColumnsMapping = new HashMap<String, Integer>(2);
+                fieldColumnsMapping = new HashMap<>(2);
                 for (int i = 0; i < fieldsJSON.length(); i++) {
                     final String field = fieldsJSON.getString(i);
                     fieldColumnsMapping.put(field, i);
@@ -263,7 +263,7 @@ public class PostViewsModel implements Serializable {
         int mChange;
         int mTotal;
         int mAverage;
-        List<Day> mDays = new LinkedList<Day>();
+        List<Day> mDays = new LinkedList<>();
 
         public int getTotal() {
             return mTotal;

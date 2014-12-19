@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.os.Build;
 import android.text.Spannable;
 import android.text.style.URLSpan;
 import android.util.SparseBooleanArray;
@@ -20,7 +19,6 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 

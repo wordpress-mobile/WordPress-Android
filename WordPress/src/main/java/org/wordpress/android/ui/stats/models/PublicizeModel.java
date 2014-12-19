@@ -18,7 +18,7 @@ public class PublicizeModel implements Serializable {
         this.mDate = null;
         JSONArray services = response.getJSONArray("services");
         if (services.length() > 0) {
-            mServices = new ArrayList<SingleItemModel>(services.length());
+            mServices = new ArrayList<>(services.length());
             for (int i = 0; i < services.length(); i++) {
                 JSONObject current = services.getJSONObject(i);
                 String serviceName = current.getString("service");

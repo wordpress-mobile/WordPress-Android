@@ -33,7 +33,7 @@ public class CommentsModel implements Serializable {
 
         JSONArray postsJSONArray = response.optJSONArray("posts");
         if (postsJSONArray != null) {
-            mPosts = new ArrayList<SingleItemModel>(postsJSONArray.length());
+            mPosts = new ArrayList<>(postsJSONArray.length());
             for (int i = 0; i < postsJSONArray.length(); i++) {
                 JSONObject currentPostJSON = postsJSONArray.getJSONObject(i);
                 String itemID = String.valueOf(currentPostJSON.getInt("id"));
@@ -47,7 +47,7 @@ public class CommentsModel implements Serializable {
 
         JSONArray authorsJSONArray = response.optJSONArray("authors");
         if (authorsJSONArray != null) {
-            mAuthors = new ArrayList<AuthorModel>(authorsJSONArray.length());
+            mAuthors = new ArrayList<>(authorsJSONArray.length());
             for (int i = 0; i < authorsJSONArray.length(); i++) {
                 JSONObject currentAuthorJSON = authorsJSONArray.getJSONObject(i);
                 String name = currentAuthorJSON.getString("name");

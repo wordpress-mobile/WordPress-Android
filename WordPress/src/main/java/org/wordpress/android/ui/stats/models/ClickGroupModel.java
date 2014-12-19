@@ -40,7 +40,7 @@ public class ClickGroupModel implements Serializable {
             setUrl(JSONUtil.getString(clickGroupJSON, "url"));
         } else {
             JSONArray childrenJSON = clickGroupJSON.getJSONArray("children");
-            mClicks = new ArrayList<SingleItemModel>(childrenJSON.length());
+            mClicks = new ArrayList<>(childrenJSON.length());
             for (int i = 0; i < childrenJSON.length(); i++) {
                 JSONObject currentResultJSON = childrenJSON.getJSONObject(i);
                 String name = currentResultJSON.getString("name");

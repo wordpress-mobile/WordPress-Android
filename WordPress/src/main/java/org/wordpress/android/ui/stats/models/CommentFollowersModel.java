@@ -24,7 +24,7 @@ public class CommentFollowersModel implements Serializable {
 
         JSONArray postsJSONArray = response.optJSONArray("posts");
         if (postsJSONArray != null) {
-            mPosts = new ArrayList<SingleItemModel>(postsJSONArray.length());
+            mPosts = new ArrayList<>(postsJSONArray.length());
             for (int i = 0; i < postsJSONArray.length(); i++) {
                 JSONObject currentPostJSON = postsJSONArray.getJSONObject(i);
                 String postId = String.valueOf(currentPostJSON.getInt("id"));

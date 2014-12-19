@@ -141,7 +141,7 @@ class StatsBarGraph extends GraphView {
         paint.setColor(style.color);
 
         // Bar chart position of this series on the canvas
-        List<BarChartRect> barChartRects = new LinkedList<BarChartRect>();
+        List<BarChartRect> barChartRects = new LinkedList<>();
 
         // draw data
         for (int i = 0; i < values.length; i++) {

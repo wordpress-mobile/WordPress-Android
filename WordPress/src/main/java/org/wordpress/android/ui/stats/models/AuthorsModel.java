@@ -37,7 +37,7 @@ public class AuthorsModel implements Serializable {
         authorsJSONArray = firstDayObject.optJSONArray("authors");
 
         if (authorsJSONArray != null) {
-            mAuthors = new ArrayList<AuthorModel>(authorsJSONArray.length());
+            mAuthors = new ArrayList<>(authorsJSONArray.length());
             for (int i = 0; i < authorsJSONArray.length(); i++) {
                 try {
                     JSONObject currentAuthorJSON = authorsJSONArray.getJSONObject(i);

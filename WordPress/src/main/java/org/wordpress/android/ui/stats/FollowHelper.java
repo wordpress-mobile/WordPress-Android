@@ -24,7 +24,7 @@ public class FollowHelper {
     private final WeakReference<Activity> mActivityRef;
 
     public FollowHelper(Activity activity) {
-        mActivityRef = new WeakReference<Activity>(activity);
+        mActivityRef = new WeakReference<>(activity);
     }
 
 
@@ -78,7 +78,7 @@ public class FollowHelper {
         private final FollowDataModel mFollowData;
 
         public FollowRestListener(Activity activity, final FollowDataModel followData) {
-            this.mActivityRef = new WeakReference<Activity>(activity);
+            this.mActivityRef = new WeakReference<>(activity);
             this.mFollowData = followData;
         }
 

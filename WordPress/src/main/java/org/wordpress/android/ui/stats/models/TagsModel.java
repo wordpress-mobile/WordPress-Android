@@ -15,7 +15,7 @@ public class TagsModel implements Serializable {
     public TagsModel(JSONObject responseJSON) throws JSONException {
         this.mViews = responseJSON.getInt("views");
         JSONArray innerTagsJSON = responseJSON.getJSONArray("tags");
-        mTags = new ArrayList<TagModel>(innerTagsJSON.length());
+        mTags = new ArrayList<>(innerTagsJSON.length());
         for (int i = 0; i < innerTagsJSON.length(); i++) {
             JSONObject currentTagJSON = innerTagsJSON.getJSONObject(i);
             TagModel currentTag = new TagModel(currentTagJSON);

@@ -39,7 +39,7 @@ public class ReferrersModel implements Serializable {
         jGroupsArray = firstDayObject.optJSONArray("groups");
 
         if (jGroupsArray != null) {
-            mGroups = new ArrayList<ReferrerGroupModel>(jGroupsArray.length());
+            mGroups = new ArrayList<>(jGroupsArray.length());
             for (int i = 0; i < jGroupsArray.length(); i++) {
                 try {
                     JSONObject currentGroupJSON = jGroupsArray.getJSONObject(i);

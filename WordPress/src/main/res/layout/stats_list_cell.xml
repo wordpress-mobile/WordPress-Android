@@ -44,6 +44,7 @@
             android:autoLink="none"
             android:textColor="@color/stats_text_color"
             android:textColorLink="@color/stats_link_text_color"
+            android:textColorHighlight="@color/transparent"
             android:textSize="@dimen/text_sz_medium" />
 
         <ImageView

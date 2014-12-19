@@ -38,7 +38,7 @@ public class TopPostsAndPagesModel implements Serializable {
             postViewsArray = new JSONArray();
         }
 
-        ArrayList<SingleItemModel> list = new ArrayList<SingleItemModel>(postViewsArray.length());
+        ArrayList<SingleItemModel> list = new ArrayList<>(postViewsArray.length());
 
         for (int i=0; i < postViewsArray.length(); i++) {
             try {

@@ -51,7 +51,7 @@ public class StatsService extends Service {
     private StatsTimeframe mServiceRequestedTimeframe;
     private String mServiceRequestedDate;
     private int mServiceStartId;
-    private final LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<Request<JSONObject>>();
+    private final LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<>();
     private int numberOfNetworkCalls = 0; // The number of networks calls made by Stats.
     private int numberOfFinishedNetworkCalls = 0; // The number of networks calls made by Stats.
     protected ThreadPoolExecutor parseResponseExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);

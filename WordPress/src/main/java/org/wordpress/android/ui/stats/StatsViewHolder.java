@@ -58,6 +58,8 @@ public class StatsViewHolder {
             Linkify.addLinks(entryTextView, Linkify.WEB_URLS);
         }
 
+        // Remove the highlight color. It's already specified in the XML, but Linkify and friends re-add it at run-time.
+        entryTextView.setHighlightColor(entryTextView.getResources().getColor(R.color.transparent));
         StatsUIHelper.removeUnderlines((Spannable) entryTextView.getText());
     }
 

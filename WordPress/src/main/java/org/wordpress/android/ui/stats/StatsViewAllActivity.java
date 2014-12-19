@@ -445,7 +445,7 @@ public class StatsViewAllActivity extends ActionBarActivity
         private final WeakReference<Activity> mActivityRef;
 
         public RestListener(Activity activity, StatsService.StatsEndpointsEnum endpointName, String blogId, StatsTimeframe timeframe) {
-                mActivityRef = new WeakReference<Activity>(activity);
+                mActivityRef = new WeakReference<>(activity);
                 mRequestBlogId = blogId;
                 mTimeframe = timeframe;
                 mEndpointName = endpointName;

@@ -38,7 +38,7 @@ public class GeoviewsModel implements Serializable {
         JSONArray viewsJSON = firstDayObject.optJSONArray("views");
 
         if (viewsJSON != null && countryInfoJSON != null) {
-            countries = new ArrayList<GeoviewModel>(viewsJSON.length());
+            countries = new ArrayList<>(viewsJSON.length());
             for (int i = 0; i < viewsJSON.length(); i++) {
                 JSONObject currentCountryJSON = viewsJSON.getJSONObject(i);
                 String currentCountryCode = currentCountryJSON.getString("country_code");
