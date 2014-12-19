@@ -85,7 +85,10 @@ public class PostsListFragment extends ListFragment
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
-                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                        if (!isAdded()) {
+                            return;
+                        }
+                        if (!NetworkUtils.checkConnection(getActivity())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
