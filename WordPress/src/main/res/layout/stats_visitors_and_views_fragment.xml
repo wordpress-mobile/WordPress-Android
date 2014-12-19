@@ -13,22 +13,21 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/stats_bar_chart_fragment_container"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_large"
-            android:minHeight="@dimen/stats_barchart_height"
-            android:orientation="vertical" />
-
-        <RadioGroup
             android:id="@+id/stats_pager_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:visibility="gone" >
-        </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/stats_bar_chart_fragment_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_large"
+            android:minHeight="@dimen/stats_barchart_height"
+            android:orientation="vertical" />
+
     </LinearLayout>
 
     <org.wordpress.android.widgets.WPTextView

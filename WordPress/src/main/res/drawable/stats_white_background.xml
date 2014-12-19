@@ -15,8 +15,7 @@
 
             <padding
                 android:bottom="2dp"
-                android:right="2dp"
-                android:top="5dp" >
+                android:right="2dp">
             </padding>
         </shape>
     </item>

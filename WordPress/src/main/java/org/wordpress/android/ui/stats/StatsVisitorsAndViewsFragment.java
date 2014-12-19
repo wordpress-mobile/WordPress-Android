@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -31,7 +31,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.widgets.TextDrawable;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
@@ -43,7 +42,7 @@ import java.util.List;
 
 
 public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
-        implements RadioGroup.OnCheckedChangeListener, StatsBarGraph.OnGestureListener {
+        implements StatsBarGraph.OnGestureListener {
 
     public static final String TAG = StatsVisitorsAndViewsFragment.class.getSimpleName();
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
@@ -52,7 +51,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private LinearLayout mGraphContainer;
     private StatsBarGraph mGraphView;
     private GraphViewSeries mCurrentSeriesOnScreen;
-    private RadioGroup mRadioGroup;
+    private LinearLayout mModuleButtonsContainer;
     private TextView mDateTextView;
     private String[] mStatsDate;
 
@@ -87,34 +86,70 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         mDateTextView = (TextView) view.findViewById(R.id.stats_summary_date);
         mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
-        mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
+        mModuleButtonsContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
 
         for (int i = 0; i < overviewItems.length; i++) {
-            RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_visitors_and_views_radio_button, null, false);
-            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
-                    RadioGroup.LayoutParams.MATCH_PARENT,
-                    RadioGroup.LayoutParams.WRAP_CONTENT
-            );
+            CheckedTextView rb = (CheckedTextView) inflater.inflate(R.layout.stats_visitors_and_views_button, null, false);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
+                    RadioGroup.LayoutParams.WRAP_CONTENT);
+            params.weight = 1;
             rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
+            params.setMargins(0, 0, 0, 0);
+            rb.setGravity(Gravity.CENTER);
             rb.setLayoutParams(params);
             rb.setText(overviewItems[i].getLabel());
             rb.setTag(overviewItems[i]);
-            mRadioGroup.addView(rb);
-            if (i == mSelectedOverviewItemIndex) {
-                rb.setChecked(true);
+            rb.setChecked(i == mSelectedOverviewItemIndex);
+            rb.setOnClickListener(TopButtonsOnClickListener);
+
+            if (i == (overviewItems.length -1)) {
+                rb.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_selector);
             }
+            mModuleButtonsContainer.addView(rb);
         }
 
-        mRadioGroup.setVisibility(View.VISIBLE);
+        mModuleButtonsContainer.setVisibility(View.VISIBLE);
         if (mVisitsData != null) {
             updateUI();
         } else {
             setupNoResultsUI(true);
         }
-        mRadioGroup.setOnCheckedChangeListener(this);
 
         return view;
     }
+
+    private View.OnClickListener TopButtonsOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!isAdded()) {
+                return;
+            }
+
+            CheckedTextView ctv = (CheckedTextView) v;
+            if (ctv.isChecked()) {
+                // already checked. Do nothing
+                return;
+            }
+
+            int numberOfButtons = mModuleButtonsContainer.getChildCount();
+            int checkedId = -1;
+            for (int i = 0; i < numberOfButtons; i++) {
+                CheckedTextView currentCheckedTextView = (CheckedTextView) mModuleButtonsContainer.getChildAt(i);
+                if (ctv == currentCheckedTextView) {
+                    checkedId = i;
+                    currentCheckedTextView.setChecked(true);
+                } else {
+                    currentCheckedTextView.setChecked(false);
+                }
+            }
+
+            if (checkedId == -1)
+                return;
+
+            mSelectedOverviewItemIndex = checkedId;
+            updateUI();
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,20 +191,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         super.onResume();
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SECTION_UPDATED));
-    }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        // checkedId will be -1 when the selection is cleared
-        if (checkedId == -1)
-            return;
-
-        int index = group.indexOfChild(group.findViewById(checkedId));
-        if (index == -1)
-            return;
-
-        mSelectedOverviewItemIndex = index;
-        updateUI();
     }
 
     private VisitModel[] getDataToShowOnGraph(VisitsModel visitsData) {
@@ -272,38 +293,26 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mDateTextView.setText(getDateForDisplayInLabels(date, getTimeframe()));
 
         VisitModel modelTapped = dataToShowOnGraph[itemPosition];
-        for (int i=0 ; i < mRadioGroup.getChildCount(); i++) {
-            View o = mRadioGroup.getChildAt(i);
-            if (o instanceof RadioButton) {
-                RadioButton currentBtm = (RadioButton)o;
-                if (i == mSelectedOverviewItemIndex) {
-                   currentBtm.setChecked(true);
-                }
-
-                TextDrawable currentTextDrawable = new TextDrawable(getActivity());
+        for (int i=0 ; i < mModuleButtonsContainer.getChildCount(); i++) {
+            View o = mModuleButtonsContainer.getChildAt(i);
+            if (o instanceof CheckedTextView) {
+                CheckedTextView currentBtm = (CheckedTextView)o;
                 OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
+                String labelPrefix = overviewItem.getLabel() + "\n";
                 switch (overviewItem) {
                     case VIEWS:
-                        currentTextDrawable.setText(FormatUtils.formatDecimal(modelTapped.getViews()));
+                        currentBtm.setText(labelPrefix + FormatUtils.formatDecimal(modelTapped.getViews()));
                         break;
                     case VISITORS:
-                        currentTextDrawable.setText(FormatUtils.formatDecimal(modelTapped.getVisitors()));
+                        currentBtm.setText(labelPrefix + FormatUtils.formatDecimal(modelTapped.getVisitors()));
                         break;
                     case LIKES:
-                        currentTextDrawable.setText(FormatUtils.formatDecimal(modelTapped.getLikes()));
+                        currentBtm.setText(labelPrefix + FormatUtils.formatDecimal(modelTapped.getLikes()));
                         break;
                     case COMMENTS:
-                        currentTextDrawable.setText(FormatUtils.formatDecimal(modelTapped.getComments()));
+                        currentBtm.setText(labelPrefix + FormatUtils.formatDecimal(modelTapped.getComments()));
                         break;
                 }
-
-                currentTextDrawable.setTextColor(getResources().getColorStateList(R.color.stats_visitors_and_views_button_text_color));
-                currentTextDrawable.setTypeface((TypefaceCache.getTypeface(getActivity())));
-                currentTextDrawable.setTextSize(
-                        TypedValue.COMPLEX_UNIT_PX,
-                        getResources().getDimensionPixelSize(R.dimen.text_sz_medium)
-                );
-                currentBtm.setCompoundDrawablesWithIntrinsicBounds(null, null, currentTextDrawable, null);
             }
         }
     }
@@ -391,14 +400,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
         mDateTextView.setText("");
 
-        for (int i=0 ; i < mRadioGroup.getChildCount(); i++) {
-            View o = mRadioGroup.getChildAt(i);
-            if (o instanceof RadioButton) {
-                RadioButton currentBtm = (RadioButton)o;
-                if (i == mSelectedOverviewItemIndex) {
-                    currentBtm.setChecked(true);
-                }
-                currentBtm.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        for (int i=0 ; i < mModuleButtonsContainer.getChildCount(); i++) {
+            View o = mModuleButtonsContainer.getChildAt(i);
+            if (o instanceof CheckedTextView) {
+                CheckedTextView currentBtm = (CheckedTextView)o;
+                OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
+                String labelPrefix = overviewItem.getLabel() + "\n 0" ;
+                currentBtm.setText(labelPrefix);
             }
         }
     }

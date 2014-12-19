@@ -342,7 +342,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             rb.setGravity(Gravity.CENTER);
             rb.setLayoutParams(params);
             rb.setText(buttonTitles[i]);
-            rb.setChecked(i == mTopPagerSelectedButtonIndex ? true : false);
+            rb.setChecked(i == mTopPagerSelectedButtonIndex);
             rb.setOnClickListener(TopModulePagerOnClickListener);
             mTopPagerContainer.addView(rb);
         }
