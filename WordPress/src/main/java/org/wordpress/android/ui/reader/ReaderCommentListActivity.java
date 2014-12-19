@@ -114,7 +114,6 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             return;
         }
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(getCommentAdapter());
 
         if (savedInstanceState != null) {

@@ -8,43 +8,38 @@
     android:id="@+id/layout_tag_info_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:background="@color/color_primary"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_small"
         android:layout_marginLeft="@dimen/reader_card_spacing"
         android:layout_marginRight="@dimen/reader_card_spacing"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/margin_medium"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_small"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/reader_card_content_padding"
+        android:paddingRight="@dimen/reader_card_content_padding"
         android:paddingTop="@dimen/margin_small">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_tag_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/grey_medium"
-            android:textSize="@dimen/text_sz_extra_large"
+            android:textColor="@color/blue_extra_light"
+            android:textSize="@dimen/text_sz_large"
             tools:text="@string/reader_label_tag_preview" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_follow_blog"
-            style="@style/ReaderTextView.Follow"
-            android:layout_marginTop="@dimen/margin_medium" />
+            style="@style/ReaderTextView.Follow" />
 
     </LinearLayout>
-
-    <View
-        android:id="@+id/divider_info_header"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_header_divider_height"
-        android:background="@color/reader_divider_grey" />
 
 </LinearLayout>

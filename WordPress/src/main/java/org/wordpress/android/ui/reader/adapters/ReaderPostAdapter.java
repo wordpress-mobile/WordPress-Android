@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -92,11 +93,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
 
             imgFeatured = (WPNetworkImageView) itemView.findViewById(R.id.image_featured);
             imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
-
-            imgBtnReblog = (ImageView) itemView.findViewById(R.id.image_reblog_btn);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
+
+            imgBtnReblog = (ImageView) itemView.findViewById(R.id.image_reblog_btn);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                imgBtnReblog.setBackgroundResource(R.drawable.ripple_oval);
+            }
         }
     }
 

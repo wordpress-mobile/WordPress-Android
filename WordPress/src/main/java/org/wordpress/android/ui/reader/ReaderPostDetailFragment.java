@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -756,6 +757,9 @@ public class ReaderPostDetailFragment extends Fragment
                         reblogPost();
                     }
                 });
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    imgBtnReblog.setBackgroundResource(R.drawable.ripple_oval);
+                }
             } else {
                 imgBtnReblog.setVisibility(View.INVISIBLE);
             }

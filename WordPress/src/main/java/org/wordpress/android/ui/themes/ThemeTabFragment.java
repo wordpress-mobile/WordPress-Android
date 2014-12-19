@@ -21,8 +21,8 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 
@@ -62,6 +62,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
     protected GridView mGridView;
+    protected TextView mEmptyView;
     protected TextView mNoResultText;
     protected ThemeTabAdapter mAdapter;
     protected ThemeTabFragmentCallback mCallback;
@@ -96,7 +97,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
         setRetainInstance(true);
 
         mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
-
+        mEmptyView = (TextView) view.findViewById(R.id.text_empty);
         mGridView = (GridView) view.findViewById(R.id.theme_gridview);
         mGridView.setRecyclerListener(this);
 
@@ -106,8 +107,12 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
                     R.id.ptr_layout), new RefreshListener() {
                 @Override
                 public void onRefreshStarted() {
-                    if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    if (!NetworkUtils.checkConnection(getActivity())) {
                         mSwipeToRefreshHelper.setRefreshing(false);
+                        mEmptyView.setText(R.string.no_network_title);
                         return;
                     }
                     if (getActivity() instanceof ThemeBrowserActivity) {
@@ -145,9 +150,25 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
             return;
         }
         mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
+        setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
         mGridView.setSelection(mSavedScrollPosition);
+    }
+
+    private void setEmptyViewVisible(boolean visible) {
+        if (getView() == null || !isAdded()) {
+            return;
+        }
+        mEmptyView.setVisibility(visible ? View.VISIBLE : View.GONE);
+        mGridView.setVisibility(visible ? View.GONE : View.VISIBLE);
+        if (visible && !NetworkUtils.isNetworkAvailable(getActivity())) {
+            mEmptyView.setText(R.string.no_network_title);
+        }
+    }
+
+    public void setEmptyViewText(int stringId) {
+        mEmptyView.setText(stringId);
     }
 
     @Override
@@ -199,6 +220,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
             mNoResultText.setVisibility(View.GONE);
         }
         mAdapter.changeCursor(cursor);
+        setEmptyViewVisible(mAdapter.getCount() == 0);
     }
 
     @Override
