@@ -47,8 +47,17 @@ You can use [Android Studio][3] by importing the project as a Gradle project.
 Say hello on our IRC channel: `#WordPress-Mobile` (freenode). Read our
 [Developer Handbook][4] and [Development Blog][5].
 
+## License
+
+WordPress for Android is an Open Source project covered by the
+[GNU General Public License version 2](LICENSE.md). Note: code
+in the `libs/` directory comes from external libraries, which might
+be covered by a different license compatible with the GPLv2.
+
 [1]: https://play.google.com/store/apps/details?id=org.wordpress.android
 [2]: http://tools.android.com/tech-docs/new-build-system/user-guide
 [3]: http://developer.android.com/sdk/installing/studio.html
 [4]: http://make.wordpress.org/mobile/handbook/
 [5]: http://make.wordpress.org/mobile/
+
+
