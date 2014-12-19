@@ -190,6 +190,7 @@
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:clickable">true</item>
         <item name="android:background">@drawable/nux_primary_button_selector</item>
+        <item name="android:stateListAnimator">@anim/raise</item>
     </style>
 
     <style name="WordPress.NUXWhiteButtonNoBg">

@@ -3,4 +3,10 @@
     <issue id="MissingTranslation" severity="ignore" />
     <issue id="ExtraTranslation" severity="ignore" />
     <issue id="RtlCompat" severity="warning" />
+
+    <issue id="NewApi">
+        <warning path="src/main/res/values/reader_styles.xml" />
+        <warning path="src/main/res/values/styles.xml" />
+    </issue>
+
 </lint>
