@@ -396,7 +396,7 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * display the standard Android share chooser to share this post
      */
-    private static final int MAX_SHARE_TITLE_LEN = 237; // 237 = 240 - (length of " - ")
+    private static final int MAX_SHARE_TITLE_LEN = 100;
     private void sharePage() {
         if (!isAdded() || !hasPost()) {
             return;
@@ -408,9 +408,9 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost.hasTitle()) {
             final String title;
             // we don't know where the user will choose to share, so enforce a max title length
-            // in order to fit a tweet
+            // in order to fit a tweet with some extra room for the URL and user edits
             if (mPost.getTitle().length() > MAX_SHARE_TITLE_LEN) {
-                title = mPost.getTitle().substring(0, MAX_SHARE_TITLE_LEN).trim();
+                title = mPost.getTitle().substring(0, MAX_SHARE_TITLE_LEN).trim() + "...";
             } else {
                 title = mPost.getTitle().trim();
             }
