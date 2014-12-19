@@ -119,7 +119,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
 
         mBgColorNormal = context.getResources().getColor(R.color.white);
-        mBgColorHighlight = context.getResources().getColor(R.color.grey_extra_light);
+        mBgColorHighlight = context.getResources().getColor(R.color.blue_extra_light);
 
         mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
         mNoLinkColor = context.getResources().getColor(R.color.grey_medium);
@@ -163,7 +163,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
 
     @Override
     public CommentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_comment, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_listitem_comment, parent, false);
         return new CommentHolder(view);
     }
 

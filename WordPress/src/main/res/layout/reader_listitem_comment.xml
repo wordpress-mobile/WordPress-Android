@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/margin_large"
+    android:paddingLeft="@dimen/reader_card_content_padding"
+    android:paddingRight="@dimen/reader_card_content_padding"
+    android:paddingTop="@dimen/margin_large">
+
+    <!-- spacer_comment_indent width and visibility set at run-time based on comment indent level -->
+    <View
+        android:id="@+id/spacer_comment_indent"
+        android:layout_width="@dimen/reader_comment_indent_per_level"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/image_comment_avatar"
+        style="@style/ReaderImageView.Avatar.Small"
+        android:layout_marginRight="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_toRightOf="@+id/spacer_comment_indent" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_comment_author"
+        style="@style/ReaderTextView.Comment.Author"
+        android:layout_marginBottom="@dimen/margin_extra_small"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_toLeftOf="@+id/text_comment_date"
+        android:layout_toRightOf="@+id/image_comment_avatar"
+        android:background="?android:selectableItemBackground"
+        tools:text="text_comment_author" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_comment_date"
+        style="@style/ReaderTextView.Date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
+        tools:text="date" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_comment_text"
+        style="@style/ReaderTextView.Comment.Text"
+        android:layout_alignLeft="@+id/text_comment_author"
+        android:layout_below="@+id/text_comment_author"
+        android:layout_marginTop="@dimen/margin_small"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        tools:text="text_comment_text" />
+
+    <LinearLayout
+        android:id="@+id/layout_comment_actions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_comment_author"
+        android:layout_below="@+id/text_comment_text"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/image_comment_reply"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:src="@drawable/note_icon_reply" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_comment_reply"
+            style="@style/ReaderTextView.Comment.Action"
+            android:text="@string/reader_label_reply"
+            android:textColor="@color/reader_hyperlink" />
+
+        <LinearLayout
+            android:id="@+id/layout_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/image_comment_like"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:src="@drawable/reader_button_comment_like" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_comment_like"
+                style="@style/ReaderTextView.Comment.Action"
+                android:textColor="@color/reader_hyperlink"
+                tools:text="@string/reader_label_like" />
+        </LinearLayout>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_comment_like_count"
+            style="@style/ReaderTextView.Comment.Action"
+            android:textColor="@color/reader_like_text"
+            android:visibility="gone"
+            tools:text="@string/reader_likes_one_short"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <!-- progress bar that appears while submitting a comment -->
+    <ProgressBar
+        android:id="@+id/progress_comment"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</RelativeLayout>
