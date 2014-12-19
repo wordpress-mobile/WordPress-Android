@@ -50,7 +50,9 @@ Say hello on our IRC channel: `#WordPress-Mobile` (freenode). Read our
 ## License
 
 WordPress for Android is an Open Source project covered by the
-[GNU General Public License version 2](LICENSE.md).
+[GNU General Public License version 2](LICENSE.md). Note: code
+in the `libs/` directory comes from external libraries, which might
+be covered by a different license compatible with the GPLv2.
 
 [1]: https://play.google.com/store/apps/details?id=org.wordpress.android
 [2]: http://tools.android.com/tech-docs/new-build-system/user-guide
