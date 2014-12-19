@@ -396,7 +396,7 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * display the standard Android share chooser to share this post
      */
-    private static final int MAX_SHARE_TITLE_LEN = 200;
+    private static final int MAX_SHARE_TITLE_LEN = 237; // 237 = 240 - (length of " - ")
     private void sharePage() {
         if (!isAdded() || !hasPost()) {
             return;
