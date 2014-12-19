@@ -3,14 +3,10 @@ package org.wordpress.android.ui.stats;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.adapters.PostsAndPagesAdapter;
@@ -21,55 +17,27 @@ import org.wordpress.android.ui.stats.models.FollowDataModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.widgets.TypefaceCache;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
 
-public class StatsCommentsFragment extends StatsAbstractListFragment implements RadioGroup.OnCheckedChangeListener {
+public class StatsCommentsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsCommentsFragment.class.getSimpleName();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        int dp4 = DisplayUtils.dpToPx(view.getContext(), 4);
-        int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
-
         Resources res = container.getContext().getResources();
-
         String[] titles = {
                 res.getString(R.string.stats_comments_by_authors),
                 res.getString(R.string.stats_comments_by_posts_and_pages),
         };
 
-        for (int i = 0; i < titles.length; i++) {
-            RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
-            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
-                    RadioGroup.LayoutParams.WRAP_CONTENT);
-            params.weight = 1;
-            rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
-            if (i == 0) {
-                params.setMargins(0, 0, dp4, 0);
-            } else {
-                params.setMargins(dp4, 0, 0, 0);
-            }
-            rb.setMinimumWidth(dp80);
-            rb.setGravity(Gravity.CENTER);
-            rb.setLayoutParams(params);
-            rb.setText(titles[i]);
-            mTopPagerRadioGroup.addView(rb);
-
-            if (i == mTopPagerSelectedButtonIndex)
-                rb.setChecked(true);
-        }
-
-        mTopPagerRadioGroup.setVisibility(View.VISIBLE);
-        mTopPagerRadioGroup.setOnCheckedChangeListener(this);
+        setupTopModulePager(inflater, view, titles);
 
         return view;
     }
@@ -96,35 +64,12 @@ public class StatsCommentsFragment extends StatsAbstractListFragment implements 
     }
 
     @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        if (!isAdded()) {
-            return;
-        }
-
-        // checkedId will be -1 when the selection is cleared
-        if (checkedId == -1)
-            return;
-
-        int index  = group.indexOfChild(group.findViewById(checkedId));
-        if (index == -1)
-            return;
-
-        mTopPagerSelectedButtonIndex = index;
-
-        View view = this.getView();
-        TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
-        entryLabel.setText(getEntryLabelResId());
-
-        updateUI();
-    }
-
-    @Override
     protected void updateUI() {
         if (!isAdded()) {
             return;
         }
 
-        mTopPagerRadioGroup.setVisibility(View.VISIBLE);
+        mTopPagerContainer.setVisibility(View.VISIBLE);
 
         if (mDatamodels == null) {
             showHideNoResultsUI(true);

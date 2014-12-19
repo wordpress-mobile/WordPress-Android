@@ -5,11 +5,4 @@
             <solid android:color="@color/calypso_blue_light" />
         </shape>
     </item>
-
-    <!-- item android:top="1dp" android:bottom="1dp" android:left="1dp" android:right="1dp">
-        <shape android:shape="rectangle" android:innerRadius="@dimen/stats_button_corner_radius">
-            <solid
-                android:color="@color/white"/>
-        </shape>
-    </item -->
 </layer-list>

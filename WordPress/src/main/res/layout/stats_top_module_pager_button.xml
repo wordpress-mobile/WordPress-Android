@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/stats_top_pager_button_selector"
+    android:padding="@dimen/margin_medium"
+    android:textColor="@color/stats_text_color"
+    android:textSize="@dimen/text_sz_small"
+    android:clickable="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />

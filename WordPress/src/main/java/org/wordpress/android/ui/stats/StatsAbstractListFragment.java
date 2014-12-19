@@ -9,10 +9,12 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.util.SparseBooleanArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -23,7 +25,9 @@ import com.android.volley.VolleyError;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
 
@@ -45,15 +49,17 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected TextView mTotalsLabel;
     protected LinearLayout mListContainer;
     protected LinearLayout mList;
-    protected Serializable[] mDatamodels;
     protected Button mViewAll;
-    protected RadioGroup mTopPagerRadioGroup;
+
+    protected LinearLayout mTopPagerContainer;
     protected int mTopPagerSelectedButtonIndex = 0;
 
     protected LinearLayout mPaginationContainer;
     protected Button mPaginationGoBackButton;
     protected Button mPaginationGoForwardButton;
     protected TextView mPaginationText;
+
+    protected Serializable[] mDatamodels;
     protected OnRequestDataListener mMoreDataListener;
 
     protected SparseBooleanArray mGroupIdToExpandedMap;
@@ -113,7 +119,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mList = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
         mListContainer = (LinearLayout) view.findViewById(R.id.stats_list_container);
         mViewAll = (Button) view.findViewById(R.id.btnViewAll);
-        mTopPagerRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
+        mTopPagerContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
         mPaginationContainer = (LinearLayout) view.findViewById(R.id.stats_pagination_container);
         mPaginationGoBackButton = (Button) view.findViewById(R.id.stats_pagination_go_back);
         mPaginationGoForwardButton = (Button) view.findViewById(R.id.stats_pagination_go_forward);
@@ -173,7 +179,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     protected void showEmptyUI() {
         mModuleTitleTextPlaceholderTextView.setVisibility(View.VISIBLE);
-        mTopPagerRadioGroup.setVisibility(View.GONE);
+        mTopPagerContainer.setVisibility(View.GONE);
         mModuleTitleTextView.setVisibility(View.GONE);
         mEmptyLabel.setVisibility(View.GONE);
         mListContainer.setVisibility(View.GONE);
@@ -304,7 +310,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, getViewType().ordinal());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_START_DATE, getStartDate());
                 viewAllIntent.putExtra(ARGS_IS_SINGLE_VIEW, true);
-                if (mTopPagerRadioGroup.getVisibility() == View.VISIBLE) {
+                if (mTopPagerContainer.getVisibility() == View.VISIBLE) {
                     viewAllIntent.putExtra(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
                 }
                 //viewAllIntent.putExtra(StatsAbstractFragment.ARG_REST_RESPONSE, mDatamodels[mTopPagerSelectedButtonIndex]);
@@ -316,6 +322,68 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected int getMaxNumberOfItemsToShowInList() {
         return isSingleView() ? MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST : MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
+
+    protected void setupTopModulePager(LayoutInflater inflater, View view, String[] buttonTitles) {
+        int dp4 = DisplayUtils.dpToPx(view.getContext(), 4);
+        int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
+
+        for (int i = 0; i < buttonTitles.length; i++) {
+            CheckedTextView rb = (CheckedTextView) inflater.inflate(R.layout.stats_top_module_pager_button, null, false);
+            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
+                    RadioGroup.LayoutParams.WRAP_CONTENT);
+            params.weight = 1;
+            rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
+            if (i == 0) {
+                params.setMargins(0, 0, dp4, 0);
+            } else {
+                params.setMargins(dp4, 0, 0, 0);
+            }
+            rb.setMinimumWidth(dp80);
+            rb.setGravity(Gravity.CENTER);
+            rb.setLayoutParams(params);
+            rb.setText(buttonTitles[i]);
+            rb.setChecked(i == mTopPagerSelectedButtonIndex ? true : false);
+            rb.setOnClickListener(TopModulePagerOnClickListener);
+            mTopPagerContainer.addView(rb);
+        }
+        mTopPagerContainer.setVisibility(View.VISIBLE);
+    }
+
+    protected View.OnClickListener TopModulePagerOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!isAdded()) {
+                return;
+            }
+
+            CheckedTextView ctv = (CheckedTextView) v;
+            if (ctv.isChecked()) {
+                // already checked. Do nothing
+                return;
+            }
+
+            int numberOfButtons = mTopPagerContainer.getChildCount();
+            int checkedId = -1;
+            for (int i = 0; i < numberOfButtons; i++) {
+                CheckedTextView currentCheckedTextView = (CheckedTextView)mTopPagerContainer.getChildAt(i);
+                if (ctv == currentCheckedTextView) {
+                    checkedId = i;
+                    currentCheckedTextView.setChecked(true);
+                } else {
+                    currentCheckedTextView.setChecked(false);
+                }
+            }
+
+            if (checkedId == -1)
+                return;
+
+            mTopPagerSelectedButtonIndex = checkedId;
+
+            TextView entryLabel = (TextView) getView().findViewById(R.id.stats_list_entry_label);
+            entryLabel.setText(getEntryLabelResId());
+            updateUI();
+        }
+    };
 
     /*
  * receives broadcast when data has been updated
