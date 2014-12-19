@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/margin_large"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_large"
+        android:paddingLeft="@dimen/reader_card_content_padding"
+        android:paddingRight="@dimen/reader_card_content_padding"
         android:paddingTop="@dimen/margin_large">
 
         <!-- spacer_comment_indent width and visibility set at run-time based on comment indent level -->

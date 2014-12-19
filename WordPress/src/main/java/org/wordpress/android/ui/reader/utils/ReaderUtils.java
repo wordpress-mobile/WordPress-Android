@@ -28,16 +28,7 @@ public class ReaderUtils {
         if (txtFollow == null || txtFollow.isSelected() == isFollowed) {
             return;
         }
-
-        if (isFollowed) {
-            txtFollow.setText(txtFollow.getContext().getString(R.string.reader_btn_unfollow));
-        } else {
-            txtFollow.setText(txtFollow.getContext().getString(R.string.reader_btn_follow));
-        }
-
-        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
-        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
-
+        txtFollow.setText(txtFollow.getContext().getString(isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow));
         txtFollow.setSelected(isFollowed);
     }
 

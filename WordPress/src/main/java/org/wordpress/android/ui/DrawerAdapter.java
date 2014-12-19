@@ -15,10 +15,12 @@ public class DrawerAdapter extends BaseAdapter {
 
     private final LayoutInflater mInflater;
     private final DrawerItems mItems = new DrawerItems();
+    private final int mInitialPadding;
 
     public DrawerAdapter(Context context) {
         super();
         mInflater = LayoutInflater.from(context);
+        mInitialPadding = context.getResources().getDimensionPixelSize(R.dimen.drawer_divider_margin);
     }
 
     @Override
@@ -73,6 +75,12 @@ public class DrawerAdapter extends BaseAdapter {
             holder.content.setBackgroundResource(R.color.drawer_background_selected);
         } else {
             holder.content.setBackgroundResource(0);
+        }
+
+        // put space between the header and the first item
+        int topPadding = (position == 0 ? mInitialPadding : 0);
+        if (convertView.getPaddingTop() != topPadding) {
+            convertView.setPadding(0, topPadding, 0 , 0);
         }
 
         return convertView;

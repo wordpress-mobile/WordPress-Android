@@ -41,10 +41,9 @@ public class ReaderUserListActivity extends ActionBarActivity {
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
         }
 
-        int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
+        int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(this, 1);
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(spacingHorizontal, spacingVertical));
 
         long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);

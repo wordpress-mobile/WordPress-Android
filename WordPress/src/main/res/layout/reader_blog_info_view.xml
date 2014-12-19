@@ -8,7 +8,7 @@
     android:id="@+id/layout_blog_info_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/color_primary"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -18,9 +18,9 @@
         android:layout_marginLeft="@dimen/reader_card_spacing"
         android:layout_marginRight="@dimen/reader_card_spacing"
         android:paddingBottom="@dimen/margin_large"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_medium"
+        android:paddingLeft="@dimen/reader_card_content_padding"
+        android:paddingRight="@dimen/reader_card_content_padding"
+        android:paddingTop="@dimen/margin_small"
         android:visibility="invisible"
         tools:visibility="visible">
 
@@ -33,8 +33,8 @@
             android:background="?android:selectableItemBackground"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/reader_hyperlink"
-            android:textSize="@dimen/text_sz_extra_large"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_large"
             tools:text="text_blog_name" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -42,12 +42,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_blog_name"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_medium"
             android:layout_toLeftOf="@+id/image_mshot"
             android:ellipsize="end"
             android:maxLines="3"
-            android:textColor="@color/grey_medium_dark"
+            android:textColor="@color/blue_extra_light"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_blog_description" />
 
@@ -62,6 +62,7 @@
             android:layout_toRightOf="@+id/text_follow_blog"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textColor="@color/blue_extra_light"
             tools:text="followers" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -82,11 +83,5 @@
             tools:layout_width="96dp" />
 
     </RelativeLayout>
-
-    <View
-        android:id="@+id/divider_info_header"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_header_divider_height"
-        android:background="@color/reader_divider_grey" />
 
 </LinearLayout>
