@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -347,6 +348,7 @@ public class ReaderPostListFragment extends Fragment {
     /*
      * animate in the blog/tag info header after a brief delay
      */
+    @SuppressLint("NewApi")
     private void animateHeader() {
         new Handler().postDelayed(new Runnable() {
             @Override
