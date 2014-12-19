@@ -4,6 +4,7 @@
     android:id="@+id/layout_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/reader_comment_selector"
     android:paddingBottom="@dimen/margin_large"
     android:paddingLeft="@dimen/reader_card_content_padding"
     android:paddingRight="@dimen/reader_card_content_padding"
@@ -21,7 +22,8 @@
         style="@style/ReaderImageView.Avatar.Small"
         android:layout_marginRight="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_small"
-        android:layout_toRightOf="@+id/spacer_comment_indent" />
+        android:layout_toRightOf="@+id/spacer_comment_indent"
+        tools:src="@drawable/gravatar_placeholder" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_comment_author"
