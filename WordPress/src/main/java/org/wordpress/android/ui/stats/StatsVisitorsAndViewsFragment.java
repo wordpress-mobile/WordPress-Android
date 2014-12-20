@@ -89,7 +89,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mModuleButtonsContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
 
         for (int i = 0; i < overviewItems.length; i++) {
-            CheckedTextView rb = (CheckedTextView) inflater.inflate(R.layout.stats_visitors_and_views_button, null, false);
+            CheckedTextView rb = (CheckedTextView) inflater.inflate(R.layout.stats_visitors_and_views_button, container, false);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
                     RadioGroup.LayoutParams.WRAP_CONTENT);
             params.weight = 1;

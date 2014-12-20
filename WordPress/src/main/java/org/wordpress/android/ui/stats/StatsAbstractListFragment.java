@@ -323,12 +323,12 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         return isSingleView() ? MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST : MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
-    protected void setupTopModulePager(LayoutInflater inflater, View view, String[] buttonTitles) {
+    protected void setupTopModulePager(LayoutInflater inflater, ViewGroup container, View view, String[] buttonTitles) {
         int dp4 = DisplayUtils.dpToPx(view.getContext(), 4);
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
 
         for (int i = 0; i < buttonTitles.length; i++) {
-            CheckedTextView rb = (CheckedTextView) inflater.inflate(R.layout.stats_top_module_pager_button, null, false);
+            CheckedTextView rb = (CheckedTextView) inflater.inflate(R.layout.stats_top_module_pager_button, container, false);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
                     RadioGroup.LayoutParams.WRAP_CONTENT);
             params.weight = 1;

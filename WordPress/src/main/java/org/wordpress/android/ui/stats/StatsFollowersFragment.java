@@ -42,7 +42,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
         };
 
 
-        setupTopModulePager(inflater, view, titles);
+        setupTopModulePager(inflater, container, view, titles);
 
         mTopPagerContainer.setVisibility(View.VISIBLE);
         mTotalsLabel.setVisibility(View.VISIBLE);
@@ -204,7 +204,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             View rowView = convertView;
             // reuse views
             if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, null);
+                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(rowView);
                 rowView.setTag(viewHolder);
@@ -236,7 +236,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 }
             } else {
                 // Email followers.
-                holder.entryTextView.setText(currentRowData.getLabel());
+                holder.setEntryText(currentRowData.getLabel());
             }
 
             // since date

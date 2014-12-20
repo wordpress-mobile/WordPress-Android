@@ -37,7 +37,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
                 res.getString(R.string.stats_comments_by_posts_and_pages),
         };
 
-        setupTopModulePager(inflater, view, titles);
+        setupTopModulePager(inflater, container, view, titles);
 
         return view;
     }
@@ -170,7 +170,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             View rowView = convertView;
             // reuse views
             if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, null);
+                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(rowView);
                 rowView.setTag(viewHolder);
@@ -180,9 +180,8 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
             // entries
-            holder.entryTextView.setText(currentRowData.getName());
+            holder.setEntryText(currentRowData.getName());
             holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_text_color));
-            holder.entryTextView.setOnClickListener(null);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));

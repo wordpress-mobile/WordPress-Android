@@ -81,7 +81,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             View rowView = convertView;
             // reuse views
             if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, null);
+                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(rowView);
                 rowView.setTag(viewHolder);
@@ -94,7 +94,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             String imageUrl = currentRowData.getImageUrl();
             int total = currentRowData.getViews();
 
-            holder.entryTextView.setText(entry);
+            holder.setEntryText(entry);
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // image (country flag)

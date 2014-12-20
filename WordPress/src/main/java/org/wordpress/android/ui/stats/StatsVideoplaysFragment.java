@@ -79,7 +79,7 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
             View rowView = convertView;
             // reuse views
             if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, null);
+                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(rowView);
                 rowView.setTag(viewHolder);

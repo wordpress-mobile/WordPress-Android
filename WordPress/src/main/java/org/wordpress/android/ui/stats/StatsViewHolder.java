@@ -26,7 +26,6 @@ public class StatsViewHolder {
 
     public StatsViewHolder(View view) {
         entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-        entryTextView.setMovementMethod(StatsWPLinkMovementMethod.getInstance());
         totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
         chevronImageView = (ImageView) view.findViewById(R.id.stats_list_cell_chevron);
 
@@ -42,25 +41,35 @@ public class StatsViewHolder {
         if (entryTextView == null) {
             return;
         }
-        boolean isLink = false;
+        boolean isLink;
         if (TextUtils.isEmpty(linkUrl)) {
             entryTextView.setText(linkName);
             isLink = (linkName != null && linkName.startsWith("http"));
+            Linkify.addLinks(entryTextView, Linkify.WEB_URLS);
         } else if (TextUtils.isEmpty(linkName)) {
             entryTextView.setText(linkUrl);
+            Linkify.addLinks(entryTextView, Linkify.WEB_URLS);
             isLink = (linkUrl != null && linkUrl.startsWith("http"));
         } else {
             entryTextView.setText(Html.fromHtml("<a href=\"" + linkUrl + "\">" + linkName + "</a>"));
+            isLink = true;
         }
 
         if (isLink) {
             entryTextView.setMovementMethod(StatsWPLinkMovementMethod.getInstance());
-            Linkify.addLinks(entryTextView, Linkify.WEB_URLS);
+            StatsUIHelper.removeUnderlines((Spannable) entryTextView.getText());
         }
 
         // Remove the highlight color. It's already specified in the XML, but Linkify and friends re-add it at run-time.
         entryTextView.setHighlightColor(entryTextView.getResources().getColor(R.color.transparent));
-        StatsUIHelper.removeUnderlines((Spannable) entryTextView.getText());
+    }
+
+
+    public void setEntryText(String text) {
+        entryTextView.setText(text);
+        entryTextView.setMovementMethod(null);
+        entryTextView.setFocusable(false);
+        entryTextView.setClickable(false);
     }
 
 
