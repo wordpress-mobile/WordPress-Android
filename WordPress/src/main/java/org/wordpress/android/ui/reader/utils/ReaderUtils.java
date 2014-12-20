@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -153,20 +152,12 @@ public class ReaderUtils {
             return "";
         }
 
-        String s = tagName.trim()
+        return tagName.trim()
             .replaceAll("&[^\\s]*;", "")        // remove html entities
             .replace(".", "-")                  // replace periods with a dash
-            .replaceAll("\\s+", "-")            // replace all whitespace with a single dash
+            .replaceAll("\\s+", "-")            // replace whitespace with a dash
             .replaceAll("[^A-Za-z0-9\\-]", "")  // remove remaining non-alphanum/non-dash chars
-            .trim();
-
-        // replace double dashes with single dash (may have been added above)
-        while (s.contains("--")) s = s.replace("--", "-");
-
-        if (!s.equals(tagName)) {
-            AppLog.d(AppLog.T.READER, "tag " + tagName + " sanitized to " + s);
-        }
-        return s;
+            .replaceAll("--", "-");             // reduce double dashes potentially added above
     }
 
     /*
