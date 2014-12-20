@@ -12,7 +12,6 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 public class ReaderTagActions {
@@ -45,7 +44,7 @@ public class ReaderTagActions {
         }
 
         final String path;
-        final String tagNameForApi = UrlUtils.urlEncode(ReaderUtils.sanitizeTagName(tag.getTagName()));
+        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagName());
 
         switch (action) {
             case DELETE:

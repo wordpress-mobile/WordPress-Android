@@ -80,9 +80,6 @@ public class ReaderTag implements Serializable {
         }
         return StringUtils.capitalize(tagName);
     }
-    public String getSanitizedTagName() {
-        return ReaderUtils.sanitizeTagName(this.tagName);
-    }
 
     /*
      * returns the tag name for use in the application log - if this is a default tag it returns
@@ -149,6 +146,10 @@ public class ReaderTag implements Serializable {
         return (tagName.equalsIgnoreCase(TAG_NAME_FOLLOWING)
              || tagName.equalsIgnoreCase(TAG_NAME_FRESHLY_PRESSED)
              || tagName.equalsIgnoreCase(TAG_NAME_LIKED));
+    }
+
+    private String getSanitizedTagName() {
+        return ReaderUtils.sanitizeWithDashes(this.tagName);
     }
 
     public static boolean isSameTag(ReaderTag tag1, ReaderTag tag2) {

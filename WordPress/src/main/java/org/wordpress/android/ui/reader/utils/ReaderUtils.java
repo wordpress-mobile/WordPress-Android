@@ -144,20 +144,18 @@ public class ReaderUtils {
     }
 
     /*
-     * returns the passed tagName formatted for use with our API - see sanitize_title_with_dashes
+     * returns the passed string formatted for use with our API - see sanitize_title_with_dashes
      * https://github.com/WordPress/WordPress/blob/master/wp-includes/formatting.php#L1258
      */
-    public static String sanitizeTagName(final String tagName) {
-        if (tagName == null) {
+    public static String sanitizeWithDashes(final String title) {
+        if (title == null) {
             return "";
         }
-
-        return tagName.trim()
-            .replaceAll("&[^\\s]*;", "")        // remove html entities
-            .replace(".", "-")                  // replace periods with a dash
-            .replaceAll("\\s+", "-")            // replace whitespace with a dash
-            .replaceAll("[^A-Za-z0-9\\-]", "")  // remove remaining non-alphanum/non-dash chars
-            .replaceAll("--", "-");             // reduce double dashes potentially added above
+        return title.trim()
+                .replaceAll("&[^\\s]*;", "")        // remove html entities
+                .replaceAll("[\\.\\s]+", "-")       // replace periods and whitespace with a dash
+                .replaceAll("[^A-Za-z0-9\\-]", "")  // remove remaining non-alphanum/non-dash chars
+                .replaceAll("--", "-");             // reduce double dashes potentially added above
     }
 
     /*

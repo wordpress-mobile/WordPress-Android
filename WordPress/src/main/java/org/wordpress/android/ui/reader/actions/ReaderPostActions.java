@@ -443,7 +443,7 @@ public class ReaderPostActions {
             return null;
         }
 
-        return String.format("/read/tags/%s/posts", ReaderUtils.sanitizeTagName(tag.getTagName()));
+        return String.format("/read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagName()));
     }
 
 }
