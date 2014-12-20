@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
@@ -79,6 +80,9 @@ public class ReaderTag implements Serializable {
         }
         return StringUtils.capitalize(tagName);
     }
+    public String getSanitizedTagName() {
+        return ReaderUtils.sanitizeTagName(this.tagName);
+    }
 
     /*
      * returns the tag name for use in the application log - if this is a default tag it returns
@@ -151,7 +155,9 @@ public class ReaderTag implements Serializable {
         if (tag1 == null || tag2 == null) {
             return false;
         }
-        return (tag1.getTagName().equalsIgnoreCase(tag2.getTagName())
-             && tag1.tagType.equals(tag2.tagType));
+        if (tag1.tagType != tag2.tagType) {
+            return false;
+        }
+        return (tag1.getSanitizedTagName().equalsIgnoreCase(tag2.getSanitizedTagName()));
     }
 }
