@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -144,27 +145,28 @@ public class ReaderUtils {
     }
 
     /*
-     * returns the passed tagName formatted for use with our API
-     * see sanitize_title_with_dashes in http://core.trac.wordpress.org/browser/tags/3.6/wp-includes/formatting.php#L0
+     * returns the passed tagName formatted for use with our API - see sanitize_title_with_dashes
+     * https://github.com/WordPress/WordPress/blob/master/wp-includes/formatting.php#L1258
      */
     public static String sanitizeTagName(final String tagName) {
         if (tagName == null) {
             return "";
         }
 
-        // remove ampersands and number signs, replace spaces & periods with dashes
-        String sanitized = tagName.trim()
-                .replace("&", "")
-                .replace("#", "")
-                .replace(" ", "-")
-                .replace(".", "-");
+        String s = tagName.trim()
+            .replaceAll("&[^\\s]*;", "")        // remove html entities
+            .replace(".", "-")                  // replace periods with a dash
+            .replaceAll("\\s+", "-")            // replace all whitespace with a single dash
+            .replaceAll("[^A-Za-z0-9\\-]", "")  // remove remaining non-alphanum/non-dash chars
+            .trim();
 
         // replace double dashes with single dash (may have been added above)
-        while (sanitized.contains("--")) {
-            sanitized = sanitized.replace("--", "-");
-        }
+        while (s.contains("--")) s = s.replace("--", "-");
 
-        return sanitized.trim();
+        if (!s.equals(tagName)) {
+            AppLog.d(AppLog.T.READER, "tag " + tagName + " sanitized to " + s);
+        }
+        return s;
     }
 
     /*
