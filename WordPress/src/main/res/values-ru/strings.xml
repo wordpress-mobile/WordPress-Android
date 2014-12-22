@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">Подробнее</string>
+	<string name="close_drawer">Убрать панель меню</string>
+	<string name="open_drawer">Показать панель меню</string>
+	<string name="delete_sure_post">Удалить запись</string>
+	<string name="delete_sure">Удалить черновик</string>
+	<string name="delete_sure_page">Удалить страницу</string>
+	<string name="confirm_delete_multi_media">Удалить выбранные элементы?</string>
+	<string name="confirm_delete_media">Удалить выбранный элемент?</string>
+	<string name="cab_selected">Выбрано: %d</string>
+	<string name="media_gallery_date_range">Отображаются файлы за период %1$s — %2$s</string>
+	<string name="sure_to_remove_account">Удалить этот блог?</string>
+	<string name="sign_out_confirm">Выйти?</string>
 	<string name="reader_empty_followed_blogs_title">Вы еще не подписаны ни на один блог.</string>
 	<string name="reader_empty_posts_liked">Вы еще не поставили отметку «Нравится» ни одной записи.</string>
 	<string name="faq_button">Часто задаваемые вопросы</string>
@@ -110,9 +122,6 @@
 	<string name="need_help_signin_wpcom">Нужна помощь?</string>
 	<string name="wpcom_signin_dialog_title">Войти на WordPress.com</string>
 	<string name="jetpack_stats_switch_user">Текущий WordPress.com аккаунт (%s) не имеет доступа к статистике этого блога. Хотите войти в другую учетную запись?</string>
-	<string name="ssl_certificate_details">Информация о сертификате</string>
-	<string name="ssl_certificate_trust">Доверенный</string>
-	<string name="ssl_certificate_do_not_trust">Недоверенный</string>
 	<string name="ptr_tip_message">Потяните вниз, чтобы обновить</string>
 	<string name="load_settings">Вы можете посетить настройки и изменить свое имя пользователя и пароль.</string>
 	<string name="loading_posts">Загрузка постов...</string>
@@ -277,7 +286,6 @@
 	<string name="new_page">Новая страница</string>
 	<string name="new_media">Новое медиа</string>
 	<string name="quick_photo">Быстрое фото</string>
-	<string name="quick_video">Быстрое видео</string>
 	<string name="view_site">Просмотреть сайт</string>
 	<string name="view_admin">Просмотреть администрацию</string>
 	<string name="privacy_policy">Политика конфиденциальности</string>

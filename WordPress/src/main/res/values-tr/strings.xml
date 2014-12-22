@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">Detaylar</string>
+	<string name="close_drawer">Menüyü kapat</string>
+	<string name="open_drawer">Menüyü aç</string>
+	<string name="delete_sure_post">Bu yazıyı sil</string>
+	<string name="delete_sure">Bu taslağı sil</string>
+	<string name="delete_sure_page">Bu sayfayı sil</string>
+	<string name="confirm_delete_multi_media">Seçili ögeler silinsin mi?</string>
+	<string name="confirm_delete_media">Seçili öge silinsin mi?</string>
+	<string name="cab_selected">%d seçili</string>
+	<string name="media_gallery_date_range">%1$s ve %2$s arası ortam dosyaları gösteriliyor</string>
+	<string name="sure_to_remove_account">Bu blog kaldırılsın mı?</string>
+	<string name="sign_out_confirm">Çıkış?</string>
 	<string name="reader_empty_followed_blogs_title">Henüz herhangi bir blog takip etmiyorsunuz.</string>
 	<string name="reader_empty_posts_liked">Henüz hiçbir yazıyı beğenmediniz</string>
 	<string name="faq_button">SSS</string>
@@ -105,15 +117,12 @@
 	<string name="stats_empty_referrers_title">Başvuran yok.</string>
 	<string name="stats_empty_referrers_desc">Başvuran, başka bir siteden sitenize bağlantı içeren bir bağlantının tıklanmasıdır.</string>
 	<string name="stats_empty_clicks_desc">"Tıklamalar" sitenizdeki giden bağlantıları tıklayan ziyaretçilerdir.</string>
-	<string name="ssl_certificate_trust">Güven</string>
-	<string name="ssl_certificate_do_not_trust">Güvenme</string>
 	<string name="load_settings">Kullanıcı adı ve şifrenizi Ayarlar\'dan değiştirebilirsiniz.</string>
 	<string name="saving">Kaydediliyor</string>
 	<string name="media_empty_list">Medya bulunamadı</string>
 	<string name="need_help_signin_wpcom">Yardıma ihtiyacınız var mı?</string>
 	<string name="wpcom_signin_dialog_title">WordPress.com\'a giriş yap</string>
 	<string name="jetpack_stats_switch_user">Şuan ki WordPress.com hesabı (%s) bu blog için istatistiklere erişmeye yetkili değil. Farklı bir hesap ile giriş yapmak ister misiniz?</string>
-	<string name="ssl_certificate_details">Sertifika Detayları</string>
 	<string name="ptr_tip_message">Püf nokta: Yenilemek için aşağı çekin</string>
 	<string name="help">Yardım</string>
 	<string name="forums">Forumlar</string>
@@ -252,7 +261,6 @@
 	<string name="new_page">Yeni sayfa</string>
 	<string name="new_media">Yeni medya</string>
 	<string name="quick_photo">Hızlı fotoğraf</string>
-	<string name="quick_video">Hızlı video</string>
 	<string name="view_site">Siteyi görüntüle</string>
 	<string name="reader_share_link">Bağlantıyı paylaş</string>
 	<string name="reader_toast_err_reblog_requires_blog">Bir blog seçin</string>

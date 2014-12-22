@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">詳細</string>
+	<string name="close_drawer">メニューを閉じる</string>
+	<string name="open_drawer">メニューを開く</string>
+	<string name="delete_sure_post">この投稿を削除</string>
+	<string name="delete_sure">この下書きを削除</string>
+	<string name="delete_sure_page">このページを削除</string>
+	<string name="confirm_delete_multi_media">選択した項目を削除しますか ?</string>
+	<string name="confirm_delete_media">選択した項目を削除しますか ?</string>
+	<string name="cab_selected">%d件選択</string>
+	<string name="media_gallery_date_range">%1$s から %2$s のメディアを表示中</string>
+	<string name="sure_to_remove_account">このブログを削除しますか ?</string>
+	<string name="sign_out_confirm">ログアウトしますか ?</string>
 	<string name="reader_empty_followed_blogs_title">フォローしているブログはまだありません。</string>
 	<string name="reader_empty_posts_liked">「いいね」を付けた投稿はありません。</string>
 	<string name="faq_button">よく聞かれる質問</string>
@@ -9,15 +21,11 @@
 	<string name="create_new_blog_wpcom">WordPress.com ブログを作成</string>
 	<string name="new_blog_wpcom_created">WordPress.com ブログを作成しました。</string>
 	<string name="reader_empty_comments">コメントはまだありません</string>
-	<string name="reader_likes_multi_short">%,d 人</string>
 	<string name="reader_empty_posts_in_tag">このタグを使った投稿はありません</string>
-	<string name="reader_label_comment_count_multi">コメント %,d 件</string>
 	<string name="reader_label_view_original">元の記事を表示</string>
 	<string name="reader_label_like">いいね</string>
 	<string name="reader_label_liked_by">いいね:</string>
 	<string name="reader_label_liked_by_you">いいねをつけました</string>
-	<string name="reader_likes_one_short">1 人</string>
-	<string name="reader_label_comment_count_single">1 件のコメント</string>
 	<string name="reader_label_comments_closed">コメントは停止中です。</string>
 	<string name="reader_label_comments_on">次の投稿へのコメント:</string>
 	<string name="reader_title_comments">コメント</string>
@@ -26,12 +34,7 @@
 	<string name="error_refresh_unauthorized_posts">投稿の表示/編集の権限がありません。</string>
 	<string name="error_refresh_unauthorized_pages">ページの表示/編集の権限がありません。</string>
 	<string name="error_refresh_unauthorized_comments">コメントの表示/編集の権限がありません。</string>
-	<string name="overwrite_local_changes">投稿を変更しましたが、まだアップロードしていません。更新処理を続けて、ローカルの変更を上書きしますか。</string>
-	<string name="older_month">1 か月以上前</string>
 	<string name="more">続き</string>
-	<string name="older_two_days">3 日以上前</string>
-	<string name="older_last_week">1 週間以上前</string>
-	<string name="stats_tooltip_week_of">1 週間の</string>
 	<string name="stats_totals_views_per_visitor">訪問者ごとの表示数</string>
 	<string name="help_and_support">ヘルプとサポート</string>
 	<string name="stats_no_blog">要求されたブログの統計を読み込めませんでした。</string>
@@ -41,7 +44,6 @@
 	<string name="mnu_comment_liked">「いいね」済み</string>
 	<string name="comment">コメント</string>
 	<string name="comment_trashed">ゴミ箱に入れたコメント</string>
-	<string name="dlg_confirm_spam_comment">このコメントをスパムとしてマークしますか。</string>
 	<string name="comment_mark_spam">スパムとしてマーク</string>
 	<string name="posts_empty_list">投稿はまだありません。新規作成してください。</string>
 	<string name="comment_reply_to_user">%s への返信</string>
@@ -49,6 +51,16 @@
 	<string name="media_empty_list_custom_date">この期間のメディアはありません。</string>
 	<string name="posting_post">"%s" を投稿</string>
 	<string name="signing_out">ログアウト中…</string>
+	<string name="reader_likes_multi_short">%,d人</string>
+	<string name="reader_label_comment_count_multi">コメント%,d件</string>
+	<string name="reader_likes_one_short">1人</string>
+	<string name="reader_label_comment_count_single">1件のコメント</string>
+	<string name="older_month">1ヶ月以上前</string>
+	<string name="overwrite_local_changes">まだアップロードしていない投稿に変更を加えました。更新処理を続けて、ローカルの変更を上書きしますか ?</string>
+	<string name="older_two_days">2日以上前</string>
+	<string name="older_last_week">1週間以上前</string>
+	<string name="stats_tooltip_week_of">週:</string>
+	<string name="dlg_confirm_spam_comment">このコメントをスパムとしてマークしますか ?</string>
 	<string name="reader_toast_blog_blocked">このブログからの投稿は今後表示されません</string>
 	<string name="reader_menu_block_blog">このブログをブロック</string>
 	<string name="reader_toast_err_block_blog">ブログをブロックできませんでした</string>
@@ -109,9 +121,6 @@
 	<string name="media_empty_list">メディアなし</string>
 	<string name="need_help_signin_wpcom">ヘルプが必要ですか ?</string>
 	<string name="wpcom_signin_dialog_title">WordPress.com ログイン</string>
-	<string name="ssl_certificate_trust">信頼する</string>
-	<string name="ssl_certificate_details">証明書詳細</string>
-	<string name="ssl_certificate_do_not_trust">信頼しない</string>
 	<string name="ptr_tip_message">ヒント: 再読み込みするにはプルダウン</string>
 	<string name="load_settings">設定画面でユーザー名とパスワードを変更できます。</string>
 	<string name="jetpack_stats_switch_user">現在の WordPress.com アカウント (%s) はこのブログの統計情報へのアクセス権がありません。他のアカウントにログインしますか ?</string>
@@ -202,7 +211,6 @@
 	<string name="new_media">新規メディア</string>
 	<string name="new_page">新規ページ</string>
 	<string name="quick_photo">クイックフォト</string>
-	<string name="quick_video">クイックビデオ</string>
 	<string name="view_site">サイトを表示</string>
 	<string name="account_details">アカウント詳細</string>
 	<string name="add_account_blog_url">ブログアドレス</string>
