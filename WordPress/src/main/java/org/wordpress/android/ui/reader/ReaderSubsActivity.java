@@ -17,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -45,6 +47,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -347,7 +350,7 @@ public class ReaderSubsActivity extends ActionBarActivity
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
 
         if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
-            ToastUtils.showToast(this, getString(R.string.reader_label_added_tag, tagName));
+            showInfoToast(getString(R.string.reader_label_added_tag, tagName));
             getPageAdapter().refreshTagFragments();
             onTagAction(tag, TagAction.ADD);
         }
@@ -413,7 +416,7 @@ public class ReaderSubsActivity extends ActionBarActivity
                     // clear the edit text and hide the soft keyboard
                     mEditAdd.setText(null);
                     EditTextUtils.hideSoftInput(mEditAdd);
-                    ToastUtils.showToast(ReaderSubsActivity.this, getString(R.string.reader_label_followed_blog));
+                    showInfoToast(getString(R.string.reader_label_followed_blog));
                     onFollowBlogChanged();
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 } else {
@@ -454,6 +457,15 @@ public class ReaderSubsActivity extends ActionBarActivity
     }
 
     /*
+     * toast message shown when adding/removing a tag - appears above the edit text at the bottom
+     */
+    private void showInfoToast(String text) {
+        int yOffset = findViewById(R.id.layout_bottom).getHeight() + DisplayUtils.dpToPx(this, 8);
+        Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, yOffset);
+        toast.show();
+    }
+    /*
      * triggered by a tag fragment's adapter after user adds/removes a tag, or from this activity
      * after user adds a tag - note that network request has been made by the time this is called
      */
@@ -467,7 +479,7 @@ public class ReaderSubsActivity extends ActionBarActivity
                 mLastAddedTagName = tag.getTagName();
                 // user added from recommended tags, make sure addition is reflected on followed tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.FOLLOWED);
-                ToastUtils.showToast(this, getString(R.string.reader_label_added_tag, tag.getTagName()));
+                showInfoToast(getString(R.string.reader_label_added_tag, tag.getTagName()));
                 break;
 
             case DELETE:
@@ -477,7 +489,7 @@ public class ReaderSubsActivity extends ActionBarActivity
                 }
                 // user deleted from followed tags, make sure deletion is reflected on recommended tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.RECOMMENDED);
-                ToastUtils.showToast(this, getString(R.string.reader_label_removed_tag, tag.getTagName()));
+                showInfoToast(getString(R.string.reader_label_removed_tag, tag.getTagName()));
                 break;
         }
     }
