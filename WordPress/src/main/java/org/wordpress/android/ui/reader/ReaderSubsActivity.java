@@ -44,8 +44,6 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
-import org.wordpress.android.ui.reader.views.MessageBarView;
-import org.wordpress.android.ui.reader.views.MessageBarView.MessageBarType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -71,7 +69,6 @@ public class ReaderSubsActivity extends ActionBarActivity
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
     private ViewPager mViewPager;
-    private MessageBarView mMessageBar;
     private SubsPageAdapter mPageAdapter;
 
     private boolean mTagsChanged;
@@ -125,8 +122,6 @@ public class ReaderSubsActivity extends ActionBarActivity
                 addCurrentEntry();
             }
         });
-
-        mMessageBar = (MessageBarView) findViewById(R.id.message_bar_view);
 
         if (savedInstanceState == null) {
             // return to the page the user was on the last time they viewed this activity
@@ -352,8 +347,7 @@ public class ReaderSubsActivity extends ActionBarActivity
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
 
         if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
-            String msgText = getString(R.string.reader_label_added_tag, tagName);
-            mMessageBar.show(msgText, MessageBarType.INFO);
+            ToastUtils.showToast(this, getString(R.string.reader_label_added_tag, tagName));
             getPageAdapter().refreshTagFragments();
             onTagAction(tag, TagAction.ADD);
         }
@@ -419,8 +413,8 @@ public class ReaderSubsActivity extends ActionBarActivity
                     // clear the edit text and hide the soft keyboard
                     mEditAdd.setText(null);
                     EditTextUtils.hideSoftInput(mEditAdd);
-                    mMessageBar.show(getString(R.string.reader_label_followed_blog), MessageBarType.INFO);
-                            onFollowBlogChanged();
+                    ToastUtils.showToast(ReaderSubsActivity.this, getString(R.string.reader_label_followed_blog));
+                    onFollowBlogChanged();
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 } else {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
@@ -473,7 +467,7 @@ public class ReaderSubsActivity extends ActionBarActivity
                 mLastAddedTagName = tag.getTagName();
                 // user added from recommended tags, make sure addition is reflected on followed tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.FOLLOWED);
-                mMessageBar.show(getString(R.string.reader_label_added_tag, tag.getTagName()), MessageBarType.INFO);
+                ToastUtils.showToast(this, getString(R.string.reader_label_added_tag, tag.getTagName()));
                 break;
 
             case DELETE:
@@ -483,7 +477,7 @@ public class ReaderSubsActivity extends ActionBarActivity
                 }
                 // user deleted from followed tags, make sure deletion is reflected on recommended tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.RECOMMENDED);
-                mMessageBar.show(getString(R.string.reader_label_removed_tag, tag.getTagName()), MessageBarType.ALERT);
+                ToastUtils.showToast(this, getString(R.string.reader_label_removed_tag, tag.getTagName()));
                 break;
         }
     }
