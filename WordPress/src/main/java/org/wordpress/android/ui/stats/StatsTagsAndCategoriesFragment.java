@@ -132,7 +132,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
             // name, url
-            holder.setEntryTextOrLink(children.getLink(), children.getName());
+            holder.setEntryTextOrLink(activity, children.getLink(), children.getName());
 
             // totals
             holder.totalsTextView.setText("");
@@ -204,14 +204,10 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             int children = getChildrenCount(groupPosition);
 
             if (children > 0) {
-                holder.entryTextView.setText(groupName);
-                holder.entryTextView.setMovementMethod(null);
+                holder.setEntryText(groupName.toString(), getResources().getColor(R.color.stats_link_text_color));
             } else {
-                holder.setEntryTextOrLink(tags.get(0).getLink(), groupName.toString());
+                holder.setEntryTextOrLink(activity, tags.get(0).getLink(), groupName.toString());
             }
-
-            // The main text is always blue in this module
-            holder.entryTextView.setTextColor(getResources().getColor(R.color.stats_link_text_color));
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));

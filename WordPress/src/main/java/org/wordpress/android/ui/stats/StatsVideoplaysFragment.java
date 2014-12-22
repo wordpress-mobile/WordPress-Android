@@ -64,14 +64,14 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     private class TopPostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
 
         private final List<SingleItemModel> list;
-        private final Activity context;
+        private final Activity activity;
         private final LayoutInflater inflater;
 
-        public TopPostsAndPagesAdapter(Activity context, List<SingleItemModel> list) {
-            super(context, R.layout.stats_list_cell, list);
-            this.context = context;
+        public TopPostsAndPagesAdapter(Activity activity, List<SingleItemModel> list) {
+            super(activity, R.layout.stats_list_cell, list);
+            this.activity = activity;
             this.list = list;
-            inflater = LayoutInflater.from(context);
+            inflater = LayoutInflater.from(activity);
         }
 
         @Override
@@ -89,7 +89,7 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
             StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
             // fill data
             // entries
-            holder.setEntryTextOrLink(currentRowData.getUrl(), currentRowData.getTitle());
+            holder.setEntryTextOrLink(activity, currentRowData.getUrl(), currentRowData.getTitle());
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));

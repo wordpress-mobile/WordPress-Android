@@ -180,8 +180,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
             // entries
-            holder.setEntryText(currentRowData.getName());
-            holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_text_color));
+            holder.setEntryText(currentRowData.getName(), getResources().getColor(R.color.stats_text_color));
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
@@ -193,7 +192,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             final FollowDataModel followData = currentRowData.getFollowData();
             if (followData == null) {
                 holder.imgMore.setVisibility(View.GONE);
-                holder.imgMore.setOnClickListener(null);
+                holder.imgMore.setClickable(false);
             } else {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 holder.imgMore.setOnClickListener(new View.OnClickListener() {

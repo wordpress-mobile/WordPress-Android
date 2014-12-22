@@ -91,7 +91,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
             String serviceName = currentRowData.getTitle();
 
             // entries
-            holder.entryTextView.setText(getServiceName(serviceName));
+            holder.setEntryText(getServiceName(serviceName));
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));

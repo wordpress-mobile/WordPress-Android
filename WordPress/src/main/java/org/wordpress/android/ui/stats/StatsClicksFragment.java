@@ -115,7 +115,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
             // name, url
-            holder.setEntryTextOrLink(children.getUrl(), children.getTitle());
+            holder.setEntryTextOrLink(activity, children.getUrl(), children.getTitle());
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(
@@ -175,14 +175,10 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             int children = getChildrenCount(groupPosition);
 
             if (children > 0) {
-                holder.entryTextView.setText(name);
-                holder.entryTextView.setMovementMethod(null);
+                holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
             } else {
-                holder.setEntryTextOrLink(url, name);
+                holder.setEntryTextOrLink(activity, url, name);
             }
-
-            // The main text is always blue in this module
-            holder.entryTextView.setTextColor(getResources().getColor(R.color.stats_link_text_color));
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));

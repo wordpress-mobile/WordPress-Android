@@ -214,14 +214,14 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
             holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_text_color));
-            holder.entryTextView.setOnClickListener(null);
+            holder.rowContent.setClickable(false);
 
             // entries
             if (mTopPagerSelectedButtonIndex == 0) {
                 // WPCOM followers
                 holder.entryTextView.setText(currentRowData.getLabel());
                 if (!TextUtils.isEmpty(currentRowData.getURL())) {
-                    holder.entryTextView.setOnClickListener(
+                    holder.rowContent.setOnClickListener(
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -232,7 +232,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                     );
                                 }
                             });
-                    holder.entryTextView.setTextColor(context.getResources().getColor(R.color.wordpress_blue));
+                    holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_link_text_color));
                 }
             } else {
                 // Email followers.
@@ -249,7 +249,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             final FollowDataModel followData = currentRowData.getFollowData();
             if (followData == null) {
                 holder.imgMore.setVisibility(View.GONE);
-                holder.imgMore.setOnClickListener(null);
+                holder.imgMore.setClickable(false);
             } else {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 holder.imgMore.setOnClickListener(new View.OnClickListener() {

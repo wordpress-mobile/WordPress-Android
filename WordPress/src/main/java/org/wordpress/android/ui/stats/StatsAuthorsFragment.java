@@ -200,10 +200,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
             String icon = group.getAvatar();
             int children = getChildrenCount(groupPosition);
 
-            holder.entryTextView.setText(name);
-            holder.entryTextView.setMovementMethod(null);
-            // The main text is always blue in this module
-            holder.entryTextView.setTextColor(getResources().getColor(R.color.stats_link_text_color));
+            holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
@@ -216,7 +213,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
             final FollowDataModel followData = group.getFollowData();
             if (followData == null) {
                 holder.imgMore.setVisibility(View.GONE);
-                holder.imgMore.setOnClickListener(null);
+                holder.imgMore.setClickable(false);
             } else {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 holder.imgMore.setOnClickListener(new View.OnClickListener() {

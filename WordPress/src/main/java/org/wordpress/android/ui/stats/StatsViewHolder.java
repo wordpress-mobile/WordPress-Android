@@ -1,17 +1,25 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -23,8 +31,10 @@ public class StatsViewHolder {
     public final WPNetworkImageView networkImageView;
     public final ImageView chevronImageView;
     public final ImageView imgMore;
+    public final LinearLayout rowContent;
 
     public StatsViewHolder(View view) {
+        rowContent = (LinearLayout) view.findViewById(R.id.layout_content);
         entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
         totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
         chevronImageView = (ImageView) view.findViewById(R.id.stats_list_cell_chevron);
@@ -37,41 +47,72 @@ public class StatsViewHolder {
     /*
      * used by stats fragments to set the entry text, making it a clickable link if a url is passed
      */
-    public void setEntryTextOrLink(String linkUrl, String linkName) {
+    public void setEntryTextOrLink(final Activity ctx, final String linkURL, String linkName) {
         if (entryTextView == null) {
             return;
         }
-        boolean isLink;
-        if (TextUtils.isEmpty(linkUrl)) {
-            entryTextView.setText(linkName);
-            isLink = (linkName != null && linkName.startsWith("http"));
-            Linkify.addLinks(entryTextView, Linkify.WEB_URLS);
-        } else if (TextUtils.isEmpty(linkName)) {
-            entryTextView.setText(linkUrl);
-            Linkify.addLinks(entryTextView, Linkify.WEB_URLS);
-            isLink = (linkUrl != null && linkUrl.startsWith("http"));
-        } else {
-            entryTextView.setText(Html.fromHtml("<a href=\"" + linkUrl + "\">" + linkName + "</a>"));
-            isLink = true;
+
+        entryTextView.setText(linkName);
+        if (TextUtils.isEmpty(linkURL)) {
+            entryTextView.setTextColor(ctx.getResources().getColor(R.color.stats_text_color));
+            rowContent.setClickable(false);
+            return;
         }
 
-        if (isLink) {
-            entryTextView.setMovementMethod(StatsWPLinkMovementMethod.getInstance());
-            StatsUIHelper.removeUnderlines((Spannable) entryTextView.getText());
-        }
+        rowContent.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String url = linkURL;
+                        AppLog.d(AppLog.T.UTILS, "Tapped on the Link: " + url);
+                        if (url.startsWith("https://wordpress.com/my-stats")
+                                || url.startsWith("http://wordpress.com/my-stats")) {
+                            // make sure to load the no-chrome version of Stats over https
+                            url = UrlUtils.makeHttps(url);
+                            if (url.contains("?")) {
+                                // add the no chrome parameters if not available
+                                if (!url.contains("?no-chrome") && !url.contains("&no-chrome")) {
+                                    url += "&no-chrome";
+                                }
+                            } else {
+                                url += "?no-chrome";
+                            }
+                            AppLog.d(AppLog.T.UTILS, "Opening the Authenticated in-app browser : " + url);
+                            // Let's try the global wpcom credentials
+                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+                            String statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+                            String statsAuthenticatedPassword = WordPressDB.decryptPassword(
+                                    settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
+                            );
+                            if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
+                                    || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
+                                // Still empty. Do not eat the event, but let's open the default Web Browser.
 
-        // Remove the highlight color. It's already specified in the XML, but Linkify and friends re-add it at run-time.
-        entryTextView.setHighlightColor(entryTextView.getResources().getColor(R.color.transparent));
+                            }
+                            WPWebViewActivity.openUrlByUsingWPCOMCredentials(ctx,
+                                    url, statsAuthenticatedUser, statsAuthenticatedPassword);
+
+                        } else if (url.startsWith("https") || url.startsWith("http")) {
+                            AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
+                            WPWebViewActivity.openURL(ctx, url);
+                        }
+
+                    }
+                }
+        );
+
+        entryTextView.setTextColor(ctx.getResources().getColor(R.color.stats_link_text_color));
     }
-
 
     public void setEntryText(String text) {
         entryTextView.setText(text);
-        entryTextView.setMovementMethod(null);
-        entryTextView.setFocusable(false);
-        entryTextView.setClickable(false);
+        rowContent.setClickable(false);
     }
 
+    public void setEntryText(String text, int color) {
+        entryTextView.setTextColor(color);
+        setEntryText(text);
+    }
 
     /*
      * used by stats fragments to set the entry text, opening it with reader if possible
@@ -86,7 +127,7 @@ public class StatsViewHolder {
         final long blogID = Long.parseLong(currentItem.getBlogID());
         final long itemID = Long.parseLong(currentItem.getItemID());
         entryTextView.setText(name);
-        entryTextView.setOnClickListener(
+        rowContent.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -107,22 +148,6 @@ public class StatsViewHolder {
                         }
                     }
                 });
-        entryTextView.setTextColor(ctx.getResources().getColor(R.color.wordpress_blue));
+        entryTextView.setTextColor(ctx.getResources().getColor(R.color.stats_link_text_color));
     }
-
-
-    /*
-     * used by stats fragments to show a downloadable icon or default image
-
-    public void showNetworkImage(String imageUrl) {
-        if (networkImageView == null) {
-            return;
-        }
-        if (imageUrl != null && imageUrl.startsWith("http")) {
-            networkImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.SITE_AVATAR);
-        } else {
-            networkImageView.setImageResource(R.drawable.stats_blank_image);
-        }
-        networkImageView.setVisibility(View.VISIBLE);
-    } */
 }

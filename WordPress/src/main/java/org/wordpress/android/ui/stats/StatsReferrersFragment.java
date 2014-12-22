@@ -90,10 +90,12 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
         private final List<ReferrerGroupModel> groups;
+        public final Activity activity;
 
         public MyExpandableListAdapter(Activity act, List<ReferrerGroupModel> groups) {
             this.groups = groups;
             this.inflater = act.getLayoutInflater();
+            this.activity = act;
         }
 
         @Override
@@ -128,7 +130,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             String icon = children.getIcon();
 
             // name, url
-            holder.setEntryTextOrLink(children.getUrl(), name);
+            holder.setEntryTextOrLink(activity, children.getUrl(), name);
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
@@ -186,14 +188,10 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             int children = getChildrenCount(groupPosition);
 
             if (children > 0) {
-                holder.entryTextView.setText(name);
-                holder.entryTextView.setMovementMethod(null);
+                holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
             } else {
-                holder.setEntryTextOrLink(url, name);
+                holder.setEntryTextOrLink(activity, url, name);
             }
-
-            // The main text is always blue in this module
-            holder.entryTextView.setTextColor(getResources().getColor(R.color.stats_link_text_color));
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
