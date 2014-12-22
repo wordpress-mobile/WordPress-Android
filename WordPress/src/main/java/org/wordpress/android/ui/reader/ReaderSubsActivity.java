@@ -191,7 +191,7 @@ public class ReaderSubsActivity extends ActionBarActivity
 
     private SubsPageAdapter getPageAdapter() {
         if (mPageAdapter == null) {
-            List<Fragment> fragments = new ArrayList<Fragment>();
+            List<Fragment> fragments = new ArrayList<>();
 
             // add tag fragments
             fragments.add(ReaderTagFragment.newInstance(ReaderTagType.FOLLOWED));
@@ -609,16 +609,21 @@ public class ReaderSubsActivity extends ActionBarActivity
             String action = StringUtils.notNullStr(intent.getAction());
             AppLog.d(AppLog.T.READER, "reader subs > received broadcast " + action);
 
-            if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED)) {
-                mTagsChanged = true;
-                getPageAdapter().refreshTagFragments();
-            } else if (action.equals(ReaderUpdateService.ACTION_RECOMMENDED_TAGS_CHANGED)) {
-                getPageAdapter().refreshTagFragments();
-            } else if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED)) {
-                mBlogsChanged = true;
-                getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
-            } else if (action.equals(ReaderUpdateService.ACTION_RECOMMENDED_BLOGS_CHANGED)) {
-                getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
+            switch (action) {
+                case ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED:
+                    mTagsChanged = true;
+                    getPageAdapter().refreshTagFragments();
+                    break;
+                case ReaderUpdateService.ACTION_RECOMMENDED_TAGS_CHANGED:
+                    getPageAdapter().refreshTagFragments();
+                    break;
+                case ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED:
+                    mBlogsChanged = true;
+                    getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+                    break;
+                case ReaderUpdateService.ACTION_RECOMMENDED_BLOGS_CHANGED:
+                    getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
+                    break;
             }
         }
     };
