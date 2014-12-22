@@ -44,8 +44,8 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
-import org.wordpress.android.ui.reader.utils.MessageBarUtils;
-import org.wordpress.android.ui.reader.utils.MessageBarUtils.MessageBarType;
+import org.wordpress.android.ui.reader.views.MessageBarView;
+import org.wordpress.android.ui.reader.views.MessageBarView.MessageBarType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -71,6 +71,7 @@ public class ReaderSubsActivity extends ActionBarActivity
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
     private ViewPager mViewPager;
+    private MessageBarView mMessageBar;
     private SubsPageAdapter mPageAdapter;
 
     private boolean mTagsChanged;
@@ -124,6 +125,8 @@ public class ReaderSubsActivity extends ActionBarActivity
                 addCurrentEntry();
             }
         });
+
+        mMessageBar = (MessageBarView) findViewById(R.id.message_bar_view);
 
         if (savedInstanceState == null) {
             // return to the page the user was on the last time they viewed this activity
@@ -350,8 +353,8 @@ public class ReaderSubsActivity extends ActionBarActivity
 
         if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
             String msgText = getString(R.string.reader_label_added_tag, tagName);
-            MessageBarUtils.showMessageBar(this, msgText, MessageBarType.INFO);
-            getPageAdapter().refreshTagFragments(null, tagName);
+            mMessageBar.show(msgText, MessageBarType.INFO);
+            getPageAdapter().refreshTagFragments();
             onTagAction(tag, TagAction.ADD);
         }
     }
@@ -416,9 +419,8 @@ public class ReaderSubsActivity extends ActionBarActivity
                     // clear the edit text and hide the soft keyboard
                     mEditAdd.setText(null);
                     EditTextUtils.hideSoftInput(mEditAdd);
-                    String msgText = getString(R.string.reader_label_followed_blog);
-                    MessageBarUtils.showMessageBar(ReaderSubsActivity.this, msgText, MessageBarType.INFO);
-                    onFollowBlogChanged();
+                    mMessageBar.show(getString(R.string.reader_label_followed_blog), MessageBarType.INFO);
+                            onFollowBlogChanged();
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 } else {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
@@ -465,35 +467,25 @@ public class ReaderSubsActivity extends ActionBarActivity
     public void onTagAction(ReaderTag tag, TagAction action) {
         mTagsChanged = true;
 
-        final String msgText;
-        final MessageBarType msgType;
-
         switch (action) {
             case ADD:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_READER_TAG);
-                msgText = getString(R.string.reader_label_added_tag, tag.getTagName());
-                msgType = MessageBarType.INFO;
                 mLastAddedTagName = tag.getTagName();
                 // user added from recommended tags, make sure addition is reflected on followed tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.FOLLOWED);
+                mMessageBar.show(getString(R.string.reader_label_added_tag, tag.getTagName()), MessageBarType.INFO);
                 break;
 
             case DELETE:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_UNFOLLOWED_READER_TAG);
-                msgText = getString(R.string.reader_label_removed_tag, tag.getTagName());
-                msgType = MessageBarType.ALERT;
                 if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagName())) {
                     mLastAddedTagName = null;
                 }
                 // user deleted from followed tags, make sure deletion is reflected on recommended tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.RECOMMENDED);
+                mMessageBar.show(getString(R.string.reader_label_removed_tag, tag.getTagName()), MessageBarType.ALERT);
                 break;
-
-            default :
-                return;
         }
-
-        MessageBarUtils.showMessageBar(this, msgText, msgType);
     }
 
     /*
@@ -579,12 +571,9 @@ public class ReaderSubsActivity extends ActionBarActivity
         }
 
         private void refreshTagFragments() {
-            refreshTagFragments(null, null);
+            refreshTagFragments(null);
         }
         private void refreshTagFragments(ReaderTagType tagType) {
-            refreshTagFragments(tagType, null);
-        }
-        private void refreshTagFragments(ReaderTagType tagType, String scrollToTagName) {
             for (Fragment fragment: mFragments) {
                 if (fragment instanceof ReaderTagFragment) {
                     ReaderTagFragment tagFragment = (ReaderTagFragment) fragment;
