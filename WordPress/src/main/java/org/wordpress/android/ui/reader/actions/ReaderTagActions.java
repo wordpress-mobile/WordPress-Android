@@ -44,7 +44,7 @@ public class ReaderTagActions {
         }
 
         final String path;
-        final String tagNameForApi = ReaderUtils.sanitizeTagName(tag.getTagName());
+        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagName());
 
         switch (action) {
             case DELETE:

@@ -1,5 +1,9 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ListView;
 
@@ -32,5 +36,23 @@ public class ListScrollPositionManager {
         if (mSetSelection) {
             mListView.setItemChecked(mSelectedPosition, true);
         }
+    }
+
+    public void saveToPreferences(Context context, String uniqueId) {
+        saveScrollOffset();
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        Editor editor = settings.edit();
+        editor.putInt("scroll-position-manager-index-" + uniqueId, mListViewScrollStateIndex);
+        editor.putInt("scroll-position-manager-offset-" + uniqueId, mListViewScrollStateOffset);
+        editor.putInt("scroll-position-manager-selected-position-" + uniqueId, mSelectedPosition);
+        editor.apply();
+    }
+
+    public void restoreFromPreferences(Context context, String uniqueId) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        mListViewScrollStateIndex = settings.getInt("scroll-position-manager-index-" + uniqueId, 0);
+        mListViewScrollStateOffset = settings.getInt("scroll-position-manager-offset-" + uniqueId, 0);
+        mSelectedPosition = settings.getInt("scroll-position-manager-selected-position-" + uniqueId, 0);
+        restoreScrollOffset();
     }
 }

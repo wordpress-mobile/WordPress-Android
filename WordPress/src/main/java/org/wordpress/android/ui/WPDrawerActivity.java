@@ -48,6 +48,7 @@ import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
@@ -62,7 +63,7 @@ import java.util.Map;
  */
 public abstract class WPDrawerActivity extends ActionBarActivity {
     public static final int NEW_BLOG_CANCELED = 10;
-
+    private static final String SCROLL_POSITION_ID = "WPDrawerActivity";
     /**
      * AuthenticatorRequest code used when no accounts exist, and user is prompted to add an
      * account.
@@ -88,6 +89,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private DrawerAdapter mDrawerAdapter;
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
+    private ListScrollPositionManager mScrollPositionManager;
 
     private static final int OPENED_FROM_DRAWER_DELAY = 250;
 
@@ -97,6 +99,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         if (isStaticMenuDrawer()) {
             setContentView(R.layout.activity_drawer_static);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.color_primary_dark));
+            }
         } else {
             setContentView(R.layout.activity_drawer);
         }
@@ -136,6 +141,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             overridePendingTransition(0, 0);
             finish();
         }
+        mScrollPositionManager.saveToPreferences(this, SCROLL_POSITION_ID);
     }
 
     @Override
@@ -147,6 +153,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             // Sync the toggle state after onRestoreInstanceState has occurred.
             mDrawerToggle.syncState();
         }
+        mScrollPositionManager.restoreFromPreferences(this, SCROLL_POSITION_ID);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -240,7 +247,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             View view = getLayoutInflater().inflate(R.layout.drawer_header, mDrawerListView, false);
             mDrawerListView.addHeaderView(view, null, false);
         }
-
+        mScrollPositionManager = new ListScrollPositionManager(mDrawerListView, false);
         View settingsRow = findViewById(R.id.settings_row);
         settingsRow.setOnClickListener(new View.OnClickListener() {
             @Override
