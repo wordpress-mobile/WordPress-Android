@@ -161,13 +161,16 @@ class StatsBarGraph extends GraphView {
             float right = left + colwidth;
             float bottom = graphheight + border - 1;
 
+            // Draw the orange selection behind the selected bar
+            if (mBarPositionToHighlight == i) {
+                paint.setColor(getResources().getColor(R.color.stats_views_hover_color));
+                paint.setAlpha(50);
+                canvas.drawRect(left, 10f, right, bottom, paint);
+            }
+
             if ((top - bottom) == 1) {
                 // draw a placeholder
-                if (mBarPositionToHighlight == i) {
-                    paint.setColor(getResources().getColor(R.color.stats_views_hover_color));
-                    paint.setAlpha(75);
-                    canvas.drawRect(left + pad, 10f, right - pad, bottom, paint);
-                } else {
+                if (mBarPositionToHighlight != i) {
                     paint.setColor(style.color);
                     paint.setAlpha(25);
                     Shader shader = new LinearGradient(left + pad, bottom - 50, left + pad, bottom, Color.WHITE, Color.BLACK, Shader.TileMode.CLAMP);
@@ -177,6 +180,7 @@ class StatsBarGraph extends GraphView {
                 }
             } else {
                 // draw a real bar
+                paint.setAlpha(255);
                 if (mBarPositionToHighlight == i) {
                     paint.setColor(getResources().getColor(R.color.stats_views_hover_color));
                 } else {

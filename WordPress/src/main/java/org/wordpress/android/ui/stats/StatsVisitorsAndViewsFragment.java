@@ -256,7 +256,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         mCurrentSeriesOnScreen = new GraphViewSeries(views);
         mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
-        mCurrentSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 1);
+        mCurrentSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
 
 
         if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
@@ -412,14 +412,15 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     private int getNumOfPoints() {
-        return 7;
-        /*
-        if (getTimeframe() == StatsTimeframe.DAY) {
-            return 7;
-        } else {
-            return 12;
+        if (!isAdded()) {
+            return 0;
         }
-        */
+
+        if(StatsUIHelper.shouldLoadMoreBars(getActivity())) {
+            return 10;
+        } else {
+            return 7;
+        }
     }
 
     @Override
