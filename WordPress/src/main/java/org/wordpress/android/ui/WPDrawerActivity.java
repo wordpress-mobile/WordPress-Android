@@ -97,7 +97,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         if (isStaticMenuDrawer()) {
             setContentView(R.layout.activity_drawer_static);
-            getWindow().setStatusBarColor(getResources().getColor(R.color.color_primary_dark));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.color_primary_dark));
+            }
         } else {
             setContentView(R.layout.activity_drawer);
         }
