@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="@dimen/message_bar_elevation"
-    android:padding="@dimen/margin_large"
-    tools:background="@color/reader_message_bar_info">
+    android:padding="@dimen/margin_extra_large"
+    tools:background="@color/color_primary_dark">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_message_bar"

@@ -8,8 +8,8 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -81,7 +81,7 @@ public class MessageBarView extends FrameLayout {
                     setVisibility(View.VISIBLE);
                 }
             });
-            anim.setInterpolator(new DecelerateInterpolator());
+            anim.setInterpolator(new AccelerateDecelerateInterpolator());
         } else {
             anim = ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, 0f, displayHeight);
             anim.addListener(new AnimatorListenerAdapter() {
