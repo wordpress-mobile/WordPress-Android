@@ -589,7 +589,7 @@ public class ReaderSubsActivity extends ActionBarActivity
                 if (fragment instanceof ReaderTagFragment) {
                     ReaderTagFragment tagFragment = (ReaderTagFragment) fragment;
                     if (tagType == null || tagType.equals(tagFragment.getTagType())) {
-                        tagFragment.refresh(scrollToTagName);
+                        tagFragment.refresh();
                     }
                 }
             }

@@ -3,12 +3,9 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -17,6 +14,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListener;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPActivityUtils;
 
@@ -24,7 +22,7 @@ import org.wordpress.android.util.WPActivityUtils;
  * fragment hosted by ReaderSubsActivity which shows either followed or popular tags
  */
 public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagActionListener {
-    private ListView mListView;
+    private ReaderRecyclerView mRecyclerView;
     private ReaderTagAdapter mTagAdapter;
     private ReaderTagType mTagType;
     private static final String ARG_TAG_TYPE = "tag_type";
@@ -66,28 +64,34 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
-        mListView = (ListView) view.findViewById(android.R.id.list);
-
-        final TextView emptyView = (TextView)view.findViewById(R.id.text_empty);
-        switch (getTagType()) {
-            case FOLLOWED:
-                emptyView.setText(R.string.reader_empty_followed_tags);
-                break;
-            case RECOMMENDED:
-                emptyView.setText(R.string.reader_empty_popular_tags);
-                break;
-        }
-
-        mListView.setEmptyView(view.findViewById(R.id.text_empty));
-
+        View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
+        mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
         return view;
+    }
+
+    void checkEmptyView() {
+        if (!isAdded()) {
+            return;
+        }
+        boolean isEmpty = hasTagAdapter() && getTagAdapter().isEmpty();
+        TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
+        if (isEmpty) {
+            switch (getTagType()) {
+                case FOLLOWED:
+                    emptyView.setText(R.string.reader_empty_followed_tags);
+                    break;
+                case RECOMMENDED:
+                    emptyView.setText(R.string.reader_empty_popular_tags);
+                    break;
+            }
+        }
+        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mListView.setAdapter(getTagAdapter());
+        mRecyclerView.setAdapter(getTagAdapter());
         getTagAdapter().refresh();
     }
 
@@ -97,30 +101,9 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
         super.onSaveInstanceState(outState);
     }
 
-    private void scrollToTagName(String tagName) {
-        int index = getTagAdapter().indexOfTagName(tagName);
-        if (index > -1) {
-            mListView.smoothScrollToPosition(index);
-        }
-    }
-
     void refresh() {
-        refresh(null);
-    }
-    void refresh(final String scrollToTagName) {
-        if (!hasTagAdapter()) {
-            return;
-        }
-        if (!TextUtils.isEmpty(scrollToTagName)) {
-            ReaderInterfaces.DataLoadedListener dataListener = new ReaderInterfaces.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    scrollToTagName(scrollToTagName);
-                }
-            };
-            getTagAdapter().refresh(dataListener);
-        } else {
-            getTagAdapter().refresh(null);
+        if (hasTagAdapter()) {
+            getTagAdapter().refresh();
         }
     }
 
@@ -131,7 +114,14 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
     private ReaderTagAdapter getTagAdapter() {
         if (mTagAdapter == null) {
             Context context = WPActivityUtils.getThemedContext(getActivity());
-            mTagAdapter = new ReaderTagAdapter(context, getTagType(), this);
+            mTagAdapter = new ReaderTagAdapter(context, getTagType());
+            mTagAdapter.setTagActionListener(this);
+            mTagAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
+                @Override
+                public void onDataLoaded(boolean isEmpty) {
+                    checkEmptyView();
+                }
+            });
         }
         return mTagAdapter;
     }
@@ -146,40 +136,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
      */
     @Override
     public void onTagAction(ReaderTag tag, TagAction action) {
-        final boolean animateRemoval;
-        switch (action) {
-            case ADD:
-                // animate tag's removal if added from recommended tags
-                animateRemoval = (getTagType() == ReaderTagType.RECOMMENDED);
-                break;
-            case DELETE:
-                // animate tag's removal if deleted from followed tags
-                animateRemoval = (getTagType() == ReaderTagType.FOLLOWED);
-                break;
-            default:
-                animateRemoval = false;
-                break;
-        }
-
-        int index = getTagAdapter().indexOfTagName(tag.getTagName());
-        if (animateRemoval && index > -1) {
-            Animation.AnimationListener aniListener = new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) { }
-                @Override
-                public void onAnimationRepeat(Animation animation) { }
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    refresh();
-                }
-            };
-            ReaderAnim.AnimateListItemStyle animStyle =
-                    (action == TagAction.ADD ? ReaderAnim.AnimateListItemStyle.ADD : ReaderAnim.AnimateListItemStyle.REMOVE);
-            ReaderAnim.animateListItem(mListView, index, animStyle, aniListener);
-        } else {
-            refresh();
-        }
-
+        checkEmptyView();
         // let the host activity know about the change
         if (getActivity() instanceof TagActionListener) {
             ((TagActionListener) getActivity()).onTagAction(tag, action);

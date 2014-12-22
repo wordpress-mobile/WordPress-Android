@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
@@ -147,11 +148,17 @@ public class ReaderTag implements Serializable {
              || tagName.equalsIgnoreCase(TAG_NAME_LIKED));
     }
 
+    private String getSanitizedTagName() {
+        return ReaderUtils.sanitizeWithDashes(this.tagName);
+    }
+
     public static boolean isSameTag(ReaderTag tag1, ReaderTag tag2) {
         if (tag1 == null || tag2 == null) {
             return false;
         }
-        return (tag1.getTagName().equalsIgnoreCase(tag2.getTagName())
-             && tag1.tagType.equals(tag2.tagType));
+        if (tag1.tagType != tag2.tagType) {
+            return false;
+        }
+        return (tag1.getSanitizedTagName().equalsIgnoreCase(tag2.getSanitizedTagName()));
     }
 }

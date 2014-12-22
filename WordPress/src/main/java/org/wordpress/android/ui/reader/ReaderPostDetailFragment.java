@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -394,14 +395,34 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * display the standard Android share chooser to share a link to this post
+     * display the standard Android share chooser to share this post
      */
+    private static final int MAX_SHARE_TITLE_LEN = 100;
     private void sharePage() {
-        if (!isAdded() || !hasPost())
+        if (!isAdded() || !hasPost()) {
             return;
+        }
+
+        final String url = (mPost.hasShortUrl() ? mPost.getShortUrl() : mPost.getUrl());
+        final String shareText;
+
+        if (mPost.hasTitle()) {
+            final String title;
+            // we don't know where the user will choose to share, so enforce a max title length
+            // in order to fit a tweet with some extra room for the URL and user edits
+            if (mPost.getTitle().length() > MAX_SHARE_TITLE_LEN) {
+                title = mPost.getTitle().substring(0, MAX_SHARE_TITLE_LEN).trim() + "…";
+            } else {
+                title = mPost.getTitle().trim();
+            }
+            shareText = title + " - " + url;
+        } else {
+            shareText = url;
+        }
+
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, mPost.getUrl());
+        intent.putExtra(Intent.EXTRA_TEXT, shareText);
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.reader_share_subject, getString(R.string.app_name)));
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.reader_share_link)));
@@ -768,6 +789,9 @@ public class ReaderPostDetailFragment extends Fragment
                         reblogPost();
                     }
                 });
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    imgBtnReblog.setBackgroundResource(R.drawable.ripple_oval);
+                }
             } else {
                 imgBtnReblog.setVisibility(View.INVISIBLE);
             }

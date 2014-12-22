@@ -209,9 +209,11 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
                                  .show();
                             AppLog.d(T.THEMES, "Failed to fetch themes: " + response.toString());
                         }
-
+                        if (mThemePagerAdapter != null && mThemePagerAdapter.getItem(page) != null &&
+                                mThemePagerAdapter.getItem(page).isAdded()) {
+                            mThemePagerAdapter.getItem(page).setEmptyViewText(R.string.no_network_title);
+                        }
                         mFetchingThemes = false;
-                        setRefreshing(false, page);
                     }
                 }
         );

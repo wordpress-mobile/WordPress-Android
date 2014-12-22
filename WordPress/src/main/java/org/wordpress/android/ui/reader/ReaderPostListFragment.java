@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.reader;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -18,7 +20,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -264,7 +268,7 @@ public class ReaderPostListFragment extends Fragment {
 
         Context context = container.getContext();
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing);
-        int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing_vertical);
+        int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
 
         // bar that appears at top when new posts are downloaded
@@ -278,26 +282,19 @@ public class ReaderPostListFragment extends Fragment {
             }
         });
 
+        // add the tag/blog header - note that this remains invisible until animated in
+        ViewGroup header = (ViewGroup) rootView.findViewById(R.id.frame_header);
         switch (getPostListType()) {
-            case TAG_FOLLOWED:
-                // this is the default, nothing extra needed
-                break;
-
             case TAG_PREVIEW:
-                // add the tag header to the view, then tell the ptr layout to appear below the header
                 mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_info_view, container, false);
-                rootView.addView(mTagInfoView);
-                ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, mTagInfoView.getId());
-                setHeaderViewElevation(mTagInfoView);
+                header.addView(mTagInfoView);
+                header.setVisibility(View.INVISIBLE);
                 break;
 
             case BLOG_PREVIEW:
-                // inflate the blog info and make it full size
                 mBlogInfoView = new ReaderBlogInfoView(context);
-                rootView.addView(mBlogInfoView);
-                ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, mBlogInfoView.getId());
-                // TODO: elevation doesn't work on the blog info header, not sure why
-                //setHeaderViewElevation(mBlogInfoView);
+                header.addView(mBlogInfoView);
+                header.setVisibility(View.INVISIBLE);
                 break;
         }
 
@@ -314,7 +311,10 @@ public class ReaderPostListFragment extends Fragment {
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
-                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                        if (!isAdded()) {
+                            return;
+                        }
+                        if (!NetworkUtils.checkConnection(getActivity())) {
                             showSwipeToRefreshProgress(false);
                             return;
                         }
@@ -336,18 +336,6 @@ public class ReaderPostListFragment extends Fragment {
         return rootView;
     }
 
-    /*
-     * for info headers, use elevation rather than a divider on SDK 21+
-     */
-    @SuppressLint("NewApi")
-    private void setHeaderViewElevation(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            float elevation = view.getContext().getResources().getDimension(R.dimen.card_elevation);
-            view.setElevation(elevation);
-            view.findViewById(R.id.divider_info_header).setVisibility(View.GONE);
-        }
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -358,6 +346,34 @@ public class ReaderPostListFragment extends Fragment {
         if (activity instanceof ReaderInterfaces.OnTagSelectedListener) {
             mOnTagSelectedListener = (ReaderInterfaces.OnTagSelectedListener) activity;
         }
+    }
+
+    /*
+     * animate in the blog/tag info header after a brief delay
+     */
+    @SuppressLint("NewApi")
+    private void animateHeader() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded()) {
+                    ViewGroup header = (ViewGroup) getView().findViewById(R.id.frame_header);
+                    header.setVisibility(View.VISIBLE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Animator animator = ViewAnimationUtils.createCircularReveal(
+                                header,
+                                header.getWidth() / 2,
+                                0,
+                                0,
+                                (float) Math.hypot(header.getWidth(), header.getHeight()));
+                        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animator.start();
+                    } else {
+                        AniUtils.startAnimation(header, R.anim.reader_top_bar_in);
+                    }
+                }
+            }
+        }, 250);
     }
 
     @Override
@@ -384,9 +400,11 @@ public class ReaderPostListFragment extends Fragment {
         switch (getPostListType()) {
             case BLOG_PREVIEW:
                 loadBlogInfo();
+                animateHeader();
                 break;
             case TAG_PREVIEW:
                 updateTagPreviewHeader();
+                animateHeader();
                 break;
         }
 
@@ -798,7 +816,7 @@ public class ReaderPostListFragment extends Fragment {
         }
 
         final TextView txtTagName = (TextView) mTagInfoView.findViewById(R.id.text_tag_name);
-        String color = HtmlUtils.colorResToHtmlColor(getActivity(), R.color.grey_extra_dark);
+        String color = HtmlUtils.colorResToHtmlColor(getActivity(), R.color.white);
         String htmlTag = "<font color=" + color + ">" + getCurrentTagName() + "</font>";
         String htmlLabel = getString(R.string.reader_label_tag_preview, htmlTag);
         txtTagName.setText(Html.fromHtml(htmlLabel));
@@ -933,7 +951,6 @@ public class ReaderPostListFragment extends Fragment {
                         && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
                         && updateAction == RequestDataAction.LOAD_NEWER
                         && !isListScrolledToTop();
-
                 if (showNewPostsBar) {
                     showNewPostsBar();
                 } else if (result.isNewOrChanged()) {

@@ -28,16 +28,7 @@ public class ReaderUtils {
         if (txtFollow == null || txtFollow.isSelected() == isFollowed) {
             return;
         }
-
-        if (isFollowed) {
-            txtFollow.setText(txtFollow.getContext().getString(R.string.reader_btn_unfollow));
-        } else {
-            txtFollow.setText(txtFollow.getContext().getString(R.string.reader_btn_follow));
-        }
-
-        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
-        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
-
+        txtFollow.setText(txtFollow.getContext().getString(isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow));
         txtFollow.setSelected(isFollowed);
     }
 
@@ -153,27 +144,18 @@ public class ReaderUtils {
     }
 
     /*
-     * returns the passed tagName formatted for use with our API
-     * see sanitize_title_with_dashes in http://core.trac.wordpress.org/browser/tags/3.6/wp-includes/formatting.php#L0
+     * returns the passed string formatted for use with our API - see sanitize_title_with_dashes
+     * https://github.com/WordPress/WordPress/blob/master/wp-includes/formatting.php#L1258
      */
-    public static String sanitizeTagName(final String tagName) {
-        if (tagName == null) {
+    public static String sanitizeWithDashes(final String title) {
+        if (title == null) {
             return "";
         }
-
-        // remove ampersands and number signs, replace spaces & periods with dashes
-        String sanitized = tagName.trim()
-                .replace("&", "")
-                .replace("#", "")
-                .replace(" ", "-")
-                .replace(".", "-");
-
-        // replace double dashes with single dash (may have been added above)
-        while (sanitized.contains("--")) {
-            sanitized = sanitized.replace("--", "-");
-        }
-
-        return sanitized.trim();
+        return title.trim()
+                .replaceAll("&[^\\s]*;", "")        // remove html entities
+                .replaceAll("[\\.\\s]+", "-")       // replace periods and whitespace with a dash
+                .replaceAll("[^A-Za-z0-9\\-]", "")  // remove remaining non-alphanum/non-dash chars
+                .replaceAll("--", "-");             // reduce double dashes potentially added above
     }
 
     /*

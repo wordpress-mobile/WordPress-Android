@@ -139,6 +139,8 @@
     <string name="themes_live_preview">Live preview</string>
     <string name="themes_details_label">Details</string>
     <string name="themes_features_label">Features</string>
+    <string name="themes_fetching">Fetching themes…</string>
+
     <string name="theme_activate_button">Activate</string>
     <string name="theme_activating_button">Activating</string>
     <string name="theme_fetch_failed">Failed to fetch themes</string>
