@@ -64,8 +64,7 @@ import java.util.Map;
  */
 public abstract class WPDrawerActivity extends ActionBarActivity {
     public static final int NEW_BLOG_CANCELED = 10;
-    public static final String SCROLL_POSITION_ID = "WPDrawerActivity";
-
+    private static final String SCROLL_POSITION_ID = "WPDrawerActivity";
     /**
      * AuthenticatorRequest code used when no accounts exist, and user is prompted to add an
      * account.
@@ -153,10 +152,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             mDrawerToggle.syncState();
         }
         mScrollPositionManager.restoreFromPreferences(this, SCROLL_POSITION_ID);
-    }
-
-    @Override public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
