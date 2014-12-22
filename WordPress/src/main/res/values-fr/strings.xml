@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">Détails</string>
+	<string name="close_drawer">Fermer le menu</string>
+	<string name="open_drawer">Ouvrir le menu</string>
 	<string name="delete_sure_post">Supprimer cet article</string>
 	<string name="delete_sure">Supprimer ce brouillon</string>
 	<string name="delete_sure_page">Supprimer cette page</string>
@@ -115,9 +118,6 @@
 	<string name="stats_empty_search_engine_terms_title">Aucun mot clé de recherche.</string>
 	<string name="stats_empty_search_engine_terms_desc">Ce sont les mots clés utilisés par les internautes pour trouver votre site sur les moteurs de recherche.</string>
 	<string name="need_help_signin_wpcom">Besoin d\'aide ?</string>
-	<string name="ssl_certificate_trust">Faire confiance</string>
-	<string name="ssl_certificate_details">Détails du certificat</string>
-	<string name="ssl_certificate_do_not_trust">Ne pas faire confiance</string>
 	<string name="ptr_tip_message">Tip: Tirer vers le bas pour rafraichir</string>
 	<string name="media_empty_list">Pas de media</string>
 	<string name="saving">Sauvegarde...</string>
@@ -287,7 +287,6 @@
 	<string name="post_format">Format d\'article</string>
 	<string name="new_media">Nouveau média</string>
 	<string name="quick_photo">Photo rapide</string>
-	<string name="quick_video">Vidéo rapide</string>
 	<string name="view_site">Voir le site</string>
 	<string name="view_admin">Voir l\'administration</string>
 	<string name="privacy_policy">Vie privée</string>

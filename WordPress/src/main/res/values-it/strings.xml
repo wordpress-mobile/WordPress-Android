@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">Dettagli</string>
+	<string name="open_drawer">Apri menu di navigazione</string>
+	<string name="close_drawer">Chiudi menu di navigazione</string>
+	<string name="delete_sure_post">Cancella questo articolo</string>
+	<string name="delete_sure">Cancella questa bozza</string>
+	<string name="delete_sure_page">Cancella questa pagina</string>
+	<string name="confirm_delete_multi_media">Cancellare gli elementi selezionati?</string>
+	<string name="confirm_delete_media">Cancellare l\'elemento selezionato?</string>
+	<string name="cab_selected">%d selezionati</string>
+	<string name="media_gallery_date_range">Visualizzazione elementi media da %1$s a %2$s</string>
+	<string name="sure_to_remove_account">Rimuovere questo blog?</string>
+	<string name="sign_out_confirm">Scollegarsi?</string>
 	<string name="faq_button">FAQ</string>
 	<string name="reader_empty_comments">Ancora nessun commento</string>
 	<string name="reader_likes_multi_short">%,d persone</string>
@@ -111,9 +123,6 @@
 	<string name="need_help_signin_wpcom">Hai bisogno di aiuto?</string>
 	<string name="wpcom_signin_dialog_title">Accesso a WordPress.com</string>
 	<string name="jetpack_stats_switch_user">L\'attuale account WordPress.com (%s) non consente di accedere alle statistiche per questo blog. Desideri accedere con un altro account?</string>
-	<string name="ssl_certificate_trust">Affidabile</string>
-	<string name="ssl_certificate_details">Dettagli del certificato</string>
-	<string name="ssl_certificate_do_not_trust">Non affidabile</string>
 	<string name="ptr_tip_message">Suggerimento: scorri il dito verso il basso per aggiornare</string>
 	<string name="reader_label_reblog_empty">Non sono presenti blog WordPress.com visibili sui quali ripubblicare questo articolo</string>
 	<string name="loading_posts">Caricamento degli articoli in corso...</string>
@@ -298,7 +307,6 @@
 	<string name="new_page">Nuova pagina</string>
 	<string name="new_media">Nuovo supporto</string>
 	<string name="quick_photo">Foto rapida</string>
-	<string name="quick_video">Video rapido</string>
 	<string name="view_site">Visualizza sito</string>
 	<string name="view_admin">Visualizza amministrazione</string>
 	<string name="privacy_policy">Informativa sulla privacy</string>
