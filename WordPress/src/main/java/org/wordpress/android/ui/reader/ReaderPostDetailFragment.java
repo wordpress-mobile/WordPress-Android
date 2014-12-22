@@ -410,7 +410,7 @@ public class ReaderPostDetailFragment extends Fragment
             // we don't know where the user will choose to share, so enforce a max title length
             // in order to fit a tweet with some extra room for the URL and user edits
             if (mPost.getTitle().length() > MAX_SHARE_TITLE_LEN) {
-                title = mPost.getTitle().substring(0, MAX_SHARE_TITLE_LEN).trim() + "...";
+                title = mPost.getTitle().substring(0, MAX_SHARE_TITLE_LEN).trim() + "…";
             } else {
                 title = mPost.getTitle().trim();
             }
