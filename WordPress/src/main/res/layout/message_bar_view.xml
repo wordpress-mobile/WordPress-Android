@@ -12,7 +12,7 @@
         android:id="@+id/text_message_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_large"
         tools:text="Message Bar" />

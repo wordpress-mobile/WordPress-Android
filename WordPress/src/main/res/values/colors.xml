@@ -96,8 +96,6 @@
     <!-- native reader colors -->
     <color name="reader_divider_grey">@color/grey_extra_light</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
-    <color name="reader_message_bar_info">@color/color_primary_dark</color>
-    <color name="reader_message_bar_alert">@color/color_accent</color>
 
     <!-- comment status colors -->
     <color name="comment_status_unapproved">@color/orange_medium</color>

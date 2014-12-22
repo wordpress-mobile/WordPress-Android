@@ -1,16 +1,20 @@
 package org.wordpress.android.ui.reader.views;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.DisplayUtils;
 
 public class MessageBarView extends FrameLayout {
 
@@ -42,13 +46,11 @@ public class MessageBarView extends FrameLayout {
 
         int colorResId =
                 (messageType == MessageBarType.ALERT ?
-                        R.color.reader_message_bar_alert : R.color.reader_message_bar_info);
+                        R.color.color_accent : R.color.color_primary_dark);
         setBackgroundColor(getContext().getResources().getColor(colorResId));
 
         if (getVisibility() != View.VISIBLE) {
-            clearAnimation();
-            AniUtils.startAnimation(this, R.anim.reader_message_bar_in);
-            setVisibility(View.VISIBLE);
+            animate(true);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -59,20 +61,38 @@ public class MessageBarView extends FrameLayout {
     }
 
     private void hide() {
-        if (getVisibility() != View.VISIBLE) {
-            return;
+        if (getVisibility() == View.VISIBLE) {
+            animate(false);
         }
-        Animation.AnimationListener listener = new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) { }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                setVisibility(View.GONE);
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) { }
-        };
+    }
+
+    private void animate(boolean animateIn) {
         clearAnimation();
-        AniUtils.startAnimation(this, R.anim.reader_message_bar_out, listener);
+
+        int duration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
+        int displayHeight = DisplayUtils.getDisplayPixelHeight(getContext());
+
+        ObjectAnimator anim;
+        if (animateIn) {
+            anim = ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, displayHeight, 0f);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    setVisibility(View.VISIBLE);
+                }
+            });
+            anim.setInterpolator(new DecelerateInterpolator());
+        } else {
+            anim = ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, 0f, displayHeight);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    setVisibility(View.GONE);
+                }
+            });
+            anim.setInterpolator(new AccelerateInterpolator());
+        }
+        anim.setDuration(duration);
+        anim.start();
     }
 }
