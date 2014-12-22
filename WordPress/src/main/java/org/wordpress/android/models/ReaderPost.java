@@ -37,6 +37,7 @@ public class ReaderPost {
     private String published;
 
     private String url;
+    private String shortUrl;
     private String featuredImage;
     private String featuredVideo;
 
@@ -79,6 +80,7 @@ public class ReaderPost {
         post.text = JSONUtil.getString(json, "content");
         post.title = JSONUtil.getStringDecoded(json, "title");
         post.url = JSONUtil.getString(json, "URL");
+        post.shortUrl = JSONUtil.getString(json, "short_URL");
         post.setBlogUrl(JSONUtil.getString(json, "site_URL"));
 
         post.numReplies = json.optInt("comment_count");
@@ -309,6 +311,16 @@ public class ReaderPost {
     }
     public void setUrl(String url) {
         this.url = StringUtils.notNullStr(url);
+    }
+
+    public String getShortUrl() {
+        return StringUtils.notNullStr(shortUrl);
+    }
+    public void setShortUrl(String url) {
+        this.shortUrl = StringUtils.notNullStr(url);
+    }
+    public boolean hasShortUrl() {
+        return !TextUtils.isEmpty(shortUrl);
     }
 
     public String getFeaturedImage() {
