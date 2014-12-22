@@ -44,8 +44,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
 
-    private final int mBgColorNormal;
-    private final int mBgColorHighlight;
     private final int mLinkColor;
     private final int mNoLinkColor;
 
@@ -118,9 +116,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
         mIndentPerLevel = (context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level) / 2);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
 
-        mBgColorNormal = context.getResources().getColor(R.color.white);
-        mBgColorHighlight = context.getResources().getColor(R.color.grey_extra_light);
-
         mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
         mNoLinkColor = context.getResources().getColor(R.color.grey_medium);
 
@@ -163,7 +158,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
 
     @Override
     public CommentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_comment, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_listitem_comment, parent, false);
         return new CommentHolder(view);
     }
 
@@ -203,16 +198,13 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
             holder.spacerIndent.setVisibility(View.GONE);
         }
 
-        if (mHighlightCommentId == comment.commentId) {
+        if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {
             // different background for highlighted comment, with optional progress bar
-            holder.container.setBackgroundColor(mBgColorHighlight);
+            holder.container.setSelected(true);
             holder.progress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
-        } else if (comment.authorId == mPost.authorId) {
-            // different background color for comments from the post's author
-            holder.container.setBackgroundColor(mBgColorHighlight);
-            holder.progress.setVisibility(View.GONE);
         } else {
-            holder.container.setBackgroundColor(mBgColorNormal);
+            // different background for comments from the post's author
+            holder.container.setSelected(comment.authorId == mPost.authorId);
             holder.progress.setVisibility(View.GONE);
         }
 
