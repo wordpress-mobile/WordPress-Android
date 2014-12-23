@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="delete_sure_post">Bejegyzés törlése</string>
+	<string name="delete_sure">Vázlat törlése</string>
+	<string name="delete_sure_page">Oldal törlése</string>
+	<string name="confirm_delete_multi_media">Kiválasztott sablon törlése?</string>
+	<string name="confirm_delete_media">Kiválasztott tétel törlése?</string>
+	<string name="cab_selected">%d kiválasztva</string>
+	<string name="sign_out_confirm">Kijelentkezés?</string>
+	<string name="reader_empty_followed_blogs_title">Még egy honlap sincs követve</string>
+	<string name="reader_empty_posts_liked">Még egy bejegyzés sincs tetszettként jelölve</string>
+	<string name="faq_button">GYIK</string>
+	<string name="browse_our_faq_button">GYIK tallózása</string>
+	<string name="create_new_blog_wpcom">WordPress.com honlap létrehozása</string>
+	<string name="new_blog_wpcom_created">WordPress.com honlap létrehozva!</string>
+	<string name="reader_empty_comments">Vélemény?</string>
+	<string name="reader_likes_multi_short">%,d ember</string>
+	<string name="reader_empty_posts_in_tag">Ezzel a címkével nincs bejegyzés jelölve</string>
+	<string name="reader_label_comment_count_multi">%,d hozzászólás</string>
+	<string name="error_refresh_unauthorized_posts">A bejegyzés megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
+	<string name="error_refresh_unauthorized_pages">Az oldalak megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
+	<string name="error_refresh_unauthorized_comments">A hozzászólások megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
+	<string name="older_month">Egy hónapnál régebbi</string>
+	<string name="more">Bövebben</string>
+	<string name="older_two_days">2 napnál régebbi</string>
+	<string name="older_last_week">Egy hétnél régebbi</string>
+	<string name="pages_empty_list">Még nincs egy oldal sem. Létrehozzunk egyet?</string>
+	<string name="media_empty_list_custom_date">Ebben az időintervallumban nincs média</string>
 	<string name="reader_menu_block_blog">Blog tiltása</string>
 	<string name="reader_toast_err_generic">A művelet végrehajtása nem sikerült</string>
 	<string name="reader_toast_err_block_blog">Nem sikerült a blog letiltása</string>
@@ -18,6 +44,7 @@
 	<string name="search_location">Keresés</string>
 	<string name="search_current_location">Hely meghatározás</string>
 	<string name="preference_send_usage_stats">Statisztika küldés</string>
+	<string name="preference_privacy">Adatvédelem</string>
 	<string name="reader_title_reblog">Post újrablogolása</string>
 	<string name="reader_label_reblog_to">Post újrablogolása ide</string>
 	<string name="update_verb">Frissítést</string>
@@ -47,11 +74,8 @@
 	<string name="stats_empty_search_engine_terms_title">Nincsenek keresési kifejezések</string>
 	<string name="saving">Mentés...</string>
 	<string name="wpcom_signin_dialog_title">WordPress.com bejelentkezés</string>
-	<string name="ssl_certificate_details">Hitelesítés részletei</string>
 	<string name="media_empty_list">Nincs média</string>
 	<string name="need_help_signin_wpcom">Segítségre van szükség?</string>
-	<string name="ssl_certificate_do_not_trust">Nem megbízható</string>
-	<string name="ssl_certificate_trust">Megbízható</string>
 	<string name="ptr_tip_message">Tipp: A frissítéshez húzzuk le</string>
 	<string name="loading_posts">Bejegyzések betöltése...</string>
 	<string name="loading_pages">Oldalak betöltése...</string>
@@ -87,6 +111,7 @@
 	<string name="mnu_comment_spam">Spam</string>
 	<string name="author_name">Szerző neve</string>
 	<string name="delete_draft">Vázlat törlése</string>
+	<string name="category_parent">Kategória szülő (opcionális)</string>
 	<string name="wordpress_blog">WordPress blog</string>
 	<string name="media_gallery_settings_title">Galléria beálitások</string>
 	<string name="new_page">Új oldal</string>
@@ -108,9 +133,17 @@
 	<string name="upload_failed">Sikertelen feltöltés</string>
 	<string name="edit_comment">Hozzászólás szerkesztése</string>
 	<string name="stats_entry_video_plays">Videó neve</string>
+	<string name="dlg_trashing_comments">Lomtárba küldés</string>
+	<string name="hide_all">Összes elrejtése</string>
+	<string name="pending_review">Áttekintésre várakozik</string>
+	<string name="always_use_these_settings_to_share">Mindig ezeket a beálitásokat használja</string>
+	<string name="view_stats_activity">Statisztika</string>
+	<string name="download">Média letöltés folyamatban</string>
+	<string name="media_add_new_media_gallery">Galéria létrehozása</string>
 	<string name="reader_menu_tags">Címkék</string>
 	<string name="reader_btn_follow">Követés</string>
 	<string name="empty_list_default">Ez a lista üres</string>
+	<string name="reader_hint_comment_on_comment">Válasz hozzászóláshoz</string>
 	<string name="themes">Sablonok</string>
 	<string name="all">Összes</string>
 	<string name="stats_comments_summary_header_recent">LEGUTÓBBI</string>

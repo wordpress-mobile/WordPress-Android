@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">상세</string>
+	<string name="close_drawer">메뉴 드로어 닫기</string>
+	<string name="open_drawer">메뉴 드로어 열기</string>
+	<string name="delete_sure_post">이 글을 삭제하기</string>
+	<string name="delete_sure">이 임시 글을 삭제하기</string>
+	<string name="delete_sure_page">이 페이지를 삭제하기</string>
+	<string name="sign_out_confirm">로그아웃?</string>
+	<string name="media_gallery_date_range">미디어는 %1$s 부터 %2$s 까지 표시하고 있습니다</string>
+	<string name="confirm_delete_multi_media">선택된 아이템을 삭제될까요?</string>
+	<string name="sure_to_remove_account">이 블로그를 영구적으로 삭제될까요?</string>
+	<string name="confirm_delete_media">선택된 아이템을 삭제될까요?</string>
+	<string name="cab_selected">%d개 선택함</string>
 	<string name="reader_empty_followed_blogs_title">아직 팔로우하는 블로그가 없습니다.</string>
 	<string name="reader_empty_posts_liked">좋아하는 게시물이 없군요.</string>
 	<string name="faq_button">FAQ</string>
@@ -106,14 +118,11 @@
 	<string name="stats_empty_search_engine_terms_title">검색어가 없습니다.</string>
 	<string name="stats_empty_search_engine_terms_desc">검색어는 사용자가 회원님을 검색할 때 사용하는 단어 또는 구입니다.</string>
 	<string name="saving">저장중...</string>
-	<string name="ssl_certificate_details">인증서 정보</string>
 	<string name="load_settings">설정으로 이동해서 사용자 이름과 비밀번호를 변경할 수 있습니다.</string>
 	<string name="media_empty_list">미디어가 없습니다.</string>
 	<string name="need_help_signin_wpcom">도움이 필요하세요?</string>
 	<string name="wpcom_signin_dialog_title">WordPress.com 로그인</string>
 	<string name="jetpack_stats_switch_user">현재 WordPress.com 계정(%s)으로는 이 블로그에 대한 통계를 확인할 수 없습니다. 다른 계정에 로그인하시겠어요?</string>
-	<string name="ssl_certificate_trust">신뢰함</string>
-	<string name="ssl_certificate_do_not_trust">신뢰 안 함</string>
 	<string name="ptr_tip_message">팁: 당겨서 새로 고침</string>
 	<string name="help">도우미</string>
 	<string name="forgot_password">패스워드를 잊으셨나요?</string>
@@ -273,7 +282,6 @@
 	<string name="privacy_policy">개인 정보 보호 정책</string>
 	<string name="local_draft">로컬 초안</string>
 	<string name="quick_photo">빠른 사진</string>
-	<string name="quick_video">빠른 비디오</string>
 	<string name="upload_failed">업로드에 실패했습니다.</string>
 	<string name="view_in_browser">브라우저에서 표시</string>
 	<string name="post_not_published">이 게시물은 아직 공개되지 않았습니다</string>

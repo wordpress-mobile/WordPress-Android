@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">Detalhes</string>
+	<string name="close_drawer">Fechar menu</string>
+	<string name="open_drawer">Abrir menu</string>
+	<string name="delete_sure_post">Excluir este post</string>
+	<string name="delete_sure">Excluir este rascunho</string>
+	<string name="delete_sure_page">Excluir esta página</string>
+	<string name="confirm_delete_multi_media">Excluir itens selecionados?</string>
+	<string name="confirm_delete_media">Excluir item selecionado?</string>
+	<string name="cab_selected">%d selecionados</string>
+	<string name="media_gallery_date_range">Exibindo mídias de %1$s a %2$s</string>
+	<string name="sure_to_remove_account">Excluir este blog?</string>
+	<string name="sign_out_confirm">Sair?</string>
 	<string name="reader_empty_followed_blogs_title">Você ainda não está seguindo um blog</string>
 	<string name="faq_button">Perguntas frequentes</string>
 	<string name="agree_terms_of_service">Ao criar sua conta, você está concordando com os nossos %1$sTermos de Serviço%2$s</string>
@@ -107,9 +119,6 @@
 	<string name="stats_empty_search_engine_terms_desc">Termos de pesquisa são palavras ou frases usadas pelos usuários para encontrar seu site em uma pesquisa.</string>
 	<string name="saving">Salvando...</string>
 	<string name="need_help_signin_wpcom">Precisa de ajuda?</string>
-	<string name="ssl_certificate_trust">Confiar</string>
-	<string name="ssl_certificate_details">Detalhes do certificado</string>
-	<string name="ssl_certificate_do_not_trust">Não confiar</string>
 	<string name="load_settings">É possível alterar o nome de usuário e a senha em configurações.</string>
 	<string name="media_empty_list">Nenhuma mídia</string>
 	<string name="wpcom_signin_dialog_title">Entrar em WordPress.com</string>
@@ -256,7 +265,6 @@
 	<string name="new_page">Nova página</string>
 	<string name="new_media">Nova mídia</string>
 	<string name="quick_photo">Foto rápida</string>
-	<string name="quick_video">Vídeo rápido</string>
 	<string name="privacy_policy">Política de privacidade</string>
 	<string name="image_settings">Configurações de imagem</string>
 	<string name="add_account_blog_url">Endereço do blog</string>
