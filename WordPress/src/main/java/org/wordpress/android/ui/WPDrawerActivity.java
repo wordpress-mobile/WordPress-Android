@@ -2,6 +2,7 @@
 package org.wordpress.android.ui;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -94,6 +95,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private static final int OPENED_FROM_DRAWER_DELAY = 250;
 
     @Override
+    @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
