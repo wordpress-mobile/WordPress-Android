@@ -1,12 +1,8 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.text.Html;
-import android.text.Spannable;
 import android.text.TextUtils;
-import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,14 +43,14 @@ public class StatsViewHolder {
     /*
      * used by stats fragments to set the entry text, making it a clickable link if a url is passed
      */
-    public void setEntryTextOrLink(final Activity ctx, final String linkURL, String linkName) {
+    public void setEntryTextOrLink(final String linkURL, String linkName) {
         if (entryTextView == null) {
             return;
         }
 
         entryTextView.setText(linkName);
         if (TextUtils.isEmpty(linkURL)) {
-            entryTextView.setTextColor(ctx.getResources().getColor(R.color.stats_text_color));
+            entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_text_color));
             rowContent.setClickable(false);
             return;
         }
@@ -79,7 +75,7 @@ public class StatsViewHolder {
                             }
                             AppLog.d(AppLog.T.UTILS, "Opening the Authenticated in-app browser : " + url);
                             // Let's try the global wpcom credentials
-                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(view.getContext());
                             String statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
                             String statsAuthenticatedPassword = WordPressDB.decryptPassword(
                                     settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
@@ -89,19 +85,19 @@ public class StatsViewHolder {
                                 // Still empty. Do not eat the event, but let's open the default Web Browser.
 
                             }
-                            WPWebViewActivity.openUrlByUsingWPCOMCredentials(ctx,
+                            WPWebViewActivity.openUrlByUsingWPCOMCredentials(view.getContext(),
                                     url, statsAuthenticatedUser, statsAuthenticatedPassword);
 
                         } else if (url.startsWith("https") || url.startsWith("http")) {
                             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
-                            WPWebViewActivity.openURL(ctx, url);
+                            WPWebViewActivity.openURL(view.getContext(), url);
                         }
 
                     }
                 }
         );
 
-        entryTextView.setTextColor(ctx.getResources().getColor(R.color.stats_link_text_color));
+        entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_link_text_color));
     }
 
     public void setEntryText(String text) {
@@ -117,7 +113,7 @@ public class StatsViewHolder {
     /*
      * used by stats fragments to set the entry text, opening it with reader if possible
      */
-    public void setEntryTextOpenInreader(final Activity ctx, SingleItemModel currentItem) {
+    public void setEntryTextOpenInReader(SingleItemModel currentItem) {
         if (entryTextView == null) {
             return;
         }
@@ -135,19 +131,19 @@ public class StatsViewHolder {
                         // otherwise 404 is returned if we try to show the post in the reader
                         if (itemID == 0) {
                             ReaderActivityLauncher.showReaderBlogPreview(
-                                    ctx,
+                                    view.getContext(),
                                     blogID,
                                     url
                             );
                         } else {
                             ReaderActivityLauncher.showReaderPostDetail(
-                                    ctx,
+                                    view.getContext(),
                                     blogID,
                                     itemID
                             );
                         }
                     }
                 });
-        entryTextView.setTextColor(ctx.getResources().getColor(R.color.stats_link_text_color));
+        entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_link_text_color));
     }
 }

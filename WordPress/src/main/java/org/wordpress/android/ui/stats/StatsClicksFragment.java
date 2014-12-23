@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,13 +79,11 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public LayoutInflater inflater;
-        public Activity activity;
         private List<ClickGroupModel> clickGroups;
 
-        public MyExpandableListAdapter(Activity act, List<ClickGroupModel> clickGroups) {
-            this.activity = act;
+        public MyExpandableListAdapter(Context context, List<ClickGroupModel> clickGroups) {
             this.clickGroups = clickGroups;
-            this.inflater = act.getLayoutInflater();
+            this.inflater = LayoutInflater.from(context);
         }
 
         @Override
@@ -115,7 +114,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
             // name, url
-            holder.setEntryTextOrLink(activity, children.getUrl(), children.getTitle());
+            holder.setEntryTextOrLink(children.getUrl(), children.getTitle());
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(
@@ -177,7 +176,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             if (children > 0) {
                 holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
             } else {
-                holder.setEntryTextOrLink(activity, url, name);
+                holder.setEntryTextOrLink(url, name);
             }
 
             // totals

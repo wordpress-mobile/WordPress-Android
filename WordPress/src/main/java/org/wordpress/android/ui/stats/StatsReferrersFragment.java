@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,12 +90,10 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
         private final List<ReferrerGroupModel> groups;
-        public final Activity activity;
 
-        public MyExpandableListAdapter(Activity act, List<ReferrerGroupModel> groups) {
+        public MyExpandableListAdapter(Context context, List<ReferrerGroupModel> groups) {
             this.groups = groups;
-            this.inflater = act.getLayoutInflater();
-            this.activity = act;
+            this.inflater = LayoutInflater.from(context);
         }
 
         @Override
@@ -130,7 +128,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             String icon = children.getIcon();
 
             // name, url
-            holder.setEntryTextOrLink(activity, children.getUrl(), name);
+            holder.setEntryTextOrLink(children.getUrl(), name);
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
@@ -190,7 +188,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             if (children > 0) {
                 holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
             } else {
-                holder.setEntryTextOrLink(activity, url, name);
+                holder.setEntryTextOrLink(url, name);
             }
 
             // totals

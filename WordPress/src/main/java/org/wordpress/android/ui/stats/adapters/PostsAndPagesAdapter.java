@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.adapters;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +16,11 @@ import java.util.List;
 public class PostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
 
     private List<SingleItemModel> list;
-    private final Activity context;
     private final LayoutInflater inflater;
     private final int localTableBlogID;
 
-    public PostsAndPagesAdapter(Activity context, int localTableBlogID, List<SingleItemModel> list) {
+    public PostsAndPagesAdapter(Context context, int localTableBlogID, List<SingleItemModel> list) {
         super(context, R.layout.stats_list_cell, list);
-        this.context = context;
         this.list = list;
         this.localTableBlogID = localTableBlogID;
         inflater = LayoutInflater.from(context);
@@ -43,7 +41,7 @@ public class PostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
         StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
         // Entry
-        holder.setEntryTextOpenInreader(context, currentRowData);
+        holder.setEntryTextOpenInReader(currentRowData);
 
         holder.imgMore.setVisibility(View.GONE);
 

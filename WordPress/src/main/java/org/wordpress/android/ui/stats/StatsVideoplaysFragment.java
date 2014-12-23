@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,14 +64,12 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     private class TopPostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
 
         private final List<SingleItemModel> list;
-        private final Activity activity;
         private final LayoutInflater inflater;
 
-        public TopPostsAndPagesAdapter(Activity activity, List<SingleItemModel> list) {
-            super(activity, R.layout.stats_list_cell, list);
-            this.activity = activity;
+        public TopPostsAndPagesAdapter(Context context, List<SingleItemModel> list) {
+            super(context, R.layout.stats_list_cell, list);
             this.list = list;
-            inflater = LayoutInflater.from(activity);
+            inflater = LayoutInflater.from(context);
         }
 
         @Override
@@ -89,7 +87,7 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
             StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
             // fill data
             // entries
-            holder.setEntryTextOrLink(activity, currentRowData.getUrl(), currentRowData.getTitle());
+            holder.setEntryTextOrLink(currentRowData.getUrl(), currentRowData.getTitle());
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));

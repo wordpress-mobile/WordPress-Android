@@ -26,29 +26,31 @@ public class ReaderActivityLauncher {
      * show a single reader post in the detail view - simply calls showReaderPostPager
      * with a single post
      */
-    public static void showReaderPostDetail(Activity activity, long blogId, long postId) {
-        Intent intent = new Intent(activity, ReaderPostPagerActivity.class);
+    public static void showReaderPostDetail(Context context, long blogId, long postId) {
+        Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+        intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
 
-        // For ActionBarActivity subclasses, we need to pull the title from the Toolbar
-        CharSequence title;
-        if (activity instanceof ActionBarActivity && ((ActionBarActivity) activity).getSupportActionBar() != null) {
-            title = ((ActionBarActivity) activity).getSupportActionBar().getTitle();
-        } else {
-            title = activity.getTitle();
+        if (context instanceof Activity) {
+            // For ActionBarActivity subclasses, we need to pull the title from the Toolbar
+            CharSequence title;
+            if (context instanceof ActionBarActivity && ((ActionBarActivity) context).getSupportActionBar() != null) {
+                title = ((ActionBarActivity) context).getSupportActionBar().getTitle();
+            } else {
+                title = ((Activity)context).getTitle();
+            }
+            intent.putExtra(ReaderConstants.ARG_TITLE, title);
         }
 
-        intent.putExtra(ReaderConstants.ARG_TITLE, title);
-        intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
-        showReaderPostPager(activity, intent);
+        showReaderPostPager(context, intent);
     }
 
     /*
      * show pager view of posts with a specific tag - passed blogId/postId is the post
      * to select after the pager is populated
      */
-    public static void showReaderPostPagerForTag(Activity activity,
+    public static void showReaderPostPagerForTag(Context context,
                                                  ReaderTag tag,
                                                  ReaderPostListType postListType,
                                                  long blogId,
@@ -57,37 +59,41 @@ public class ReaderActivityLauncher {
             return;
         }
 
-        Intent intent = new Intent(activity, ReaderPostPagerActivity.class);
+        Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_TITLE, tag.getTagName());
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
-        showReaderPostPager(activity, intent);
+        showReaderPostPager(context, intent);
     }
 
     /*
      * show pager view of posts in a specific blog
      */
-    public static void showReaderPostPagerForBlog(Activity activity,
+    public static void showReaderPostPagerForBlog(Context context,
                                                   long blogId,
                                                   long postId) {
-        Intent intent = new Intent(activity, ReaderPostPagerActivity.class);
+        Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
-        intent.putExtra(ReaderConstants.ARG_TITLE, activity.getString(R.string.reader_title_blog_preview));
+        intent.putExtra(ReaderConstants.ARG_TITLE, context.getString(R.string.reader_title_blog_preview));
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
-        showReaderPostPager(activity, intent);
+        showReaderPostPager(context, intent);
     }
 
-    private static void showReaderPostPager(Activity activity, Intent intent) {
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.reader_activity_slide_in,
-                R.anim.reader_activity_scale_out);
-        ActivityCompat.startActivity(activity, intent, options.toBundle());
+    private static void showReaderPostPager(Context context, Intent intent) {
+        if (context instanceof Activity) {
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                    context,
+                    R.anim.reader_activity_slide_in,
+                    R.anim.reader_activity_scale_out);
+            ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
+        } else {
+            context.startActivity(intent);
+        }
     }
 
 
