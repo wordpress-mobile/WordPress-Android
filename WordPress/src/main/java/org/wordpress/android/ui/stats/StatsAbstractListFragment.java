@@ -13,6 +13,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
@@ -44,7 +46,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected static final int NO_STRING_ID = -1;
 
     protected TextView mModuleTitleTextView;
-    protected TextView mModuleTitleTextPlaceholderTextView;
     protected TextView mEmptyLabel;
     protected TextView mTotalsLabel;
     protected LinearLayout mListContainer;
@@ -105,9 +106,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
         mModuleTitleTextView = (TextView) view.findViewById(R.id.stats_module_title);
         mModuleTitleTextView.setText(getTitle());
-
-        mModuleTitleTextPlaceholderTextView = (TextView) view.findViewById(R.id.stats_module_title_placeholder);
-        mModuleTitleTextPlaceholderTextView.setText("               ");
 
         TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
         entryLabel.setText(getEntryLabelResId());
@@ -178,9 +176,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     }
 
     protected void showEmptyUI() {
-        mModuleTitleTextPlaceholderTextView.setVisibility(View.VISIBLE);
         mTopPagerContainer.setVisibility(View.GONE);
-        mModuleTitleTextView.setVisibility(View.GONE);
         mEmptyLabel.setVisibility(View.GONE);
         mListContainer.setVisibility(View.GONE);
         mList.setVisibility(View.GONE);
@@ -189,7 +185,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     }
 
     protected void showHideNoResultsUI(boolean showNoResultsUI) {
-        mModuleTitleTextPlaceholderTextView.setVisibility(View.GONE);
         mModuleTitleTextView.setVisibility(View.VISIBLE);
 
         if (showNoResultsUI) {
@@ -212,8 +207,18 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             mPaginationContainer.setVisibility(View.GONE);
         } else {
             mEmptyLabel.setVisibility(View.GONE);
+
+            if (mListContainer.getVisibility() != View.VISIBLE) {
+                Animation expand = new ScaleAnimation(1.0f, 1.0f, 0.0f, 1.0f);
+                expand.setDuration(3 * StatsUIHelper.ANIM_DURATION);
+                expand.setInterpolator(StatsUIHelper.getInterpolator());
+                mListContainer.startAnimation(expand);
+            }
             mListContainer.setVisibility(View.VISIBLE);
             mList.setVisibility(View.VISIBLE);
+
+
+
             if (!isSingleView() && isViewAllOptionAvailable()) {
                 // No view all button if already in single view
                 configureViewAllButton();
@@ -236,7 +241,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         }
 
         mGroupIdToExpandedMap.clear();
-        mModuleTitleTextPlaceholderTextView.setVisibility(View.GONE);
         mModuleTitleTextView.setVisibility(View.VISIBLE);
 
         String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";

@@ -26,7 +26,7 @@ public class StatsUIHelper {
     // Max number of rows to show in a stats fragment
     public static final int STATS_GROUP_MAX_ITEMS = 10;
     public static final int STATS_CHILD_MAX_ITEMS = 50;
-    private static final int ANIM_DURATION = 150;
+    public static final int ANIM_DURATION = 150;
 
     // Used for tablet UI
     private static final int TABLET_720DP = 720;

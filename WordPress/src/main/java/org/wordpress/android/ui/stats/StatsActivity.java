@@ -261,6 +261,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     private void loadStatsFragments(boolean forceRecreationOfFragments, boolean loadGraphFragment, boolean loadAlltimeFragmets) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
+        //ft.setCustomAnimations(R.anim.stats_fragment_in, R.anim.stats_fragment_out);
 
         StatsAbstractFragment fragment;
 

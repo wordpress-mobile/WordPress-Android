@@ -18,20 +18,10 @@
             android:paddingTop="@dimen/margin_small">
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/stats_module_title_placeholder"
-                android:layout_marginLeft="@dimen/margin_large"
-                android:layout_marginRight="@dimen/margin_large"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/calypso_blue_light"
-                android:layout_marginBottom="@dimen/margin_medium"
-                android:visibility="gone"
-                />
-
-            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_module_title"
                 android:layout_marginLeft="@dimen/margin_large"
                 android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small"
                 style="@style/StatsModuleTitle" />
 
             <LinearLayout
