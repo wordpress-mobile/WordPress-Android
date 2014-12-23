@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">詳細資料</string>
+	<string name="close_drawer">關閉側選單</string>
+	<string name="open_drawer">開啟側選單</string>
+	<string name="delete_sure_post">刪除此文章</string>
+	<string name="delete_sure">刪除此草稿</string>
+	<string name="delete_sure_page">刪除此頁面</string>
+	<string name="confirm_delete_multi_media">要刪除選取的項目嗎？</string>
+	<string name="confirm_delete_media">要刪除選取的項目嗎？</string>
+	<string name="cab_selected">已選取：%d</string>
+	<string name="media_gallery_date_range">顯示自 %1$s 到 %2$s 的媒體</string>
+	<string name="sure_to_remove_account">要移除此網誌嗎？</string>
+	<string name="sign_out_confirm">要登出嗎？</string>
 	<string name="reader_empty_followed_blogs_title">你尚未關注任何網誌</string>
 	<string name="reader_empty_posts_liked">你未對任何文章按讚</string>
 	<string name="faq_button">常見問題集</string>
@@ -111,9 +123,6 @@
 	<string name="need_help_signin_wpcom">需要說明嗎？</string>
 	<string name="wpcom_signin_dialog_title">WordPress.com 登入</string>
 	<string name="jetpack_stats_switch_user">目前的 WordPress.com 帳號 (%s) 沒有存取此網誌統計的權限。是否要登入其他帳號？</string>
-	<string name="ssl_certificate_trust">信任</string>
-	<string name="ssl_certificate_details">憑證詳細資料</string>
-	<string name="ssl_certificate_do_not_trust">不要信任</string>
 	<string name="ptr_tip_message">秘訣：下拉即可重新整理</string>
 	<string name="reader_label_reblog_empty">你沒有能夠轉發此文章的可見 WordPress.com 目標網誌</string>
 	<string name="loading_posts">正在載入文章…</string>
@@ -298,7 +307,6 @@
 	<string name="new_page">新頁面</string>
 	<string name="new_media">新媒體</string>
 	<string name="quick_photo">快速照片</string>
-	<string name="quick_video">快速影片</string>
 	<string name="view_site">檢視網站</string>
 	<string name="view_admin">檢視管理員</string>
 	<string name="privacy_policy">隱私權政策</string>
@@ -397,6 +405,8 @@
 	<string name="reader_toast_err_view_image">無法檢視圖片</string>
 	<string name="limit_reached">已達限制。你可以在 1 分鐘後再試一次。如果在 1 分鐘不到之前重試，只會延長你必須等候繼續進行的時間。如果你覺得這是錯誤，請聯絡支援團隊。</string>
 	<string name="nux_tutorial_get_started_title">開始使用！</string>
+	<string name="reader_empty_followed_tags">你未關注任何標籤</string>
+	<string name="create_account_wpcom">在 WordPress.com 上建立帳號</string>
 	<string name="stats_totals_followers_shares_header_includes_publicize">包含%s宣傳</string>
 	<string name="themes">佈景主題</string>
 	<string name="all">全部</string>

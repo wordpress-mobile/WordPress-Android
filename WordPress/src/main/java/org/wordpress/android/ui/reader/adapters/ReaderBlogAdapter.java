@@ -195,7 +195,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             blogHolder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderAnim.animateFollowButton(view);
                     changeFollowStatus((TextView) view, position, !isFollowing);
                 }
             });
@@ -264,7 +263,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void changeFollowStatus(final TextView textView,
+    private void changeFollowStatus(final TextView txtFollow,
                                     final int position,
                                     final boolean isAskingToFollow) {
         if (getItemViewType(position) != VIEW_TYPE_ITEM) {
@@ -280,9 +279,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 blogUrl = blog.getBlogUrl();
                 break;
             case FOLLOWED:
-                if (position >= mRecommendedBlogs.size()) {
-                    return;
-                }
                 ReaderBlog info = mFollowedBlogs.get(position);
                 blogId = info.blogId;
                 blogUrl = info.getUrl();
@@ -294,15 +290,17 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                Context context = textView.getContext();
+                Context context = txtFollow.getContext();
                 if (!succeeded && context != null) {
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(context, resId);
-                    ReaderUtils.showFollowStatus(textView, !isAskingToFollow);
+                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
                     checkFollowStatus();
                 }
             }
         };
+
+        ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
 
         if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, actionListener)) {
             if (getBlogType() == ReaderBlogType.FOLLOWED) {

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">פרטים</string>
+	<string name="close_drawer">סגירת תפריט</string>
+	<string name="open_drawer">פתיחת תפריט</string>
 	<string name="delete_sure_post">מחיקת פוסט</string>
 	<string name="delete_sure_page">מחיקת עמוד</string>
 	<string name="delete_sure">מחיקת טיוטה</string>
@@ -39,7 +42,6 @@
 	<string name="reader_empty_posts_liked">לא עשית לייק על אף פוסט</string>
 	<string name="browse_our_faq_button">לעיון בשאלות הנפוצות שלנו</string>
 	<string name="nux_help_description">אפשר לבקר במרכז העזרה כדי לקבל תשובות לשאלות נפוצות, או לבקר בפורומים כדי לשאול שאלות חדשות</string>
-	<string name="agree_terms_of_service">בעצם יצירת החשבון יש משום הסכמה מצדך ל%1$sתנאי השירות המדהימים%2$s שלנו</string>
 	<string name="create_new_blog_wpcom">יצירת בלוג של WordPress.com</string>
 	<string name="new_blog_wpcom_created">נוצר בלוג WordPress.com!</string>
 	<string name="reader_label_like">לייק</string>
@@ -52,12 +54,13 @@
 	<string name="older_last_week">בן יותר משבוע</string>
 	<string name="stats_no_blog">לא ניתן לטעון את הנתונים הסטטיסטיים עבור הבלוג הדרוש</string>
 	<string name="select_a_blog">בחר אתר WordPress</string>
-	<string name="sending_content">מעלה %s תוכן</string>
 	<string name="uploading_total">העלאה %1$d של %2$d</string>
 	<string name="mnu_comment_liked">פרסם לייק</string>
 	<string name="media_empty_list_custom_date">אין מדיה במרווח זמן זה</string>
 	<string name="posting_post">מפרסם "%s"</string>
 	<string name="signing_out">יוצא מהמערכת...</string>
+	<string name="agree_terms_of_service">‏יצירת חשבון מהווה הסכמה ל%1$sתנאי השימוש המרתקים%2$s שלנו</string>
+	<string name="sending_content">מעלה תוכן של %s</string>
 	<string name="reader_toast_err_generic">לא ניתן לבצע את הפעולה</string>
 	<string name="reader_toast_err_block_blog">לא ניתן לחסום בלוג זה</string>
 	<string name="reader_toast_blog_blocked">הפוסטים מהבלוג הזה לא יוצגו עוד</string>
@@ -120,9 +123,6 @@
 	<string name="need_help_signin_wpcom">זקוק לעזרה?</string>
 	<string name="wpcom_signin_dialog_title">כניסה ל-WordPress.com</string>
 	<string name="jetpack_stats_switch_user">לחשבון הנוכחי ב-WordPress.com (%s) אין גישה לנתונים הסטטיסטיים של הבלוג הזה. האם ברצונך להיכנס לחשבון אחר?</string>
-	<string name="ssl_certificate_trust">תן אמון</string>
-	<string name="ssl_certificate_details">פרטי האישור</string>
-	<string name="ssl_certificate_do_not_trust">אל תיתן אמון</string>
 	<string name="ptr_tip_message">עצה: משוך כלפי מטה כדי לרענן</string>
 	<string name="reader_label_reblog_empty">אין לך בלוגים גלויים ב-WordPress.com שניתן לפרסם בהן מחדש את הרשומה הזו</string>
 	<string name="loading_posts">טוען רשומות...</string>
@@ -307,7 +307,6 @@
 	<string name="new_page">דף חדש</string>
 	<string name="new_media">מדיה חדשה</string>
 	<string name="quick_photo">צילום מהיר</string>
-	<string name="quick_video">וידאו מהיר</string>
 	<string name="view_site">צפה באתר</string>
 	<string name="view_admin">צפה ב-Admin</string>
 	<string name="privacy_policy">מדיניות פרטיות</string>

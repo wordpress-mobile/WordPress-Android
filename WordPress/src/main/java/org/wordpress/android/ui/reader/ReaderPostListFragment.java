@@ -827,12 +827,10 @@ public class ReaderPostListFragment extends Fragment {
         txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReaderAnim.animateFollowButton(txtFollow);
                 boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(getCurrentTagName());
+                ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
                 TagAction action = (isAskingToFollow ? TagAction.ADD : TagAction.DELETE);
-                if (ReaderTagActions.performTagAction(getCurrentTag(), action, null)) {
-                    ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
-                }
+                ReaderTagActions.performTagAction(getCurrentTag(), action, null);
             }
         });
     }

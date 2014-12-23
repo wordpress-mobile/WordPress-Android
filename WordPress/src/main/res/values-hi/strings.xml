@@ -56,12 +56,9 @@
 	<string name="stats_empty_top_posts_title">कोई शीर्ष पोस्ट या पृष्ठ अभी तक नहीं मिला.</string>
 	<string name="stats_empty_top_posts_desc">यह दृश्य आपकी सबसे ज्यादा देखी गयी पोस्ट और पृष्ठों को दिखाता है.</string>
 	<string name="stats_empty_clicks_desc">"क्लिक" आपकी साइट पर बाहर जाने वाली लिंक पर क्लिक करने वाले लोग हैं.</string>
-	<string name="ssl_certificate_details">प्रमाणपत्र विवरण</string>
 	<string name="need_help_signin_wpcom">मदद की ज़रूरत है?</string>
 	<string name="media_empty_list">कोई मीडिया नहीं</string>
 	<string name="saving">सहेजा जा रहा…</string>
-	<string name="ssl_certificate_do_not_trust">भरोसा नही करे</string>
-	<string name="ssl_certificate_trust">भरोसा</string>
 	<string name="wpcom_signin_dialog_title">वर्डप्रेस डॉट कॉम साइन इन</string>
 	<string name="load_settings">आप सेटिंग में जाएं और वहां अपना उपयोक्तानाम और कूटशब्द बदल सकते हैं.</string>
 	<string name="ptr_tip_message">सुझाव: रिफ्रेश करने के लिए नीचे खींचे</string>
@@ -261,7 +258,6 @@
 	<string name="category_slug">श्रेणी स्लग (वैकल्पिक)</string>
 	<string name="scaled_image_error">एक वैध बढ़ाया चौड़ाई का मान दर्ज करें</string>
 	<string name="quick_photo">त्वरित तस्वीर</string>
-	<string name="quick_video">त्वरित विडियो</string>
 	<string name="stats_view_video_plays">विडियो चलाया गया</string>
 	<string name="error_blog_hidden">यह ब्लॉग छिपा हुआ है और लोड नहीं किया जा सकता है. सेटिंग्स में इसे फिर से सक्रिय करे और फिर कोशिश करें.</string>
 	<string name="file_error_create">मीडिया अपलोड करने के लिए अस्थायी फ़ाइल नहीं बनाया जा सका. आपके डिवाइस पर पर्याप्त खाली स्थान है सुनिश्चित करें.</string>

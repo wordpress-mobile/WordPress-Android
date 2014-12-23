@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">Details</string>
+	<string name="close_drawer">Menübereich schließen</string>
+	<string name="open_drawer">Menübereich öffnen</string>
+	<string name="sign_out_confirm">Abmelden?</string>
+	<string name="sure_to_remove_account">Diesen Blog entfernen?</string>
+	<string name="cab_selected">%d ausgewählt</string>
+	<string name="confirm_delete_media">Ausgewähltes Objekt löschen?</string>
+	<string name="confirm_delete_multi_media">Ausgewählte Objekte löschen?</string>
+	<string name="delete_sure_page">Lösche diese Seite</string>
+	<string name="delete_sure_post">Lösche diesen Beitrag</string>
+	<string name="delete_sure">Lösche diesen Entwurf</string>
+	<string name="media_gallery_date_range">Zeige Medien von %1$s bis %2$s</string>
 	<string name="reader_empty_followed_blogs_title">Du folgst bisher noch keinem Blog</string>
 	<string name="reader_empty_posts_liked">Du hast bisher noch keine Beiträge mit „gefällt mir“ markiert.</string>
 	<string name="faq_button">FAQ</string>
@@ -111,9 +123,6 @@
 	<string name="need_help_signin_wpcom">Du benötigst Hilfe?</string>
 	<string name="wpcom_signin_dialog_title">Anmelden auf WordPress.com</string>
 	<string name="jetpack_stats_switch_user">Das aktuelle Konto auf WordPress.com (%s) hat keine Zugriffsrechte auf die Statistiken für diesen Blog. Willst du Dich mit einem anderen Konto anmelden?</string>
-	<string name="ssl_certificate_trust">Vertrauen</string>
-	<string name="ssl_certificate_details">Zertifikatsdetails</string>
-	<string name="ssl_certificate_do_not_trust">Nicht vertrauen</string>
 	<string name="ptr_tip_message">Tipp: Nach unten ziehen, um die Seite neu zu laden.</string>
 	<string name="help">Hilfe</string>
 	<string name="forgot_password">Passwort vergessen?</string>
@@ -235,7 +244,6 @@
 	<string name="location_not_found">Unbekannter Standort</string>
 	<string name="privacy_policy">Datenschutzbestimmung</string>
 	<string name="image_settings">Bild-Einstellungen</string>
-	<string name="quick_video">Schnelles Video</string>
 	<string name="comment_added">Kommentar erfolgreich hinzugefügt</string>
 	<string name="blog_removed_successfully">Blog erfolgreich entfernt</string>
 	<string name="stats_visitors_and_views_header_all_time">Gesamte Zeit</string>

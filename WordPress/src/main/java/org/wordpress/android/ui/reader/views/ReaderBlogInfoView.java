@@ -212,7 +212,7 @@ public class ReaderBlogInfoView extends LinearLayout {
             }
         };
 
-        ReaderAnim.animateFollowButton(txtFollow);
+        ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
 
         if (ReaderBlogActions.performFollowAction(
                 mBlogInfo.blogId,
@@ -228,7 +228,6 @@ public class ReaderBlogInfoView extends LinearLayout {
             mBlogInfo.isFollowing = isAskingToFollow;
             mBlogInfo.numSubscribers = newCount;
             showFollowerCount(newCount);
-            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
         }
     }
 
