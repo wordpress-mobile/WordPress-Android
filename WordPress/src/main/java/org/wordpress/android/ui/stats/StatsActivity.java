@@ -419,8 +419,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                    }
                }
            }, 500);
-
-
         }
     }
 
