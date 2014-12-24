@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">Rincian</string>
+	<string name="close_drawer">Tutup rak menu</string>
+	<string name="open_drawer">Buka rak menu</string>
+	<string name="delete_sure_post">Hapus pos ini</string>
+	<string name="delete_sure">Hapus draf ini</string>
+	<string name="delete_sure_page">Hapus laman ini</string>
+	<string name="confirm_delete_media">Hapus item terpilih?</string>
+	<string name="confirm_delete_multi_media">Hapus semua item terpilih?</string>
+	<string name="cab_selected">%d terpilih</string>
+	<string name="media_gallery_date_range">Menampilkan media dari %1$s hingga %2$s</string>
+	<string name="sure_to_remove_account">Hapus blog ini?</string>
+	<string name="sign_out_confirm">Keluar?</string>
 	<string name="reader_empty_followed_blogs_title">Anda belum mengikuti blog sama sekali</string>
 	<string name="reader_empty_posts_liked">Anda belum menyukai pos sama sekali</string>
 	<string name="faq_button">Tanya Jawab Umum</string>
@@ -111,9 +123,6 @@
 	<string name="need_help_signin_wpcom">Butuh bantuan?</string>
 	<string name="wpcom_signin_dialog_title">Masuk ke WordPress.com</string>
 	<string name="jetpack_stats_switch_user">Akun WordPress.com (%s) ini tidak memiliki akses ke statistik untuk blog ini. Apakah Anda ingin masuk menggunakan akun lain?</string>
-	<string name="ssl_certificate_trust">Percayai</string>
-	<string name="ssl_certificate_details">Rincian Sertifikat</string>
-	<string name="ssl_certificate_do_not_trust">Jangan Percayai</string>
 	<string name="ptr_tip_message">Tip: Tarik ke bawah untuk menyegarkan</string>
 	<string name="loading_pages">Memuat laman...</string>
 	<string name="reader_label_reblog_empty_link">Ubah visibilitas blog</string>
@@ -297,7 +306,6 @@
 	<string name="new_page">Laman baru</string>
 	<string name="new_media">Media baru</string>
 	<string name="quick_photo">Foto cepat</string>
-	<string name="quick_video">Video cepat</string>
 	<string name="view_site">Tampilkan situs</string>
 	<string name="view_admin">Tampilkan admin</string>
 	<string name="privacy_policy">Kebijakan privasi</string>
@@ -392,7 +400,9 @@
 	<string name="reader_toast_err_share_intent">Tidak dapat membagikan</string>
 	<string name="reader_toast_err_view_image">Tidak dapat melihat gambar</string>
 	<string name="reader_toast_err_url_intent">Tidak bisa  membuka %s</string>
+	<string name="reader_empty_followed_tags">Anda belum mengikuti satupun tag</string>
 	<string name="reader_empty_popular_tags">Bukan tag populer</string>
+	<string name="create_account_wpcom">Buat akun dengan Wordpress.com</string>
 	<string name="connecting_wpcom">MEnghubungkan ke Wordpress.com</string>
 	<string name="username_invalid">Username tidak valid</string>
 	<string name="limit_reached">Mencapai batasan. Anda dapat mencoba kembali setelah 1 menit. Cobalah kembali, ini akan menambahkan kesempatan kepada anda sebelum benar-benar masuk list banned. Jika menurut anda ini adalah suatu kesalahan, hubungi Support.</string>

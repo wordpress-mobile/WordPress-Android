@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">Details</string>
+	<string name="close_drawer">Close menu drawer</string>
+	<string name="open_drawer">Open menu drawer</string>
 	<string name="delete_sure_post">Delete this post</string>
 	<string name="delete_sure">Delete this draft</string>
 	<string name="delete_sure_page">Delete this page</string>
@@ -120,9 +123,6 @@
 	<string name="need_help_signin_wpcom">Need help?</string>
 	<string name="wpcom_signin_dialog_title">WordPress.com sign in</string>
 	<string name="jetpack_stats_switch_user">The current WordPress.com account (%s) doesn\'t have access to the stats for this blog. Would you like to sign in to a different account?</string>
-	<string name="ssl_certificate_trust">Trust</string>
-	<string name="ssl_certificate_details">Certificate Details</string>
-	<string name="ssl_certificate_do_not_trust">Don\'t trust</string>
 	<string name="ptr_tip_message">Tip: Pull down to refresh</string>
 	<string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
 	<string name="loading_posts">Loading posts…</string>
@@ -307,7 +307,6 @@
 	<string name="new_page">New page</string>
 	<string name="new_media">New media</string>
 	<string name="quick_photo">Quick photo</string>
-	<string name="quick_video">Quick video</string>
 	<string name="view_site">View site</string>
 	<string name="view_admin">View admin</string>
 	<string name="privacy_policy">Privacy policy</string>

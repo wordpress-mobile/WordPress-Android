@@ -101,6 +101,10 @@ public class ReaderBlogActions {
                                               boolean isAskingToFollow,
                                               ActionListener actionListener) {
         if (post == null) {
+            AppLog.w(T.READER, "follow action performed with null post");
+            if (actionListener != null) {
+                actionListener.onActionResult(false);
+            }
             return false;
         }
         // don't use the blogId if this is an external feed

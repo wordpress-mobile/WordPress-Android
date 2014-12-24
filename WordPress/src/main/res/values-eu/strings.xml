@@ -162,7 +162,6 @@
 	<string name="stats_view_tags_and_categories">Etiketak eta kategoriak</string>
 	<string name="stats_view_video_plays">Bideo erreprodukzioak</string>
 	<string name="stats_entry_video_plays">Bideoaren izena</string>
-	<string name="quick_video">Bideo azkarra</string>
 	<string name="view_admin">Kudeatzailea ikusi</string>
 	<string name="reader_share_link">Esteka partekatu</string>
 	<string name="reader_title_applog">Aplikazioaren erregistroa</string>

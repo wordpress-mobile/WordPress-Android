@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="ssl_certificate_details">Details</string>
+	<string name="close_drawer">Zijmenu sluiten</string>
+	<string name="open_drawer">Zijmenu openen</string>
+	<string name="delete_sure_post">Dit bericht verwijderen</string>
+	<string name="delete_sure">Dit concept verwijderen</string>
+	<string name="delete_sure_page">Deze pagina verwijderen</string>
+	<string name="confirm_delete_multi_media">Geselecteerde items verwijderen?</string>
+	<string name="confirm_delete_media">Geselecteerd item verwijderen?</string>
+	<string name="cab_selected">%d geselecteerd</string>
+	<string name="media_gallery_date_range">Media van %1$s tot %2$s weergeven</string>
+	<string name="sure_to_remove_account">Dit blog verwijderen?</string>
+	<string name="sign_out_confirm">Afmelden?</string>
 	<string name="faq_button">FAQ</string>
 	<string name="browse_our_faq_button">Bekijk onze FAQ</string>
 	<string name="reader_likes_one_short">1 persoon</string>
@@ -111,9 +123,6 @@
 	<string name="need_help_signin_wpcom">Hulp nodig?</string>
 	<string name="wpcom_signin_dialog_title">Aanmelden bij WordPress.com</string>
 	<string name="jetpack_stats_switch_user">Het huidige WordPress.com-account (%s) heeft geen toegang tot de statistieken van dit blog. Wil je inloggen met een ander account?</string>
-	<string name="ssl_certificate_trust">Vertrouwen</string>
-	<string name="ssl_certificate_details">Certificaatgegevens</string>
-	<string name="ssl_certificate_do_not_trust">Niet vertrouwen</string>
 	<string name="ptr_tip_message">Tip: schuif omlaag om te vernieuwen</string>
 	<string name="loading_posts">Berichten laden...</string>
 	<string name="loading_pages">Pagina\'s laden...</string>
@@ -298,7 +307,6 @@
 	<string name="new_page">Nieuwe pagina</string>
 	<string name="new_media">Nieuwe media</string>
 	<string name="quick_photo">Snelle foto</string>
-	<string name="quick_video">Snelle video</string>
 	<string name="view_site">Site weergeven</string>
 	<string name="view_admin">Admin weergeven</string>
 	<string name="privacy_policy">Privacybeleid</string>

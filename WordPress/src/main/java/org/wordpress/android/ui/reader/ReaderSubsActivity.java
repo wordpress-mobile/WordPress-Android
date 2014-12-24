@@ -17,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -44,9 +46,8 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
-import org.wordpress.android.ui.reader.utils.MessageBarUtils;
-import org.wordpress.android.ui.reader.utils.MessageBarUtils.MessageBarType;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -188,7 +189,7 @@ public class ReaderSubsActivity extends ActionBarActivity
 
     private SubsPageAdapter getPageAdapter() {
         if (mPageAdapter == null) {
-            List<Fragment> fragments = new ArrayList<Fragment>();
+            List<Fragment> fragments = new ArrayList<>();
 
             // add tag fragments
             fragments.add(ReaderTagFragment.newInstance(ReaderTagType.FOLLOWED));
@@ -349,9 +350,8 @@ public class ReaderSubsActivity extends ActionBarActivity
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
 
         if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
-            String msgText = getString(R.string.reader_label_added_tag, tagName);
-            MessageBarUtils.showMessageBar(this, msgText, MessageBarType.INFO);
-            getPageAdapter().refreshTagFragments(null, tagName);
+            showInfoToast(getString(R.string.reader_label_added_tag, tagName));
+            getPageAdapter().refreshTagFragments();
             onTagAction(tag, TagAction.ADD);
         }
     }
@@ -416,8 +416,7 @@ public class ReaderSubsActivity extends ActionBarActivity
                     // clear the edit text and hide the soft keyboard
                     mEditAdd.setText(null);
                     EditTextUtils.hideSoftInput(mEditAdd);
-                    String msgText = getString(R.string.reader_label_followed_blog);
-                    MessageBarUtils.showMessageBar(ReaderSubsActivity.this, msgText, MessageBarType.INFO);
+                    showInfoToast(getString(R.string.reader_label_followed_blog));
                     onFollowBlogChanged();
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 } else {
@@ -458,6 +457,15 @@ public class ReaderSubsActivity extends ActionBarActivity
     }
 
     /*
+     * toast message shown when adding/removing a tag - appears above the edit text at the bottom
+     */
+    private void showInfoToast(String text) {
+        int yOffset = findViewById(R.id.layout_bottom).getHeight() + DisplayUtils.dpToPx(this, 8);
+        Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, yOffset);
+        toast.show();
+    }
+    /*
      * triggered by a tag fragment's adapter after user adds/removes a tag, or from this activity
      * after user adds a tag - note that network request has been made by the time this is called
      */
@@ -465,35 +473,25 @@ public class ReaderSubsActivity extends ActionBarActivity
     public void onTagAction(ReaderTag tag, TagAction action) {
         mTagsChanged = true;
 
-        final String msgText;
-        final MessageBarType msgType;
-
         switch (action) {
             case ADD:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_READER_TAG);
-                msgText = getString(R.string.reader_label_added_tag, tag.getTagName());
-                msgType = MessageBarType.INFO;
                 mLastAddedTagName = tag.getTagName();
                 // user added from recommended tags, make sure addition is reflected on followed tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.FOLLOWED);
+                showInfoToast(getString(R.string.reader_label_added_tag, tag.getTagName()));
                 break;
 
             case DELETE:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_UNFOLLOWED_READER_TAG);
-                msgText = getString(R.string.reader_label_removed_tag, tag.getTagName());
-                msgType = MessageBarType.ALERT;
                 if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagName())) {
                     mLastAddedTagName = null;
                 }
                 // user deleted from followed tags, make sure deletion is reflected on recommended tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.RECOMMENDED);
+                showInfoToast(getString(R.string.reader_label_removed_tag, tag.getTagName()));
                 break;
-
-            default :
-                return;
         }
-
-        MessageBarUtils.showMessageBar(this, msgText, msgType);
     }
 
     /*
@@ -579,12 +577,9 @@ public class ReaderSubsActivity extends ActionBarActivity
         }
 
         private void refreshTagFragments() {
-            refreshTagFragments(null, null);
+            refreshTagFragments(null);
         }
         private void refreshTagFragments(ReaderTagType tagType) {
-            refreshTagFragments(tagType, null);
-        }
-        private void refreshTagFragments(ReaderTagType tagType, String scrollToTagName) {
             for (Fragment fragment: mFragments) {
                 if (fragment instanceof ReaderTagFragment) {
                     ReaderTagFragment tagFragment = (ReaderTagFragment) fragment;
@@ -620,16 +615,21 @@ public class ReaderSubsActivity extends ActionBarActivity
             String action = StringUtils.notNullStr(intent.getAction());
             AppLog.d(AppLog.T.READER, "reader subs > received broadcast " + action);
 
-            if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED)) {
-                mTagsChanged = true;
-                getPageAdapter().refreshTagFragments();
-            } else if (action.equals(ReaderUpdateService.ACTION_RECOMMENDED_TAGS_CHANGED)) {
-                getPageAdapter().refreshTagFragments();
-            } else if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED)) {
-                mBlogsChanged = true;
-                getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
-            } else if (action.equals(ReaderUpdateService.ACTION_RECOMMENDED_BLOGS_CHANGED)) {
-                getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
+            switch (action) {
+                case ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED:
+                    mTagsChanged = true;
+                    getPageAdapter().refreshTagFragments();
+                    break;
+                case ReaderUpdateService.ACTION_RECOMMENDED_TAGS_CHANGED:
+                    getPageAdapter().refreshTagFragments();
+                    break;
+                case ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED:
+                    mBlogsChanged = true;
+                    getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+                    break;
+                case ReaderUpdateService.ACTION_RECOMMENDED_BLOGS_CHANGED:
+                    getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
+                    break;
             }
         }
     };

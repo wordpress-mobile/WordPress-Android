@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white">
@@ -28,12 +29,6 @@
 
     </android.support.v4.view.ViewPager>
 
-    <include
-        android:id="@+id/text_message_bar"
-        layout="@layout/message_bar_include"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/divider_list" />
 
     <View
         android:id="@+id/divider_list"
@@ -48,11 +43,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:paddingLeft="@dimen/margin_medium"
-        android:paddingRight="@dimen/margin_extra_large"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_extra_large"
         android:paddingTop="@dimen/margin_small">
 
         <EditText
@@ -65,10 +60,10 @@
 
         <ImageButton
             android:id="@+id/btn_add"
-            android:padding="@dimen/margin_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
+            android:padding="@dimen/margin_small"
             android:src="@drawable/ic_add_grey600_24dp" />
 
     </LinearLayout>

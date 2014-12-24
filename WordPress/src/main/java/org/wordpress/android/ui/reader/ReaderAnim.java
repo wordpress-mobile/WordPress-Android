@@ -14,8 +14,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 
 public class ReaderAnim {
 
@@ -176,31 +178,25 @@ public class ReaderAnim {
     }
 
     /*
-     * animation when user taps a like/follow/reblog button
+     * animation when user taps a like/reblog button
      */
-    private static enum ReaderButton { LIKE_ON, LIKE_OFF, REBLOG, FOLLOW }
+    private static enum ReaderButton { LIKE_ON, LIKE_OFF, REBLOG}
     public static void animateLikeButton(final View target, boolean isAskingToLike) {
         animateButton(target, isAskingToLike ? ReaderButton.LIKE_ON : ReaderButton.LIKE_OFF);
     }
     public static void animateReblogButton(final View target) {
         animateButton(target, ReaderButton.REBLOG);
     }
-    public static void animateFollowButton(final View target) {
-        animateButton(target, ReaderButton.FOLLOW);
-    }
     private static void animateButton(final View target, ReaderButton button) {
         if (target == null || button == null) {
             return;
         }
 
-        // follow button uses reverse scaling
-        float endScale = (button == ReaderButton.FOLLOW ? 0.75f : 1.75f);
-
-        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, endScale);
+        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 1.75f);
         animX.setRepeatMode(ValueAnimator.REVERSE);
         animX.setRepeatCount(1);
 
-        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, endScale);
+        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 1.75f);
         animY.setRepeatMode(ValueAnimator.REVERSE);
         animY.setRepeatCount(1);
 
@@ -225,6 +221,40 @@ public class ReaderAnim {
 
         long durationMillis = Duration.SHORT.toMillis(target.getContext());
         set.setDuration(durationMillis);
+        set.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        set.start();
+    }
+
+    /*
+     * animation when user taps a follow button
+     */
+    public static void animateFollowButton(final TextView txtFollow,
+                                           final boolean isAskingToFollow) {
+        if (txtFollow == null) {
+            return;
+        }
+
+        ObjectAnimator animX = ObjectAnimator.ofFloat(txtFollow, View.SCALE_X, 1f, 0.5f);
+        animX.setRepeatMode(ValueAnimator.REVERSE);
+        animX.setRepeatCount(1);
+
+        ObjectAnimator animY = ObjectAnimator.ofFloat(txtFollow, View.SCALE_Y, 1f, 0.5f);
+        animY.setRepeatMode(ValueAnimator.REVERSE);
+        animY.setRepeatCount(1);
+
+        // change the button text and selection state before scaling back in
+        animX.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
+            }
+        });
+
+        long durationMillis = Duration.SHORT.toMillis(txtFollow.getContext());
+        AnimatorSet set = new AnimatorSet();
+        set.play(animX).with(animY);
+        set.setDuration(durationMillis / 2);
         set.setInterpolator(new AccelerateDecelerateInterpolator());
 
         set.start();
