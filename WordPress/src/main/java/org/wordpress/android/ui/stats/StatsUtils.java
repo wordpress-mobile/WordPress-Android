@@ -38,9 +38,9 @@ public class StatsUtils {
     @SuppressLint("SimpleDateFormat")
     public static long toMs(String date, String pattern) {
         if (date == null) {
-            AppLog.w(T.UTILS, "Trying to parse a null date");
             return -1;
         }
+        
         if (pattern == null) {
             AppLog.w(T.UTILS, "Trying to parse with a null pattern");
             return -1;
