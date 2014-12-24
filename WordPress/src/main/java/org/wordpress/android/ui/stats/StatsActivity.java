@@ -70,7 +70,8 @@ import java.util.Map;
 public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.ScrollViewListener,
         StatsAuthorsFragment.OnAuthorsSectionChangeListener,
         StatsVisitorsAndViewsFragment.OnDateChangeListener,
-        StatsAbstractListFragment.OnRequestDataListener {
+        StatsAbstractListFragment.OnRequestDataListener,
+        StatsAbstractFragment.TimeframeDateProvider {
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
@@ -140,7 +141,8 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                         }
 
                         mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                        loadStatsFragments(true, true, true);
+                        loadStatsFragments(false, true, true); // This is here just for a security check
+                        emptyDataModelInFragments(true, true);
                         refreshStats(mCurrentTimeframe, mRequestedDate, true);
                     }
                 });
@@ -209,7 +211,8 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                             String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
                             mSwipeToRefreshHelper.setRefreshing(true);
                             refreshStats(selectedTimeframe, date, true);
-                            loadStatsFragments(true, true, false);
+                            emptyDataModelInFragments(true, false);
+                            loadStatsFragments(false, true, false); // This is here just for a security check
                         }
                     }
                     @Override
@@ -258,6 +261,33 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         super.onSaveInstanceState(outState);
     }
 
+    private void resetDatamodelForFragment( FragmentManager fm , String fragmentTAG) {
+        StatsAbstractFragment fragment = (StatsAbstractFragment) fm.findFragmentByTag(fragmentTAG);
+        if (fragment != null) {
+            fragment.resetDataModel();
+        }
+    }
+
+
+    private void emptyDataModelInFragments(boolean resetGraphData, boolean resetAlltimeFragmets) {
+        FragmentManager fm = getFragmentManager();
+        if (resetGraphData) {
+            resetDatamodelForFragment(fm, StatsVisitorsAndViewsFragment.TAG);
+        }
+        resetDatamodelForFragment(fm, StatsTopPostsAndPagesFragment.TAG);
+        resetDatamodelForFragment(fm, StatsReferrersFragment.TAG);
+        resetDatamodelForFragment(fm, StatsClicksFragment.TAG);
+        resetDatamodelForFragment(fm, StatsGeoviewsFragment.TAG);
+        resetDatamodelForFragment(fm, StatsAuthorsFragment.TAG);
+        resetDatamodelForFragment(fm, StatsVideoplaysFragment.TAG);
+        if (resetAlltimeFragmets) {
+            resetDatamodelForFragment(fm, StatsCommentsFragment.TAG);
+            resetDatamodelForFragment(fm, StatsTagsAndCategoriesFragment.TAG);
+            resetDatamodelForFragment(fm, StatsPublicizeFragment.TAG);
+            resetDatamodelForFragment(fm, StatsFollowersFragment.TAG);
+        }
+    }
+
     private void loadStatsFragments(boolean forceRecreationOfFragments, boolean loadGraphFragment, boolean loadAlltimeFragmets) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -267,59 +297,59 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
         if (loadGraphFragment) {
             if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID);
                 ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
             }
         }
 
         if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID);
             ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID);
             ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID);
             ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID);
             ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsAuthorsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID);
             ft.replace(R.id.stats_top_authors_container, fragment, StatsAuthorsFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsVideoplaysFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID);
             ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
         }
 
         if (loadAlltimeFragmets) {
             if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID);
                 ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID);
                 ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsPublicizeFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID);
                 ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID);
                 ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
             }
         }
@@ -342,10 +372,10 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
     @Override
     public void onRefreshRequested(StatsService.StatsEndpointsEnum[] endPointsNeedUpdate) {
+        mSwipeToRefreshHelper.setRefreshing(mIsUpdatingStats);
         if (mIsUpdatingStats) {
             return;
         }
-        mSwipeToRefreshHelper.setRefreshing(mIsUpdatingStats);
         refreshStats(mCurrentTimeframe, mRequestedDate, true);
     }
 
@@ -547,7 +577,19 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     public void onDateChanged(String blogID, StatsTimeframe timeframe, String date) {
         mRequestedDate = date;
         refreshStats(timeframe, date, false);
-        loadStatsFragments(true, false, false);
+        emptyDataModelInFragments(false, false);
+        loadStatsFragments(false, false, false); // This is here just for a security check
+    }
+
+    // Fragments call these two methods below to access the current timeframe/date selected by the user.
+    @Override
+    public String getCurrentDate() {
+        return mRequestedDate;
+    }
+
+    @Override
+    public StatsTimeframe getCurrentTimeFrame() {
+        return mCurrentTimeframe;
     }
 
     private void refreshStats(StatsTimeframe timeframe, String date, boolean updateAlltimeStats) {

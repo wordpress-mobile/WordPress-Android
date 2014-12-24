@@ -43,7 +43,8 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class StatsViewAllActivity extends ActionBarActivity
         implements StatsAuthorsFragment.OnAuthorsSectionChangeListener,
-        StatsAbstractListFragment.OnRequestDataListener {
+        StatsAbstractListFragment.OnRequestDataListener,
+        StatsAbstractFragment.TimeframeDateProvider {
 
     private boolean mIsInFront;
     private boolean mIsUpdatingStats;
@@ -513,5 +514,16 @@ public class StatsViewAllActivity extends ActionBarActivity
                 .putExtra(StatsService.EXTRA_ENDPOINT_NAME, sectionName)
                 .putExtra(StatsService.EXTRA_ENDPOINT_DATA, data);
         LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
+    }
+
+    // Fragments call these two methods below to access the current timeframe/date selected by the user.
+    @Override
+    public String getCurrentDate() {
+        return mDate;
+    }
+
+    @Override
+    public StatsTimeframe getCurrentTimeFrame() {
+        return mTimeframe;
     }
 }

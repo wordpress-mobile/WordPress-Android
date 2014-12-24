@@ -109,12 +109,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         mModuleButtonsContainer.setVisibility(View.VISIBLE);
-        if (mVisitsData != null) {
-            updateUI();
-        } else {
-            setupNoResultsUI(true);
-        }
-
         return view;
     }
 
@@ -191,6 +185,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         super.onResume();
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SECTION_UPDATED));
+
+        if (mVisitsData != null) {
+            updateUI();
+        } else {
+            setupNoResultsUI(true);
+            mMoreDataListener.onRefreshRequested(new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.VISITS});
+        }
     }
 
     private VisitModel[] getDataToShowOnGraph(VisitsModel visitsData) {
@@ -213,7 +214,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
-        if( mVisitsData instanceof VolleyError) {
+        if (mVisitsData instanceof VolleyError) {
             setupNoResultsUI(false);
             return;
         }
@@ -282,6 +283,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     //update the area right below the graph
     private void updateUIBelowTheGraph(int itemPosition) {
+        if (mVisitsData == null) {
+            setupNoResultsUI(false);
+            return;
+        }
+
+        if (mVisitsData instanceof VolleyError) {
+            setupNoResultsUI(false);
+            return;
+        }
+
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph((VisitsModel)mVisitsData);
 
         String date =  mStatsDate[itemPosition];
@@ -577,5 +588,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
             return titles;
         }
+    }
+
+    @Override
+    protected void resetDataModel() {
+        mVisitsData = null;
     }
 }

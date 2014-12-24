@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.stats;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+
+import org.wordpress.android.ui.stats.service.StatsService;
 
 
 public abstract class StatsAbstractFragment extends Fragment {
@@ -13,7 +16,22 @@ public abstract class StatsAbstractFragment extends Fragment {
     protected static final String ARGS_START_DATE = "ARGS_START_DATE";
     protected static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
 
-    public static StatsAbstractFragment newInstance(StatsViewType viewType, int localTableBlogID, StatsTimeframe timeframe, String date) {
+    protected TimeframeDateProvider mTimelineProvider;
+    protected OnRequestDataListener mMoreDataListener;
+
+    // Container Activity must implement this interface
+    public interface TimeframeDateProvider {
+        public String getCurrentDate();
+        public StatsTimeframe getCurrentTimeFrame();
+    }
+
+    // Container Activity must implement this interface
+    public interface OnRequestDataListener {
+        public void onRefreshRequested(StatsService.StatsEndpointsEnum[] endPointsNeedUpdate);
+        public void onMoreDataRequested(StatsService.StatsEndpointsEnum endPointNeedUpdate, int pageNumber);
+    }
+
+    public static StatsAbstractFragment newInstance(StatsViewType viewType, int localTableBlogID) {
         StatsAbstractFragment fragment = null;
 
         switch (viewType) {
@@ -58,11 +76,25 @@ public abstract class StatsAbstractFragment extends Fragment {
         Bundle args = new Bundle();
         args.putInt(ARGS_VIEW_TYPE, viewType.ordinal());
         args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
-        args.putSerializable(ARGS_TIMEFRAME, timeframe);
-        args.putString(ARGS_START_DATE, date);
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mTimelineProvider = (TimeframeDateProvider) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement TimeframeDateProvider");
+        }
+
+        try {
+            mMoreDataListener = (OnRequestDataListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnRequestMoreDataListener");
+        }
     }
 
     protected StatsViewType getViewType() {
@@ -75,13 +107,15 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     protected StatsTimeframe getTimeframe() {
-        return (StatsTimeframe) getArguments().getSerializable(ARGS_TIMEFRAME);
+        return mTimelineProvider.getCurrentTimeFrame();
     }
 
-    // This is the FIRST date used when created the fragment.
     protected String getStartDate() {
-        return getArguments().getString(ARGS_START_DATE);
+        return mTimelineProvider.getCurrentDate();
     }
 
     protected abstract String getTitle();
+
+    protected abstract void resetDataModel();
+
 }

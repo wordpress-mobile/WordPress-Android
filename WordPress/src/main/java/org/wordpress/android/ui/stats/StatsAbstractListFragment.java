@@ -13,8 +13,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
@@ -61,7 +59,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected TextView mPaginationText;
 
     protected Serializable[] mDatamodels;
-    protected OnRequestDataListener mMoreDataListener;
 
     protected SparseBooleanArray mGroupIdToExpandedMap;
 
@@ -77,22 +74,10 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     protected StatsResourceVars mResourceVars;
 
-
-    // Container Activity must implement this interface
-    public interface OnRequestDataListener {
-        public void onRefreshRequested(StatsService.StatsEndpointsEnum[] endPointsNeedUpdate);
-        public void onMoreDataRequested(StatsService.StatsEndpointsEnum endPointNeedUpdate, int pageNumber);
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mResourceVars = new StatsResourceVars(activity);
-        try {
-            mMoreDataListener = (OnRequestDataListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnRequestMoreDataListener");
-        }
     }
 
     @Override
@@ -207,17 +192,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             mPaginationContainer.setVisibility(View.GONE);
         } else {
             mEmptyLabel.setVisibility(View.GONE);
-
-            if (mListContainer.getVisibility() != View.VISIBLE) {
-                Animation expand = new ScaleAnimation(1.0f, 1.0f, 0.0f, 1.0f);
-                expand.setDuration(3 * StatsUIHelper.ANIM_DURATION);
-                expand.setInterpolator(StatsUIHelper.getInterpolator());
-                mListContainer.startAnimation(expand);
-            }
             mListContainer.setVisibility(View.VISIBLE);
             mList.setVisibility(View.VISIBLE);
-
-
 
             if (!isSingleView() && isViewAllOptionAvailable()) {
                 // No view all button if already in single view
@@ -437,4 +413,10 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             }
         }
     };
+
+
+    @Override
+    protected void resetDataModel() {
+        mDatamodels = null;
+    }
 }
