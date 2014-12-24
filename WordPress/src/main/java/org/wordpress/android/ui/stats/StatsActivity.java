@@ -58,8 +58,11 @@ import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * The native stats activity, accessible via the menu drawer.
@@ -98,6 +101,10 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
 
     private LinearLayout mFragmentContainer;
+
+    private ArrayList<StatsService.StatsEndpointsEnum> fragmentsRefreshList = new ArrayList<>();
+    private final Object fragmentsRefreshListSynchObj = new Object();
+    private Timer fragmentsRefreshListTimer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,7 +150,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                         mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
                         loadStatsFragments(false, true, true); // This is here just for a security check
                         emptyDataModelInFragments(true, true);
-                        refreshStats(mCurrentTimeframe, mRequestedDate, true);
+                        refreshStats(mCurrentTimeframe, mRequestedDate, true, true);
                     }
                 });
 
@@ -210,7 +217,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                         if (NetworkUtils.isNetworkAvailable(StatsActivity.this)) {
                             String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
                             mSwipeToRefreshHelper.setRefreshing(true);
-                            refreshStats(selectedTimeframe, date, true);
+                            refreshStats(selectedTimeframe, date, true, true);
                             emptyDataModelInFragments(true, false);
                             loadStatsFragments(false, true, false); // This is here just for a security check
                         }
@@ -249,6 +256,10 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
         mSwipeToRefreshHelper.setRefreshing(false);
+        if (fragmentsRefreshListTimer != null)  {
+            fragmentsRefreshListTimer.cancel();
+            fragmentsRefreshListTimer = null;
+        }
     }
 
     @Override
@@ -267,7 +278,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             fragment.resetDataModel();
         }
     }
-
 
     private void emptyDataModelInFragments(boolean resetGraphData, boolean resetAlltimeFragmets) {
         FragmentManager fm = getFragmentManager();
@@ -376,7 +386,42 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         if (mIsUpdatingStats) {
             return;
         }
-        refreshStats(mCurrentTimeframe, mRequestedDate, true);
+
+        // fragments that needs an update require it at almost the same time. Keep a list of fragments
+        // that require the update and call the service with the right parameters.
+        synchronized (fragmentsRefreshListSynchObj) {
+           for (int i = 0; i < endPointsNeedUpdate.length; i ++) {
+               StatsService.StatsEndpointsEnum current = endPointsNeedUpdate[i];
+               if (!fragmentsRefreshList.contains(current)) {
+                   fragmentsRefreshList.add(current);
+               }
+           }
+
+           // the last fragment set the right call
+           if (fragmentsRefreshListTimer != null)  {
+               fragmentsRefreshListTimer.cancel();
+           }
+
+           fragmentsRefreshListTimer = new Timer();
+           fragmentsRefreshListTimer.schedule(new TimerTask() {
+               @Override
+               public void run() {
+                   synchronized (fragmentsRefreshListSynchObj) {
+                       if (fragmentsRefreshList.contains(StatsService.StatsEndpointsEnum.VISITS)) {
+                           // update stats with graph data
+                           refreshStats(mCurrentTimeframe, mRequestedDate, true, true);
+                       } else {
+                           refreshStats(mCurrentTimeframe, mRequestedDate, false, true);
+                       }
+                       fragmentsRefreshList.clear();
+                       fragmentsRefreshListTimer.cancel();
+                       fragmentsRefreshListTimer = null;
+                   }
+               }
+           }, 500);
+
+
+        }
     }
 
     private void startWPComLoginActivity() {
@@ -413,7 +458,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
                                     mSwipeToRefreshHelper.setRefreshing(true);
-                                    refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDateTZ(mLocalBlogID), true);
+                                    refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDateTZ(mLocalBlogID), true, true);
                                 }
                             }
                         }
@@ -435,7 +480,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                         }
                     }, "wp.getOptions", params);
                 } else {
-                    refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID), true);
+                    refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID), true, true);
                 }
                 mSwipeToRefreshHelper.setRefreshing(true);
             }
@@ -568,7 +613,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         selectCurrentTimeframeInActionBar();
         scrollToTop();
         mSwipeToRefreshHelper.setRefreshing(true);
-        refreshStats(mCurrentTimeframe, mRequestedDate, true);
+        refreshStats(mCurrentTimeframe, mRequestedDate, true, true);
         loadStatsFragments(true, true, true);
     }
 
@@ -576,7 +621,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     @Override
     public void onDateChanged(String blogID, StatsTimeframe timeframe, String date) {
         mRequestedDate = date;
-        refreshStats(timeframe, date, false);
+        refreshStats(timeframe, date, false, false);
         emptyDataModelInFragments(false, false);
         loadStatsFragments(false, false, false); // This is here just for a security check
     }
@@ -592,7 +637,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         return mCurrentTimeframe;
     }
 
-    private void refreshStats(StatsTimeframe timeframe, String date, boolean updateAlltimeStats) {
+    private void refreshStats(StatsTimeframe timeframe, String date, boolean updateGraph, boolean updateAlltimeStats) {
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
         if (currentBlog == null) {
@@ -661,6 +706,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         intent.putExtra(StatsService.ARG_PERIOD, timeframe);
         intent.putExtra(StatsService.ARG_DATE, date);
         intent.putExtra(StatsService.ARG_UPDATE_ALLTIME_STATS, updateAlltimeStats);
+        intent.putExtra(StatsService.ARG_UPDATE_GRAPH_STATS, updateGraph);
         startService(intent);
     }
 
