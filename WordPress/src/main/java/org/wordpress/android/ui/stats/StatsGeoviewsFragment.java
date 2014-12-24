@@ -1,86 +1,141 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Fragment;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.StatsGeoviewsTable;
-import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.models.GeoviewModel;
+import org.wordpress.android.ui.stats.models.GeoviewsModel;
+import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
-/**
- * Fragment for geoview (views by country) stats. Has two pages, for Today's and Yesterday's stats.
- */
-public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
-    private static final Uri STATS_GEOVIEWS_URI = StatsContentProvider.STATS_GEOVIEWS_URI;
+import java.util.List;
 
-    private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
 
+public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsGeoviewsFragment.class.getSimpleName();
 
     @Override
-    protected Fragment getFragment(int position) {
-        int entryLabelResId = R.string.stats_entry_country;
-        int totalsLabelResId = R.string.stats_totals_views;
-        int emptyLabelResId = R.string.stats_empty_geoviews;
+    protected void updateUI() {
+        if (!isAdded()) {
+            return;
+        }
 
-        Uri uri = Uri.parse(STATS_GEOVIEWS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
+        if (isErrorResponse()) {
+            showErrorUI();
+            return;
+        }
 
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId, getLocalTableBlogID());
-        fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
-        fragment.setCallback(this);
-        return fragment;
+        if (hasCountries()) {
+            ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), getCountries());
+            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
+            showHideNoResultsUI(false);
+        } else {
+            showHideNoResultsUI(true);
+        }
     }
 
-    public static class CustomCursorAdapter extends CursorAdapter {
+    private boolean hasCountries() {
+        return !isDataEmpty() && ((GeoviewsModel) mDatamodels[0]).getCountries() != null;
+    }
+
+    private List<GeoviewModel> getCountries() {
+        if (!hasCountries()) {
+            return null;
+        }
+        return ((GeoviewsModel) mDatamodels[0]).getCountries();
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return (!isDataEmpty()
+                && ((GeoviewsModel) mDatamodels[0]).getCountries() != null
+                && ((GeoviewsModel) mDatamodels[0]).getCountries().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
+    }
+
+    @Override
+    protected boolean isExpandableList() {
+        return false;
+    }
+
+    private class GeoviewsAdapter extends ArrayAdapter<GeoviewModel> {
+
+        private final List<GeoviewModel> list;
+        private final Activity context;
         private final LayoutInflater inflater;
 
-        public CustomCursorAdapter(Context context, Cursor c) {
-            super(context, c, true);
+        public GeoviewsAdapter(Activity context, List<GeoviewModel> list) {
+            super(context, R.layout.stats_list_cell, list);
+            this.context = context;
+            this.list = list;
             inflater = LayoutInflater.from(context);
         }
 
         @Override
-        public View newView(Context context, Cursor cursor, ViewGroup root) {
-            View view = inflater.inflate(R.layout.stats_list_cell, root, false);
-            view.setTag(new StatsViewHolder(view));
-            return view;
-        }
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View rowView = convertView;
+            // reuse views
+            if (rowView == null) {
+                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                // configure view holder
+                StatsViewHolder viewHolder = new StatsViewHolder(rowView);
+                rowView.setTag(viewHolder);
+            }
 
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            final StatsViewHolder holder = (StatsViewHolder) view.getTag();
+            final GeoviewModel currentRowData = list.get(position);
+            StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
+            // fill data
+            String entry = currentRowData.getCountryFullName();
+            String imageUrl = currentRowData.getImageUrl();
+            int total = currentRowData.getViews();
 
-            String entry = cursor.getString(cursor.getColumnIndex(StatsGeoviewsTable.Columns.COUNTRY));
-            String imageUrl = cursor.getString(cursor.getColumnIndex(StatsGeoviewsTable.Columns.IMAGE_URL));
-            int total = cursor.getInt(cursor.getColumnIndex(StatsGeoviewsTable.Columns.VIEWS));
-
-            holder.entryTextView.setText(entry);
+            holder.setEntryText(entry);
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // image (country flag)
-            holder.showNetworkImage(imageUrl);
+            //holder.showNetworkImage(imageUrl);
+
+            holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(imageUrl, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.SITE_AVATAR);
+            holder.networkImageView.setVisibility(View.VISIBLE);
+
+            return rowView;
         }
+    }
+
+    @Override
+    protected int getEntryLabelResId() {
+        return R.string.stats_entry_country;
+    }
+
+    @Override
+    protected int getTotalsLabelResId() {
+        return R.string.stats_totals_views;
+    }
+
+    @Override
+    protected int getEmptyLabelTitleResId() {
+        return R.string.stats_empty_geoviews;
+    }
+
+    @Override
+    protected int getEmptyLabelDescResId() {
+        return R.string.stats_empty_geoviews_desc;
+    }
+
+    @Override
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.GEO_VIEWS
+        };
     }
 
     @Override
     public String getTitle() {
-        return getString(R.string.stats_view_views_by_country);
-    }
-
-    @Override
-    protected String[] getTabTitles() {
-        return StatsTimeframe.toStringArray(TIMEFRAMES);
-    }
-
-    @Override
-    protected int getInnerFragmentID() {
-        return R.id.stats_geoviews;
+        return getString(R.string.stats_view_countries);
     }
 }

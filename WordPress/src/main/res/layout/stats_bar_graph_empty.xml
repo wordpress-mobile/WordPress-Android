@@ -3,5 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:text="@string/stats_bar_graph_empty" >
+    android:text="@string/stats_bar_graph_empty"
+    android:id="@+id/stats_bar_graph_empty_label">
 </org.wordpress.android.widgets.WPTextView>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="StatsWhiteBackground">
+        <item name="android:background">@drawable/stats_white_background</item>
+    </style>
+
+    <style name="StatsHeader">
+        <item name="android:textColor">@color/stats_module_content_list_header</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:textStyle">bold</item>
+        <!--  item name="android:textAllCaps">true</item -->
+    </style>
+
+    <!-- Used in activity details -->
+    <style name="StatsHeaderTotals">
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_gravity">top</item>
+        <item name="android:singleLine">true</item>
+        <!--  item name="android:fontFamily">sans-serif-light</item -->
+    </style>
+
+    <style name="StatsHeaderTotalsLabel">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_gravity">bottom</item>
+        <!--  item name="android:fontFamily">sans-serif-light</item -->
+    </style>
+
+    <style name="StatsViewAllButton">
+        <item name="android:gravity">left</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:button">@android:color/transparent</item>
+        <item name="android:minHeight">22dp</item>
+        <item name="android:textColor">@color/wordpress_blue</item>
+        <item name="android:paddingTop">@dimen/margin_medium</item>
+        <item name="android:paddingLeft">@dimen/margin_medium</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="StatsModuleTitle">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/stats_text_color</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- TextViews -->
+    <!-- style name="StatsTextView" parent="android:Widget.TextView">
+        <item name="android:textColorLink">@color/reader_hyperlink</item>
+    </style>
+
+    <style name="StatsTextView.SecondaryAction" parent="StatsTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:minWidth">60dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawableLeft">@drawable/dashicon_external_black</item>
+        <item name="android:background">@drawable/reader_button_follow</item>
+        <item name="android:textColor">@color/reader_follow_text</item>
+        <item name="android:paddingLeft">@dimen/margin_small</item>
+        <item name="android:paddingTop">@dimen/margin_small</item>
+        <item name="android:paddingBottom">@dimen/margin_small</item>
+        <item name="android:paddingRight">@dimen/margin_small</item>
+        <item name="android:layout_marginRight">@dimen/margin_medium</item>
+        <item name="android:drawablePadding">0dp</item>
+        <item name="android:text">View</item>
+    </style -->
+</resources>

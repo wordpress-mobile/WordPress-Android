@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ptr_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.wordpress.android.ui.stats.ScrollViewExt xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Graph -->
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/stats_white_background"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                android:layout_margin="@dimen/margin_medium">
+
+                <LinearLayout
+                    android:id="@+id/stats_bar_chart_fragment_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/stats_barchart_height"
+                    android:orientation="vertical" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small">
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/stats_views_label"
+                        style="@style/StatsHeaderTotals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/calypso_blue_dark"
+                        android:layout_alignParentLeft="true" />
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/stats_views_totals"
+                        style="@style/StatsHeaderTotals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/calypso_orange_dark"
+                        android:text="0"
+                        android:layout_alignParentRight="true" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <!-- Months and Years -->
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:background="@drawable/stats_white_background"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                android:layout_margin="@dimen/margin_medium">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/stats_months_years_title"
+                    style="@style/StatsModuleTitle"
+                    android:text="Months and Years" />
+
+
+                <LinearLayout
+                    android:id="@+id/stats_months_years_list_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:visibility="gone">
+                    </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Average per Day -->
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:background="@drawable/stats_white_background"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                android:layout_margin="@dimen/margin_medium">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/stats_averages_title"
+                    style="@style/StatsModuleTitle"
+                    android:text="Averages per Day" />
+
+                <LinearLayout
+                    android:id="@+id/stats_averages_list_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:visibility="gone"></LinearLayout>
+
+            </LinearLayout>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/stats_all_response"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="whole response"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
+    </org.wordpress.android.ui.stats.ScrollViewExt>
+</android.support.v4.widget.SwipeRefreshLayout>

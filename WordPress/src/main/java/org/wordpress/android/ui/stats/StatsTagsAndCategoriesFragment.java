@@ -1,101 +1,244 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.TextView;
+import android.widget.BaseExpandableListAdapter;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.StatsTagsAndCategoriesTable;
-import org.wordpress.android.models.StatsTagsandCategories.Type;
-import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.models.TagModel;
+import org.wordpress.android.ui.stats.models.TagsContainerModel;
+import org.wordpress.android.ui.stats.models.TagsModel;
+import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 
-import java.util.Locale;
+import java.util.List;
 
-/**
- * Fragment for tags and categories stats. Only a single page.
- */
-public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment implements StatsCursorInterface {
-    private static final Uri STATS_TAGS_AND_CATEGORIES_URI = StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI;
-
+public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsTagsAndCategoriesFragment.class.getSimpleName();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
+    protected void updateUI() {
+        if (!isAdded()) {
+            return;
+        }
 
-        TextView tv = (TextView) view.findViewById(R.id.stats_pager_title);
-        tv.setText(getTitle().toUpperCase(Locale.getDefault()));
+        if (isErrorResponse()) {
+            showErrorUI();
+            return;
+        }
 
-        FragmentManager fm = getFragmentManager();
-
-        int entryLabelResId = R.string.stats_entry_tags_and_categories;
-        int totalsLabelResId = R.string.stats_totals_views;
-        int emptyLabelResId = R.string.stats_empty_tags_and_categories;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TAGS_AND_CATEGORIES_URI, entryLabelResId, totalsLabelResId, emptyLabelResId, getLocalTableBlogID());
-        fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
-        fragment.setCallback(this);
-
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.stats_pager_container, fragment, StatsCursorFragment.TAG);
-        ft.commit();
-
-        return view;
+        if (hasTags()) {
+            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), getTags());
+            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
+            showHideNoResultsUI(false);
+        } else {
+            showHideNoResultsUI(true);
+        }
     }
 
-    public class CustomCursorAdapter extends CursorAdapter {
-        public CustomCursorAdapter(Context context, Cursor c) {
-            super(context, c, true);
+    private boolean hasTags() {
+        return !isDataEmpty()
+                && ((TagsContainerModel) mDatamodels[0]).getTags() != null
+                && (((TagsContainerModel) mDatamodels[0]).getTags()).size() > 0;
+    }
+
+    private List<TagsModel> getTags() {
+        if (!hasTags()) {
+            return null;
+        }
+        return ((TagsContainerModel) mDatamodels[0]).getTags();
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return hasTags() && getTags().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
+    }
+
+    @Override
+    protected boolean isExpandableList() {
+        return true;
+    }
+
+    @Override
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.TAGS_AND_CATEGORIES
+        };
+    }
+
+    @Override
+    protected int getEntryLabelResId() {
+        return R.string.stats_entry_tags_and_categories;
+    }
+    @Override
+    protected int getTotalsLabelResId() {
+        return R.string.stats_totals_views;
+    }
+    @Override
+    protected int getEmptyLabelTitleResId() {
+        return R.string.stats_empty_tags_and_categories;
+    }
+    @Override
+    protected int getEmptyLabelDescResId() {
+        return R.string.stats_empty_tags_and_categories_desc;
+    }
+
+    private class MyExpandableListAdapter extends BaseExpandableListAdapter {
+        public final LayoutInflater inflater;
+        private final List<TagsModel> groups;
+
+        public MyExpandableListAdapter(Context context, List<TagsModel> groups) {
+            this.groups = groups;
+            this.inflater = LayoutInflater.from(context);
         }
 
         @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            String entry = cursor.getString(cursor.getColumnIndex(StatsTagsAndCategoriesTable.Columns.TOPIC));
-            int total = cursor.getInt(cursor.getColumnIndex(StatsTagsAndCategoriesTable.Columns.VIEWS));
-            String type = cursor.getString(cursor.getColumnIndex(StatsTagsAndCategoriesTable.Columns.TYPE));
+        public Object getChild(int groupPosition, int childPosition) {
+            TagsModel currentGroup = groups.get(groupPosition);
+            List<TagModel> results = currentGroup.getTags();
+            return results.get(childPosition);
+        }
 
-            // entries
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            entryTextView.setText(entry);
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return 0;
+        }
 
-            // tag and category icons
-            if (type.equals(Type.CATEGORY.getLabel())) {
-                entryTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stats_icon_categories, 0, 0, 0);
-            } else if (type.equals(Type.TAG.getLabel())) {
-                entryTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stats_icon_tags, 0, 0, 0);
+        @Override
+        public View getChildView(int groupPosition, final int childPosition,
+                                 boolean isLastChild, View convertView, ViewGroup parent) {
+
+            final TagModel children = (TagModel) getChild(groupPosition, childPosition);
+
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                // configure view holder
+                StatsViewHolder viewHolder = new StatsViewHolder(convertView);
+
+                //Make the picture smaller (same size of the chevron) only for tag
+                ViewGroup.LayoutParams params = viewHolder.networkImageView.getLayoutParams();
+                params.width = DisplayUtils.dpToPx(convertView.getContext(), 12);
+                params.height = params.width;
+                viewHolder.networkImageView.setLayoutParams(params);
+
+                convertView.setTag(viewHolder);
+            }
+
+            final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
+
+            // name, url
+            holder.setEntryTextOrLink(children.getLink(), children.getName());
+
+            // totals
+            holder.totalsTextView.setText("");
+
+            // icon.
+            holder.networkImageView.setVisibility(View.VISIBLE);
+            holder.networkImageView.setImageDrawable(getResources().getDrawable(R.drawable.stats_icon_tags));
+
+            return convertView;
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            TagsModel currentGroup = groups.get(groupPosition);
+            List<TagModel> tags = currentGroup.getTags();
+            if (tags == null || tags.size() == 1 ) {
+                return 0;
             } else {
-                entryTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                return tags.size();
+            }
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return groups.get(groupPosition);
+        }
+
+        @Override
+        public int getGroupCount() {
+            return groups.size();
+        }
+
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return 0;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded,
+                                 View convertView, ViewGroup parent) {
+
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                // configure view holder
+                StatsViewHolder viewHolder = new StatsViewHolder(convertView);
+                convertView.setTag(viewHolder);
+
+                //Make the picture smaller (same size of the chevron) only for tag
+                ViewGroup.LayoutParams params = viewHolder.networkImageView.getLayoutParams();
+                params.width = DisplayUtils.dpToPx(convertView.getContext(), 12);
+                params.height = params.width;
+                viewHolder.networkImageView.setLayoutParams(params);
+            }
+
+            final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
+
+            TagsModel group = (TagsModel) getGroup(groupPosition);
+            StringBuilder groupName = new StringBuilder();
+            List<TagModel> tags = group.getTags();
+            for (int i = 0; i < tags.size(); i++) {
+                TagModel currentTag = tags.get(i);
+                groupName.append(currentTag.getName());
+                if ( i < (tags.size() - 1)) {
+                    groupName.append(" | ");
+                }
+            }
+            int total = group.getViews();
+            int children = getChildrenCount(groupPosition);
+
+            if (children > 0) {
+                holder.setEntryText(groupName.toString(), getResources().getColor(R.color.stats_link_text_color));
+            } else {
+                holder.setEntryTextOrLink(tags.get(0).getLink(), groupName.toString());
             }
 
             // totals
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(FormatUtils.formatDecimal(total));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
+            // expand/collapse chevron
+            holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
+
+
+            // icon
+            if ( children == 0 ) {
+                holder.networkImageView.setVisibility(View.VISIBLE);
+                int drawableResource = groupName.toString().equalsIgnoreCase("uncategorized") ? R.drawable.stats_icon_categories
+                        : R.drawable.stats_icon_tags;
+                holder.networkImageView.setImageDrawable(getResources().getDrawable(drawableResource));
+            }
+
+            return convertView;
         }
 
         @Override
-        public View newView(Context context, Cursor cursor, ViewGroup root) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return false;
         }
 
     }
 
     @Override
-    protected String getTitle() {
+    public String getTitle() {
         return getString(R.string.stats_view_tags_and_categories);
-    }
-
-    @Override
-    public void onCursorLoaded(Uri uri, Cursor cursor) {
-        // StatsCursorInterface callback: do nothing
     }
 }

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentManager;
@@ -14,20 +13,22 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.view.GestureDetector;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -57,29 +58,31 @@ import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.Serializable;
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * The native stats activity, accessible via the menu drawer.
  * <p>
- * By pressing a spinner on the action bar, the user can select which stats view they wish to see.
+ * By pressing a spinner on the action bar, the user can select which timeframe they wish to see.
  * </p>
  */
-public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.ScrollViewListener {
+public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.ScrollViewListener,
+        StatsAuthorsFragment.OnAuthorsSectionChangeListener,
+        StatsVisitorsAndViewsFragment.OnDateChangeListener,
+        StatsAbstractListFragment.OnRequestDataListener,
+        StatsAbstractFragment.TimeframeDateProvider {
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
+    private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
+    private static final String SAVED_STATS_REQUESTED_DATE= "SAVED_STATS_REQUESTED_DATE";
+
+    private Spinner mSpinner;
+
     private static final int REQUEST_JETPACK = 7000;
 
     public static final String ARG_NO_MENU_DRAWER = "no_menu_drawer";
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
-
-    public static final String STATS_GESTURE_SHOW_TAP = "STATS_SHOW_TAP";
-    public static final String STATS_GESTURE_SINGLE_TAP_CONFIRMED = "STATS_SINGLE_TAP_CONFIRMED";
-    public static final String STATS_GESTURE_OTHER = "STATS_GESTURE_OTHER";
-    public static final String STATS_DETAILS_DATE = "STATS_DETAILS_DATE";
-    private GestureDetectorCompat mDetector;
 
     private Dialog mSignInDialog;
     private int mNavPosition = 0;
@@ -88,8 +91,11 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     private boolean mIsInFront;
     private boolean mNoMenuDrawer = false;
     private int mLocalBlogID = -1;
+    private StatsTimeframe mCurrentTimeframe = StatsTimeframe.DAY;
+    private String mRequestedDate;
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
 
     private LinearLayout mFragmentContainer;
 
@@ -108,9 +114,9 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
 
         mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
+        ActionBar actionBar = getSupportActionBar();
         if (mNoMenuDrawer) {
             setContentView(R.layout.stats_activity);
-            ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
@@ -120,7 +126,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
         mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
 
-        // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
@@ -129,7 +134,16 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
-                        refreshStats();
+
+                        if (mIsUpdatingStats) {
+                            AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
+                            return;
+                        }
+
+                        mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                        loadStatsFragments(false, true, true); // This is here just for a security check
+                        emptyDataModelInFragments(true, true);
+                        refreshStats(mCurrentTimeframe, mRequestedDate, true);
                     }
                 });
 
@@ -139,8 +153,16 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
             mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
+            mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
+            mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
+            if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
+                mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
+            } else {
+                mCurrentTimeframe = StatsTimeframe.DAY;
+            }
+            mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
         }
 
         //Make sure the blog_id passed to this activity is valid and the blog is available within the app
@@ -153,21 +175,55 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             return;
         }
 
-        loadStatsFragments();
-
-        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
-        mDetector.setIsLongpressEnabled(false);
-
-        // Refresh stats at startup if network and not on configuration changed
-        if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
-            refreshStats();
-            mSwipeToRefreshHelper.setRefreshing(true);
-        }
+        loadStatsFragments(false, true, true);
 
         ScrollViewExt scrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
         if (scrollView != null) {
             scrollView.setScrollViewListener(this);
         }
+
+        if (!mNoMenuDrawer && actionBar != null && mSpinner == null) {
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                View view = View.inflate(this, R.layout.reader_spinner, toolbar);
+                mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
+
+                StatsTimeframe[] timeframes = {StatsTimeframe.DAY, StatsTimeframe.WEEK,
+                        StatsTimeframe.MONTH, StatsTimeframe.YEAR};
+                mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, timeframes);
+
+                actionBar.setDisplayShowTitleEnabled(false);
+                mSpinner.setAdapter(mTimeframeSpinnerAdapter);
+                mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        final StatsTimeframe selectedTimeframe =  (StatsTimeframe) mTimeframeSpinnerAdapter.getItem(position);
+
+                        if (mCurrentTimeframe == selectedTimeframe) {
+                            AppLog.d(T.STATS, "The selected TIME FRAME is already active: " + selectedTimeframe.getLabel());
+                            return;
+                        }
+
+                        AppLog.d(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
+                        mCurrentTimeframe = selectedTimeframe;
+                        if (NetworkUtils.isNetworkAvailable(StatsActivity.this)) {
+                            String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                            mSwipeToRefreshHelper.setRefreshing(true);
+                            refreshStats(selectedTimeframe, date, true);
+                            emptyDataModelInFragments(true, false);
+                            loadStatsFragments(false, true, false); // This is here just for a security check
+                        }
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // nop
+                    }
+                });
+            }
+        }
+
+        selectCurrentTimeframeInActionBar();
     }
 
     @Override
@@ -200,41 +256,127 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         outState.putInt(SAVED_NAV_POSITION, mNavPosition);
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
+        outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
+        outState.putString(SAVED_STATS_REQUESTED_DATE, mRequestedDate);
         super.onSaveInstanceState(outState);
     }
 
-    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onDown(MotionEvent event) {
-            return true;
+    private void resetDatamodelForFragment( FragmentManager fm , String fragmentTAG) {
+        StatsAbstractFragment fragment = (StatsAbstractFragment) fm.findFragmentByTag(fragmentTAG);
+        if (fragment != null) {
+            fragment.resetDataModel();
         }
-        @Override
-        public boolean onSingleTapUp(MotionEvent event) {
-            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_SINGLE_TAP_CONFIRMED);
-            return false;
+    }
+
+
+    private void emptyDataModelInFragments(boolean resetGraphData, boolean resetAlltimeFragmets) {
+        FragmentManager fm = getFragmentManager();
+        if (resetGraphData) {
+            resetDatamodelForFragment(fm, StatsVisitorsAndViewsFragment.TAG);
         }
-        @Override
-        public void onShowPress(MotionEvent e) {
-            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_SHOW_TAP);
+        resetDatamodelForFragment(fm, StatsTopPostsAndPagesFragment.TAG);
+        resetDatamodelForFragment(fm, StatsReferrersFragment.TAG);
+        resetDatamodelForFragment(fm, StatsClicksFragment.TAG);
+        resetDatamodelForFragment(fm, StatsGeoviewsFragment.TAG);
+        resetDatamodelForFragment(fm, StatsAuthorsFragment.TAG);
+        resetDatamodelForFragment(fm, StatsVideoplaysFragment.TAG);
+        if (resetAlltimeFragmets) {
+            resetDatamodelForFragment(fm, StatsCommentsFragment.TAG);
+            resetDatamodelForFragment(fm, StatsTagsAndCategoriesFragment.TAG);
+            resetDatamodelForFragment(fm, StatsPublicizeFragment.TAG);
+            resetDatamodelForFragment(fm, StatsFollowersFragment.TAG);
+        }
+    }
+
+    private void loadStatsFragments(boolean forceRecreationOfFragments, boolean loadGraphFragment, boolean loadAlltimeFragmets) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        //ft.setCustomAnimations(R.anim.stats_fragment_in, R.anim.stats_fragment_out);
+
+        StatsAbstractFragment fragment;
+
+        if (loadGraphFragment) {
+            if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID);
+                ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
+            }
         }
 
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_OTHER);
-            return false;
+        if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID);
+            ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
         }
 
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_OTHER);
-            return false;
+        if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID);
+            ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
+        }
+
+        if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID);
+            ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
+        }
+
+        if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID);
+            ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
+        }
+
+        if (fm.findFragmentByTag(StatsAuthorsFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID);
+            ft.replace(R.id.stats_top_authors_container, fragment, StatsAuthorsFragment.TAG);
+        }
+
+        if (fm.findFragmentByTag(StatsVideoplaysFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID);
+            ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
+        }
+
+        if (loadAlltimeFragmets) {
+            if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID);
+                ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
+            }
+
+            if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID);
+                ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
+            }
+
+            if (fm.findFragmentByTag(StatsPublicizeFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID);
+                ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
+            }
+
+            if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID);
+                ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
+            }
+        }
+
+        ft.commit();
+    }
+
+    // AuthorsFragment should be dismissed when 0 or 1 author.
+    public void onAuthorsVisibilityChange(boolean isEmpty) {
+        View authorsContainer = this.findViewById(R.id.stats_top_authors_container);
+        if (authorsContainer != null) {
+            authorsContainer.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         }
     }
 
     @Override
-    public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
-        this.mDetector.onTouchEvent(event);
-        return super.dispatchTouchEvent(event);
+    public void onMoreDataRequested(StatsService.StatsEndpointsEnum endPointNeedUpdate, int pageNumber) {
+        // nope
+    }
+
+    @Override
+    public void onRefreshRequested(StatsService.StatsEndpointsEnum[] endPointsNeedUpdate) {
+        mSwipeToRefreshHelper.setRefreshing(mIsUpdatingStats);
+        if (mIsUpdatingStats) {
+            return;
+        }
+        refreshStats(mCurrentTimeframe, mRequestedDate, true);
     }
 
     private void startWPComLoginActivity() {
@@ -271,7 +413,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
                                     mSwipeToRefreshHelper.setRefreshing(true);
-                                    refreshStats();
+                                    refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDateTZ(mLocalBlogID), true);
                                 }
                             }
                         }
@@ -293,145 +435,17 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                         }
                     }, "wp.getOptions", params);
                 } else {
-                    refreshStats();
+                    refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID), true);
                 }
                 mSwipeToRefreshHelper.setRefreshing(true);
             }
         }
     }
 
-    private void loadStatsFragments() {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-
-        StatsAbsViewFragment fragment;
-
-        if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS, mLocalBlogID);
-            ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
-        }
-
-        if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null) {
-            fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID);
-            ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
-        }
-
-        if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID);
-            ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
-        }
-
-        if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY, mLocalBlogID);
-            ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
-        }
-
-        if (fm.findFragmentByTag(StatsSearchEngineTermsFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS, mLocalBlogID);
-            ft.replace(R.id.stats_searchengine_container, fragment, StatsSearchEngineTermsFragment.TAG);
-        }
-
-        if (fm.findFragmentByTag(StatsTotalsFollowersAndSharesFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES, mLocalBlogID);
-            ft.replace(R.id.stats_totals_followers_shares_container,
-                    fragment, StatsTotalsFollowersAndSharesFragment.TAG);
-        }
-
-        if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID);
-            ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
-        }
-
-        // TODO: awaiting stats APIs
-        /*if (fm.findFragmentByTag(StatsVideoFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIDEO_PLAYS);
-            ft.replace(R.id.stats_video_container, fragment, StatsVideoFragment.TAG);
-        }
-        if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES);
-            ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
-        }
-        if (fm.findFragmentByTag(StatsTopAuthorsFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_AUTHORS);
-            ft.replace(R.id.stats_top_authors_container, fragment, StatsTopAuthorsFragment.TAG);
-        }
-        if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.COMMENTS);
-            ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
-        }*/
-
-        ft.commit();
-
-        // split layout into two for 720DP tablets and 600DP tablets in landscape
-        if (StatsUIHelper.shouldLoadSplitLayout(this)) {
-            loadSplitLayout();
-        }
-    }
-
-    private void loadSplitLayout() {
-        LinearLayout columnLeft = (LinearLayout) findViewById(R.id.stats_tablet_col_left);
-        LinearLayout columnRight = (LinearLayout) findViewById(R.id.stats_tablet_col_right);
-        FrameLayout frameView;
-
-        /*
-         * left column
-         */
-        frameView = (FrameLayout) findViewById(R.id.stats_top_posts_container);
-        mFragmentContainer.removeView(frameView);
-        columnLeft.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_referrers_container);
-        mFragmentContainer.removeView(frameView);
-        columnLeft.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_clicks_container);
-        mFragmentContainer.removeView(frameView);
-        columnLeft.addView(frameView);
-
-        /*
-         * right column
-         */
-        frameView = (FrameLayout) findViewById(R.id.stats_geoviews_container);
-        mFragmentContainer.removeView(frameView);
-        columnRight.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_searchengine_container);
-        mFragmentContainer.removeView(frameView);
-        columnRight.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_totals_followers_shares_container);
-        mFragmentContainer.removeView(frameView);
-        columnRight.addView(frameView);
-
-        // TODO: awaiting stats APIs
-        /*frameView = (FrameLayout) findViewById(R.id.stats_top_authors_container);
-        mFragmentContainer.removeView(frameView);
-        columnLeft.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_video_container);
-        mFragmentContainer.removeView(frameView);
-        columnLeft.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_comments_container);
-        mFragmentContainer.removeView(frameView);
-        columnRight.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_tags_and_categories_container);
-        mFragmentContainer.removeView(frameView);
-        columnRight.addView(frameView);*/
-    }
-
     private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
-        private final WeakReference<StatsActivity> mStatsActivityWeakRef;
-
-        public VerifyJetpackSettingsCallback(StatsActivity refActivity) {
-            this.mStatsActivityWeakRef = new WeakReference<StatsActivity>(refActivity);
-        }
-
         @Override
         public void onSuccess() {
-            if (mStatsActivityWeakRef.get() == null || mStatsActivityWeakRef.get().isFinishing()
-                    || !mStatsActivityWeakRef.get().mIsInFront) {
+            if (isFinishing() || !mIsInFront) {
                 return;
             }
 
@@ -439,31 +453,34 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                 // Blog has not returned a jetpack_client_id
                 stopStatsService();
                 mSwipeToRefreshHelper.setRefreshing(false);
-                showJetpackMissingAlert(this.mStatsActivityWeakRef.get());
+                showJetpackMissingAlert();
             }
         }
 
         @Override
         public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            if (mStatsActivityWeakRef.get() == null || mStatsActivityWeakRef.get().isFinishing()
-                    || !mStatsActivityWeakRef.get().mIsInFront) {
+            if (isFinishing() || !mIsInFront) {
                 return;
             }
             if (mSignInDialog != null && mSignInDialog.isShowing()) {
                 return;
             }
             stopStatsService();
-            Toast.makeText(mStatsActivityWeakRef.get(), R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
+            Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
         }
     }
 
-    private void showJetpackMissingAlert(final Activity currentActivity) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(currentActivity);
+    private void showJetpackMissingAlert() {
+        if (isFinishing()) {
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-        if (currentBlog == null && !isFinishing()) {
+        if (currentBlog == null) {
             AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
             Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            return;
         }
         if (currentBlog.isAdmin()) {
             builder.setMessage(getString(R.string.jetpack_message))
@@ -474,7 +491,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                             + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com"
                             + "&plugin-search-input=Search+Plugins";
                     String authURL = WPWebViewActivity.getBlogLoginUrl(currentBlog);
-                    Intent jetpackIntent = new Intent(currentActivity, WPWebViewActivity.class);
+                    Intent jetpackIntent = new Intent(StatsActivity.this, WPWebViewActivity.class);
                     jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, currentBlog.getUsername());
                     jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, currentBlog.getPassword());
                     jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
@@ -510,7 +527,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         if (item.getItemId() == R.id.menu_view_stats_full_site) {
             final String blogId = StatsUtils.getBlogId(mLocalBlogID);
             if (blogId == null) {
-                showJetpackMissingAlert(this);
+                showJetpackMissingAlert();
                 return true;
             }
 
@@ -544,54 +561,38 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
     @Override
     public void onBlogChanged() {
-
         stopStatsService();
-
         mLocalBlogID = WordPress.getCurrentBlog().getLocalTableBlogId();
+        mCurrentTimeframe = StatsTimeframe.DAY;
+        mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+        selectCurrentTimeframeInActionBar();
         scrollToTop();
-
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-
-        StatsAbsViewFragment fragment;
-
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS, mLocalBlogID);
-        ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
-
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID);
-        ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
-
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY, mLocalBlogID);
-        ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
-
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID);
-        ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
-
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS, mLocalBlogID);
-        ft.replace(R.id.stats_searchengine_container, fragment, StatsSearchEngineTermsFragment.TAG);
-
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES, mLocalBlogID);
-        ft.replace(R.id.stats_totals_followers_shares_container, fragment, StatsTotalsFollowersAndSharesFragment.TAG);
-
-        fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID);
-        ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
-
-        ft.commit();
-
         mSwipeToRefreshHelper.setRefreshing(true);
-        refreshStats();
+        refreshStats(mCurrentTimeframe, mRequestedDate, true);
+        loadStatsFragments(true, true, true);
     }
 
-    /**
-     * Do not refresh Stats in BG when user switch between blogs since the refresh
-     * is already started in foreground at this point.
-     */
+    // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
     @Override
-    protected boolean shouldUpdateCurrentBlogStatsInBackground() {
-        return false;
+    public void onDateChanged(String blogID, StatsTimeframe timeframe, String date) {
+        mRequestedDate = date;
+        refreshStats(timeframe, date, false);
+        emptyDataModelInFragments(false, false);
+        loadStatsFragments(false, false, false); // This is here just for a security check
     }
 
-    private void refreshStats() {
+    // Fragments call these two methods below to access the current timeframe/date selected by the user.
+    @Override
+    public String getCurrentDate() {
+        return mRequestedDate;
+    }
+
+    @Override
+    public StatsTimeframe getCurrentTimeFrame() {
+        return mCurrentTimeframe;
+    }
+
+    private void refreshStats(StatsTimeframe timeframe, String date, boolean updateAlltimeStats) {
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
         if (currentBlog == null) {
@@ -602,12 +603,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
         if (!NetworkUtils.isNetworkAvailable(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            return;
-        }
-
-        if (mIsUpdatingStats) {
-            mSwipeToRefreshHelper.setRefreshing(false);
-            AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
+            AppLog.w(AppLog.T.STATS, "StatsActivity > no connection, update canceled");
             return;
         }
 
@@ -639,7 +635,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             if (!currentBlog.isDotcomFlag()) {
                 // Refresh blog settings/options that includes 'jetpack_client_id'needed here
                 new ApiHelper.RefreshBlogContentTask(currentBlog,
-                        new VerifyJetpackSettingsCallback(StatsActivity.this)).execute(false);
+                        new VerifyJetpackSettingsCallback()).execute(false);
             } else {
                 // blodID cannot be null on dotcom blogs.
                 Toast.makeText(this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
@@ -657,9 +653,14 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             return;
         }
 
+        mIsUpdatingStats = true;
+
         // start service to get stats
         Intent intent = new Intent(this, StatsService.class);
         intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
+        intent.putExtra(StatsService.ARG_PERIOD, timeframe);
+        intent.putExtra(StatsService.ARG_DATE, date);
+        intent.putExtra(StatsService.ARG_UPDATE_ALLTIME_STATS, updateAlltimeStats);
         startService(intent);
     }
 
@@ -678,11 +679,10 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = StringUtils.notNullStr(intent.getAction());
+
             if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
                 mIsUpdatingStats = intent.getBooleanExtra(StatsService.EXTRA_IS_UPDATING, false);
-                if (!mIsUpdatingStats) {
-                    mSwipeToRefreshHelper.setRefreshing(false);
-                }
+                mSwipeToRefreshHelper.setRefreshing(mIsUpdatingStats);
 
                 // Check if there were errors
                 if (intent.getBooleanExtra(StatsService.EXTRA_IS_ERROR, false) && !isFinishing()
@@ -733,10 +733,113 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
     };
 
+    /*
+    * make sure the passed timeframe is the one selected in the actionbar
+    */
+    private void selectCurrentTimeframeInActionBar() {
+        if (isFinishing()) {
+            return;
+        }
+
+        if (mTimeframeSpinnerAdapter == null || mSpinner == null) {
+            return;
+        }
+
+        int position = mTimeframeSpinnerAdapter.getIndexOfTimeframe(mCurrentTimeframe);
+
+        if (position > -1 && position != mSpinner.getSelectedItemPosition()) {
+            mSpinner.setSelection(position);
+        }
+    }
+
+    /*
+     * adapter used by the timeframe spinner
+     */
+    private class TimeframeSpinnerAdapter extends BaseAdapter {
+        private StatsTimeframe[] mTimeframes;
+        private LayoutInflater mInflater;
+
+        TimeframeSpinnerAdapter(Context context, StatsTimeframe[] timeframeNames) {
+            super();
+            mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mTimeframes = timeframeNames;
+        }
+
+        @Override
+        public int getCount() {
+            return (mTimeframes != null ? mTimeframes.length : 0);
+        }
+
+        @Override
+        public Object getItem(int position) {
+            if (position < 0 || position >= getCount())
+                return "";
+            return mTimeframes[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final View view;
+            if (convertView == null) {
+                view = mInflater.inflate(R.layout.reader_spinner_item, parent, false);
+            } else {
+                view = convertView;
+            }
+
+            final TextView text = (TextView) view.findViewById(R.id.text);
+            StatsTimeframe selectedTimeframe = (StatsTimeframe)getItem(position);
+            text.setText(selectedTimeframe.getLabel());
+            return view;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            StatsTimeframe selectedTimeframe = (StatsTimeframe)getItem(position);
+            final TagViewHolder holder;
+
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.reader_spinner_dropdown_item, parent, false);
+                holder = new TagViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (TagViewHolder) convertView.getTag();
+            }
+
+            holder.textView.setText(selectedTimeframe.getLabel());
+            return convertView;
+        }
+
+        private class TagViewHolder {
+            private final TextView textView;
+            TagViewHolder(View view) {
+                textView = (TextView) view.findViewById(R.id.text);
+            }
+        }
+
+        public int getIndexOfTimeframe(StatsTimeframe tm) {
+            int pos = 0;
+            for (int i = 0; i < mTimeframes.length; i++) {
+                if (mTimeframes[i] == tm) {
+                    pos = i;
+                    return pos;
+                }
+            }
+            return pos;
+        }
+    }
+
     @Override
     public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
         // We take the last son in the scrollview
-        View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
+        View view = scrollView.getChildAt(scrollView.getChildCount() - 1);
+        if (view == null) {
+            return;
+        }
         int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY() + view.getTop()));
 
         // if diff is zero, then the bottom has been reached
@@ -745,10 +848,11 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
     }
 
-    private static final RateLimitedTask sTrackBottomReachedStats = new RateLimitedTask(2) {
+    private static RateLimitedTask sTrackBottomReachedStats = new RateLimitedTask(2) {
         protected boolean run() {
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SCROLLED_TO_BOTTOM);
             return true;
         }
     };
+
 }

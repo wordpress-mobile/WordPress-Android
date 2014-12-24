@@ -1,58 +1,52 @@
 package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.RemoteException;
 import android.preference.PreferenceManager;
 
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.StatsBarChartData;
-import org.wordpress.android.models.StatsSummary;
-import org.wordpress.android.models.StatsVideoSummary;
-import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.models.AuthorsModel;
+import org.wordpress.android.ui.stats.models.ClicksModel;
+import org.wordpress.android.ui.stats.models.CommentFollowersModel;
+import org.wordpress.android.ui.stats.models.CommentsModel;
+import org.wordpress.android.ui.stats.models.FollowersModel;
+import org.wordpress.android.ui.stats.models.GeoviewsModel;
+import org.wordpress.android.ui.stats.models.PublicizeModel;
+import org.wordpress.android.ui.stats.models.ReferrersModel;
+import org.wordpress.android.ui.stats.models.TagsContainerModel;
+import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
+import org.wordpress.android.ui.stats.models.VideoPlaysModel;
+import org.wordpress.android.ui.stats.models.VisitsModel;
+import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
-/**
- * A utility class to help with date parsing and saving summaries in stats
- */
 public class StatsUtils {
-    private static final String STAT_SUMMARY = "StatSummary_";
-    private static final String STAT_VIDEO_SUMMARY = "StatVideoSummary_";
-    private static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
-    /**
-     * Converts date in the form of 2013-07-18 to ms *
-     */
     @SuppressLint("SimpleDateFormat")
-    public static long toMs(String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    public static long toMs(String date, String pattern) {
+        if (date == null) {
+            return -1;
+        }
+        
+        if (pattern == null) {
+            AppLog.w(T.UTILS, "Trying to parse with a null pattern");
+            return -1;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         try {
             return sdf.parse(date).getTime();
         } catch (ParseException e) {
@@ -61,27 +55,79 @@ public class StatsUtils {
         return -1;
     }
 
+    /**
+     * Converts date in the form of 2013-07-18 to ms *
+     */
+    public static long toMs(String date) {
+        return toMs(date, "yyyy-MM-dd");
+    }
+
     public static String msToString(long ms, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(new Date(ms));
     }
 
-    public static String getCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    /**
+     * Get the current date of the blog in the form of yyyy-MM-dd (EX: 2013-07-18) *
+     */
+    public static String getCurrentDateTZ(int localTableBlogID) {
+        String pattern = "yyyy-MM-dd";
+        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
+        if (timezone == null) {
+            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
+            return getCurrentDate();
+        }
+
+        return getCurrentDateTimeTZ(timezone, pattern);
+    }
+
+    /**
+     * Get the current datetime of the blog *
+     */
+    public static String getCurrentDateTimeTZ(int localTableBlogID) {
+        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
+        if (timezone == null) {
+            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
+            return getCurrentDatetime();
+        }
+        String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
+        return getCurrentDateTimeTZ(timezone, pattern);
+    }
+
+    /**
+     * Get the current datetime of the blog in Ms *
+     */
+    public static long getCurrentDateTimeMsTZ(int localTableBlogID) {
+        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
+        if (timezone == null) {
+            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
+            return new Date().getTime();
+        }
+        String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
+        return toMs(getCurrentDateTimeTZ(timezone, pattern), pattern);
+    }
+
+    /**
+     * Get the current date in the form of yyyy-MM-dd (EX: 2013-07-18) *
+     */
+    private static String getCurrentDate() {
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         return sdf.format(new Date());
     }
 
-    public static String getYesterdaysDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(new Date(getCurrentDateMs() - ONE_DAY));
+    /**
+     * Get the current date in the form of "yyyy-MM-dd HH:mm:ss"
+     */
+    private static String getCurrentDatetime() {
+        String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        return sdf.format(new Date());
     }
 
-    public static long getCurrentDateMs() {
-        return toMs(getCurrentDate());
-    }
-
-    public static String getBlogTimezone(Blog blog) {
+    private static String getBlogTimezone(Blog blog) {
         if (blog == null) {
+            AppLog.w(T.UTILS, "Blog object is null!! Can't read timezone opt then.");
             return null;
         }
 
@@ -99,38 +145,47 @@ public class StatsUtils {
         return timezone;
     }
 
-    public static String getCurrentDateTZ(String blogTimeZoneOption) {
+    private static String getCurrentDateTimeTZ(String blogTimeZoneOption, String pattern) {
         Date date = new Date();
-        SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat gmtDf = new SimpleDateFormat(pattern);
 
         if (blogTimeZoneOption == null) {
             AppLog.w(T.UTILS, "blogTimeZoneOption is null. getCurrentDateTZ() will return the device time!");
             return gmtDf.format(date);
         }
 
-        if (blogTimeZoneOption.equals("0")) {
-            gmtDf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        } else if (blogTimeZoneOption.startsWith("-")) {
-            gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOption));
+        /*
+        Convert the timezone to a form that is compatible with Java TimeZone class
+        WordPress returns something like the following:
+           UTC+0:30   ---->  0.5
+           UTC+1      ---->  1.0
+           UTC-0:30   ----> -1.0
+        */
+
+        AppLog.d(T.STATS, "Parsing the following Timezone received from WP: " + blogTimeZoneOption);
+        String timezoneNormalized;
+        if (blogTimeZoneOption.equals("0") || blogTimeZoneOption.equals("0.0")) {
+            timezoneNormalized = "GMT";
         } else {
-            if (blogTimeZoneOption.startsWith("+")) {
-                gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOption));
+            String[] timezoneSplitted = org.apache.commons.lang.StringUtils.split(blogTimeZoneOption, ".");
+            timezoneNormalized = timezoneSplitted[0];
+            if(timezoneSplitted.length > 1 && timezoneSplitted[1].equals("5")){
+                timezoneNormalized += ":30";
+            }
+            if (timezoneNormalized.startsWith("-")) {
+                timezoneNormalized = "GMT" + timezoneNormalized;
             } else {
-                gmtDf.setTimeZone(TimeZone.getTimeZone("GMT+" + blogTimeZoneOption));
+                if (timezoneNormalized.startsWith("+")) {
+                    timezoneNormalized = "GMT" + timezoneNormalized;
+                } else {
+                    timezoneNormalized = "GMT+" + timezoneNormalized;
+                }
             }
         }
+
+        AppLog.d(T.STATS, "Setting the following Timezone: " + timezoneNormalized);
+        gmtDf.setTimeZone(TimeZone.getTimeZone(timezoneNormalized));
         return gmtDf.format(date);
-    }
-
-    public static String getYesterdaysDateTZ(String blogTimeZoneOption) {
-        String todayDateTZ = getCurrentDateTZ(blogTimeZoneOption);
-        long yesterdayMillis = StatsUtils.toMs(todayDateTZ);
-        SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
-        return gmtDf.format(new Date(yesterdayMillis - StatsUtils.ONE_DAY));
-    }
-
-    public static long getCurrentDateMsTZ(String blogTimeZoneOption) {
-        return toMs(getCurrentDateTZ(blogTimeZoneOption));
     }
 
     public static String parseDate(String timestamp, String fromFormat, String toFormat) {
@@ -145,142 +200,16 @@ public class StatsUtils {
         return "";
     }
 
-    public static void saveSummary(String blogId, JSONObject stat) {
-        try {
-            JSONObject statsObject = stat.getJSONObject("stats");
-            String day = stat.getString("day");
-            statsObject.put("day", day);
-            FileOutputStream fos = WordPress.getContext().openFileOutput(STAT_SUMMARY + blogId, Context.MODE_PRIVATE);
-            fos.write(statsObject.toString().getBytes());
-            fos.close();
-        } catch (FileNotFoundException e) {
-            AppLog.e(T.STATS, e);
-        } catch (IOException e) {
-            AppLog.e(T.STATS, e);
-        } catch (JSONException e) {
-            AppLog.e(T.STATS, e);
-        }
-
-        saveGraphData(blogId, stat);
-    }
-
-    private static void saveGraphData(String blogId, JSONObject stat) {
-        try {
-            JSONArray data = stat.getJSONObject("visits").getJSONArray("data");
-            Uri uri = StatsContentProvider.STATS_BAR_CHART_DATA_URI;
-            Context context = WordPress.getContext();
-
-            int length = data.length();
-
-            ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-
-            if (length > 0) {
-                ContentProviderOperation op = ContentProviderOperation.newDelete(uri).withSelection("blogId=? AND unit=?", new String[]{blogId, StatsBarChartUnit.DAY.name()}).build();
-                operations.add(op);
-            }
-
-            for (int i = 0; i < length; i++) {
-                StatsBarChartData item = new StatsBarChartData(blogId, StatsBarChartUnit.DAY, data.getJSONArray(i));
-                ContentValues values = StatsBarChartDataTable.getContentValues(item);
-
-                if (values != null) {
-                    ContentProviderOperation op = ContentProviderOperation.newInsert(uri).withValues(values).build();
-                    operations.add(op);
-                }
-            }
-
-            ContentResolver resolver = context.getContentResolver();
-            resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-            resolver.notifyChange(uri, null);
-        } catch (JSONException e) {
-            AppLog.e(T.STATS, e);
-        } catch (RemoteException e) {
-            AppLog.e(T.STATS, e);
-        } catch (OperationApplicationException e) {
-            AppLog.e(T.STATS, e);
-        }
-    }
-
-    public static void deleteSummary(String blogId) {
-        WordPress.getContext().deleteFile(STAT_SUMMARY + blogId);
-    }
-
-    public static StatsSummary getSummary(String blogId) {
-        StatsSummary stat = null;
-        try {
-            FileInputStream fis = WordPress.getContext().openFileInput(STAT_SUMMARY + blogId);
-            StringBuilder fileContent = new StringBuilder();
-
-            byte[] buffer = new byte[1024];
-
-            int bytesRead = fis.read(buffer);
-            while (bytesRead != -1) {
-                fileContent.append(new String(buffer, 0, bytesRead, "ISO-8859-1"));
-                bytesRead = fis.read(buffer);
-            }
-            fis.close();
-
-            Gson gson = new Gson();
-            stat = gson.fromJson(fileContent.toString(), StatsSummary.class);
-
-        } catch (FileNotFoundException e) {
-            // stats haven't been downloaded yet
-        } catch (IOException e) {
-            AppLog.e(T.STATS, e);
-        }
-        return stat;
-    }
-
-    public static void saveVideoSummary(String blogId, JSONObject stat) {
-        try {
-            stat.put("date", getCurrentDate());
-            FileOutputStream fos = WordPress.getContext().openFileOutput(STAT_VIDEO_SUMMARY + blogId, Context.MODE_PRIVATE);
-            fos.write(stat.toString().getBytes());
-            fos.close();
-        } catch (FileNotFoundException e) {
-            AppLog.e(T.STATS, e);
-        } catch (IOException e) {
-            AppLog.e(T.STATS, e);
-        } catch (JSONException e) {
-            AppLog.e(T.STATS, e);
-        }
-    }
-
-    public static void deleteVideoSummary(String blogId) {
-        WordPress.getContext().deleteFile(STAT_VIDEO_SUMMARY + blogId);
-    }
-
-    public static StatsVideoSummary getVideoSummary(String blogId) {
-        StatsVideoSummary stat = null;
-        try {
-            FileInputStream fis = WordPress.getContext().openFileInput(STAT_VIDEO_SUMMARY + blogId);
-            StringBuilder fileContent = new StringBuilder();
-
-            byte[] buffer = new byte[1024];
-
-            while (fis.read(buffer) != -1) {
-                fileContent.append(new String(buffer));
-            }
-
-            JSONObject object = new JSONObject(fileContent.toString());
-
-            String timeframe = object.getString("timeframe");
-            int plays = object.getInt("plays");
-            int impressions = object.getInt("impressions");
-            int minutes = object.getInt("minutes");
-            String bandwidth = object.getString("bandwidth");
-            String date = object.getString("date");
-
-            stat = new StatsVideoSummary(timeframe, plays, impressions, minutes, bandwidth, date);
-
-        } catch (FileNotFoundException e) {
-            AppLog.e(T.STATS, e);
-        } catch (IOException e) {
-            AppLog.e(T.STATS, e);
-        } catch (JSONException e) {
-            AppLog.e(T.STATS, e);
-        }
-        return stat;
+    /**
+     * Get a diff between two dates
+     * @param date1 the oldest date in Ms
+     * @param date2 the newest date in Ms
+     * @param timeUnit the unit in which you want the diff
+     * @return the diff value, in the provided unit
+     */
+    public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
     }
 
     public static int getSmallestWidthDP() {
@@ -323,7 +252,8 @@ public class StatsUtils {
     }
 
     public static class StatsCredentials {
-        private String mUsername, mPassword;
+        private final String mUsername;
+        private final String mPassword;
 
         public StatsCredentials(String username, String password) {
             this.mUsername = username;
@@ -358,4 +288,53 @@ public class StatsUtils {
             return currentBlog.getApi_blogid();
         }
     }
+
+
+    public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
+            throws JSONException {
+        Serializable model = null;
+        switch (endpointName) {
+            case VISITS:
+                model = new VisitsModel(blogID, response);
+                break;
+            case TOP_POSTS:
+                model = new TopPostsAndPagesModel(blogID, response);
+                break;
+            case REFERRERS:
+                model = new ReferrersModel(blogID, response);
+                break;
+            case CLICKS:
+                model = new ClicksModel(blogID, response);
+                break;
+            case GEO_VIEWS:
+                model = new GeoviewsModel(blogID, response);
+                break;
+            case AUTHORS:
+                model = new AuthorsModel(blogID, response);
+                break;
+            case VIDEO_PLAYS:
+                model = new VideoPlaysModel(blogID, response);
+                break;
+            case COMMENTS:
+                model = new CommentsModel(blogID, response);
+                break;
+            case FOLLOWERS_WPCOM:
+                model = new FollowersModel(blogID, response);
+                break;
+            case FOLLOWERS_EMAIL:
+                model = new FollowersModel(blogID, response);
+                break;
+            case COMMENT_FOLLOWERS:
+                model = new CommentFollowersModel(blogID, response);
+                break;
+            case TAGS_AND_CATEGORIES:
+                model = new TagsContainerModel(blogID, response);
+                break;
+            case PUBLICIZE:
+                model = new PublicizeModel(blogID, response);
+                break;
+        }
+        return model;
+    }
+
 }

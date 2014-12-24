@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="graph_font_size">10sp</dimen>
+    <dimen name="graph_font_size">12sp</dimen>
     <dimen name="default_dialog_width">480dp</dimen>
 
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_tablet</dimen>

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.text.Spannable;
+import android.text.style.URLSpan;
 import android.util.SparseBooleanArray;
 import android.view.Display;
 import android.view.View;
@@ -23,8 +25,8 @@ import org.wordpress.android.R;
 public class StatsUIHelper {
     // Max number of rows to show in a stats fragment
     public static final int STATS_GROUP_MAX_ITEMS = 10;
-    public static final int STATS_CHILD_MAX_ITEMS = 25;
-    private static final int ANIM_DURATION = 150;
+    public static final int STATS_CHILD_MAX_ITEMS = 50;
+    public static final int ANIM_DURATION = 150;
 
     // Used for tablet UI
     private static final int TABLET_720DP = 720;
@@ -37,19 +39,19 @@ public class StatsUIHelper {
         return (point.y < point.x);
     }
 
-    // split layout into two for 720DP tablets and 600DP tablets in landscape
-    public static boolean shouldLoadSplitLayout(Activity act) {
+    // Load more bars for 720DP tablets and 600DP tablets in landscape
+    public static boolean shouldLoadMoreBars(Activity act) {
         return (StatsUtils.getSmallestWidthDP() >= TABLET_720DP
                 || (StatsUtils.getSmallestWidthDP() == TABLET_600DP && isInLandscape(act)));
     }
 
-    public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout) {
+    public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout, int maxNumberOfItemsToshow) {
         if (ctx == null || linearLayout == null || adapter == null) {
             return;
         }
 
         // limit number of items to show otherwise it would cause performance issues on the LinearLayout
-        int count = Math.min(adapter.getCount(), STATS_GROUP_MAX_ITEMS);
+        int count = Math.min(adapter.getCount(), maxNumberOfItemsToshow);
 
         if (count == 0) {
             linearLayout.removeAllViews();
@@ -57,8 +59,6 @@ public class StatsUIHelper {
         }
 
         int numExistingViews = linearLayout.getChildCount();
-        int altRowColor = ctx.getResources().getColor(R.color.stats_alt_row);
-
         // remove excess views
         if (count < numExistingViews) {
             int numToRemove = numExistingViews - count;
@@ -66,39 +66,70 @@ public class StatsUIHelper {
             numExistingViews = count;
         }
 
+        int bgColor = Color.TRANSPARENT;
         for (int i = 0; i < count; i++) {
-            int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
             final View view;
             // reuse existing view when possible
             if (i < numExistingViews) {
                 View convertView = linearLayout.getChildAt(i);
                 view = adapter.getView(i, convertView, linearLayout);
                 view.setBackgroundColor(bgColor);
+                setViewBackgroundWithoutResettingPadding(view, i == 0 ? 0 : R.drawable.stats_list_item_background);
             } else {
                 view = adapter.getView(i, null, linearLayout);
                 view.setBackgroundColor(bgColor);
+                setViewBackgroundWithoutResettingPadding(view, i == 0 ? 0 : R.drawable.stats_list_item_background);
                 linearLayout.addView(view);
             }
         }
         linearLayout.invalidate();
     }
 
+    /**
+     *
+     * Padding information are reset when changing the background Drawable on a View.
+     * The reason why setting an image resets the padding is because 9-patch images can encode padding.
+     *
+     * See http://stackoverflow.com/a/10469121 and
+     * http://www.mail-archive.com/android-developers@googlegroups.com/msg09595.html
+     *
+     * @param v The view to apply the background resource
+     * @param backgroundResId The resource ID
+     */
+    private static void setViewBackgroundWithoutResettingPadding(final View v, final int backgroundResId) {
+        final int paddingBottom = v.getPaddingBottom(), paddingLeft = v.getPaddingLeft();
+        final int paddingRight = v.getPaddingRight(), paddingTop = v.getPaddingTop();
+        v.setBackgroundResource(backgroundResId);
+        v.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+    }
+
+    public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout) {
+        reloadLinearLayout(ctx, adapter, linearLayout, STATS_GROUP_MAX_ITEMS);
+    }
+
     public static void reloadGroupViews(final Context ctx,
                                         final ExpandableListAdapter mAdapter,
                                         final SparseBooleanArray mGroupIdToExpandedMap,
                                         final LinearLayout mLinearLayout) {
+        reloadGroupViews(ctx, mAdapter, mGroupIdToExpandedMap, mLinearLayout, STATS_GROUP_MAX_ITEMS);
+    }
+
+    public static void reloadGroupViews(final Context ctx,
+                                        final ExpandableListAdapter mAdapter,
+                                        final SparseBooleanArray mGroupIdToExpandedMap,
+                                        final LinearLayout mLinearLayout,
+                                        final int maxNumberOfItemsToshow) {
         if (ctx == null || mLinearLayout == null || mAdapter == null || mGroupIdToExpandedMap == null) {
             return;
         }
 
-        int groupCount = Math.min(mAdapter.getGroupCount(), STATS_GROUP_MAX_ITEMS);
+        int groupCount = Math.min(mAdapter.getGroupCount(), maxNumberOfItemsToshow);
         if (groupCount == 0) {
             mLinearLayout.removeAllViews();
             return;
         }
 
         int numExistingGroupViews = mLinearLayout.getChildCount();
-        int altRowColor = ctx.getResources().getColor(R.color.stats_alt_row);
 
         // remove excess views
         if (groupCount < numExistingGroupViews) {
@@ -107,10 +138,11 @@ public class StatsUIHelper {
             numExistingGroupViews = groupCount;
         }
 
+        int bgColor = Color.TRANSPARENT;
+
         // add each group
         for (int i = 0; i < groupCount; i++) {
             boolean isExpanded = mGroupIdToExpandedMap.get(i);
-            int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
 
             // reuse existing view when possible
             final View groupView;
@@ -118,10 +150,11 @@ public class StatsUIHelper {
                 View convertView = mLinearLayout.getChildAt(i);
                 groupView = mAdapter.getGroupView(i, isExpanded, convertView, mLinearLayout);
                 groupView.setBackgroundColor(bgColor);
+                setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_background);
             } else {
                 groupView = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
                 groupView.setBackgroundColor(bgColor);
-                mLinearLayout.addView(groupView);
+                setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_background);                mLinearLayout.addView(groupView);
             }
 
             // add children if this group is expanded
@@ -142,7 +175,7 @@ public class StatsUIHelper {
                     if (shouldExpand) {
                         StatsUIHelper.showChildViews(mAdapter, mLinearLayout, groupPosition, groupView, true);
                     } else {
-                        StatsUIHelper.hideChildViews(groupView, true);
+                        StatsUIHelper.hideChildViews(groupView, groupPosition, true);
                     }
                 }
             });
@@ -156,11 +189,12 @@ public class StatsUIHelper {
         return new AccelerateInterpolator();
     }
 
-    public static void hideChildViews(View groupView, boolean animate) {
+    public static void hideChildViews(View groupView, int groupPosition,  boolean animate) {
         final ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
         if (childContainer == null) {
             return;
         }
+
         if (childContainer.getVisibility() != View.GONE) {
             if (animate) {
                 Animation expand = new ScaleAnimation(1.0f, 1.0f, 1.0f, 0.0f);
@@ -181,18 +215,25 @@ public class StatsUIHelper {
                 childContainer.setVisibility(View.GONE);
             }
         }
-        StatsUIHelper.setGroupChevron(false, groupView, animate);
+        StatsUIHelper.setGroupChevron(false, groupView, groupPosition, animate);
     }
 
     /*
      * shows the correct up/down chevron for the passed group
      */
-    public static void setGroupChevron(final boolean isGroupExpanded, View groupView, boolean animate) {
+    public static void setGroupChevron(final boolean isGroupExpanded, View groupView, int groupPosition, boolean animate) {
         final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
         if (chevron == null) {
             return;
         }
+        if (isGroupExpanded) {
+            // change the background of the parent
+            setViewBackgroundWithoutResettingPadding(groupView, R.drawable.stats_list_item_expanded_background);
+        } else {
+            setViewBackgroundWithoutResettingPadding(groupView, groupPosition == 0 ? 0 : R.drawable.stats_list_item_background);
+        }
 
+        chevron.clearAnimation(); // Remove any other prev animations set on the chevron
         if (animate) {
             // make sure we start with the correct chevron for the prior state before animating it
             chevron.setImageResource(isGroupExpanded ? R.drawable.stats_chevron_right : R.drawable.stats_chevron_down);
@@ -235,11 +276,12 @@ public class StatsUIHelper {
                 mAdapter.getChildView(groupPosition, i, isLastChild, convertView, mLinearLayout);
             } else {
                 View childView = mAdapter.getChildView(groupPosition, i, isLastChild, null, mLinearLayout);
-                // remove the right padding so the child total aligns with the group total
-                childView.setPadding(childView.getPaddingLeft(),
+                // remove the right/left padding so the child total aligns to left
+                childView.setPadding(0,
                         childView.getPaddingTop(),
                         0,
-                        childView.getPaddingBottom());
+                        isLastChild ? 0 : childView.getPaddingBottom()); // No padding bottom on last child
+                setViewBackgroundWithoutResettingPadding(childView, R.drawable.stats_list_item_child_background);
                 childContainer.addView(childView);
             }
         }
@@ -254,6 +296,26 @@ public class StatsUIHelper {
             childContainer.setVisibility(View.VISIBLE);
         }
 
-        StatsUIHelper.setGroupChevron(true, groupView, animate);
+        StatsUIHelper.setGroupChevron(true, groupView, groupPosition, animate);
     }
+
+    /**
+     * Removes URL underlines in a string by replacing URLSpan occurrences by
+     * URLSpanNoUnderline objects.
+     *
+     * @param pText A Spannable object. For example, a TextView casted as
+     *               Spannable.
+     */
+    public static void removeUnderlines(Spannable pText) {
+        URLSpan[] spans = pText.getSpans(0, pText.length(), URLSpan.class);
+
+        for(URLSpan span:spans) {
+            int start = pText.getSpanStart(span);
+            int end = pText.getSpanEnd(span);
+            pText.removeSpan(span);
+            span = new URLSpanNoUnderline(span.getURL());
+            pText.setSpan(span, start, end, 0);
+        }
+    }
+
 }

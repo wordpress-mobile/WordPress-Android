@@ -3,7 +3,11 @@ package org.wordpress.android.ui.stats;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.os.Handler;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
+import android.support.v4.view.GestureDetectorCompat;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 
 import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
@@ -25,6 +29,9 @@ class StatsBarGraph extends GraphView {
     private List<List<BarChartRect>> mSeriesRectsDrawedOnScreen = (List<List<BarChartRect>>) new LinkedList();
     private int mBarPositionToHighlight = -1;
 
+    private GestureDetectorCompat mDetector;
+    private OnGestureListener mGestureListener;
+
     public StatsBarGraph(Context context) {
         super(context, "");
 
@@ -36,11 +43,63 @@ class StatsBarGraph extends GraphView {
 
         // Use Open Sans
         paint.setTypeface(TypefaceCache.getTypeface(getContext()));
+
+        mDetector = new GestureDetectorCompat(getContext(), new MyGestureListener());
+        mDetector.setIsLongpressEnabled(false);
+    }
+
+    public void setGestureListener(OnGestureListener listener) {
+        this.mGestureListener = listener;
+    }
+
+    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent event) {
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent event) {
+            highlightBarAndBroadcastDate();
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+            highlightBarAndBroadcastDate();
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return false;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            return false;
+        }
+
+        private void highlightBarAndBroadcastDate() {
+            int tappedBar = getTappedBar();
+            //AppLog.d(AppLog.T.STATS, this.getClass().getName() + " Tapped bar " + tappedBar);
+            if (tappedBar >= 0) {
+                highlightBar(tappedBar);
+                if (mGestureListener != null) {
+                    mGestureListener.onBarTapped(tappedBar);
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent (MotionEvent event) {
+        this.mDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 
     private void setProperties() {
-        getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK);
-        getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
+        getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.blue_dark));
+        getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.stats_bar_graph_vertical_label));
         getGraphViewStyle().setTextSize(getResources().getDimensionPixelSize(R.dimen.graph_font_size));
         getGraphViewStyle().setGridXColor(Color.TRANSPARENT);
         getGraphViewStyle().setGridYColor(getResources().getColor(R.color.stats_bar_graph_grid));
@@ -82,7 +141,7 @@ class StatsBarGraph extends GraphView {
         paint.setColor(style.color);
 
         // Bar chart position of this series on the canvas
-        List<BarChartRect> barChartRects = new LinkedList<BarChartRect>();
+        List<BarChartRect> barChartRects = new LinkedList<>();
 
         // draw data
         for (int i = 0; i < values.length; i++) {
@@ -95,19 +154,6 @@ class StatsBarGraph extends GraphView {
                 paint.setColor(style.getValueDependentColor().get(values[i]));
             }
 
-            // Trick to redraw the tapped bar
-            if (mBarPositionToHighlight == i) {
-                int color;
-                if (style.color == getResources().getColor(R.color.stats_bar_graph_views)) {
-                    color = getResources().getColor(R.color.stats_views_hover_color);
-                } else {
-                    color = getResources().getColor(R.color.stats_visitors_hover_color);
-                }
-                paint.setColor(color);
-            } else {
-                paint.setColor(style.color);
-            }
-
             float pad = style.padding;
 
             float left = (i * colwidth) + horstart;
@@ -115,7 +161,34 @@ class StatsBarGraph extends GraphView {
             float right = left + colwidth;
             float bottom = graphheight + border - 1;
 
-            canvas.drawRect(left + pad, top, right - pad, bottom, paint);
+            // Draw the orange selection behind the selected bar
+            if (mBarPositionToHighlight == i) {
+                paint.setColor(getResources().getColor(R.color.stats_views_hover_color));
+                paint.setAlpha(50);
+                canvas.drawRect(left, 10f, right, bottom, paint);
+            }
+
+            if ((top - bottom) == 1) {
+                // draw a placeholder
+                if (mBarPositionToHighlight != i) {
+                    paint.setColor(style.color);
+                    paint.setAlpha(25);
+                    Shader shader = new LinearGradient(left + pad, bottom - 50, left + pad, bottom, Color.WHITE, Color.BLACK, Shader.TileMode.CLAMP);
+                    paint.setShader(shader);
+                    canvas.drawRect(left + pad, bottom - 50, right - pad, bottom, paint);
+                    paint.setShader(null);
+                }
+            } else {
+                // draw a real bar
+                paint.setAlpha(255);
+                if (mBarPositionToHighlight == i) {
+                    paint.setColor(getResources().getColor(R.color.stats_views_hover_color));
+                } else {
+                    paint.setColor(style.color);
+                }
+                canvas.drawRect(left + pad, top, right - pad, bottom, paint);
+            }
+
             barChartRects.add(new BarChartRect(left + pad, top, right - pad, bottom));
         }
         mSeriesRectsDrawedOnScreen.add(barChartRects);
@@ -137,7 +210,7 @@ class StatsBarGraph extends GraphView {
         }
         return -1;
     }
-
+/*
     public float getMiddlePointOfTappedBar(int tappedBar) {
         if (tappedBar == -1 || mSeriesRectsDrawedOnScreen == null || mSeriesRectsDrawedOnScreen.size() == 0) {
             return -1;
@@ -162,10 +235,18 @@ class StatsBarGraph extends GraphView {
             }
         }, 500);
     }
-
+*/
     public void highlightBar(int barPosition) {
         mBarPositionToHighlight = barPosition;
         this.redrawAll();
+    }
+
+    public int getHighlightBar() {
+        return mBarPositionToHighlight;
+    }
+
+    public void resetHighlightBar() {
+        mBarPositionToHighlight = -1;
     }
 
     @Override
@@ -218,13 +299,12 @@ class StatsBarGraph extends GraphView {
          * height for the Y coordinate. This is a fix to make very small bars tappable.
          */
         public boolean isPointInside(float x, float y) {
-            if (x >= this.mLeft
-                    && x <= this.mRight
-                    && (this.mBottom - this.mTop) > 1f
-                    ) {
-                return true;
-            }
-            return false;
+            return x >= this.mLeft
+                    && x <= this.mRight;
         }
+    }
+
+    interface OnGestureListener {
+        public void onBarTapped(int tappedBar);
     }
 }

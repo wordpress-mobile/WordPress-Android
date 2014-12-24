@@ -1,137 +1,208 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorTreeAdapter;
+import android.widget.BaseExpandableListAdapter;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.StatsReferrerGroupsTable;
-import org.wordpress.android.datasets.StatsReferrersTable;
-import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.models.ClickGroupModel;
+import org.wordpress.android.ui.stats.models.ClicksModel;
+import org.wordpress.android.ui.stats.models.SingleItemModel;
+import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
-/**
- * Fragment for click stats. Has two pages, for Today's and Yesterday's stats.
- * Clicks contain expandable lists.
- */
-public class StatsClicksFragment extends StatsAbsPagedViewFragment {
-    private static final Uri STATS_CLICK_GROUP_URI = StatsContentProvider.STATS_CLICK_GROUP_URI;
-    private static final Uri STATS_CLICKS_URI = StatsContentProvider.STATS_CLICKS_URI;
+import java.util.List;
 
-    private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
-
+public class StatsClicksFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsClicksFragment.class.getSimpleName();
 
     @Override
-    protected String[] getTabTitles() {
-        return StatsTimeframe.toStringArray(TIMEFRAMES);
+    protected void updateUI() {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (isErrorResponse()) {
+            showErrorUI();
+            return;
+        }
+
+        if (!isDataEmpty() && ((ClicksModel) mDatamodels[0]).getClickGroups().size() > 0) {
+            BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((ClicksModel) mDatamodels[0]).getClickGroups());
+            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
+            showHideNoResultsUI(false);
+        } else {
+            showHideNoResultsUI(true);
+        }
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        return (mDatamodels != null && mDatamodels[0] != null
+                && ((ClicksModel) mDatamodels[0]).getClickGroups() != null
+                && ((ClicksModel) mDatamodels[0]).getClickGroups().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
+    }
+
+    @Override
+    protected boolean isExpandableList() {
+        return true;
+    }
+
+    @Override
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.CLICKS
+        };
+    }
+
+    @Override
+    protected int getEntryLabelResId() {
+        return R.string.stats_entry_clicks_link;
+    }
+    @Override
+    protected int getTotalsLabelResId() {
+        return R.string.stats_totals_clicks;
+    }
+    @Override
+    protected int getEmptyLabelTitleResId() {
+        return R.string.stats_empty_clicks_title;
+    }
+    @Override
+    protected int getEmptyLabelDescResId() {
+        return R.string.stats_empty_clicks_desc;
+    }
+
+    private class MyExpandableListAdapter extends BaseExpandableListAdapter {
+        public LayoutInflater inflater;
+        private List<ClickGroupModel> clickGroups;
+
+        public MyExpandableListAdapter(Context context, List<ClickGroupModel> clickGroups) {
+            this.clickGroups = clickGroups;
+            this.inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public Object getChild(int groupPosition, int childPosition) {
+            ClickGroupModel currentGroup = clickGroups.get(groupPosition);
+            List<SingleItemModel> results = currentGroup.getClicks();
+            return results.get(childPosition);
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return 0;
+        }
+
+        @Override
+        public View getChildView(int groupPosition, final int childPosition,
+                                 boolean isLastChild, View convertView, ViewGroup parent) {
+
+            final SingleItemModel children = (SingleItemModel) getChild(groupPosition, childPosition);
+
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                // configure view holder
+                StatsViewHolder viewHolder = new StatsViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            }
+
+            final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
+
+            // name, url
+            holder.setEntryTextOrLink(children.getUrl(), children.getTitle());
+
+            // totals
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(
+                    children.getTotals()
+            ));
+
+            // no icon
+            holder.networkImageView.setVisibility(View.GONE);
+
+            return convertView;
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            ClickGroupModel currentGroup = clickGroups.get(groupPosition);
+            List<SingleItemModel> clicks = currentGroup.getClicks();
+            if (clicks == null) {
+                return 0;
+            } else {
+                return clicks.size();
+            }
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return clickGroups.get(groupPosition);
+        }
+
+        @Override
+        public int getGroupCount() {
+            return clickGroups.size();
+        }
+
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return 0;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded,
+                                 View convertView, ViewGroup parent) {
+
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                convertView.setTag(new StatsViewHolder(convertView));
+            }
+
+            final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
+
+            ClickGroupModel group = (ClickGroupModel) getGroup(groupPosition);
+
+            String name = group.getName();
+            int total = group.getViews();
+            String url = group.getUrl();
+            String icon = group.getIcon();
+            int children = getChildrenCount(groupPosition);
+
+            if (children > 0) {
+                holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
+            } else {
+                holder.setEntryTextOrLink(url, name);
+            }
+
+            // totals
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+
+            holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(icon, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.STATS_SITE_AVATAR);
+            holder.networkImageView.setVisibility(View.VISIBLE);
+
+            // expand/collapse chevron
+            holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
+            return convertView;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return false;
+        }
+
     }
 
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_clicks);
-    }
-
-    @Override
-    protected int getInnerFragmentID() {
-        return R.id.stats_clicks;
-    }
-
-    @Override
-    protected Fragment getFragment(int position) {
-        Uri groupUri = Uri.parse(STATS_CLICK_GROUP_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
-        Uri childrenUri = STATS_CLICKS_URI;
-
-        StatsCursorTreeFragment fragment = StatsCursorTreeFragment.newInstance(groupUri, childrenUri,
-                R.string.stats_entry_clicks_url, R.string.stats_totals_clicks, R.string.stats_empty_clicks_title,
-                R.string.stats_empty_clicks_desc, getLocalTableBlogID());
-        CustomAdapter adapter = new CustomAdapter(null, getActivity());
-        adapter.setCursorLoaderCallback(fragment);
-        fragment.setListAdapter(adapter);
-        fragment.setCallback(this);
-        return fragment;
-    }
-
-    public class CustomAdapter extends CursorTreeAdapter {
-        private StatsCursorLoaderCallback mCallback;
-        private final LayoutInflater inflater;
-
-        public CustomAdapter(Cursor cursor, Context context) {
-            super(cursor, context, true);
-            inflater = LayoutInflater.from(context);
-        }
-
-        public void setCursorLoaderCallback(StatsCursorLoaderCallback callback) {
-            mCallback = callback;
-        }
-
-        @Override
-        protected View newChildView(Context context, Cursor cursor, boolean isLastChild, ViewGroup parent) {
-            View view = inflater.inflate(R.layout.stats_list_cell, parent, false);
-            view.setTag(new StatsViewHolder(view));
-            return view;
-        }
-
-        @Override
-        protected void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
-            final StatsViewHolder holder = (StatsViewHolder)view.getTag();
-
-            String name = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.NAME));
-            int total = cursor.getInt(cursor.getColumnIndex(StatsReferrersTable.Columns.TOTAL));
-
-            // name, url
-            holder.setEntryTextOrLink(name, name);
-
-            // totals
-            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
-
-            // no icon, make it invisible so children are indented
-            holder.networkImageView.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        protected View newGroupView(Context context, Cursor cursor, boolean isExpanded, ViewGroup parent) {
-            View view = inflater.inflate(R.layout.stats_list_cell, parent, false);
-            view.setTag(new StatsViewHolder(view));
-            return view;
-        }
-
-        @Override
-        protected void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
-            final StatsViewHolder holder = (StatsViewHolder) view.getTag();
-
-            String name = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.NAME));
-            int total = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.TOTAL));
-            String url = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.URL));
-            String icon = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.ICON));
-            int children = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.CHILDREN));
-
-            // name, url
-            holder.setEntryTextOrLink(url, name);
-
-            // totals
-            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
-
-            // icon
-            holder.showNetworkImage(icon);
-
-            // expand/collapse chevron
-            holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
-        }
-
-        @Override
-        protected Cursor getChildrenCursor(Cursor groupCursor) {
-            Bundle bundle = new Bundle();
-            bundle.putLong(StatsCursorLoaderCallback.BUNDLE_DATE, groupCursor.getLong(groupCursor.getColumnIndex("date")));
-            bundle.putString(StatsCursorLoaderCallback.BUNDLE_GROUP_ID, groupCursor.getString(groupCursor.getColumnIndex("groupId")));
-            mCallback.onUriRequested(groupCursor.getPosition(), STATS_CLICKS_URI, bundle);
-            return null;
-        }
     }
 }

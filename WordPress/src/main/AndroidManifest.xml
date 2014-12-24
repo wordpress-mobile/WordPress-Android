@@ -147,9 +147,10 @@
         <activity android:name=".ui.stats.StatsActivity"
                   android:theme="@style/WordPress.DrawerActivity"/>
 
-        <activity android:name=".ui.WPWebViewActivity"/>
+        <activity android:name=".ui.stats.StatsViewAllActivity"
+                  android:theme="@style/CalypsoTheme"/>
 
-        <activity android:name=".ui.stats.StatsDetailsActivity"/>
+        <activity android:name=".ui.WPWebViewActivity"/>
 
         <!-- Media Activities -->
         <activity android:name=".ui.media.MediaBrowserActivity"
@@ -311,12 +312,5 @@
         <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
-
-        <provider
-            android:name=".providers.StatsContentProvider"
-            android:authorities="org.wordpress.android.providers.StatsContentProvider"
-            android:exported="false"/>
-
-
     </application>
 </manifest>

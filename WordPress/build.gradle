@@ -2,7 +2,6 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url 'http://download.crashlytics.com/maven' }
-
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
@@ -38,8 +37,6 @@ android {
         targetSdkVersion 21
 
         buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
-        buildConfigField "String", "STATS_PROVIDER_AUTHORITY",
-                "\"org.wordpress.android.providers.StatsContentProvider\""
     }
 
     productFlavors {
@@ -47,8 +44,6 @@ android {
 
         zbetagroup {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
-            buildConfigField "String", "STATS_PROVIDER_AUTHORITY",
-                    "\"org.wordpress.android.providers.StatsContentProviderBeta\""
             applicationId "org.wordpress.android.beta"
         }
     }

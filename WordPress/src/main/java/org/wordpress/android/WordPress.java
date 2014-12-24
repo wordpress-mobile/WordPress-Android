@@ -45,6 +45,7 @@ import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdat
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
@@ -81,7 +82,6 @@ public class WordPress extends Application {
     public static Blog currentBlog;
     public static Post currentPost;
     public static WordPressDB wpDB;
-    public static WordPressStatsDB wpStatsDB;
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
     public static RestClientUtils mRestClientUtils;
@@ -114,33 +114,6 @@ public class WordPress extends Application {
                 new ApiHelper.RefreshBlogContentTask(currentBlog, null).executeOnExecutor(
                         AsyncTask.THREAD_POOL_EXECUTOR, false);
                 return true;
-            }
-            return false;
-        }
-    };
-
-    /**
-     *  Updates the stats of the current blog in background. There is a timeout of 30 minutes that limits
-     *  too frequent refreshes.
-     *  User is not notified in case of errors.
-     */
-    public static RateLimitedTask sUpdateCurrentBlogStats = new RateLimitedTask(SECONDS_BETWEEN_STATS_UPDATE) {
-        protected boolean run() {
-            Blog currentBlog = WordPress.getCurrentBlog();
-            if (currentBlog != null) {
-                String blogID = null;
-                if (currentBlog.isDotcomFlag()) {
-                    blogID = String.valueOf(currentBlog.getRemoteBlogId());
-                } else if (currentBlog.isJetpackPowered() && currentBlog.hasValidJetpackCredentials()) {
-                    blogID = currentBlog.getApi_blogid(); // Can return null
-                }
-                if (blogID != null) {
-                    // start service to get stats
-                    Intent intent = new Intent(mContext, StatsService.class);
-                    intent.putExtra(StatsService.ARG_BLOG_ID, blogID);
-                    mContext.startService(intent);
-                    return true;
-                }
             }
             return false;
         }
@@ -182,7 +155,6 @@ public class WordPress extends Application {
         versionName = PackageUtils.getVersionName(this);
         HelpshiftHelper.init(this);
         initWpDb();
-        wpStatsDB = new WordPressStatsDB(this);
 
         RestClientUtils.setUserAgent(getUserAgent());
 
@@ -793,9 +765,6 @@ public class WordPress extends Application {
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
-
-                // Rate limited Stats Update
-                sUpdateCurrentBlogStats.runIfNotLimited();
 
                 // Rate limited WPCom blog list Update
                 sUpdateWordPressComBlogList.runIfNotLimited();

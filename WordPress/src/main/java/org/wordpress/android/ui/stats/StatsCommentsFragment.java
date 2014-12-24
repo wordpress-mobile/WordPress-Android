@@ -1,198 +1,246 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Fragment;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
+import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.StatsMostCommentedTable;
-import org.wordpress.android.datasets.StatsTopCommentersTable;
-import org.wordpress.android.models.StatsSummary;
-import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.adapters.PostsAndPagesAdapter;
+import org.wordpress.android.ui.stats.models.AuthorModel;
+import org.wordpress.android.ui.stats.models.CommentFollowersModel;
+import org.wordpress.android.ui.stats.models.CommentsModel;
+import org.wordpress.android.ui.stats.models.FollowDataModel;
+import org.wordpress.android.ui.stats.models.SingleItemModel;
+import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
-/**
- * Fragment for comments stats. Has three pages, for Most Commented, for Top Commenters, and for Comments Summary
- */
-public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
-    private static final Uri STATS_MOST_COMMENTED_URI = StatsContentProvider.STATS_MOST_COMMENTED_URI;
-    private static final Uri STATS_TOP_COMMENTERS_URI = StatsContentProvider.STATS_TOP_COMMENTERS_URI;
+import java.util.List;
 
+
+public class StatsCommentsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsCommentsFragment.class.getSimpleName();
 
-    private static final String[] TITLES = new String[] { "Top Recent Commenters", "Most Commented", "Summary" };
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
-    private static final int TOP_COMMENTERS = 0;
-    private static final int MOST_COMMENTED = 1;
+        Resources res = container.getContext().getResources();
+        String[] titles = {
+                res.getString(R.string.stats_comments_by_authors),
+                res.getString(R.string.stats_comments_by_posts_and_pages),
+        };
+
+        setupTopModulePager(inflater, container, view, titles);
+
+        return view;
+    }
 
     @Override
-    protected Fragment getFragment(int position) {
-        if (position == 0) {
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_COMMENTERS_URI,
-                    R.string.stats_entry_top_commenter, R.string.stats_totals_comments, R.string.stats_empty_comments, getLocalTableBlogID());
-            fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, TOP_COMMENTERS));
-            fragment.setCallback(this);
-            return fragment;
-        } else if (position == 1) {
-            int entryLabelResId = R.string.stats_entry_most_commented;
-            int totalsLabelResId = R.string.stats_totals_comments;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_MOST_COMMENTED_URI,
-                    R.string.stats_entry_most_commented, R.string.stats_totals_comments, R.string.stats_empty_comments, getLocalTableBlogID());
-            fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
-            fragment.setCallback(this);
-            return fragment;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            AppLog.d(AppLog.T.STATS, this.getTag() + " > restoring instance state");
+            if (savedInstanceState.containsKey(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX)) {
+                mTopPagerSelectedButtonIndex = savedInstanceState.getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX);
+            }
         } else {
-            return new CommentsSummaryFragment();
+            // first time it's created
+            mTopPagerSelectedButtonIndex = getArguments().getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
         }
     }
 
-    public class CustomCursorAdapter extends CursorAdapter {
-        private final LayoutInflater inflater;
-        private final int mType;
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
+        outState.putInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
+        super.onSaveInstanceState(outState);
+    }
 
-        public CustomCursorAdapter(Context context, Cursor c, int type) {
-            super(context, c, true);
-            mType = type;
+    @Override
+    protected void updateUI() {
+        if (!isAdded()) {
+            return;
+        }
+
+        mTopPagerContainer.setVisibility(View.VISIBLE);
+
+        if (mDatamodels == null) {
+            showHideNoResultsUI(true);
+            mTotalsLabel.setVisibility(View.GONE);
+            return;
+        }
+
+        if (isErrorResponse()) {
+            showErrorUI();
+            return;
+        }
+
+        if (mDatamodels[1] != null) { // check if comment-followers is already here
+            mTotalsLabel.setVisibility(View.VISIBLE);
+            int totalNumberOfFollowers = ((CommentFollowersModel) mDatamodels[1]).getTotal();
+            mTotalsLabel.setText(
+                    getString(
+                            R.string.stats_comments_total_comments_followers,
+                            FormatUtils.formatDecimal(totalNumberOfFollowers)
+                    )
+            );
+        } else {
+            mTotalsLabel.setVisibility(View.GONE);
+        }
+
+        ArrayAdapter adapter = null;
+
+        if (mTopPagerSelectedButtonIndex == 0 && hasAuthors()) {
+            adapter = new AuthorsAdapter(getActivity(), getAuthors());
+        } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts()) {
+            adapter = new PostsAndPagesAdapter(getActivity(), getLocalTableBlogID(), getPosts());
+        }
+
+        if (adapter != null) {
+            StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
+            showHideNoResultsUI(false);
+        } else {
+            showHideNoResultsUI(true);
+        }
+    }
+
+    private boolean hasAuthors() {
+        return mDatamodels != null && mDatamodels[0] != null
+                && ((CommentsModel) mDatamodels[0]).getAuthors() != null
+                && ((CommentsModel) mDatamodels[0]).getAuthors().size() > 0;
+    }
+
+    private List<AuthorModel> getAuthors() {
+        if (!hasAuthors()) {
+            return null;
+        }
+        return ((CommentsModel) mDatamodels[0]).getAuthors();
+    }
+
+    private boolean hasPosts() {
+        return mDatamodels != null && mDatamodels[0] != null
+                && ((CommentsModel) mDatamodels[0]).getPosts() != null
+                && ((CommentsModel) mDatamodels[0]).getPosts().size() > 0;
+    }
+
+    private List<SingleItemModel> getPosts() {
+        if (!hasPosts()) {
+            return null;
+        }
+        return ((CommentsModel) mDatamodels[0]).getPosts();
+    }
+
+    @Override
+    protected boolean isViewAllOptionAvailable() {
+        if (mTopPagerSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
+            return true;
+        } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean isExpandableList() {
+        return false;
+    }
+
+    private class AuthorsAdapter extends ArrayAdapter<AuthorModel> {
+
+        private final List<AuthorModel> list;
+        private final Activity context;
+        private final LayoutInflater inflater;
+
+        public AuthorsAdapter(Activity context, List<AuthorModel> list) {
+            super(context, R.layout.stats_list_cell, list);
+            this.context = context;
+            this.list = list;
             inflater = LayoutInflater.from(context);
         }
 
         @Override
-        public View newView(Context context, Cursor cursor, ViewGroup root) {
-            View view = inflater.inflate(R.layout.stats_list_cell, root, false);
-            view.setTag(new StatsViewHolder(view));
-            return view;
-        }
-
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            final StatsViewHolder holder = (StatsViewHolder) view.getTag();
-
-            final String entry;
-            final int total;
-            if (mType == TOP_COMMENTERS) {
-                entry = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.NAME));
-                total = cursor.getInt(cursor.getColumnIndex(StatsTopCommentersTable.Columns.COMMENTS));
-            } else {
-                entry = cursor.getString(cursor.getColumnIndex(StatsMostCommentedTable.Columns.POST));
-                total = cursor.getInt(cursor.getColumnIndex(StatsMostCommentedTable.Columns.COMMENTS));
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View rowView = convertView;
+            // reuse views
+            if (rowView == null) {
+                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                // configure view holder
+                StatsViewHolder viewHolder = new StatsViewHolder(rowView);
+                rowView.setTag(viewHolder);
             }
 
-            holder.entryTextView.setText(entry);
-            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            final AuthorModel currentRowData = list.get(position);
+            final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
-            // image
-            if (mType == TOP_COMMENTERS) {
-                String imageUrl = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.IMAGE_URL));
-                holder.networkImageView.setVisibility(View.VISIBLE);
-                holder.showNetworkImage(imageUrl);
+            // entries
+            holder.setEntryText(currentRowData.getName(), getResources().getColor(R.color.stats_text_color));
+
+            // totals
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
+
+            // avatar
+            holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
+            holder.networkImageView.setVisibility(View.VISIBLE);
+
+            final FollowDataModel followData = currentRowData.getFollowData();
+            if (followData == null) {
+                holder.imgMore.setVisibility(View.GONE);
+                holder.imgMore.setClickable(false);
             } else {
-                holder.networkImageView.setVisibility(View.GONE);
+                holder.imgMore.setVisibility(View.VISIBLE);
+                holder.imgMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        FollowHelper fh = new FollowHelper(context);
+                        fh.showPopup(holder.imgMore, followData);
+                    }
+                });
             }
+
+            return rowView;
         }
+    }
+
+    @Override
+    protected int getEntryLabelResId() {
+        if (mTopPagerSelectedButtonIndex == 0) {
+            return R.string.stats_entry_top_commenter;
+        } else {
+            return R.string.stats_entry_posts_and_pages;
+        }
+    }
+
+    @Override
+    protected int getTotalsLabelResId() {
+        return R.string.stats_totals_comments;
+    }
+
+    @Override
+    protected int getEmptyLabelTitleResId() {
+        return R.string.stats_empty_comments;
+    }
+
+    @Override
+    protected int getEmptyLabelDescResId() {
+        return R.string.stats_empty_comments_desc;
+    }
+
+    @Override
+    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.COMMENTS, StatsService.StatsEndpointsEnum.COMMENT_FOLLOWERS
+        };
     }
 
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_comments);
-    }
-
-    @Override
-    protected String[] getTabTitles() {
-        return TITLES;
-    }
-
-    @Override
-    protected int getInnerFragmentID() {
-        return R.id.stats_comments;
-    }
-
-    /** Fragment used for summary view **/
-    public static class CommentsSummaryFragment extends Fragment {
-        private TextView mPerMonthText;
-        private TextView mTotalText;
-        private TextView mActiveDayText;
-        private TextView mActiveTimeText;
-        private TextView mMostCommentedText;
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.stats_comments_summary, container, false);
-
-            mPerMonthText = (TextView) view.findViewById(R.id.stats_comments_summary_per_month_count);
-            mTotalText = (TextView) view.findViewById(R.id.stats_comments_summary_total_count);
-            mActiveDayText = (TextView) view.findViewById(R.id.stats_comments_summary_most_active_day_text);
-            mActiveTimeText = (TextView) view.findViewById(R.id.stats_comments_summary_most_active_time_text);
-            mMostCommentedText = (TextView) view.findViewById(R.id.stats_comments_summary_most_commented_text);
-
-            return view;
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            refreshStatsFromFile();
-        }
-
-        private void refreshStatsFromFile() {
-            if (WordPress.getCurrentBlog() == null)
-                return;
-
-            final String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-            new AsyncTask<Void, Void, StatsSummary>() {
-                @Override
-                protected StatsSummary doInBackground(Void... params) {
-                    //StatsRestHelper.getStatsSummary(blogId);
-                    return StatsUtils.getSummary(blogId);
-                }
-
-                protected void onPostExecute(final StatsSummary result) {
-                    if (getActivity() == null)
-                        return;
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            refreshStats(result);
-                        }
-                    });
-                }
-            }.execute();
-        }
-
-        private void refreshStats(StatsSummary stats) {
-            int perMonth = 0;
-            int total = 0;
-            String activeDay = "";
-            String activeTime = "";
-            String activePost = "";
-            String activePostUrl = "";
-
-            if (stats != null) {
-                perMonth = stats.getCommentsPerMonth();
-                total = stats.getCommentsAllTime();
-                activeDay = stats.getCommentsMostActiveRecentDay();
-                activeTime = stats.getCommentsMostActiveTime();
-//                activePost = result.getRecentMostActivePost(); // TODO
-//                activePostUrl = result.getRecentMostActivePostUrl(); // TODO
-            }
-
-
-            mPerMonthText.setText(FormatUtils.formatDecimal(perMonth));
-            mTotalText.setText(FormatUtils.formatDecimal(total));
-            mActiveDayText.setText(activeDay);
-            mActiveTimeText.setText(activeTime);
-
-           // StatUtils.setEntryTextOrLink(mMostCommentedText, activePostUrl, activePost);
-        }
-
-
     }
 }

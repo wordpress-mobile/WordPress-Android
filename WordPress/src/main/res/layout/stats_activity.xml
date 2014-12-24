@@ -6,10 +6,10 @@
     android:layout_height="match_parent">
 
     <org.wordpress.android.ui.stats.ScrollViewExt xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/scroll_view_stats"
-                android:fillViewport="true">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scroll_view_stats"
+        android:fillViewport="true">
 
         <LinearLayout
             android:id="@+id/stats_fragment_container"
@@ -18,6 +18,14 @@
             android:paddingBottom="@dimen/margin_medium"
             android:orientation="vertical">
 
+            <!--FrameLayout
+                android:id="@+id/stats_timeframe_selector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"/ -->
+
             <FrameLayout
                 android:id="@+id/stats_visitors_and_views_container"
                 android:layout_width="match_parent"
@@ -25,6 +33,7 @@
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"/>
+
 
             <LinearLayout
                 android:id="@+id/stats_row_container"
@@ -57,14 +66,6 @@
                 android:layout_marginRight="@dimen/margin_medium"/>
 
             <FrameLayout
-                android:id="@+id/stats_geoviews_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"/>
-
-            <FrameLayout
                 android:id="@+id/stats_referrers_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,50 +82,75 @@
                 android:layout_marginRight="@dimen/margin_medium"/>
 
             <FrameLayout
-                android:id="@+id/stats_searchengine_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
-                android:layout_marginBottom="@dimen/margin_medium"/>
-
-            <FrameLayout
-                android:id="@+id/stats_totals_followers_shares_container"
+                android:id="@+id/stats_geoviews_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"/>
 
-            <!-- <FrameLayout
-                android:id="@+id/stats_tags_and_categories_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginLeft="@dimen/margin_medium" />
             <FrameLayout
                 android:id="@+id/stats_top_authors_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium" /> -->
+                android:layout_marginRight="@dimen/margin_medium"
+                />
 
-            <!--<FrameLayout
+            <FrameLayout
                 android:id="@+id/stats_video_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium" />
+                android:layout_marginRight="@dimen/margin_medium"
+                />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/stats_other_recent_stats_label"
+                android:textAppearance="?android:attr/textAppearance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:textColor="#587295"
+                android:gravity="center"
+                android:text="@string/stats_other_recent_stats_label"/>
+
             <FrameLayout
                 android:id="@+id/stats_comments_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium" /> -->
+                android:layout_marginRight="@dimen/margin_medium"
+                />
+
+            <FrameLayout
+                android:id="@+id/stats_tags_and_categories_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                />
+
+            <FrameLayout
+                android:id="@+id/stats_followers_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                />
+
+            <FrameLayout
+                android:id="@+id/stats_publicize_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"/>
 
         </LinearLayout>
     </org.wordpress.android.ui.stats.ScrollViewExt>
