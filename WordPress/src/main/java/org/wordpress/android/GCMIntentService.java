@@ -145,9 +145,12 @@ public class GCMIntentService extends GCMBaseIntentService {
         resultIntent.addCategory("android.intent.category.LAUNCHER");
 
         if (mActiveNotificationsMap.size() <= 1) {
-            mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notification_icon).setContentTitle(title)
-                                                           .setContentText(message).setTicker(message).setAutoCancel(true)
-                                                           .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+            mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setColor(getResources().getColor(R.color.wordpress_blue))
+                    .setContentTitle(title)
+                    .setContentText(message).setTicker(message).setAutoCancel(true)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
             if (note_id != null) {
                 resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
@@ -204,8 +207,8 @@ public class GCMIntentService extends GCMBaseIntentService {
             String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
 
             mBuilder = new NotificationCompat.Builder(this)
-                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.noticon_notification))
                     .setSmallIcon(R.drawable.notification_icon)
+                    .setColor(getResources().getColor(R.color.wordpress_blue))
                     .setContentTitle("WordPress")
                     .setContentText(subject)
                     .setTicker(message)
