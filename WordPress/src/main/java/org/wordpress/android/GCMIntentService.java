@@ -149,7 +149,9 @@ public class GCMIntentService extends GCMBaseIntentService {
                     .setSmallIcon(R.drawable.notification_icon)
                     .setColor(getResources().getColor(R.color.wordpress_blue))
                     .setContentTitle(title)
-                    .setContentText(message).setTicker(message).setAutoCancel(true)
+                    .setContentText(message)
+                    .setTicker(message)
+                    .setAutoCancel(true)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
             if (note_id != null) {
