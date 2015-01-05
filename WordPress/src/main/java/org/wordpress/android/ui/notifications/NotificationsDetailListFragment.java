@@ -4,7 +4,6 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.ListFragment;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,7 +11,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -25,6 +23,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.HeaderUserNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
@@ -54,6 +53,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private int mCommentListPosition = ListView.INVALID_POSITION;
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
     private OnNoteChangeListener mOnNoteChangeListener;
+    private NoteBlockAdapter mNoteBlockAdapter;
 
     public NotificationsDetailListFragment() {
     }
@@ -132,37 +132,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         mFooterView = footerView;
     }
 
-    private class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
-
-        private final List<NoteBlock> mNoteBlockList;
-        private final LayoutInflater mLayoutInflater;
-
-        NoteBlockAdapter(Context context, List<NoteBlock> noteBlocks) {
-            super(context, 0, noteBlocks);
-
-            mNoteBlockList = noteBlocks;
-            mLayoutInflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            NoteBlock noteBlock = mNoteBlockList.get(position);
-
-            // Check the tag for this recycled view, if it matches we can reuse it
-            if (convertView == null || noteBlock.getBlockType() != convertView.getTag(R.id.note_block_tag_id)) {
-                convertView = mLayoutInflater.inflate(noteBlock.getLayoutResourceId(), parent, false);
-                convertView.setTag(noteBlock.getViewHolder(convertView));
-            }
-
-            // Update the block type for this view
-            convertView.setTag(R.id.note_block_tag_id, noteBlock.getBlockType());
-
-            noteBlock.setBackgroundColor(mBackgroundColor);
-
-            return noteBlock.configureView(convertView);
-        }
-    }
-
     private final NoteBlock.OnNoteBlockTextClickListener mOnNoteBlockTextClickListener = new NoteBlock.OnNoteBlockTextClickListener() {
         @Override
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
@@ -212,6 +181,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
     };
 
+    private boolean hasNoteBlockAdapter() {
+        return mNoteBlockAdapter != null;
+    }
+
 
     // Loop through the 'body' items in this note, and create blocks for each.
     private class LoadNoteBlocksTask extends AsyncTask<Void, Boolean, List<NoteBlock>> {
@@ -223,7 +196,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (mNote == null) return null;
 
             JSONArray bodyArray = mNote.getBody();
-            final List<NoteBlock> noteList = new ArrayList<NoteBlock>();
+            final List<NoteBlock> noteList = new ArrayList<>();
 
             // Add the note header if one was provided
             if (mNote.getHeader() != null) {
@@ -314,7 +287,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 mRootLayout.setGravity(Gravity.CENTER_VERTICAL);
             }
 
-            setListAdapter(new NoteBlockAdapter(getActivity(), noteList));
+            if (!hasNoteBlockAdapter()) {
+                mNoteBlockAdapter = new NoteBlockAdapter(getActivity(), noteList, mBackgroundColor);
+                setListAdapter(mNoteBlockAdapter);
+            } else {
+                mNoteBlockAdapter.setNoteList(noteList);
+            }
         }
     }
 
