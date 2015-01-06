@@ -59,6 +59,13 @@ android {
     }
 
     buildTypes {
+        release {
+            // Proguard is only used to fix an issue with some Samsung device
+            // https://github.com/wordpress-mobile/WordPress-Android/issues/2151
+            minifyEnabled true
+            proguardFile 'proguard.cfg'
+        }
+
         debug {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
         }
@@ -81,6 +88,8 @@ dependencies {
     compile 'com.cocosw:undobar:1.6@aar'
 
     compile('org.apache.httpcomponents:httpmime:4.1.+') {
+        exclude module: 'httpcore'
+        exclude module: 'httpclient'
         exclude group: 'commons-logging', module: 'commons-logging'
     }
 
