@@ -1,14 +1,16 @@
 #!/bin/sh
 
 LANG_FILE=tools/release-notes-language-codes.csv
-RESDIR=tools/release-notes
+TMPDIR=/tmp/release-notes
+OUTFILE=$TMPDIR/release-notes.md
 
 function fetch() {
 	for line in $(cat $LANG_FILE) ; do
 		code=$(echo $line|cut -d "," -f1|tr -d " ")
 		local=$(echo $line|cut -d "," -f2|tr -d " ")
 		echo updating $local - $code
-		curl -sSfL --globoff -o $RESDIR/strings-$code.xml "https://translate.wordpress.org/projects/android/dev/release-notes/$code/default/export-translations?filters[status]=current&format=android" || (echo Error downloading $code)
+		mkdir -p $TMPDIR
+		curl -sSfL --globoff -o $TMPDIR/strings-$code.xml "https://translate.wordpress.org/projects/android/dev/release-notes/$code/default/export-translations?filters[status]=current&format=android" || (echo Error downloading $code)
 	done
 }
 
@@ -22,20 +24,27 @@ function cleanup() {
 	| sed 's/[[:space:]]*$//g'
 }
 
-function prepare() {
+function extract_release_notes() {
 	comment=$1
 	footer=$2
-	rm -f $RESDIR/release-notes.md
+	rm -f $OUTFILE
 	for line in $(cat $LANG_FILE) ; do
 		code=$(echo $line|cut -d "," -f1|tr -d " ")
 		name=$(echo $line|cut -d "," -f3-|tr -d " ")
-		echo \# $name >> $RESDIR/release-notes.md
-		echo >> $RESDIR/release-notes.md
-		grep \"$comment\" $RESDIR/strings-$code.xml | cleanup >> $RESDIR/release-notes.md
-		grep \"$footer\" $RESDIR/strings-$code.xml | cleanup >> $RESDIR/release-notes.md
-		echo >> $RESDIR/release-notes.md
+		echo \# $name >> $OUTFILE
+		echo >> $OUTFILE
+		grep \"$comment\" $TMPDIR/strings-$code.xml | cleanup >> $OUTFILE
+		grep \"$footer\" $TMPDIR/strings-$code.xml | cleanup >> $OUTFILE
+		echo >> $OUTFILE
 	done
 }
 
+if [ x"$2" == x ]; then
+	echo Usage: $0 RELEASE_NOTES_ID FOOTER_ID
+	echo Example: $0 release_note_35 release_note_footer
+	exit 1
+fi
+
 fetch
-prepare $1 $2
+extract_release_notes $1 $2
+open $OUTFILE
