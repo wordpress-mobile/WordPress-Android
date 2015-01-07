@@ -1,11 +1,15 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -110,40 +114,73 @@ public class StatsViewHolder {
         setEntryText(text);
     }
 
+
     /*
-     * used by stats fragments to set the entry text, opening it with reader if possible
+     * Used by stats fragments to set the entry text, opening the stats details page.
      */
-    public void setEntryTextOpenInReader(SingleItemModel currentItem) {
+    public void setEntryTextOpenDetailsPage(final SingleItemModel currentItem) {
         if (entryTextView == null) {
             return;
         }
 
         String name = currentItem.getTitle();
-        final String url = currentItem.getUrl();
-        final long blogID = Long.parseLong(currentItem.getBlogID());
-        final long itemID = Long.parseLong(currentItem.getItemID());
         entryTextView.setText(name);
         rowContent.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Intent statsPostViewIntent = new Intent(view.getContext(), StatsSinglePostDetailsActivity.class);
+                        statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_OBJECT, currentItem);
+                        view.getContext().startActivity(statsPostViewIntent);
+                    }
+                });
+        entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_link_text_color));
+    }
+
+    /*
+     * Used by stats fragments to create the more btn context menu with the "View" option in it.
+     * Opening it with reader if possible.
+     *
+     */
+    public void setMoreButtonOpenInReader(SingleItemModel currentItem) {
+        if (imgMore == null) {
+            return;
+        }
+
+        final String url = currentItem.getUrl();
+        final long blogID = Long.parseLong(currentItem.getBlogID());
+        final long itemID = Long.parseLong(currentItem.getItemID());
+
+        imgMore.setVisibility(View.VISIBLE);
+        imgMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Context ctx = view.getContext();
+                PopupMenu popup = new PopupMenu(ctx, view);
+                MenuItem menuItem = popup.getMenu().add(ctx.getString(R.string.stats_view));
+                menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
                         // If the post/page has ID == 0 is the home page, and we need to load the blog preview,
                         // otherwise 404 is returned if we try to show the post in the reader
                         if (itemID == 0) {
                             ReaderActivityLauncher.showReaderBlogPreview(
-                                    view.getContext(),
+                                    ctx,
                                     blogID,
                                     url
                             );
                         } else {
                             ReaderActivityLauncher.showReaderPostDetail(
-                                    view.getContext(),
+                                    ctx,
                                     blogID,
                                     itemID
                             );
                         }
+                        return true;
                     }
                 });
-        entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_link_text_color));
+                popup.show();
+            }
+        });
     }
 }

@@ -1,12 +1,16 @@
 package org.wordpress.android.ui.stats.adapters;
 
+
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.PopupMenu;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.StatsViewHolder;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.util.FormatUtils;
@@ -41,9 +45,10 @@ public class PostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
         StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
         // Entry
-        holder.setEntryTextOpenInReader(currentRowData);
+        holder.setEntryTextOpenDetailsPage(currentRowData);
 
-        holder.imgMore.setVisibility(View.GONE);
+        // Setup the more button
+        holder.setMoreButtonOpenInReader(currentRowData);
 
         // totals
         holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));

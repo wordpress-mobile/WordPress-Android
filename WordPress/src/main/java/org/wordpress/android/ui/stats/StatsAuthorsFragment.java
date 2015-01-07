@@ -143,7 +143,10 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
             // name, url
-            holder.setEntryTextOpenInReader(children);
+            holder.setEntryTextOpenDetailsPage(children);
+
+            // Setup the more button
+            holder.setMoreButtonOpenInReader(children);
 
             // totals
             int total = children.getTotals();
