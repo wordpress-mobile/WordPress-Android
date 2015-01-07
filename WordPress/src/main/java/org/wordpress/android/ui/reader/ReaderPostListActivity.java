@@ -30,9 +30,11 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.util.Date;
 import java.util.EnumSet;
 
 import javax.annotation.Nonnull;
@@ -47,6 +49,9 @@ public class ReaderPostListActivity extends WPDrawerActivity
 
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
+
+    private static Date mLastTimeUpdatedFollowed;
+    private static final int MINUTES_BETWEEN_FOLLOWED_UPDATES = 60;
 
     private ReaderTypes.ReaderPostListType mPostListType;
 
@@ -127,6 +132,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
         IntentFilter filter = new IntentFilter();
         filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+        updateFollowedIfNecessary();
     }
 
     @Override
@@ -218,7 +224,9 @@ public class ReaderPostListActivity extends WPDrawerActivity
                 if (isResultOK) {
                     removeListFragment();
                     mHasPerformedInitialUpdate = false;
+                    mLastTimeUpdatedFollowed = null;
                     performInitialUpdate();
+                    updateFollowedIfNecessary();
                 }
                 break;
         }
@@ -230,6 +238,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
 
         AppLog.i(T.READER, "reader post list > user signed out");
         mHasPerformedInitialUpdate = false;
+        mLastTimeUpdatedFollowed = null;
 
         // reader database will have been cleared by the time this is called, but the fragment must
         // be removed or else they will continue to show the same articles - onResume() will take
@@ -292,30 +301,13 @@ public class ReaderPostListActivity extends WPDrawerActivity
     }
 
     /*
-     * is the list fragment showing posts with the passed tag?
+     * initial update performed the first time the user opens the reader
      */
-    private boolean isListFragmentForTagShowing(String tagName) {
-        if (tagName == null) {
-            return false;
-        }
-        ReaderPostListFragment listFragment = getListFragment();
-        return listFragment != null
-                && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-                && listFragment.getCurrentTagName().equals(tagName);
-    }
-
-    /*
-       * initial update performed at startup to ensure we have the latest reader-related info
-       */
     private void performInitialUpdate() {
         if (!NetworkUtils.isNetworkAvailable(this)) {
             return;
         }
 
-        // start background service to get the latest followed tags and blogs
-        ReaderUpdateService.startService(this,
-                EnumSet.of(UpdateTask.TAGS,
-                           UpdateTask.FOLLOWED_BLOGS));
         mHasPerformedInitialUpdate = true;
 
         // update current user to ensure we have their user_id as well as their latest info
@@ -326,6 +318,25 @@ public class ReaderPostListActivity extends WPDrawerActivity
         // update cookies so that we can show authenticated images in WebViews
         AppLog.d(T.READER, "reader post list > updating cookies");
         ReaderAuthActions.updateCookies(ReaderPostListActivity.this);
+    }
+
+    /*
+     * start background service to get the latest followed tags and blogs - only runs if
+     * update hasn't occurred in the past 60 minutes
+     */
+    void updateFollowedIfNecessary() {
+        Date dtNow = new Date();
+        int diff = DateTimeUtils.minutesBetween(dtNow, mLastTimeUpdatedFollowed);
+        if (diff > 0 && diff < MINUTES_BETWEEN_FOLLOWED_UPDATES) {
+            return;
+        }
+
+        mLastTimeUpdatedFollowed = dtNow;
+
+        AppLog.d(T.READER, "reader post list > updating tags and blogs");
+        ReaderUpdateService.startService(this,
+                EnumSet.of(UpdateTask.TAGS,
+                           UpdateTask.FOLLOWED_BLOGS));
     }
 
     /*
