@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +34,9 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.EnumSet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
@@ -49,6 +51,8 @@ public class ReaderPostListActivity extends WPDrawerActivity
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
 
+    private final ScheduledExecutorService mUpdateScheduler = Executors.newScheduledThreadPool(1);
+
     private ReaderTypes.ReaderPostListType mPostListType;
 
     @Override
@@ -56,12 +60,19 @@ public class ReaderPostListActivity extends WPDrawerActivity
         super.onCreate(savedInstanceState);
         createMenuDrawer(R.layout.reader_activity_post_list);
         readIntent(getIntent(), savedInstanceState);
-        mUpdateHandler.postDelayed(mUpdateRunnable, 500);
+
+        // start updating tags & blogs after 500ms, then update them hourly
+        mUpdateScheduler.scheduleWithFixedDelay(
+                new Runnable() {
+                    public void run() {
+                        updateFollowedTagsAndBlogs();
+                    }
+                }, 500, (1000 * 60) * 60, TimeUnit.MILLISECONDS);
     }
 
     @Override
     protected void onDestroy() {
-        mUpdateHandler.removeCallbacks(mUpdateRunnable);
+        mUpdateScheduler.shutdownNow();
         super.onDestroy();
     }
 
@@ -134,7 +145,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
         super.onResume();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED);
-        filter.addAction(ReaderUpdateService.ACTION_UPDATE_COMPLETED);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
@@ -381,18 +391,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
     }
 
     /*
-     * handler/runnable which update followed tags & blogs at regular intervals
-     */
-    private static final long MILLISECONDS_BETWEEN_UPDATES = (1000 * 60) * 60; // 1hr
-    private final Handler mUpdateHandler = new Handler();
-    private final Runnable mUpdateRunnable = new Runnable() {
-        @Override
-        public void run() {
-            updateFollowedTagsAndBlogs();
-        }
-    };
-
-    /*
      * receiver which is notified when followed tags and/or blogs have changed
      */
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -405,10 +403,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
             String action = StringUtils.notNullStr(intent.getAction());
             AppLog.d(T.READER, "reader post list > received broadcast " + action);
 
-            if (action.equals(ReaderUpdateService.ACTION_UPDATE_COMPLETED)) {
-                // followed tags & blogs were just updated so schedule the next update
-                mUpdateHandler.postDelayed(mUpdateRunnable, MILLISECONDS_BETWEEN_UPDATES);
-            } else if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED)) {
+            if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED)) {
                 ReaderPostListFragment listFragment = getListFragment();
                 if (listFragment == null) {
                     // list fragment doesn't exist yet (can happen if user signed out) - create
