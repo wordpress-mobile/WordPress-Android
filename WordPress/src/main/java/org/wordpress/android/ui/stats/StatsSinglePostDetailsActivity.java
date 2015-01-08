@@ -48,19 +48,16 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class StatsSinglePostDetailsActivity extends ActionBarActivity
         implements StatsBarGraph.OnGestureListener{
     public static final String ARG_REMOTE_POST_OBJECT = "ARG_REMOTE_POST_OBJECT";
-    public static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
+    private static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
+    private static final String UNDER_THE_GRAPH_DATE_LABEL_FORMAT = "MMMM d";
 
-    private boolean mIsInFront;
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     private final Handler mHandler = new Handler();
 
     private LinearLayout mGraphContainer;
-    private TextView mStatsForLabel;
-    private StatsBarGraph mGraphView;
-    private GraphViewSeries mCurrentSeriesOnScreen;
     private TextView mStatsViewsLabel;
     private TextView mStatsViewsTotals;
     private LinearLayout mMonthsAndYearsList;
@@ -71,9 +68,9 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     private PostViewsModel mRestResponseParsed;
     private int mSelectedBarGraphIndex = -1;
 
-    protected SparseBooleanArray mYearsIdToExpandedMap;
-    protected SparseBooleanArray mAveragesIdToExpandedMap;
-    protected SparseBooleanArray mRecentWeeksIdToExpandedMap;
+    private SparseBooleanArray mYearsIdToExpandedMap;
+    private SparseBooleanArray mAveragesIdToExpandedMap;
+    private SparseBooleanArray mRecentWeeksIdToExpandedMap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,7 +102,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                 }
         );
 
-        mStatsForLabel = (TextView) findViewById(R.id.stats_summary_title);
+        TextView mStatsForLabel = (TextView) findViewById(R.id.stats_summary_title);
         mGraphContainer = (LinearLayout) findViewById(R.id.stats_bar_chart_fragment_container);
         mStatsViewsLabel = (TextView) findViewById(R.id.stats_views_label);
         mStatsViewsTotals = (TextView) findViewById(R.id.stats_views_totals);
@@ -145,7 +142,6 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     @Override
     protected void onResume() {
         super.onResume();
-        mIsInFront = true;
         if (mRestResponseParsed == null) {
             setupEmptyUI(true);
             mHandler.postDelayed(new Runnable() {
@@ -162,7 +158,6 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     @Override
     protected void onPause() {
         super.onPause();
-        mIsInFront = false;
     }
 
     @Override
@@ -199,7 +194,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
         AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + singlePostRestPath);
 
-        RestBatchCallListener vListener = new RestBatchCallListener(this, blogId, remotePostID);
+        RestBatchCallListener vListener = new RestBatchCallListener(this);
         restClientUtils.get(singlePostRestPath, vListener, vListener);
 
         mIsUpdatingStats = true;
@@ -209,7 +204,6 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mAveragesList.setVisibility(View.GONE);
         mRecentWeeksList.setVisibility(View.GONE);
 
-        return;
     }
 
     private void setupEmptyUI(boolean isLoading) {
@@ -217,10 +211,12 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         if (context != null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View emptyBarGraphView = inflater.inflate(R.layout.stats_bar_graph_empty, mGraphContainer, false);
-            /*if (isLoading) {
-                final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
-                emptyLabel.setText("Loading...");
-            }*/
+            final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
+            if (isLoading) {
+                emptyLabel.setText("");
+            } else {
+                emptyLabel.setText(getString(R.string.stats_bar_graph_empty));
+            }
             if (emptyBarGraphView != null) {
                 mGraphContainer.removeAllViews();
                 mGraphContainer.addView(emptyBarGraphView);
@@ -233,7 +229,6 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mRecentWeeksList.setVisibility(View.GONE);
         mAveragesIdToExpandedMap.clear();
         mYearsIdToExpandedMap.clear();
-        return;
     }
 
     private VisitModel[] getDataToShowOnGraph () {
@@ -279,8 +274,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         GraphView.GraphViewData[] views = new GraphView.GraphViewData[dataToShowOnGraph.length];
 
         for (int i = 0; i < dataToShowOnGraph.length; i++) {
-            int currentItemValue = 0;
-            currentItemValue = dataToShowOnGraph[i].getViews();
+            int currentItemValue = dataToShowOnGraph[i].getViews();
             views[i] = new GraphView.GraphViewData(i, currentItemValue);
 
             String currentItemStatsDate = dataToShowOnGraph[i].getPeriod();
@@ -288,10 +282,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             mStatsDate[i] = currentItemStatsDate;
         }
 
-        mCurrentSeriesOnScreen = new GraphViewSeries(views);
+        GraphViewSeries mCurrentSeriesOnScreen = new GraphViewSeries(views);
         mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
         mCurrentSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(this, 5);
 
+        StatsBarGraph mGraphView;
         if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
             mGraphView = (StatsBarGraph) mGraphContainer.getChildAt(0);
         } else {
@@ -310,7 +305,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mSelectedBarGraphIndex = (mSelectedBarGraphIndex != -1) ? mSelectedBarGraphIndex : dataToShowOnGraph.length - 1;
         mGraphView.highlightBar(mSelectedBarGraphIndex);
 
-        setMainViewsLabel(StatsUtils.parseDate(mStatsDate[mSelectedBarGraphIndex], "yyyy-MM-dd", "MMM d"),
+        setMainViewsLabel(StatsUtils.parseDate(mStatsDate[mSelectedBarGraphIndex], "yyyy-MM-dd", UNDER_THE_GRAPH_DATE_LABEL_FORMAT),
                 dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
 
         mMonthsAndYearsList.setVisibility(View.VISIBLE);
@@ -326,7 +321,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mRecentWeeksList.setVisibility(View.VISIBLE);
         List<PostViewsModel.Week> recentWeeks = mRestResponseParsed.getWeeks();
         RecentWeeksListAdapter recentWeeksListAdapter = new RecentWeeksListAdapter(this, recentWeeks, mRestResponseParsed.getHighestWeekAverage());
-        StatsUIHelper.reloadGroupViews(this, recentWeeksListAdapter, mAveragesIdToExpandedMap, mRecentWeeksList);
+        StatsUIHelper.reloadGroupViews(this, recentWeeksListAdapter, mRecentWeeksIdToExpandedMap, mRecentWeeksList);
 
      }
 
@@ -391,16 +386,16 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
             // show the trophy indicator if the value is the maximum reached
             if (currentDay.getCount() == maxReachedValue) {
-                holder.networkImageView.setVisibility(View.VISIBLE);
-                holder.networkImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
+                holder.imgMore.setVisibility(View.VISIBLE);
+                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
                 holder.totalsTextView.setTextColor(getResources().getColor(R.color.calypso_orange));
             } else {
-                holder.networkImageView.setVisibility(View.GONE);
+                holder.imgMore.setVisibility(View.GONE);
                 holder.totalsTextView.setTextColor(getResources().getColor(R.color.stats_text_color));
             }
 
-            // no more btm
-            holder.imgMore.setVisibility(View.GONE);
+
+            holder.networkImageView.setVisibility(View.GONE);
             return convertView;
         }
 
@@ -456,10 +451,10 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             PostViewsModel.Day firstChild = (PostViewsModel.Day) getChild(groupPosition, 0);
             if (numberOfChilds > 1) {
                 PostViewsModel.Day lastChild = (PostViewsModel.Day) getChild(groupPosition, getChildrenCount(groupPosition) - 1);
-                name = StatsUtils.parseDate(firstChild.getDay(), "yyyy-MM-dd", "MMMM dd")
-                        + " - " + StatsUtils.parseDate(lastChild.getDay(), "yyyy-MM-dd", "MMMM dd");
+                name = StatsUtils.parseDate(firstChild.getDay(), "yyyy-MM-dd", "MMM dd")
+                        + " - " + StatsUtils.parseDate(lastChild.getDay(), "yyyy-MM-dd", "MMM dd");
             } else {
-                name = StatsUtils.parseDate(firstChild.getDay(), "yyyy-MM-dd", "MMMM dd");
+                name = StatsUtils.parseDate(firstChild.getDay(), "yyyy-MM-dd", "MMM dd");
             }
 
             if (shouldShowTheTrophyIcon) {
@@ -528,7 +523,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
-            holder.setEntryText(StatsUtils.parseDate(currentMonth.getMonth(), "MM", "MMM"));
+            holder.setEntryText(StatsUtils.parseDate(currentMonth.getMonth(), "MM", "MMMM"));
 
             // Do not propagate click to childs
             holder.rowContent.setOnClickListener(
@@ -544,16 +539,15 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
             // show the trophy indicator if the value is the maximum reached
             if (currentMonth.getCount() == maxReachedValue) {
-                holder.networkImageView.setVisibility(View.VISIBLE);
-                holder.networkImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
+                holder.imgMore.setVisibility(View.VISIBLE);
+                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
                 holder.totalsTextView.setTextColor(getResources().getColor(R.color.calypso_orange));
             } else {
-                holder.networkImageView.setVisibility(View.GONE);
+                holder.imgMore.setVisibility(View.GONE);
                 holder.totalsTextView.setTextColor(getResources().getColor(R.color.stats_text_color));
             }
 
-            // no more btm
-            holder.imgMore.setVisibility(View.GONE);
+            holder.networkImageView.setVisibility(View.GONE);
             return convertView;
         }
 
@@ -635,14 +629,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
 
     private class RestBatchCallListener implements RestRequest.Listener, RestRequest.ErrorListener {
-        private final String mRequestBlogId, mRemotePostID;
 
         private final WeakReference<Activity> mActivityRef;
 
-        public RestBatchCallListener(Activity activity, String mRequestBlogId, String remotePostID) {
-            mActivityRef = new WeakReference<Activity>(activity);
-            this.mRequestBlogId = mRequestBlogId;
-            this.mRemotePostID = remotePostID;
+        public RestBatchCallListener(Activity activity) {
+            mActivityRef = new WeakReference<>(activity);
         }
 
         @Override
@@ -709,7 +700,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mSelectedBarGraphIndex = tappedBar;
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph();
         String currentItemStatsDate = dataToShowOnGraph[mSelectedBarGraphIndex].getPeriod();
-        currentItemStatsDate = StatsUtils.parseDate(currentItemStatsDate, "yyyy-MM-dd", "MMM d");
+        currentItemStatsDate = StatsUtils.parseDate(currentItemStatsDate, "yyyy-MM-dd", UNDER_THE_GRAPH_DATE_LABEL_FORMAT);
         setMainViewsLabel(currentItemStatsDate, dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
     }
 
