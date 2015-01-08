@@ -941,14 +941,12 @@ public class ReaderPostListFragment extends Fragment {
                     return;
                 }
 
-                // show the "new posts" bar rather than immediately update the list
-                // if the user is viewing posts for a followed tag, posts are already
-                // displayed, and the user has scrolled the list
+                // show the "new posts" bar rather than immediately update the list if the user
+                // if the user is viewing existing posts for a followed tag
                 boolean showNewPostsBar = result == ReaderActions.UpdateResult.HAS_NEW
                         && !isPostListEmpty()
                         && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
-                        && updateAction == RequestDataAction.LOAD_NEWER
-                        && !isListScrolledToTop();
+                        && updateAction == RequestDataAction.LOAD_NEWER;
                 if (showNewPostsBar) {
                     showNewPostsBar();
                 } else if (result.isNewOrChanged()) {

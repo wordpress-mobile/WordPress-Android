@@ -665,7 +665,7 @@
     <string name="reader_hint_reblog_comment">Add your thoughts (optional)</string>
 
     <!-- TextView labels -->
-    <string name="reader_label_new_posts">Show new posts</string>
+    <string name="reader_label_new_posts">&#8593; New posts</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog to</string>
