@@ -61,11 +61,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     private TextView mStatsForLabel;
     private StatsBarGraph mGraphView;
     private GraphViewSeries mCurrentSeriesOnScreen;
-    private TextView mWholeResponse;
     private TextView mStatsViewsLabel;
     private TextView mStatsViewsTotals;
     private LinearLayout mMonthsAndYearsList;
     private LinearLayout mAveragesList;
+    private LinearLayout mRecentWeeksList;
 
     private SingleItemModel mRemotePostItem; // The original item returned from TopPostsAndPages endpoint
     private PostViewsModel mRestResponseParsed;
@@ -73,6 +73,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
     protected SparseBooleanArray mYearsIdToExpandedMap;
     protected SparseBooleanArray mAveragesIdToExpandedMap;
+    protected SparseBooleanArray mRecentWeeksIdToExpandedMap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,11 +107,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
         mStatsForLabel = (TextView) findViewById(R.id.stats_summary_title);
         mGraphContainer = (LinearLayout) findViewById(R.id.stats_bar_chart_fragment_container);
-        mWholeResponse = (TextView) findViewById(R.id.stats_all_response);
         mStatsViewsLabel = (TextView) findViewById(R.id.stats_views_label);
         mStatsViewsTotals = (TextView) findViewById(R.id.stats_views_totals);
         mMonthsAndYearsList = (LinearLayout) findViewById(R.id.stats_months_years_list_linearlayout);
         mAveragesList = (LinearLayout) findViewById(R.id.stats_averages_list_linearlayout);
+        mRecentWeeksList = (LinearLayout) findViewById(R.id.stats_recent_weeks_list_linearlayout);
 
         if (savedInstanceState != null) {
             mRemotePostItem = (SingleItemModel) savedInstanceState.getSerializable(ARG_REMOTE_POST_OBJECT);
@@ -130,6 +131,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
         mYearsIdToExpandedMap = new SparseBooleanArray();
         mAveragesIdToExpandedMap = new SparseBooleanArray();
+        mRecentWeeksIdToExpandedMap = new SparseBooleanArray();
     }
 
     @Override
@@ -205,6 +207,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
         mMonthsAndYearsList.setVisibility(View.GONE);
         mAveragesList.setVisibility(View.GONE);
+        mRecentWeeksList.setVisibility(View.GONE);
 
         return;
     }
@@ -223,11 +226,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                 mGraphContainer.addView(emptyBarGraphView);
             }
         }
-        mWholeResponse.setText("");
         mStatsViewsLabel.setText("");
         mStatsViewsTotals.setText("");
         mMonthsAndYearsList.setVisibility(View.GONE);
         mAveragesList.setVisibility(View.GONE);
+        mRecentWeeksList.setVisibility(View.GONE);
         mAveragesIdToExpandedMap.clear();
         mYearsIdToExpandedMap.clear();
         return;
@@ -310,19 +313,21 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         setMainViewsLabel(StatsUtils.parseDate(mStatsDate[mSelectedBarGraphIndex], "yyyy-MM-dd", "MMM d"),
                 dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
 
-        if (mRestResponseParsed.getOriginalResponse() != null) {
-            mWholeResponse.setText(mRestResponseParsed.getOriginalResponse().toString());
-        }
-
         mMonthsAndYearsList.setVisibility(View.VISIBLE);
         List<PostViewsModel.Year> years = mRestResponseParsed.getYears();
-        MonthsAndYearsListAdapter monthsAndYearsListAdapter = new MonthsAndYearsListAdapter(this, years);
+        MonthsAndYearsListAdapter monthsAndYearsListAdapter = new MonthsAndYearsListAdapter(this, years, mRestResponseParsed.getHighestMonth());
         StatsUIHelper.reloadGroupViews(this, monthsAndYearsListAdapter, mYearsIdToExpandedMap, mMonthsAndYearsList);
 
         mAveragesList.setVisibility(View.VISIBLE);
         List<PostViewsModel.Year> averages = mRestResponseParsed.getAverages();
-        MonthsAndYearsListAdapter averagesListAdapter = new MonthsAndYearsListAdapter(this, averages);
+        MonthsAndYearsListAdapter averagesListAdapter = new MonthsAndYearsListAdapter(this, averages, mRestResponseParsed.getHighestDayAverage());
         StatsUIHelper.reloadGroupViews(this, averagesListAdapter, mAveragesIdToExpandedMap, mAveragesList);
+
+        mRecentWeeksList.setVisibility(View.VISIBLE);
+        List<PostViewsModel.Week> recentWeeks = mRestResponseParsed.getWeeks();
+        RecentWeeksListAdapter recentWeeksListAdapter = new RecentWeeksListAdapter(this, recentWeeks, mRestResponseParsed.getHighestWeekAverage());
+        StatsUIHelper.reloadGroupViews(this, recentWeeksListAdapter, mAveragesIdToExpandedMap, mRecentWeeksList);
+
      }
 
 
@@ -333,13 +338,168 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     }
 
 
+    private class RecentWeeksListAdapter extends BaseExpandableListAdapter {
+        public final LayoutInflater inflater;
+        private final List<PostViewsModel.Week> groups;
+        private final int maxReachedValue;
+
+        public RecentWeeksListAdapter(Context context, List<PostViewsModel.Week> groups, int maxReachedValue) {
+            this.groups = groups;
+            this.inflater = LayoutInflater.from(context);
+            this.maxReachedValue = maxReachedValue;
+        }
+
+        @Override
+        public Object getChild(int groupPosition, int childPosition) {
+            PostViewsModel.Week currentWeek = groups.get(groupPosition);
+            return currentWeek.getDays().get(childPosition);
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return 0;
+        }
+
+        @Override
+        public View getChildView(int groupPosition, final int childPosition,
+                                 boolean isLastChild, View convertView, ViewGroup parent) {
+
+            final PostViewsModel.Day currentDay = (PostViewsModel.Day) getChild(groupPosition, childPosition);
+
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                // configure view holder
+                StatsViewHolder viewHolder = new StatsViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            }
+
+            final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
+
+            holder.setEntryText(StatsUtils.parseDate(currentDay.getDay(), "yyyy-MM-dd", "EEE, MMMM dd"));
+
+            // Do not propagate click to childs
+            holder.rowContent.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    });
+
+            // totals
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(currentDay.getCount()));
+
+            // show the trophy indicator if the value is the maximum reached
+            if (currentDay.getCount() == maxReachedValue) {
+                holder.networkImageView.setVisibility(View.VISIBLE);
+                holder.networkImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
+                holder.totalsTextView.setTextColor(getResources().getColor(R.color.calypso_orange));
+            } else {
+                holder.networkImageView.setVisibility(View.GONE);
+                holder.totalsTextView.setTextColor(getResources().getColor(R.color.stats_text_color));
+            }
+
+            // no more btm
+            holder.imgMore.setVisibility(View.GONE);
+            return convertView;
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            PostViewsModel.Week week = groups.get(groupPosition);
+            return week.getDays().size();
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return groups.get(groupPosition);
+        }
+
+        @Override
+        public int getGroupCount() {
+            return groups.size();
+        }
+
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return 0;
+        }
+
+        @Override
+        public View getGroupView(final int groupPosition, boolean isExpanded,
+                                 View convertView, ViewGroup parent) {
+
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                convertView.setTag(new StatsViewHolder(convertView));
+            }
+
+            final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
+
+            PostViewsModel.Week week = (PostViewsModel.Week) getGroup(groupPosition);
+
+            int total = week.getTotal();
+
+            // change the color of the text if one of its childs has reached maximum value
+            int numberOfChilds = getChildrenCount(groupPosition);
+            boolean shouldShowTheTrophyIcon = false;
+            for (int i=0; i < numberOfChilds; i++) {
+                PostViewsModel.Day currentChild = (PostViewsModel.Day) getChild(groupPosition, i);
+                if (currentChild.getCount() == maxReachedValue) {
+                    shouldShowTheTrophyIcon = true;
+                }
+            }
+
+            // Build the label to show on the group
+            String name;
+            PostViewsModel.Day firstChild = (PostViewsModel.Day) getChild(groupPosition, 0);
+            if (numberOfChilds > 1) {
+                PostViewsModel.Day lastChild = (PostViewsModel.Day) getChild(groupPosition, getChildrenCount(groupPosition) - 1);
+                name = StatsUtils.parseDate(firstChild.getDay(), "yyyy-MM-dd", "MMMM dd")
+                        + " - " + StatsUtils.parseDate(lastChild.getDay(), "yyyy-MM-dd", "MMMM dd");
+            } else {
+                name = StatsUtils.parseDate(firstChild.getDay(), "yyyy-MM-dd", "MMMM dd");
+            }
+
+            if (shouldShowTheTrophyIcon) {
+                holder.setEntryText(name, getResources().getColor(R.color.calypso_orange));
+            } else {
+                holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
+            }
+
+            holder.networkImageView.setVisibility(View.GONE);
+
+            // totals
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+
+            // expand/collapse chevron
+            holder.chevronImageView.setVisibility(numberOfChilds > 0 ? View.VISIBLE : View.GONE);
+            return convertView;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return false;
+        }
+
+    }
+
+
     private class MonthsAndYearsListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
         private final List<PostViewsModel.Year> groups;
+        private final int maxReachedValue;
 
-        public MonthsAndYearsListAdapter(Context context, List<PostViewsModel.Year> groups) {
+        public MonthsAndYearsListAdapter(Context context, List<PostViewsModel.Year> groups, int maxReachedValue) {
             this.groups = groups;
             this.inflater = LayoutInflater.from(context);
+            this.maxReachedValue = maxReachedValue;
         }
 
         @Override
@@ -382,10 +542,18 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentMonth.getCount()));
 
-            holder.networkImageView.setVisibility(View.GONE);
+            // show the trophy indicator if the value is the maximum reached
+            if (currentMonth.getCount() == maxReachedValue) {
+                holder.networkImageView.setVisibility(View.VISIBLE);
+                holder.networkImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
+                holder.totalsTextView.setTextColor(getResources().getColor(R.color.calypso_orange));
+            } else {
+                holder.networkImageView.setVisibility(View.GONE);
+                holder.totalsTextView.setTextColor(getResources().getColor(R.color.stats_text_color));
+            }
+
             // no more btm
             holder.imgMore.setVisibility(View.GONE);
-
             return convertView;
         }
 
@@ -427,15 +595,29 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             String name = year.getLabel();
             int total = year.getTotal();
 
-            holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
+            // change the color of the text if one of its childs has reached maximum value
+            int numberOfChilds = getChildrenCount(groupPosition);
+            boolean shouldShowTheTrophyIcon = false;
+            for (int i=0; i < numberOfChilds; i++) {
+                PostViewsModel.Month currentChild = (PostViewsModel.Month) getChild(groupPosition, i);
+                if (currentChild.getCount() == maxReachedValue) {
+                    shouldShowTheTrophyIcon = true;
+                    break;
+                }
+            }
+            if (shouldShowTheTrophyIcon) {
+                holder.setEntryText(name, getResources().getColor(R.color.calypso_orange));
+            } else {
+                holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
+            }
+
+            holder.networkImageView.setVisibility(View.GONE);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
-            holder.networkImageView.setVisibility(View.GONE);
-
             // expand/collapse chevron
-            holder.chevronImageView.setVisibility(getChildrenCount(groupPosition) > 0 ? View.VISIBLE : View.GONE);
+            holder.chevronImageView.setVisibility(numberOfChilds > 0 ? View.VISIBLE : View.GONE);
             return convertView;
         }
 

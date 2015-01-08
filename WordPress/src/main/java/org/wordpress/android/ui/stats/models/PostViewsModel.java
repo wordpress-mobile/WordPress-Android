@@ -228,7 +228,7 @@ public class PostViewsModel implements Serializable {
                 JSONObject currentWeekJSON = weeksJSON.getJSONObject(i);
 
                 currentWeek.setTotal(currentWeekJSON.getInt("total"));
-
+                currentWeek.setAverage(currentWeekJSON.getInt("average"));
                 try {
                     if (i == 0 ) {
                         currentWeek.setChange(0);
@@ -237,7 +237,7 @@ public class PostViewsModel implements Serializable {
                     }
                 } catch (JSONException e){
                     AppLog.w(AppLog.T.STATS, "Cannot parse the change value in weeks section. Trying to understand the meaning: 42!!");
-                    //  if i == 0 is the first week. if notit could mean infinity
+                    //  if i == 0 is the first week. if not it could mean infinity
                     String aProblematicValue = currentWeekJSON.get("change").toString();
                     if (aProblematicValue.contains("infinity")) {
                         currentWeek.setChange(Integer.MAX_VALUE);
@@ -245,8 +245,6 @@ public class PostViewsModel implements Serializable {
                         currentWeek.setChange(0);
                     }
                 }
-
-                currentWeek.setAverage(currentWeekJSON.getInt("average"));
 
                 JSONArray daysJSON = currentWeekJSON.getJSONArray("days");
                 for (int j = 0; j < daysJSON.length(); j++) {
