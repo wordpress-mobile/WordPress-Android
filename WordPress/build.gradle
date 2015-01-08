@@ -32,7 +32,7 @@ android {
     defaultConfig {
         applicationId "org.wordpress.android"
         versionName "3.5"
-        versionCode 157
+        versionCode 158
         minSdkVersion 14
         targetSdkVersion 21
 
@@ -49,6 +49,13 @@ android {
     }
 
     buildTypes {
+        release {
+            // Proguard is only used to fix an issue with some Samsung device
+            // https://github.com/wordpress-mobile/WordPress-Android/issues/2151
+            minifyEnabled true
+            proguardFile 'proguard.cfg'
+        }
+
         debug {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
         }
