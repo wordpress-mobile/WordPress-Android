@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -61,8 +60,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * The native stats activity, accessible via the menu drawer.
@@ -100,11 +97,9 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
 
-    private LinearLayout mFragmentContainer;
-
     private ArrayList<StatsService.StatsEndpointsEnum> fragmentsRefreshList = new ArrayList<>();
     private final Object fragmentsRefreshListSynchObj = new Object();
-    private Timer fragmentsRefreshListTimer;
+    private final Handler mUpdateStatsHandler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,8 +125,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         } else {
             createMenuDrawer(R.layout.stats_activity);
         }
-
-        mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
 
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
@@ -256,10 +249,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
         mSwipeToRefreshHelper.setRefreshing(false);
-        if (fragmentsRefreshListTimer != null)  {
-            fragmentsRefreshListTimer.cancel();
-            fragmentsRefreshListTimer = null;
-        }
+        mUpdateStatsHandler.removeCallbacks(mUpdateStatsRequestedRunnable);
     }
 
     @Override
@@ -390,37 +380,32 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         // fragments that needs an update require it at almost the same time. Keep a list of fragments
         // that require the update and call the service with the right parameters.
         synchronized (fragmentsRefreshListSynchObj) {
-           for (int i = 0; i < endPointsNeedUpdate.length; i ++) {
-               StatsService.StatsEndpointsEnum current = endPointsNeedUpdate[i];
-               if (!fragmentsRefreshList.contains(current)) {
-                   fragmentsRefreshList.add(current);
-               }
-           }
-
-           // the last fragment set the right call
-           if (fragmentsRefreshListTimer != null)  {
-               fragmentsRefreshListTimer.cancel();
-           }
-
-           fragmentsRefreshListTimer = new Timer();
-           fragmentsRefreshListTimer.schedule(new TimerTask() {
-               @Override
-               public void run() {
-                   synchronized (fragmentsRefreshListSynchObj) {
-                       if (fragmentsRefreshList.contains(StatsService.StatsEndpointsEnum.VISITS)) {
-                           // update stats with graph data
-                           refreshStats(mCurrentTimeframe, mRequestedDate, true, true);
-                       } else {
-                           refreshStats(mCurrentTimeframe, mRequestedDate, false, true);
-                       }
-                       fragmentsRefreshList.clear();
-                       fragmentsRefreshListTimer.cancel();
-                       fragmentsRefreshListTimer = null;
-                   }
-               }
-           }, 500);
+            for (int i = 0; i < endPointsNeedUpdate.length; i++) {
+                StatsService.StatsEndpointsEnum current = endPointsNeedUpdate[i];
+                if (!fragmentsRefreshList.contains(current)) {
+                    fragmentsRefreshList.add(current);
+                }
+            }
+            mUpdateStatsHandler.removeCallbacks(mUpdateStatsRequestedRunnable);
+            mUpdateStatsHandler.postDelayed(mUpdateStatsRequestedRunnable, 500);
         }
     }
+
+    private final Runnable mUpdateStatsRequestedRunnable = new Runnable() {
+        @Override
+        public void run() {
+            synchronized (fragmentsRefreshListSynchObj) {
+                if (fragmentsRefreshList.contains(StatsService.StatsEndpointsEnum.VISITS)) {
+                    // update stats with graph data
+                    refreshStats(mCurrentTimeframe, mRequestedDate, true, true);
+                } else {
+                    refreshStats(mCurrentTimeframe, mRequestedDate, false, true);
+                }
+                mSwipeToRefreshHelper.setRefreshing(mIsUpdatingStats);
+                fragmentsRefreshList.clear();
+            }
+        }
+    };
 
     private void startWPComLoginActivity() {
         mResultCode = RESULT_CANCELED;
