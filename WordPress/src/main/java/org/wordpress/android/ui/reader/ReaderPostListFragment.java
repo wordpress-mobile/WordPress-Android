@@ -281,6 +281,7 @@ public class ReaderPostListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 hideNewPostsBar();
+                mRecyclerView.smoothScrollToPosition(0);
             }
         });
 
@@ -1025,9 +1026,21 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     private void hideNewPostsBar() {
-        if (isAdded() && isNewPostsBarShowing()) {
-            ReaderAnim.fadeOut(mNewPostsBar, ReaderAnim.Duration.MEDIUM);
+        if (!isAdded() || !isNewPostsBarShowing()) {
+            return;
         }
+
+        Animation.AnimationListener listener = new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) { }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mNewPostsBar.setVisibility(View.GONE);
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+        };
+        AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
     }
 
     /*
