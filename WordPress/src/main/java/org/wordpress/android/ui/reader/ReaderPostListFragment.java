@@ -222,7 +222,7 @@ public class ReaderPostListFragment extends Fragment {
             mWasPaused = false;
             // refresh the posts in case the user returned from an activity that
             // changed one (or more) of the posts
-            refreshPosts();
+            refreshPosts(false);
             // likewise for tags
             refreshTags();
 
@@ -486,7 +486,7 @@ public class ReaderPostListFragment extends Fragment {
             @Override
             public void onUndo(Parcelable parcelable) {
                 ReaderBlogActions.undoBlockBlogFromReader(blockResult);
-                refreshPosts();
+                refreshPosts(false);
             }
         };
         new UndoBarController.UndoBar(getActivity())
@@ -840,10 +840,9 @@ public class ReaderPostListFragment extends Fragment {
     /*
      * refresh adapter so latest posts appear
      */
-    void refreshPosts() {
+    void refreshPosts(boolean isLoadingOlderPosts) {
         if (hasPostAdapter()) {
-            //ReaderPost post = getPostAdapter().getItem(getCurrentPosition());
-            getPostAdapter().refresh();
+            getPostAdapter().refresh(isLoadingOlderPosts);
         }
     }
 
@@ -876,7 +875,7 @@ public class ReaderPostListFragment extends Fragment {
                 }
                 setIsUpdating(false, updateAction);
                 if (result.isNewOrChanged()) {
-                    refreshPosts();
+                    refreshPosts(false);
                 }
             }
         };
@@ -919,7 +918,7 @@ public class ReaderPostListFragment extends Fragment {
         // refresh the posts so posts that were unliked/unfollowed no longer appear
         if (refreshType == RefreshType.MANUAL && isCurrentTag(tag)) {
             if (tag.getTagName().equals(ReaderTag.TAG_NAME_LIKED) || tag.getTagName().equals(ReaderTag.TAG_NAME_FOLLOWING))
-                refreshPosts();
+                refreshPosts(false);
         }
 
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
@@ -942,7 +941,8 @@ public class ReaderPostListFragment extends Fragment {
                     if (!isPostAdapterEmpty() && updateAction == RequestDataAction.LOAD_NEWER) {
                         showNewPostsBar();
                     }
-                    refreshPosts();
+                    boolean isLoadingOlderPosts = (updateAction == RequestDataAction.LOAD_OLDER);
+                    refreshPosts(isLoadingOlderPosts);
                 } else {
                     setEmptyTitleAndDescriptionForCurrentTag();
                 }

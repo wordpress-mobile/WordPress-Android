@@ -359,8 +359,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         }
     }
 
-    public void refresh() {
-        loadPosts();
+    public void refresh(boolean isLoadingOlderPosts) {
+        loadPosts(isLoadingOlderPosts);
     }
 
     /*
@@ -368,7 +368,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
      */
     void reload() {
         clear();
-        loadPosts();
+        loadPosts(false);
     }
 
     void removeItem(int position) {
@@ -446,12 +446,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         }
     }
 
-    private void loadPosts() {
+    private void loadPosts(boolean isLoadingOlderPosts) {
         if (mIsTaskRunning) {
             AppLog.w(AppLog.T.READER, "reader posts task already running");
             return;
         }
-        new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadPostsTask(isLoadingOlderPosts).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     ReaderPost getItem(int position) {
@@ -573,7 +573,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         ReaderPostList allPosts;
+        boolean isLoadingOlderPosts;
 
+        LoadPostsTask(boolean isLoadingOlderPosts) {
+            this.isLoadingOlderPosts = isLoadingOlderPosts;
+        }
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -632,8 +636,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
                     }
                     // add all new posts at once
                     if (newPosts.size() > 0) {
-                        mPosts.addAll(0, newPosts);
-                        notifyItemRangeInserted(0, newPosts.size());
+                        int firstIndex = (isLoadingOlderPosts ? mPosts.size() : 0);
+                        mPosts.addAll(firstIndex, newPosts);
+                        notifyItemRangeInserted(firstIndex, newPosts.size());
                     }
                 }
             }
