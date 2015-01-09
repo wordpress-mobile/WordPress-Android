@@ -119,7 +119,7 @@ public class ReaderPostListFragment extends Fragment {
         }
         void saveInstance(Bundle bundle) {
             if (!isEmpty()) {
-                ArrayList<String> history = new ArrayList<String>();
+                ArrayList<String> history = new ArrayList<>();
                 history.addAll(this);
                 bundle.putStringArrayList(keyName, history);
             }
@@ -547,7 +547,7 @@ public class ReaderPostListFragment extends Fragment {
                     return;
                 }
                 if (!isCurrentTag(tag)) {
-                    Map<String, String> properties = new HashMap<String, String>();
+                    Map<String, String> properties = new HashMap<>();
                     properties.put("tag", tag.getTagName());
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
                     if (tag.getTagName().equals(ReaderTag.TAG_NAME_FRESHLY_PRESSED)) {
@@ -858,13 +858,6 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     /*
-     * reload the list of posts
-     */
-    private void reloadPosts() {
-        getPostAdapter().reload();
-    }
-
-    /*
      * get posts for the current blog from the server
      */
     void updatePostsInCurrentBlog(final RequestDataAction updateAction) {
@@ -1083,10 +1076,6 @@ public class ReaderPostListFragment extends Fragment {
      */
     ReaderPostListType getPostListType() {
         return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
-    }
-
-    private boolean isListScrolledToTop() {
-        return (mRecyclerView != null && !mRecyclerView.canScrollVertically(-1));
     }
 
     /*

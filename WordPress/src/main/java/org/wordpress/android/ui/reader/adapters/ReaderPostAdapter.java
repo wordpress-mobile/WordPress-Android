@@ -46,7 +46,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     private boolean mCanRequestMorePosts = false;
 
     private final ReaderTypes.ReaderPostListType mPostListType;
-    private ReaderPostList mPosts = new ReaderPostList();
+    private final ReaderPostList mPosts = new ReaderPostList();
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
@@ -366,7 +366,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     /*
      * same as refresh() above but first clears the existing posts
      */
-    public void reload() {
+    void reload() {
         clear();
         loadPosts();
     }
@@ -454,7 +454,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public ReaderPost getItem(int position) {
+    ReaderPost getItem(int position) {
         if (isValidPosition(position)) {
             return mPosts.get(position);
         } else {
