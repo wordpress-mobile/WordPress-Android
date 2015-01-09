@@ -46,7 +46,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:src="@drawable/ic_action_up" />
+            android:src="@drawable/ic_arrow_up_white_24dp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
