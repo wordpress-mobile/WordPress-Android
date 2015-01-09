@@ -281,7 +281,7 @@ public class ReaderPostListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 hideNewPostsBar();
-                mRecyclerView.smoothScrollToPosition(0);
+                mRecyclerView.scrollToPosition(0);
             }
         });
 
@@ -938,7 +938,8 @@ public class ReaderPostListFragment extends Fragment {
                 }
 
                 if (result.isNewOrChanged()) {
-                    if (!isPostAdapterEmpty()) {
+                    // show the "new posts" bar if there are existing posts and we just loaded new ones
+                    if (!isPostAdapterEmpty() && updateAction == RequestDataAction.LOAD_NEWER) {
                         showNewPostsBar();
                     }
                     refreshPosts();
