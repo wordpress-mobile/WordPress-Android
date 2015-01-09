@@ -95,6 +95,7 @@ public class ReaderPostListFragment extends Fragment {
     private long mCurrentBlogId;
     private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
+
     private int mRestorePosition;
 
     private boolean mIsUpdating;
@@ -175,6 +176,8 @@ public class ReaderPostListFragment extends Fragment {
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
                 mTagPreviewHistory.push(getCurrentTagName());
             }
+
+            // TODO: save KEY_RESTORE_POSITION
         }
     }
 
@@ -271,13 +274,12 @@ public class ReaderPostListFragment extends Fragment {
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
 
-        // bar that appears at top when new posts are downloaded
+        // bar that appears at top after new posts are loaded
         mNewPostsBar = (TextView) rootView.findViewById(R.id.text_new_posts);
         mNewPostsBar.setVisibility(View.GONE);
         mNewPostsBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reloadPosts();
                 hideNewPostsBar();
             }
         });
@@ -840,6 +842,7 @@ public class ReaderPostListFragment extends Fragment {
      */
     void refreshPosts() {
         if (hasPostRecycler()) {
+            //ReaderPost post = getPostRecycler().getItem(getCurrentPosition());
             getPostRecycler().refresh();
         }
     }
@@ -941,15 +944,10 @@ public class ReaderPostListFragment extends Fragment {
                     return;
                 }
 
-                // show the "new posts" bar rather than immediately update the list if the user
-                // if the user is viewing existing posts for a followed tag
-                boolean showNewPostsBar = result == ReaderActions.UpdateResult.HAS_NEW
-                        && !isPostListEmpty()
-                        && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
-                        && updateAction == RequestDataAction.LOAD_NEWER;
-                if (showNewPostsBar) {
-                    showNewPostsBar();
-                } else if (result.isNewOrChanged()) {
+                if (result.isNewOrChanged()) {
+                    if (!isPostListEmpty()) {
+                        showNewPostsBar();
+                    }
                     refreshPosts();
                 } else {
                     setEmptyTitleAndDescriptionForCurrentTag();
@@ -1016,28 +1014,20 @@ public class ReaderPostListFragment extends Fragment {
 
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
+
+        // hide after a short delay
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideNewPostsBar();
+            }
+        }, 3000);
     }
 
     private void hideNewPostsBar() {
-        if (!isAdded() || !isNewPostsBarShowing()) {
-            return;
+        if (isAdded() && isNewPostsBarShowing()) {
+            ReaderAnim.fadeOut(mNewPostsBar, ReaderAnim.Duration.MEDIUM);
         }
-
-        Animation.AnimationListener listener = new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mNewPostsBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        };
-        AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
     }
 
     /*

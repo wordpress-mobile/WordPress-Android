@@ -454,7 +454,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    ReaderPost getItem(int position) {
+    public ReaderPost getItem(int position) {
         if (isValidPosition(position)) {
             return mPosts.get(position);
         } else {
@@ -572,7 +572,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     private boolean mIsTaskRunning = false;
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
-        ReaderPostList tmpPosts;
+        ReaderPostList newPosts = new ReaderPostList();
 
         @Override
         protected void onPreExecute() {
@@ -587,6 +587,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         @Override
         protected Boolean doInBackground(Void... params) {
             final int numExisting;
+            final ReaderPostList tmpPosts;
             switch (getPostListType()) {
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
@@ -601,20 +602,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
                     return false;
             }
 
-            if (mPosts.isSameList(tmpPosts)) {
-                return false;
-            }
-
             // if we're not already displaying the max # posts, enable requesting more when
             // the user scrolls to the end of the list
             mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
+
+            // determine which are new posts
+            for (ReaderPost post: tmpPosts) {
+                int index = mPosts.indexOfPost(post);
+                if (index == -1) {
+                    newPosts.add(post);
+                }
+            }
+            if (newPosts.size() == 0) {
+                return false;
+            }
 
             // pre-calc avatar URLs, featured image URLs, display tag, and pubDates in each
             // post - these values are all cached by the post after the first time they're
             // computed, so calling these getters ensures the values are immediately available
             // when accessed from getView
             String currentTagName = (mCurrentTag != null ? mCurrentTag.getTagName() : "");
-            for (ReaderPost post : tmpPosts) {
+            for (ReaderPost post : newPosts) {
                 post.getPostAvatarForDisplay(mAvatarSz);
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
                 post.getDatePublished();
@@ -627,8 +635,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mPosts = (ReaderPostList) tmpPosts.clone();
-                notifyDataSetChanged();
+                mPosts.addAll(0, newPosts);
+                notifyItemRangeInserted(0, newPosts.size());
             }
 
             if (mDataLoadedListener != null) {
