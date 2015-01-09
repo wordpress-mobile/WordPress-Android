@@ -572,7 +572,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     private boolean mIsTaskRunning = false;
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
-        ReaderPostList newPosts = new ReaderPostList();
+        ReaderPostList allPosts;
 
         @Override
         protected void onPreExecute() {
@@ -587,47 +587,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         @Override
         protected Boolean doInBackground(Void... params) {
             final int numExisting;
-            final ReaderPostList tmpPosts;
             switch (getPostListType()) {
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
-                    tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
+                    allPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
                 case BLOG_PREVIEW:
-                    tmpPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
+                    allPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     break;
                 default:
                     return false;
             }
 
-            // if we're not already displaying the max # posts, enable requesting more when
-            // the user scrolls to the end of the list
-            mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
-
-            // determine which are new posts
-            for (ReaderPost post: tmpPosts) {
-                int index = mPosts.indexOfPost(post);
-                if (index == -1) {
-                    newPosts.add(post);
-                }
-            }
-            if (newPosts.size() == 0) {
+            if (mPosts.isSameList(allPosts)) {
                 return false;
             }
 
-            // pre-calc avatar URLs, featured image URLs, display tag, and pubDates in each
-            // post - these values are all cached by the post after the first time they're
-            // computed, so calling these getters ensures the values are immediately available
-            // when accessed from getView
-            String currentTagName = (mCurrentTag != null ? mCurrentTag.getTagName() : "");
-            for (ReaderPost post : newPosts) {
-                post.getPostAvatarForDisplay(mAvatarSz);
-                post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-                post.getDatePublished();
-                post.getTagForDisplay(currentTagName);
-            }
+            // if we're not already displaying the max # posts, enable requesting more when
+            // the user scrolls to the end of the list
+            mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
             return true;
         }
@@ -635,8 +615,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mPosts.addAll(0, newPosts);
-                notifyItemRangeInserted(0, newPosts.size());
+                if (mPosts.size() == 0) {
+                    mPosts.addAll(allPosts);
+                    notifyDataSetChanged();
+                } else {
+                    // determine new & changed posts
+                    ReaderPostList newPosts = new ReaderPostList();
+                    for (ReaderPost post : allPosts) {
+                        int index = mPosts.indexOfPost(post);
+                        if (index == -1) {
+                            newPosts.add(post);
+                        } else if (!post.isSamePost(mPosts.get(index))) {
+                            mPosts.set(index, post);
+                            notifyItemChanged(index);
+                        }
+                    }
+                    // add all new posts at once
+                    if (newPosts.size() > 0) {
+                        mPosts.addAll(0, newPosts);
+                        notifyItemRangeInserted(0, newPosts.size());
+                    }
+                }
             }
 
             if (mDataLoadedListener != null) {
