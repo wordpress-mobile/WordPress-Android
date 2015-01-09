@@ -77,7 +77,7 @@ public class ReaderPostListFragment extends Fragment {
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
 
-    private ReaderPostAdapter mPostRecycler;
+    private ReaderPostAdapter mPostAdapter;
     private ReaderRecyclerView mRecyclerView;
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
@@ -257,7 +257,7 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     private int getCurrentPosition() {
-        if (mRecyclerView != null && hasPostRecycler()) {
+        if (mRecyclerView != null && hasPostAdapter()) {
             return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         } else {
             return 0;
@@ -386,15 +386,15 @@ public class ReaderPostListFragment extends Fragment {
         setHasOptionsMenu(true);
         setupActionBar();
 
-        boolean adapterAlreadyExists = hasPostRecycler();
-        mRecyclerView.setAdapter(getPostRecycler());
+        boolean adapterAlreadyExists = hasPostAdapter();
+        mRecyclerView.setAdapter(getPostAdapter());
 
         // if adapter didn't already exist, populate it now then update the tag - this
         // check is important since without it the adapter would be reset and posts would
         // be updated every time the user moves between fragments
         if (!adapterAlreadyExists && getPostListType().isTagType()) {
             boolean isRecreated = (savedInstanceState != null);
-            getPostRecycler().setCurrentTag(mCurrentTag);
+            getPostAdapter().setCurrentTag(mCurrentTag);
             if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
                 updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
             }
@@ -411,8 +411,8 @@ public class ReaderPostListFragment extends Fragment {
                 break;
         }
 
-        getPostRecycler().setOnTagSelectedListener(mOnTagSelectedListener);
-        getPostRecycler().setOnPostPopupListener(mOnPostPopupListener);
+        getPostAdapter().setOnTagSelectedListener(mOnTagSelectedListener);
+        getPostAdapter().setOnPostPopupListener(mOnPostPopupListener);
     }
 
     @Override
@@ -454,7 +454,7 @@ public class ReaderPostListFragment extends Fragment {
      * from the adapter
      */
     private void blockBlogForPost(final ReaderPost post) {
-        if (post == null || !hasPostRecycler()) {
+        if (post == null || !hasPostAdapter()) {
             return;
         }
 
@@ -479,7 +479,7 @@ public class ReaderPostListFragment extends Fragment {
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
         // remove posts in this blog from the adapter
-        getPostRecycler().removePostsInBlog(post.blogId);
+        getPostAdapter().removePostsInBlog(post.blogId);
 
         // show the undo bar enabling the user to undo the block
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
@@ -695,27 +695,26 @@ public class ReaderPostListFragment extends Fragment {
         }
     };
 
-    private ReaderPostAdapter getPostRecycler() {
-        if (mPostRecycler == null) {
-            AppLog.d(T.READER, "reader post list > creating post recycler");
+    private ReaderPostAdapter getPostAdapter() {
+        if (mPostAdapter == null) {
+            AppLog.d(T.READER, "reader post list > creating post adapter");
 
             Context context = WPActivityUtils.getThemedContext(getActivity());
-            mPostRecycler = new ReaderPostAdapter(context, getPostListType());
-
-            mPostRecycler.setOnPostSelectedListener(mPostSelectedListener);
-            mPostRecycler.setOnDataLoadedListener(mDataLoadedListener);
-            mPostRecycler.setOnDataRequestedListener(mDataRequestedListener);
-            mPostRecycler.setOnReblogRequestedListener(mRequestReblogListener);
+            mPostAdapter = new ReaderPostAdapter(context, getPostListType());
+            mPostAdapter.setOnPostSelectedListener(mPostSelectedListener);
+            mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
+            mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
+            mPostAdapter.setOnReblogRequestedListener(mRequestReblogListener);
         }
-        return mPostRecycler;
+        return mPostAdapter;
     }
 
-    private boolean hasPostRecycler() {
-        return (mPostRecycler != null);
+    private boolean hasPostAdapter() {
+        return (mPostAdapter != null);
     }
 
-    boolean isPostListEmpty() {
-        return (mPostRecycler == null || mPostRecycler.isEmpty());
+    boolean isPostAdapterEmpty() {
+        return (mPostAdapter == null || mPostAdapter.isEmpty());
     }
 
     private boolean isCurrentTag(final ReaderTag tag) {
@@ -758,8 +757,8 @@ public class ReaderPostListFragment extends Fragment {
         // will happen when the list fragment is restored and the current tag is re-selected in the
         // toolbar dropdown
         if (isCurrentTag(tag)
-                && hasPostRecycler()
-                && getPostRecycler().isCurrentTag(tag)) {
+                && hasPostAdapter()
+                && getPostAdapter().isCurrentTag(tag)) {
             return;
         }
 
@@ -775,7 +774,7 @@ public class ReaderPostListFragment extends Fragment {
                 break;
         }
 
-        getPostRecycler().setCurrentTag(tag);
+        getPostAdapter().setCurrentTag(tag);
         hideNewPostsBar();
         hideUndoBar();
         updateTagPreviewHeader();
@@ -842,9 +841,9 @@ public class ReaderPostListFragment extends Fragment {
      * refresh adapter so latest posts appear
      */
     void refreshPosts() {
-        if (hasPostRecycler()) {
-            //ReaderPost post = getPostRecycler().getItem(getCurrentPosition());
-            getPostRecycler().refresh();
+        if (hasPostAdapter()) {
+            //ReaderPost post = getPostAdapter().getItem(getCurrentPosition());
+            getPostAdapter().refresh();
         }
     }
 
@@ -853,8 +852,8 @@ public class ReaderPostListFragment extends Fragment {
      * post may have been changed (either by the user, or because it updated)
      */
     void reloadPost(ReaderPost post) {
-        if (post != null && hasPostRecycler()) {
-            getPostRecycler().reloadPost(post);
+        if (post != null && hasPostAdapter()) {
+            getPostAdapter().reloadPost(post);
         }
     }
 
@@ -862,7 +861,7 @@ public class ReaderPostListFragment extends Fragment {
      * reload the list of posts
      */
     private void reloadPosts() {
-        getPostRecycler().reload();
+        getPostAdapter().reload();
     }
 
     /*
@@ -946,7 +945,7 @@ public class ReaderPostListFragment extends Fragment {
                 }
 
                 if (result.isNewOrChanged()) {
-                    if (!isPostListEmpty()) {
+                    if (!isPostAdapterEmpty()) {
                         showNewPostsBar();
                     }
                     refreshPosts();
@@ -991,7 +990,7 @@ public class ReaderPostListFragment extends Fragment {
         if (updateAction == RequestDataAction.LOAD_OLDER) {
             // show/hide progress bar at bottom if these are older posts
             showLoadingProgress(isUpdating);
-        } else if (isUpdating && isPostListEmpty()) {
+        } else if (isUpdating && isPostAdapterEmpty()) {
             // show swipe-to-refresh if update started and no posts are showing
             showSwipeToRefreshProgress(true);
         } else if (!isUpdating) {
@@ -1145,8 +1144,8 @@ public class ReaderPostListFragment extends Fragment {
                             if (isAdded()) {
                                 mCurrentBlogId = blogInfo.blogId;
                                 mCurrentBlogUrl = blogInfo.getUrl();
-                                if (isPostListEmpty()) {
-                                    getPostRecycler().setCurrentBlog(mCurrentBlogId);
+                                if (isPostAdapterEmpty()) {
+                                    getPostAdapter().setCurrentBlog(mCurrentBlogId);
                                     updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
                                 }
                             }
