@@ -359,8 +359,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         }
     }
 
-    public void refresh(boolean isLoadingOlderPosts) {
-        loadPosts(isLoadingOlderPosts);
+    public void refresh() {
+        loadPosts();
     }
 
     /*
@@ -368,7 +368,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
      */
     void reload() {
         clear();
-        loadPosts(false);
+        loadPosts();
     }
 
     void removeItem(int position) {
@@ -446,12 +446,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         }
     }
 
-    private void loadPosts(boolean isLoadingOlderPosts) {
+    private void loadPosts() {
         if (mIsTaskRunning) {
             AppLog.w(AppLog.T.READER, "reader posts task already running");
             return;
         }
-        new LoadPostsTask(isLoadingOlderPosts).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     ReaderPost getItem(int position) {
@@ -573,11 +573,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         ReaderPostList allPosts;
-        boolean isLoadingOlderPosts;
 
-        LoadPostsTask(boolean isLoadingOlderPosts) {
-            this.isLoadingOlderPosts = isLoadingOlderPosts;
-        }
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -624,21 +620,21 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
                     notifyDataSetChanged();
                 } else {
                     // determine new & changed posts
-                    ReaderPostList newPosts = new ReaderPostList();
+                    int index;
+                    int addIndex = 0;
                     for (ReaderPost post : allPosts) {
-                        int index = mPosts.indexOfPost(post);
+                        index = mPosts.indexOfPost(post);
                         if (index == -1) {
-                            newPosts.add(post);
-                        } else if (!post.isSamePost(mPosts.get(index))) {
-                            mPosts.set(index, post);
-                            notifyItemChanged(index);
+                            mPosts.add(addIndex, post);
+                            notifyItemInserted(addIndex);
+                            addIndex++;
+                        } else {
+                            addIndex = index + 1;
+                            if (!post.isSamePost(mPosts.get(index))) {
+                                mPosts.set(index, post);
+                                notifyItemChanged(index);
+                            }
                         }
-                    }
-                    // add all new posts at once
-                    if (newPosts.size() > 0) {
-                        int firstIndex = (isLoadingOlderPosts ? mPosts.size() : 0);
-                        mPosts.addAll(firstIndex, newPosts);
-                        notifyItemRangeInserted(firstIndex, newPosts.size());
                     }
                 }
             }
