@@ -84,7 +84,7 @@ public class ReaderPostListFragment extends Fragment {
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private TextView mNewPostsBar;
+    private View mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
 
@@ -276,7 +276,7 @@ public class ReaderPostListFragment extends Fragment {
         mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
 
         // bar that appears at top after new posts are loaded
-        mNewPostsBar = (TextView) rootView.findViewById(R.id.text_new_posts);
+        mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);
         mNewPostsBar.setVisibility(View.GONE);
         mNewPostsBar.setOnClickListener(new View.OnClickListener() {
             @Override
