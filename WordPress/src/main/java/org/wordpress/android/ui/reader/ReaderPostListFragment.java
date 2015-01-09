@@ -177,8 +177,6 @@ public class ReaderPostListFragment extends Fragment {
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
                 mTagPreviewHistory.push(getCurrentTagName());
             }
-
-            // TODO: save KEY_RESTORE_POSITION
         }
     }
 
