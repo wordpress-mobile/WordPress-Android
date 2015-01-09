@@ -36,6 +36,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_medium"
         android:background="@drawable/reader_new_posts_bar_background"
+        android:drawableLeft="@drawable/ic_action_up"
+        android:drawablePadding="@dimen/margin_small"
         android:elevation="@dimen/message_bar_elevation"
         android:gravity="center"
         android:paddingBottom="@dimen/margin_large"
