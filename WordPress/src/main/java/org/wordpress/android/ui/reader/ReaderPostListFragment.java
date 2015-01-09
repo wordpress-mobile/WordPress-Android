@@ -935,11 +935,13 @@ public class ReaderPostListFragment extends Fragment {
                     return;
                 }
 
-                if (result.isNewOrChanged()) {
-                    // show the "new posts" bar if there are existing posts and we just loaded new ones
-                    if (!isPostAdapterEmpty() && updateAction == RequestDataAction.LOAD_NEWER) {
-                        showNewPostsBar();
-                    }
+                // show "new posts" bar only if there are new posts and the list isn't empty
+                if (result == ReaderActions.UpdateResult.HAS_NEW
+                        && !isPostAdapterEmpty()
+                        && updateAction == RequestDataAction.LOAD_NEWER) {
+                    showNewPostsBar();
+                    refreshPosts();
+                } else if (result.isNewOrChanged()) {
                     refreshPosts();
                 } else {
                     setEmptyTitleAndDescriptionForCurrentTag();
