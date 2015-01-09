@@ -100,6 +100,7 @@ public class ReaderPostListFragment extends Fragment {
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
+    private boolean mIsAnimatingOutNewPostsBar;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -1018,9 +1019,11 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     private void hideNewPostsBar() {
-        if (!isAdded() || !isNewPostsBarShowing()) {
+        if (!isAdded() || !isNewPostsBarShowing() || mIsAnimatingOutNewPostsBar) {
             return;
         }
+
+        mIsAnimatingOutNewPostsBar = true;
 
         Animation.AnimationListener listener = new Animation.AnimationListener() {
             @Override
@@ -1028,6 +1031,7 @@ public class ReaderPostListFragment extends Fragment {
             @Override
             public void onAnimationEnd(Animation animation) {
                 mNewPostsBar.setVisibility(View.GONE);
+                mIsAnimatingOutNewPostsBar = false;
             }
             @Override
             public void onAnimationRepeat(Animation animation) { }
