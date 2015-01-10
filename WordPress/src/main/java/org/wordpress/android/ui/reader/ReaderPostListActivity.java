@@ -414,7 +414,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
                     listFragment.refreshTags();
                     // update the current tag if the list fragment is empty - this will happen if
                     // the tag table was previously empty (ie: first run)
-                    if (listFragment.isPostListEmpty()) {
+                    if (listFragment.isPostAdapterEmpty()) {
                         listFragment.updateCurrentTag();
                     }
                 }
