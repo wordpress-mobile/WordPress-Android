@@ -2,4 +2,7 @@
 
     <string name="app_name">Media Picker</string>
 
+    <string name="cd_media_item_image">media item image</string>
+    <string name="cd_media_item_overlay">media item overlay image</string>
+
 </resources>
