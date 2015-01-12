@@ -29,18 +29,33 @@
         android:id="@+id/empty_view"
         layout="@layout/reader_empty_view" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_new_posts"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/layout_new_posts"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/color_primary_dark"
-        android:gravity="center"
-        android:padding="@dimen/margin_large"
-        android:text="@string/reader_label_new_posts"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_sz_large"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@drawable/reader_new_posts_bar_background"
+        android:elevation="@dimen/message_bar_elevation"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_extra_large"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_arrow_up_white_24dp" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/margin_medium"
+            android:text="@string/reader_label_new_posts"
+            android:textColor="@color/grey_extra_light"
+            android:textSize="@dimen/text_sz_large" />
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progress_footer"
