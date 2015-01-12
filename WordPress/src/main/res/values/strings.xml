@@ -675,7 +675,6 @@
     <string name="reader_label_followers">%s followers</string>
     <string name="reader_label_followed_blog">Blog followed</string>
     <string name="reader_label_unfollowed_blog">Blog unfollowed</string>
-    <string name="reader_label_more">Show more</string>
     <string name="reader_label_tag_preview">Posts tagged %s</string>
     <string name="reader_label_comments_on">Comments on</string>
     <string name="reader_label_comments_closed">Comments are closed</string>
