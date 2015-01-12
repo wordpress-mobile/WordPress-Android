@@ -640,7 +640,7 @@
     <string name="reader_page_followed_tags">Followed tags</string>
     <string name="reader_page_popular_tags">Popular tags</string>
     <string name="reader_page_followed_blogs">Followed blogs</string>
-    <string name="reader_page_recommended_blogs">Recommended blogs</string>
+    <string name="reader_page_recommended_blogs">Blogs you may like</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
