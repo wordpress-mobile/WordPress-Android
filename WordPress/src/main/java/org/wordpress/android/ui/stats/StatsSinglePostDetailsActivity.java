@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -372,7 +373,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
             holder.setEntryText(StatsUtils.parseDate(currentDay.getDay(), "yyyy-MM-dd", "EEE, MMMM dd"));
 
-            // Do not propagate click to childs
+            // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
             holder.rowContent.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
@@ -380,6 +381,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
                         }
                     });
+            holder.rowContent.setBackgroundColor(Color.TRANSPARENT);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentDay.getCount()));
@@ -389,11 +391,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                 holder.imgMore.setVisibility(View.VISIBLE);
                 holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
                 holder.totalsTextView.setTextColor(getResources().getColor(R.color.calypso_orange));
+                holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
                 holder.totalsTextView.setTextColor(getResources().getColor(R.color.stats_text_color));
             }
-
 
             holder.networkImageView.setVisibility(View.GONE);
             return convertView;
@@ -525,7 +527,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
             holder.setEntryText(StatsUtils.parseDate(currentMonth.getMonth(), "MM", "MMMM"));
 
-            // Do not propagate click to childs
+            // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
             holder.rowContent.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
@@ -533,6 +535,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
                         }
                     });
+            holder.rowContent.setBackgroundColor(Color.TRANSPARENT);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentMonth.getCount()));
@@ -542,6 +545,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                 holder.imgMore.setVisibility(View.VISIBLE);
                 holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
                 holder.totalsTextView.setTextColor(getResources().getColor(R.color.calypso_orange));
+                holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
                 holder.totalsTextView.setTextColor(getResources().getColor(R.color.stats_text_color));
