@@ -34,6 +34,7 @@ public class StatsService extends Service {
     public static final String ARG_PERIOD = "stats_period";
     public static final String ARG_DATE = "stats_date";
     public static final String ARG_UPDATE_ALLTIME_STATS = "ARG_UPDATE_ALLTIME_STATS";
+    public static final String ARG_UPDATE_GRAPH_STATS = "ARG_UPDATE_GRAPH_STATS";
     public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS,
         VIDEO_PLAYS, COMMENTS, FOLLOWERS_WPCOM, FOLLOWERS_EMAIL, COMMENT_FOLLOWERS, TAGS_AND_CATEGORIES, PUBLICIZE}
 
@@ -105,9 +106,10 @@ public class StatsService extends Service {
 
         // True when the network call to update the graph is needed
         boolean updateAlltimeStats = intent.getBooleanExtra(ARG_UPDATE_ALLTIME_STATS, true);
+        boolean updateGraphStats = intent.getBooleanExtra(ARG_UPDATE_GRAPH_STATS, true);
 
         if (mServiceBlogId == null) {
-            startTasks(blogId, period, requestedDate, updateAlltimeStats, startId);
+            startTasks(blogId, period, requestedDate, updateGraphStats, updateAlltimeStats, startId);
         } else if (blogId.equals(mServiceBlogId) && mServiceRequestedTimeframe == period
                 && requestedDate.equals(mServiceRequestedDate)) {
             // already running on the same blogID, same period
@@ -117,7 +119,7 @@ public class StatsService extends Service {
         } else {
             // stats is running on a different blogID
             stopRefresh();
-            startTasks(blogId, period, requestedDate, updateAlltimeStats, startId);
+            startTasks(blogId, period, requestedDate, updateGraphStats, updateAlltimeStats, startId);
         }
         // Always update the startId. Always.
         this.mServiceStartId = startId;
@@ -141,7 +143,7 @@ public class StatsService extends Service {
     }
 
     private void startTasks(final String blogId, final StatsTimeframe timeframe, final String date,
-                            final boolean updateAlltimeStats, final int startId) {
+                            final boolean updateGraphStats, final boolean updateAlltimeStats, final int startId) {
         this.mServiceBlogId = blogId;
         this.mServiceRequestedTimeframe = timeframe;
         this.mServiceRequestedDate = date;
@@ -159,12 +161,7 @@ public class StatsService extends Service {
 
                 broadcastUpdate(true);
 
-                /* Summary call
-                SummaryCallListener sListener = new SummaryCallListener(mServiceBlogId, mServiceRequestedTimeframe);
-                final String summaryPath = String.format("/sites/%s/stats/summary?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
-                statsNetworkRequests.add(restClientUtils.get(summaryPath, sListener, sListener));
-*/
-                if (updateAlltimeStats) {
+                if (updateGraphStats) {
                     // Visits call: The Graph and the section just below the graph
                     RestListener vListener = new RestListener(StatsEndpointsEnum.VISITS, mServiceBlogId, mServiceRequestedTimeframe);
                     final String visitsPath = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", mServiceBlogId, period, mServiceRequestedDate);
