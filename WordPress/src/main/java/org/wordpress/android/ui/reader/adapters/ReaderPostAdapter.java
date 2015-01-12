@@ -46,7 +46,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     private boolean mCanRequestMorePosts = false;
 
     private final ReaderTypes.ReaderPostListType mPostListType;
-    private ReaderPostList mPosts = new ReaderPostList();
+    private final ReaderPostList mPosts = new ReaderPostList();
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
@@ -366,7 +366,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     /*
      * same as refresh() above but first clears the existing posts
      */
-    public void reload() {
+    void reload() {
         clear();
         loadPosts();
     }
@@ -572,7 +572,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     private boolean mIsTaskRunning = false;
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
-        ReaderPostList tmpPosts;
+        ReaderPostList allPosts;
 
         @Override
         protected void onPreExecute() {
@@ -590,18 +590,18 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             switch (getPostListType()) {
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
-                    tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
+                    allPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
                 case BLOG_PREVIEW:
-                    tmpPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
+                    allPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     break;
                 default:
                     return false;
             }
 
-            if (mPosts.isSameList(tmpPosts)) {
+            if (mPosts.isSameList(allPosts)) {
                 return false;
             }
 
@@ -609,26 +609,34 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             // the user scrolls to the end of the list
             mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
-            // pre-calc avatar URLs, featured image URLs, display tag, and pubDates in each
-            // post - these values are all cached by the post after the first time they're
-            // computed, so calling these getters ensures the values are immediately available
-            // when accessed from getView
-            String currentTagName = (mCurrentTag != null ? mCurrentTag.getTagName() : "");
-            for (ReaderPost post : tmpPosts) {
-                post.getPostAvatarForDisplay(mAvatarSz);
-                post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-                post.getDatePublished();
-                post.getTagForDisplay(currentTagName);
-            }
-
             return true;
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mPosts = (ReaderPostList) tmpPosts.clone();
-                notifyDataSetChanged();
+                if (mPosts.size() == 0) {
+                    mPosts.addAll(allPosts);
+                    notifyDataSetChanged();
+                } else {
+                    // determine new & changed posts
+                    int index;
+                    int addIndex = 0;
+                    for (ReaderPost post : allPosts) {
+                        index = mPosts.indexOfPost(post);
+                        if (index == -1) {
+                            mPosts.add(addIndex, post);
+                            notifyItemInserted(addIndex);
+                            addIndex++;
+                        } else {
+                            addIndex = index + 1;
+                            if (!post.isSamePost(mPosts.get(index))) {
+                                mPosts.set(index, post);
+                                notifyItemChanged(index);
+                            }
+                        }
+                    }
+                }
             }
 
             if (mDataLoadedListener != null) {
