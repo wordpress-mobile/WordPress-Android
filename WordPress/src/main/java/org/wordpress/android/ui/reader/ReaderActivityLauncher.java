@@ -34,10 +34,14 @@ public class ReaderActivityLauncher {
 
         if (context instanceof Activity) {
             // For ActionBarActivity subclasses, we need to pull the title from the Toolbar
-            CharSequence title;
+            CharSequence title = null;
             if (context instanceof ActionBarActivity && ((ActionBarActivity) context).getSupportActionBar() != null) {
                 title = ((ActionBarActivity) context).getSupportActionBar().getTitle();
-            } else {
+            }
+
+            if (title == null) {
+                // Not an ActionBarActivity, or getSupportActionBar().getTitle() returned null.
+                // Try to read the title from the Activity
                 title = ((Activity)context).getTitle();
             }
             intent.putExtra(ReaderConstants.ARG_TITLE, title);
