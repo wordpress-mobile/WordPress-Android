@@ -6,6 +6,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
+import java.lang.Character;
 import java.util.regex.Pattern;
 
 public class ReaderTag implements Serializable {
@@ -74,10 +75,17 @@ public class ReaderTag implements Serializable {
         if (tagName == null) {
             return "";
         }
-        // HACK to allow iPhone, iPad, iEverything else
-        if (tagName.startsWith("iP")) {
+        // If already uppercase, assume correctly formatted
+        if (Character.isUpperCase(tagName.charAt(0))) {
             return tagName;
         }
+        // Accounts for iPhone, ePaper, etc.
+        if (tagName.length() > 1 &&
+                Character.isUpperCase(tagName.charAt(0)) &&
+                Character.isLowerCase(tagName.charAt(1))) {
+            return tagName;
+        }
+        // Capitalize anything else.
         return StringUtils.capitalize(tagName);
     }
 
