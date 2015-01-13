@@ -300,7 +300,7 @@ public class ReaderUpdateService extends Service {
             @Override
             public void run() {
                 ReaderRecommendBlogList serverBlogs = ReaderRecommendBlogList.fromJson(jsonObject);
-                ReaderRecommendBlogList localBlogs = ReaderBlogTable.getAllRecommendedBlogs();
+                ReaderRecommendBlogList localBlogs = ReaderBlogTable.getRecommendedBlogs();
 
                 if (!localBlogs.isSameList(serverBlogs)) {
                     ReaderBlogTable.setRecommendedBlogs(serverBlogs);

@@ -14,9 +14,7 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderRecommendedBlog;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderAnim;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -37,7 +35,6 @@ import java.util.Comparator;
 public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_ITEM = 0;
-    private static final int VIEW_TYPE_FOOTER = 1;
 
     public enum ReaderBlogType {RECOMMENDED, FOLLOWED}
 
@@ -113,11 +110,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public int getItemCount() {
         switch (getBlogType()) {
             case RECOMMENDED:
-                if (mRecommendedBlogs.size() == 0) {
-                    return 0;
-                } else {
-                    return mRecommendedBlogs.size() + 1; // +1 for the footer
-                }
+                return mRecommendedBlogs.size();
             case FOLLOWED:
                 return mFollowedBlogs.size();
             default:
@@ -132,16 +125,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        switch (getBlogType()) {
-            case RECOMMENDED:
-                if (position < mRecommendedBlogs.size()) {
-                    return VIEW_TYPE_ITEM;
-                } else {
-                    return VIEW_TYPE_FOOTER;
-                }
-            default:
-                return VIEW_TYPE_ITEM;
-        }
+        return VIEW_TYPE_ITEM;
     }
 
     @Override
@@ -150,9 +134,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case VIEW_TYPE_ITEM:
                 View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_listitem_blog, parent, false);
                 return new BlogViewHolder(itemView);
-            case VIEW_TYPE_FOOTER:
-                View footerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_footer_recommendations, parent, false);
-                return new FooterViewHolder(footerView);
             default:
                 return null;
         }
@@ -248,21 +229,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    /*
-     * holder used for the "More recommendations" footer
-     */
-    class FooterViewHolder extends RecyclerView.ViewHolder {
-        public FooterViewHolder(View view) {
-            super(view);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    loadMoreRecommendations();
-                }
-            });
-        }
-    }
-
     private void changeFollowStatus(final TextView txtFollow,
                                     final int position,
                                     final boolean isAskingToFollow) {
@@ -313,27 +279,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    /*
-     * user tapped to view more recommended blogs - increase the offset when requesting
-     * recommendations from local db and refresh the adapter
-     */
-    private void loadMoreRecommendations() {
-        if (getBlogType() != ReaderBlogType.RECOMMENDED) {
-            return;
-        }
-
-        int currentOffset = AppPrefs.getReaderRecommendedBlogOffset();
-        int newOffset = currentOffset + ReaderConstants.READER_MAX_RECOMMENDED_TO_DISPLAY;
-
-        // start over if we've reached the max
-        if (newOffset >= ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST) {
-            newOffset = 0;
-        }
-
-        AppPrefs.setReaderRecommendedBlogOffset(newOffset);
-        refresh();
-    }
-
     private boolean mIsTaskRunning = false;
     private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
         ReaderRecommendBlogList tmpRecommendedBlogs;
@@ -353,15 +298,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         protected Boolean doInBackground(Void... params) {
             switch (getBlogType()) {
                 case RECOMMENDED:
-                    // get recommended blogs using this offset, then start over with no offset
-                    // if there aren't any with this offset,
-                    int limit = ReaderConstants.READER_MAX_RECOMMENDED_TO_DISPLAY;
-                    int offset = AppPrefs.getReaderRecommendedBlogOffset();
-                    tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, offset);
-                    if (tmpRecommendedBlogs.size() == 0 && offset > 0) {
-                        AppPrefs.setReaderRecommendedBlogOffset(0);
-                        tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, 0);
-                    }
+                    tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs();
                     return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
 
                 case FOLLOWED:
