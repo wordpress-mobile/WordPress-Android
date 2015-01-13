@@ -24,9 +24,6 @@ public class AppPrefs {
         // title of the last active page in ReaderSubsActivity
         READER_SUBS_PAGE_TITLE,
 
-        // offset when showing recommended blogs
-        READER_RECOMMENDED_OFFSET,
-
         // email retrieved and attached to mixpanel profile
         MIXPANEL_EMAIL_ADDRESS_RETRIEVED,
     }
@@ -129,20 +126,6 @@ public class AppPrefs {
                    .remove(PrefKey.READER_TAG_NAME.name())
                    .remove(PrefKey.READER_TAG_TYPE.name())
                    .apply();
-        }
-    }
-
-    /*
-     * offset used along with a SQL LIMIT to enable user to page through recommended blogs
-     */
-    public static int getReaderRecommendedBlogOffset() {
-        return getInt(PrefKey.READER_RECOMMENDED_OFFSET);
-    }
-    public static void setReaderRecommendedBlogOffset(int offset) {
-        if (offset == 0) {
-            remove(PrefKey.READER_RECOMMENDED_OFFSET);
-        } else {
-            setInt(PrefKey.READER_RECOMMENDED_OFFSET, offset);
         }
     }
 

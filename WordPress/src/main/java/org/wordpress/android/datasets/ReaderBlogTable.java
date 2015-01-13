@@ -271,7 +271,7 @@ public class ReaderBlogTable {
         }
     }
 
-    public static ReaderRecommendBlogList getAllRecommendedBlogs() {
+    public static ReaderRecommendBlogList getRecommendedBlogs() {
         return getRecommendedBlogs(0, 0);
     }
     public static ReaderRecommendBlogList getRecommendedBlogs(int limit, int offset) {

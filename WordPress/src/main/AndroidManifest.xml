@@ -122,6 +122,9 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@style/WordPress.DropDownListView.Light">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.posts.PostsActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
