@@ -2,6 +2,7 @@ package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.inputmethod.EditorInfo;
 import android.widget.MultiAutoCompleteTextView;
 
 import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
@@ -30,6 +31,8 @@ public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
         setTokenizer(new SuggestionTokenizer());
         setThreshold(1);
         mPersistentEditTextHelper = new PersistentEditTextHelper(context);
+        // When TYPE_TEXT_FLAG_AUTO_COMPLETE is set, autocorrection is disabled.
+        setRawInputType(getInputType() & ~EditorInfo.TYPE_TEXT_FLAG_AUTO_COMPLETE);
     }
 
     public PersistentEditTextHelper getAutoSaveTextHelper() {
