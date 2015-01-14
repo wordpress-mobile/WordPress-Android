@@ -358,7 +358,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         @Override
         public void onError(final int messageId, final boolean httpAuthRequired,
-                            final boolean erroneousSslCertificate) {
+                            final boolean erroneousSslCertificate, final String clientResponse) {
             if (!isAdded()) {
                 return;
             }
@@ -374,7 +374,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                         return;
                     }
                     if (messageId != 0) {
-                        signInError(messageId);
+                        signInError(messageId, clientResponse);
                         return;
                     }
                     endProgress();
@@ -394,7 +394,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
             @Override
             public void onError(int errorMessageId, boolean httpAuthRequired, boolean erroneousSslCertificate) {
-                mFecthBlogListCallback.onError(errorMessageId, httpAuthRequired, erroneousSslCertificate);
+                mFecthBlogListCallback.onError(errorMessageId, httpAuthRequired, erroneousSslCertificate, "");
             }
         });
     }
@@ -627,7 +627,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         endProgress();
     }
 
-    protected void signInError(int messageId) {
+    protected void signInError(int messageId, String clientResponse) {
         AnalyticsTracker.track(Stat.LOGIN_FAILED);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert;

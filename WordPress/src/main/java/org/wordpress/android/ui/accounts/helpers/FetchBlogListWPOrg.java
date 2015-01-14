@@ -69,7 +69,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             if (userBlogs == null) {
                 // Could happen if the returned server response is truncated
                 mErrorMsgId = org.wordpress.android.R.string.xmlrpc_error;
-                callback.onError(mErrorMsgId, false, false);
+                callback.onError(mErrorMsgId, false, false, client.getResponse());
                 return;
             }
             Arrays.sort(userBlogs, BlogUtils.BlogNameComparator);
@@ -100,7 +100,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
             mErrorMsgId = org.wordpress.android.R.string.no_site_error;
         }
-        callback.onError(mErrorMsgId, mHttpAuthRequired, mErroneousSslCertificate);
+        callback.onError(mErrorMsgId, mHttpAuthRequired, mErroneousSslCertificate, client.getResponse());
     }
 
     public void fetchBlogList(Callback callback) {
@@ -113,20 +113,16 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             if (!mHttpAuthRequired && mErrorMsgId == 0) {
                 mErrorMsgId = org.wordpress.android.R.string.no_site_error;
             }
-            callback.onError(mErrorMsgId, mHttpAuthRequired, mErroneousSslCertificate);
+            callback.onError(mErrorMsgId, mHttpAuthRequired, mErroneousSslCertificate, "");
             return;
         }
 
         // Validate the URL found before calling the client. Prevent a crash that can occur
         // during the setup of self-hosted sites.
         URI xmlrpcUri;
-        try {
             xmlrpcUri = URI.create(xmlrpcUrl);
             getBlogList(xmlrpcUri, callback);
-        } catch (Exception e) {
-            mErrorMsgId = org.wordpress.android.R.string.no_site_error;
-            callback.onError(mErrorMsgId, mHttpAuthRequired, mErroneousSslCertificate);
-        }
+
     }
 
     private String getRsdUrl(String baseUrl) throws SSLHandshakeException {
