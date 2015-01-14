@@ -11,6 +11,7 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
+        android:id="@+id/layout_empty_images"
         android:layout_height="100dp"
         android:layout_marginBottom="8dp">
 

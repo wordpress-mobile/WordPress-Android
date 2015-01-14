@@ -14,8 +14,8 @@ public class ReaderTag implements Serializable {
     private String endpoint;
     public ReaderTagType tagType;
 
-    public static String TAG_ID_FOLLOWING = "following";
-    public static String TAG_ID_LIKED = "liked";
+    public static final String TAG_ID_FOLLOWING = "following";
+    public static final String TAG_ID_LIKED = "liked";
 
     // these are the default tag names, which aren't localized in the /read/menu/ response
     public static final String TAG_NAME_LIKED = "Posts I Like";
