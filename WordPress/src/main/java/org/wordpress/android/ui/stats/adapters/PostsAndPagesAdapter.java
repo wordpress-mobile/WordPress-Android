@@ -3,27 +3,24 @@ package org.wordpress.android.ui.stats.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.PopupMenu;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.StatsViewHolder;
-import org.wordpress.android.ui.stats.models.SingleItemModel;
+import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.util.FormatUtils;
 
 import java.util.List;
 
-public class PostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
+public class PostsAndPagesAdapter extends ArrayAdapter<PostModel> {
 
-    private List<SingleItemModel> list;
+    private List<PostModel> list;
     private final LayoutInflater inflater;
     private final int localTableBlogID;
 
-    public PostsAndPagesAdapter(Context context, int localTableBlogID, List<SingleItemModel> list) {
+    public PostsAndPagesAdapter(Context context, int localTableBlogID, List<PostModel> list) {
         super(context, R.layout.stats_list_cell, list);
         this.list = list;
         this.localTableBlogID = localTableBlogID;
@@ -41,7 +38,7 @@ public class PostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
             rowView.setTag(viewHolder);
         }
 
-        final SingleItemModel currentRowData = list.get(position);
+        final PostModel currentRowData = list.get(position);
         StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
         // Entry

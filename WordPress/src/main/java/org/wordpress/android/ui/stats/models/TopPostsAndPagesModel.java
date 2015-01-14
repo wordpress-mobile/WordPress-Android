@@ -15,7 +15,7 @@ public class TopPostsAndPagesModel implements Serializable {
     private String mPeriod;
     private String mDate;
     private String mBlogID;
-    private List<SingleItemModel> mTopPostsAndPages;
+    private List<PostModel> mTopPostsAndPages;
 
     public TopPostsAndPagesModel(String blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
@@ -38,7 +38,7 @@ public class TopPostsAndPagesModel implements Serializable {
             postViewsArray = new JSONArray();
         }
 
-        ArrayList<SingleItemModel> list = new ArrayList<>(postViewsArray.length());
+        ArrayList<PostModel> list = new ArrayList<>(postViewsArray.length());
 
         for (int i=0; i < postViewsArray.length(); i++) {
             try {
@@ -47,11 +47,12 @@ public class TopPostsAndPagesModel implements Serializable {
                 String itemTitle = postObject.getString("title");
                 int itemTotal = postObject.getInt("views");
                 String itemURL = postObject.getString("href");
-                SingleItemModel currentModel = new SingleItemModel(blogID, mDate, itemID, itemTitle,
-                        itemTotal, itemURL, null);
+                String itemType = postObject.getString("type");
+                PostModel currentModel = new PostModel(blogID, mDate, itemID, itemTitle,
+                        itemTotal, itemURL, null, itemType);
                 list.add(currentModel);
             } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, "Unexpected TopPostModel object in top posts and pages array" +
+                AppLog.e(AppLog.T.STATS, "Unexpected PostModel object in top posts and pages array" +
                         "at position " + i + " Response: " + response.toString(), e);
             }
         }
@@ -82,7 +83,7 @@ public class TopPostsAndPagesModel implements Serializable {
         this.mPeriod = period;
     }
 
-    public List<SingleItemModel> getTopPostsAndPages() {
+    public List<PostModel> getTopPostsAndPages() {
         return mTopPostsAndPages;
     }
 

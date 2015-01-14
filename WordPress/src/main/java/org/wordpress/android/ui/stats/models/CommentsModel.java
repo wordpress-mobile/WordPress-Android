@@ -18,7 +18,7 @@ public class CommentsModel implements Serializable {
     private String mMostActiveTime;
     private SingleItemModel mMostCommentedPost;
 
-    private List<SingleItemModel> mPosts;
+    private List<PostModel> mPosts;
     private List<AuthorModel> mAuthors;
 
     public CommentsModel(String blogID, JSONObject response) throws JSONException {
@@ -40,7 +40,7 @@ public class CommentsModel implements Serializable {
                 String name = currentPostJSON.getString("name");
                 int totals = currentPostJSON.getInt("comments");
                 String link = currentPostJSON.getString("link");
-                SingleItemModel currentPost = new SingleItemModel(blogID, mDate, itemID, name, totals, link, null);
+                PostModel currentPost = new PostModel(blogID, mDate, itemID, name, totals, link, null, "post");
                 mPosts.add(currentPost);
             }
         }
@@ -77,7 +77,7 @@ public class CommentsModel implements Serializable {
         this.mDate = date;
     }
 
-    public List<SingleItemModel> getPosts() {
+    public List<PostModel> getPosts() {
         return this.mPosts;
     }
 
