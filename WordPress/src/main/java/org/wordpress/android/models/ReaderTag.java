@@ -72,7 +72,7 @@ public class ReaderTag implements Serializable {
         this.tagName = StringUtils.notNullStr(name);
     }
     public String getCapitalizedTagName() {
-        if (tagName == null) {
+        if (tagName == null || tagName.length() == 0) {
             return "";
         }
         // If already uppercase, assume correctly formatted
@@ -81,8 +81,8 @@ public class ReaderTag implements Serializable {
         }
         // Accounts for iPhone, ePaper, etc.
         if (tagName.length() > 1 &&
-                Character.isUpperCase(tagName.charAt(0)) &&
-                Character.isLowerCase(tagName.charAt(1))) {
+                Character.isLowerCase(tagName.charAt(0)) &&
+                Character.isUpperCase(tagName.charAt(1))) {
             return tagName;
         }
         // Capitalize anything else.
