@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class StatsFollowersFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsFollowersFragment.class.getSimpleName();
 
-    private  List<String> dotComUserDomains = new ArrayList<>();
+    private  List<String> dotComUserBlogsURL = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,8 +73,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
         }
 
         // Single background thread used to create the blogs list in BG
-        ThreadPoolExecutor domainsListCreatorExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
-        domainsListCreatorExecutor.submit(new Thread() {
+        ThreadPoolExecutor blogsListCreatorExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
+        blogsListCreatorExecutor.submit(new Thread() {
             @Override
             public void run() {
                 // Read all the dotcomBlog blogs and get the list of home URLs.
@@ -82,8 +82,13 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 List <Map<String, Object>> dotComUserBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"homeURL"});
                 for (Map<String, Object> blog : dotComUserBlogs) {
                     if (blog != null && blog.get("homeURL") != null) {
-                        String domainURL = UrlUtils.getDomainFromUrl(blog.get("homeURL").toString());
-                        dotComUserDomains.add(domainURL);
+                        String normURL = UrlUtils.normalizeUrl(blog.get("homeURL").toString()).toLowerCase();
+                        if (normURL.toLowerCase().startsWith("http://")) {
+                            normURL = normURL.substring(7);
+                        } else if (normURL.startsWith("https://")) {
+                            normURL = normURL.substring(8);
+                        }
+                        dotComUserBlogsURL.add(normURL);
                     }
                 }
             }
@@ -252,8 +257,13 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     // If follow data is empty, we cannot follow the blog, or access it in the reader.
                     // We need to check if the user is a member of this blog.
                     // If so, we can launch open the reader, otherwise open the blog in the in-app browser.
-                    String domain = UrlUtils.getDomainFromUrl(currentRowData.getURL());
-                    openInReader = dotComUserDomains.contains(domain);
+                    String normURL = UrlUtils.normalizeUrl(currentRowData.getURL()).toLowerCase();
+                    if (normURL.startsWith("http://")) {
+                        normURL = normURL.substring(7);
+                    } else if (normURL.startsWith("https://")) {
+                        normURL = normURL.substring(8);
+                    }
+                    openInReader = dotComUserBlogsURL.contains(normURL);
                 }
 
                 if (openInReader) {
