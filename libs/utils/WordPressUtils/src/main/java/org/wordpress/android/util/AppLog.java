@@ -60,13 +60,13 @@ public class AppLog {
     public static void e(T tag, String message, Throwable tr) {
         Log.e(TAG + "-" + tag.toString(), message, tr);
         addEntry(tag, LogLevel.e, message + " - exception: " + tr.getMessage());
-        addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(tr));
+        addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(tr));
     }
 
     public static void e(T tag, Throwable tr) {
         Log.e(TAG + "-" + tag.toString(), tr.getMessage(), tr);
         addEntry(tag, LogLevel.e, tr.getMessage());
-        addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(tr));
+        addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(tr));
     }
 
     public static void e(T tag, String volleyErrorMsg, int statusCode) {
@@ -113,15 +113,15 @@ public class AppLog {
 
         private String toHtml() {
             StringBuilder sb = new StringBuilder()
-                    .append("<font color='")
+                    .append("<font color=\"")
                     .append(logLevel.toHtmlColor())
-                    .append("'>")
+                    .append("\">")
                     .append("[")
                     .append(logTag.name())
                     .append("] ")
                     .append(logLevel.name())
                     .append(": ")
-                    .append(logText)
+                    .append(TextUtils.htmlEncode(logText).replace("\n", "<br />"))
                     .append("</font>");
             return sb.toString();
         }
@@ -164,9 +164,6 @@ public class AppLog {
         return errors.toString();
     }
 
-    private static String getHTMLStringStackTrace(Throwable throwable) {
-        return getStringStackTrace(throwable).replace("\n", "<br/>");
-    }
 
     /*
      * returns entire log as html for display (see AppLogViewerActivity)
