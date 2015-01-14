@@ -70,6 +70,9 @@ public class PostUploadService extends Service {
     public static void addPostToUpload(Post currentPost) {
         synchronized (mPostsList) {
             mPostsList.add(currentPost);
+            // Enable 'isUploading' flag for post
+            currentPost.setUploading(true);
+            WordPress.wpDB.updatePost(currentPost);
         }
     }
 
@@ -152,11 +155,16 @@ public class PostUploadService extends Service {
 
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
+            // Update the 'isUploading' flag for post
+            mPost.setUploading(false);
+            WordPress.wpDB.updatePost(mPost);
+
             if (postUploadedSuccessfully) {
                 WordPress.postUploaded(mPost.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
                 mPostUploadNotifier.cancelNotification();
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
             } else {
+                WordPress.postUploadFailed(mPost.getLocalTableBlogId());
                 mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(), mErrorUnavailableVideoPress);
             }
 
