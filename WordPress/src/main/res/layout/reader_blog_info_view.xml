@@ -3,13 +3,12 @@
 <!--
     blog info header used by reader blog preview
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_blog_info_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_primary"
-    android:orientation="vertical">
+    android:background="@color/color_primary">
 
     <RelativeLayout
         android:id="@+id/layout_bloginfo_inner"
@@ -84,4 +83,4 @@
 
     </RelativeLayout>
 
-</LinearLayout>
+</FrameLayout>
