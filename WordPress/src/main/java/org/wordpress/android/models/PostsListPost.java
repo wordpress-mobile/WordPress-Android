@@ -17,8 +17,10 @@ public class PostsListPost {
     private String status;
     private boolean isLocalDraft;
     private boolean hasLocalChanges;
+    private boolean mIsUploading;
 
-    public PostsListPost(int postId, int blogId, String title, long dateCreatedGmt, String status, boolean localDraft, boolean localChanges) {
+    public PostsListPost(int postId, int blogId, String title, long dateCreatedGmt, String status, boolean localDraft,
+                         boolean localChanges, boolean uploading) {
         setPostId(postId);
         setBlogId(blogId);
         setTitle(title);
@@ -26,6 +28,7 @@ public class PostsListPost {
         setStatus(status);
         setLocalDraft(localDraft);
         setHasLocalChanges(localChanges);
+        setIsUploading(uploading);
     }
 
     public int getPostId() {
@@ -90,5 +93,13 @@ public class PostsListPost {
 
     public void setHasLocalChanges(boolean localChanges) {
         this.hasLocalChanges = localChanges;
+    }
+
+    public boolean isUploading() {
+        return mIsUploading;
+    }
+
+    public void setIsUploading(boolean uploading) {
+        this.mIsUploading = uploading;
     }
 }
