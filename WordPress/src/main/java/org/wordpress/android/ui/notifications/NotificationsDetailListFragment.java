@@ -173,11 +173,15 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     private final UserNoteBlock.OnGravatarClickedListener mOnGravatarClickedListener = new UserNoteBlock.OnGravatarClickedListener() {
         @Override
-        public void onGravatarClicked(long siteId, long userId) {
+        public void onGravatarClicked(long siteId, long userId, String siteUrl) {
             if (!isAdded()) return;
 
             NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
-            notificationsActivity.showBlogPreviewActivity(siteId, null);
+            if (siteId == 0 && !TextUtils.isEmpty(siteUrl)) {
+                notificationsActivity.showWebViewActivityForUrl(siteUrl);
+            } else {
+                notificationsActivity.showBlogPreviewActivity(siteId, siteUrl);
+            }
         }
     };
 
