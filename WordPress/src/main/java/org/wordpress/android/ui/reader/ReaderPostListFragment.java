@@ -567,7 +567,7 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     /*
-     * box/pages animation that appears when loading an empty list should only appear for tags
+     * box/pages animation that appears when loading an empty list (only appears for tags)
      */
     private boolean shouldShowBoxAndPagesAnimation() {
         return getPostListType().isTagType();
@@ -596,8 +596,6 @@ public class ReaderPostListFragment extends Fragment {
 
         if (isUpdating()) {
             titleResId = R.string.reader_empty_posts_in_tag_updating;
-        } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            titleResId = R.string.connection_error;
         } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             titleResId = R.string.reader_empty_posts_in_blog;
         } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getSpinnerAdapter() != null) {
@@ -621,15 +619,14 @@ public class ReaderPostListFragment extends Fragment {
                     titleResId = R.string.reader_empty_posts_in_tag;
                     break;
             }
-        } else if (getPostListType().isTagType()) {
-            titleResId = R.string.reader_empty_posts_in_tag;
         } else {
-            return;
+            titleResId = R.string.reader_empty_posts_in_tag;
         }
 
         TextView titleView = (TextView) mEmptyView.findViewById(R.id.title_empty);
-        TextView descriptionView = (TextView) mEmptyView.findViewById(R.id.description_empty);
         titleView.setText(getString(titleResId));
+
+        TextView descriptionView = (TextView) mEmptyView.findViewById(R.id.description_empty);
         if (descriptionResId == 0) {
             descriptionView.setVisibility(View.INVISIBLE);
         } else {
@@ -644,14 +641,15 @@ public class ReaderPostListFragment extends Fragment {
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            if (!isAdded())
+            if (!isAdded()) {
                 return;
+            }
             if (isEmpty) {
+                setEmptyTitleAndDescription();
+                mEmptyView.setVisibility(View.VISIBLE);
                 if (shouldShowBoxAndPagesAnimation()) {
                     startBoxAndPagesAnimation();
                 }
-                setEmptyTitleAndDescription();
-                mEmptyView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.GONE);
                 if (mRestorePosition > 0) {
@@ -709,7 +707,6 @@ public class ReaderPostListFragment extends Fragment {
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
-
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
             mPostAdapter.setOnPostSelectedListener(mPostSelectedListener);
