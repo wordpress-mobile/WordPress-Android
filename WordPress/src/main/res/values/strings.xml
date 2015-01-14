@@ -166,6 +166,7 @@
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
     <string name="local_draft">Local draft</string>
+    <string name="post_uploading">Uploading</string>
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="empty_list_default">This list is empty</string>
 
