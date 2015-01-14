@@ -43,6 +43,7 @@ public class Post implements Serializable {
     private String slug;
     private boolean localDraft;
     private boolean uploaded;
+    private boolean mIsUploading;
     private boolean mChangedFromLocalDraftToPublished;
     private boolean isPage;
     private String pageParentId;
@@ -365,6 +366,14 @@ public class Post implements Serializable {
 
     public void setPageParentTitle(String wp_page_parent_title) {
         this.pageParentTitle = wp_page_parent_title;
+    }
+
+    public boolean isUploading() {
+        return mIsUploading;
+    }
+
+    public void setUploading(boolean uploading) {
+        this.mIsUploading = uploading;
     }
 
     public boolean isUploaded() {
