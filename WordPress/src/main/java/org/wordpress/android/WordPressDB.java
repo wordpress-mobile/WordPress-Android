@@ -51,7 +51,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 27;
+    private static final int DATABASE_VERSION = 28;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -113,6 +113,9 @@ public class WordPressDB {
 
     //add boolean to posts to check uploaded posts that have local changes
     private static final String ADD_LOCAL_POST_CHANGES = "alter table posts add isLocalChange boolean default 0";
+
+    // Add boolean to POSTS to track posts currently being uploaded
+    private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
 
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
@@ -245,6 +248,10 @@ public class WordPressDB {
             case 26:
                 // Drop the notes table, no longer needed with Simperium.
                 db.execSQL("DROP TABLE IF EXISTS notes;");
+                currentVersion++;
+            case 27:
+                // Add isUploading column to POSTS
+                db.execSQL(ADD_IS_UPLOADING);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -859,7 +866,7 @@ public class WordPressDB {
         Cursor c;
         c = db.query(POSTS_TABLE,
                 new String[] { "id", "blogID", "title",
-                        "date_created_gmt", "post_status", "localDraft", "isLocalChange" },
+                        "date_created_gmt", "post_status", "isUploading", "localDraft", "isLocalChange" },
                 "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)",
                 new String[] {String.valueOf(blogId), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
         int numRows = c.getCount();
@@ -876,7 +883,8 @@ public class WordPressDB {
                     c.getLong(c.getColumnIndex("date_created_gmt")),
                     c.getString(c.getColumnIndex("post_status")),
                     SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))),
-                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange")))
+                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))),
+                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isUploading")))
             );
             posts.add(i, post);
             c.moveToNext();
@@ -905,6 +913,7 @@ public class WordPressDB {
             values.put("mt_keywords", post.getKeywords());
             values.put("wp_password", post.getPassword());
             values.put("post_status", post.getPostStatus());
+            values.put("isUploading", post.isUploading());
             values.put("uploaded", post.isUploaded());
             values.put("isPage", post.isPage());
             values.put("wp_post_format", post.getPostFormat());
@@ -930,6 +939,7 @@ public class WordPressDB {
             values.put("date_created_gmt", post.getDate_created_gmt());
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMoreText());
+            values.put("isUploading", post.isUploading());
             values.put("uploaded", post.isUploaded());
 
             JSONArray categoriesJsonArray = post.getJSONCategories();
@@ -1059,6 +1069,7 @@ public class WordPressDB {
                 }
 
                 post.setLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
+            post.setUploading(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isUploading"))));
                 post.setUploaded(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("uploaded"))));
                 post.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isPage"))));
                 post.setPageParentId(c.getString(c.getColumnIndex("wp_page_parent_id")));
