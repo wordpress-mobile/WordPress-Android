@@ -34,6 +34,9 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.EnumSet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
@@ -48,6 +51,8 @@ public class ReaderPostListActivity extends WPDrawerActivity
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
 
+    private final ScheduledExecutorService mUpdateScheduler = Executors.newScheduledThreadPool(1);
+
     private ReaderTypes.ReaderPostListType mPostListType;
 
     @Override
@@ -55,6 +60,20 @@ public class ReaderPostListActivity extends WPDrawerActivity
         super.onCreate(savedInstanceState);
         createMenuDrawer(R.layout.reader_activity_post_list);
         readIntent(getIntent(), savedInstanceState);
+
+        // start updating tags & blogs after 500ms, then update them hourly
+        mUpdateScheduler.scheduleWithFixedDelay(
+                new Runnable() {
+                    public void run() {
+                        updateFollowedTagsAndBlogs();
+                    }
+                }, 500, (1000 * 60) * 60, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mUpdateScheduler.shutdownNow();
+        super.onDestroy();
     }
 
     private void readIntent(Intent intent, Bundle savedInstanceState) {
@@ -292,30 +311,13 @@ public class ReaderPostListActivity extends WPDrawerActivity
     }
 
     /*
-     * is the list fragment showing posts with the passed tag?
+     * initial update performed the first time the user opens the reader
      */
-    private boolean isListFragmentForTagShowing(String tagName) {
-        if (tagName == null) {
-            return false;
-        }
-        ReaderPostListFragment listFragment = getListFragment();
-        return listFragment != null
-                && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-                && listFragment.getCurrentTagName().equals(tagName);
-    }
-
-    /*
-       * initial update performed at startup to ensure we have the latest reader-related info
-       */
     private void performInitialUpdate() {
         if (!NetworkUtils.isNetworkAvailable(this)) {
             return;
         }
 
-        // start background service to get the latest followed tags and blogs
-        ReaderUpdateService.startService(this,
-                EnumSet.of(UpdateTask.TAGS,
-                           UpdateTask.FOLLOWED_BLOGS));
         mHasPerformedInitialUpdate = true;
 
         // update current user to ensure we have their user_id as well as their latest info
@@ -326,6 +328,15 @@ public class ReaderPostListActivity extends WPDrawerActivity
         // update cookies so that we can show authenticated images in WebViews
         AppLog.d(T.READER, "reader post list > updating cookies");
         ReaderAuthActions.updateCookies(ReaderPostListActivity.this);
+    }
+
+    /*
+     * start background service to get the latest followed tags and blogs
+     */
+    void updateFollowedTagsAndBlogs() {
+        AppLog.d(T.READER, "reader post list > updating tags and blogs");
+        ReaderUpdateService.startService(this,
+                EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 
     /*
