@@ -300,11 +300,10 @@ public class ReaderPostListFragment extends Fragment {
                 break;
         }
 
-        // view that appears when current tag/blog has no posts - images in this view are
-        // animated for tags only
+        // view that appears when current tag/blog has no posts - box images in this view are
+        // displayed and animated for tags only
         mEmptyView = rootView.findViewById(R.id.empty_view);
-        ViewGroup emptyImages = (ViewGroup) mEmptyView.findViewById(R.id.layout_empty_images);
-        emptyImages.setVisibility(getPostListType().isTagType() ? View.VISIBLE : View.GONE);
+        mEmptyView.findViewById(R.id.layout_box_images).setVisibility(shouldShowBoxAndPagesAnimation() ? View.VISIBLE : View.GONE);
 
         // progress bar that appears when loading more posts
         mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
@@ -567,25 +566,24 @@ public class ReaderPostListFragment extends Fragment {
         });
     }
 
+    /*
+     * box/pages animation that appears when loading an empty list should only appear for tags
+     */
+    private boolean shouldShowBoxAndPagesAnimation() {
+        return getPostListType().isTagType();
+    }
     private void startBoxAndPagesAnimation() {
-        if (!isAdded() || !getPostListType().isTagType()) {
+        if (!isAdded()) {
             return;
         }
 
-        ImageView page1 = (ImageView) getView().findViewById(R.id.empty_tags_box_page1);
-        ImageView page2 = (ImageView) getView().findViewById(R.id.empty_tags_box_page2);
-        ImageView page3 = (ImageView) getView().findViewById(R.id.empty_tags_box_page3);
+        ImageView page1 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page1);
+        ImageView page2 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page2);
+        ImageView page3 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page3);
 
-        Animation animPage1 = AnimationUtils.loadAnimation(getActivity(),
-                R.anim.box_with_pages_slide_up_page1);
-        Animation animPage2 = AnimationUtils.loadAnimation(getActivity(),
-                R.anim.box_with_pages_slide_up_page2);
-        Animation animPage3 = AnimationUtils.loadAnimation(getActivity(),
-                R.anim.box_with_pages_slide_up_page3);
-
-        page1.startAnimation(animPage1);
-        page2.startAnimation(animPage2);
-        page3.startAnimation(animPage3);
+        page1.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page1));
+        page2.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page2));
+        page3.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page3));
     }
 
     private void setEmptyTitleAndDescription() {
@@ -594,7 +592,7 @@ public class ReaderPostListFragment extends Fragment {
         }
 
         int titleResId;
-        int descriptionResId = -1;
+        int descriptionResId = 0;
 
         if (isUpdating()) {
             titleResId = R.string.reader_empty_posts_in_tag_updating;
@@ -602,12 +600,9 @@ public class ReaderPostListFragment extends Fragment {
             titleResId = R.string.connection_error;
         } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             titleResId = R.string.reader_empty_posts_in_blog;
-        } else {
-            if (getSpinnerAdapter() == null) {
-                return;
-            }
+        } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getSpinnerAdapter() != null) {
             int tagIndex = getSpinnerAdapter().getIndexOfTag(mCurrentTag);
-            final String tagId;
+            String tagId;
             if (tagIndex > -1) {
                 ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(tagIndex);
                 tagId = tag.getStringIdFromEndpoint();
@@ -626,12 +621,16 @@ public class ReaderPostListFragment extends Fragment {
                     titleResId = R.string.reader_empty_posts_in_tag;
                     break;
             }
+        } else if (getPostListType().isTagType()) {
+            titleResId = R.string.reader_empty_posts_in_tag;
+        } else {
+            return;
         }
 
-        TextView titleView = (TextView) getView().findViewById(R.id.title_empty);
-        TextView descriptionView = (TextView) getView().findViewById(R.id.description_empty);
+        TextView titleView = (TextView) mEmptyView.findViewById(R.id.title_empty);
+        TextView descriptionView = (TextView) mEmptyView.findViewById(R.id.description_empty);
         titleView.setText(getString(titleResId));
-        if (descriptionResId == -1) {
+        if (descriptionResId == 0) {
             descriptionView.setVisibility(View.INVISIBLE);
         } else {
             descriptionView.setText(getString(descriptionResId));
@@ -648,7 +647,9 @@ public class ReaderPostListFragment extends Fragment {
             if (!isAdded())
                 return;
             if (isEmpty) {
-                startBoxAndPagesAnimation();
+                if (shouldShowBoxAndPagesAnimation()) {
+                    startBoxAndPagesAnimation();
+                }
                 setEmptyTitleAndDescription();
                 mEmptyView.setVisibility(View.VISIBLE);
             } else {
