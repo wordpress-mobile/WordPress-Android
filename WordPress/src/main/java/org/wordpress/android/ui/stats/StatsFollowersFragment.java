@@ -28,11 +28,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
 public class StatsFollowersFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsFollowersFragment.class.getSimpleName();
+
+    private  List<String> dotComUserDomains = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +71,23 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             // first time it's created
             mTopPagerSelectedButtonIndex = getArguments().getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
         }
+
+        // Single background thread used to create the blogs list in BG
+        ThreadPoolExecutor domainsListCreatorExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
+        domainsListCreatorExecutor.submit(new Thread() {
+            @Override
+            public void run() {
+                // Read all the dotcomBlog blogs and get the list of home URLs.
+                // This will be used later to check if the user is a member of followers blog marked as private.
+                List <Map<String, Object>> dotComUserBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"homeURL"});
+                for (Map<String, Object> blog : dotComUserBlogs) {
+                    if (blog != null && blog.get("homeURL") != null) {
+                        String domainURL = UrlUtils.getDomainFromUrl(blog.get("homeURL").toString());
+                        dotComUserDomains.add(domainURL);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -195,28 +216,12 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
         private final List<FollowerModel> list;
         private final Activity context;
         private final LayoutInflater inflater;
-        private final  List<String> dotComUserBlogsURL = new ArrayList<>();
 
         public DotComFollowerAdapter(Activity context, List<FollowerModel> list) {
             super(context, R.layout.stats_list_cell, list);
             this.context = context;
             this.list = list;
             inflater = LayoutInflater.from(context);
-
-            // Read all the dotcomBlog blogs and get the list of home URLs.
-            // This will be used later to check if the user is a member of followers blog marked as private.
-            List <Map<String, Object>> dotComUserBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"homeURL"});
-            for (Map<String, Object> blog : dotComUserBlogs) {
-                if (blog != null && blog.get("homeURL") != null) {
-                    String normURL = UrlUtils.normalizeUrl(blog.get("homeURL").toString());
-                    if (normURL.toLowerCase().startsWith("http://")) {
-                        normURL = normURL.substring(7).toLowerCase();
-                    } else if (normURL.toLowerCase().startsWith("https://")) {
-                        normURL = normURL.substring(8).toLowerCase();
-                    }
-                    dotComUserBlogsURL.add(normURL);
-                }
-            }
         }
 
         @Override
@@ -247,19 +252,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     // If follow data is empty, we cannot follow the blog, or access it in the reader.
                     // We need to check if the user is a member of this blog.
                     // If so, we can launch open the reader, otherwise open the blog in the in-app browser.
-                    openInReader = false;
-                    String normURL = UrlUtils.normalizeUrl(currentRowData.getURL());
-                    if (normURL.toLowerCase().startsWith("http://")) {
-                        normURL = normURL.substring(7).toLowerCase();
-                    } else if (normURL.toLowerCase().startsWith("https://")) {
-                        normURL = normURL.substring(8).toLowerCase();
-                    }
-
-                    for (String currentBlogURL : dotComUserBlogsURL) {
-                        if (currentBlogURL.equals(normURL)) {
-                            openInReader = true;
-                        }
-                    }
+                    String domain = UrlUtils.getDomainFromUrl(currentRowData.getURL());
+                    openInReader = dotComUserDomains.contains(domain);
                 }
 
                 if (openInReader) {

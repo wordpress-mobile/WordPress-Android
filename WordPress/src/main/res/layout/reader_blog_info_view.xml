@@ -3,13 +3,12 @@
 <!--
     blog info header used by reader blog preview
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_blog_info_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_primary"
-    android:orientation="vertical">
+    android:background="@color/color_primary">
 
     <RelativeLayout
         android:id="@+id/layout_bloginfo_inner"
@@ -24,51 +23,54 @@
         android:visibility="invisible"
         tools:visibility="visible">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_blog_name"
-            style="@style/ReaderTextView"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/image_mshot"
-            android:background="?android:selectableItemBackground"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="text_blog_name" />
+            android:layout_toLeftOf="@+id/image_mshot">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_blog_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text_blog_name"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_toLeftOf="@+id/image_mshot"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:textColor="@color/blue_extra_light"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="text_blog_description" />
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_blog_name"
+                style="@style/ReaderTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sz_large"
+                tools:text="text_blog_name" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_follow_count"
-            style="@style/ReaderTextView.Label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/text_follow_blog"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_toLeftOf="@+id/image_mshot"
-            android:layout_toRightOf="@+id/text_follow_blog"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/blue_extra_light"
-            tools:text="followers" />
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_blog_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_blog_name"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="@color/blue_extra_light"
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="text_blog_description" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_follow_blog"
-            style="@style/ReaderTextView.Follow"
-            android:layout_below="@+id/text_blog_description" />
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_follow_count"
+                style="@style/ReaderTextView.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/text_follow_blog"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_toRightOf="@+id/text_follow_blog"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/blue_extra_light"
+                tools:text="followers" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_follow_blog"
+                style="@style/ReaderTextView.Follow"
+                android:layout_below="@+id/text_blog_description" />
+        </RelativeLayout>
 
         <!-- actual size is set at runtime based on display -->
         <org.wordpress.android.widgets.WPNetworkImageView
@@ -84,4 +86,4 @@
 
     </RelativeLayout>
 
-</LinearLayout>
+</FrameLayout>

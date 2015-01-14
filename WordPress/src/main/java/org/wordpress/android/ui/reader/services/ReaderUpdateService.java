@@ -36,6 +36,7 @@ public class ReaderUpdateService extends Service {
      * or for unchanged/failed)
      */
 
+    public static final String ACTION_UPDATE_COMPLETED          = "reader_update_completed";
     public static final String ACTION_FOLLOWED_TAGS_CHANGED     = "reader_followed_tags_changed";
     public static final String ACTION_RECOMMENDED_TAGS_CHANGED  = "reader_recommended_tags_changed";
     public static final String ACTION_FOLLOWED_BLOGS_CHANGED    = "reader_followed_blogs_changed";
@@ -118,6 +119,7 @@ public class ReaderUpdateService extends Service {
 
     private void allTasksCompleted() {
         AppLog.i(AppLog.T.READER, "reader service > all tasks completed");
+        sendLocalBroadcast(new Intent().setAction(ACTION_UPDATE_COMPLETED));
         stopSelf();
     }
 
