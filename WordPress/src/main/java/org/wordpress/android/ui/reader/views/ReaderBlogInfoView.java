@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,7 +30,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * blog (blog preview) but can be reused elsewhere - call loadBlogInfo() to show the
  * info for a specific blog
  */
-public class ReaderBlogInfoView extends LinearLayout {
+public class ReaderBlogInfoView extends FrameLayout {
 
     public interface BlogInfoListener {
         void onBlogInfoLoaded(ReaderBlog blogInfo);

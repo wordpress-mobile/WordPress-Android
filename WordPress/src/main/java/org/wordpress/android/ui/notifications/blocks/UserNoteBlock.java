@@ -24,7 +24,7 @@ public class UserNoteBlock extends NoteBlock {
 
     public interface OnGravatarClickedListener {
         // userId is currently unused, but will be handy once a profile view is added to the app
-        public void onGravatarClicked(long siteId, long userId);
+        public void onGravatarClicked(long siteId, long userId, String siteUrl);
     }
 
     public UserNoteBlock(
@@ -191,8 +191,9 @@ public class UserNoteBlock extends NoteBlock {
     private void showBlogPreview() {
         long siteId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.site", 0));
         long userId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.user", 0));
-        if (mGravatarClickedListener != null && siteId > 0 && userId > 0) {
-            mGravatarClickedListener.onGravatarClicked(siteId, userId);
+        String siteUrl = getUserUrl();
+        if (mGravatarClickedListener != null) {
+            mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
         }
     }
 }
