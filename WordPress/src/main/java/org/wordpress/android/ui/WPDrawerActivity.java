@@ -330,7 +330,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
     }
 
-    protected void toggleDrawer() {
+    private void toggleDrawer() {
         if (mDrawerLayout != null) {
             if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 closeDrawer();
