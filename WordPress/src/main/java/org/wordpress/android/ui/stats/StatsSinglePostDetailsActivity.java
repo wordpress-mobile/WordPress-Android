@@ -227,10 +227,8 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             } else {
                 emptyLabel.setText(getString(R.string.stats_bar_graph_empty));
             }
-            if (emptyBarGraphView != null) {
-                mGraphContainer.removeAllViews();
-                mGraphContainer.addView(emptyBarGraphView);
-            }
+            mGraphContainer.removeAllViews();
+            mGraphContainer.addView(emptyBarGraphView);
         }
         mStatsViewsLabel.setText("");
         mStatsViewsTotals.setText("");
