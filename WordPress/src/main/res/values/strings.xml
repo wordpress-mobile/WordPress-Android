@@ -808,6 +808,9 @@
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="faq_button">FAQ</string>
 
+    <!-- Application logs view -->
+    <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
+
     <!-- Simperium -->
     <string name="simperium_connection_error">Couldn\'t sign in to get notifications.</string>
 
