@@ -151,6 +151,19 @@ public class PostsListFragment extends ListFragment
                     if (getListView().getEmptyView() == null) {
                         getListView().setEmptyView(getView().findViewById(R.id.empty_view));
                     }
+
+                    if (postCount == 0 && !isRefreshing()) {
+                        // No posts and not currently refreshing. Display "no posts/pages" screen
+                        TextView textView = (TextView) getView().findViewById(R.id.title_empty);
+                        if (textView != null) {
+                            if (mIsPage) {
+                                textView.setText(getText(R.string.pages_empty_list));
+                            } else {
+                                textView.setText(getText(R.string.posts_empty_list));
+                            }
+                        }
+                    }
+
                     if (postCount == 0 && mCanLoadMorePosts) {
                         // No posts, let's request some if network available
                         if (isAdded() && NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -213,14 +226,6 @@ public class PostsListFragment extends ListFragment
             }
         });
 
-        TextView textView = (TextView) getView().findViewById(R.id.title_empty);
-        if (textView != null) {
-            if (mIsPage) {
-                textView.setText(getText(R.string.pages_empty_list));
-            } else {
-                textView.setText(getText(R.string.posts_empty_list));
-            }
-        }
         initSwipeToRefreshHelper();
         WordPress.setOnPostUploadedListener(this);
 
@@ -313,6 +318,16 @@ public class PostsListFragment extends ListFragment
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
             return;
+        }
+
+        // Display loading screen
+        TextView textView = (TextView) getView().findViewById(R.id.title_empty);
+        if (textView != null) {
+            if (mIsPage) {
+                textView.setText(getText(R.string.loading_pages));
+            } else {
+                textView.setText(getText(R.string.loading_posts));
+            }
         }
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
