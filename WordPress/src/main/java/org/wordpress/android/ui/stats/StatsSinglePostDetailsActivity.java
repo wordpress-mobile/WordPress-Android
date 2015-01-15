@@ -330,7 +330,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     private void setMainViewsLabel(String dateFormatted, int totals) {
         mStatsViewsLabel.setText(getString(R.string.stats_views) + ": "
                 + dateFormatted);
-        mStatsViewsTotals.setText(String.valueOf(totals));
+        mStatsViewsTotals.setText(FormatUtils.formatDecimal(totals));
     }
 
 
