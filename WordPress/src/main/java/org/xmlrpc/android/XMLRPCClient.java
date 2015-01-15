@@ -298,9 +298,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             // no parser.require() here since its called in XMLRPCSerializer.deserialize() below
             // deserialize result
             Object obj = XMLRPCSerializer.deserialize(pullParser);
-            if (entity != null) {
-                entity.consumeContent();
-            }
+            consumeHttpEntity(entity);
             return obj;
         } else if (tag.equals(TAG_FAULT)) {
             // fault response
@@ -310,15 +308,26 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             Map<String, Object> map = (Map<String, Object>) XMLRPCSerializer.deserialize(pullParser);
             String faultString = (String) map.get(TAG_FAULT_STRING);
             int faultCode = (Integer) map.get(TAG_FAULT_CODE);
-            if (entity != null) {
-                entity.consumeContent();
-            }
+            consumeHttpEntity(entity);
             throw new XMLRPCFault(faultString, faultCode);
         } else {
-            if (entity != null) {
-                entity.consumeContent();
-            }
+            consumeHttpEntity(entity);
             throw new XMLRPCException("Bad tag <" + tag + "> in XMLRPC response - neither <params> nor <fault>");
+        }
+    }
+
+    /**
+     * Deallocate Http Entity and close streams
+     */
+    private static void consumeHttpEntity(HttpEntity entity) {
+        // Ideally we should use EntityUtils.consume(), introduced in apache http utils 4.1 - not available in
+        // Android yet
+        if (entity != null) {
+            try {
+                entity.consumeContent();
+            } catch (IOException e) {
+                // ignore exception (could happen if Content-Length is wrong)
+            }
         }
     }
 
