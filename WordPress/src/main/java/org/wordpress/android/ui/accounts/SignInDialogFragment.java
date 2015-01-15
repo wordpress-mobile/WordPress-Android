@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.widgets.WPTextView;
@@ -37,6 +38,7 @@ public class SignInDialogFragment extends DialogFragment {
     public static final int ACTION_FINISH = 1;
     public static final int ACTION_OPEN_URL = 2;
     public static final int ACTION_OPEN_SUPPORT_CHAT = 3;
+    public static final int ACTION_OPEN_APPLICATION_LOG = 4;
 
     public SignInDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -151,6 +153,10 @@ public class SignInDialogFragment extends DialogFragment {
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
                         SignInFragment.ENTERED_USERNAME_KEY));
                 HelpshiftHelper.getInstance().showConversation(getActivity());
+                dismissAllowingStateLoss();
+                break;
+            case ACTION_OPEN_APPLICATION_LOG:
+                startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
                 dismissAllowingStateLoss();
                 break;
             default:

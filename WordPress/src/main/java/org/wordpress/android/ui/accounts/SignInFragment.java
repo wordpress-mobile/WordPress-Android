@@ -650,9 +650,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 endProgress();
                 return;
             } else {
+                AppLog.e(T.NUX, clientResponse);
+                // create a 3 buttons dialog ("Contact us", "Read Application Logs" and "Cancel")
                 nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                        getString(messageId), org.wordpress.android.R.drawable.noticon_alert_big, getString(
-                                org.wordpress.android.R.string.nux_tap_continue));
+                        getString(messageId),
+                        R.drawable.noticon_alert_big, 3,
+                        getString(R.string.cancel),
+                        getString(R.string.reader_title_applog),
+                        getString(R.string.contact_us),
+                        SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG,
+                        SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
             }
         }
         ft.add(nuxAlert, "alert");
