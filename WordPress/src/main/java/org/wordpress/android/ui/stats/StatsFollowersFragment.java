@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.stats.models.FollowerModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -230,6 +232,10 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             // reuse views
             if (rowView == null) {
                 rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                // set a min-width value that is large enough to contains the "since" string
+                LinearLayout totalContainer = (LinearLayout) rowView.findViewById(R.id.stats_list_cell_total_container);
+                int dp64 = DisplayUtils.dpToPx(rowView.getContext(), 64);
+                totalContainer.setMinimumWidth(dp64);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(rowView);
                 rowView.setTag(viewHolder);

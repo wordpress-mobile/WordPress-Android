@@ -60,12 +60,19 @@
             android:paddingRight="@dimen/margin_small"
             android:src="@drawable/ic_action_more" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/stats_list_cell_total"
+        <LinearLayout
+            android:id="@+id/stats_list_cell_total_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/stats_text_color"
-            android:textSize="@dimen/text_sz_medium" />
+            android:minWidth="36dp"
+            android:gravity="end">
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/stats_list_cell_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/stats_text_color"
+                android:textSize="@dimen/text_sz_medium" />
+        </LinearLayout>
     </LinearLayout>
 
 

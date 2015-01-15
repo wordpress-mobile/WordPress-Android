@@ -21,7 +21,7 @@ public class AuthorModel implements Serializable {
     private String mAvatar;
     private int mViews;
     private FollowDataModel mFollowData;
-    private List<SingleItemModel> mPosts;
+    private List<PostModel> mPosts;
 
     public AuthorModel(String mBlogId, String date, String mGroupId, String mName, String mAvatar, int mViews, JSONObject followData) throws JSONException {
         this.mBlogId = mBlogId;
@@ -58,7 +58,7 @@ public class AuthorModel implements Serializable {
             String title = currentPostJSON.getString("title");
             int views = currentPostJSON.getInt("views");
             String url = currentPostJSON.getString("url");
-            SingleItemModel currentPost = new SingleItemModel(mBlogId, mDate, postId, title, views, url, null);
+            PostModel currentPost = new PostModel(mBlogId, mDate, postId, title, views, url, null, "post");
             mPosts.add(currentPost);
         }
     }
@@ -115,5 +115,5 @@ public class AuthorModel implements Serializable {
         this.mAvatar = icon;
     }
 
-    public List<SingleItemModel> getPosts() { return mPosts; }
+    public List<PostModel> getPosts() { return mPosts; }
 }
