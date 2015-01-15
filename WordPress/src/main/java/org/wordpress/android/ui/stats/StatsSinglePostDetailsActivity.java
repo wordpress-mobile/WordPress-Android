@@ -371,7 +371,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
-            holder.setEntryText(StatsUtils.parseDate(currentDay.getDay(), "yyyy-MM-dd", "EEE, MMMM dd"));
+            holder.setEntryText(StatsUtils.parseDate(currentDay.getDay(), "yyyy-MM-dd", "EEE, MMM dd"));
 
             // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
             holder.rowContent.setOnClickListener(
@@ -387,14 +387,12 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentDay.getCount()));
 
             // show the trophy indicator if the value is the maximum reached
-            if (currentDay.getCount() == maxReachedValue) {
+            if (currentDay.getCount() == maxReachedValue && maxReachedValue > 0) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
-                holder.totalsTextView.setTextColor(getResources().getColor(R.color.calypso_orange));
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
-                holder.totalsTextView.setTextColor(getResources().getColor(R.color.stats_text_color));
             }
 
             holder.networkImageView.setVisibility(View.GONE);
@@ -441,10 +439,12 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             // change the color of the text if one of its childs has reached maximum value
             int numberOfChilds = getChildrenCount(groupPosition);
             boolean shouldShowTheTrophyIcon = false;
-            for (int i=0; i < numberOfChilds; i++) {
-                PostViewsModel.Day currentChild = (PostViewsModel.Day) getChild(groupPosition, i);
-                if (currentChild.getCount() == maxReachedValue) {
-                    shouldShowTheTrophyIcon = true;
+            if (maxReachedValue > 0) {
+                for (int i = 0; i < numberOfChilds; i++) {
+                    PostViewsModel.Day currentChild = (PostViewsModel.Day) getChild(groupPosition, i);
+                    if (currentChild.getCount() == maxReachedValue) {
+                        shouldShowTheTrophyIcon = true;
+                    }
                 }
             }
 
@@ -459,16 +459,19 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                 name = StatsUtils.parseDate(firstChild.getDay(), "yyyy-MM-dd", "MMM dd");
             }
 
-            if (shouldShowTheTrophyIcon) {
-                holder.setEntryText(name, getResources().getColor(R.color.calypso_orange));
-            } else {
-                holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
-            }
+            holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
 
             holder.networkImageView.setVisibility(View.GONE);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            if (shouldShowTheTrophyIcon) {
+                holder.imgMore.setVisibility(View.VISIBLE);
+                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
+                holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
+            } else {
+                holder.imgMore.setVisibility(View.GONE);
+            }
 
             // expand/collapse chevron
             holder.chevronImageView.setVisibility(numberOfChilds > 0 ? View.VISIBLE : View.GONE);
@@ -541,14 +544,12 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentMonth.getCount()));
 
             // show the trophy indicator if the value is the maximum reached
-            if (currentMonth.getCount() == maxReachedValue) {
+            if (currentMonth.getCount() == maxReachedValue && maxReachedValue > 0) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
-                holder.totalsTextView.setTextColor(getResources().getColor(R.color.calypso_orange));
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
-                holder.totalsTextView.setTextColor(getResources().getColor(R.color.stats_text_color));
             }
 
             holder.networkImageView.setVisibility(View.GONE);
@@ -596,23 +597,30 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             // change the color of the text if one of its childs has reached maximum value
             int numberOfChilds = getChildrenCount(groupPosition);
             boolean shouldShowTheTrophyIcon = false;
-            for (int i=0; i < numberOfChilds; i++) {
-                PostViewsModel.Month currentChild = (PostViewsModel.Month) getChild(groupPosition, i);
-                if (currentChild.getCount() == maxReachedValue) {
-                    shouldShowTheTrophyIcon = true;
-                    break;
+            if (maxReachedValue > 0) {
+                for (int i = 0; i < numberOfChilds; i++) {
+                    PostViewsModel.Month currentChild = (PostViewsModel.Month) getChild(groupPosition, i);
+                    if (currentChild.getCount() == maxReachedValue) {
+                        shouldShowTheTrophyIcon = true;
+                        break;
+                    }
                 }
             }
-            if (shouldShowTheTrophyIcon) {
-                holder.setEntryText(name, getResources().getColor(R.color.calypso_orange));
-            } else {
-                holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
-            }
 
-            holder.networkImageView.setVisibility(View.GONE);
+            holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
+
+            if (shouldShowTheTrophyIcon) {
+                holder.imgMore.setVisibility(View.VISIBLE);
+                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
+                holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
+            } else {
+                holder.imgMore.setVisibility(View.GONE);
+            }
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+
+            holder.networkImageView.setVisibility(View.GONE);
 
             // expand/collapse chevron
             holder.chevronImageView.setVisibility(numberOfChilds > 0 ? View.VISIBLE : View.GONE);
