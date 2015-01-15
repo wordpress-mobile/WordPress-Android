@@ -63,7 +63,7 @@ public class StatsUtils {
      * Converts date in the form of 2013-07-18 to ms *
      */
     public static long toMs(String date) {
-        return toMs(date, "yyyy-MM-dd");
+        return toMs(date, StatsConstants.STATS_INPUT_DATE_FORMAT);
     }
 
     public static String msToString(long ms, String format) {
@@ -75,14 +75,13 @@ public class StatsUtils {
      * Get the current date of the blog in the form of yyyy-MM-dd (EX: 2013-07-18) *
      */
     public static String getCurrentDateTZ(int localTableBlogID) {
-        String pattern = "yyyy-MM-dd";
         String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
         if (timezone == null) {
             AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
             return getCurrentDate();
         }
 
-        return getCurrentDateTimeTZ(timezone, pattern);
+        return getCurrentDateTimeTZ(timezone, StatsConstants.STATS_INPUT_DATE_FORMAT);
     }
 
     /**
@@ -115,8 +114,7 @@ public class StatsUtils {
      * Get the current date in the form of yyyy-MM-dd (EX: 2013-07-18) *
      */
     private static String getCurrentDate() {
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
         return sdf.format(new Date());
     }
 

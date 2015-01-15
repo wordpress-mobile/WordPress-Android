@@ -27,8 +27,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
@@ -53,7 +51,6 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     public static final String ARG_REMOTE_POST_OBJECT = "ARG_REMOTE_POST_OBJECT";
     private static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
-    private static final String UNDER_THE_GRAPH_DATE_LABEL_FORMAT = "MMMM d";
 
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -278,7 +275,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             views[i] = new GraphView.GraphViewData(i, currentItemValue);
 
             String currentItemStatsDate = dataToShowOnGraph[i].getPeriod();
-            horLabels[i] = StatsUtils.parseDate(currentItemStatsDate, "yyyy-MM-dd", "MMM d");
+            horLabels[i] = StatsUtils.parseDate(
+                    currentItemStatsDate,
+                    StatsConstants.STATS_INPUT_DATE_FORMAT,
+                    StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT
+            );
             mStatsDate[i] = currentItemStatsDate;
         }
 
@@ -305,8 +306,14 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mSelectedBarGraphIndex = (mSelectedBarGraphIndex != -1) ? mSelectedBarGraphIndex : dataToShowOnGraph.length - 1;
         mGraphView.highlightBar(mSelectedBarGraphIndex);
 
-        setMainViewsLabel(StatsUtils.parseDate(mStatsDate[mSelectedBarGraphIndex], "yyyy-MM-dd", UNDER_THE_GRAPH_DATE_LABEL_FORMAT),
-                dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
+        setMainViewsLabel(
+                StatsUtils.parseDate(
+                        mStatsDate[mSelectedBarGraphIndex],
+                        StatsConstants.STATS_INPUT_DATE_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT
+                ),
+                dataToShowOnGraph[mSelectedBarGraphIndex].getViews()
+        );
 
         mMonthsAndYearsList.setVisibility(View.VISIBLE);
         List<PostViewsModel.Year> years = mRestResponseParsed.getYears();
@@ -334,6 +341,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
 
     private class RecentWeeksListAdapter extends BaseExpandableListAdapter {
+        public static final String GROUP_DATE_FORMAT = "MMM dd";
         public final LayoutInflater inflater;
         private final List<PostViewsModel.Week> groups;
         private final int maxReachedValue;
@@ -370,7 +378,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                 holder = (StatsViewHolder) convertView.getTag();
             }
 
-            holder.setEntryText(StatsUtils.parseDate(currentDay.getDay(), "yyyy-MM-dd", "EEE, MMM dd"));
+            holder.setEntryText(StatsUtils.parseDate(currentDay.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, "EEE, MMM dd"));
 
             // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
             holder.rowContent.setOnClickListener(
@@ -454,10 +462,10 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             PostViewsModel.Day firstChild = (PostViewsModel.Day) getChild(groupPosition, 0);
             if (numberOfChilds > 1) {
                 PostViewsModel.Day lastChild = (PostViewsModel.Day) getChild(groupPosition, getChildrenCount(groupPosition) - 1);
-                name = StatsUtils.parseDate(firstChild.getDay(), "yyyy-MM-dd", "MMM dd")
-                        + " - " + StatsUtils.parseDate(lastChild.getDay(), "yyyy-MM-dd", "MMM dd");
+                name = StatsUtils.parseDate(firstChild.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT)
+                        + " - " + StatsUtils.parseDate(lastChild.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT);
             } else {
-                name = StatsUtils.parseDate(firstChild.getDay(), "yyyy-MM-dd", "MMM dd");
+                name = StatsUtils.parseDate(firstChild.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT);
             }
 
             holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
@@ -529,7 +537,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                 holder = (StatsViewHolder) convertView.getTag();
             }
 
-            holder.setEntryText(StatsUtils.parseDate(currentMonth.getMonth(), "MM", "MMMM"));
+            holder.setEntryText(StatsUtils.parseDate(currentMonth.getMonth(), "MM", StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
 
             // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
             holder.rowContent.setOnClickListener(
@@ -715,7 +723,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mSelectedBarGraphIndex = tappedBar;
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph();
         String currentItemStatsDate = dataToShowOnGraph[mSelectedBarGraphIndex].getPeriod();
-        currentItemStatsDate = StatsUtils.parseDate(currentItemStatsDate, "yyyy-MM-dd", UNDER_THE_GRAPH_DATE_LABEL_FORMAT);
+        currentItemStatsDate = StatsUtils.parseDate(
+                currentItemStatsDate,
+                StatsConstants.STATS_INPUT_DATE_FORMAT,
+                StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT
+        );
         setMainViewsLabel(currentItemStatsDate, dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
     }
 
