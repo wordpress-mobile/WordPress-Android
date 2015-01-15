@@ -363,14 +363,14 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
             final PostViewsModel.Day currentDay = (PostViewsModel.Day) getChild(groupPosition, childPosition);
 
+            final StatsViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
-                // configure view holder
-                StatsViewHolder viewHolder = new StatsViewHolder(convertView);
-                convertView.setTag(viewHolder);
+                holder = new StatsViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (StatsViewHolder) convertView.getTag();
             }
-
-            final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
             holder.setEntryText(StatsUtils.parseDate(currentDay.getDay(), "yyyy-MM-dd", "EEE, MMM dd"));
 
@@ -426,12 +426,14 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
 
+            final StatsViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
-                convertView.setTag(new StatsViewHolder(convertView));
+                holder = new StatsViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (StatsViewHolder) convertView.getTag();
             }
-
-            final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
             PostViewsModel.Week week = (PostViewsModel.Week) getGroup(groupPosition);
 
@@ -520,14 +522,14 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
 
             final PostViewsModel.Month currentMonth = (PostViewsModel.Month) getChild(groupPosition, childPosition);
 
+            final StatsViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
-                // configure view holder
-                StatsViewHolder viewHolder = new StatsViewHolder(convertView);
-                convertView.setTag(viewHolder);
+                holder = new StatsViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (StatsViewHolder) convertView.getTag();
             }
-
-            final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
             holder.setEntryText(StatsUtils.parseDate(currentMonth.getMonth(), "MM", "MMMM"));
 
@@ -583,12 +585,14 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
 
+            final StatsViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
-                convertView.setTag(new StatsViewHolder(convertView));
+                holder = new StatsViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (StatsViewHolder) convertView.getTag();
             }
-
-            final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
             PostViewsModel.Year year = (PostViewsModel.Year) getGroup(groupPosition);
 
