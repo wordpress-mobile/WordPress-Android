@@ -271,6 +271,10 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         initBlogSpinner();
         updateMenuDrawer();
 
+        setToolbarClickListener();
+    }
+
+    protected void setToolbarClickListener() {
         // Set navigation listener, which ensures menu button works on all devices (#2157)
         getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override
