@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.stats.models.FollowDataModel;
 import org.wordpress.android.ui.stats.models.FollowerModel;
@@ -18,17 +19,24 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
 public class StatsFollowersFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsFollowersFragment.class.getSimpleName();
+
+    private HashSet<String> dotComUserBlogsURL = new HashSet<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,6 +71,23 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             // first time it's created
             mTopPagerSelectedButtonIndex = getArguments().getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
         }
+
+        // Single background thread used to create the blogs list in BG
+        ThreadPoolExecutor blogsListCreatorExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
+        blogsListCreatorExecutor.submit(new Thread() {
+            @Override
+            public void run() {
+                // Read all the dotcomBlog blogs and get the list of home URLs.
+                // This will be used later to check if the user is a member of followers blog marked as private.
+                List <Map<String, Object>> dotComUserBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"homeURL"});
+                for (Map<String, Object> blog : dotComUserBlogs) {
+                    if (blog != null && blog.get("homeURL") != null) {
+                        String normURL = normalizeAndRemoveScheme(blog.get("homeURL").toString());
+                        dotComUserBlogsURL.add(normURL);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -216,11 +241,23 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_text_color));
             holder.rowContent.setClickable(false);
 
+            final FollowDataModel followData = currentRowData.getFollowData();
+
             // entries
-            if (mTopPagerSelectedButtonIndex == 0) {
-                // WPCOM followers
-                holder.entryTextView.setText(currentRowData.getLabel());
-                if (!TextUtils.isEmpty(currentRowData.getURL())) {
+            if (mTopPagerSelectedButtonIndex == 0 && !TextUtils.isEmpty(currentRowData.getURL())) {
+                // WPCOM followers with no empty URL
+
+                boolean openInReader = true;
+                if (followData == null) {
+                    // If follow data is empty, we cannot follow the blog, or access it in the reader.
+                    // We need to check if the user is a member of this blog.
+                    // If so, we can launch open the reader, otherwise open the blog in the in-app browser.
+                    String normURL = normalizeAndRemoveScheme(currentRowData.getURL());
+                    openInReader = dotComUserBlogsURL.contains(normURL);
+                }
+
+                if (openInReader) {
+                    holder.entryTextView.setText(currentRowData.getLabel());
                     holder.rowContent.setOnClickListener(
                             new View.OnClickListener() {
                                 @Override
@@ -232,10 +269,12 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                     );
                                 }
                             });
-                    holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_link_text_color));
+                } else {
+                    holder.setEntryTextOrLink(currentRowData.getURL(), currentRowData.getLabel());
                 }
+                holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_link_text_color));
             } else {
-                // Email followers.
+                // Email followers, or wpcom followers with empty URL
                 holder.setEntryText(currentRowData.getLabel());
             }
 
@@ -246,7 +285,6 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
-            final FollowDataModel followData = currentRowData.getFollowData();
             if (followData == null) {
                 holder.imgMore.setVisibility(View.GONE);
                 holder.imgMore.setClickable(false);
@@ -361,6 +399,19 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             }
 
             return "";
+        }
+    }
+
+    private static String normalizeAndRemoveScheme(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return "";
+        }
+        String normURL = UrlUtils.normalizeUrl(url.toLowerCase());
+        int pos = normURL.indexOf("://");
+        if (pos > -1) {
+            return normURL.substring(pos + 3);
+        } else {
+            return normURL;
         }
     }
 
