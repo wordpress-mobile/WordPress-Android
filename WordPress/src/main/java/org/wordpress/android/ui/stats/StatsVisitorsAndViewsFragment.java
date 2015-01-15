@@ -196,7 +196,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     private VisitModel[] getDataToShowOnGraph(VisitsModel visitsData) {
         List<VisitModel> visitModels = visitsData.getVisits();
-        int numPoints = Math.min(getNumOfPoints(), visitModels.size());
+        int numPoints = Math.min(StatsUIHelper.getNumOfBarsToShow(getActivity()), visitModels.size());
         int currentPointIndex = numPoints - 1;
         VisitModel[] visitModelsToShow = new VisitModel[numPoints];
 
@@ -209,6 +209,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     private void updateUI() {
+        if (!isAdded()) {
+            return;
+        }
+
         if (mVisitsData == null) {
             setupNoResultsUI(false);
             return;
@@ -283,6 +287,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     //update the area right below the graph
     private void updateUIBelowTheGraph(int itemPosition) {
+        if (!isAdded()) {
+            return;
+        }
+
         if (mVisitsData == null) {
             setupNoResultsUI(false);
             return;
@@ -392,6 +400,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     private void setupNoResultsUI(boolean isLoading) {
+        if (!isAdded()) {
+            return;
+        }
         mSelectedBarGraphBarIndex = -1;
         Context context = mGraphContainer.getContext();
         if (context != null) {
@@ -419,18 +430,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 String labelPrefix = overviewItem.getLabel() + "\n 0" ;
                 currentBtm.setText(labelPrefix);
             }
-        }
-    }
-
-    private int getNumOfPoints() {
-        if (!isAdded()) {
-            return 0;
-        }
-
-        if(StatsUIHelper.shouldLoadMoreBars(getActivity())) {
-            return 10;
-        } else {
-            return 7;
         }
     }
 

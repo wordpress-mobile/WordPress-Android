@@ -242,7 +242,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             return new VisitModel[0];
         }
 
-        int numPoints = Math.min(getNumOfPoints(), dayViews.length);
+        int numPoints = Math.min(StatsUIHelper.getNumOfBarsToShow(this), dayViews.length);
         int currentPointIndex = numPoints - 1;
         VisitModel[] visitModels = new VisitModel[numPoints];
 
@@ -252,14 +252,6 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         }
 
         return visitModels;
-    }
-
-    private int getNumOfPoints() {
-        if(StatsUIHelper.shouldLoadMoreBars(this)) {
-            return 10;
-        } else {
-            return 7;
-        }
     }
 
     private void updateUI() {
