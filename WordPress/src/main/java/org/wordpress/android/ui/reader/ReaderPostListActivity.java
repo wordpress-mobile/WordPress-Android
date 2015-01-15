@@ -163,9 +163,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
             case R.id.menu_tags:
                 ReaderActivityLauncher.showReaderSubsForResult(this);
                 return true;

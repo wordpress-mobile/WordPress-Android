@@ -63,7 +63,6 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
         super.onCreate(null);
         AppLog.i(T.NOTIFS, "Creating NotificationsActivity");
         createMenuDrawer(R.layout.notifications_activity);
-        setSupportActionBar(getToolbar());
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
@@ -136,29 +135,14 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                FragmentManager fm = getFragmentManager();
-                if (fm.getBackStackEntryCount() > 0) {
-                    mRestoredReplyText = getCommentReplyText();
-                    popNoteDetail();
-                    return true;
-                } else {
-                    return super.onOptionsItemSelected(item);
-                }
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
                     int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
                     if (getSupportActionBar() != null && backStackEntryCount == 0) {
                         getSupportActionBar().setTitle(R.string.notifications);
+                    } else {
+                        mRestoredReplyText = getCommentReplyText();
                     }
                     if (getDrawerToggle() != null) {
                         getDrawerToggle().setDrawerIndicatorEnabled(backStackEntryCount == 0);
