@@ -24,8 +24,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class StatsFollowersFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsFollowersFragment.class.getSimpleName();
 
-    private  List<String> dotComUserBlogsURL = new ArrayList<>();
+    private HashSet<String> dotComUserBlogsURL = new HashSet<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,12 +82,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 List <Map<String, Object>> dotComUserBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"homeURL"});
                 for (Map<String, Object> blog : dotComUserBlogs) {
                     if (blog != null && blog.get("homeURL") != null) {
-                        String normURL = UrlUtils.normalizeUrl(blog.get("homeURL").toString()).toLowerCase();
-                        if (normURL.toLowerCase().startsWith("http://")) {
-                            normURL = normURL.substring(7);
-                        } else if (normURL.startsWith("https://")) {
-                            normURL = normURL.substring(8);
-                        }
+                        String normURL = normalizeAndRemoveScheme(blog.get("homeURL").toString());
                         dotComUserBlogsURL.add(normURL);
                     }
                 }
@@ -257,12 +252,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     // If follow data is empty, we cannot follow the blog, or access it in the reader.
                     // We need to check if the user is a member of this blog.
                     // If so, we can launch open the reader, otherwise open the blog in the in-app browser.
-                    String normURL = UrlUtils.normalizeUrl(currentRowData.getURL()).toLowerCase();
-                    if (normURL.startsWith("http://")) {
-                        normURL = normURL.substring(7);
-                    } else if (normURL.startsWith("https://")) {
-                        normURL = normURL.substring(8);
-                    }
+                    String normURL = normalizeAndRemoveScheme(currentRowData.getURL());
                     openInReader = dotComUserBlogsURL.contains(normURL);
                 }
 
@@ -409,6 +399,19 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             }
 
             return "";
+        }
+    }
+
+    private static String normalizeAndRemoveScheme(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return "";
+        }
+        String normURL = UrlUtils.normalizeUrl(url.toLowerCase());
+        int pos = normURL.indexOf("://");
+        if (pos > -1) {
+            return normURL.substring(pos + 3);
+        } else {
+            return normURL;
         }
     }
 
