@@ -27,8 +27,10 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
-import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -65,7 +67,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     private LinearLayout mAveragesList;
     private LinearLayout mRecentWeeksList;
 
-    private SingleItemModel mRemotePostItem; // The original item returned from TopPostsAndPages endpoint
+    private PostModel mRemotePostItem; // The original item returned from TopPostsAndPages endpoint
     private PostViewsModel mRestResponseParsed;
     private int mSelectedBarGraphIndex = -1;
 
@@ -112,18 +114,25 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mRecentWeeksList = (LinearLayout) findViewById(R.id.stats_recent_weeks_list_linearlayout);
 
         if (savedInstanceState != null) {
-            mRemotePostItem = (SingleItemModel) savedInstanceState.getSerializable(ARG_REMOTE_POST_OBJECT);
+            mRemotePostItem = (PostModel) savedInstanceState.getSerializable(ARG_REMOTE_POST_OBJECT);
             mRestResponseParsed = (PostViewsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
-            mRemotePostItem = (SingleItemModel) extras.getSerializable(ARG_REMOTE_POST_OBJECT);
+            mRemotePostItem = (PostModel) extras.getSerializable(ARG_REMOTE_POST_OBJECT);
             mRestResponseParsed = (PostViewsModel) extras.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = extras.getInt(ARG_SELECTED_GRAPH_BAR, -1);
         }
 
-        String prefix = getString(R.string.stats_for);
-        mStatsForLabel.setText(String.format(prefix, mRemotePostItem.getTitle()));
+        // Setup the main top label that opens the post in the Reader where possible
+        mStatsForLabel.setText(mRemotePostItem.getTitle());
+        mStatsForLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Context ctx = v.getContext();
+                StatsUtils.openPostInReaderOrInAppWebview(ctx, mRemotePostItem);
+            }
+        });
 
         setTitle(R.string.stats);
 

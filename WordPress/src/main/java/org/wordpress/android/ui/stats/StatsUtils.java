@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -10,12 +11,15 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.stats.models.AuthorsModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
+import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.TagsContainerModel;
@@ -337,4 +341,36 @@ public class StatsUtils {
         return model;
     }
 
+    public static void openPostInReaderOrInAppWebview(Context ctx, final PostModel post) {
+        final String postType = post.getPostType();
+        final String url = post.getUrl();
+        final long blogID = Long.parseLong(post.getBlogID());
+        final long itemID = Long.parseLong(post.getItemID());
+        if (postType.equals("post") || postType.equals("page")) {
+            // If the post/page has ID == 0 is the home page, and we need to load the blog preview,
+            // otherwise 404 is returned if we try to show the post in the reader
+            if (itemID == 0) {
+                ReaderActivityLauncher.showReaderBlogPreview(
+                        ctx,
+                        blogID,
+                        url
+                );
+            } else {
+                ReaderActivityLauncher.showReaderPostDetail(
+                        ctx,
+                        blogID,
+                        itemID
+                );
+            }
+        } else if (postType.equals("homepage")) {
+            ReaderActivityLauncher.showReaderBlogPreview(
+                    ctx,
+                    blogID,
+                    url
+            );
+        } else {
+            AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
+            WPWebViewActivity.openURL(ctx, url);
+        }
+    }
 }

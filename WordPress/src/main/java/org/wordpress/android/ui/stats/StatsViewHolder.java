@@ -17,7 +17,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
@@ -119,7 +118,7 @@ public class StatsViewHolder {
     /*
      * Used by stats fragments to set the entry text, opening the stats details page.
      */
-    public void setEntryTextOpenDetailsPage(final SingleItemModel currentItem) {
+    public void setEntryTextOpenDetailsPage(final PostModel currentItem) {
         if (entryTextView == null) {
             return;
         }
@@ -143,15 +142,10 @@ public class StatsViewHolder {
      * Opening it with reader if possible.
      *
      */
-    public void setMoreButtonOpenInReader(PostModel currentItem) {
+    public void setMoreButtonOpenInReader(final PostModel currentItem) {
         if (imgMore == null) {
             return;
         }
-
-        final String url = currentItem.getUrl();
-        final long blogID = Long.parseLong(currentItem.getBlogID());
-        final long itemID = Long.parseLong(currentItem.getItemID());
-        final String postType = currentItem.getPostType();
 
         imgMore.setVisibility(View.VISIBLE);
         imgMore.setOnClickListener(new View.OnClickListener() {
@@ -163,32 +157,7 @@ public class StatsViewHolder {
                 menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if (postType.equals("post") || postType.equals("page")) {
-                            // If the post/page has ID == 0 is the home page, and we need to load the blog preview,
-                            // otherwise 404 is returned if we try to show the post in the reader
-                            if (itemID == 0) {
-                                ReaderActivityLauncher.showReaderBlogPreview(
-                                        ctx,
-                                        blogID,
-                                        url
-                                );
-                            } else {
-                                ReaderActivityLauncher.showReaderPostDetail(
-                                        ctx,
-                                        blogID,
-                                        itemID
-                                );
-                            }
-                        } else if (postType.equals("homepage")) {
-                            ReaderActivityLauncher.showReaderBlogPreview(
-                                    ctx,
-                                    blogID,
-                                    url
-                            );
-                        } else {
-                            AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
-                            WPWebViewActivity.openURL(ctx, url);
-                        }
+                        StatsUtils.openPostInReaderOrInAppWebview(ctx, currentItem);
                         return true;
                     }
                 });
