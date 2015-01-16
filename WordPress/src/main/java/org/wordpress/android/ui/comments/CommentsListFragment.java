@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -70,7 +71,14 @@ public class CommentsListFragment extends Fragment {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isAdded())
                         return;
-                    showEmptyView(isEmpty);
+                    if (getCommentAdapter().getCount() > 0) {
+                        // Don't show a loading screen if there are already some displayed comments
+                        showEmptyView(false, R.string.loading_comments);
+                    } else if (!mIsUpdatingComments) {
+                        // Show the "no comments" screen if there are no new comments
+                        // (and there isn't an UpdateCommentsTask running)
+                        showEmptyView(isEmpty, R.string.comments_empty_list);
+                    }
                 }
             };
 
@@ -361,6 +369,9 @@ public class CommentsListFragment extends Fragment {
             return;
         }
 
+        // Display loading screen
+        showEmptyView(true, R.string.loading_comments);
+
         mUpdateCommentsTask = new UpdateCommentsTask(loadMore);
         mUpdateCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -485,9 +496,16 @@ public class CommentsListFragment extends Fragment {
                         return;
                 }
             }
-            if (!getActivity().isFinishing() && comments != null && comments.size() > 0) {
-                getCommentAdapter().loadComments();
+
+            if (!getActivity().isFinishing()) {
+                if (comments != null && comments.size() > 0) {
+                    getCommentAdapter().loadComments();
+                } else {
+                    // Show the "no comments" screen
+                    showEmptyView(true, R.string.comments_empty_list);
+                }
             }
+
         }
     }
 
@@ -503,13 +521,19 @@ public class CommentsListFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void showEmptyView(boolean show) {
+    private void showEmptyView(boolean show, int stringId) {
         if (!isAdded()) {
             return;
         }
-        View emptyView = getView().findViewById(R.id.empty_view);
+
+        TextView emptyView = (TextView) getView().findViewById(R.id.empty_view);
         if (emptyView != null) {
-            emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+            if (getCommentAdapter().getCount() == 0 && show) {
+                emptyView.setText(getText(stringId));
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                emptyView.setVisibility(View.GONE);
+            }
         }
     }
 
