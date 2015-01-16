@@ -346,6 +346,7 @@ public class MediaGridFragment extends Fragment
             mOldMediaSyncOffset = offset;
 
             mIsRefreshing = true;
+            setFilter(mFilter);
             mListener.onMediaItemListDownloadStart();
             mGridAdapter.setRefreshing(true);
 
@@ -465,7 +466,11 @@ public class MediaGridFragment extends Fragment
             setEmptyViewVisible(false);
         } else {
             if (filter != Filter.CUSTOM_DATE) {
-                setEmptyViewVisible(true, R.string.media_empty_list);
+                if (mIsRefreshing) {
+                    setEmptyViewVisible(true, R.string.loading_media);
+                } else {
+                    setEmptyViewVisible(true, R.string.media_empty_list);
+                }
             }
         }
     }
