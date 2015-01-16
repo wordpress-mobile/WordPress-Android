@@ -4,6 +4,7 @@ package org.wordpress.android.ui;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +20,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -227,7 +227,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             mDrawerToggle = new ActionBarDrawerToggle(
                     this,
                     mDrawerLayout,
-                    mToolbar,
+                    getToolbar(),
                     R.string.open_drawer,
                     R.string.close_drawer
             ) {
@@ -270,6 +270,25 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         initBlogSpinner();
         updateMenuDrawer();
+
+        setToolbarClickListener();
+    }
+
+    protected void setToolbarClickListener() {
+        // Set navigation listener, which ensures menu button works on all devices (#2157)
+        getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isFinishing()) return;
+
+                FragmentManager fm = getFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStack();
+                } else {
+                    toggleDrawer();
+                }
+            }
+        });
     }
 
     /*
@@ -675,13 +694,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         public void onNothingSelected(AdapterView<?> parent) {
         }
     };
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home && mDrawerLayout != null) {
-            toggleDrawer();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     private void refreshCurrentBlogContent() {
         if (WordPress.getCurrentBlog() != null) {

@@ -90,7 +90,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
         // hide drawer toggle and enable back arrow click if this is blog preview or tag preview
         if (mPostListType.isPreviewType() && getDrawerToggle() != null) {
             getDrawerToggle().setDrawerIndicatorEnabled(false);
-            getDrawerToggle().setToolbarNavigationClickListener(new View.OnClickListener() {
+            getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onBackPressed();
@@ -175,6 +175,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
     public void onBackPressed() {
         ReaderPostListFragment fragment = getListFragment();
         if (fragment == null || !fragment.goBackInTagHistory()) {
+            setToolbarClickListener();
             super.onBackPressed();
         }
     }
@@ -182,9 +183,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
             case R.id.menu_tags:
                 ReaderActivityLauncher.showReaderSubsForResult(this);
                 return true;
