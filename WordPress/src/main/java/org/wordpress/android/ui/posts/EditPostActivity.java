@@ -178,7 +178,7 @@ public class EditPostActivity extends ActionBarActivity {
                 }
             }
         });
-        ActivityId.trackLastActivity(this, ActivityId.POST_EDITOR);
+        ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
     class AutoSaveTask extends TimerTask {

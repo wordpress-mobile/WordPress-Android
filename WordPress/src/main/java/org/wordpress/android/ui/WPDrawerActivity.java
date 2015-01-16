@@ -353,7 +353,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         // if the item has an activity id, remember it for launch
         ActivityId activityId = item.getDrawerItemId().toActivityId();
         if (activityId != ActivityId.UNKNOWN) {
-            ActivityId.trackLastActivity(WPDrawerActivity.this, activityId);
+            ActivityId.trackLastActivity(activityId);
         }
 
         final Intent intent;
@@ -731,7 +731,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         refreshCurrentBlogContent();
-        
+
         if (WordPress.getCurrentBlog() != null) {
             onBlogChanged();
         }
