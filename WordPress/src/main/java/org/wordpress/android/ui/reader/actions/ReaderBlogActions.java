@@ -73,7 +73,7 @@ public class ReaderBlogActions {
                 if (success) {
                     AppLog.d(T.READER, "blog " + actionName + " succeeded");
                 } else {
-                    AppLog.w(T.READER, "blog " + actionName + " failed - " + jsonToString(jsonObject));
+                    AppLog.w(T.READER, "blog " + actionName + " failed - " + jsonToString(jsonObject) + " - " + path);
                     localRevertFollowAction(blogId, blogUrl, isAskingToFollow);
                 }
                 if (actionListener != null) {
