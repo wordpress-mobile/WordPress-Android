@@ -49,6 +49,7 @@ public class PostsListFragment extends ListFragment
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
     private View mProgressFooterView;
+    private TextView mEmptyViewTitle;
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
@@ -75,7 +76,9 @@ public class PostsListFragment extends ListFragment
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.post_listview, container, false);
+        View view = inflater.inflate(R.layout.post_listview, container, false);
+        mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
+        return view;
     }
 
     private void initSwipeToRefreshHelper() {
@@ -153,15 +156,8 @@ public class PostsListFragment extends ListFragment
                     }
 
                     if (postCount == 0 && !isRefreshing()) {
-                        // No posts and not currently refreshing. Display "no posts/pages" screen
-                        TextView textView = (TextView) getView().findViewById(R.id.title_empty);
-                        if (textView != null) {
-                            if (mIsPage) {
-                                textView.setText(getText(R.string.pages_empty_list));
-                            } else {
-                                textView.setText(getText(R.string.posts_empty_list));
-                            }
-                        }
+                        // No posts and not currently refreshing. Display the "no posts/pages" message
+                        displayNoContentMessage();
                     }
 
                     if (postCount == 0 && mCanLoadMorePosts) {
@@ -320,15 +316,7 @@ public class PostsListFragment extends ListFragment
             return;
         }
 
-        // Display loading screen
-        TextView textView = (TextView) getView().findViewById(R.id.title_empty);
-        if (textView != null) {
-            if (mIsPage) {
-                textView.setText(getText(R.string.loading_pages));
-            } else {
-                textView.setText(getText(R.string.loading_posts));
-            }
-        }
+        displayLoadingMessage();
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {
@@ -480,6 +468,28 @@ public class PostsListFragment extends ListFragment
         }
         mIsFetchingPosts = false;
         mSwipeToRefreshHelper.setRefreshing(false);
+    }
+
+    private void displayNoContentMessage() {
+        if (mIsPage) {
+            setEmptyViewVisible(R.string.pages_empty_list);
+        } else {
+            setEmptyViewVisible(R.string.posts_empty_list);
+        }
+    }
+
+    private void displayLoadingMessage() {
+        if (mIsPage) {
+            setEmptyViewVisible(R.string.loading_pages);
+        } else {
+            setEmptyViewVisible(R.string.loading_posts);
+        }
+    }
+
+    private void setEmptyViewVisible(int messageId) {
+        if (mEmptyViewTitle != null) {
+            mEmptyViewTitle.setText(getText(messageId));
+        }
     }
 
     public interface OnPostSelectedListener {

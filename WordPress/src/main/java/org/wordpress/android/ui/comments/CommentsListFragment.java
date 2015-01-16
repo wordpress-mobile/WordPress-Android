@@ -50,6 +50,7 @@ public class CommentsListFragment extends Fragment {
     private ListView mListView;
     private CommentAdapter mCommentAdapter;
     private ActionMode mActionMode;
+    private TextView mEmptyView;
 
     private UpdateCommentsTask mUpdateCommentsTask;
 
@@ -71,13 +72,14 @@ public class CommentsListFragment extends Fragment {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isAdded())
                         return;
+
                     if (getCommentAdapter().getCount() > 0) {
-                        // Don't show a loading screen if there are already some displayed comments
-                        showEmptyView(false, R.string.loading_comments);
+                        // Don't show a loading message if there are already some displayed comments
+                        displayLoadingMessage(false);
                     } else if (!mIsUpdatingComments) {
-                        // Show the "no comments" screen if there are no new comments
+                        // Show the "no comments" message if there are no new comments
                         // (and there isn't an UpdateCommentsTask running)
-                        showEmptyView(isEmpty, R.string.comments_empty_list);
+                        displayNoContentMessage(isEmpty);
                     }
                 }
             };
@@ -178,6 +180,7 @@ public class CommentsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
 
         mListView = (ListView) view.findViewById(android.R.id.list);
+        mEmptyView = (TextView) view.findViewById(R.id.empty_view);
 
         // progress bar that appears when loading more comments
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress_loading);
@@ -369,8 +372,7 @@ public class CommentsListFragment extends Fragment {
             return;
         }
 
-        // Display loading screen
-        showEmptyView(true, R.string.loading_comments);
+        displayLoadingMessage(true);
 
         mUpdateCommentsTask = new UpdateCommentsTask(loadMore);
         mUpdateCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -501,8 +503,7 @@ public class CommentsListFragment extends Fragment {
                 if (comments != null && comments.size() > 0) {
                     getCommentAdapter().loadComments();
                 } else {
-                    // Show the "no comments" screen
-                    showEmptyView(true, R.string.comments_empty_list);
+                    displayNoContentMessage(true);
                 }
             }
 
@@ -521,18 +522,25 @@ public class CommentsListFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void showEmptyView(boolean show, int stringId) {
+    private void displayNoContentMessage(boolean visible) {
+        setEmptyViewVisible(visible, R.string.comments_empty_list);
+    }
+
+    private void displayLoadingMessage(boolean visible) {
+        setEmptyViewVisible(visible, R.string.loading_comments);
+    }
+
+    private void setEmptyViewVisible(boolean visible, int messageId) {
         if (!isAdded()) {
             return;
         }
 
-        TextView emptyView = (TextView) getView().findViewById(R.id.empty_view);
-        if (emptyView != null) {
-            if (getCommentAdapter().getCount() == 0 && show) {
-                emptyView.setText(getText(stringId));
-                emptyView.setVisibility(View.VISIBLE);
+        if (mEmptyView != null) {
+            if (getCommentAdapter().getCount() == 0 && visible) {
+                mEmptyView.setText(getText(messageId));
+                mEmptyView.setVisibility(View.VISIBLE);
             } else {
-                emptyView.setVisibility(View.GONE);
+                mEmptyView.setVisibility(View.GONE);
             }
         }
     }
