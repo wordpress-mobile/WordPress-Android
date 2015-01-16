@@ -268,12 +268,6 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         et.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        // ignore orientation change
-        super.onConfigurationChanged(newConfig);
-    }
-
     /**
      * Remove the blog this activity is managing settings for.
      */

@@ -84,7 +84,6 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".ui.prefs.LicensesActivity"/>
@@ -109,7 +108,6 @@
         <!-- Posts activities -->
         <activity
             android:name=".ui.posts.AddCategoryActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/add_new_category"
             android:theme="@style/WordPress.Dialog" />
         <activity
@@ -131,7 +129,6 @@
         </activity>
         <activity
             android:name=".ui.posts.PostsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/WordPress.DrawerActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -139,11 +136,9 @@
         </activity>
         <activity
             android:name=".ui.posts.PagesActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/WordPress.DrawerActivity" />
         <activity
-            android:name=".ui.posts.SelectCategoriesActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:name=".ui.posts.SelectCategoriesActivity" />
         <activity android:name=".ui.posts.ViewPostActivity" />
 
         <!-- Stats Activities -->
@@ -251,13 +246,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.DashboardActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:name=".ui.DashboardActivity" />
         <activity
             android:name=".ui.ViewSiteActivity"
-            android:theme="@style/WordPress.DrawerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
-        </activity>
+            android:theme="@style/WordPress.DrawerActivity" />
 
         <!-- Notifications activities -->
         <activity
