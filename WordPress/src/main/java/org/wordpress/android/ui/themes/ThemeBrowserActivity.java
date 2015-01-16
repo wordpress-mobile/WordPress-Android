@@ -78,7 +78,6 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
         setTitle(R.string.themes);
 
         createMenuDrawer(R.layout.theme_browser_activity);
-        setSupportActionBar(getToolbar());
 
         mThemePagerAdapter = new ThemePagerAdapter(getFragmentManager());
 
@@ -254,14 +253,7 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        if (itemId == android.R.id.home) {
-            FragmentManager fm = getFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                fm.popBackStack();
-                setupBaseLayout();
-                return true;
-            }
-        } else if (itemId == R.id.menu_search) {
+        if (itemId == R.id.menu_search) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             if (mSearchFragment == null) {
                 mSearchFragment = ThemeSearchFragment.newInstance();

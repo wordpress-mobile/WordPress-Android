@@ -344,6 +344,8 @@ public class WordPress extends Application {
 
     public interface OnPostUploadedListener {
         public abstract void OnPostUploaded(int localBlogId, String postId, boolean isPage);
+
+        public abstract void OnPostUploadFailed(int localBlogId);
     }
 
     public static void setOnPostUploadedListener(OnPostUploadedListener listener) {
@@ -354,6 +356,19 @@ public class WordPress extends Application {
         if (onPostUploadedListener != null) {
             try {
                 onPostUploadedListener.OnPostUploaded(localBlogId, postId, isPage);
+            } catch (Exception e) {
+                postsShouldRefresh = true;
+            }
+        } else {
+            postsShouldRefresh = true;
+        }
+
+    }
+
+    public static void postUploadFailed(int localBlogId) {
+        if (onPostUploadedListener != null) {
+            try {
+                onPostUploadedListener.OnPostUploadFailed(localBlogId);
             } catch (Exception e) {
                 postsShouldRefresh = true;
             }

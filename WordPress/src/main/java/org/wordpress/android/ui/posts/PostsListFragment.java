@@ -459,6 +459,29 @@ public class PostsListFragment extends ListFragment
         }
     }
 
+    @Override
+    public void OnPostUploadFailed(int localBlogId) {
+        mSwipeToRefreshHelper.setRefreshing(true);
+
+        if (!isAdded()) {
+            return;
+        }
+
+        // If the user switched to a different blog while uploading his post, don't reload posts and refresh the view
+        if (WordPress.getCurrentBlog() == null || WordPress.getCurrentBlog().getLocalTableBlogId() != localBlogId) {
+            return;
+        }
+
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            mSwipeToRefreshHelper.setRefreshing(false);
+            return;
+        }
+
+        mSwipeToRefreshHelper.setRefreshing(false);
+        // Refresh the posts list to revert post status back to local draft or local changes
+        getPostListAdapter().loadPosts();
+    }
+
     public void onBlogChanged() {
         if (mCurrentFetchPostsTask != null) {
             mCurrentFetchPostsTask.cancel(true);

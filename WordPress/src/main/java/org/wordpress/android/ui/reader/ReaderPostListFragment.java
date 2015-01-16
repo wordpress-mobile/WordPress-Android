@@ -300,8 +300,10 @@ public class ReaderPostListFragment extends Fragment {
                 break;
         }
 
-        // textView that appears when current tag has no posts
+        // view that appears when current tag/blog has no posts - box images in this view are
+        // displayed and animated for tags only
         mEmptyView = rootView.findViewById(R.id.empty_view);
+        mEmptyView.findViewById(R.id.layout_box_images).setVisibility(shouldShowBoxAndPagesAnimation() ? View.VISIBLE : View.GONE);
 
         // progress bar that appears when loading more posts
         mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
@@ -564,65 +566,71 @@ public class ReaderPostListFragment extends Fragment {
         });
     }
 
+    /*
+     * box/pages animation that appears when loading an empty list (only appears for tags)
+     */
+    private boolean shouldShowBoxAndPagesAnimation() {
+        return getPostListType().isTagType();
+    }
     private void startBoxAndPagesAnimation() {
         if (!isAdded()) {
             return;
         }
 
-        Animation animPage1 = AnimationUtils.loadAnimation(getActivity(),
-                R.anim.box_with_pages_slide_up_page1);
-        ImageView page1 = (ImageView) getView().findViewById(R.id.empty_tags_box_page1);
-        page1.startAnimation(animPage1);
+        ImageView page1 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page1);
+        ImageView page2 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page2);
+        ImageView page3 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page3);
 
-        Animation animPage2 = AnimationUtils.loadAnimation(getActivity(),
-                R.anim.box_with_pages_slide_up_page2);
-        ImageView page2 = (ImageView) getView().findViewById(R.id.empty_tags_box_page2);
-        page2.startAnimation(animPage2);
-
-        Animation animPage3 = AnimationUtils.loadAnimation(getActivity(),
-                R.anim.box_with_pages_slide_up_page3);
-        ImageView page3 = (ImageView) getView().findViewById(R.id.empty_tags_box_page3);
-        page3.startAnimation(animPage3);
+        page1.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page1));
+        page2.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page2));
+        page3.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page3));
     }
 
-    private void setEmptyTitleAndDescriptionForCurrentTag() {
-        if (!isAdded() || getSpinnerAdapter() == null) {
+    private void setEmptyTitleAndDescription() {
+        if (!isAdded()) {
             return;
         }
 
-        int title;
-        int description = -1;
-        if (isUpdating()) {
-            title = R.string.reader_empty_posts_in_tag_updating;
-        } else {
-            int tagIndex = getSpinnerAdapter().getIndexOfTag(mCurrentTag);
+        int titleResId;
+        int descriptionResId = 0;
 
-            final String tagId;
+        if (isUpdating()) {
+            titleResId = R.string.reader_empty_posts_in_tag_updating;
+        } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+            titleResId = R.string.reader_empty_posts_in_blog;
+        } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getSpinnerAdapter() != null) {
+            int tagIndex = getSpinnerAdapter().getIndexOfTag(mCurrentTag);
+            String tagId;
             if (tagIndex > -1) {
                 ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(tagIndex);
                 tagId = tag.getStringIdFromEndpoint();
             } else {
                 tagId = "";
             }
-            if (tagId.equals(ReaderTag.TAG_ID_FOLLOWING)) {
-                title = R.string.reader_empty_followed_blogs_title;
-                description = R.string.reader_empty_followed_blogs_description;
-            } else {
-                if (tagId.equals(ReaderTag.TAG_ID_LIKED)) {
-                    title = R.string.reader_empty_posts_liked;
-                } else {
-                    title = R.string.reader_empty_posts_in_tag;
-                }
+            switch (tagId) {
+                case ReaderTag.TAG_ID_FOLLOWING:
+                    titleResId = R.string.reader_empty_followed_blogs_title;
+                    descriptionResId = R.string.reader_empty_followed_blogs_description;
+                    break;
+                case ReaderTag.TAG_ID_LIKED:
+                    titleResId = R.string.reader_empty_posts_liked;
+                    break;
+                default:
+                    titleResId = R.string.reader_empty_posts_in_tag;
+                    break;
             }
+        } else {
+            titleResId = R.string.reader_empty_posts_in_tag;
         }
 
-        TextView titleView = (TextView) getView().findViewById(R.id.title_empty);
-        TextView descriptionView = (TextView) getView().findViewById(R.id.description_empty);
-        titleView.setText(getString(title));
-        if (description == -1) {
+        TextView titleView = (TextView) mEmptyView.findViewById(R.id.title_empty);
+        titleView.setText(getString(titleResId));
+
+        TextView descriptionView = (TextView) mEmptyView.findViewById(R.id.description_empty);
+        if (descriptionResId == 0) {
             descriptionView.setVisibility(View.INVISIBLE);
         } else {
-            descriptionView.setText(getString(description));
+            descriptionView.setText(getString(descriptionResId));
             descriptionView.setVisibility(View.VISIBLE);
         }
     }
@@ -633,13 +641,15 @@ public class ReaderPostListFragment extends Fragment {
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            if (!isAdded())
+            if (!isAdded()) {
                 return;
-            // empty text/animation is only show when displaying posts with a specific tag
-            if (isEmpty && getPostListType().isTagType()) {
-                startBoxAndPagesAnimation();
-                setEmptyTitleAndDescriptionForCurrentTag();
+            }
+            if (isEmpty) {
+                setEmptyTitleAndDescription();
                 mEmptyView.setVisibility(View.VISIBLE);
+                if (shouldShowBoxAndPagesAnimation()) {
+                    startBoxAndPagesAnimation();
+                }
             } else {
                 mEmptyView.setVisibility(View.GONE);
                 if (mRestorePosition > 0) {
@@ -697,7 +707,6 @@ public class ReaderPostListFragment extends Fragment {
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
-
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
             mPostAdapter.setOnPostSelectedListener(mPostSelectedListener);
@@ -875,6 +884,8 @@ public class ReaderPostListFragment extends Fragment {
                 setIsUpdating(false, updateAction);
                 if (result.isNewOrChanged()) {
                     refreshPosts();
+                } else if (isPostAdapterEmpty()) {
+                    setEmptyTitleAndDescription();
                 }
             }
         };
@@ -901,7 +912,7 @@ public class ReaderPostListFragment extends Fragment {
         }
 
         setIsUpdating(true, updateAction);
-        setEmptyTitleAndDescriptionForCurrentTag();
+        setEmptyTitleAndDescription();
 
         // go no further if we're viewing a followed tag and the tag table is empty - this will
         // occur when the Reader is accessed for the first time (ie: fresh install) - note that
@@ -944,7 +955,7 @@ public class ReaderPostListFragment extends Fragment {
                 } else if (result.isNewOrChanged()) {
                     refreshPosts();
                 } else {
-                    setEmptyTitleAndDescriptionForCurrentTag();
+                    setEmptyTitleAndDescription();
                 }
             }
         };

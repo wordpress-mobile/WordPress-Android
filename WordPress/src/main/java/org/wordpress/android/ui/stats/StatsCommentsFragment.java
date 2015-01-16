@@ -14,7 +14,7 @@ import org.wordpress.android.ui.stats.models.AuthorModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowDataModel;
-import org.wordpress.android.ui.stats.models.SingleItemModel;
+import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
@@ -130,7 +130,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
                 && ((CommentsModel) mDatamodels[0]).getPosts().size() > 0;
     }
 
-    private List<SingleItemModel> getPosts() {
+    private List<PostModel> getPosts() {
         if (!hasPosts()) {
             return null;
         }

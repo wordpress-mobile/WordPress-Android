@@ -63,7 +63,6 @@ public class PostsActivity extends WPDrawerActivity
         ProfilingUtils.dump();
 
         createMenuDrawer(R.layout.posts);
-        setSupportActionBar(getToolbar());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -218,19 +217,6 @@ public class PostsActivity extends WPDrawerActivity
         i.putExtra(EditPostActivity.EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         startActivityForResult(i, ACTIVITY_EDIT_POST);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            FragmentManager fm = getFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                popPostDetail();
-                return true;
-            }
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

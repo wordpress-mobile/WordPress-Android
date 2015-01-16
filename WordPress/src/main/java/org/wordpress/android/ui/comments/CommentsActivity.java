@@ -42,7 +42,6 @@ public class CommentsActivity extends WPDrawerActivity
         super.onCreate(null);
 
         createMenuDrawer(R.layout.comment_activity);
-        setSupportActionBar(getToolbar());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -99,20 +98,6 @@ public class CommentsActivity extends WPDrawerActivity
         if (hasDetailFragment()) {
             getDetailFragment().clear();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                    FragmentManager fm = getFragmentManager();
-                    if (fm.getBackStackEntryCount() > 0) {
-                        fm.popBackStack();
-                    return true;
-                }
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =

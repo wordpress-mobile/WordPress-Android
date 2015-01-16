@@ -6,7 +6,9 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -20,7 +22,7 @@ public class PostViewsModel implements Serializable {
     private VisitModel[] mDayViews; //Used to build the graph
     private HashMap<String, Integer> fieldColumnsMapping;
     private List<Year> mYears;
-    private List<Average> mAverages;
+    private List<Year> mAverages;
     private List<Week> mWeeks;
 
     public String getDate() {
@@ -51,7 +53,7 @@ public class PostViewsModel implements Serializable {
         return mYears;
     }
 
-    public List<Average> getAverages() {
+    public List<Year> getAverages() {
         return mAverages;
     }
 
@@ -152,13 +154,25 @@ public class PostViewsModel implements Serializable {
                 int total = currentYearObj.getInt("total");
                 currentYear.setTotal(total);
 
-                JSONObject months = currentYearObj.getJSONObject("months");
-                String[] orderedMonthsKeys = orderKeys(months.keys(), months.length());
-                for (String currentMonthKey : orderedMonthsKeys) {
-                    int currentMonthVisits = months.getInt(currentMonthKey);
-                    int currentMonthIndex = Integer.parseInt(currentMonthKey) - 1;
-                    currentYear.getMonths()[currentMonthIndex] = currentMonthVisits;
+                JSONObject monthsJSON = currentYearObj.getJSONObject("months");
+                Iterator<String> monthsKeys = monthsJSON.keys();
+                List<Month> monthsList = new ArrayList<>(monthsJSON.length());
+                while (monthsKeys.hasNext()) {
+                    String currentMonthKey = monthsKeys.next();
+                    int currentMonthVisits = monthsJSON.getInt(currentMonthKey);
+                    monthsList.add(new Month(currentMonthKey, currentMonthVisits));
                 }
+
+                Collections.sort(monthsList, new java.util.Comparator<Month>() {
+                    public int compare(Month o1, Month o2) {
+                        int v1 = Integer.parseInt(o1.getMonth());
+                        int v2 = Integer.parseInt(o2.getMonth());
+                        // ascending order
+                        return v1 - v2;
+                    }
+                });
+
+                currentYear.setMonths(monthsList);
                 mYears.add(currentYear);
             }
         } catch (JSONException e) {
@@ -174,19 +188,30 @@ public class PostViewsModel implements Serializable {
             String[] orderedKeys = orderKeys(averagesJSON.keys(), averagesJSON.length());
 
             for (String currentJSONKey : orderedKeys) {
-                Average currentAverage = new Average();
+                Year currentAverage = new Year();
                 currentAverage.setLabel(currentJSONKey);
 
                 JSONObject currentAverageJSONObj = averagesJSON.getJSONObject(currentJSONKey);
-                currentAverage.setOverall(currentAverageJSONObj.getInt("overall"));
+                currentAverage.setTotal(currentAverageJSONObj.getInt("overall"));
 
                 JSONObject monthsJSON = currentAverageJSONObj.getJSONObject("months");
-                String[] orderedMonthsKeys = orderKeys(monthsJSON.keys(), monthsJSON.length());
-                for (String currentMonthKey : orderedMonthsKeys) {
+                Iterator<String> monthsKeys = monthsJSON.keys();
+                List<Month> monthsList = new ArrayList<>(monthsJSON.length());
+                while (monthsKeys.hasNext()) {
+                    String currentMonthKey = monthsKeys.next();
                     int currentMonthVisits = monthsJSON.getInt(currentMonthKey);
-                    int currentMonthIndex = Integer.parseInt(currentMonthKey) - 1;
-                    currentAverage.getMonths()[currentMonthIndex] = currentMonthVisits;
+                    monthsList.add(new Month(currentMonthKey, currentMonthVisits));
                 }
+                Collections.sort(monthsList, new java.util.Comparator<Month>() {
+                    public int compare(Month o1, Month o2) {
+                        int v1 = Integer.parseInt(o1.getMonth());
+                        int v2 = Integer.parseInt(o2.getMonth());
+                        // ascending order
+                        return v1 - v2;
+                    }
+                });
+
+                currentAverage.setMonths(monthsList);
                 mAverages.add(currentAverage);
             }
         } catch (JSONException e) {
@@ -203,7 +228,7 @@ public class PostViewsModel implements Serializable {
                 JSONObject currentWeekJSON = weeksJSON.getJSONObject(i);
 
                 currentWeek.setTotal(currentWeekJSON.getInt("total"));
-
+                currentWeek.setAverage(currentWeekJSON.getInt("average"));
                 try {
                     if (i == 0 ) {
                         currentWeek.setChange(0);
@@ -212,7 +237,7 @@ public class PostViewsModel implements Serializable {
                     }
                 } catch (JSONException e){
                     AppLog.w(AppLog.T.STATS, "Cannot parse the change value in weeks section. Trying to understand the meaning: 42!!");
-                    //  if i == 0 is the first week. if notit could mean infinity
+                    //  if i == 0 is the first week. if not it could mean infinity
                     String aProblematicValue = currentWeekJSON.get("change").toString();
                     if (aProblematicValue.contains("infinity")) {
                         currentWeek.setChange(Integer.MAX_VALUE);
@@ -220,8 +245,6 @@ public class PostViewsModel implements Serializable {
                         currentWeek.setChange(0);
                     }
                 }
-
-                currentWeek.setAverage(currentWeekJSON.getInt("average"));
 
                 JSONArray daysJSON = currentWeekJSON.getJSONArray("days");
                 for (int j = 0; j < daysJSON.length(); j++) {
@@ -298,47 +321,17 @@ public class PostViewsModel implements Serializable {
         }
     }
 
-    public class Average implements Serializable {
-        private String mLabel;
-        private int mOverall;
-        private int[] mMonths = new int[12];
-
-        public String getLabel() {
-            return mLabel;
-        }
-
-        public void setLabel(String label) {
-            this.mLabel = label;
-        }
-
-        public int getOverall() {
-            return mOverall;
-        }
-
-        public void setOverall(int overall) {
-            this.mOverall = overall;
-        }
-
-        public int[] getMonths() {
-            return mMonths;
-        }
-
-        public void setMonths(int[] months) {
-            this.mMonths = months;
-        }
-    }
-
     public class Year implements Serializable {
-        String mLabel;
-        int mTotal;
-        int[] mMonths = new int[12];
+        private String mLabel;
+        private int mTotal;
+        private List<Month> mMonths;
 
-        public int[] getMonths() {
+        public List<Month> getMonths() {
             return mMonths;
         }
 
-        public void setMonths(int[] months) {
-            this.mMonths = months;
+        public void setMonths(List<Month> months) {
+            mMonths = months;
         }
 
         public String getLabel() {
@@ -355,6 +348,23 @@ public class PostViewsModel implements Serializable {
 
         public void setTotal(int total) {
             this.mTotal = total;
+        }
+    }
+
+    public class Month implements Serializable {
+        private int mCount;
+        private String mMonth;
+
+        Month(String label, int count) {
+            this.mMonth = label;
+            this.mCount = count;
+        }
+
+        public String getMonth() {
+            return mMonth;
+        }
+        public int getCount() {
+            return mCount;
         }
     }
 }

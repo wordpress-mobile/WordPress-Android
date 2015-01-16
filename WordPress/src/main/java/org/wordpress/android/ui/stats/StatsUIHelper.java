@@ -318,4 +318,13 @@ public class StatsUIHelper {
         }
     }
 
+
+    public static int getNumOfBarsToShow(Activity act) {
+        if(shouldLoadMoreBars(act)) {
+            return 10;
+        } else {
+            return 7;
+        }
+    }
+
 }
