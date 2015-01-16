@@ -3,7 +3,6 @@ package org.wordpress.android.ui.prefs;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -35,7 +34,7 @@ import java.util.Locale;
 public class BlogPreferencesActivity extends ActionBarActivity {
     private boolean mIsViewingAdmin;
 
-    /** The blog this activity is managing settings for. */
+    // The blog this activity is managing settings for.
     private Blog blog;
     private boolean mBlogDeleted;
     private EditText mUsernameET;
@@ -140,17 +139,9 @@ public class BlogPreferencesActivity extends ActionBarActivity {
 
         WordPress.wpDB.saveBlog(blog);
 
-        if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId())
+        if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId()) {
             WordPress.currentBlog = blog;
-
-        // exit settings screen
-        Bundle bundle = new Bundle();
-
-        bundle.putString("returnStatus", "SAVE");
-        Intent mIntent = new Intent();
-        mIntent.putExtras(bundle);
-        setResult(RESULT_OK, mIntent);
-        finish();
+        }
     }
 
     @Override
