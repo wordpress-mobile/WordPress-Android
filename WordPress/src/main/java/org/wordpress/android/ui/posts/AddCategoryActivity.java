@@ -109,10 +109,4 @@ public class AddCategoryActivity extends ActionBarActivity {
             sCategories.setAdapter(categoryAdapter);
         }
     }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        //ignore orientation change
-        super.onConfigurationChanged(newConfig);
-    }
 }
