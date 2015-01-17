@@ -435,8 +435,9 @@ public class ReaderPostListFragment extends Fragment {
         }
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        mFollowButton = (TextView) inflater.inflate(R.layout.reader_toolbar_follow_button, toolbar, false);
-        toolbar.addView(mFollowButton);
+        View followView = inflater.inflate(R.layout.reader_toolbar_follow_button, toolbar, false);
+        mFollowButton = (TextView) followView.findViewById(R.id.text_follow);
+        toolbar.addView(followView);
 
         boolean isFollowing = getPostListType() == ReaderPostListType.BLOG_PREVIEW
                 ? ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl)

@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
     follow button which appears in the toolbar for tag/blog preview
 -->
-<org.wordpress.android.widgets.WPTextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text_follow_button"
-    style="@style/ReaderTextView.Follow"
-    android:layout_marginRight="@dimen/margin_extra_large"
-    android:layout_gravity="center_vertical|right" />
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical|right"
+    android:layout_marginRight="@dimen/reader_card_spacing"
+    android:paddingRight="@dimen/reader_card_content_padding">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_follow"
+        style="@style/ReaderTextView.Follow" />
+</FrameLayout>
