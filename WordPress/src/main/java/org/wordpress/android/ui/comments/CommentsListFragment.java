@@ -497,9 +497,11 @@ public class CommentsListFragment extends Fragment {
 
             // result will be null on error OR if no more comments exists
             if (comments == null && !getActivity().isFinishing() && mErrorType != ErrorType.NO_ERROR) {
+                mHasAutoRefreshedComments = false;
                 switch (mErrorType) {
                     case UNAUTHORIZED:
                         ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_unauthorized_comments));
+                        showEmptyViewWithMessage(MessageId.PERMISSION_ERROR);
                         return;
                     default:
                         ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
@@ -555,6 +557,9 @@ public class CommentsListFragment extends Fragment {
                         break;
                     case NETWORK_ERROR:
                         stringId = R.string.network_error;
+                        break;
+                    case PERMISSION_ERROR:
+                        stringId = R.string.error_refresh_unauthorized_comments;
                         break;
                 }
 
