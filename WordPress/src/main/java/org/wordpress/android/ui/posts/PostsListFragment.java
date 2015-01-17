@@ -380,6 +380,7 @@ public class PostsListFragment extends ListFragment
                             ToastUtils.showToast(getActivity(),
                                     mIsPage ? R.string.error_refresh_unauthorized_pages : R.string.error_refresh_unauthorized_posts,
                                     Duration.LONG);
+                            setEmptyViewMessage(MessageId.PERMISSION_ERROR);
                             return;
                         default:
                             ToastUtils.showToast(getActivity(),
@@ -526,6 +527,9 @@ public class PostsListFragment extends ListFragment
                 case NETWORK_ERROR:
                     stringId = R.string.network_error;
                     break;
+                case PERMISSION_ERROR:
+                    stringId = mIsPage ? R.string.error_refresh_unauthorized_pages :
+                            R.string.error_refresh_unauthorized_posts;
             }
 
             mEmptyViewTitle.setText(getText(stringId));
