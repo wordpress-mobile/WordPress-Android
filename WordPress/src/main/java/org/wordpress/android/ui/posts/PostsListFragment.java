@@ -53,6 +53,10 @@ public class PostsListFragment extends ListFragment
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
+    private enum MessageId {
+        LOADING, NO_CONTENT, NETWORK_ERROR, PERMISSION_ERROR
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +97,7 @@ public class PostsListFragment extends ListFragment
                         }
                         if (!NetworkUtils.checkConnection(getActivity())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
+                            setEmptyViewMessage(MessageId.NETWORK_ERROR);
                             return;
                         }
                         refreshPosts((PostsActivity) getActivity());
@@ -157,7 +162,7 @@ public class PostsListFragment extends ListFragment
 
                     if (postCount == 0 && !isRefreshing()) {
                         // No posts and not currently refreshing. Display the "no posts/pages" message
-                        displayNoContentMessage();
+                        setEmptyViewMessage(MessageId.NO_CONTENT);
                     }
 
                     if (postCount == 0 && mCanLoadMorePosts) {
@@ -165,6 +170,8 @@ public class PostsListFragment extends ListFragment
                         if (isAdded() && NetworkUtils.isNetworkAvailable(getActivity())) {
                             setRefreshing(true);
                             requestPosts(false);
+                        } else {
+                            setEmptyViewMessage(MessageId.NETWORK_ERROR);
                         }
                     } else if (mShouldSelectFirstPost) {
                         // Select the first row on a tablet, if requested
@@ -235,6 +242,8 @@ public class PostsListFragment extends ListFragment
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             ((PostsActivity) getActivity()).requestPosts();
+        } else {
+            setEmptyViewMessage(MessageId.NETWORK_ERROR);
         }
     }
 
@@ -313,10 +322,11 @@ public class PostsListFragment extends ListFragment
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
+            setEmptyViewMessage(MessageId.NETWORK_ERROR);
             return;
         }
 
-        displayLoadingMessage();
+        setEmptyViewMessage(MessageId.LOADING);
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {
@@ -413,6 +423,7 @@ public class PostsListFragment extends ListFragment
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
+            setEmptyViewMessage(MessageId.NETWORK_ERROR);
             return;
         }
 
@@ -474,6 +485,7 @@ public class PostsListFragment extends ListFragment
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
+            setEmptyViewMessage(MessageId.NETWORK_ERROR);
             return;
         }
 
@@ -493,25 +505,30 @@ public class PostsListFragment extends ListFragment
         mSwipeToRefreshHelper.setRefreshing(false);
     }
 
-    private void displayNoContentMessage() {
-        if (mIsPage) {
-            setEmptyViewVisible(R.string.pages_empty_list);
-        } else {
-            setEmptyViewVisible(R.string.posts_empty_list);
-        }
-    }
-
-    private void displayLoadingMessage() {
-        if (mIsPage) {
-            setEmptyViewVisible(R.string.loading_pages);
-        } else {
-            setEmptyViewVisible(R.string.loading_posts);
-        }
-    }
-
-    private void setEmptyViewVisible(int messageId) {
+    private void setEmptyViewMessage(MessageId messageId) {
         if (mEmptyViewTitle != null) {
-            mEmptyViewTitle.setText(getText(messageId));
+            int stringId = 0;
+
+            View noContentImage = getView().findViewById(R.id.empty_tags_box_top);
+            if (messageId == MessageId.NO_CONTENT) {
+                noContentImage.setVisibility(View.VISIBLE);
+            } else {
+                noContentImage.setVisibility(View.GONE);
+            }
+
+            switch (messageId) {
+                case LOADING:
+                    stringId = mIsPage ? R.string.loading_pages : R.string.loading_posts;
+                    break;
+                case NO_CONTENT:
+                    stringId = mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list;
+                    break;
+                case NETWORK_ERROR:
+                    stringId = R.string.network_error;
+                    break;
+            }
+
+            mEmptyViewTitle.setText(getText(stringId));
         }
     }
 
