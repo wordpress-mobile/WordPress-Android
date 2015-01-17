@@ -19,7 +19,6 @@
         android:paddingBottom="@dimen/margin_medium"
         android:paddingLeft="@dimen/reader_card_content_padding"
         android:paddingRight="@dimen/reader_card_content_padding"
-        android:paddingTop="@dimen/margin_medium"
         android:visibility="invisible"
         tools:visibility="visible">
 

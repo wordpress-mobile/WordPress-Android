@@ -18,7 +18,6 @@
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginLeft="@dimen/reader_card_spacing"
         android:layout_marginRight="@dimen/reader_card_spacing"
-        android:layout_marginTop="@dimen/margin_large"
         android:ellipsize="end"
         android:maxLines="2"
         android:paddingLeft="@dimen/reader_card_content_padding"
