@@ -18,17 +18,16 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /*
- * header view showing blog name, description, follower count, follow button, and mshot
- * of the blog - designed for use in ReaderPostListFragment when previewing posts in a
- * blog (blog preview) but can be reused elsewhere - call loadBlogInfo() to show the
- * info for a specific blog
+ * header view showing blog name, description, follower count, and mshot of the
+ * blog - designed for use in ReaderPostListFragment when previewing posts in a
+ * blog (blog preview) but can be reused elsewhere - call loadBlogInfo() to show
+ * the info for a specific blog
  */
 public class ReaderBlogInfoView extends FrameLayout {
 
@@ -90,7 +89,6 @@ public class ReaderBlogInfoView extends FrameLayout {
 
         final TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
         final TextView txtDescription = (TextView) findViewById(R.id.text_blog_description);
-        final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
 
         if (blogInfo.hasUrl()) {
             // clicking the blog name shows the blog in the browser
@@ -121,13 +119,6 @@ public class ReaderBlogInfoView extends FrameLayout {
         }
 
         showFollowerCount(blogInfo.numSubscribers);
-        ReaderUtils.showFollowStatus(txtFollowBtn, blogInfo.isFollowing);
-        txtFollowBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleBlogFollowStatus(txtFollowBtn);
-            }
-        });
 
         // layout is invisible at design time
         if (layoutInner.getVisibility() != View.VISIBLE) {
@@ -189,46 +180,6 @@ public class ReaderBlogInfoView extends FrameLayout {
             }
         };
         ReaderBlogActions.updateBlogInfo(blogId, blogUrl, listener);
-    }
-
-    private void toggleBlogFollowStatus(final TextView txtFollow) {
-        if (mBlogInfo == null || txtFollow == null) {
-            return;
-        }
-
-        final boolean isAskingToFollow = !mBlogInfo.isFollowing;
-        final int currentCount = mBlogInfo.numSubscribers;
-
-        ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                // revert to original state if follow/unfollow failed
-                if (!succeeded) {
-                    mBlogInfo.isFollowing = !isAskingToFollow;
-                    mBlogInfo.numSubscribers = currentCount;
-                    showFollowerCount(currentCount);
-                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
-                }
-            }
-        };
-
-        ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
-
-        if (ReaderBlogActions.performFollowAction(
-                mBlogInfo.blogId,
-                mBlogInfo.getUrl(),
-                isAskingToFollow,
-                followListener)) {
-            int newCount;
-            if (isAskingToFollow) {
-                newCount = currentCount + 1;
-            } else {
-                newCount = (currentCount > 0 ? currentCount - 1 : currentCount);
-            }
-            mBlogInfo.isFollowing = isAskingToFollow;
-            mBlogInfo.numSubscribers = newCount;
-            showFollowerCount(newCount);
-        }
     }
 
     private void loadMshotImage(final ReaderBlog blogInfo) {
