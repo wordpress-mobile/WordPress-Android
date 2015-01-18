@@ -656,10 +656,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                         getString(messageId),
                         R.drawable.noticon_alert_big, 3,
                         getString(R.string.cancel),
-                        getString(R.string.reader_title_applog),
                         getString(R.string.contact_us),
-                        SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG,
-                        SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
+                        getString(R.string.reader_title_applog),
+                        SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
+                        SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
             }
         }
         ft.add(nuxAlert, "alert");
