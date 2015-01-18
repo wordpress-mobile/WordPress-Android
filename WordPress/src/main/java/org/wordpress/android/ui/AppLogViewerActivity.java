@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -120,9 +121,14 @@ public class AppLogViewerActivity extends ActionBarActivity {
     }
 
     private void copyAppLogToClipboard() {
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboard.setPrimaryClip(ClipData.newPlainText("AppLog", AppLog.toPlainText(this)));
-        ToastUtils.showToast(this, R.string.logs_copied_to_clipboard);
+        try {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText("AppLog", AppLog.toPlainText(this)));
+            ToastUtils.showToast(this, R.string.logs_copied_to_clipboard);
+        } catch (Exception e) {
+            AppLog.e(T.UTILS, e);
+            ToastUtils.showToast(this, R.string.error_copy_to_clipboard);
+        }
     }
 
     @Override
