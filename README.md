@@ -64,6 +64,12 @@ account.
 
 Read more about [OAuth2][6] and the [WordPress.com REST endpoint][7].
 
+## How we work ##
+
+You can read more about [Code Style Guidelines](CODESTYLE.md) we adopted, and
+how we're organizing branches in our repository in the
+[Contribution Guide](CONTRIBUTING.md).
+
 ## Need help to build or hack? ##
 
 Say hello on our [Slack][4] channel: `#mobile`.
