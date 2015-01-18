@@ -118,6 +118,10 @@ public class MediaGridFragment extends Fragment
         }
     }
 
+    private enum MessageId {
+        LOADING, NO_CONTENT, NETWORK_ERROR, PERMISSION_ERROR, NO_CONTENT_CUSTOM_DATE
+    }
+
     private final OnItemSelectedListener mFilterSelectedListener = new OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -183,6 +187,7 @@ public class MediaGridFragment extends Fragment
                             return;
                         }
                         if (!NetworkUtils.checkConnection(getActivity())) {
+                            setFilter(mFilter, MessageId.NETWORK_ERROR);
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
@@ -321,9 +326,14 @@ public class MediaGridFragment extends Fragment
 
     public void refreshMediaFromDB() {
         setFilter(mFilter);
-        if (mGridAdapter.getDataCount() == 0 && !mHasRetrievedAllMedia && isAdded()
-                && NetworkUtils.isNetworkAvailable(getActivity())) {
-            refreshMediaFromServer(0, true);
+        if (isAdded() && mGridAdapter.getDataCount() == 0) {
+            if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                if (!mHasRetrievedAllMedia) {
+                    refreshMediaFromServer(0, true);
+                }
+            } else {
+                showEmptyViewWithMessage(MessageId.NETWORK_ERROR);
+            }
         }
     }
 
@@ -346,7 +356,7 @@ public class MediaGridFragment extends Fragment
             mOldMediaSyncOffset = offset;
 
             mIsRefreshing = true;
-            setFilter(mFilter);
+            setFilter(mFilter, MessageId.LOADING);
             mListener.onMediaItemListDownloadStart();
             mGridAdapter.setRefreshing(true);
 
@@ -404,6 +414,7 @@ public class MediaGridFragment extends Fragment
                                 mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
                                 mSwipeToRefreshHelper.setRefreshing(false);
+                                setFilter(mFilter, MessageId.NETWORK_ERROR);
                             }
                         });
                     }
@@ -438,24 +449,40 @@ public class MediaGridFragment extends Fragment
         }
     }
 
-    private void setEmptyViewVisible(boolean visible) {
-        setEmptyViewVisible(visible, -1);
+    private void showEmptyViewWithMessage(MessageId messageId) {
+        int stringId = 0;
+
+        switch (messageId) {
+            case LOADING:
+                stringId = R.string.loading_media;
+                break;
+            case NO_CONTENT:
+                stringId = R.string.media_empty_list;
+                break;
+            case NETWORK_ERROR:
+                stringId = R.string.network_error;
+                break;
+            case PERMISSION_ERROR:
+                break;
+            case NO_CONTENT_CUSTOM_DATE:
+                stringId = R.string.media_empty_list_custom_date;
+        }
+
+        mGridView.setVisibility(View.GONE);
+        mEmptyView.setVisibility(View.VISIBLE);
+        mEmptyViewTitle.setText(getResources().getString(stringId));
     }
 
-    private void setEmptyViewVisible(boolean visible, int messageId) {
-        if (visible) {
-            mGridView.setVisibility(View.GONE);
-            mEmptyView.setVisibility(View.VISIBLE);
-            if (messageId != -1) {
-                mEmptyViewTitle.setText(getResources().getString(messageId));
-            }
-        } else {
-            mEmptyView.setVisibility(View.GONE);
-            mGridView.setVisibility(View.VISIBLE);
-        }
+    private void hideEmptyView() {
+        mEmptyView.setVisibility(View.GONE);
+        mGridView.setVisibility(View.VISIBLE);
     }
 
     public void setFilter(Filter filter) {
+        setFilter(filter, MessageId.NO_CONTENT);
+    }
+
+    public void setFilter(Filter filter, MessageId messageId) {
         mFilter = filter;
         Cursor cursor = filterItems(mFilter);
         if (filter != Filter.CUSTOM_DATE || cursor == null || cursor.getCount() == 0) {
@@ -463,14 +490,10 @@ public class MediaGridFragment extends Fragment
         }
         if (cursor != null && cursor.getCount() != 0) {
             mGridAdapter.swapCursor(cursor);
-            setEmptyViewVisible(false);
+            hideEmptyView();
         } else {
             if (filter != Filter.CUSTOM_DATE) {
-                if (mIsRefreshing) {
-                    setEmptyViewVisible(true, R.string.loading_media);
-                } else {
-                    setEmptyViewVisible(true, R.string.media_empty_list);
-                }
+                showEmptyViewWithMessage(messageId);
             }
         }
     }
@@ -492,7 +515,7 @@ public class MediaGridFragment extends Fragment
 
         if (cursor != null && cursor.moveToFirst()) {
             mResultView.setVisibility(View.VISIBLE);
-            setEmptyViewVisible(false);
+            hideEmptyView();
             DateFormat format = DateFormat.getDateInstance();
             String formattedStart = format.format(startDate.getTime());
             String formattedEnd = format.format(endDate.getTime());
@@ -500,7 +523,7 @@ public class MediaGridFragment extends Fragment
                     formattedEnd));
             return cursor;
         } else {
-            setEmptyViewVisible(true, R.string.media_empty_list_custom_date);
+            showEmptyViewWithMessage(MessageId.NO_CONTENT_CUSTOM_DATE);
         }
         return null;
     }
