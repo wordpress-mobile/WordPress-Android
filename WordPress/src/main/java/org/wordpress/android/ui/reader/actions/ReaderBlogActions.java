@@ -32,6 +32,10 @@ public class ReaderBlogActions {
         public boolean wasFollowing;
     }
 
+    private static String jsonToString(JSONObject json) {
+        return (json != null ? json.toString() : "");
+    }
+
     /*
      * follow/unfollow a blog - make sure to pass the blogId when known since following
      * solely by url may cause the blog to be followed as a feed
@@ -69,7 +73,7 @@ public class ReaderBlogActions {
                 if (success) {
                     AppLog.d(T.READER, "blog " + actionName + " succeeded");
                 } else {
-                    AppLog.w(T.READER, "blog " + actionName + " failed");
+                    AppLog.w(T.READER, "blog " + actionName + " failed - " + jsonToString(jsonObject) + " - " + path);
                     localRevertFollowAction(blogId, blogUrl, isAskingToFollow);
                 }
                 if (actionListener != null) {
@@ -80,7 +84,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.w(T.READER, "blog " + actionName + " failed");
+                AppLog.w(T.READER, "blog " + actionName + " failed with error");
                 AppLog.e(T.READER, volleyError);
                 localRevertFollowAction(blogId, blogUrl, isAskingToFollow);
                 if (actionListener != null) {
