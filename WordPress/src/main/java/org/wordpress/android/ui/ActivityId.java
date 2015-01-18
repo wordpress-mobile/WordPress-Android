@@ -3,6 +3,8 @@ package org.wordpress.android.ui;
 import android.content.Context;
 
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 public enum ActivityId {
     UNKNOWN("Unknown"),
@@ -28,28 +30,10 @@ public enum ActivityId {
         return mStringValue;
     }
 
-    public static void trackLastActivity(Context context, ActivityId activityId) {
+    public static void trackLastActivity(ActivityId activityId) {
+        AppLog.v(T.UTILS, "trackLastActivity, activityId: " + activityId);
         if (activityId != null) {
             AppPrefs.setLastActivityStr(activityId.name());
-        }
-    }
-
-    /**
-     * Map special cases of activities that can't be restored
-     */
-    public ActivityId autoRestoreMapper() {
-        switch (this) {
-            // Login screen can't be restored
-            case LOGIN:
-                return UNKNOWN;
-
-            // In case the post editor was selected, restore the post list instead.
-            case POST_EDITOR:
-                return POSTS;
-
-            // All other screen can be restored
-            default:
-                return this;
         }
     }
 
