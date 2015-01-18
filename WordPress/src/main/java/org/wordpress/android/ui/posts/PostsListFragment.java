@@ -69,16 +69,6 @@ public class PostsListFragment extends ListFragment
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        boolean isRefreshing = mSwipeToRefreshHelper.isRefreshing();
-        super.onConfigurationChanged(newConfig);
-        // Swipe to refresh layout is destroyed onDetachedFromWindow,
-        // so we have to re-init the layout, via the helper here
-        initSwipeToRefreshHelper();
-        mSwipeToRefreshHelper.setRefreshing(isRefreshing);
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.post_listview, container, false);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);

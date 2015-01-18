@@ -363,12 +363,6 @@ public class SelectCategoriesActivity extends ActionBarActivity {
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        // ignore orientation change
-        super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
     public void onBackPressed() {
         saveAndFinish();
         super.onBackPressed();

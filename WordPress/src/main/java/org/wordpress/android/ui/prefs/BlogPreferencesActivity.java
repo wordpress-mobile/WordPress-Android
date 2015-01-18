@@ -3,7 +3,6 @@ package org.wordpress.android.ui.prefs;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -35,7 +34,7 @@ import java.util.Locale;
 public class BlogPreferencesActivity extends ActionBarActivity {
     private boolean mIsViewingAdmin;
 
-    /** The blog this activity is managing settings for. */
+    // The blog this activity is managing settings for.
     private Blog blog;
     private boolean mBlogDeleted;
     private EditText mUsernameET;
@@ -79,7 +78,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
 
         if (blog.isDotcomFlag()) {
             // Hide credentials section
-            RelativeLayout credentialsRL = (RelativeLayout)findViewById(R.id.sectionContent);
+            RelativeLayout credentialsRL = (RelativeLayout) findViewById(R.id.sectionContent);
             credentialsRL.setVisibility(View.GONE);
             removeBlogButton.setVisibility(View.GONE);
         }
@@ -96,8 +95,9 @@ public class BlogPreferencesActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
 
-        if (mBlogDeleted || mIsViewingAdmin)
+        if (mBlogDeleted || mIsViewingAdmin) {
             return;
+        }
 
         blog.setUsername(mUsernameET.getText().toString());
         blog.setPassword(mPasswordET.getText().toString());
@@ -117,8 +117,9 @@ public class BlogPreferencesActivity extends ActionBarActivity {
                 error = true;
             }
 
-            if (width == 0)
+            if (width == 0) {
                 error = true;
+            }
 
             if (error) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(BlogPreferencesActivity.this);
@@ -140,17 +141,9 @@ public class BlogPreferencesActivity extends ActionBarActivity {
 
         WordPress.wpDB.saveBlog(blog);
 
-        if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId())
+        if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId()) {
             WordPress.currentBlog = blog;
-
-        // exit settings screen
-        Bundle bundle = new Bundle();
-
-        bundle.putString("returnStatus", "SAVE");
-        Intent mIntent = new Intent();
-        mIntent.putExtras(bundle);
-        setResult(RESULT_OK, mIntent);
-        finish();
+        }
     }
 
     @Override
@@ -166,27 +159,33 @@ public class BlogPreferencesActivity extends ActionBarActivity {
 
     private void loadSettingsForBlog() {
         // Set header labels to upper case
-        ((TextView) findViewById(R.id.l_section1)).setText(getResources().getString(R.string.account_details).toUpperCase(Locale.getDefault()));
-        ((TextView) findViewById(R.id.l_section2)).setText(getResources().getString(R.string.media).toUpperCase(Locale.getDefault()));
-        ((TextView) findViewById(R.id.l_maxImageWidth)).setText(getResources().getString(R.string.max_thumbnail_px_width).toUpperCase(Locale.getDefault()));
-        ((TextView) findViewById(R.id.l_httpuser)).setText(getResources().getString(R.string.http_credentials).toUpperCase(Locale.getDefault()));
+        ((TextView) findViewById(R.id.l_section1))
+                .setText(getResources().getString(R.string.account_details).toUpperCase(Locale.getDefault()));
+        ((TextView) findViewById(R.id.l_section2))
+                .setText(getResources().getString(R.string.media).toUpperCase(Locale.getDefault()));
+        ((TextView) findViewById(R.id.l_maxImageWidth))
+                .setText(getResources().getString(R.string.max_thumbnail_px_width).toUpperCase(Locale.getDefault()));
+        ((TextView) findViewById(R.id.l_httpuser))
+                .setText(getResources().getString(R.string.http_credentials).toUpperCase(Locale.getDefault()));
 
         ArrayAdapter<Object> spinnerArrayAdapter = new ArrayAdapter<Object>(this,
-                R.layout.spinner_textview, new String[] {
-                        "Original Size", "100", "200", "300", "400", "500", "600", "700", "800",
-                        "900", "1000", "1100", "1200", "1300", "1400", "1500", "1600", "1700",
-                        "1800", "1900", "2000"
-                });
+                R.layout.spinner_textview, new String[]{
+                "Original Size", "100", "200", "300", "400", "500", "600", "700", "800",
+                "900", "1000", "1100", "1200", "1300", "1400", "1500", "1600", "1700",
+                "1800", "1900", "2000"
+        });
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mImageWidthSpinner.setAdapter(spinnerArrayAdapter);
         mImageWidthSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-               CheckBox fullSizeImageCheckBox = (CheckBox)findViewById(R.id.fullSizeImage);
-               if(id == 0) //Original size selected. Do not show the link to full image.
-                   fullSizeImageCheckBox.setVisibility(View.GONE);
-               else
-                   fullSizeImageCheckBox.setVisibility(View.VISIBLE);
+                CheckBox fullSizeImageCheckBox = (CheckBox) findViewById(R.id.fullSizeImage);
+                // Original size selected. Do not show the link to full image.
+                if (id == 0) {
+                    fullSizeImageCheckBox.setVisibility(View.GONE);
+                } else {
+                    fullSizeImageCheckBox.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -194,12 +193,11 @@ public class BlogPreferencesActivity extends ActionBarActivity {
             }
         });
 
-
         mUsernameET.setText(blog.getUsername());
         mPasswordET.setText(blog.getPassword());
         mHttpUsernameET.setText(blog.getHttpuser());
         mHttpPasswordET.setText(blog.getHttppassword());
-        TextView httpUserLabel = (TextView)findViewById(R.id.l_httpuser);
+        TextView httpUserLabel = (TextView) findViewById(R.id.l_httpuser);
         if (blog.isDotcomFlag()) {
             mHttpUsernameET.setVisibility(View.GONE);
             mHttpPasswordET.setVisibility(View.GONE);
@@ -233,7 +231,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
             }
         });*/
         // sets up a state listener for the fullsize checkbox
-        CheckBox fullSizeImageCheckBox = (CheckBox)findViewById(R.id.fullSizeImage);
+        CheckBox fullSizeImageCheckBox = (CheckBox) findViewById(R.id.fullSizeImage);
         fullSizeImageCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -250,10 +248,13 @@ public class BlogPreferencesActivity extends ActionBarActivity {
 
         int imageWidthPosition = spinnerArrayAdapter.getPosition(blog.getMaxImageWidth());
         mImageWidthSpinner.setSelection((imageWidthPosition >= 0) ? imageWidthPosition : 0);
-        if (mImageWidthSpinner.getSelectedItemPosition() == 0) //Original size selected. Do not show the link to full image.
+        if (mImageWidthSpinner.getSelectedItemPosition() ==
+                0) //Original size selected. Do not show the link to full image.
+        {
             fullSizeImageCheckBox.setVisibility(View.GONE);
-        else
+        } else {
             fullSizeImageCheckBox.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -268,12 +269,6 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         et.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        // ignore orientation change
-        super.onConfigurationChanged(newConfig);
-    }
-
     /**
      * Remove the blog this activity is managing settings for.
      */
@@ -284,10 +279,12 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                boolean deleteSuccess = WordPress.wpDB.deleteAccount(BlogPreferencesActivity.this, blog.getLocalTableBlogId());
+                boolean deleteSuccess =
+                        WordPress.wpDB.deleteAccount(BlogPreferencesActivity.this, blog.getLocalTableBlogId());
                 if (deleteSuccess) {
                     AnalyticsTracker.refreshMetadata();
-                    Toast.makeText(activity, getResources().getText(R.string.blog_removed_successfully), Toast.LENGTH_SHORT)
+                    Toast.makeText(activity, getResources().getText(R.string.blog_removed_successfully),
+                            Toast.LENGTH_SHORT)
                             .show();
                     WordPress.wpDB.deleteLastBlogId();
                     WordPress.currentBlog = null;

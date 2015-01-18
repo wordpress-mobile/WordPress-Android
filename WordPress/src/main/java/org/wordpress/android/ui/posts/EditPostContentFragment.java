@@ -614,7 +614,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
         mFullViewBottom = mRootView.getBottom();
     }
 
