@@ -393,7 +393,7 @@ public class MediaGridFragment extends Fragment
                 }
 
                 @Override
-                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                public void onFailure(final ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                     if (errorType != ApiHelper.ErrorType.NO_ERROR) {
                         if (getActivity() != null) {
                             String message = errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP ? getString(
@@ -414,7 +414,11 @@ public class MediaGridFragment extends Fragment
                                 mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
                                 mSwipeToRefreshHelper.setRefreshing(false);
-                                setFilter(mFilter, MessageId.NETWORK_ERROR);
+                                if (errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP) {
+                                    setFilter(mFilter, MessageId.PERMISSION_ERROR);
+                                } else {
+                                    setFilter(mFilter, MessageId.NETWORK_ERROR);
+                                }
                             }
                         });
                     }
@@ -463,9 +467,11 @@ public class MediaGridFragment extends Fragment
                 stringId = R.string.network_error;
                 break;
             case PERMISSION_ERROR:
+                stringId = R.string.media_error_no_permission;
                 break;
             case NO_CONTENT_CUSTOM_DATE:
                 stringId = R.string.media_empty_list_custom_date;
+                break;
         }
 
         mGridView.setVisibility(View.GONE);
