@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -53,8 +52,8 @@ public class PostsListFragment extends ListFragment
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
-    private enum MessageId {
-        LOADING, NO_CONTENT, NETWORK_ERROR, PERMISSION_ERROR
+    private enum MessageType {
+        LOADING, NO_CONTENT, NETWORK_ERROR, PERMISSION_ERROR, GENERIC_ERROR;
     }
 
     @Override
@@ -87,7 +86,7 @@ public class PostsListFragment extends ListFragment
                         }
                         if (!NetworkUtils.checkConnection(getActivity())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
-                            setEmptyViewMessage(MessageId.NETWORK_ERROR);
+                            updateEmptyView(MessageType.NETWORK_ERROR);
                             return;
                         }
                         refreshPosts((PostsActivity) getActivity());
@@ -152,7 +151,7 @@ public class PostsListFragment extends ListFragment
 
                     if (postCount == 0 && !isRefreshing()) {
                         // No posts and not currently refreshing. Display the "no posts/pages" message
-                        setEmptyViewMessage(MessageId.NO_CONTENT);
+                        updateEmptyView(MessageType.NO_CONTENT);
                     }
 
                     if (postCount == 0 && mCanLoadMorePosts) {
@@ -161,7 +160,7 @@ public class PostsListFragment extends ListFragment
                             setRefreshing(true);
                             requestPosts(false);
                         } else {
-                            setEmptyViewMessage(MessageId.NETWORK_ERROR);
+                            updateEmptyView(MessageType.NETWORK_ERROR);
                         }
                     } else if (mShouldSelectFirstPost) {
                         // Select the first row on a tablet, if requested
@@ -233,7 +232,7 @@ public class PostsListFragment extends ListFragment
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             ((PostsActivity) getActivity()).requestPosts();
         } else {
-            setEmptyViewMessage(MessageId.NETWORK_ERROR);
+            updateEmptyView(MessageType.NETWORK_ERROR);
         }
     }
 
@@ -312,11 +311,11 @@ public class PostsListFragment extends ListFragment
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            setEmptyViewMessage(MessageId.NETWORK_ERROR);
+            updateEmptyView(MessageType.NETWORK_ERROR);
             return;
         }
 
-        setEmptyViewMessage(MessageId.LOADING);
+        updateEmptyView(MessageType.LOADING);
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {
@@ -370,12 +369,13 @@ public class PostsListFragment extends ListFragment
                             ToastUtils.showToast(getActivity(),
                                     mIsPage ? R.string.error_refresh_unauthorized_pages : R.string.error_refresh_unauthorized_posts,
                                     Duration.LONG);
-                            setEmptyViewMessage(MessageId.PERMISSION_ERROR);
+                            updateEmptyView(MessageType.PERMISSION_ERROR);
                             return;
                         default:
                             ToastUtils.showToast(getActivity(),
                                     mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
                                     Duration.LONG);
+                            updateEmptyView(MessageType.GENERIC_ERROR);
                             return;
                     }
                 }
@@ -414,7 +414,7 @@ public class PostsListFragment extends ListFragment
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            setEmptyViewMessage(MessageId.NETWORK_ERROR);
+            updateEmptyView(MessageType.NETWORK_ERROR);
             return;
         }
 
@@ -476,7 +476,7 @@ public class PostsListFragment extends ListFragment
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            setEmptyViewMessage(MessageId.NETWORK_ERROR);
+            updateEmptyView(MessageType.NETWORK_ERROR);
             return;
         }
 
@@ -496,18 +496,18 @@ public class PostsListFragment extends ListFragment
         mSwipeToRefreshHelper.setRefreshing(false);
     }
 
-    private void setEmptyViewMessage(MessageId messageId) {
+    private void updateEmptyView(MessageType messageType) {
         if (mEmptyViewTitle != null) {
             int stringId = 0;
 
             View noContentImage = getView().findViewById(R.id.empty_tags_box_top);
-            if (messageId == MessageId.NO_CONTENT) {
+            if (messageType == MessageType.NO_CONTENT) {
                 noContentImage.setVisibility(View.VISIBLE);
             } else {
                 noContentImage.setVisibility(View.GONE);
             }
 
-            switch (messageId) {
+            switch (messageType) {
                 case LOADING:
                     stringId = mIsPage ? R.string.loading_pages : R.string.loading_posts;
                     break;
@@ -520,6 +520,10 @@ public class PostsListFragment extends ListFragment
                 case PERMISSION_ERROR:
                     stringId = mIsPage ? R.string.error_refresh_unauthorized_pages :
                             R.string.error_refresh_unauthorized_posts;
+                    break;
+                case GENERIC_ERROR:
+                    stringId = mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts;
+                    break;
             }
 
             mEmptyViewTitle.setText(getText(stringId));
