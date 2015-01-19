@@ -439,10 +439,7 @@ public class ReaderPostListFragment extends Fragment {
         mFollowButton = (TextView) followView.findViewById(R.id.text_follow);
         toolbar.addView(followView);
 
-        boolean isFollowing = getPostListType() == ReaderPostListType.BLOG_PREVIEW
-                ? ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl)
-                : ReaderTagTable.isFollowedTagName(getCurrentTagName());
-        ReaderUtils.showFollowStatus(mFollowButton, isFollowing);
+        updateFollowButton();
 
         mFollowButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -454,6 +451,16 @@ public class ReaderPostListFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void updateFollowButton() {
+        if (!isAdded() || mFollowButton == null) {
+            return;
+        }
+        boolean isFollowing = getPostListType() == ReaderPostListType.BLOG_PREVIEW
+                ? ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl)
+                : ReaderTagTable.isFollowedTagName(getCurrentTagName());
+        ReaderUtils.showFollowStatus(mFollowButton, isFollowing);
     }
 
     @Override
@@ -825,8 +832,12 @@ public class ReaderPostListFragment extends Fragment {
         getPostAdapter().setCurrentTag(tag);
         hideNewPostsBar();
         hideUndoBar();
-        updateTagPreviewHeader();
         showLoadingProgress(false);
+
+        if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+            updateTagPreviewHeader();
+            updateFollowButton();
+        }
 
         // update posts in this tag if it's time to do so
         if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
@@ -853,6 +864,8 @@ public class ReaderPostListFragment extends Fragment {
         }
 
         setCurrentTagName(tag, false);
+        updateFollowButton();
+
         return true;
     }
 
