@@ -51,6 +51,7 @@ public class CommentsListFragment extends Fragment {
     private CommentAdapter mCommentAdapter;
     private ActionMode mActionMode;
     private TextView mEmptyView;
+    private String mEmptyViewMessage;
 
     private UpdateCommentsTask mUpdateCommentsTask;
 
@@ -59,7 +60,21 @@ public class CommentsListFragment extends Fragment {
     private static final int COMMENTS_PER_PAGE = 30;
 
     private enum MessageId {
-        LOADING, NO_CONTENT, NETWORK_ERROR, PERMISSION_ERROR
+        LOADING, NO_CONTENT, NETWORK_ERROR, PERMISSION_ERROR;
+
+        public static MessageId getEnumFromString(String value) {
+            for (MessageId id : values()) {
+                if (id.name().equals(value)) {
+                    return id;
+                }
+            }
+            return NO_CONTENT;
+        }
+
+        public static boolean isTypeError(String value) {
+            MessageId messageId = getEnumFromString(value);
+            return (messageId == NETWORK_ERROR || messageId == PERMISSION_ERROR);
+        }
     }
 
     private ListView getListView() {
@@ -81,9 +96,9 @@ public class CommentsListFragment extends Fragment {
                         // Hide the empty view if there are already some displayed comments
                         hideEmptyView();
                     } else if (!mIsUpdatingComments) {
-                        // Show the "no comments" message if there are no new comments
-                        // (and there isn't an UpdateCommentsTask running)
-                        if (mEmptyView != null && !mEmptyView.getText().equals(getText(R.string.network_error))) {
+                        // Show the "no comments" message, unless an UpdateCommentsTask is running or
+                        // unless the empty view is currently displaying an error message
+                        if (mEmptyView != null && !MessageId.isTypeError(mEmptyViewMessage)) {
                             showEmptyViewWithMessage(MessageId.NO_CONTENT);
                         }
                     }
@@ -147,14 +162,21 @@ public class CommentsListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         setUpListView();
         getCommentAdapter().loadComments();
+
+        Bundle extras = getActivity().getIntent().getExtras();
+        mHasAutoRefreshedComments = extras.getBoolean(CommentsActivity.KEY_AUTO_REFRESHED);
+        mEmptyViewMessage = extras.getString(CommentsActivity.KEY_EMPTY_VIEW_MESSAGE);
+
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             showEmptyViewWithMessage(MessageId.NETWORK_ERROR);
             return;
         }
-        Bundle extras = getActivity().getIntent().getExtras();
-        mHasAutoRefreshedComments = extras.getBoolean(CommentsActivity.KEY_AUTO_REFRESHED);
+
+        // Restore the empty view's message
+        showEmptyViewWithMessage(MessageId.getEnumFromString(mEmptyViewMessage));
 
         if (!mHasAutoRefreshedComments) {
             updateComments(false);
@@ -497,7 +519,6 @@ public class CommentsListFragment extends Fragment {
 
             // result will be null on error OR if no more comments exists
             if (comments == null && !getActivity().isFinishing() && mErrorType != ErrorType.NO_ERROR) {
-                mHasAutoRefreshedComments = false;
                 switch (mErrorType) {
                     case UNAUTHORIZED:
                         ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_unauthorized_comments));
@@ -564,11 +585,16 @@ public class CommentsListFragment extends Fragment {
                 }
 
                 mEmptyView.setText(getText(stringId));
+                mEmptyViewMessage = messageId.name();
                 mEmptyView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.GONE);
             }
         }
+    }
+
+    public String getEmptyViewMessage() {
+        return mEmptyViewMessage;
     }
 
     /**

@@ -35,6 +35,7 @@ public class CommentsActivity extends WPDrawerActivity
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     private static final String KEY_SELECTED_POST_ID = "selected_post_id";
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
+    static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private long mSelectedCommentId;
 
     @Override
@@ -57,6 +58,7 @@ public class CommentsActivity extends WPDrawerActivity
     private void restoreSavedInstance(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             getIntent().putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED));
+            getIntent().putExtra(KEY_EMPTY_VIEW_MESSAGE, savedInstanceState.getString(KEY_EMPTY_VIEW_MESSAGE));
 
             // restore the selected comment
             long commentId = savedInstanceState.getLong(KEY_SELECTED_COMMENT_ID);
@@ -234,6 +236,7 @@ public class CommentsActivity extends WPDrawerActivity
 
         if (hasListFragment()) {
             outState.putBoolean(KEY_AUTO_REFRESHED, getListFragment().mHasAutoRefreshedComments);
+            outState.putString(KEY_EMPTY_VIEW_MESSAGE, getListFragment().getEmptyViewMessage());
         }
         super.onSaveInstanceState(outState);
     }
