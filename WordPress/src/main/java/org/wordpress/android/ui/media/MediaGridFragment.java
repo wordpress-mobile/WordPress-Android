@@ -474,14 +474,12 @@ public class MediaGridFragment extends Fragment
                 break;
         }
 
-        mGridView.setVisibility(View.GONE);
         mEmptyView.setVisibility(View.VISIBLE);
         mEmptyViewTitle.setText(getResources().getString(stringId));
     }
 
     private void hideEmptyView() {
         mEmptyView.setVisibility(View.GONE);
-        mGridView.setVisibility(View.VISIBLE);
     }
 
     public void setFilter(Filter filter) {
@@ -498,6 +496,7 @@ public class MediaGridFragment extends Fragment
             mGridAdapter.swapCursor(cursor);
             hideEmptyView();
         } else {
+            mGridAdapter.changeCursor(null);
             if (filter != Filter.CUSTOM_DATE) {
                 showEmptyViewWithMessage(messageId);
             }
