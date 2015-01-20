@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
@@ -75,8 +76,7 @@ public class StatsViewAllActivity extends ActionBarActivity
         setContentView(R.layout.stats_activity_view_all);
 
         if (savedInstanceState == null) {
-            // AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
-            // TODO: add analytics here
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_ALL_ACCESSED);
         }
 
         ActionBar actionBar = getSupportActionBar();

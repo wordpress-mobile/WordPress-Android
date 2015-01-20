@@ -22,6 +22,7 @@ import com.jjoe64.graphview.GraphViewSeries;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -562,8 +563,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
             mListener.onDateChanged(blogId, getTimeframe(), calculatedDate);
         }
-    }
 
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART);
+    }
 
     private enum OverviewLabel {
         VIEWS(R.string.stats_views),
