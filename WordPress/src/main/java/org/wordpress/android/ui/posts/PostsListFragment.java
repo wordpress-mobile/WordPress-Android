@@ -48,7 +48,11 @@ public class PostsListFragment extends ListFragment
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
     private View mProgressFooterView;
+
+    private View mEmptyView;
+    private View mEmptyViewImage;
     private TextView mEmptyViewTitle;
+
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
@@ -70,6 +74,8 @@ public class PostsListFragment extends ListFragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.post_listview, container, false);
+        mEmptyView = view.findViewById(R.id.empty_view);
+        mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
         return view;
     }
@@ -143,13 +149,16 @@ public class PostsListFragment extends ListFragment
                     if (!isAdded()) {
                         return;
                     }
-                    // set the empty view now that posts have been loaded - this avoids the problem
-                    // of the empty view immediately appearing when set at design time
-                    if (getListView().getEmptyView() == null) {
-                        getListView().setEmptyView(getView().findViewById(R.id.empty_view));
+
+                    // Now that posts have been loaded, show the empty view if there are no results to display
+                    // This avoids the problem of the empty view immediately appearing when set at design time
+                    if (postCount == 0) {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                    } else {
+                        mEmptyView.setVisibility(View.GONE);
                     }
 
-                    if (postCount == 0 && !isRefreshing()) {
+                    if (!isRefreshing()) {
                         // No posts and not currently refreshing. Display the "no posts/pages" message
                         updateEmptyView(MessageType.NO_CONTENT);
                     }
@@ -497,14 +506,13 @@ public class PostsListFragment extends ListFragment
     }
 
     private void updateEmptyView(MessageType messageType) {
-        if (mEmptyViewTitle != null) {
+        if (mEmptyView != null) {
             int stringId = 0;
 
-            View noContentImage = getView().findViewById(R.id.empty_tags_box_top);
             if (messageType == MessageType.NO_CONTENT) {
-                noContentImage.setVisibility(View.VISIBLE);
+                mEmptyViewImage.setVisibility(View.VISIBLE);
             } else {
-                noContentImage.setVisibility(View.GONE);
+                mEmptyViewImage.setVisibility(View.GONE);
             }
 
             switch (messageType) {
