@@ -575,7 +575,7 @@ public class CommentsListFragment extends Fragment {
                         stringId = R.string.comments_empty_list;
                         break;
                     case NETWORK_ERROR:
-                        stringId = R.string.network_error;
+                        stringId = R.string.no_network_message;
                         break;
                     case PERMISSION_ERROR:
                         stringId = R.string.error_refresh_unauthorized_comments;

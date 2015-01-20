@@ -500,7 +500,7 @@ public class MediaGridFragment extends Fragment
                             mEmptyView.setVisibility(View.VISIBLE);
                             return;
                         }
-                        stringId = R.string.network_error;
+                        stringId = R.string.no_network_message;
                         break;
                     case PERMISSION_ERROR:
                         stringId = R.string.media_error_no_permission;

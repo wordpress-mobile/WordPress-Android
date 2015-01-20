@@ -525,7 +525,7 @@ public class PostsListFragment extends ListFragment
                     stringId = mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list;
                     break;
                 case NETWORK_ERROR:
-                    stringId = R.string.network_error;
+                    stringId = R.string.no_network_message;
                     break;
                 case PERMISSION_ERROR:
                     stringId = mIsPage ? R.string.error_refresh_unauthorized_pages :
