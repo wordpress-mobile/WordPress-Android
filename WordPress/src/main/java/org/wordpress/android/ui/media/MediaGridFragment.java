@@ -496,6 +496,11 @@ public class MediaGridFragment extends Fragment
                     stringId = R.string.media_empty_list;
                     break;
                 case NETWORK_ERROR:
+                    // Don't overwrite NO_CONTENT_CUSTOM_DATE message, since refresh is disabled with that filter on
+                    if (mEmptyViewMessage == MessageType.NO_CONTENT_CUSTOM_DATE) {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        return;
+                    }
                     stringId = R.string.network_error;
                     break;
                 case PERMISSION_ERROR:
@@ -534,11 +539,15 @@ public class MediaGridFragment extends Fragment
             // No data to display. Clear the GridView and display a message in the empty view
             mGridAdapter.changeCursor(null);
             if (filter != Filter.CUSTOM_DATE) {
-                if (mEmptyViewMessage.equals(MessageType.LOADING)) {
+                // Overwrite the LOADING and NO_CONTENT_CUSTOM_DATE messages
+                if (mEmptyViewMessage == MessageType.LOADING ||
+                        mEmptyViewMessage == MessageType.NO_CONTENT_CUSTOM_DATE) {
                     showEmptyViewWithMessage(MessageType.NO_CONTENT);
                 } else {
                     showEmptyViewWithMessage(mEmptyViewMessage);
                 }
+            } else {
+                showEmptyViewWithMessage(MessageType.NO_CONTENT_CUSTOM_DATE);
             }
         }
     }
