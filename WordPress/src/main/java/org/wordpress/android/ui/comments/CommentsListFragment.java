@@ -392,6 +392,10 @@ public class CommentsListFragment extends Fragment {
         if (mIsUpdatingComments) {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
             return;
+        } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            updateEmptyView(MessageType.NETWORK_ERROR);
+            setRefreshing(false);
+            return;
         }
 
         updateEmptyView(MessageType.LOADING);

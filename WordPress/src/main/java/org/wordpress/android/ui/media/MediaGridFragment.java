@@ -352,6 +352,12 @@ public class MediaGridFragment extends Fragment
     }
 
     public void refreshMediaFromServer(int offset, final boolean auto) {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            updateEmptyView(MessageType.NETWORK_ERROR);
+            setRefreshing(false);
+            return;
+        }
+
         // do not refresh if custom date filter is shown
         if (WordPress.getCurrentBlog() == null || mFilter == Filter.CUSTOM_DATE) {
             setRefreshing(false);
