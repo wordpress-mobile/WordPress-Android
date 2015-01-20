@@ -27,7 +27,7 @@ public class SignInActivity extends Activity {
         FragmentManager fragmentManager = getFragmentManager();
         mSignInFragment = (SignInFragment) fragmentManager.findFragmentById(R.id.sign_in_fragment);
         actionMode(getIntent().getExtras());
-        ActivityId.trackLastActivity(this, ActivityId.LOGIN);
+        ActivityId.trackLastActivity(ActivityId.LOGIN);
     }
 
     private void actionMode(Bundle extras) {
