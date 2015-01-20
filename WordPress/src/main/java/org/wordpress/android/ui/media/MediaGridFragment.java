@@ -354,11 +354,13 @@ public class MediaGridFragment extends Fragment
     public void refreshMediaFromServer(int offset, final boolean auto) {
         // do not refresh if custom date filter is shown
         if (WordPress.getCurrentBlog() == null || mFilter == Filter.CUSTOM_DATE) {
+            setRefreshing(false);
             return;
         }
 
         // do not refresh if in search
         if (mSearchTerm != null && mSearchTerm.length() > 0) {
+            setRefreshing(false);
             return;
         }
 
