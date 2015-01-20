@@ -131,6 +131,16 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         //AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
+
+        // Do not serialize VolleyError. FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
+        if (mDatamodels != null) {
+            for (int i=0; i < mDatamodels.length; i++) {
+                if (mDatamodels[i] instanceof VolleyError) {
+                    mDatamodels[i] = null;
+                }
+            }
+        }
+
         outState.putSerializable(ARG_REST_RESPONSE, mDatamodels);
         super.onSaveInstanceState(outState);
     }
