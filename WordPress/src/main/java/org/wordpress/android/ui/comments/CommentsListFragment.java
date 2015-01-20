@@ -26,6 +26,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.ui.MessageType;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -58,19 +59,6 @@ public class CommentsListFragment extends Fragment {
     private OnCommentSelectedListener mOnCommentSelectedListener;
 
     private static final int COMMENTS_PER_PAGE = 30;
-
-    private enum MessageType {
-        LOADING, NO_CONTENT, NETWORK_ERROR, PERMISSION_ERROR, GENERIC_ERROR;
-
-        public static MessageType getEnumFromString(String value) {
-            for (MessageType id : values()) {
-                if (id.name().equals(value)) {
-                    return id;
-                }
-            }
-            return NO_CONTENT;
-        }
-    }
 
     private ListView getListView() {
         return mListView;

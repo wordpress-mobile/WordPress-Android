@@ -37,6 +37,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
+import org.wordpress.android.ui.MessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostContentFragment;
@@ -118,19 +119,6 @@ public class MediaGridFragment extends Fragment
                 return ALL;
             else
                 return Filter.values()[filterPos];
-        }
-    }
-
-    private enum MessageType {
-        LOADING, NO_CONTENT, NETWORK_ERROR, PERMISSION_ERROR, GENERIC_ERROR, NO_CONTENT_CUSTOM_DATE;
-
-        public static MessageType getEnumFromString(String value) {
-            for (MessageType id : values()) {
-                if (id.name().equals(value)) {
-                    return id;
-                }
-            }
-            return NO_CONTENT;
         }
     }
 
