@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
@@ -29,6 +28,7 @@ import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.TransitionUtils;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.passcodelock.AppLockManager;
@@ -254,7 +254,7 @@ public class PostsActivity extends WPDrawerActivity
                 ft.hide(mPostList);
                 viewPostFragment = new ViewPostFragment();
                 ft.add(R.id.postDetailFragmentContainer, viewPostFragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                TransitionUtils.setFragmentTransition(ft, viewPostFragment);
                 ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
             } else {

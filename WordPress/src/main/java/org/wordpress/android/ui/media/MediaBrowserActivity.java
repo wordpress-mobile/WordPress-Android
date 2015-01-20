@@ -36,6 +36,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.util.TransitionUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
@@ -299,6 +300,7 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
             setupBaseLayout();
             mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
             ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
+            TransitionUtils.setFragmentTransition(ft, mMediaItemFragment);
             ft.addToBackStack(null);
             ft.commit();
         }
@@ -359,6 +361,7 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
 
                 mMediaEditFragment = MediaEditFragment.newInstance(mediaId);
                 ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
+                TransitionUtils.setFragmentTransition(ft, mMediaEditFragment);
                 ft.addToBackStack(null);
                 ft.commit();
                 if (getDrawerToggle() != null) {

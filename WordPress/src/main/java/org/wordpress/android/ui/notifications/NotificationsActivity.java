@@ -5,11 +5,13 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.transition.AutoTransition;
 import android.view.MenuItem;
 
 import com.cocosw.undobar.UndoBarController;
@@ -35,6 +37,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.TransitionUtils;
 
 import javax.annotation.Nonnull;
 
@@ -246,10 +249,9 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        TransitionUtils.setFragmentTransition(ft, mDetailFragment);
         ft.hide(mNotesListFragment);
         ft.add(R.id.layout_fragment_container, mDetailFragment);
-        //mMenuDrawer.setDrawerIndicatorEnabled(false);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
 

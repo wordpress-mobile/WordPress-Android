@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
-import android.view.MenuItem;
 
 import com.cocosw.undobar.UndoBarController;
 
@@ -24,6 +23,7 @@ import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.TransitionUtils;
 
 import javax.annotation.Nonnull;
 
@@ -155,10 +155,12 @@ public class CommentsActivity extends WPDrawerActivity
         FragmentTransaction ft = fm.beginTransaction();
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         ft.add(R.id.layout_fragment_container, fragment, tagForFragment)
-          .addToBackStack(tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        if (hasDetailFragment())
+          .addToBackStack(tagForFragment);
+        TransitionUtils.setFragmentTransition(ft, fragment);
+        if (hasDetailFragment()) {
             ft.hide(getDetailFragment());
+        }
+
         ft.commit();
     }
 
@@ -179,8 +181,8 @@ public class CommentsActivity extends WPDrawerActivity
         String tagForFragment = getString(R.string.fragment_tag_comment_detail);
         CommentDetailFragment detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(),
                 commentId);
-        ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment).addToBackStack(tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment).addToBackStack(tagForFragment);
+        TransitionUtils.setFragmentTransition(ft, detailFragment);
         if (listFragment != null) {
             ft.hide(listFragment);
         }
