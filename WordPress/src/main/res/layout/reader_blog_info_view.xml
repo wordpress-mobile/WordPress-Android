@@ -16,17 +16,17 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/reader_card_spacing"
         android:layout_marginRight="@dimen/reader_card_spacing"
-        android:paddingBottom="@dimen/margin_large"
+        android:paddingBottom="@dimen/margin_medium"
         android:paddingLeft="@dimen/reader_card_content_padding"
         android:paddingRight="@dimen/reader_card_content_padding"
-        android:paddingTop="@dimen/margin_small"
         android:visibility="invisible"
         tools:visibility="visible">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/image_mshot">
+            android:layout_toLeftOf="@+id/image_mshot"
+            android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_blog_name"
@@ -44,9 +44,8 @@
                 android:id="@+id/text_blog_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/text_blog_name"
-                android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_small"
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:textColor="@color/blue_extra_light"
@@ -58,19 +57,11 @@
                 style="@style/ReaderTextView.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/text_follow_blog"
-                android:layout_marginLeft="@dimen/margin_large"
-                android:layout_toRightOf="@+id/text_follow_blog"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/blue_extra_light"
                 tools:text="followers" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_follow_blog"
-                style="@style/ReaderTextView.Follow"
-                android:layout_below="@+id/text_blog_description" />
-        </RelativeLayout>
+        </LinearLayout>
 
         <!-- actual size is set at runtime based on display -->
         <org.wordpress.android.widgets.WPNetworkImageView

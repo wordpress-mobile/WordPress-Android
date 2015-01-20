@@ -98,17 +98,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
             });
         }
 
-        switch (mPostListType) {
-            case TAG_PREVIEW:
-                setTitle(R.string.reader_title_tag_preview);
-                break;
-            case BLOG_PREVIEW:
-                setTitle(R.string.reader_title_blog_preview);
-                break;
-            default:
-                break;
-        }
-
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
 
@@ -131,6 +120,17 @@ public class ReaderPostListActivity extends WPDrawerActivity
 
                 showListFragmentForTag(tag, mPostListType);
             }
+        }
+
+        switch (mPostListType) {
+            case TAG_PREVIEW:
+                setTitle(R.string.reader_title_tag_preview);
+                break;
+            case BLOG_PREVIEW:
+                setTitle(R.string.reader_title_blog_preview);
+                break;
+            default:
+                break;
         }
     }
 
@@ -249,7 +249,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
         mHasPerformedInitialUpdate = false;
 
         // reader database will have been cleared by the time this is called, but the fragment must
-        // be removed or else they will continue to show the same articles - onResume() will take
+        // be removed or else it will continue to show the same articles - onResume() will take
         // care of re-displaying the correct fragment if necessary
         removeListFragment();
     }
