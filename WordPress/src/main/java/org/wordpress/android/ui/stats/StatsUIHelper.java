@@ -39,10 +39,9 @@ public class StatsUIHelper {
         return (point.y < point.x);
     }
 
-    // Load more bars for 720DP tablets and 600DP tablets in landscape
-    public static boolean shouldLoadMoreBars(Activity act) {
-        return (StatsUtils.getSmallestWidthDP() >= TABLET_720DP
-                || (StatsUtils.getSmallestWidthDP() == TABLET_600DP && isInLandscape(act)));
+    // Load more bars for 720DP tablets
+    public static boolean shouldLoadMoreBars() {
+        return (StatsUtils.getSmallestWidthDP() >= TABLET_720DP);
     }
 
     public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout, int maxNumberOfItemsToshow) {
