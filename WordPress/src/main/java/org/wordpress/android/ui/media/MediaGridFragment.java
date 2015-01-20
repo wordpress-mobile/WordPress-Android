@@ -93,7 +93,7 @@ public class MediaGridFragment extends Fragment
 
     private LinearLayout mEmptyView;
     private TextView mEmptyViewTitle;
-    private MessageType mEmptyViewMessage = MessageType.NO_CONTENT;
+    private MessageType mEmptyViewMessageType = MessageType.NO_CONTENT;
 
     private int mOldMediaSyncOffset = 0;
 
@@ -230,7 +230,7 @@ public class MediaGridFragment extends Fragment
         mGridView.setSelection(savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0));
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETREIEVED_ALL_MEDIA, false);
         mFilter = Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));
-        mEmptyViewMessage = MessageType.getEnumFromString(savedInstanceState.getString(BUNDLE_EMPTY_VIEW_MESSAGE));
+        mEmptyViewMessageType = MessageType.getEnumFromString(savedInstanceState.getString(BUNDLE_EMPTY_VIEW_MESSAGE));
 
         mIsDateFilterSet = savedInstanceState.getBoolean(BUNDLE_DATE_FILTER_SET, false);
         mStartDay = savedInstanceState.getInt(BUNDLE_DATE_FILTER_START_DAY);
@@ -257,7 +257,7 @@ public class MediaGridFragment extends Fragment
         outState.putBoolean(BUNDLE_HAS_RETREIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, isInMultiSelect());
         outState.putInt(BUNDLE_FILTER, mFilter.ordinal());
-        outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessage.name());
+        outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
 
         outState.putBoolean(BUNDLE_DATE_FILTER_SET, mIsDateFilterSet);
         outState.putBoolean(BUNDLE_DATE_FILTER_VISIBLE, (mDatePickerDialog != null && mDatePickerDialog.isShowing()));
@@ -477,46 +477,42 @@ public class MediaGridFragment extends Fragment
     }
 
     private void updateEmptyView(MessageType messageType) {
-        if (mGridAdapter.getDataCount() == 0) {
-            showEmptyViewWithMessage(messageType);
-        } else {
-            hideEmptyView();
-        }
-    }
-
-    private void showEmptyViewWithMessage(MessageType messageType) {
         if (mEmptyView != null) {
-            int stringId = 0;
+            if (mGridAdapter.getDataCount() == 0) {
+                int stringId = 0;
 
-            switch (messageType) {
-                case LOADING:
-                    stringId = R.string.loading_media;
-                    break;
-                case NO_CONTENT:
-                    stringId = R.string.media_empty_list;
-                    break;
-                case NETWORK_ERROR:
-                    // Don't overwrite NO_CONTENT_CUSTOM_DATE message, since refresh is disabled with that filter on
-                    if (mEmptyViewMessage == MessageType.NO_CONTENT_CUSTOM_DATE) {
-                        mEmptyView.setVisibility(View.VISIBLE);
-                        return;
-                    }
-                    stringId = R.string.network_error;
-                    break;
-                case PERMISSION_ERROR:
-                    stringId = R.string.media_error_no_permission;
-                    break;
-                case GENERIC_ERROR:
-                    stringId = R.string.error_refresh_media;
-                    break;
-                case NO_CONTENT_CUSTOM_DATE:
-                    stringId = R.string.media_empty_list_custom_date;
-                    break;
+                switch (messageType) {
+                    case LOADING:
+                        stringId = R.string.loading_media;
+                        break;
+                    case NO_CONTENT:
+                        stringId = R.string.media_empty_list;
+                        break;
+                    case NETWORK_ERROR:
+                        // Don't overwrite NO_CONTENT_CUSTOM_DATE message, since refresh is disabled with that filter on
+                        if (mEmptyViewMessageType == MessageType.NO_CONTENT_CUSTOM_DATE) {
+                            mEmptyView.setVisibility(View.VISIBLE);
+                            return;
+                        }
+                        stringId = R.string.network_error;
+                        break;
+                    case PERMISSION_ERROR:
+                        stringId = R.string.media_error_no_permission;
+                        break;
+                    case GENERIC_ERROR:
+                        stringId = R.string.error_refresh_media;
+                        break;
+                    case NO_CONTENT_CUSTOM_DATE:
+                        stringId = R.string.media_empty_list_custom_date;
+                        break;
+                }
+
+                mEmptyViewTitle.setText(getText(stringId));
+                mEmptyViewMessageType = messageType;
+                mEmptyView.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyView.setVisibility(View.GONE);
             }
-
-            mEmptyViewTitle.setText(getResources().getString(stringId));
-            mEmptyViewMessage = messageType;
-            mEmptyView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -538,17 +534,16 @@ public class MediaGridFragment extends Fragment
         } else {
             // No data to display. Clear the GridView and display a message in the empty view
             mGridAdapter.changeCursor(null);
-            if (filter != Filter.CUSTOM_DATE) {
-                // Overwrite the LOADING and NO_CONTENT_CUSTOM_DATE messages
-                if (mEmptyViewMessage == MessageType.LOADING ||
-                        mEmptyViewMessage == MessageType.NO_CONTENT_CUSTOM_DATE) {
-                    showEmptyViewWithMessage(MessageType.NO_CONTENT);
-                } else {
-                    showEmptyViewWithMessage(mEmptyViewMessage);
-                }
+        }
+        if (filter != Filter.CUSTOM_DATE) {
+            // Overwrite the LOADING and NO_CONTENT_CUSTOM_DATE messages
+            if (mEmptyViewMessageType == MessageType.LOADING || mEmptyViewMessageType == MessageType.NO_CONTENT_CUSTOM_DATE) {
+                updateEmptyView(MessageType.NO_CONTENT);
             } else {
-                showEmptyViewWithMessage(MessageType.NO_CONTENT_CUSTOM_DATE);
+                updateEmptyView(mEmptyViewMessageType);
             }
+        } else {
+            updateEmptyView(MessageType.NO_CONTENT_CUSTOM_DATE);
         }
     }
 
