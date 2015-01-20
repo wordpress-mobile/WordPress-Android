@@ -375,9 +375,11 @@ public class PostsListFragment extends ListFragment
                 if (errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
                     switch (errorType) {
                         case UNAUTHORIZED:
-                            ToastUtils.showToast(getActivity(),
-                                    mIsPage ? R.string.error_refresh_unauthorized_pages : R.string.error_refresh_unauthorized_posts,
-                                    Duration.LONG);
+                            if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
+                                ToastUtils.showToast(getActivity(),
+                                        mIsPage ? R.string.error_refresh_unauthorized_pages :
+                                                R.string.error_refresh_unauthorized_posts, Duration.LONG);
+                            }
                             updateEmptyView(MessageType.PERMISSION_ERROR);
                             return;
                         default:

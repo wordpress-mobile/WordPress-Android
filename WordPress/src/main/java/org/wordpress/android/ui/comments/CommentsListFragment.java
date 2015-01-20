@@ -513,7 +513,9 @@ public class CommentsListFragment extends Fragment {
             if (comments == null && !getActivity().isFinishing() && mErrorType != ErrorType.NO_ERROR) {
                 switch (mErrorType) {
                     case UNAUTHORIZED:
-                        ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_unauthorized_comments));
+                        if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
+                            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_unauthorized_comments));
+                        }
                         updateEmptyView(MessageType.PERMISSION_ERROR);
                         return;
                     default:

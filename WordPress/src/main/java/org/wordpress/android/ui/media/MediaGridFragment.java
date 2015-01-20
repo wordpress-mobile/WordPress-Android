@@ -411,9 +411,15 @@ public class MediaGridFragment extends Fragment
                 public void onFailure(final ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                     if (errorType != ApiHelper.ErrorType.NO_ERROR) {
                         if (getActivity() != null) {
-                            String message = errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP ? getString(
-                                    R.string.media_error_no_permission) : getString(R.string.error_refresh_media);
-                            ToastUtils.showToast(getActivity(), message, Duration.LONG);
+                            if (errorType != ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP) {
+                                ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media),
+                                        Duration.LONG);
+                            } else {
+                                if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
+                                    ToastUtils.showToast(getActivity(), getString(
+                                            R.string.media_error_no_permission));
+                                }
+                            }
                         }
                         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                         mHasRetrievedAllMedia = true;
@@ -468,6 +474,14 @@ public class MediaGridFragment extends Fragment
         }
     }
 
+    private void updateEmptyView(MessageType messageType) {
+        if (mGridAdapter.getDataCount() == 0) {
+            showEmptyViewWithMessage(messageType);
+        } else {
+            hideEmptyView();
+        }
+    }
+
     private void showEmptyViewWithMessage(MessageType messageType) {
         if (mEmptyView != null) {
             int stringId = 0;
@@ -496,14 +510,6 @@ public class MediaGridFragment extends Fragment
             mEmptyViewTitle.setText(getResources().getString(stringId));
             mEmptyViewMessage = messageType;
             mEmptyView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void updateEmptyView(MessageType messageType) {
-        if (mGridAdapter.getDataCount() == 0) {
-            showEmptyViewWithMessage(messageType);
-        } else {
-            hideEmptyView();
         }
     }
 
