@@ -5,14 +5,11 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.transition.AutoTransition;
-import android.view.MenuItem;
 
 import com.cocosw.undobar.UndoBarController;
 import com.simperium.client.Bucket;
