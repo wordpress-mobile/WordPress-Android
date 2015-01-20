@@ -82,7 +82,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (mDatamodels[1] != null) { // check if comment-followers is already here
+        if (!isErrorResponse(1)) { // check if comment-followers is already here
             mTotalsLabel.setVisibility(View.VISIBLE);
             int totalNumberOfFollowers = ((CommentFollowersModel) mDatamodels[1]).getTotal();
             mTotalsLabel.setText(
