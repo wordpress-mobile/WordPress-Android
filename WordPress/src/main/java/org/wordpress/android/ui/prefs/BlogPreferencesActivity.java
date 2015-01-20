@@ -218,18 +218,6 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         scaledImage.setChecked(false);
         scaledImage.setVisibility(View.GONE);
 
-        // sets up a state listener for the scaled image checkbox
-   /*     ((CheckBox) findViewById(R.id.scaledImage)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CheckBox scaledImage = (CheckBox) findViewById(R.id.scaledImage);
-                showScaledSetting(scaledImage.isChecked());
-                if (scaledImage.isChecked()) {
-                    CheckBox fullSize = (CheckBox) findViewById(R.id.fullSizeImage);
-                    fullSize.setChecked(false);
-                }
-            }
-        });*/
         // sets up a state listener for the fullsize checkbox
         CheckBox fullSizeImageCheckBox = (CheckBox) findViewById(R.id.fullSizeImage);
         fullSizeImageCheckBox.setOnClickListener(new View.OnClickListener() {

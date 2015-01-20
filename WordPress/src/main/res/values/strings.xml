@@ -598,6 +598,7 @@
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
+    <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
@@ -815,6 +816,9 @@
     <string name="help_center">Help center</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="faq_button">FAQ</string>
+
+    <!-- Application logs view -->
+    <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
 
     <!-- Simperium -->
     <string name="simperium_connection_error">Couldn\'t sign in to get notifications.</string>
