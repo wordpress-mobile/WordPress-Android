@@ -246,7 +246,7 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             return new VisitModel[0];
         }
 
-        int numPoints = Math.min(StatsUIHelper.getNumOfBarsToShow(this), dayViews.length);
+        int numPoints = Math.min(StatsUIHelper.getNumOfBarsToShow(), dayViews.length);
         int currentPointIndex = numPoints - 1;
         VisitModel[] visitModels = new VisitModel[numPoints];
 
