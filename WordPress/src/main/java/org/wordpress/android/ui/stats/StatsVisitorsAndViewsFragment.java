@@ -22,6 +22,7 @@ import com.jjoe64.graphview.GraphViewSeries;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -166,6 +167,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     public void onSaveInstanceState(Bundle outState) {
         //AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > saving instance state");
 
+        // FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
+        if (mVisitsData != null && mVisitsData instanceof VolleyError) {
+            VolleyError currentVolleyError = (VolleyError) mVisitsData;
+            mVisitsData = StatsUtils.rewriteVolleyError(currentVolleyError, getString(R.string.error_refresh_stats));
+        }
         outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
         outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
@@ -214,7 +220,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
-        if (mVisitsData instanceof VolleyError) {
+        if (mVisitsData instanceof VolleyError || mVisitsData instanceof StatsError) {
             setupNoResultsUI(false);
             return;
         }
