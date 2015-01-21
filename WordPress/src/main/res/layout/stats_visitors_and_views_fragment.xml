@@ -35,7 +35,8 @@
         android:textAppearance="?android:attr/textAppearance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_small"
         android:textColor="#587295"
         android:text="Date"/>
 </LinearLayout>
