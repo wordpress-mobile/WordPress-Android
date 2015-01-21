@@ -275,10 +275,23 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setGestureListener(this);
 
-        int barSelectedOnGraph = mSelectedBarGraphBarIndex != -1 ? mSelectedBarGraphBarIndex : dataToShowOnGraph.length - 1;
-        mGraphView.highlightBar(barSelectedOnGraph);
+        int barSelectedOnGraph;
+        if (mSelectedBarGraphBarIndex == -1) {
+            // No previous bar was highlighted, highlight the most recent one
+            barSelectedOnGraph = dataToShowOnGraph.length - 1;
+        } else if (mSelectedBarGraphBarIndex < dataToShowOnGraph.length) {
+            barSelectedOnGraph = mSelectedBarGraphBarIndex;
+        } else {
+            // A previous bar was highlighted, but it's out of the screen now. Device Rotated.
+            // This cannot happen now, since we've fixed number of bars on a device. # of bars doesn't change with device rotation.
+            barSelectedOnGraph = dataToShowOnGraph.length - 1;
+            mSelectedBarGraphBarIndex = barSelectedOnGraph;
+            // TODO: make sure to handle this case in the modules below, otherwise the graph is updated but not other fragments
+            // that are still pointing to the old selected date.
+        }
 
         updateUIBelowTheGraph(barSelectedOnGraph);
+        mGraphView.highlightBar(barSelectedOnGraph);
     }
 
     //update the area right below the graph
@@ -294,6 +307,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph((VisitsModel)mVisitsData);
+
+        // This check should never be true, since we put a check on the index in the calling function updateUI()
+        if (dataToShowOnGraph.length <= itemPosition) {
+            // Make sure we're not highlighting
+            itemPosition = dataToShowOnGraph.length -1;
+        }
 
         String date =  mStatsDate[itemPosition];
         if (date == null) {
@@ -427,7 +446,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return 0;
         }
 
-        if(StatsUIHelper.shouldLoadMoreBars(getActivity())) {
+        if(StatsUIHelper.shouldLoadMoreBars()) {
             return 10;
         } else {
             return 7;
