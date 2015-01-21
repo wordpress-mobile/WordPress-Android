@@ -119,7 +119,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         ActionBar actionBar = getSupportActionBar();
         createMenuDrawer(R.layout.stats_activity);
         if (mNoMenuDrawer) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            getDrawerToggle().setDrawerIndicatorEnabled(false);
             // Override the default NavigationOnClickListener
             getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
