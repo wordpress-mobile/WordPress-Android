@@ -23,6 +23,7 @@ import com.jjoe64.graphview.GraphViewSeries;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -92,7 +93,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         for (int i = 0; i < overviewItems.length; i++) {
             CheckedTextView rb = (CheckedTextView) inflater.inflate(R.layout.stats_visitors_and_views_button, container, false);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
-                    RadioGroup.LayoutParams.WRAP_CONTENT);
+                    RadioGroup.LayoutParams.MATCH_PARENT);
             params.weight = 1;
             rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
             params.setMargins(0, 0, 0, 0);
@@ -167,6 +168,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     public void onSaveInstanceState(Bundle outState) {
         //AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > saving instance state");
 
+        // FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
+        if (mVisitsData != null && mVisitsData instanceof VolleyError) {
+            VolleyError currentVolleyError = (VolleyError) mVisitsData;
+            mVisitsData = StatsUtils.rewriteVolleyError(currentVolleyError, getString(R.string.error_refresh_stats));
+        }
         outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
         outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
@@ -197,7 +203,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     private VisitModel[] getDataToShowOnGraph(VisitsModel visitsData) {
         List<VisitModel> visitModels = visitsData.getVisits();
-        int numPoints = Math.min(StatsUIHelper.getNumOfBarsToShow(getActivity()), visitModels.size());
+        int numPoints = Math.min(StatsUIHelper.getNumOfBarsToShow(), visitModels.size());
         int currentPointIndex = numPoints - 1;
         VisitModel[] visitModelsToShow = new VisitModel[numPoints];
 
@@ -219,7 +225,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
-        if (mVisitsData instanceof VolleyError) {
+        if (mVisitsData instanceof VolleyError || mVisitsData instanceof StatsError) {
             setupNoResultsUI(false);
             return;
         }
@@ -280,10 +286,23 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setGestureListener(this);
 
-        int barSelectedOnGraph = mSelectedBarGraphBarIndex != -1 ? mSelectedBarGraphBarIndex : dataToShowOnGraph.length - 1;
-        mGraphView.highlightBar(barSelectedOnGraph);
+        int barSelectedOnGraph;
+        if (mSelectedBarGraphBarIndex == -1) {
+            // No previous bar was highlighted, highlight the most recent one
+            barSelectedOnGraph = dataToShowOnGraph.length - 1;
+        } else if (mSelectedBarGraphBarIndex < dataToShowOnGraph.length) {
+            barSelectedOnGraph = mSelectedBarGraphBarIndex;
+        } else {
+            // A previous bar was highlighted, but it's out of the screen now. Device Rotated.
+            // This cannot happen now, since we've fixed number of bars on a device. # of bars doesn't change with device rotation.
+            barSelectedOnGraph = dataToShowOnGraph.length - 1;
+            mSelectedBarGraphBarIndex = barSelectedOnGraph;
+            // TODO: make sure to handle this case in the modules below, otherwise the graph is updated but not other fragments
+            // that are still pointing to the old selected date.
+        }
 
         updateUIBelowTheGraph(barSelectedOnGraph);
+        mGraphView.highlightBar(barSelectedOnGraph);
     }
 
     //update the area right below the graph
@@ -303,6 +322,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph((VisitsModel)mVisitsData);
+
+        // This check should never be true, since we put a check on the index in the calling function updateUI()
+        if (dataToShowOnGraph.length <= itemPosition) {
+            // Make sure we're not highlighting
+            itemPosition = dataToShowOnGraph.length -1;
+        }
 
         String date =  mStatsDate[itemPosition];
         if (date == null) {

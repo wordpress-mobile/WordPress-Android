@@ -117,13 +117,16 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
         mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
         ActionBar actionBar = getSupportActionBar();
+        createMenuDrawer(R.layout.stats_activity);
         if (mNoMenuDrawer) {
-            setContentView(R.layout.stats_activity);
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
-        } else {
-            createMenuDrawer(R.layout.stats_activity);
+            getDrawerToggle().setDrawerIndicatorEnabled(false);
+            // Override the default NavigationOnClickListener
+            getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
         }
 
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
@@ -183,7 +186,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
 
         if (!mNoMenuDrawer && actionBar != null && mSpinner == null) {
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            final Toolbar toolbar = getToolbar();
             if (toolbar != null) {
                 View view = View.inflate(this, R.layout.reader_spinner, toolbar);
                 mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
@@ -572,9 +575,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser,
                     statsAuthenticatedPassword);
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
-            return true;
-        } else if (mNoMenuDrawer && item.getItemId() == android.R.id.home) {
-            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
