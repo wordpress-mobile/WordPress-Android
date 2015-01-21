@@ -23,6 +23,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -132,11 +133,14 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     public void onSaveInstanceState(Bundle outState) {
         //AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
 
-        // Do not serialize VolleyError. FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
+        // Do not serialize VolleyError, but rewrite in a simple stats Exception.
+        // VolleyErrors should be serializable, but for some reason they are not.
+        // FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
         if (mDatamodels != null) {
             for (int i=0; i < mDatamodels.length; i++) {
-                if (mDatamodels[i] instanceof VolleyError) {
-                    mDatamodels[i] = null;
+                if (mDatamodels[i] != null && mDatamodels[i] instanceof VolleyError) {
+                    VolleyError currentVolleyError = (VolleyError) mDatamodels[i];
+                    mDatamodels[i] = StatsUtils.rewriteVolleyError(currentVolleyError, getString(R.string.error_refresh_stats));
                 }
             }
         }
@@ -268,7 +272,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     protected boolean isErrorResponse(int index) {
         return mDatamodels != null && mDatamodels[index] != null
-                && mDatamodels[index] instanceof VolleyError;
+                && (mDatamodels[index] instanceof VolleyError || mDatamodels[index] instanceof StatsError);
     }
 
     protected boolean isSingleView() {
