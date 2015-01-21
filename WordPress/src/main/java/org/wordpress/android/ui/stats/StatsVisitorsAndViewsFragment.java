@@ -91,7 +91,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         for (int i = 0; i < overviewItems.length; i++) {
             CheckedTextView rb = (CheckedTextView) inflater.inflate(R.layout.stats_visitors_and_views_button, container, false);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
-                    RadioGroup.LayoutParams.WRAP_CONTENT);
+                    RadioGroup.LayoutParams.MATCH_PARENT);
             params.weight = 1;
             rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
             params.setMargins(0, 0, 0, 0);
