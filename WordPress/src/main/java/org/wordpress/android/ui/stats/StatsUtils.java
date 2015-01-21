@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.android.volley.VolleyError;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.AuthorsModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
@@ -335,6 +338,24 @@ public class StatsUtils {
                 break;
         }
         return model;
+    }
+
+    /*
+     * This function rewrites a VolleyError into a simple Stats Error by getting the error message.
+     * This is a FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228 where
+     * VolleyErrors cannot be serializable.
+     */
+    public static StatsError rewriteVolleyError(VolleyError volleyError, String defaultErrorString) {
+        if (volleyError != null && volleyError.getMessage() != null) {
+            return new StatsError(volleyError.getMessage());
+        }
+
+        if (defaultErrorString != null) {
+            return new StatsError(defaultErrorString);
+        }
+
+        // Error string should be localized here, but don't want to pass a context
+        return new StatsError("Stats couldn't be refreshed at this time");
     }
 
 }
