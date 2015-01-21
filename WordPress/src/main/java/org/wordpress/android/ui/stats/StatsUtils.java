@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.android.volley.VolleyError;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
@@ -13,6 +15,7 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.AuthorsModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
@@ -38,13 +41,12 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class StatsUtils {
-
     @SuppressLint("SimpleDateFormat")
     public static long toMs(String date, String pattern) {
         if (date == null) {
             return -1;
         }
-        
+
         if (pattern == null) {
             AppLog.w(T.UTILS, "Trying to parse with a null pattern");
             return -1;
@@ -370,5 +372,23 @@ public class StatsUtils {
             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
             WPWebViewActivity.openURL(ctx, url);
         }
+    }
+
+    /*
+     * This function rewrites a VolleyError into a simple Stats Error by getting the error message.
+     * This is a FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228 where
+     * VolleyErrors cannot be serializable.
+     */
+    public static StatsError rewriteVolleyError(VolleyError volleyError, String defaultErrorString) {
+        if (volleyError != null && volleyError.getMessage() != null) {
+            return new StatsError(volleyError.getMessage());
+        }
+
+        if (defaultErrorString != null) {
+            return new StatsError(defaultErrorString);
+        }
+
+        // Error string should be localized here, but don't want to pass a context
+        return new StatsError("Stats couldn't be refreshed at this time");
     }
 }
