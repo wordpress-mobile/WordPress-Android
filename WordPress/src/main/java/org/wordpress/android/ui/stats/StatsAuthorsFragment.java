@@ -247,6 +247,6 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
     @Override
     public String getTitle() {
-        return getString(R.string.stats_view_top_authors);
+        return getString(R.string.stats_view_authors);
     }
 }
