@@ -17,13 +17,6 @@
         android:gravity="center_vertical"
         android:layout_gravity="center_vertical">
 
-        <org.wordpress.android.widgets.WPNetworkImageView
-            android:id="@+id/stats_list_cell_image"
-            android:layout_width="@dimen/avatar_sz_small"
-            android:layout_height="@dimen/avatar_sz_small"
-            android:layout_marginRight="@dimen/margin_large"
-            android:visibility="gone" />
-
         <ImageView
             android:id="@+id/stats_list_cell_chevron"
             android:layout_width="12dp"
@@ -31,6 +24,13 @@
             android:layout_marginRight="@dimen/margin_large"
             android:visibility="gone"
             android:src="@drawable/stats_chevron_right" />
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/stats_list_cell_image"
+            android:layout_width="@dimen/avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
+            android:layout_marginRight="@dimen/margin_large"
+            android:visibility="gone" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_list_cell_entry"

@@ -112,6 +112,10 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
+            // The link icon
+            holder.chevronImageView.setVisibility(View.VISIBLE);
+            holder.chevronImageView.setImageDrawable(getResources().getDrawable(R.drawable.stats_link));
+
             // name, url
             holder.setEntryTextOrLink(children.getUrl(), children.getTitle());
 
@@ -184,8 +188,13 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(icon, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.STATS_SITE_AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
-            // expand/collapse chevron
-            holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
+            holder.chevronImageView.setVisibility(View.VISIBLE);
+            if (children == 0) {
+                holder.chevronImageView.setImageDrawable(getResources().getDrawable(R.drawable.stats_link));
+            } else {
+                holder.chevronImageView.setImageDrawable(getResources().getDrawable(R.drawable.stats_chevron_right));
+            }
+
             return convertView;
         }
 
