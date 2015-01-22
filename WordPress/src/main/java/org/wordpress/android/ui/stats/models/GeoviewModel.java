@@ -9,13 +9,15 @@ public class GeoviewModel implements Serializable {
     private final String mCountryShortName;
     private final String mCountryFullName;
     private int mViews;
-    private String mImageUrl;
+    private String mFlagIconURL;
+    private String mFlatFlagIconURL;
 
-    public GeoviewModel(String countryShortName, String countryFullName, int views, String imageUrl) {
+    public GeoviewModel(String countryShortName, String countryFullName, int views, String flagIcon, String flatFlagIcon) {
         this.mCountryShortName = countryShortName;
         this.mCountryFullName = countryFullName;
         this.mViews = views;
-        this.mImageUrl = imageUrl;
+        this.mFlagIconURL = flagIcon;
+        this.mFlatFlagIconURL = flatFlagIcon;
     }
 
     public String getCountryFullName() {
@@ -34,11 +36,12 @@ public class GeoviewModel implements Serializable {
         this.mViews = views;
     }
 
-    public String getImageUrl() {
-        return mImageUrl;
+    public String getFlagIconURL() {
+        return mFlagIconURL;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.mImageUrl = imageUrl;
+    public String getFlatFlagIconURL() {
+        return mFlatFlagIconURL;
     }
+
 }

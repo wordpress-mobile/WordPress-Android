@@ -91,15 +91,13 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
             // fill data
             String entry = currentRowData.getCountryFullName();
-            String imageUrl = currentRowData.getImageUrl();
+            String imageUrl = currentRowData.getFlatFlagIconURL();
             int total = currentRowData.getViews();
 
             holder.setEntryText(entry);
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // image (country flag)
-            //holder.showNetworkImage(imageUrl);
-
             holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(imageUrl, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.SITE_AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
