@@ -44,13 +44,15 @@ public class GeoviewsModel implements Serializable {
                 String currentCountryCode = currentCountryJSON.getString("country_code");
                 int currentCountryViews = currentCountryJSON.getInt("views");
                 String flagIcon = null;
+                String flatFlagIcon = null;
                 String countryFullName = null;
                 JSONObject currentCountryDetails = countryInfoJSON.optJSONObject(currentCountryCode);
                 if (currentCountryDetails != null) {
                     flagIcon = currentCountryDetails.optString("flag_icon");
+                    flatFlagIcon = currentCountryDetails.optString("flat_flag_icon");
                     countryFullName = currentCountryDetails.optString("country_full");
                 }
-                GeoviewModel m = new GeoviewModel(currentCountryCode, countryFullName, currentCountryViews, flagIcon);
+                GeoviewModel m = new GeoviewModel(currentCountryCode, countryFullName, currentCountryViews, flagIcon, flatFlagIcon);
                 countries.add(m);
 
             }
