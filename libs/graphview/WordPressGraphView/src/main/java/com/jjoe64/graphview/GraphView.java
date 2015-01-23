@@ -293,7 +293,7 @@ abstract public class GraphView extends LinearLayout {
 			 // measure bottom text
 			if (labelTextHeight == null || verLabelTextWidth == null) {
 				paint.setTextSize(getGraphViewStyle().getTextSize());
-				double testY = getVerticalLabelMaxTextSample();
+				double testY = ((getMaxY()-getMinY())*0.783)+getMinY();
 				String testLabel = formatLabel(testY, false);
 				paint.getTextBounds(testLabel, 0, testLabel.length(), textBounds);
 				labelTextHeight = (textBounds.height());
@@ -572,16 +572,6 @@ abstract public class GraphView extends LinearLayout {
 	public float getLegendWidth() {
 		return legendWidth;
 	}
-
-    /**
-     * returns a value that has the same length of the maximal Y value representable
-     * in the Y axis.
-     *
-     * warning: only override this, if you really know want you're doing!
-     */
-    protected double getVerticalLabelMaxTextSample() {
-        return ((getMaxY()-getMinY())*0.783)+getMinY();
-    }
 
 	/**
 	 * returns the maximal X value of the current viewport (if viewport is set)

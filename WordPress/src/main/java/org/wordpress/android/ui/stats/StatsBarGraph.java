@@ -126,15 +126,6 @@ class StatsBarGraph extends GraphView {
     }
 
     @Override
-    protected double getVerticalLabelMaxTextSample() {
-        // We know that the maximum value on the Y axis is 999, because we've set a CustomLabelFormatter.
-        // Don't taking in consideration the actual values of series will fix the issue where the graph
-        // vertical label size changes dimensions when the underlying data changes.
-        // EX: Switch from days to Weeks or Months.
-        return 100d;
-    }
-
-    @Override
     protected void onBeforeDrawSeries() {
         mSeriesRectsDrawedOnScreen.clear();
     }
@@ -172,7 +163,7 @@ class StatsBarGraph extends GraphView {
 
             // Draw the orange selection behind the selected bar
             if (mBarPositionToHighlight == i) {
-                paint.setColor(getResources().getColor(R.color.stats_views_hover_color));
+                paint.setColor(getResources().getColor(R.color.calypso_orange_dark));
                 paint.setAlpha(50);
                 canvas.drawRect(left, 10f, right, bottom, paint);
             }
@@ -191,7 +182,7 @@ class StatsBarGraph extends GraphView {
                 // draw a real bar
                 paint.setAlpha(255);
                 if (mBarPositionToHighlight == i) {
-                    paint.setColor(getResources().getColor(R.color.stats_views_hover_color));
+                    paint.setColor(getResources().getColor(R.color.calypso_orange_dark));
                 } else {
                     paint.setColor(style.color);
                 }
