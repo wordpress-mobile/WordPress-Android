@@ -1,11 +1,14 @@
 package org.wordpress.android.ui.posts;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -13,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +28,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.MessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -53,9 +58,15 @@ public class PostsListFragment extends ListFragment
     private View mEmptyView;
     private View mEmptyViewImage;
     private TextView mEmptyViewTitle;
+    private MessageType mEmptyViewMessage = MessageType.NO_CONTENT;
+    private boolean mAnimateFromManualRefresh;
+    private boolean mAnimateFromAutoRefresh;
+    private EmptyViewAnimationHandler mEmptyViewAnimationHandler;
 
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
+
+    private static final int ANIMATION_DURATION = 150;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +103,7 @@ public class PostsListFragment extends ListFragment
                             updateEmptyView(MessageType.NETWORK_ERROR);
                             return;
                         }
+                        mAnimateFromManualRefresh = true;
                         refreshPosts((PostsActivity) getActivity());
                     }
                 });
@@ -157,6 +169,9 @@ public class PostsListFragment extends ListFragment
 
                     if (!isRefreshing()) {
                         // No posts and not currently refreshing. Display the "no posts/pages" message
+                        if (postCount == 0 && !mCanLoadMorePosts) {
+                            mAnimateFromAutoRefresh = true;
+                        }
                         updateEmptyView(MessageType.NO_CONTENT);
                     }
 
@@ -234,6 +249,8 @@ public class PostsListFragment extends ListFragment
                 newPost();
             }
         });
+
+        mEmptyViewAnimationHandler = new EmptyViewAnimationHandler(true);
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             ((PostsActivity) getActivity()).requestPosts();
@@ -504,14 +521,42 @@ public class PostsListFragment extends ListFragment
         mSwipeToRefreshHelper.setRefreshing(false);
     }
 
-    private void updateEmptyView(MessageType messageType) {
+    private void updateEmptyView(final MessageType messageType) {
+        // Handle animation display
+        if (mAnimateFromManualRefresh) {
+            // Swiped to refresh. Display the NO_CONTENT > LOADING or LOADING > NO_CONTENT sequence
+            mAnimateFromAutoRefresh = false;
+            if (mPostsListAdapter == null || mPostsListAdapter.getCount() == 0) {
+                if (!MessageType.isError(mEmptyViewMessage) && !MessageType.isError(messageType)) {
+                    if (mEmptyViewMessage == MessageType.NO_CONTENT && messageType == MessageType.LOADING) {
+                        mEmptyViewAnimationHandler.showLoadingSequence();
+                    } else {
+                        mEmptyViewAnimationHandler.showNoContentSequence();
+                    }
+                    return;
+                }
+            }
+            mAnimateFromManualRefresh = false;
+        } else if (mAnimateFromAutoRefresh) {
+            // If not called by swiping, only show the LOADING > NO_CONTENT sequence
+            if (mEmptyViewMessage == MessageType.LOADING && messageType == MessageType.NO_CONTENT) {
+                mEmptyViewAnimationHandler.showNoContentSequence();
+                return;
+            }
+            mAnimateFromAutoRefresh = false;
+        }
+
         if (mEmptyView != null) {
             int stringId = 0;
 
-            if (messageType == MessageType.NO_CONTENT) {
-                mEmptyViewImage.setVisibility(View.VISIBLE);
-            } else {
-                mEmptyViewImage.setVisibility(View.GONE);
+            // Don't modify the empty view image if the NO_CONTENT > LOADING sequence has already run -
+            // let the EmptyViewAnimationHandler take care of it
+            if (!mEmptyViewAnimationHandler.isBetweenSequences()) {
+                if (messageType == MessageType.NO_CONTENT) {
+                    mEmptyViewImage.setVisibility(View.VISIBLE);
+                } else {
+                    mEmptyViewImage.setVisibility(View.GONE);
+                }
             }
 
             switch (messageType) {
@@ -534,6 +579,7 @@ public class PostsListFragment extends ListFragment
             }
 
             mEmptyViewTitle.setText(getText(stringId));
+            mEmptyViewMessage = messageType;
         }
     }
 
@@ -547,5 +593,149 @@ public class PostsListFragment extends ListFragment
 
     public interface OnSinglePostLoadedListener {
         public void onSinglePostLoaded();
+    }
+
+    private class EmptyViewAnimationHandler implements ObjectAnimator.AnimatorListener {
+        private boolean mIsInLoadingPhase;
+        private int mAnimationStage;
+
+        private ObjectAnimator mObjectAnimator;
+
+        private final int mSlideDistance;
+
+        public EmptyViewAnimationHandler(boolean isLoading) {
+            mObjectAnimator = new ObjectAnimator();
+
+            setInLoadingPhase(isLoading);
+
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mEmptyViewImage.getLayoutParams();
+            mSlideDistance = -((layoutParams.height + layoutParams.bottomMargin + layoutParams.topMargin) / 2);
+        }
+
+        public void setInLoadingPhase(boolean isLoading) {
+            mIsInLoadingPhase = isLoading;
+        }
+
+        public boolean isAnimating() {
+            return (0 < mAnimationStage && mAnimationStage < 5);
+        }
+
+        public boolean isBetweenSequences() {
+            return (mIsInLoadingPhase && mAnimationStage > 4);
+        }
+
+        public void startAnimation(Object target, String propertyName, float fromValue, float toValue) {
+            mObjectAnimator.removeAllListeners();
+
+            mObjectAnimator = ObjectAnimator.ofFloat(target, propertyName, fromValue, toValue);
+            mObjectAnimator.setDuration(ANIMATION_DURATION);
+            mObjectAnimator.addListener(this);
+
+            mObjectAnimator.start();
+        }
+
+        public void showLoadingSequence() {
+            // Display the NO_CONTENT > LOADING sequence
+            setInLoadingPhase(true);
+            mAnimationStage = 1;
+            startAnimation(mEmptyViewImage, "alpha", 1f, 0f);
+        }
+
+        public void showNoContentSequence() {
+            // Display the LOADING > NO_CONTENT sequence
+            mAnimateFromManualRefresh = false;
+            if (isAnimating()) {
+                // Delay starting the LOADING > NO_CONTENT sequence if NO_CONTENT > LOADING hasn't finished yet
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setInLoadingPhase(false);
+                        mAnimationStage = 1;
+                        startAnimation(mEmptyViewTitle, "alpha", 1f, 0.1f);
+                    }
+                }, 3 * ANIMATION_DURATION);
+            } else {
+                setInLoadingPhase(false);
+                mAnimationStage = 1;
+                startAnimation(mEmptyViewTitle, "alpha", 1f, 0.1f);
+            }
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            if (!isAdded()) {
+                return;
+            }
+
+            mAnimationStage++;
+
+            if (mIsInLoadingPhase) {
+                switch (mAnimationStage) {
+                    // A step in the NO_CONTENT > LOADING sequence completed. Set up the next animation in the chain
+                    case 2:
+                        startAnimation(mEmptyViewTitle, "translationY", 0, mSlideDistance);
+                        break;
+                    case 3:
+                        startAnimation(mEmptyViewTitle, "alpha", 1f, 0.1f);
+                        break;
+                    case 4:
+                        mEmptyViewTitle.setText(mIsPage ? R.string.loading_pages : R.string.loading_posts);
+                        mEmptyViewMessage = MessageType.LOADING;
+
+                        startAnimation(mEmptyViewTitle, "alpha", 0.1f, 1f);
+                        break;
+                    default:
+                        return;
+                }
+            } else {
+                switch (mAnimationStage) {
+                    // A step in the LOADING > NO_CONTENT sequence completed. Set up the next animation in the chain
+                    case 2:
+
+                        mEmptyViewTitle.setText(mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list);
+                        mEmptyViewMessage = MessageType.NO_CONTENT;
+
+                        startAnimation(mEmptyViewTitle, "alpha", 0.1f, 1f);
+                        break;
+                    case 3:
+                        startAnimation(mEmptyViewTitle, "translationY", mSlideDistance, 0);
+
+                        if (mAnimateFromAutoRefresh) {
+                            // Force mEmptyViewImage to take up space in the layout, so that mEmptyViewTitle lands
+                            // where it should at the end of its slide animation
+                            mEmptyViewImage.setVisibility(View.INVISIBLE);
+                        }
+                        break;
+                    case 4:
+                        if (mAnimateFromAutoRefresh) {
+                            // Uses AlphaAnimation instead of an ObjectAnimator to address a display glitch
+                            // in the auto-refresh case
+                            mAnimateFromAutoRefresh = false;
+                            AniUtils.startAnimation(mEmptyViewImage, android.R.anim.fade_in, ANIMATION_DURATION);
+                            mEmptyViewImage.setVisibility(View.VISIBLE);
+                        } else {
+                            startAnimation(mEmptyViewImage, "alpha", 0f, 1f);
+                        }
+                        break;
+                    default:
+                        return;
+                }
+            }
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            mAnimationStage = 0;
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
+        }
     }
 }
