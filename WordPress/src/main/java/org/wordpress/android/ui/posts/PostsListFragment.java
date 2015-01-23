@@ -61,6 +61,7 @@ public class PostsListFragment extends ListFragment
     private MessageType mEmptyViewMessage = MessageType.NO_CONTENT;
     private boolean mAnimateFromManualRefresh;
     private boolean mAnimateFromAutoRefresh;
+    private boolean mOverrideSwipeRefreshLayout;
     private EmptyViewAnimationHandler mEmptyViewAnimationHandler;
 
     private boolean mCanLoadMorePosts = true;
@@ -167,7 +168,7 @@ public class PostsListFragment extends ListFragment
                         mEmptyView.setVisibility(View.GONE);
                     }
 
-                    if (!isRefreshing()) {
+                    if (!isRefreshing() || mOverrideSwipeRefreshLayout) {
                         // No posts and not currently refreshing. Display the "no posts/pages" message
                         if (postCount == 0 && !mCanLoadMorePosts) {
                             mAnimateFromAutoRefresh = true;
@@ -361,7 +362,14 @@ public class PostsListFragment extends ListFragment
                 mIsFetchingPosts = false;
                 if (!isAdded())
                     return;
-                mSwipeToRefreshHelper.setRefreshing(false);
+
+                if (mEmptyViewAnimationHandler.isAnimating() || mEmptyViewAnimationHandler.isBetweenSequences()) {
+                    // Keep the SwipeRefreshLayout circle visible until the EmptyViewAnimationHandler dismisses it
+                    mOverrideSwipeRefreshLayout = true;
+                } else {
+                    mSwipeToRefreshHelper.setRefreshing(false);
+                }
+
                 if (mProgressFooterView != null) {
                     mProgressFooterView.setVisibility(View.GONE);
                 }
@@ -691,6 +699,8 @@ public class PostsListFragment extends ListFragment
                 switch (mAnimationStage) {
                     // A step in the LOADING > NO_CONTENT sequence completed. Set up the next animation in the chain
                     case 2:
+                        mSwipeToRefreshHelper.setRefreshing(false);
+                        mOverrideSwipeRefreshLayout = false;
 
                         mEmptyViewTitle.setText(mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list);
                         mEmptyViewMessage = MessageType.NO_CONTENT;
