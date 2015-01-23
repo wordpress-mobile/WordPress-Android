@@ -220,7 +220,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
             holder.imgReply.setOnClickListener(replyClickListener);
         }
 
-        showLikeStatus(holder, comment, position);
+        showLikeStatus(holder, position);
 
         // if we're nearing the end of the comments and we know more exist on the server,
         // fire request to load more
@@ -242,9 +242,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
         return (position >= 0 && position < mComments.size());
     }
 
-    private void showLikeStatus(final CommentHolder holder,
-                                final ReaderComment comment,
-                                final int position) {
+    private void showLikeStatus(final CommentHolder holder, final int position) {
+        if (!isValidPosition(position)) {
+            return;
+        }
+
+        final ReaderComment comment = mComments.get(position);
         if (mPost.isLikesEnabled) {
             holder.layoutLikes.setVisibility(View.VISIBLE);
             holder.imgLike.setSelected(comment.isLikedByCurrentUser);
@@ -310,7 +313,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
 
         ReaderComment updatedComment = ReaderCommentTable.getComment(comment.blogId, comment.postId, comment.commentId);
         mComments.set(position, updatedComment);
-        showLikeStatus(holder, updatedComment, position);
+        showLikeStatus(holder, position);
     }
 
     /*
