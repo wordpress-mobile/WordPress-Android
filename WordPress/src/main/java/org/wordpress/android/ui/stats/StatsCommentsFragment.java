@@ -77,7 +77,11 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (isErrorResponse()) {
+        // This module is a kind of exception to the normal way we build page interface.
+        // In this module only the first rest endpoint StatsService.StatsEndpointsEnum.COMMENTS
+        // is used to populate 99% of the UI even if there is a tab on the top.
+        // Switching to a different tab on the UI doesn't switch the underlying datamodel index as in all other modules.
+        if (isErrorResponse(0)) {
             showErrorUI();
             return;
         }
@@ -113,6 +117,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
     private boolean hasAuthors() {
         return mDatamodels != null && mDatamodels[0] != null
+                && !isErrorResponse(0)
                 && ((CommentsModel) mDatamodels[0]).getAuthors() != null
                 && ((CommentsModel) mDatamodels[0]).getAuthors().size() > 0;
     }
@@ -126,6 +131,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
     private boolean hasPosts() {
         return mDatamodels != null && mDatamodels[0] != null
+                && !isErrorResponse(0)
                 && ((CommentsModel) mDatamodels[0]).getPosts() != null
                 && ((CommentsModel) mDatamodels[0]).getPosts().size() > 0;
     }
