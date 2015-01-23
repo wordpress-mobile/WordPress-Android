@@ -299,7 +299,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        //ft.setCustomAnimations(R.anim.stats_fragment_in, R.anim.stats_fragment_out);
 
         StatsAbstractFragment fragment;
 
@@ -362,7 +361,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             }
         }
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     // AuthorsFragment should be dismissed when 0 or 1 author.
