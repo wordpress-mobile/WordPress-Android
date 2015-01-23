@@ -126,6 +126,15 @@ class StatsBarGraph extends GraphView {
     }
 
     @Override
+    protected double getVerticalLabelMaxTextSample() {
+        // We know that the maximum value on the Y axis is 999, because we've set a CustomLabelFormatter.
+        // Don't taking in consideration the actual values of series will fix the issue where the graph
+        // vertical label size changes dimensions when the underlying data changes.
+        // EX: Switch from days to Weeks or Months.
+        return 100d;
+    }
+
+    @Override
     protected void onBeforeDrawSeries() {
         mSeriesRectsDrawedOnScreen.clear();
     }
