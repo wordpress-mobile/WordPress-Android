@@ -200,7 +200,9 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                 mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                        if (isFinishing() || isActivityDestroyed()) {
+                            return;
+                        }
                         final StatsTimeframe selectedTimeframe =  (StatsTimeframe) mTimeframeSpinnerAdapter.getItem(position);
 
                         if (mCurrentTimeframe == selectedTimeframe) {
@@ -292,9 +294,11 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     }
 
     private void loadStatsFragments(boolean forceRecreationOfFragments, boolean loadGraphFragment, boolean loadAlltimeFragmets) {
+        if (isFinishing() || isActivityDestroyed()) {
+            return;
+        }
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        //ft.setCustomAnimations(R.anim.stats_fragment_in, R.anim.stats_fragment_out);
 
         StatsAbstractFragment fragment;
 
@@ -357,7 +361,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             }
         }
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     // AuthorsFragment should be dismissed when 0 or 1 author.
@@ -603,6 +607,9 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
     @Override
     public void onDateChanged(String blogID, StatsTimeframe timeframe, String date) {
+        if (isFinishing() || isActivityDestroyed()) {
+            return;
+        }
         mRequestedDate = date;
         refreshStats(timeframe, date, false, false);
         emptyDataModelInFragments(false, false);
