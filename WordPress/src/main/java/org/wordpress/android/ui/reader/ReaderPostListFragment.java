@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -361,23 +362,33 @@ public class ReaderPostListFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        ViewGroup header = (ViewGroup) getView().findViewById(R.id.frame_header);
-        if (header == null || header.getVisibility() == View.VISIBLE) {
+
+        final ViewGroup header = (ViewGroup) getView().findViewById(R.id.frame_header);
+        if (header == null) {
             return;
         }
-        header.setVisibility(View.VISIBLE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Animator animator = ViewAnimationUtils.createCircularReveal(
-                    header,
-                    header.getWidth() / 2,
-                    0,
-                    0,
-                    (float) Math.hypot(header.getWidth(), header.getHeight()));
-            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.start();
-        } else {
-            AniUtils.startAnimation(header, R.anim.reader_top_bar_in);
-        }
+
+        // must wait for header to be fully laid out before animation or else we risk
+        // "IllegalStateException: Cannot start this animator on a detached view"
+        header.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                header.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                header.setVisibility(View.VISIBLE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Animator animator = ViewAnimationUtils.createCircularReveal(
+                            header,
+                            header.getWidth() / 2,
+                            0,
+                            0,
+                            (float) Math.hypot(header.getWidth(), header.getHeight()));
+                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animator.start();
+                } else {
+                    AniUtils.startAnimation(header, R.anim.reader_top_bar_in);
+                }
+            }
+        });
     }
 
     @Override
