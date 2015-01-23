@@ -235,11 +235,11 @@ public class ReaderAnim {
             return;
         }
 
-        ObjectAnimator animX = ObjectAnimator.ofFloat(txtFollow, View.SCALE_X, 1f, 0.5f);
+        ObjectAnimator animX = ObjectAnimator.ofFloat(txtFollow, View.SCALE_X, 1f, 0.75f);
         animX.setRepeatMode(ValueAnimator.REVERSE);
         animX.setRepeatCount(1);
 
-        ObjectAnimator animY = ObjectAnimator.ofFloat(txtFollow, View.SCALE_Y, 1f, 0.5f);
+        ObjectAnimator animY = ObjectAnimator.ofFloat(txtFollow, View.SCALE_Y, 1f, 0.75f);
         animY.setRepeatMode(ValueAnimator.REVERSE);
         animY.setRepeatCount(1);
 

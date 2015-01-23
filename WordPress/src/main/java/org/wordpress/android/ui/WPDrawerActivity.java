@@ -143,7 +143,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             overridePendingTransition(0, 0);
             finish();
         }
-        mScrollPositionManager.saveToPreferences(this, SCROLL_POSITION_ID);
+        if (mScrollPositionManager != null) {
+            mScrollPositionManager.saveToPreferences(this, SCROLL_POSITION_ID);
+        }
     }
 
     @Override
@@ -155,7 +157,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             // Sync the toggle state after onRestoreInstanceState has occurred.
             mDrawerToggle.syncState();
         }
-        mScrollPositionManager.restoreFromPreferences(this, SCROLL_POSITION_ID);
+        if (mScrollPositionManager != null) {
+            mScrollPositionManager.restoreFromPreferences(this, SCROLL_POSITION_ID);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

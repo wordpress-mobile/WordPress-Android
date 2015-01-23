@@ -36,6 +36,7 @@ import com.cocosw.undobar.UndoBarController;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderBlog;
@@ -50,7 +51,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -90,6 +90,7 @@ public class ReaderPostListFragment extends Fragment {
 
     private ViewGroup mTagInfoView;
     private ReaderBlogInfoView mBlogInfoView;
+    private TextView mFollowButton;
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -401,6 +402,10 @@ public class ReaderPostListFragment extends Fragment {
             }
         }
 
+        if (getPostListType().isPreviewType()) {
+            createFollowButton();
+        }
+
         switch (getPostListType()) {
             case BLOG_PREVIEW:
                 loadBlogInfo();
@@ -414,6 +419,48 @@ public class ReaderPostListFragment extends Fragment {
 
         getPostAdapter().setOnTagSelectedListener(mOnTagSelectedListener);
         getPostAdapter().setOnPostPopupListener(mOnPostPopupListener);
+    }
+
+    /*
+     * adds a follow button to the toolbar for tag/blog preview
+     */
+    private void createFollowButton() {
+        if (!isAdded()) {
+            return;
+        }
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        if (toolbar == null) {
+            return;
+        }
+
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View followView = inflater.inflate(R.layout.reader_toolbar_follow_button, toolbar, false);
+        mFollowButton = (TextView) followView.findViewById(R.id.text_follow);
+        toolbar.addView(followView);
+
+        updateFollowButton();
+
+        mFollowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                    toggleBlogFollowStatus();
+                } else {
+                    toggleTagFollowStatus();
+                }
+            }
+        });
+    }
+
+    private void updateFollowButton() {
+        if (!isAdded() || mFollowButton == null) {
+            return;
+        }
+        boolean isFollowing = getPostListType() == ReaderPostListType.BLOG_PREVIEW
+                ? ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl)
+                : ReaderTagTable.isFollowedTagName(getCurrentTagName());
+        ReaderUtils.showFollowStatus(mFollowButton, isFollowing);
     }
 
     @Override
@@ -785,8 +832,12 @@ public class ReaderPostListFragment extends Fragment {
         getPostAdapter().setCurrentTag(tag);
         hideNewPostsBar();
         hideUndoBar();
-        updateTagPreviewHeader();
         showLoadingProgress(false);
+
+        if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+            updateTagPreviewHeader();
+            updateFollowButton();
+        }
 
         // update posts in this tag if it's time to do so
         if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
@@ -813,6 +864,8 @@ public class ReaderPostListFragment extends Fragment {
         }
 
         setCurrentTagName(tag, false);
+        updateFollowButton();
+
         return true;
     }
 
@@ -830,19 +883,6 @@ public class ReaderPostListFragment extends Fragment {
         String htmlTag = "<font color=" + color + ">" + getCurrentTagName() + "</font>";
         String htmlLabel = getString(R.string.reader_label_tag_preview, htmlTag);
         txtTagName.setText(Html.fromHtml(htmlLabel));
-
-        final TextView txtFollow = (TextView) mTagInfoView.findViewById(R.id.text_follow_blog);
-        ReaderUtils.showFollowStatus(txtFollow, ReaderTagTable.isFollowedTagName(getCurrentTagName()));
-
-        txtFollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(getCurrentTagName());
-                ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
-                TagAction action = (isAskingToFollow ? TagAction.ADD : TagAction.DELETE);
-                ReaderTagActions.performTagAction(getCurrentTag(), action, null);
-            }
-        });
     }
 
     /*
@@ -1152,6 +1192,9 @@ public class ReaderPostListFragment extends Fragment {
                                     getPostAdapter().setCurrentBlog(mCurrentBlogId);
                                     updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
                                 }
+                                if (mFollowButton != null) {
+                                    ReaderUtils.showFollowStatus(mFollowButton, blogInfo.isFollowing);
+                                }
                             }
                         }
                         @Override
@@ -1165,4 +1208,43 @@ public class ReaderPostListFragment extends Fragment {
         }
     }
 
+    /*
+    * user tapped follow button in toolbar to follow/unfollow the current blog
+    */
+    private void toggleBlogFollowStatus() {
+        if (!isAdded() || mFollowButton == null) {
+            return;
+        }
+
+        final boolean isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl);
+        ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!succeeded && isAdded()) {
+                    ReaderUtils.showFollowStatus(mFollowButton, !isAskingToFollow);
+                }
+            }
+        };
+
+        ReaderAnim.animateFollowButton(mFollowButton, isAskingToFollow);
+        ReaderBlogActions.performFollowAction(
+                mCurrentBlogId,
+                mCurrentBlogUrl,
+                isAskingToFollow,
+                followListener);
+    }
+
+    /*
+     * user tapped follow button in toolbar to follow/unfollow the current tag
+     */
+    private void toggleTagFollowStatus() {
+        if (!isAdded() || mFollowButton == null) {
+            return;
+        }
+
+        boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(getCurrentTagName());
+        ReaderAnim.animateFollowButton(mFollowButton, isAskingToFollow);
+        ReaderTagActions.TagAction action = (isAskingToFollow ? ReaderTagActions.TagAction.ADD : ReaderTagActions.TagAction.DELETE);
+        ReaderTagActions.performTagAction(getCurrentTag(), action, null);
+    }
 }
