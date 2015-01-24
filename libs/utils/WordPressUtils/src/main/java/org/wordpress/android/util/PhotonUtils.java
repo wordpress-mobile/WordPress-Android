@@ -20,8 +20,9 @@ public class PhotonUtils {
             return "";
 
         // if this isn't a gravatar image, return as resized photon image url
-        if (!imageUrl.contains("gravatar.com"))
+        if (!imageUrl.contains("gravatar.com")) {
             return getPhotonImageUrl(imageUrl, avatarSz, avatarSz);
+        }
 
         // remove all other params, then add query string for size and "mystery man" default
         return UrlUtils.removeQuery(imageUrl) + "?s=" + avatarSz + "&d=mm";
@@ -35,12 +36,13 @@ public class PhotonUtils {
     }
 
     /*
-     * returns a photon url for the passed image with the resize query set to the passed dimensions
+     * returns a photon url for the passed image with the resize query set to the passed
+     * dimensions - note that the passed quality parameter will only affect JPEGs
      */
     public static enum Quality {
         HIGH,
         MEDIUM,
-        LOW,
+        LOW
     }
     public static String getPhotonImageUrl(String imageUrl, int width, int height) {
         return getPhotonImageUrl(imageUrl, width, height, Quality.MEDIUM);
@@ -85,7 +87,7 @@ public class PhotonUtils {
         }
 
         // if both width & height are passed use the "resize" param, use only "w" or "h" if just
-        // one of them is set - note that the passed quality parameter will only affect JPEGs
+        // one of them is set
         final String query;
         if (width > 0 && height > 0) {
             query = "?resize=" + width + "," + height + "&" + qualityParam;

@@ -113,10 +113,17 @@ public class ReaderUtils {
     }
 
     public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate) {
+        return getResizedImageUrl(imageUrl, width, height, isPrivate, PhotonUtils.Quality.MEDIUM);
+    }
+    public static String getResizedImageUrl(final String imageUrl,
+                                            int width,
+                                            int height,
+                                            boolean isPrivate,
+                                            PhotonUtils.Quality quality) {
         if (isPrivate) {
             return getPrivateImageForDisplay(imageUrl, width, height);
         } else {
-            return PhotonUtils.getPhotonImageUrl(imageUrl, width, height);
+            return PhotonUtils.getPhotonImageUrl(imageUrl, width, height, quality);
         }
     }
 
