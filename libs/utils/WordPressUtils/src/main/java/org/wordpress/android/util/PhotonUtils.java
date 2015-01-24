@@ -37,8 +37,15 @@ public class PhotonUtils {
     /*
      * returns a photon url for the passed image with the resize query set to the passed dimensions
      */
-    private static final String QUALITY_PARAM = "quality=65";
+    public static enum Quality {
+        HIGH,
+        MEDIUM,
+        LOW,
+    }
     public static String getPhotonImageUrl(String imageUrl, int width, int height) {
+        return getPhotonImageUrl(imageUrl, width, height, Quality.MEDIUM);
+    }
+    public static String getPhotonImageUrl(String imageUrl, int width, int height, Quality quality) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
         }
@@ -68,17 +75,30 @@ public class PhotonUtils {
             return imageUrl + "?w=" + width + "&h=" + height;
         }
 
+        final String qualityParam;
+        switch (quality) {
+            case HIGH:
+                qualityParam = "quality=100";
+                break;
+            case LOW:
+                qualityParam = "quality=35";
+                break;
+            default: // medium
+                qualityParam = "quality=65";
+                break;
+        }
+
         // if both width & height are passed use the "resize" param, use only "w" or "h" if just
         // one of them is set - note that the passed quality parameter will only affect JPEGs
         final String query;
         if (width > 0 && height > 0) {
-            query = "?resize=" + width + "," + height + "&" + QUALITY_PARAM;
+            query = "?resize=" + width + "," + height + "&" + qualityParam;
         } else if (width > 0) {
-            query = "?w=" + width + "&" + QUALITY_PARAM;
+            query = "?w=" + width + "&" + qualityParam;
         } else if (height > 0) {
-            query = "?h=" + height + "&" + QUALITY_PARAM;
+            query = "?h=" + height + "&" + qualityParam;
         } else {
-            query = "?" + QUALITY_PARAM;
+            query = "?" + qualityParam;
         }
 
         // return passed url+query if it's already a photon url
