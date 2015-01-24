@@ -661,6 +661,7 @@ public class PostsListFragment extends ListFragment
 
             if (isAnimating()) {
                 // Delay starting the LOADING > NO_CONTENT sequence if NO_CONTENT > LOADING hasn't finished yet
+                int delayTime = ((7-mAnimationStage) * ANIMATION_DURATION);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -668,7 +669,7 @@ public class PostsListFragment extends ListFragment
                         mAnimationStage = 1;
                         startAnimation(mEmptyViewTitle, "alpha", 1f, 0.1f);
                     }
-                }, 3 * ANIMATION_DURATION);
+                }, delayTime);
             } else {
                 setInLoadingPhase(false);
                 mAnimationStage = 1;
