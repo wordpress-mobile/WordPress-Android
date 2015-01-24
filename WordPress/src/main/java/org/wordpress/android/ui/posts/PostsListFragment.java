@@ -59,10 +59,10 @@ public class PostsListFragment extends ListFragment
     private View mEmptyViewImage;
     private TextView mEmptyViewTitle;
     private MessageType mEmptyViewMessage = MessageType.NO_CONTENT;
-    private boolean mAnimateFromManualRefresh;
-    private boolean mAnimateFromAutoRefresh;
-    private boolean mOverrideSwipeRefreshLayout;
+
     private EmptyViewAnimationHandler mEmptyViewAnimationHandler;
+    private boolean mSwipedToRefresh;
+    private boolean mKeepSwipeRefreshLayoutVisible;
 
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
@@ -104,7 +104,7 @@ public class PostsListFragment extends ListFragment
                             updateEmptyView(MessageType.NETWORK_ERROR);
                             return;
                         }
-                        mAnimateFromManualRefresh = true;
+                        mSwipedToRefresh = true;
                         refreshPosts((PostsActivity) getActivity());
                     }
                 });
@@ -168,11 +168,8 @@ public class PostsListFragment extends ListFragment
                         mEmptyView.setVisibility(View.GONE);
                     }
 
-                    if (!isRefreshing() || mOverrideSwipeRefreshLayout) {
+                    if (!isRefreshing() || mKeepSwipeRefreshLayoutVisible) {
                         // No posts and not currently refreshing. Display the "no posts/pages" message
-                        if (postCount == 0 && !mCanLoadMorePosts) {
-                            mAnimateFromAutoRefresh = true;
-                        }
                         updateEmptyView(MessageType.NO_CONTENT);
                     }
 
@@ -251,7 +248,7 @@ public class PostsListFragment extends ListFragment
             }
         });
 
-        mEmptyViewAnimationHandler = new EmptyViewAnimationHandler(true);
+        mEmptyViewAnimationHandler = new EmptyViewAnimationHandler();
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             ((PostsActivity) getActivity()).requestPosts();
@@ -364,8 +361,8 @@ public class PostsListFragment extends ListFragment
                     return;
 
                 if (mEmptyViewAnimationHandler.isAnimating() || mEmptyViewAnimationHandler.isBetweenSequences()) {
-                    // Keep the SwipeRefreshLayout circle visible until the EmptyViewAnimationHandler dismisses it
-                    mOverrideSwipeRefreshLayout = true;
+                    // Keep the SwipeRefreshLayout animation visible until the EmptyViewAnimationHandler dismisses it
+                    mKeepSwipeRefreshLayoutVisible = true;
                 } else {
                     mSwipeToRefreshHelper.setRefreshing(false);
                 }
@@ -427,6 +424,7 @@ public class PostsListFragment extends ListFragment
         if (mProgressFooterView != null && mProgressFooterView.getVisibility() == View.VISIBLE) {
             mProgressFooterView.setVisibility(View.GONE);
         }
+        mEmptyViewAnimationHandler.clear();
     }
 
     public void setShouldSelectFirstPost(boolean shouldSelect) {
@@ -530,28 +528,26 @@ public class PostsListFragment extends ListFragment
     }
 
     private void updateEmptyView(final MessageType messageType) {
-        // Handle animation display
-        if (mAnimateFromManualRefresh) {
-            // Swiped to refresh. Display the NO_CONTENT > LOADING or LOADING > NO_CONTENT sequence
-            mAnimateFromAutoRefresh = false;
-            if (mPostsListAdapter == null || mPostsListAdapter.getCount() == 0) {
-                if (!MessageType.isError(mEmptyViewMessage) && !MessageType.isError(messageType)) {
-                    if (mEmptyViewMessage == MessageType.NO_CONTENT && messageType == MessageType.LOADING) {
-                        mEmptyViewAnimationHandler.showLoadingSequence();
-                    } else {
-                        mEmptyViewAnimationHandler.showNoContentSequence();
-                    }
+        if (mPostsListAdapter != null && mPostsListAdapter.getCount() == 0) {
+            // Handle animation display
+            if (mEmptyViewMessage == MessageType.NO_CONTENT && messageType == MessageType.LOADING) {
+                // Show the NO_CONTENT > LOADING sequence, but only if the user swiped to refresh
+                if (mSwipedToRefresh) {
+                    mSwipedToRefresh = false;
+                    mEmptyViewAnimationHandler.showLoadingSequence();
                     return;
                 }
-            }
-            mAnimateFromManualRefresh = false;
-        } else if (mAnimateFromAutoRefresh) {
-            // If not called by swiping, only show the LOADING > NO_CONTENT sequence
-            if (mEmptyViewMessage == MessageType.LOADING && messageType == MessageType.NO_CONTENT) {
+            } else if (mEmptyViewMessage == MessageType.LOADING && messageType == MessageType.NO_CONTENT) {
+                // Show the LOADING > NO_CONTENT sequence
                 mEmptyViewAnimationHandler.showNoContentSequence();
                 return;
             }
-            mAnimateFromAutoRefresh = false;
+        } else {
+            // Dismiss the SwipeRefreshLayout animation if it was set to persist
+            if (mKeepSwipeRefreshLayoutVisible) {
+                mSwipeToRefreshHelper.setRefreshing(false);
+                mKeepSwipeRefreshLayoutVisible = false;
+            }
         }
 
         if (mEmptyView != null) {
@@ -606,16 +602,13 @@ public class PostsListFragment extends ListFragment
     private class EmptyViewAnimationHandler implements ObjectAnimator.AnimatorListener {
         private boolean mIsInLoadingPhase;
         private int mAnimationStage;
+        private boolean mHasDisplayedLoadingSequence;
 
         private ObjectAnimator mObjectAnimator;
 
         private final int mSlideDistance;
 
-        public EmptyViewAnimationHandler(boolean isLoading) {
-            mObjectAnimator = new ObjectAnimator();
-
-            setInLoadingPhase(isLoading);
-
+        public EmptyViewAnimationHandler() {
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mEmptyViewImage.getLayoutParams();
             mSlideDistance = -((layoutParams.height + layoutParams.bottomMargin + layoutParams.topMargin) / 2);
         }
@@ -632,8 +625,16 @@ public class PostsListFragment extends ListFragment
             return (mIsInLoadingPhase && mAnimationStage > 4);
         }
 
+        public void clear() {
+            mAnimationStage = 0;
+            mIsInLoadingPhase = false;
+            mHasDisplayedLoadingSequence = false;
+        }
+
         public void startAnimation(Object target, String propertyName, float fromValue, float toValue) {
-            mObjectAnimator.removeAllListeners();
+            if (mObjectAnimator != null) {
+                mObjectAnimator.removeAllListeners();
+            }
 
             mObjectAnimator = ObjectAnimator.ofFloat(target, propertyName, fromValue, toValue);
             mObjectAnimator.setDuration(ANIMATION_DURATION);
@@ -643,15 +644,21 @@ public class PostsListFragment extends ListFragment
         }
 
         public void showLoadingSequence() {
-            // Display the NO_CONTENT > LOADING sequence
             setInLoadingPhase(true);
             mAnimationStage = 1;
+            mEmptyViewMessage = MessageType.LOADING;
             startAnimation(mEmptyViewImage, "alpha", 1f, 0f);
         }
 
         public void showNoContentSequence() {
-            // Display the LOADING > NO_CONTENT sequence
-            mAnimateFromManualRefresh = false;
+            // If the data was auto-refreshed, the NO_CONTENT > LOADING sequence was not shown before this one, and
+            // some special handling will be needed
+            if (isAnimating() || isBetweenSequences()) {
+                mHasDisplayedLoadingSequence = true;
+            } else {
+                mHasDisplayedLoadingSequence = false;
+            }
+
             if (isAnimating()) {
                 // Delay starting the LOADING > NO_CONTENT sequence if NO_CONTENT > LOADING hasn't finished yet
                 new Handler().postDelayed(new Runnable() {
@@ -688,7 +695,6 @@ public class PostsListFragment extends ListFragment
                         break;
                     case 4:
                         mEmptyViewTitle.setText(mIsPage ? R.string.loading_pages : R.string.loading_posts);
-                        mEmptyViewMessage = MessageType.LOADING;
 
                         startAnimation(mEmptyViewTitle, "alpha", 0.1f, 1f);
                         break;
@@ -700,7 +706,7 @@ public class PostsListFragment extends ListFragment
                     // A step in the LOADING > NO_CONTENT sequence completed. Set up the next animation in the chain
                     case 2:
                         mSwipeToRefreshHelper.setRefreshing(false);
-                        mOverrideSwipeRefreshLayout = false;
+                        mKeepSwipeRefreshLayoutVisible = false;
 
                         mEmptyViewTitle.setText(mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list);
                         mEmptyViewMessage = MessageType.NO_CONTENT;
@@ -710,17 +716,16 @@ public class PostsListFragment extends ListFragment
                     case 3:
                         startAnimation(mEmptyViewTitle, "translationY", mSlideDistance, 0);
 
-                        if (mAnimateFromAutoRefresh) {
+                        if (!mHasDisplayedLoadingSequence) {
                             // Force mEmptyViewImage to take up space in the layout, so that mEmptyViewTitle lands
                             // where it should at the end of its slide animation
                             mEmptyViewImage.setVisibility(View.INVISIBLE);
                         }
                         break;
                     case 4:
-                        if (mAnimateFromAutoRefresh) {
+                        if (!mHasDisplayedLoadingSequence) {
                             // Uses AlphaAnimation instead of an ObjectAnimator to address a display glitch
                             // in the auto-refresh case
-                            mAnimateFromAutoRefresh = false;
                             AniUtils.startAnimation(mEmptyViewImage, android.R.anim.fade_in, ANIMATION_DURATION);
                             mEmptyViewImage.setVisibility(View.VISIBLE);
                         } else {

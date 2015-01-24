@@ -11,10 +11,4 @@ public enum MessageType {
         }
         return NO_CONTENT;
     }
-
-    public static boolean isError(MessageType messageType) {
-        return (messageType == NETWORK_ERROR ||
-                messageType == PERMISSION_ERROR ||
-                messageType == GENERIC_ERROR);
-    }
 }
