@@ -62,15 +62,11 @@ public class PhotonUtils {
         // don't use with GIFs - photon breaks animated GIFs, and sometimes returns a GIF that
         // can't be read by BitmapFactory.decodeByteArray (used by Volley in ImageRequest.java
         // to decode the downloaded image)
-        // ex: http://i0.wp.com/lusianne.files.wordpress.com/2013/08/193.gif?resize=768,320
         if (imageUrl.endsWith(".gif")) {
             return imageUrl;
         }
 
         // if this is an "mshots" url, skip photon and return it with a query that sets the width/height
-        // (these are screenshots of the blog that often appear in freshly pressed posts)
-        // see http://wp.tutsplus.com/tutorials/how-to-generate-website-screenshots-for-your-wordpress-site/
-        // ex: http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
         if (isMshotsUrl(imageUrl)) {
             return imageUrl + "?w=" + width + "&h=" + height;
         }
