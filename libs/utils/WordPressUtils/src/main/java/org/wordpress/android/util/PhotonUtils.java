@@ -37,6 +37,7 @@ public class PhotonUtils {
     /*
      * returns a photon url for the passed image with the resize query set to the passed dimensions
      */
+    private static final String QUALITY_PARAM = "quality=65";
     public static String getPhotonImageUrl(String imageUrl, int width, int height) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
@@ -68,16 +69,16 @@ public class PhotonUtils {
         }
 
         // if both width & height are passed use the "resize" param, use only "w" or "h" if just
-        // one of them is set, otherwise no query string
+        // one of them is set - note that the passed quality parameter will only affect JPEGs
         final String query;
         if (width > 0 && height > 0) {
-            query = "?resize=" + width + "," + height;
+            query = "?resize=" + width + "," + height + "&" + QUALITY_PARAM;
         } else if (width > 0) {
-            query = "?w=" + width;
+            query = "?w=" + width + "&" + QUALITY_PARAM;
         } else if (height > 0) {
-            query = "?h=" + height;
+            query = "?h=" + height + "&" + QUALITY_PARAM;
         } else {
-            query = "";
+            query = "?" + QUALITY_PARAM;
         }
 
         // return passed url+query if it's already a photon url
