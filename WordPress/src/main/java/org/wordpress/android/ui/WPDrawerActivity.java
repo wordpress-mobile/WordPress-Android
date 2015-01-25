@@ -336,7 +336,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
     }
 
-    protected void hideStaticDrawer() {
+    protected void hideDrawer() {
         View drawer = findViewById(R.id.left_drawer);
         if (drawer != null) {
             drawer.setVisibility(View.GONE);
