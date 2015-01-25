@@ -288,6 +288,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 FragmentManager fm = getFragmentManager();
                 if (fm.getBackStackEntryCount() > 0) {
                     fm.popBackStack();
+                } else if (isStaticMenuDrawer()) {
+                    finish();
                 } else {
                     toggleDrawer();
                 }
