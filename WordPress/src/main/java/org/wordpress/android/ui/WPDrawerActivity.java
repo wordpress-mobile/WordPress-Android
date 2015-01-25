@@ -324,7 +324,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
     }
 
-    private void closeDrawer() {
+    void closeDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
@@ -333,6 +333,13 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private void openDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.openDrawer(GravityCompat.START);
+        }
+    }
+
+    protected void hideStaticDrawer() {
+        View drawer = findViewById(R.id.left_drawer);
+        if (drawer != null) {
+            drawer.setVisibility(View.GONE);
         }
     }
 

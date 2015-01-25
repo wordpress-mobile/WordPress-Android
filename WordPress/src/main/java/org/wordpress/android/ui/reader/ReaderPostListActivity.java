@@ -132,6 +132,11 @@ public class ReaderPostListActivity extends WPDrawerActivity
             default:
                 break;
         }
+
+        // hide the static drawer for blog/tag preview
+        if (isStaticMenuDrawer() && mPostListType.isPreviewType()) {
+            hideStaticDrawer();
+        }
     }
 
     @Override
