@@ -18,6 +18,39 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:visibility="gone" >
+
+            <!-- VIEWS tab-->
+            <include
+                layout="@layout/stats_visitors_and_views_tab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"/>
+
+            <!-- VISITORS tab -->
+            <include
+                layout="@layout/stats_visitors_and_views_tab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"/>
+
+            <!-- LIKES tab -->
+            <include
+                layout="@layout/stats_visitors_and_views_tab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"/>
+
+            <!-- COMMENTS tab -->
+            <include
+                layout="@layout/stats_visitors_and_views_tab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"/>
+
         </LinearLayout>
 
         <LinearLayout

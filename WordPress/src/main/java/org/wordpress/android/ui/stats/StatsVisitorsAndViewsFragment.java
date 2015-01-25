@@ -91,18 +91,18 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
         mModuleButtonsContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
 
-        for (int i = 0; i < overviewItems.length; i++) {
-            LinearLayout currentTab = (LinearLayout) inflater.inflate(R.layout.stats_visitors_and_views_tab, container, false);
-            boolean isLastItem = i == (overviewItems.length -1);
-            boolean isChecked = i == mSelectedOverviewItemIndex;
-            TabViewHolder currentTabViewHolder = new TabViewHolder(currentTab, overviewItems[i], isChecked, isLastItem);
-            currentTab.setOnClickListener(TopButtonsOnClickListener);
-            currentTab.setTag(currentTabViewHolder);
-
-            mModuleButtonsContainer.addView(currentTab);
+        // Make sure we've all the info to build the tab correctly. This is ALWAYS true
+        if (mModuleButtonsContainer.getChildCount() == overviewItems.length) {
+            for (int i = 0; i < mModuleButtonsContainer.getChildCount(); i++) {
+                LinearLayout currentTab = (LinearLayout) mModuleButtonsContainer.getChildAt(i);
+                boolean isLastItem = i == (overviewItems.length - 1);
+                boolean isChecked = i == mSelectedOverviewItemIndex;
+                TabViewHolder currentTabViewHolder = new TabViewHolder(currentTab, overviewItems[i], isChecked, isLastItem);
+                currentTab.setOnClickListener(TopButtonsOnClickListener);
+                currentTab.setTag(currentTabViewHolder);
+            }
+            mModuleButtonsContainer.setVisibility(View.VISIBLE);
         }
-
-        mModuleButtonsContainer.setVisibility(View.VISIBLE);
         return view;
     }
 
@@ -370,8 +370,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph((VisitsModel)mVisitsData);
 
+        // Make sure we've data to show on the screen
+        if (dataToShowOnGraph.length == 0) {
+            return;
+        }
+
         // This check should never be true, since we put a check on the index in the calling function updateUI()
-        if (dataToShowOnGraph.length <= itemPosition) {
+        if (dataToShowOnGraph.length <= itemPosition || itemPosition == -1) {
             // Make sure we're not highlighting
             itemPosition = dataToShowOnGraph.length -1;
         }
