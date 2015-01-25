@@ -87,7 +87,17 @@
                     style="@style/StatsModuleTitle"
                     android:text="@string/stats_months_and_years" />
 
+                <include
+                    android:id="@+id/stats_months_years_empty_module_placeholder"
+                    layout="@layout/stats_empty_module_placeholder"
+                    android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <RelativeLayout
+                    android:id="@+id/stats_months_years_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_large"
@@ -135,7 +145,17 @@
                     style="@style/StatsModuleTitle"
                     android:text="@string/stats_average_per_day" />
 
+                <include
+                    android:id="@+id/stats_averages_empty_module_placeholder"
+                    layout="@layout/stats_empty_module_placeholder"
+                    android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <RelativeLayout
+                    android:id="@+id/stats_averages_list_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_large"
@@ -183,7 +203,17 @@
                     style="@style/StatsModuleTitle"
                     android:text="@string/stats_recent_weeks" />
 
+                <include
+                    android:id="@+id/stats_recent_weeks_empty_module_placeholder"
+                    layout="@layout/stats_empty_module_placeholder"
+                    android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <RelativeLayout
+                    android:id="@+id/stats_recent_weeks_list_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_large"

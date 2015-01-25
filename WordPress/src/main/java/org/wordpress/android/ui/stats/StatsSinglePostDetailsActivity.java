@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -61,9 +62,18 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     private LinearLayout mGraphContainer;
     private TextView mStatsViewsLabel;
     private TextView mStatsViewsTotals;
+
     private LinearLayout mMonthsAndYearsList;
+    private RelativeLayout mMonthsAndYearsHeader;
+    private LinearLayout mMonthsAndYearsEmptyPlaceholder;
+
     private LinearLayout mAveragesList;
+    private RelativeLayout mAveragesHeader;
+    private LinearLayout mAveragesEmptyPlaceholder;
+
     private LinearLayout mRecentWeeksList;
+    private RelativeLayout mRecentWeeksHeader;
+    private LinearLayout mRecentWeeksEmptyPlaceholder;
 
     private PostModel mRemotePostItem; // The original item returned from TopPostsAndPages endpoint
     private PostViewsModel mRestResponseParsed;
@@ -106,9 +116,18 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mGraphContainer = (LinearLayout) findViewById(R.id.stats_bar_chart_fragment_container);
         mStatsViewsLabel = (TextView) findViewById(R.id.stats_views_label);
         mStatsViewsTotals = (TextView) findViewById(R.id.stats_views_totals);
+
+        mMonthsAndYearsHeader = (RelativeLayout) findViewById(R.id.stats_months_years_header);
         mMonthsAndYearsList = (LinearLayout) findViewById(R.id.stats_months_years_list_linearlayout);
+        mMonthsAndYearsEmptyPlaceholder = (LinearLayout) findViewById(R.id.stats_months_years_empty_module_placeholder);
+
+        mAveragesHeader = (RelativeLayout) findViewById(R.id.stats_averages_list_header);
         mAveragesList = (LinearLayout) findViewById(R.id.stats_averages_list_linearlayout);
+        mAveragesEmptyPlaceholder = (LinearLayout) findViewById(R.id.stats_averages_empty_module_placeholder);
+
+        mRecentWeeksHeader = (RelativeLayout) findViewById(R.id.stats_recent_weeks_list_header);
         mRecentWeeksList = (LinearLayout) findViewById(R.id.stats_recent_weeks_list_linearlayout);
+        mRecentWeeksEmptyPlaceholder = (LinearLayout) findViewById(R.id.stats_recent_weeks_empty_module_placeholder);
 
         if (savedInstanceState != null) {
             mRemotePostItem = (PostModel) savedInstanceState.getSerializable(ARG_REMOTE_POST_OBJECT);
@@ -207,11 +226,23 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mIsUpdatingStats = true;
         mSwipeToRefreshHelper.setRefreshing(true);
 
-        mMonthsAndYearsList.setVisibility(View.GONE);
-        mAveragesList.setVisibility(View.GONE);
-        mRecentWeeksList.setVisibility(View.GONE);
-
+        showHideEmptyModulesIndicator(true);
     }
+
+    private void showHideEmptyModulesIndicator(boolean show) {
+        mMonthsAndYearsHeader.setVisibility(show ? View.GONE : View.VISIBLE);
+        mRecentWeeksHeader.setVisibility(show ? View.GONE : View.VISIBLE);
+        mAveragesHeader.setVisibility(show ? View.GONE : View.VISIBLE);
+
+        mMonthsAndYearsList.setVisibility(show ? View.GONE : View.VISIBLE);
+        mAveragesList.setVisibility(show ? View.GONE : View.VISIBLE);
+        mRecentWeeksList.setVisibility(show ? View.GONE : View.VISIBLE);
+
+        mMonthsAndYearsEmptyPlaceholder.setVisibility(show ? View.VISIBLE : View.GONE);
+        mRecentWeeksEmptyPlaceholder.setVisibility(show ? View.VISIBLE : View.GONE);
+        mAveragesEmptyPlaceholder.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
 
     private void setupEmptyUI(boolean isLoading) {
         Context context = mGraphContainer.getContext();
@@ -229,9 +260,19 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         }
         mStatsViewsLabel.setText("");
         mStatsViewsTotals.setText("");
+
         mMonthsAndYearsList.setVisibility(View.GONE);
-        mAveragesList.setVisibility(View.GONE);
         mRecentWeeksList.setVisibility(View.GONE);
+        mAveragesList.setVisibility(View.GONE);
+
+        mMonthsAndYearsHeader.setVisibility(View.GONE);
+        mRecentWeeksHeader.setVisibility(View.GONE);
+        mAveragesHeader.setVisibility(View.GONE);
+
+        mMonthsAndYearsEmptyPlaceholder.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        mRecentWeeksEmptyPlaceholder.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        mAveragesEmptyPlaceholder.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+
         mAveragesIdToExpandedMap.clear();
         mYearsIdToExpandedMap.clear();
     }
@@ -315,6 +356,8 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                 dataToShowOnGraph[mSelectedBarGraphIndex].getViews()
         );
 
+        showHideEmptyModulesIndicator(false);
+
         mMonthsAndYearsList.setVisibility(View.VISIBLE);
         List<PostViewsModel.Year> years = mRestResponseParsed.getYears();
         MonthsAndYearsListAdapter monthsAndYearsListAdapter = new MonthsAndYearsListAdapter(this, years, mRestResponseParsed.getHighestMonth());
@@ -329,7 +372,6 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         List<PostViewsModel.Week> recentWeeks = mRestResponseParsed.getWeeks();
         RecentWeeksListAdapter recentWeeksListAdapter = new RecentWeeksListAdapter(this, recentWeeks, mRestResponseParsed.getHighestWeekAverage());
         StatsUIHelper.reloadGroupViews(this, recentWeeksListAdapter, mRecentWeeksIdToExpandedMap, mRecentWeeksList);
-
      }
 
 
