@@ -15,6 +15,8 @@ import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
@@ -47,7 +49,8 @@ import javax.annotation.Nonnull;
  * post detail
  */
 public class ReaderPostPagerActivity extends ActionBarActivity
-        implements ReaderInterfaces.OnPostPopupListener {
+        implements ReaderInterfaces.OnPostPopupListener,
+                   ReaderInterfaces.AutoHideToolbarListener {
 
     private Toolbar mToolbar;
     private ReaderViewPager mViewPager;
@@ -65,7 +68,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO: investigate setHideOnContentScrollEnabled
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
 
@@ -121,6 +123,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
+                onShowHideToolbar(true);
             }
 
             @Override
@@ -386,6 +389,32 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         if (!isFinishing()) {
             UndoBarController.clear(this);
         }
+    }
+
+    @Override
+    public void onShowHideToolbar(boolean show) {
+        int newVisibility = (show ? View.VISIBLE : View.GONE);
+        if (mToolbar == null || mToolbar.getVisibility() == newVisibility) {
+            return;
+        }
+
+        final Animation animation;
+        if (show) {
+            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                    -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        } else {
+            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                    0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
+        }
+
+        long duration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
+        animation.setDuration(duration);
+
+        mToolbar.clearAnimation();
+        mToolbar.startAnimation(animation);
+        mToolbar.setVisibility(newVisibility);
     }
 
     /**

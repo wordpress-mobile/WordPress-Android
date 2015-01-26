@@ -73,6 +73,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsBlockBlogDisabled;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
+    private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
 
     private ReaderResourceVars mResourceVars;
 
@@ -120,6 +121,9 @@ public class ReaderPostDetailFragment extends Fragment
         if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
             mOnPopupListener = (ReaderInterfaces.OnPostPopupListener) activity;
         }
+        if (activity instanceof ReaderInterfaces.AutoHideToolbarListener) {
+            mAutoHideToolbarListener = (ReaderInterfaces.AutoHideToolbarListener) activity;
+        }
     }
 
     @Override
@@ -154,15 +158,18 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
+
     @Override
     public void onScrollUp() {
         animateIconBar(true);
+        showToolbar(true);
     }
 
     @Override
     public void onScrollDown() {
         if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
             animateIconBar(false);
+            showToolbar(false);
         }
     }
 
@@ -170,6 +177,12 @@ public class ReaderPostDetailFragment extends Fragment
     public void onScrollCompleted() {
         if (!mScrollView.canScrollDown()) {
             animateIconBar(true);
+        }
+    }
+
+    private void showToolbar(boolean show) {
+        if (mAutoHideToolbarListener != null) {
+            mAutoHideToolbarListener.onShowHideToolbar(show);
         }
     }
 
