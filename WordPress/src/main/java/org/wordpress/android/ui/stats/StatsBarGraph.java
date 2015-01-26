@@ -17,6 +17,7 @@ import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import org.wordpress.android.R;
 import org.wordpress.android.widgets.TypefaceCache;
 
+import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -103,24 +104,20 @@ class StatsBarGraph extends GraphView {
         getGraphViewStyle().setTextSize(getResources().getDimensionPixelSize(R.dimen.graph_font_size));
         getGraphViewStyle().setGridXColor(Color.TRANSPARENT);
         getGraphViewStyle().setGridYColor(getResources().getColor(R.color.stats_bar_graph_grid));
-        getGraphViewStyle().setNumVerticalLabels(6);
+        getGraphViewStyle().setNumVerticalLabels(3);
 
         setCustomLabelFormatter(new CustomLabelFormatter() {
+            private NumberFormat numberFormatter;
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
                     return null;
                 }
-
-                if (value < 1000) {
-                    return null;
-                } else if (value < 1000000) { // thousands
-                    return Math.round(value / 1000) + "K";
-                } else if (value < 1000000000) { // millions
-                    return Math.round(value / 1000000) + "M";
-                } else {
-                    return null;
+                if (numberFormatter == null) {
+                    numberFormatter = NumberFormat.getNumberInstance();
+                    numberFormatter.setMaximumFractionDigits(0);
                 }
+                return numberFormatter.format(value);
             }
         });
     }
