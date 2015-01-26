@@ -59,6 +59,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/margin_large"
             android:paddingLeft="@dimen/margin_medium"
+            android:paddingRight="@dimen/margin_medium"
             android:paddingBottom="@dimen/margin_large"
             android:minHeight="@dimen/stats_barchart_height"
             android:orientation="vertical" />
