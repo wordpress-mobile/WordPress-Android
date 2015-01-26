@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -397,11 +398,8 @@ public class ReaderPostPagerActivity extends ActionBarActivity
      */
     @Override
     public void onShowHideToolbar(boolean show) {
-        if (isFinishing()) {
-            return;
-        }
         int newVisibility = (show ? View.VISIBLE : View.GONE);
-        if (mToolbar == null || mToolbar.getVisibility() == newVisibility) {
+        if (isFinishing() || mToolbar == null || mToolbar.getVisibility() == newVisibility) {
             return;
         }
 
@@ -415,6 +413,12 @@ public class ReaderPostPagerActivity extends ActionBarActivity
 
         long duration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
         animation.setDuration(duration);
+
+        if (show) {
+            animation.setInterpolator(new DecelerateInterpolator());
+        } else {
+            animation.setInterpolator(new AccelerateInterpolator());
+        }
 
         mToolbar.clearAnimation();
         mToolbar.startAnimation(animation);
