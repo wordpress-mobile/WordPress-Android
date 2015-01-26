@@ -15,6 +15,7 @@ import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.PopupMenu;
@@ -396,21 +397,21 @@ public class ReaderPostPagerActivity extends ActionBarActivity
      */
     @Override
     public void onShowHideToolbar(boolean show) {
+        if (isFinishing()) {
+            return;
+        }
         int newVisibility = (show ? View.VISIBLE : View.GONE);
         if (mToolbar == null || mToolbar.getVisibility() == newVisibility) {
             return;
         }
 
-        final Animation animation;
-        if (show) {
-            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                    -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        } else {
-            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                    0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
-        }
+        float fromY = (show ? -1f : 0f);
+        float toY   = (show ? 0f : -1f);
+        Animation animation = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, fromY,
+                Animation.RELATIVE_TO_SELF, toY);
 
         long duration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
         animation.setDuration(duration);
