@@ -14,7 +14,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -166,14 +168,14 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollUp() {
-        animateIconBar(true);
+        showIconBar(true);
         showToolbar(true);
     }
 
     @Override
     public void onScrollDown() {
         if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
-            animateIconBar(false);
+            showIconBar(false);
             showToolbar(false);
         }
     }
@@ -181,7 +183,7 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onScrollCompleted() {
         if (!mScrollView.canScrollDown()) {
-            animateIconBar(true);
+            showIconBar(true);
         }
     }
 
@@ -239,30 +241,33 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * animate in/out the layout containing the reblog/comment/like icons
      */
-    private void animateIconBar(boolean isAnimatingIn) {
-        if (isAnimatingIn && mLayoutIcons.getVisibility() == View.VISIBLE) {
-            return;
-        }
-        if (!isAnimatingIn && mLayoutIcons.getVisibility() != View.VISIBLE) {
+    private void showIconBar(boolean show) {
+        if (!isAdded()) return;
+
+        int newVisibility = (show ? View.VISIBLE : View.GONE);
+        if (mLayoutIcons == null || mLayoutIcons.getVisibility() == newVisibility) {
             return;
         }
 
-        final Animation animation;
-        if (isAnimatingIn) {
-            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                    1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        } else {
-            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                    0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
-        }
+        float fromY = (show ? 1f : 0f);
+        float toY   = (show ? 0f : 1f);
+        Animation animation = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, fromY,
+                Animation.RELATIVE_TO_SELF, toY);
 
         animation.setDuration(mResourceVars.mediumAnimTime);
 
+        if (show) {
+            animation.setInterpolator(new DecelerateInterpolator());
+        } else {
+            animation.setInterpolator(new AccelerateInterpolator());
+        }
+
         mLayoutIcons.clearAnimation();
         mLayoutIcons.startAnimation(animation);
-        mLayoutIcons.setVisibility(isAnimatingIn ? View.VISIBLE : View.GONE);
+        mLayoutIcons.setVisibility(newVisibility);
     }
 
     @Override
