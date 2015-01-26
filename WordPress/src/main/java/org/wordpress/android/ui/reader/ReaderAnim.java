@@ -12,7 +12,9 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -307,6 +309,50 @@ public class ReaderAnim {
         }
 
         listItem.startAnimation(animation);
+    }
+
+    /*
+     * used when animating a toolbar in/out
+     */
+    public static void animateTopBar(View view, boolean show) {
+        animateBar(view, show, true);
+    }
+    public static void animateBottomBar(View view, boolean show) {
+        animateBar(view, show, false);
+    }
+    private static void animateBar(View view, boolean show, boolean isTopBar) {
+        int newVisibility = (show ? View.VISIBLE : View.GONE);
+        if (view == null || view.getVisibility() == newVisibility) {
+            return;
+        }
+
+        float fromY;
+        float toY;
+        if (isTopBar) {
+            fromY = (show ? -1f : 0f);
+            toY   = (show ? 0f : -1f);
+        } else {
+            fromY = (show ? 1f : 0f);
+            toY   = (show ? 0f : 1f);
+        }
+        Animation animation = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, fromY,
+                Animation.RELATIVE_TO_SELF, toY);
+
+        long durationMillis = Duration.MEDIUM.toMillis(view.getContext());
+        animation.setDuration(durationMillis);
+
+        if (show) {
+            animation.setInterpolator(new DecelerateInterpolator());
+        } else {
+            animation.setInterpolator(new AccelerateInterpolator());
+        }
+
+        view.clearAnimation();
+        view.startAnimation(animation);
+        view.setVisibility(newVisibility);
     }
 
 }
