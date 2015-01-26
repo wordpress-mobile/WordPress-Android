@@ -76,6 +76,7 @@ public class EditPostSettingsFragment extends Fragment
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
+    private TextView mPageParentText;
 
     private ArrayList<String> mCategories;
 
@@ -128,20 +129,27 @@ public class EditPostSettingsFragment extends Fragment
         });
         mTagsEditText = (EditText) rootView.findViewById(R.id.tags);
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
+        mPageParentText = (TextView) rootView.findViewById(R.id.pageParent);
 
         // Set header labels to upper case
         ((TextView) rootView.findViewById(R.id.categoryLabel)).setText(getResources().getString(R.string.categories).toUpperCase());
         ((TextView) rootView.findViewById(R.id.statusLabel)).setText(getResources().getString(R.string.status).toUpperCase());
         ((TextView) rootView.findViewById(R.id.postFormatLabel)).setText(getResources().getString(R.string.post_format).toUpperCase());
         ((TextView) rootView.findViewById(R.id.pubDateLabel)).setText(getResources().getString(R.string.publish_date).toUpperCase());
+        ((TextView) rootView.findViewById(R.id.pageParentLabel)).setText(getResources().getString(R.string.parent).toUpperCase());
 
-        if (mActivity.getPost().isPage()) { // remove post specific views
+        if (mActivity.getPost().isPage()) {
+            // Remove post-specific views
             mExcerptEditText.setVisibility(View.GONE);
             (rootView.findViewById(R.id.sectionTags)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.postFormatLabel)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.postFormat)).setVisibility(View.GONE);
         } else {
+            // Remove page-specific views
+            (rootView.findViewById(R.id.pageParentLabel)).setVisibility(View.GONE);
+            mPageParentText.setVisibility(View.GONE);
+
             mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
             mPostFormats =
                     new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status",
@@ -240,6 +248,14 @@ public class EditPostSettingsFragment extends Fragment
                     mPubDateText.setText(formattedDate);
                 } catch (RuntimeException e) {
                     AppLog.e(T.POSTS, e);
+                }
+            }
+
+            if (!TextUtils.isEmpty(post.getPageParentId()) && !post.getPageParentId().equals("0")) {
+                if (!TextUtils.isEmpty(post.getPageParentTitle())) {
+                    mPageParentText.setText(post.getPageParentTitle());
+                } else {
+                    mPageParentText.setText("#" + post.getPageParentId() + " (" + getText(R.string.untitled) + ")");
                 }
             }
 

@@ -102,6 +102,26 @@
             android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
             android:minLines="1" />
 
+        <TextView
+            android:id="@+id/pageParentLabel"
+            style="@style/WordPressSubHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/parent"/>
+
+        <TextView
+            android:id="@+id/pageParent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:background="@drawable/selectable_background_wordpress"
+            android:text="@string/no_parent"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_sz_large" />
+
         <EditText
             android:id="@+id/post_password"
             android:layout_width="fill_parent"
