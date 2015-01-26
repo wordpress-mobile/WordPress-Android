@@ -7,23 +7,35 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 public class WPWebChromeClient extends WebChromeClient {
-    private ProgressBar mProgressBar;
-    private Activity mActivity;
+    private final ProgressBar mProgressBar;
+    private final Activity mActivity;
+    private final boolean mAutoUpdateActivityTitle;
 
     public WPWebChromeClient(Activity activity, ProgressBar progressBar) {
-        mProgressBar = progressBar;
         mActivity = activity;
+        mProgressBar = progressBar;
+        mAutoUpdateActivityTitle = true;
+    }
+
+    public WPWebChromeClient(Activity activity,
+                             ProgressBar progressBar,
+                             boolean autoUpdateActivityTitle) {
+        mActivity = activity;
+        mProgressBar = progressBar;
+        mAutoUpdateActivityTitle = autoUpdateActivityTitle;
     }
 
     public void onProgressChanged(WebView webView, int progress) {
-        if (!mActivity.isFinishing()) {
+        if (mActivity != null && !mActivity.isFinishing() && mAutoUpdateActivityTitle) {
             mActivity.setTitle(webView.getTitle());
         }
-        if (progress == 100) {
-            mProgressBar.setVisibility(View.GONE);
-        } else {
-            mProgressBar.setVisibility(View.VISIBLE);
-            mProgressBar.setProgress(progress);
+        if (mProgressBar != null) {
+            if (progress == 100) {
+                mProgressBar.setVisibility(View.GONE);
+            } else {
+                mProgressBar.setVisibility(View.VISIBLE);
+                mProgressBar.setProgress(progress);
+            }
         }
     }
 }
