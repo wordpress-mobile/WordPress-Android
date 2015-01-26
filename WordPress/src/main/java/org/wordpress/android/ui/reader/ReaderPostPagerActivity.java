@@ -391,6 +391,9 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         }
     }
 
+    /*
+     * called by detail fragment to show/hide the toolbar when user scrolls
+     */
     @Override
     public void onShowHideToolbar(boolean show) {
         int newVisibility = (show ? View.VISIBLE : View.GONE);
@@ -429,7 +432,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         // built-in way to do this - note that destroyItem() removes fragments
         // from this map when they're removed from the adapter, so this doesn't
         // retain *every* fragment
-        private final SparseArray<Fragment> mFragmentMap = new SparseArray<Fragment>();
+        private final SparseArray<Fragment> mFragmentMap = new SparseArray<>();
 
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm);
