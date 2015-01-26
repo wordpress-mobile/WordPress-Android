@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Gravity;
@@ -129,14 +130,32 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             updateBackGroundAndIcon();
         }
 
+        private Drawable getTabIcon() {
+            switch (labelItem) {
+                case VISITORS:
+                    return isChecked ? getResources().getDrawable(R.drawable.stats_icon_visitors_active) :
+                            getResources().getDrawable(R.drawable.stats_icon_visitors);
+                case COMMENTS:
+                    return isChecked ? getResources().getDrawable(R.drawable.stats_icon_comments_active) :
+                            getResources().getDrawable(R.drawable.stats_icon_comments);
+                case LIKES:
+                    return isChecked ? getResources().getDrawable(R.drawable.stats_icon_likes_active) :
+                            getResources().getDrawable(R.drawable.stats_icon_likes);
+                default:
+                    // Views and when no prev match
+                    return isChecked ? getResources().getDrawable(R.drawable.stats_icon_views_active) :
+                            getResources().getDrawable(R.drawable.stats_icon_views);
+            }
+        }
+
         public void updateBackGroundAndIcon() {
             if (isChecked) {
                 value.setTextColor(getResources().getColor(R.color.calypso_orange_dark));
-                icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
             } else {
                 value.setTextColor(getResources().getColor(R.color.calypso_blue_unread));
-                icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like));
             }
+
+            icon.setImageDrawable(getTabIcon());
 
             if (isLastItem) {
                 if (isChecked) {
