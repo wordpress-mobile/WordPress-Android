@@ -24,8 +24,8 @@
 
             <ImageView
                 android:id="@+id/stats_visitors_and_views_tab_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/ic_like" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
