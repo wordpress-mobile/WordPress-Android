@@ -53,7 +53,7 @@ import com.jjoe64.graphview.compatible.ScaleGestureDetector;
  */
 abstract public class GraphView extends LinearLayout {
 	static final private class GraphViewConfig {
-		static final float BORDER = 20;
+		static final float BORDER = 30;
 	}
 
 	private class GraphViewContentView extends View {
@@ -113,7 +113,7 @@ abstract public class GraphView extends LinearLayout {
 				verlabels = generateVerlabels(graphheight);
 			}
 
-			// vertical lines
+			// vertical lines (aligned with the verLabels)
 			paint.setTextAlign(Align.LEFT);
 			int vers = verlabels.length - 1;
 			for (int i = 0; i < verlabels.length; i++) {
@@ -131,11 +131,24 @@ abstract public class GraphView extends LinearLayout {
 				paint.setColor(graphViewStyle.getGridXColor());
 				float x = ((graphwidth / hors) * i) + horstart + (colWidth/2);
 				canvas.drawLine(x, height - border, x, border, paint);
+
+                // Draw the background of labels
+                paint.setColor(graphViewStyle.getHorizontalLabelsBackgroundColor(i));
+                paint.setAlpha(50);
+                canvas.drawRect(
+                        ((graphwidth / hors) * i) + horstart,
+                        height - border,
+                        ((graphwidth / hors) * i) + horstart + colWidth,
+                        height,
+                        paint
+                );
+
+                // Draw the label
 				paint.setTextAlign(Align.CENTER);
 				paint.setColor(graphViewStyle.getHorizontalLabelsColor(i));
 				
 				if (horLabelsToShow > 0 && (hors / horLabelsToShow) > 0) {
-			        canvas.drawText(horlabels[i], x, height - 4, paint);
+			        canvas.drawText(horlabels[i], x, height - (GraphViewConfig.BORDER / 2), paint);
 				}
 			}
 

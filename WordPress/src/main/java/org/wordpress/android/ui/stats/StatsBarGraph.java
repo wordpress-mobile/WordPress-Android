@@ -13,6 +13,7 @@ import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
+import com.jjoe64.graphview.GraphViewStyle;
 import com.jjoe64.graphview.IndexDependentColor;
 
 import org.wordpress.android.R;
@@ -99,7 +100,6 @@ class StatsBarGraph extends GraphView {
         return super.onTouchEvent(event);
     }
 
-
     private class HorizontalLabelsColor implements IndexDependentColor {
         public int get(int index) {
             if (mBarPositionToHighlight == index) {
@@ -110,14 +110,26 @@ class StatsBarGraph extends GraphView {
         }
     }
 
+    private class HorizontalLabelsBackgroundColor implements IndexDependentColor {
+        public int get(int index) {
+            if (mBarPositionToHighlight == index) {
+                return getResources().getColor(R.color.calypso_orange_dark);
+            } else {
+                return Color.WHITE;
+            }
+        }
+    }
+
     private void setProperties() {
-        getGraphViewStyle().setHorizontalLabelsIndexDependentColor(new HorizontalLabelsColor());
-        getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.blue_dark));
-        getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.stats_bar_graph_vertical_label));
-        getGraphViewStyle().setTextSize(getResources().getDimensionPixelSize(R.dimen.graph_font_size));
-        getGraphViewStyle().setGridXColor(Color.TRANSPARENT);
-        getGraphViewStyle().setGridYColor(getResources().getColor(R.color.stats_bar_graph_grid));
-        getGraphViewStyle().setNumVerticalLabels(3);
+        GraphViewStyle gStyle =  getGraphViewStyle();
+        gStyle.setHorizontalLabelsIndexDependentColor(new HorizontalLabelsColor());
+        gStyle.setHorizontalLabelsBackgroundIndexDependentColor(new HorizontalLabelsBackgroundColor());
+        gStyle.setHorizontalLabelsColor(getResources().getColor(R.color.blue_dark));
+        gStyle.setVerticalLabelsColor(getResources().getColor(R.color.stats_bar_graph_vertical_label));
+        gStyle.setTextSize(getResources().getDimensionPixelSize(R.dimen.graph_font_size));
+        gStyle.setGridXColor(Color.TRANSPARENT);
+        gStyle.setGridYColor(getResources().getColor(R.color.stats_bar_graph_grid));
+        gStyle.setNumVerticalLabels(3);
 
         setCustomLabelFormatter(new CustomLabelFormatter() {
             private NumberFormat numberFormatter;
