@@ -636,7 +636,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             return;
         }
 
-        if (!NetworkUtils.isNetworkAvailable(this)) {
+        if (!NetworkUtils.checkConnection(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(AppLog.T.STATS, "StatsActivity > no connection, update canceled");
             return;
