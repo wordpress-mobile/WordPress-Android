@@ -32,6 +32,11 @@ public class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
     }
 
     @Override
+    public int getCount() {
+        return mNoteBlockList == null ? 0 : mNoteBlockList.size();
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         NoteBlock noteBlock = mNoteBlockList.get(position);
 

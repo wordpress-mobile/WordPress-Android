@@ -43,6 +43,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
+import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
@@ -98,8 +99,11 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (isStaticMenuDrawer()) {
+        boolean menuDrawerDisabled = false;
+        if (getIntent() != null) {
+            menuDrawerDisabled = getIntent().getBooleanExtra(StatsActivity.ARG_NO_MENU_DRAWER, false);
+        }
+        if (isStaticMenuDrawer() && !menuDrawerDisabled) {
             setContentView(R.layout.activity_drawer_static);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(getResources().getColor(R.color.color_primary_dark));
@@ -288,6 +292,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 FragmentManager fm = getFragmentManager();
                 if (fm.getBackStackEntryCount() > 0) {
                     fm.popBackStack();
+                } else if (isStaticMenuDrawer()) {
+                    finish();
                 } else {
                     toggleDrawer();
                 }
@@ -322,7 +328,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
     }
 
-    private void closeDrawer() {
+    void closeDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
@@ -331,6 +337,13 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private void openDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.openDrawer(GravityCompat.START);
+        }
+    }
+
+    protected void hideDrawer() {
+        View drawer = findViewById(R.id.left_drawer);
+        if (drawer != null) {
+            drawer.setVisibility(View.GONE);
         }
     }
 
