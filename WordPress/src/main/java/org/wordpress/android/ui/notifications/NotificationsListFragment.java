@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
@@ -93,7 +94,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
                         // open the latest version of this note just in case it has changed - this can
                         // happen if the note was tapped from the list fragment after it was updated
                         // by another fragment (such as NotificationCommentLikeFragment)
-                        openNote(noteId);
+                        openNote(noteId, getActivity());
                     }
                 });
             }
@@ -191,19 +192,19 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     /**
      * Open a note fragment based on the type of note
      */
-    private void openNote(final String noteId) {
-        if (noteId == null || !isAdded()) {
+    public void openNote(final String noteId, Activity activity) {
+        if (noteId == null || activity == null) {
             return;
         }
 
-        Intent detailIntent = new Intent(getActivity(), NotificationsDetailActivity.class);
+        Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
         detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
 
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                getActivity(),
+                activity,
                 R.anim.reader_activity_slide_in,
                 R.anim.reader_activity_scale_out);
-        ActivityCompat.startActivity(getActivity(), detailIntent, options.toBundle());
+        ActivityCompat.startActivity(activity, detailIntent, options.toBundle());
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }

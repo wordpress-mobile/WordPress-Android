@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.AppLog;
 
 public class NotificationsActivity extends WPDrawerActivity {
+    private NotificationsListFragment mNotesListFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,11 +27,31 @@ public class NotificationsActivity extends WPDrawerActivity {
         }
 
         if (savedInstanceState == null) {
+            mNotesListFragment = new NotificationsListFragment();
             getFragmentManager().beginTransaction()
-                    .add(R.id.notifications_container, new NotificationsListFragment())
+                    .add(R.id.notifications_container, mNotesListFragment)
                     .commit();
 
+            launchWithNoteId();
+
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        AppLog.i(AppLog.T.NOTIFS, "Launching NotificationsActivity with new intent");
+
+        launchWithNoteId();
+    }
+
+    private void launchWithNoteId() {
+        if (isFinishing() || mNotesListFragment == null) return;
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
+            mNotesListFragment.openNote(intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA), this);
         }
 
         GCMIntentService.clearNotificationsMap();
