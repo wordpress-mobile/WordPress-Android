@@ -13,6 +13,7 @@ import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
+import com.jjoe64.graphview.IndexDependentColor;
 
 import org.wordpress.android.R;
 import org.wordpress.android.widgets.TypefaceCache;
@@ -98,7 +99,19 @@ class StatsBarGraph extends GraphView {
         return super.onTouchEvent(event);
     }
 
+
+    private class HorizontalLabelsColor implements IndexDependentColor {
+        public int get(int index) {
+            if (mBarPositionToHighlight == index) {
+                return getResources().getColor(R.color.calypso_orange_dark);
+            } else {
+                return getResources().getColor(R.color.blue_dark);
+            }
+        }
+    }
+
     private void setProperties() {
+        getGraphViewStyle().setHorizontalLabelsIndexDependentColor(new HorizontalLabelsColor());
         getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.blue_dark));
         getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.stats_bar_graph_vertical_label));
         getGraphViewStyle().setTextSize(getResources().getDimensionPixelSize(R.dimen.graph_font_size));
@@ -250,30 +263,6 @@ class StatsBarGraph extends GraphView {
     protected double getMinY() {
         return 0;
     }
-
-    @Override
-    protected double getMaxY() {
-        double maxY = super.getMaxY();
-
-        final int divideBy;
-        if (maxY < 100) {
-            divideBy = 10;
-        } else if (maxY < 1000) {
-            divideBy = 100;
-        } else if (maxY < 10000) {
-            divideBy = 1000;
-        } else if (maxY < 100000) {
-            divideBy = 10000;
-        } else if (maxY < 1000000) {
-            divideBy = 100000;
-        } else {
-            divideBy = 1000000;
-        }
-
-        maxY = Math.rint((maxY / divideBy) + 1) * divideBy;
-        return maxY;
-    }
-
 
     /**
      * Private class that is used to hold the local (to the canvas) coordinate on the screen

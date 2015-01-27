@@ -132,7 +132,7 @@ abstract public class GraphView extends LinearLayout {
 				float x = ((graphwidth / hors) * i) + horstart + (colWidth/2);
 				canvas.drawLine(x, height - border, x, border, paint);
 				paint.setTextAlign(Align.CENTER);
-				paint.setColor(graphViewStyle.getHorizontalLabelsColor());
+				paint.setColor(graphViewStyle.getHorizontalLabelsColor(i));
 				
 				if (horLabelsToShow > 0 && (hors / horLabelsToShow) > 0) {
 			        canvas.drawText(horlabels[i], x, height - 4, paint);

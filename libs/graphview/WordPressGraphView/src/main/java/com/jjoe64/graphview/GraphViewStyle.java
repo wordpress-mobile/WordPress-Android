@@ -29,6 +29,7 @@ import android.graphics.Color;
 public class GraphViewStyle {
 	private int verticalLabelsColor;
 	private int horizontalLabelsColor;
+    private IndexDependentColor horizontalLabelsIndexDependentColor;
 	private int gridXColor;
 	private int gridYColor;
 	private float textSize = 30f;
@@ -57,6 +58,14 @@ public class GraphViewStyle {
 	public int getGridYColor() {
 		return gridYColor;
 	}
+
+    public int getHorizontalLabelsColor(int i) {
+        if (horizontalLabelsIndexDependentColor != null) {
+            return horizontalLabelsIndexDependentColor.get(i);
+        }
+
+        return getHorizontalLabelsColor();
+    }
 
 	public int getHorizontalLabelsColor() {
 		return horizontalLabelsColor;
@@ -122,4 +131,17 @@ public class GraphViewStyle {
 	public void setVerticalLabelsWidth(int verticalLabelsWidth) {
 		this.verticalLabelsWidth = verticalLabelsWidth;
 	}
+
+    public IndexDependentColor getHorizontalLabelsIndexDependentColor() {
+        return horizontalLabelsIndexDependentColor;
+    }
+
+    /**
+     * the color depends on the index of the data in the series
+     * only possible in BarGraphView
+     * @param indexDependentColor
+     */
+    public void setHorizontalLabelsIndexDependentColor(IndexDependentColor indexDependentColor) {
+        this.horizontalLabelsIndexDependentColor = indexDependentColor;
+    }
 }
