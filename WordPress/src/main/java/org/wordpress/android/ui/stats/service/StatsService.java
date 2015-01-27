@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -88,7 +89,7 @@ public class StatsService extends Service {
         }
 
         final String blogId = intent.getStringExtra(ARG_BLOG_ID);
-        if (org.apache.commons.lang.StringUtils.isBlank(blogId)) {
+        if (TextUtils.isEmpty(blogId)) {
             AppLog.e(T.STATS, "StatsService was started with a blank blog_id ");
             return START_NOT_STICKY;
         }
@@ -102,14 +103,9 @@ public class StatsService extends Service {
         if (requestedDate == null) {
             AppLog.w(T.STATS, "StatsService is started with a NULL date on this blogID - "
                     + blogId + ". Using current date!!!");
-            try {
-                int parsedBlogID = Integer.parseInt(blogId);
-                int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
-                requestedDate = StatsUtils.getCurrentDateTZ(localTableBlogId);
-            } catch (NumberFormatException e) {
-                AppLog.e(T.STATS, "StatsService was started with a blog_id that cannot be casted to int " + blogId, e);
-                return START_NOT_STICKY;
-            }
+            int parsedBlogID = Integer.parseInt(blogId);
+            int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
+            requestedDate = StatsUtils.getCurrentDateTZ(localTableBlogId);
         }
 
         // True when the network call to update the graph is needed
