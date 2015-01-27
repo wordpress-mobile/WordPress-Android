@@ -293,7 +293,7 @@ abstract public class GraphView extends LinearLayout {
 			 // measure bottom text
 			if (labelTextHeight == null || verLabelTextWidth == null) {
 				paint.setTextSize(getGraphViewStyle().getTextSize());
-				double testY = ((getMaxY()-getMinY())*0.783)+getMinY();
+				double testY = getMaxY();
 				String testLabel = formatLabel(testY, false);
 				paint.getTextBounds(testLabel, 0, testLabel.length(), textBounds);
 				labelTextHeight = (textBounds.height());
