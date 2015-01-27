@@ -516,7 +516,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mSelectedBarGraphBarIndex = tappedBar;
         updateUIBelowTheGraph(tappedBar);
 
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 

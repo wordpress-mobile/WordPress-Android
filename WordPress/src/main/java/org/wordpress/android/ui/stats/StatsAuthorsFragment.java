@@ -70,7 +70,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (mDatamodels != null && mDatamodels[0] != null
+        return (!isDataEmpty(0)
                 && ((AuthorsModel) mDatamodels[0]).getAuthors() != null
                 && ((AuthorsModel) mDatamodels[0]).getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
     }
