@@ -65,6 +65,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(@Nonnull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_fragment_detail_list, container, false);
         mRootLayout = (LinearLayout)view.findViewById(R.id.notifications_list_root);
@@ -135,38 +142,38 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private final NoteBlock.OnNoteBlockTextClickListener mOnNoteBlockTextClickListener = new NoteBlock.OnNoteBlockTextClickListener() {
         @Override
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
-            if (!isAdded()) return;
+            if (!isAdded() || !(getActivity() instanceof NotificationsDetailActivity)) return;
 
-            NotificationsUtils.handleNoteBlockSpanClick((NotificationsActivity) getActivity(), clickedSpan);
+            NotificationsUtils.handleNoteBlockSpanClick((NotificationsDetailActivity) getActivity(), clickedSpan);
         }
 
         @Override
         public void showDetailForNoteIds() {
-            if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsActivity)) {
+            if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsDetailActivity)) {
                 return;
             }
 
-            NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
+            NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
             if (mNote.getParentCommentId() > 0 || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
                 // show comment detail
-                notificationsActivity.showCommentDetailForNote(mNote);
+                detailActivity.showCommentDetailForNote(mNote);
             } else {
                 // otherwise, load the post in the Reader
-                notificationsActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
+                detailActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
             }
         }
 
         @Override
         public void showSitePreview(long siteId, String siteUrl) {
-            if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsActivity)) {
+            if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsDetailActivity)) {
                 return;
             }
 
-            NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
+            NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
             if (siteId > 0) {
-                notificationsActivity.showBlogPreviewActivity(siteId, siteUrl);
+                detailActivity.showBlogPreviewActivity(siteId, siteUrl);
             } else if (!TextUtils.isEmpty(siteUrl)) {
-                notificationsActivity.showWebViewActivityForUrl(siteUrl);
+                detailActivity.showWebViewActivityForUrl(siteUrl);
             }
         }
     };
@@ -174,13 +181,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private final UserNoteBlock.OnGravatarClickedListener mOnGravatarClickedListener = new UserNoteBlock.OnGravatarClickedListener() {
         @Override
         public void onGravatarClicked(long siteId, long userId, String siteUrl) {
-            if (!isAdded()) return;
+            if (!isAdded() || !(getActivity() instanceof NotificationsDetailActivity)) return;
 
-            NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
+            NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
             if (siteId == 0 && !TextUtils.isEmpty(siteUrl)) {
-                notificationsActivity.showWebViewActivityForUrl(siteUrl);
+                detailActivity.showWebViewActivityForUrl(siteUrl);
             } else {
-                notificationsActivity.showBlogPreviewActivity(siteId, siteUrl);
+                detailActivity.showBlogPreviewActivity(siteId, siteUrl);
             }
         }
     };

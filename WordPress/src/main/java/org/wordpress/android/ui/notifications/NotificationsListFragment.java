@@ -1,32 +1,52 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.NotificationManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.cocosw.undobar.UndoBarController;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
 
+import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 
 import javax.annotation.Nonnull;
 
-public class NotificationsListFragment extends Fragment implements Bucket.Listener<Note> {
+public class NotificationsListFragment extends Fragment implements Bucket.Listener<Note>,
+        CommentActions.OnNoteCommentActionListener, CommentActions.OnCommentChangeListener {
+    public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
+    public static final String NOTE_ID_EXTRA = "noteId";
+    public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
+
+    private static final String KEY_INITIAL_UPDATE = "initialUpdate";
+    private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
 
     private SwipeToRefreshHelper mFauxSwipeToRefreshHelper;
     private NotesAdapter mNotesAdapter;
@@ -35,8 +55,12 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     private TextView mEmptyTextView;
 
     private int mRestoredScrollPosition;
+    private boolean mHasPerformedInitialUpdate;
 
     private Bucket<Note> mBucket;
+
+    public NotificationsListFragment() {
+    }
 
     /**
      * For responding to tapping of notes
@@ -61,6 +85,17 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         if (mBucket != null) {
             if (mNotesAdapter == null) {
                 mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
+                mNotesAdapter.setOnNoteClickListener(new OnNoteClickListener() {
+                    @Override
+                    public void onClickNote(String noteId) {
+                        if (TextUtils.isEmpty(noteId)) return;
+
+                        // open the latest version of this note just in case it has changed - this can
+                        // happen if the note was tapped from the list fragment after it was updated
+                        // by another fragment (such as NotificationCommentLikeFragment)
+                        openNote(noteId);
+                    }
+                });
             }
 
             mRecyclerView.setAdapter(mNotesAdapter);
@@ -78,6 +113,11 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         super.onActivityCreated(savedInstanceState);
 
         initSwipeToRefreshHelper();
+
+        if (savedInstanceState != null) {
+            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE, false);
+            setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
+        }
     }
 
     @Override
@@ -89,6 +129,15 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         if (mBucket != null) {
             mBucket.addListener(this);
         }
+
+        // Remove notification if it is showing when we resume this activity.
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
+        notificationManager.cancel(GCMIntentService.PUSH_NOTIFICATION_ID);
+
+        if (SimperiumUtils.isUserAuthorized()) {
+            SimperiumUtils.startBuckets();
+            AppLog.i(AppLog.T.NOTIFS, "Starting Simperium buckets");
+        }
     }
 
     @Override
@@ -98,6 +147,15 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
             mBucket.removeListener(this);
         }
         super.onPause();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (isAdded() && !mHasPerformedInitialUpdate) {
+            mHasPerformedInitialUpdate = true;
+            ReaderAuthActions.updateCookies(getActivity());
+        }
     }
 
     @Override
@@ -130,10 +188,24 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
                 });
     }
 
-    public void setOnNoteClickListener(OnNoteClickListener listener) {
-        if (mNotesAdapter != null) {
-            mNotesAdapter.setOnNoteClickListener(listener);
+    /**
+     * Open a note fragment based on the type of note
+     */
+    private void openNote(final String noteId) {
+        if (noteId == null || !isAdded()) {
+            return;
         }
+
+        Intent detailIntent = new Intent(getActivity(), NotificationsDetailActivity.class);
+        detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                getActivity(),
+                R.anim.reader_activity_slide_in,
+                R.anim.reader_activity_scale_out);
+        ActivityCompat.startActivity(getActivity(), detailIntent, options.toBundle());
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
 
     public void setNoteIsHidden(String noteId, boolean isHidden) {
@@ -207,10 +279,15 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@Nonnull Bundle outState) {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+
+        outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
+
+        // Save list view scroll position
+        outState.putInt(KEY_LIST_SCROLL_POSITION, getScrollPosition());
 
         super.onSaveInstanceState(outState);
     }
@@ -225,6 +302,90 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
 
     public void setRestoredListPosition(int listPosition) {
         mRestoredScrollPosition = listPosition;
+    }
+
+    @Override
+    public void onModerateCommentForNote(final Note note, final CommentStatus newStatus) {
+        if (!isAdded()) return;
+
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        }
+
+        if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
+            note.setLocalStatus(CommentStatus.toRESTString(newStatus));
+            note.save();
+            setNoteIsModerating(note.getId(), true);
+            CommentActions.moderateCommentForNote(note, newStatus,
+                    new CommentActions.CommentActionListener() {
+                        @Override
+                        public void onActionResult(boolean succeeded) {
+                            if (!isAdded()) return;
+
+                            setNoteIsModerating(note.getId(), false);
+
+                            if (!succeeded) {
+                                note.setLocalStatus(null);
+                                note.save();
+                                ToastUtils.showToast(getActivity(),
+                                        R.string.error_moderate_comment,
+                                        ToastUtils.Duration.LONG
+                                );
+                            }
+                        }
+                    });
+        } else if (newStatus == CommentStatus.TRASH || newStatus == CommentStatus.SPAM) {
+            setNoteIsHidden(note.getId(), true);
+            // Show undo bar for trash or spam actions
+            new UndoBarController.UndoBar(getActivity())
+                    .message(newStatus == CommentStatus.TRASH ? R.string.comment_trashed : R.string.comment_spammed)
+                    .listener(new UndoBarController.AdvancedUndoListener() {
+                        @Override
+                        public void onHide(Parcelable parcelable) {
+                            if (!isAdded()) return;
+                            // Deleted notifications in Simperium never come back, so we won't
+                            // make the request until the undo bar fades away
+                            CommentActions.moderateCommentForNote(note, newStatus,
+                                    new CommentActions.CommentActionListener() {
+                                        @Override
+                                        public void onActionResult(boolean succeeded) {
+                                            if (!isAdded()) return;
+
+                                            if (!succeeded) {
+                                                setNoteIsHidden(note.getId(), false);
+                                                ToastUtils.showToast(getActivity(),
+                                                        R.string.error_moderate_comment,
+                                                        ToastUtils.Duration.LONG
+                                                );
+                                            }
+                                        }
+                                    });
+                        }
+
+                        @Override
+                        public void onClear(@Nonnull Parcelable[] token) {
+                            //noop
+                        }
+
+                        @Override
+                        public void onUndo(Parcelable parcelable) {
+                            setNoteIsHidden(note.getId(), false);
+                        }
+                    }).show();
+        }
+    }
+
+    @Override
+    public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
+        // pop back stack if we edited a comment notification, so simperium will show the change
+        if (changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL
+                && changeType == CommentActions.ChangeType.EDITED) {
+            FragmentManager fm = getFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                fm.popBackStack();
+            }
+        }
     }
 
     /**
