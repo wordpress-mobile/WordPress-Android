@@ -9,6 +9,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/calypso_blue_light"
-        android:minWidth="250dp"/>
+        android:background="#80e8f0f5"
+        android:minWidth="250dp"
+        android:minHeight="30dp"
+        />
 </LinearLayout>
