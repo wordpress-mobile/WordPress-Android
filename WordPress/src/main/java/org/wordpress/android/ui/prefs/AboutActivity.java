@@ -13,6 +13,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.passcodelock.AppLockManager;
 
+import java.util.Calendar;
+
 public class AboutActivity extends ActionBarActivity implements OnClickListener {
     private static final String URL_TOS = "http://en.wordpress.com/tos";
     private static final String URL_AUTOMATTIC = "http://automattic.com";
@@ -24,14 +26,19 @@ public class AboutActivity extends ActionBarActivity implements OnClickListener 
         setContentView(R.layout.about);
 
         WPTextView version = (WPTextView) findViewById(R.id.about_version);
-        version.setText(getString(R.string.version) + " "
-                + WordPress.versionName);
+        version.setText(getString(R.string.version) + " " + WordPress.versionName);
 
         WPTextView tos = (WPTextView) findViewById(R.id.about_tos);
         tos.setOnClickListener(this);
 
         WPTextView pp = (WPTextView) findViewById(R.id.about_privacy);
         pp.setOnClickListener(this);
+
+        WPTextView publisher = (WPTextView) findViewById(R.id.about_publisher);
+        publisher.setText(getString(R.string.publisher) + " " + getString(R.string.automattic_inc));
+
+        WPTextView copyright = (WPTextView) findViewById(R.id.about_copyright);
+        copyright.setText("©" + Calendar.getInstance().get(Calendar.YEAR) + " " + getString(R.string.automattic_inc));
     }
 
     @Override
