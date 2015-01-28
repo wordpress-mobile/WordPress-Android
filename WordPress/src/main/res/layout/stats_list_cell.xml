@@ -18,6 +18,14 @@
         android:layout_gravity="center_vertical">
 
         <ImageView
+            android:id="@+id/stats_list_cell_link"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginRight="10dp"
+            android:visibility="gone"
+            android:src="@drawable/stats_link" />
+
+        <ImageView
             android:id="@+id/stats_list_cell_chevron"
             android:layout_width="12dp"
             android:layout_height="12dp"

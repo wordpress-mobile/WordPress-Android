@@ -127,8 +127,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             int total = children.getTotals();
 
             // The link icon
-            holder.chevronImageView.setVisibility(View.VISIBLE);
-            holder.chevronImageView.setImageDrawable(getResources().getDrawable(R.drawable.stats_link));
+            holder.showLinkIcon();
 
             // name, url
             holder.setEntryTextOrLink(children.getUrl(), name);
@@ -202,9 +201,9 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             holder.chevronImageView.setVisibility(View.VISIBLE);
             if (children == 0) {
-                holder.chevronImageView.setImageDrawable(getResources().getDrawable(R.drawable.stats_link));
+                holder.showLinkIcon();
             } else {
-                holder.chevronImageView.setImageDrawable(getResources().getDrawable(R.drawable.stats_chevron_right));
+                holder.showChevronIcon();
             }
 
             return convertView;
