@@ -116,7 +116,7 @@ public class ManageBlogsActivity extends ActionBarActivity implements OnItemClic
             item.put("isHidden", false);
         }
         WordPress.wpDB.setAllDotComAccountsVisibility(true);
-        ((BlogsAdapter)getListView().getAdapter()).notifyDataSetChanged();
+        ((BlogsAdapter) getListView().getAdapter()).notifyDataSetChanged();
     }
 
     private void deselectAll() {
@@ -124,7 +124,7 @@ public class ManageBlogsActivity extends ActionBarActivity implements OnItemClic
             item.put("isHidden", true);
         }
         WordPress.wpDB.setAllDotComAccountsVisibility(false);
-        ((BlogsAdapter)getListView().getAdapter()).notifyDataSetChanged();
+        ((BlogsAdapter) getListView().getAdapter()).notifyDataSetChanged();
     }
 
     private void refreshBlogs() {
@@ -134,7 +134,7 @@ public class ManageBlogsActivity extends ActionBarActivity implements OnItemClic
 
     private void loadAccounts() {
         ListView listView = getListView();
-        mAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[] {"isHidden"});
+        mAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"isHidden"});
         listView.setAdapter(new BlogsAdapter(this, R.layout.manageblogs_listitem, mAccounts));
     }
 
