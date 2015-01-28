@@ -116,8 +116,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasAuthors() {
-        return mDatamodels != null && mDatamodels[0] != null
-                && !isErrorResponse(0)
+        return !isDataEmpty(0)
                 && ((CommentsModel) mDatamodels[0]).getAuthors() != null
                 && ((CommentsModel) mDatamodels[0]).getAuthors().size() > 0;
     }
@@ -130,8 +129,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasPosts() {
-        return mDatamodels != null && mDatamodels[0] != null
-                && !isErrorResponse(0)
+        return !isDataEmpty(0)
                 && ((CommentsModel) mDatamodels[0]).getPosts() != null
                 && ((CommentsModel) mDatamodels[0]).getPosts().size() > 0;
     }
@@ -145,6 +143,10 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
+        if (isDataEmpty(0)) {
+            return false;
+        }
+
         if (mTopPagerSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
         } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {

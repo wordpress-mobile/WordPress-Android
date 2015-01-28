@@ -190,7 +190,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        if (mDatamodels == null) {
+        if (isDataEmpty()) {
             return false;
         }
         FollowersModel followersModel = (FollowersModel) mDatamodels[mTopPagerSelectedButtonIndex];
