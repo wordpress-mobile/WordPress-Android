@@ -67,6 +67,7 @@ import java.util.Vector;
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
+    private static final int ACTIVITY_REQUEST_CODE_SELECT_PARENT = 6;
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
@@ -77,7 +78,7 @@ public class EditPostSettingsFragment extends Fragment
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private int mPageParentId;
-    private String mPageParentTitle;
+    private String mPageParentTitle = "";
     private TextView mPageParentText;
 
     private ArrayList<String> mCategories;
@@ -132,6 +133,7 @@ public class EditPostSettingsFragment extends Fragment
         mTagsEditText = (EditText) rootView.findViewById(R.id.tags);
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
         mPageParentText = (TextView) rootView.findViewById(R.id.pageParent);
+        mPageParentText.setOnClickListener(this);
 
         // Set header labels to upper case
         ((TextView) rootView.findViewById(R.id.categoryLabel)).setText(getResources().getString(R.string.categories).toUpperCase());
@@ -329,6 +331,14 @@ public class EditPostSettingsFragment extends Fragment
                         populateSelectedCategories();
                     }
                     break;
+                case ACTIVITY_REQUEST_CODE_SELECT_PARENT:
+                    extras = data.getExtras();
+                    if (extras != null && extras.containsKey("parentId")) {
+                        mPageParentId = extras.getInt("parentId");
+                        mPageParentTitle = extras.getString("parentTitle");
+                        updatePageParentText();
+                    }
+                    break;
             }
         }
     }
@@ -347,6 +357,14 @@ public class EditPostSettingsFragment extends Fragment
             Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
             categoriesIntent.putExtras(bundle);
             startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
+        } else if (id == R.id.pageParent) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("blogId", WordPress.getCurrentBlog().getLocalTableBlogId());
+            bundle.putInt("parentId", mPageParentId);
+
+            Intent pagesIntent = new Intent(getActivity(), SelectPageParentActivity.class);
+            pagesIntent.putExtras(bundle);
+            startActivityForResult(pagesIntent, ACTIVITY_REQUEST_CODE_SELECT_PARENT);
         } else if (id == R.id.categoryButton) {
             onCategoryButtonClick(v);
         } else if (id == R.id.locationText) {

@@ -505,6 +505,7 @@
     <!-- page parent management -->
     <string name="parent">Parent</string>
     <string name="no_parent">(no parent)</string>
+    <string name="select_parent">Select page parent</string>
 
     <!-- notifications -->
     <string name="notifications">Notifications</string>
