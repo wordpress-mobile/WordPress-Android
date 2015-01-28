@@ -24,14 +24,15 @@
 
             <ImageView
                 android:id="@+id/stats_visitors_and_views_tab_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginRight="3dp"
                 android:src="@drawable/ic_like" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 android:id="@+id/stats_visitors_and_views_tab_label"
                 android:textColor="@color/calypso_blue_dark"
-                android:textSize="@dimen/text_sz_small"
+                android:textSize="10sp"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:layout_width="wrap_content"
