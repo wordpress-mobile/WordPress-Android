@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -12,8 +13,10 @@ import com.simperium.client.BucketObjectMissingException;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -23,7 +26,8 @@ import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
-public class NotificationsDetailActivity extends ActionBarActivity {
+public class NotificationsDetailActivity extends ActionBarActivity implements
+        CommentActions.OnNoteCommentActionListener {
     private static String ARG_TITLE = "activityTitle";
 
     @Override
@@ -113,7 +117,6 @@ public class NotificationsDetailActivity extends ActionBarActivity {
         if (note.isCommentType()) {
             // show comment detail for comment notifications
             CommentDetailFragment commentDetailFragment = CommentDetailFragment.newInstance(note);
-
             // TODO: FIX
             //if (!TextUtils.isEmpty(mRestoredReplyText)) {
             //    commentDetailFragment.setRestoredReplyText(mRestoredReplyText);
@@ -173,5 +176,15 @@ public class NotificationsDetailActivity extends ActionBarActivity {
         if (isFinishing() || url == null)
             return;
         WPWebViewActivity.openURL(this, url);
+    }
+
+    @Override
+    public void onModerateCommentForNote(Note note, CommentStatus newStatus) {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, note.getId());
+        resultIntent.putExtra(NotificationsListFragment.NOTE_COMMENT_STATUS_EXTRA, CommentStatus.toRESTString(newStatus));
+
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 }

@@ -56,4 +56,14 @@ public class NotificationsActivity extends WPDrawerActivity {
 
         GCMIntentService.clearNotificationsMap();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // This can be removed if min_sdk is 16 or higher
+        if (mNotesListFragment != null) {
+            mNotesListFragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }

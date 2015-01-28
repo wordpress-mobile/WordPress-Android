@@ -35,16 +35,18 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 
 import javax.annotation.Nonnull;
 
-public class NotificationsListFragment extends Fragment implements Bucket.Listener<Note>,
-        CommentActions.OnNoteCommentActionListener, CommentActions.OnCommentChangeListener {
+public class NotificationsListFragment extends Fragment implements Bucket.Listener<Note> {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
+    public static final String NOTE_COMMENT_STATUS_EXTRA = "commentStatus";
+    public static final int NOTE_DETAIL_REQUEST_CODE = 0;
 
     private static final String KEY_INITIAL_UPDATE = "initialUpdate";
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
@@ -204,7 +206,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
                 activity,
                 R.anim.reader_activity_slide_in,
                 R.anim.reader_activity_scale_out);
-        ActivityCompat.startActivity(activity, detailIntent, options.toBundle());
+        ActivityCompat.startActivityForResult(activity, detailIntent, NOTE_DETAIL_REQUEST_CODE, options.toBundle());
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
@@ -306,13 +308,24 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     }
 
     @Override
-    public void onModerateCommentForNote(final Note note, final CommentStatus newStatus) {
-        if (!isAdded()) return;
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == NOTE_DETAIL_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            if (SimperiumUtils.getNotesBucket() == null) return;
 
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
+            try {
+                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra(NOTE_ID_EXTRA)));
+                CommentStatus commentStatus = CommentStatus.fromString(data.getStringExtra(NOTE_COMMENT_STATUS_EXTRA));
+                moderateCommentForNote(note, commentStatus);
+            } catch (BucketObjectMissingException e) {
+                e.printStackTrace();
+            }
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void moderateCommentForNote(final Note note, final CommentStatus newStatus) {
+        if (!isAdded()) return;
 
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             note.setLocalStatus(CommentStatus.toRESTString(newStatus));
@@ -374,18 +387,6 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
                             setNoteIsHidden(note.getId(), false);
                         }
                     }).show();
-        }
-    }
-
-    @Override
-    public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
-        // pop back stack if we edited a comment notification, so simperium will show the change
-        if (changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL
-                && changeType == CommentActions.ChangeType.EDITED) {
-            FragmentManager fm = getFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                fm.popBackStack();
-            }
         }
     }
 
