@@ -50,13 +50,14 @@
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_blog_name" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_follow"
-                style="@style/ReaderTextView.Follow"
+            
+            <org.wordpress.android.ui.reader.views.ReaderFollowButton
+                android:id="@+id/follow_button"
                 android:layout_below="@+id/text_blog_name"
                 android:layout_marginTop="@dimen/margin_small"
-                android:layout_toRightOf="@+id/image_avatar" />
+                android:layout_toRightOf="@+id/image_avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <ImageView
                 android:id="@+id/image_more"

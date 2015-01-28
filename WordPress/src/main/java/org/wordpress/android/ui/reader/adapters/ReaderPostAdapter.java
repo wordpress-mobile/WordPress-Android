@@ -26,7 +26,7 @@ import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -64,11 +64,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         private final TextView txtText;
         private final TextView txtBlogName;
         private final TextView txtDate;
-        private final TextView txtFollow;
         private final TextView txtTag;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
+        private final ReaderFollowButton followButton;
 
         private final ImageView imgBtnReblog;
         private final ImageView imgMore;
@@ -85,11 +85,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
             txtBlogName = (TextView) itemView.findViewById(R.id.text_blog_name);
             txtDate = (TextView) itemView.findViewById(R.id.text_date);
-            txtFollow = (TextView) itemView.findViewById(R.id.text_follow);
             txtTag = (TextView) itemView.findViewById(R.id.text_tag);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
+            followButton = (ReaderFollowButton) itemView.findViewById(R.id.follow_button);
 
             imgFeatured = (WPNetworkImageView) itemView.findViewById(R.id.image_featured);
             imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
@@ -134,11 +134,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             }
 
             // follow/following
-            ReaderUtils.showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
-            holder.txtFollow.setOnClickListener(new View.OnClickListener() {
+            holder.followButton.setIsFollowed(post.isFollowedByCurrentUser, false);
+            holder.followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleFollow((TextView) v, position);
+                    toggleFollow((ReaderFollowButton) v, position);
                 }
             });
 
@@ -528,22 +528,22 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     /*
      * triggered when user taps the follow button
      */
-    private void toggleFollow(final TextView txtFollow, int position) {
+    private void toggleFollow(final ReaderFollowButton followButton, int position) {
         ReaderPost post = getItem(position);
         if (post == null) {
             return;
         }
 
         final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
-        ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
+        followButton.setIsFollowed(isAskingToFollow, true);
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded) {
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
-                    ToastUtils.showToast(txtFollow.getContext(), resId);
-                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
+                    ToastUtils.showToast(followButton.getContext(), resId);
+                    followButton.setIsFollowed(!isAskingToFollow, false);
                 }
             }
         };

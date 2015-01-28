@@ -14,11 +14,10 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderRecommendedBlog;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -172,11 +171,11 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     break;
             }
 
-            ReaderUtils.showFollowStatus(blogHolder.txtFollow, isFollowing);
-            blogHolder.txtFollow.setOnClickListener(new View.OnClickListener() {
+            blogHolder.followButton.setIsFollowed(isFollowing, false);
+            blogHolder.followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    changeFollowStatus((TextView) view, position, !isFollowing);
+                    changeFollowStatus((ReaderFollowButton) view, position, !isFollowing);
                 }
             });
 
@@ -205,7 +204,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtTitle;
         private final TextView txtDescription;
         private final TextView txtUrl;
-        private final TextView txtFollow;
+        private final ReaderFollowButton followButton;
         private final WPNetworkImageView imgBlog;
 
         public BlogViewHolder(View view) {
@@ -214,7 +213,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtDescription = (TextView) view.findViewById(R.id.text_description);
             txtUrl = (TextView) view.findViewById(R.id.text_url);
-            txtFollow = (TextView) view.findViewById(R.id.text_follow);
+            followButton = (ReaderFollowButton) view.findViewById(R.id.follow_button);
             imgBlog = (WPNetworkImageView) view.findViewById(R.id.image_blog);
 
             // followed blogs don't have a description
@@ -229,7 +228,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void changeFollowStatus(final TextView txtFollow,
+    private void changeFollowStatus(final ReaderFollowButton followButton,
                                     final int position,
                                     final boolean isAskingToFollow) {
         if (getItemViewType(position) != VIEW_TYPE_ITEM) {
@@ -256,17 +255,17 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                Context context = txtFollow.getContext();
+                Context context = followButton.getContext();
                 if (!succeeded && context != null) {
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(context, resId);
-                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
+                    followButton.setIsFollowed(!isAskingToFollow, false);
                     checkFollowStatus();
                 }
             }
         };
 
-        ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
+        followButton.setIsFollowed(isAskingToFollow, true);
 
         if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, actionListener)) {
             if (getBlogType() == ReaderBlogType.FOLLOWED) {

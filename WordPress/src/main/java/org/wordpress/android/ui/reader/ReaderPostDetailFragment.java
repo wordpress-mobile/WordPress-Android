@@ -34,6 +34,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
@@ -342,14 +343,14 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
-        final TextView txtFollow = (TextView) getView().findViewById(R.id.text_follow);
-        ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
+        final ReaderFollowButton followButton = (ReaderFollowButton) getView().findViewById(R.id.follow_button);
+        followButton.setIsFollowed(isAskingToFollow, true);
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && isAdded()) {
-                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
+                    followButton.setIsFollowed(!isAskingToFollow, false);
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(getActivity(), resId);
                 }
@@ -646,11 +647,11 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtTitle;
         TextView txtBlogName;
         TextView txtDateAndAuthor;
-        TextView txtFollow;
 
         ImageView imgBtnReblog;
         ImageView imgMore;
 
+        ReaderFollowButton followButton;
         WPNetworkImageView imgAvatar;
         ViewGroup layoutDetailHeader;
 
@@ -678,15 +679,14 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
-            txtFollow = (TextView) container.findViewById(R.id.text_follow);
             txtDateAndAuthor = (TextView) container.findViewById(R.id.text_date_and_author);
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
             imgMore = (ImageView) container.findViewById(R.id.image_more);
-
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
+            followButton = (ReaderFollowButton) container.findViewById(R.id.follow_button);
 
             return true;
         }
@@ -719,8 +719,8 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            ReaderUtils.showFollowStatus(txtFollow, mPost.isFollowedByCurrentUser);
-            txtFollow.setOnClickListener(new View.OnClickListener() {
+            followButton.setIsFollowed(mPost.isFollowedByCurrentUser, false);
+            followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     togglePostFollowed();
