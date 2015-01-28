@@ -1,11 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/title"
-    android:id="@+id/blog_name"
-    android:gravity="center_vertical"
-    android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-    android:padding="@dimen/settings_list_item_padding" />
+    <LinearLayout
+        android:id="@+id/textview_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/blog_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/settings_list_item_padding"
+            android:paddingStart="@dimen/settings_list_item_padding"
+            android:paddingTop="@dimen/settings_list_item_padding"
+            android:text="@string/title"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:ellipsize="marquee"
+            tools:text="Blog Name"/>
+
+        <TextView
+            android:id="@+id/blog_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:paddingLeft="@dimen/settings_list_item_padding"
+            android:paddingStart="@dimen/settings_list_item_padding"
+            android:paddingBottom="@dimen/settings_list_item_padding"
+            android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+            android:textColor="@android:color/tertiary_text_dark"
+            android:singleLine="true"
+            tools:text="blogurl.wordpress.com"/>
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/textview_wrapper"
+        android:layout_alignTop="@id/textview_wrapper"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="@dimen/settings_list_item_padding"
+        android:paddingEnd="@dimen/settings_list_item_padding"
+        android:layout_gravity="center_vertical"/>
+</RelativeLayout>

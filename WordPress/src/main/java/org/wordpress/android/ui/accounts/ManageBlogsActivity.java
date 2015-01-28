@@ -10,12 +10,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
+import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -31,7 +31,7 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import java.util.List;
 import java.util.Map;
 
-public class ManageBlogsActivity extends ActionBarActivity implements OnItemClickListener {
+public class ManageBlogsActivity extends ActionBarActivity {
     private List<Map<String, Object>> mAccounts;
     private ListScrollPositionManager mListScrollPositionManager;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -76,14 +76,6 @@ public class ManageBlogsActivity extends ActionBarActivity implements OnItemClic
         if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
             refreshBlogs();
         }
-        getListView().setOnItemClickListener(this);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        CheckedTextView checkedView = (CheckedTextView) view;
-        checkedView.setChecked(!checkedView.isChecked());
-        setItemChecked(position, checkedView.isChecked());
     }
 
     @Override
@@ -147,20 +139,47 @@ public class ManageBlogsActivity extends ActionBarActivity implements OnItemClic
 
     private class BlogsAdapter extends ArrayAdapter<Map<String, Object>> {
         private int mResource;
+        private final LayoutInflater mInflater;
 
-        public BlogsAdapter(Context context, int resource, List objects) {
+        public BlogsAdapter(Context context, int resource, List<Map<String, Object>> objects) {
             super(context, resource, objects);
             mResource = resource;
+            mInflater = LayoutInflater.from(context);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(mResource, parent, false);
-            CheckedTextView nameView = (CheckedTextView) rowView.findViewById(R.id.blog_name);
-            nameView.setText(BlogUtils.getBlogNameFromAccountMap(getItem(position)));
-            nameView.setChecked(!MapUtils.getMapBool(getItem(position), "isHidden"));
-            return rowView;
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            final BlogItemViewHolder holder;
+            if (convertView == null) {
+                convertView = mInflater.inflate(mResource, parent, false);
+                holder = new BlogItemViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (BlogItemViewHolder) convertView.getTag();
+            }
+            holder.nameView.setText(BlogUtils.getBlogNameFromAccountMap(getItem(position)));
+            holder.urlView.setText(BlogUtils.getHostNameFromAccountMap(getItem(position)));
+            holder.checkBox.setChecked(!MapUtils.getMapBool(getItem(position), "isHidden"));
+            convertView.setOnClickListener(new OnClickListener() {
+                @Override public void onClick(View v) {
+                    holder.checkBox.setChecked(!holder.checkBox.isChecked());
+                    setItemChecked(position, holder.checkBox.isChecked());
+                }
+            });
+            return convertView;
+        }
+
+        private class BlogItemViewHolder {
+            private final TextView nameView;
+            private final CheckBox checkBox;
+            private final TextView urlView;
+
+            BlogItemViewHolder(final View rowView) {
+                nameView = (TextView) rowView.findViewById(R.id.blog_name);
+                urlView = (TextView) rowView.findViewById(R.id.blog_url);
+                checkBox = (CheckBox) rowView.findViewById(R.id.checkbox);
+                checkBox.setClickable(false);
+            }
         }
     }
 
