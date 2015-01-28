@@ -92,18 +92,21 @@ public class SelectPageParentActivity extends ActionBarActivity {
 
         if (mFirstRefresh) {
             mFirstRefresh = false;
-            final int checkedPosition = mPageIds.get(mSelectedPageId);
-            mListView.setItemChecked(checkedPosition, true);
+            if (mPageIds.containsKey(mSelectedPageId)) {
+                final int checkedPosition = mPageIds.get(mSelectedPageId);
 
-            // Auto-scroll to initial selected position
-            mListView.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (mListView.getLastVisiblePosition() < checkedPosition) {
-                        mListView.setSelectionFromTop(checkedPosition - 1, 0);
+                mListView.setItemChecked(checkedPosition, true);
+
+                // Auto-scroll to initial selected position
+                mListView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mListView.getLastVisiblePosition() < checkedPosition) {
+                            mListView.setSelectionFromTop(checkedPosition - 1, 0);
+                        }
                     }
-                }
-            });
+                });
+            }
         } else {
             mListScrollPositionManager.restoreScrollOffset();
         }
@@ -127,17 +130,21 @@ public class SelectPageParentActivity extends ActionBarActivity {
     }
 
     private void saveAndFinish() {
-        String parentTitle =  "";
-        if (mSelectedPageId != 0) {
-            parentTitle = mPageLevels.get(mListView.getCheckedItemPosition()).getName();
+        Intent mIntent = new Intent();
+
+        if (mListView.getCheckedItemPosition() > 0) {
+            // If nothing is checked, the parent id initially passed was not found. Don't modify the post data
+            String parentTitle =  "";
+            if (mSelectedPageId != 0) {
+                parentTitle = mPageLevels.get(mListView.getCheckedItemPosition()).getName();
+            }
+            Bundle bundle = new Bundle();
+            bundle.putInt("parentId", mSelectedPageId);
+            bundle.putString("parentTitle", parentTitle);
+
+            mIntent.putExtras(bundle);
         }
 
-        Bundle bundle = new Bundle();
-        bundle.putInt("parentId", mSelectedPageId);
-        bundle.putString("parentTitle", parentTitle);
-
-        Intent mIntent = new Intent();
-        mIntent.putExtras(bundle);
         setResult(RESULT_OK, mIntent);
         finish();
     }
