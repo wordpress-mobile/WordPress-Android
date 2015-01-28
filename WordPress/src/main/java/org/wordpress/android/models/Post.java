@@ -433,6 +433,8 @@ public class Post implements Serializable {
                                       StringUtils.equals(status, otherPost.status) &&
                                       StringUtils.equals(password, otherPost.password) &&
                                       StringUtils.equals(postFormat, otherPost.postFormat) &&
+                                      StringUtils.equals(pageParentId, otherPost.pageParentId) &&
+                                      StringUtils.equals(pageParentTitle, otherPost.pageParentTitle) &&
                                       this.dateCreatedGmt == otherPost.dateCreatedGmt &&
                                       PostLocation.equals(this.mPostLocation, otherPost.mPostLocation)
         );

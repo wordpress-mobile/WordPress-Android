@@ -76,6 +76,8 @@ public class EditPostSettingsFragment extends Fragment
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
+    private int mPageParentId;
+    private String mPageParentTitle;
     private TextView mPageParentText;
 
     private ArrayList<String> mCategories;
@@ -252,11 +254,9 @@ public class EditPostSettingsFragment extends Fragment
             }
 
             if (!TextUtils.isEmpty(post.getPageParentId()) && !post.getPageParentId().equals("0")) {
-                if (!TextUtils.isEmpty(post.getPageParentTitle())) {
-                    mPageParentText.setText(post.getPageParentTitle());
-                } else {
-                    mPageParentText.setText("#" + post.getPageParentId() + " (" + getText(R.string.untitled) + ")");
-                }
+                mPageParentId = Integer.parseInt(post.getPageParentId());
+                mPageParentTitle = post.getPageParentTitle();
+                updatePageParentText();
             }
 
             if (!TextUtils.isEmpty(post.getPassword()))
@@ -488,6 +488,9 @@ public class EditPostSettingsFragment extends Fragment
             if (mPostFormats != null && mPostFormatSpinner.getSelectedItemPosition() < mPostFormats.length) {
                 postFormat = mPostFormats[mPostFormatSpinner.getSelectedItemPosition()];
             }
+        } else {
+            post.setPageParentId(Integer.toString(mPageParentId));
+            post.setPageParentTitle(mPageParentTitle);
         }
 
         String status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition());
@@ -887,6 +890,14 @@ public class EditPostSettingsFragment extends Fragment
         if (selectCategory != null) {
             selectCategory.setOnClickListener(this);
             mSectionCategories.addView(selectCategory);
+        }
+    }
+
+    private void updatePageParentText() {
+        if (!TextUtils.isEmpty(mPageParentTitle)) {
+            mPageParentText.setText(mPageParentTitle);
+        } else {
+            mPageParentText.setText("#" + mPageParentId + " (" + getText(R.string.untitled) + ")");
         }
     }
 }

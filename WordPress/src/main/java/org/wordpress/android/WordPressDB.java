@@ -916,6 +916,10 @@ public class WordPressDB {
             values.put("isUploading", post.isUploading());
             values.put("uploaded", post.isUploaded());
             values.put("isPage", post.isPage());
+            if (post.isPage()) {
+                values.put("wp_page_parent_id", post.getPageParentId());
+                values.put("wp_page_parent_title", post.getPageParentTitle());
+            }
             values.put("wp_post_format", post.getPostFormat());
             putPostLocation(post, values);
             values.put("isLocalChange", post.isLocalChange());
@@ -956,6 +960,10 @@ public class WordPressDB {
             values.put("wp_post_format", post.getPostFormat());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
+            if (post.isPage()) {
+                values.put("wp_page_parent_id", post.getPageParentId());
+                values.put("wp_page_parent_title", post.getPageParentTitle());
+            }
             putPostLocation(post, values);
 
             result = db.update(POSTS_TABLE, values, "blogID=? AND id=? AND isPage=?",
