@@ -2,7 +2,6 @@ package org.wordpress.android.ui.notifications;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,7 +44,8 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
-    public static final String NOTE_COMMENT_STATUS_EXTRA = "commentStatus";
+    public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
+    public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
     public static final int NOTE_DETAIL_REQUEST_CODE = 0;
 
     private static final String KEY_INITIAL_UPDATE = "initialUpdate";
@@ -96,7 +96,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
                         // open the latest version of this note just in case it has changed - this can
                         // happen if the note was tapped from the list fragment after it was updated
                         // by another fragment (such as NotificationCommentLikeFragment)
-                        openNote(noteId, getActivity());
+                        openNote(noteId, getActivity(), false);
                     }
                 });
             }
@@ -194,13 +194,14 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     /**
      * Open a note fragment based on the type of note
      */
-    public void openNote(final String noteId, Activity activity) {
+    public void openNote(final String noteId, Activity activity, boolean shouldShowKeyboard) {
         if (noteId == null || activity == null) {
             return;
         }
 
         Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
         detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
+        detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard);
 
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
@@ -313,8 +314,8 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
             if (SimperiumUtils.getNotesBucket() == null) return;
 
             try {
-                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra(NOTE_ID_EXTRA)));
-                CommentStatus commentStatus = CommentStatus.fromString(data.getStringExtra(NOTE_COMMENT_STATUS_EXTRA));
+                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra(NOTE_MODERATE_ID_EXTRA)));
+                CommentStatus commentStatus = CommentStatus.fromString(data.getStringExtra(NOTE_MODERATE_STATUS_EXTRA));
                 moderateCommentForNote(note, commentStatus);
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();

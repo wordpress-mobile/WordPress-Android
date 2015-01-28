@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.simperium.client.BucketObjectMissingException;
 
@@ -47,6 +47,11 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
             if (noteId == null) {
                 // TODO: error msg?
                 return;
+            }
+
+            // Hide the keyboard, unless we arrived here from the 'Reply' action in a push notification
+            if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             }
 
             if (SimperiumUtils.getNotesBucket() != null) {
@@ -116,16 +121,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         Fragment fragment;
         if (note.isCommentType()) {
             // show comment detail for comment notifications
-            CommentDetailFragment commentDetailFragment = CommentDetailFragment.newInstance(note);
-            // TODO: FIX
-            //if (!TextUtils.isEmpty(mRestoredReplyText)) {
-            //    commentDetailFragment.setRestoredReplyText(mRestoredReplyText);
-            //}
-            //if (getIntent() != null && getIntent().hasExtra(NOTE_INSTANT_REPLY_EXTRA)) {
-            //    commentDetailFragment.setShouldFocusReplyField(true);
-            //}
-
-            fragment = commentDetailFragment;
+            fragment = CommentDetailFragment.newInstance(note);
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above
@@ -181,8 +177,8 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
     @Override
     public void onModerateCommentForNote(Note note, CommentStatus newStatus) {
         Intent resultIntent = new Intent();
-        resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, note.getId());
-        resultIntent.putExtra(NotificationsListFragment.NOTE_COMMENT_STATUS_EXTRA, CommentStatus.toRESTString(newStatus));
+        resultIntent.putExtra(NotificationsListFragment.NOTE_MODERATE_ID_EXTRA, note.getId());
+        resultIntent.putExtra(NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA, CommentStatus.toRESTString(newStatus));
 
         setResult(RESULT_OK, resultIntent);
         finish();

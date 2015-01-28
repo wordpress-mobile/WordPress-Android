@@ -51,7 +51,8 @@ public class NotificationsActivity extends WPDrawerActivity {
 
         Intent intent = getIntent();
         if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
-            mNotesListFragment.openNote(intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA), this);
+            boolean shouldShowKeyboard = intent.getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
+            mNotesListFragment.openNote(intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA), this, shouldShowKeyboard);
         }
 
         GCMIntentService.clearNotificationsMap();
