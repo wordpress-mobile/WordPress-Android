@@ -26,11 +26,25 @@ public class BlogUtils {
     /**
      * Return a blog name or blog url (host part only) if trimmed name is an empty string
      */
-    public static String getBlogNameFromAccountMap(Map<String, Object> account) {
-        String blogName = StringUtils.unescapeHTML(MapUtils.getMapStr(account, "blogName"));
+    public static String getBlogNameOrHostNameFromAccountMap(Map<String, Object> account) {
+        String blogName = getBlogNameFromAccountMap(account);
         if (blogName.trim().length() == 0) {
             blogName = StringUtils.getHost(MapUtils.getMapStr(account, "url"));
         }
         return blogName;
+    }
+
+    /**
+     * Return a blog name or blog url (host part only) if trimmed name is an empty string
+     */
+    public static String getBlogNameFromAccountMap(Map<String, Object> account) {
+        return StringUtils.unescapeHTML(MapUtils.getMapStr(account, "blogName"));
+    }
+
+    /**
+     * Return blog url (host part only) if trimmed name is an empty string
+     */
+    public static String getHostNameFromAccountMap(Map<String, Object> account) {
+        return StringUtils.getHost(MapUtils.getMapStr(account, "url"));
     }
 }

@@ -596,7 +596,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         for (int i = 0; i < blogCount; i++) {
             Map<String, Object> account = accounts.get(i);
-            blogNames[i] = BlogUtils.getBlogNameFromAccountMap(account);
+            blogNames[i] = BlogUtils.getBlogNameOrHostNameFromAccountMap(account);
             mBlogIDs[i] = Integer.valueOf(account.get("id").toString());
         }
 
