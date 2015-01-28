@@ -175,7 +175,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         setHasOptionsMenu(true);
-        setRetainInstance(true);
     }
 
     @Override

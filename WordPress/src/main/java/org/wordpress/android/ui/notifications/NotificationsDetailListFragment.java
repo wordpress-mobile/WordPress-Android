@@ -65,13 +65,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setRetainInstance(true);
-    }
-
-    @Override
     public View onCreateView(@Nonnull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_fragment_detail_list, container, false);
         mRootLayout = (LinearLayout)view.findViewById(R.id.notifications_list_root);
