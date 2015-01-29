@@ -41,6 +41,11 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment, Bucket.Listener<Note> {
+    private static String KEY_NOTE_ID = "noteId";
+    private static String KEY_LIST_POSITION = "listPosition";
+
+    private int mRestoredListPosition;
+
     public interface OnNoteChangeListener {
         public void onNoteChanged(Note note);
     }
@@ -58,10 +63,20 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     public NotificationsDetailListFragment() {
     }
 
-    public static NotificationsDetailListFragment newInstance(final Note note) {
+    public static NotificationsDetailListFragment newInstance(final String noteId) {
         NotificationsDetailListFragment fragment = new NotificationsDetailListFragment();
-        fragment.setNote(note);
+        fragment.setNoteWithNoteId(noteId);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_NOTE_ID)) {
+            setNoteWithNoteId(savedInstanceState.getString(KEY_NOTE_ID));
+            mRestoredListPosition = savedInstanceState.getInt(KEY_LIST_POSITION, 0);
+        }
     }
 
     @Override
@@ -118,6 +133,30 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     @Override
     public void setNote(Note note) {
         mNote = note;
+    }
+
+    // TODO: load in async task
+    public void setNoteWithNoteId(String noteId) {
+        if (noteId == null) return;
+
+        if (SimperiumUtils.getNotesBucket() != null) {
+            try {
+                Note note = SimperiumUtils.getNotesBucket().get(noteId);
+                setNote(note);
+            } catch (BucketObjectMissingException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mNote != null) {
+            outState.putString(KEY_NOTE_ID, mNote.getId());
+            outState.putInt(KEY_LIST_POSITION, getListView().getFirstVisiblePosition());
+        }
+
+        super.onSaveInstanceState(outState);
     }
 
     public void setOnNoteChangeListener(OnNoteChangeListener listener) {
@@ -296,6 +335,11 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 setListAdapter(mNoteBlockAdapter);
             } else {
                 mNoteBlockAdapter.setNoteList(noteList);
+            }
+
+            if (mRestoredListPosition > 0) {
+                getListView().setSelectionFromTop(mRestoredListPosition, 0);
+                mRestoredListPosition = 0;
             }
         }
     }

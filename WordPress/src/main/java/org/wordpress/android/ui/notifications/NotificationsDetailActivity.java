@@ -129,10 +129,10 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
             if (isPost) {
                 fragment = ReaderPostDetailFragment.newInstance(note.getSiteId(), note.getPostId());
             } else {
-                fragment = NotificationsDetailListFragment.newInstance(note);
+                fragment = NotificationsDetailListFragment.newInstance(note.getId());
             }
         } else {
-            fragment = NotificationsDetailListFragment.newInstance(note);
+            fragment = NotificationsDetailListFragment.newInstance(note.getId());
         }
 
         return fragment;

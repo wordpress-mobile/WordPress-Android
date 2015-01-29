@@ -950,7 +950,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // Now we'll add a detail fragment list
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note);
+        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note.getId());
         mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
         // Listen for note changes from the defail list fragment, so we can update the status buttons
         mNotificationsDetailListFragment.setOnNoteChangeListener(new NotificationsDetailListFragment.OnNoteChangeListener() {
