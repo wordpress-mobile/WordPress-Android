@@ -46,7 +46,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
-    public static final int NOTE_DETAIL_REQUEST_CODE = 0;
+    private static final int NOTE_DETAIL_REQUEST_CODE = 0;
 
     private static final String KEY_INITIAL_UPDATE = "initialUpdate";
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
@@ -212,7 +212,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
 
-    public void setNoteIsHidden(String noteId, boolean isHidden) {
+    private void setNoteIsHidden(String noteId, boolean isHidden) {
         if (mNotesAdapter == null) return;
 
         if (isHidden) {
@@ -229,7 +229,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         }
     }
 
-    public void setNoteIsModerating(String noteId, boolean isModerating) {
+    private void setNoteIsModerating(String noteId, boolean isModerating) {
         if (mNotesAdapter == null) return;
 
         if (isModerating) {
@@ -296,7 +296,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         super.onSaveInstanceState(outState);
     }
 
-    public int getScrollPosition() {
+    private int getScrollPosition() {
         if (!isAdded() || mRecyclerView == null) {
             return RecyclerView.NO_POSITION;
         }
@@ -304,7 +304,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         return mLinearLayoutManager.findFirstVisibleItemPosition();
     }
 
-    public void setRestoredListPosition(int listPosition) {
+    private void setRestoredListPosition(int listPosition) {
         mRestoredScrollPosition = listPosition;
     }
 

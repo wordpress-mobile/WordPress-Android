@@ -41,8 +41,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment, Bucket.Listener<Note> {
-    private static String KEY_NOTE_ID = "noteId";
-    private static String KEY_LIST_POSITION = "listPosition";
+    private static final String KEY_NOTE_ID = "noteId";
+    private static final String KEY_LIST_POSITION = "listPosition";
 
     private int mRestoredListPosition;
 
@@ -135,7 +135,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         mNote = note;
     }
 
-    public void setNoteWithNoteId(String noteId) {
+    private void setNoteWithNoteId(String noteId) {
         if (noteId == null) return;
 
         if (SimperiumUtils.getNotesBucket() != null) {

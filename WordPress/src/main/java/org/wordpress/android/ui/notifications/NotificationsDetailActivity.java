@@ -25,10 +25,11 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 
 public class NotificationsDetailActivity extends ActionBarActivity implements
         CommentActions.OnNoteCommentActionListener {
-    private static String ARG_TITLE = "activityTitle";
+    private static final String ARG_TITLE = "activityTitle";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         if (savedInstanceState == null) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (noteId == null) {
-                // TODO: error msg?
+                ToastUtils.showToast(this, R.string.error_notification_open);
                 return;
             }
 
@@ -76,6 +77,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
                 } catch (BucketObjectMissingException e) {
                     AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
+                    ToastUtils.showToast(this, R.string.error_notification_open);
                 }
             }
         } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
@@ -169,8 +171,8 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
     }
 
     public void showWebViewActivityForUrl(String url) {
-        if (isFinishing() || url == null)
-            return;
+        if (isFinishing() || url == null) return;
+
         WPWebViewActivity.openURL(this, url);
     }
 

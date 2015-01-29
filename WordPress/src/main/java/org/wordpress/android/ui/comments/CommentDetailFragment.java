@@ -319,7 +319,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             showComment();
     }
 
-    public void setShouldFocusReplyField(boolean shouldFocusReplyField) {
+    private void setShouldFocusReplyField(boolean shouldFocusReplyField) {
         mShouldFocusReplyField = shouldFocusReplyField;
     }
 
@@ -340,7 +340,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
-    public void setNoteWithNoteId(String noteId) {
+    private void setNoteWithNoteId(String noteId) {
         if (noteId == null) return;
 
         if (SimperiumUtils.getNotesBucket() != null) {
