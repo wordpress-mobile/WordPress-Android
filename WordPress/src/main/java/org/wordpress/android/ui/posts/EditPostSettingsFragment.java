@@ -360,6 +360,7 @@ public class EditPostSettingsFragment extends Fragment
         } else if (id == R.id.pageParent) {
             Bundle bundle = new Bundle();
             bundle.putInt("blogId", WordPress.getCurrentBlog().getLocalTableBlogId());
+            bundle.putInt("pageId", Integer.parseInt(mActivity.getPost().getRemotePostId()));
             bundle.putInt("parentId", mPageParentId);
 
             Intent pagesIntent = new Intent(getActivity(), SelectPageParentActivity.class);

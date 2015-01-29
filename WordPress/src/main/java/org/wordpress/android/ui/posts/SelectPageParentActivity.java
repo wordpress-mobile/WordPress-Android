@@ -23,9 +23,10 @@ import java.util.Map;
 public class SelectPageParentActivity extends ActionBarActivity {
     private ListView mListView;
     private ListScrollPositionManager mListScrollPositionManager;
-    private int mSelectedPageId;
+    private int mSelectedParentId;
 
     private Blog mBlog;
+    private int mPageId;
     private ArrayList<PageNode> mPageLevels;
     private Map<Integer, Integer> mPageIds = new HashMap<>();
 
@@ -52,21 +53,28 @@ public class SelectPageParentActivity extends ActionBarActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                mListView.setItemChecked(position, true);
-                mSelectedPageId = mPageLevels.get(position).getPageId();
+                PageNode selectedParent = mPageLevels.get(position);
+                if (selectedParent.getPageId() == mPageId || selectedParent.isDescendantOfPageWithId(mPageId)) {
+                    // Can't set the parent of a page to the page itself or its descendants
+                    // Return to previously selected parent
+                    mListView.setItemChecked(mPageIds.get(mSelectedParentId), true);
+                } else {
+                    mSelectedParentId = selectedParent.getPageId();
+                }
             }
         });
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             int blogId = extras.getInt("blogId");
+            mPageId = extras.getInt("pageId");
             mBlog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
             if (mBlog == null) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();
             }
 
-            mSelectedPageId = extras.getInt("parentId");
+            mSelectedParentId = extras.getInt("parentId");
         }
 
         if (savedInstanceState == null) {
@@ -92,8 +100,8 @@ public class SelectPageParentActivity extends ActionBarActivity {
 
         if (mFirstRefresh) {
             mFirstRefresh = false;
-            if (mPageIds.containsKey(mSelectedPageId)) {
-                final int checkedPosition = mPageIds.get(mSelectedPageId);
+            if (mPageIds.containsKey(mSelectedParentId)) {
+                final int checkedPosition = mPageIds.get(mSelectedParentId);
 
                 mListView.setItemChecked(checkedPosition, true);
 
@@ -132,14 +140,14 @@ public class SelectPageParentActivity extends ActionBarActivity {
     private void saveAndFinish() {
         Intent mIntent = new Intent();
 
-        // If nothing is checked, the parent id initially passed was not found. Don't modify the post data
+        // If nothing is checked, the parent id initially passed was not found. Don't modify the page data
         if (mListView.getCheckedItemPosition() >= 0) {
             String parentTitle =  "";
-            if (mSelectedPageId != 0) {
+            if (mSelectedParentId != 0) {
                 parentTitle = mPageLevels.get(mListView.getCheckedItemPosition()).getName();
             }
             Bundle bundle = new Bundle();
-            bundle.putInt("parentId", mSelectedPageId);
+            bundle.putInt("parentId", mSelectedParentId);
             bundle.putString("parentTitle", parentTitle);
 
             mIntent.putExtras(bundle);

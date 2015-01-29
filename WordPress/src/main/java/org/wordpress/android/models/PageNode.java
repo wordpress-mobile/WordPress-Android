@@ -17,6 +17,8 @@ public class PageNode {
     private String name;
     private int parentId;
     private int level;
+
+    private PageNode parent;
     SortedMap<String, PageNode> children = new TreeMap<>(new Comparator<String>() {
         @Override
         public int compare(String s, String s2) {
@@ -30,6 +32,14 @@ public class PageNode {
 
     public void setChildren(SortedMap<String, PageNode> children) {
         this.children = children;
+    }
+
+    public PageNode getParent() {
+        return parent;
+    }
+
+    public void setParent(PageNode parent) {
+        this.parent = parent;
     }
 
     public PageNode(int pageId, int parentId, String name) {
@@ -101,6 +111,7 @@ public class PageNode {
                 currentRootNode = rootPage;
             } else {
                 currentRootNode = postsMap.get(page.getParentId(), rootPage);
+                page.parent = postsMap.get(page.getParentId());
             }
             currentRootNode.children.put(page.getName(), postsMap.get(page.getPageId()));
         }
@@ -124,5 +135,12 @@ public class PageNode {
         ArrayList<PageNode> sortedPages = new ArrayList<>();
         preOrderTreeTraversal(node, 0, sortedPages);
         return sortedPages;
+    }
+
+    public boolean isDescendantOfPageWithId(int postId) {
+        if (parentId == postId) {
+            return true;
+        }
+        return (parentId != 0 && parent.isDescendantOfPageWithId(postId));
     }
 }
