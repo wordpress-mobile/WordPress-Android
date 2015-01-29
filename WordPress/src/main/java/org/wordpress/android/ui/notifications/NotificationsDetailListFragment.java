@@ -34,7 +34,6 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +101,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         if (mFooterView != null) {
            listView.addFooterView(mFooterView);
         }
+
+        reloadNoteBlocks();
     }
 
     @Override
@@ -111,10 +112,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         // start listening to bucket change events
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().addListener(this);
-        }
-
-        if (mNote != null) {
-            reloadNoteBlocks();
         }
     }
 
@@ -138,23 +135,18 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         mNote = note;
     }
 
+    // TODO: load in async task
     public void setNoteWithNoteId(String noteId) {
         if (noteId == null) return;
 
-        SimperiumUtils.getNoteAsync(noteId, new SimperiumUtils.NoteLoadedCallback() {
-            @Override
-            public void onNoteLoaded(Note note) {
+        if (SimperiumUtils.getNotesBucket() != null) {
+            try {
+                Note note = SimperiumUtils.getNotesBucket().get(noteId);
                 setNote(note);
-                reloadNoteBlocks();
+            } catch (BucketObjectMissingException e) {
+                e.printStackTrace();
             }
-
-            @Override
-            public void onError() {
-                if (!isAdded()) return;
-
-                ToastUtils.showToast(getActivity(), R.string.error_generic);
-            }
-        });
+        }
     }
 
     @Override
