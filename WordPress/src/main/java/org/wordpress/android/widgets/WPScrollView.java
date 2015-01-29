@@ -14,12 +14,7 @@ public class WPScrollView extends ScrollView {
     private boolean mIsMoving;
     private static final int SCROLL_CHECK_DELAY = 100;
 
-    public interface OnScrollDirectionListener {
-        public void onScrollUp();
-        public void onScrollDown();
-        public void onScrollCompleted();
-    }
-    private OnScrollDirectionListener mOnScrollDirectionListener;
+    private ScrollDirectionListener mScrollDirectionListener;
 
     public WPScrollView(Context context) {
         super(context);
@@ -33,13 +28,13 @@ public class WPScrollView extends ScrollView {
         super(context, attrs, defStyle);
     }
 
-    public void setOnScrollDirectionListener(OnScrollDirectionListener listener) {
-        mOnScrollDirectionListener = listener;
+    public void setScrollDirectionListener(ScrollDirectionListener listener) {
+        mScrollDirectionListener = listener;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mOnScrollDirectionListener != null) {
+        if (mScrollDirectionListener != null) {
             int action = event.getAction() & MotionEvent.ACTION_MASK;
 
             switch (action) {
@@ -47,9 +42,9 @@ public class WPScrollView extends ScrollView {
                     if (mIsMoving) {
                         int yDiff = (int) (event.getY() - mLastMotionY);
                         if (yDiff < 0) {
-                            mOnScrollDirectionListener.onScrollDown();
+                            mScrollDirectionListener.onScrollDown();
                         } else if (yDiff > 0) {
-                            mOnScrollDirectionListener.onScrollUp();
+                            mScrollDirectionListener.onScrollUp();
                         }
                         mLastMotionY = event.getY();
                     } else {
@@ -83,8 +78,8 @@ public class WPScrollView extends ScrollView {
         @Override
         public void run() {
             if (mInitialScrollCheckY == getScrollY()) {
-                if (mOnScrollDirectionListener != null) {
-                    mOnScrollDirectionListener.onScrollCompleted();
+                if (mScrollDirectionListener != null) {
+                    mScrollDirectionListener.onScrollCompleted();
                 }
             } else {
                 mInitialScrollCheckY = getScrollY();

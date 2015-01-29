@@ -20,12 +20,7 @@ public class WPListView extends ListView {
     private ViewTreeObserver.OnScrollChangedListener mScrollChangedListener;
 
     // use this listener to detect simple up/down scrolling
-    public interface OnScrollDirectionListener {
-        public void onScrollUp();
-        public void onScrollDown();
-        public void onScrollCompleted();
-    }
-    private OnScrollDirectionListener mOnScrollDirectionListener;
+    private ScrollDirectionListener mScrollDirectionListener;
 
     public WPListView(Context context) {
         super(context);
@@ -46,8 +41,8 @@ public class WPListView extends ListView {
         return super.computeVerticalScrollOffset();
     }
 
-    public void setOnScrollDirectionListener(OnScrollDirectionListener listener) {
-        mOnScrollDirectionListener = listener;
+    public void setScrollDirectionListener(ScrollDirectionListener listener) {
+        mScrollDirectionListener = listener;
     }
 
     public void setOnScrollChangedListener(ViewTreeObserver.OnScrollChangedListener listener) {
@@ -68,7 +63,7 @@ public class WPListView extends ListView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mOnScrollDirectionListener != null) {
+        if (mScrollDirectionListener != null) {
             int action = event.getAction() & MotionEvent.ACTION_MASK;
 
             switch (action) {
@@ -76,9 +71,9 @@ public class WPListView extends ListView {
                     if (mIsMoving) {
                         int yDiff = (int) (event.getY() - mLastMotionY);
                         if (yDiff < 0) {
-                            mOnScrollDirectionListener.onScrollDown();
+                            mScrollDirectionListener.onScrollDown();
                         } else if (yDiff > 0) {
-                            mOnScrollDirectionListener.onScrollUp();
+                            mScrollDirectionListener.onScrollUp();
                         }
                         mLastMotionY = event.getY();
                     } else {
@@ -112,8 +107,8 @@ public class WPListView extends ListView {
         @Override
         public void run() {
             if (mInitialScrollCheckY == getScrollY()) {
-                if (mOnScrollDirectionListener != null) {
-                    mOnScrollDirectionListener.onScrollCompleted();
+                if (mScrollDirectionListener != null) {
+                    mScrollDirectionListener.onScrollCompleted();
                 }
             } else {
                 mInitialScrollCheckY = getScrollY();
