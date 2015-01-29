@@ -132,8 +132,8 @@ public class SelectPageParentActivity extends ActionBarActivity {
     private void saveAndFinish() {
         Intent mIntent = new Intent();
 
-        if (mListView.getCheckedItemPosition() > 0) {
-            // If nothing is checked, the parent id initially passed was not found. Don't modify the post data
+        // If nothing is checked, the parent id initially passed was not found. Don't modify the post data
+        if (mListView.getCheckedItemPosition() >= 0) {
             String parentTitle =  "";
             if (mSelectedPageId != 0) {
                 parentTitle = mPageLevels.get(mListView.getCheckedItemPosition()).getName();

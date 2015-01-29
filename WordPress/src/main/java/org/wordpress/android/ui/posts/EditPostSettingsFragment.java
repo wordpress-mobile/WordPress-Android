@@ -255,7 +255,7 @@ public class EditPostSettingsFragment extends Fragment
                 }
             }
 
-            if (!TextUtils.isEmpty(post.getPageParentId()) && !post.getPageParentId().equals("0")) {
+            if (!TextUtils.isEmpty(post.getPageParentId())) {
                 mPageParentId = Integer.parseInt(post.getPageParentId());
                 mPageParentTitle = post.getPageParentTitle();
                 updatePageParentText();
@@ -912,10 +912,14 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void updatePageParentText() {
-        if (!TextUtils.isEmpty(mPageParentTitle)) {
-            mPageParentText.setText(mPageParentTitle);
+        if (mPageParentId != 0) {
+            if (!TextUtils.isEmpty(mPageParentTitle)) {
+                mPageParentText.setText(mPageParentTitle);
+            } else {
+                mPageParentText.setText("#" + mPageParentId + " (" + getText(R.string.untitled) + ")");
+            }
         } else {
-            mPageParentText.setText("#" + mPageParentId + " (" + getText(R.string.untitled) + ")");
+            mPageParentText.setText(R.string.no_parent);
         }
     }
 }
