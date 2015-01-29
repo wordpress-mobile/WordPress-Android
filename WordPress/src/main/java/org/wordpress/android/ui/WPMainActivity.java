@@ -13,9 +13,6 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.util.AppLog;
@@ -27,10 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends ActionBarActivity
-    implements ReaderInterfaces.OnReaderPostSelectedListener,
-               ReaderInterfaces.OnReaderTagSelectedListener
-{
+public class WPMainActivity extends ActionBarActivity {
     private WPMainViewPager mViewPager;
     private WPTabAdapter mTabAdapter;
 
@@ -70,9 +64,6 @@ public class WPMainActivity extends ActionBarActivity
         super.onSaveInstanceState(outState);
     }
 
-    /***
-     * START READER-RELATED ROUTINES
-     */
     private ReaderPostListFragment getReaderListFragment() {
         Fragment fragment = mTabAdapter.getFragment(WPTabAdapter.TAB_READER);
         if (fragment != null && fragment instanceof ReaderPostListFragment) {
@@ -80,55 +71,6 @@ public class WPMainActivity extends ActionBarActivity
         }
         return null;
     }
-
-    /*
-     * user tapped a post in the reader list fragment
-     */
-    @Override
-    public void onReaderPostSelected(long blogId, long postId) {
-        ReaderPostListFragment listFragment = getReaderListFragment();
-        if (listFragment == null) {
-            return;
-        }
-
-        switch (listFragment.getPostListType()) {
-            case TAG_FOLLOWED:
-            case TAG_PREVIEW:
-                ReaderActivityLauncher.showReaderPostPagerForTag(
-                        this,
-                        listFragment.getCurrentTag(),
-                        listFragment.getPostListType(),
-                        blogId,
-                        postId);
-                break;
-            case BLOG_PREVIEW:
-                ReaderActivityLauncher.showReaderPostPagerForBlog(
-                        this,
-                        blogId,
-                        postId);
-                break;
-        }
-    }
-
-    /*
-     * user tapped a tag in the reader list fragment
-     */
-    @Override
-    public void onReaderTagSelected(String tagName) {
-        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
-        ReaderPostListFragment listFragment = getReaderListFragment();
-        if (listFragment != null && listFragment.getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
-            // user is already previewing a tag, so change current tag in existing preview
-            listFragment.setCurrentTag(tag);
-        } else {
-            // user isn't previewing a tag, so open in tag preview
-            ReaderActivityLauncher.showReaderTagPreview(this, tag);
-        }
-    }
-
-    /*
-     * END READER-RELATED ROUTINES
-     ***/
 
     /**
      * pager adapter containing post detail fragments

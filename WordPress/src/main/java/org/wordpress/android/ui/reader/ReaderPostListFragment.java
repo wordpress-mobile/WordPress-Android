@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Build;
@@ -73,16 +72,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-public class ReaderPostListFragment extends Fragment {
+public class ReaderPostListFragment extends Fragment
+    implements ReaderInterfaces.OnReaderPostSelectedListener,
+        ReaderInterfaces.OnReaderTagSelectedListener,
+        ReaderInterfaces.OnPostPopupListener {
 
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
 
     private ReaderPostAdapter mPostAdapter;
     private ReaderRecyclerView mRecyclerView;
-
-    private ReaderInterfaces.OnReaderPostSelectedListener mPostSelectedListener;
-    private ReaderInterfaces.OnReaderTagSelectedListener mOnTagSelectedListener;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private View mNewPostsBar;
@@ -342,18 +341,6 @@ public class ReaderPostListFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        if (activity instanceof ReaderInterfaces.OnReaderPostSelectedListener) {
-            mPostSelectedListener = (ReaderInterfaces.OnReaderPostSelectedListener) activity;
-        }
-        if (activity instanceof ReaderInterfaces.OnReaderTagSelectedListener) {
-            mOnTagSelectedListener = (ReaderInterfaces.OnReaderTagSelectedListener) activity;
-        }
-    }
-
     /*
      * animate in the blog/tag info header after a brief delay
      */
@@ -433,8 +420,9 @@ public class ReaderPostListFragment extends Fragment {
                 break;
         }
 
-        getPostAdapter().setOnTagSelectedListener(mOnTagSelectedListener);
-        getPostAdapter().setOnPostPopupListener(mOnPostPopupListener);
+        getPostAdapter().setOnPostSelectedListener(this);
+        getPostAdapter().setOnTagSelectedListener(this);
+        getPostAdapter().setOnPostPopupListener(this);
     }
 
     /*
@@ -488,30 +476,6 @@ public class ReaderPostListFragment extends Fragment {
             setupActionBar();
         }
     }
-
-    /*
-     * called when user taps dropdown arrow icon next to a post - shows a popup menu
-     * that enables blocking the blog the post is in
-     */
-    private final ReaderInterfaces.OnPostPopupListener mOnPostPopupListener = new ReaderInterfaces.OnPostPopupListener() {
-        @Override
-        public void onShowPostPopup(View view, final ReaderPost post) {
-            if (view == null || post == null) {
-                return;
-            }
-
-            PopupMenu popup = new PopupMenu(getActivity(), view);
-            MenuItem menuItem = popup.getMenu().add(getString(R.string.reader_menu_block_blog));
-            menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    blockBlogForPost(post);
-                    return true;
-                }
-            });
-            popup.show();
-        }
-    };
 
     /*
      * blocks the blog associated with the passed post and removes all posts in that blog
@@ -778,7 +742,6 @@ public class ReaderPostListFragment extends Fragment {
             AppLog.d(T.READER, "reader post list > creating post adapter");
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
-            mPostAdapter.setOnPostSelectedListener(mPostSelectedListener);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             mPostAdapter.setOnReblogRequestedListener(mRequestReblogListener);
@@ -1268,5 +1231,64 @@ public class ReaderPostListFragment extends Fragment {
         ReaderAnim.animateFollowButton(mFollowButton, isAskingToFollow);
         ReaderTagActions.TagAction action = (isAskingToFollow ? ReaderTagActions.TagAction.ADD : ReaderTagActions.TagAction.DELETE);
         ReaderTagActions.performTagAction(getCurrentTag(), action, null);
+    }
+
+    @Override
+    public void onReaderPostSelected(long blogId, long postId) {
+        if (!isAdded()) return;
+
+        switch (getPostListType()) {
+            case TAG_FOLLOWED:
+            case TAG_PREVIEW:
+                ReaderActivityLauncher.showReaderPostPagerForTag(
+                        getActivity(),
+                        getCurrentTag(),
+                        getPostListType(),
+                        blogId,
+                        postId);
+                break;
+            case BLOG_PREVIEW:
+                ReaderActivityLauncher.showReaderPostPagerForBlog(
+                        getActivity(),
+                        blogId,
+                        postId);
+                break;
+        }
+    }
+
+    @Override
+    public void onReaderTagSelected(String tagName) {
+        if (!isAdded()) return;
+
+        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
+        if (getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
+            // user is already previewing a tag, so change current tag in existing preview
+            setCurrentTag(tag);
+        } else {
+            // user isn't previewing a tag, so open in tag preview
+            ReaderActivityLauncher.showReaderTagPreview(getActivity(), tag);
+        }
+    }
+
+    /*
+     * called when user taps dropdown arrow icon next to a post - shows a popup menu
+     * that enables blocking the blog the post is in
+     */
+    @Override
+    public void onShowPostPopup(View view, final ReaderPost post) {
+        if (!isAdded() || view == null || post == null) {
+            return;
+        }
+
+        PopupMenu popup = new PopupMenu(getActivity(), view);
+        MenuItem menuItem = popup.getMenu().add(getString(R.string.reader_menu_block_blog));
+        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                blockBlogForPost(post);
+                return true;
+            }
+        });
+        popup.show();
     }
 }
