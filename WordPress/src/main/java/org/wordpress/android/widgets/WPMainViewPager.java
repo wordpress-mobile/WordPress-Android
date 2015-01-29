@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.views;
+package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
@@ -15,13 +15,13 @@ import org.wordpress.android.util.AppLog;
  *
  */
 
-public class ReaderViewPager extends ViewPager {
+public class WPMainViewPager extends ViewPager {
 
-    public ReaderViewPager(Context context) {
+    public WPMainViewPager(Context context) {
         super(context);
     }
 
-    public ReaderViewPager(Context context, AttributeSet attrs) {
+    public WPMainViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

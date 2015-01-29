@@ -60,6 +60,10 @@
             </intent-filter>
         </activity>
 
+        <!-- Main tab activity -->
+        <activity android:name=".ui.WPMainActivity"
+            android:theme="@style/Calypso.NoActionBar"/>
+
         <!-- Account activities -->
         <activity
             android:name=".ui.accounts.SignInActivity"

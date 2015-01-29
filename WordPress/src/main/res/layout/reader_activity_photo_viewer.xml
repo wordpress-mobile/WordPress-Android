@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/grey_extra_dark">
 
-    <org.wordpress.android.ui.reader.views.ReaderViewPager
+    <org.wordpress.android.widgets.WPMainViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

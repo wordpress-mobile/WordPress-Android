@@ -132,7 +132,7 @@ public class ReaderPostListFragment extends Fragment {
     /*
      * show posts with a specific tag
      */
-    static ReaderPostListFragment newInstance(ReaderTag tag, ReaderPostListType listType) {
+    public static ReaderPostListFragment newInstance(ReaderTag tag, ReaderPostListType listType) {
         AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
         Bundle args = new Bundle();
