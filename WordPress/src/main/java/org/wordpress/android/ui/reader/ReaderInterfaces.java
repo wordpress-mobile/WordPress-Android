@@ -6,12 +6,12 @@ import org.wordpress.android.models.ReaderPost;
 
 public class ReaderInterfaces {
 
-    public static interface OnPostSelectedListener {
-        public void onPostSelected(long blogId, long postId);
+    public static interface OnReaderPostSelectedListener {
+        public void onReaderPostSelected(long blogId, long postId);
     }
 
-    public static interface OnTagSelectedListener {
-        public void onTagSelected(String tagName);
+    public static interface OnReaderTagSelectedListener {
+        public void onReaderTagSelected(String tagName);
     }
 
     /*

@@ -81,8 +81,8 @@ public class ReaderPostListFragment extends Fragment {
     private ReaderPostAdapter mPostAdapter;
     private ReaderRecyclerView mRecyclerView;
 
-    private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
-    private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
+    private ReaderInterfaces.OnReaderPostSelectedListener mPostSelectedListener;
+    private ReaderInterfaces.OnReaderTagSelectedListener mOnTagSelectedListener;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private View mNewPostsBar;
@@ -346,11 +346,11 @@ public class ReaderPostListFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (activity instanceof ReaderInterfaces.OnPostSelectedListener) {
-            mPostSelectedListener = (ReaderInterfaces.OnPostSelectedListener) activity;
+        if (activity instanceof ReaderInterfaces.OnReaderPostSelectedListener) {
+            mPostSelectedListener = (ReaderInterfaces.OnReaderPostSelectedListener) activity;
         }
-        if (activity instanceof ReaderInterfaces.OnTagSelectedListener) {
-            mOnTagSelectedListener = (ReaderInterfaces.OnTagSelectedListener) activity;
+        if (activity instanceof ReaderInterfaces.OnReaderTagSelectedListener) {
+            mOnTagSelectedListener = (ReaderInterfaces.OnReaderTagSelectedListener) activity;
         }
     }
 
@@ -600,6 +600,12 @@ public class ReaderPostListFragment extends Fragment {
             return;
         }
 
+        // check if it was already added to the toolbar
+        mSpinner = (Spinner) toolbar.findViewById(R.id.action_bar_spinner);
+        if (mSpinner != null) {
+            return;
+        }
+
         View view = View.inflate(getActivity(), R.layout.reader_spinner, toolbar);
         mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
         mSpinner.setAdapter(getSpinnerAdapter());
@@ -795,7 +801,7 @@ public class ReaderPostListFragment extends Fragment {
         return (tagName != null && tagName.equalsIgnoreCase(getCurrentTagName()));
     }
 
-    ReaderTag getCurrentTag() {
+    public ReaderTag getCurrentTag() {
         return mCurrentTag;
     }
 
@@ -816,7 +822,7 @@ public class ReaderPostListFragment extends Fragment {
         }
         setCurrentTag(new ReaderTag(tagName, ReaderTagType.FOLLOWED), allowAutoUpdate);
     }
-    void setCurrentTag(final ReaderTag tag) {
+    public void setCurrentTag(final ReaderTag tag) {
         setCurrentTag(tag, true);
     }
     void setCurrentTag(final ReaderTag tag, boolean allowAutoUpdate) {
@@ -1145,7 +1151,7 @@ public class ReaderPostListFragment extends Fragment {
      * are we showing all posts with a specific tag (followed or previewed), or all
      * posts in a specific blog?
      */
-    ReaderPostListType getPostListType() {
+    public ReaderPostListType getPostListType() {
         return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 

@@ -48,8 +48,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     private final ReaderTypes.ReaderPostListType mPostListType;
     private final ReaderPostList mPosts = new ReaderPostList();
 
-    private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
-    private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
+    private ReaderInterfaces.OnReaderPostSelectedListener mPostSelectedListener;
+    private ReaderInterfaces.OnReaderTagSelectedListener mOnTagSelectedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.RequestReblogListener mReblogListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
@@ -190,7 +190,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
                 @Override
                 public void onClick(View v) {
                     if (mOnTagSelectedListener != null) {
-                        mOnTagSelectedListener.onTagSelected(tagToDisplay);
+                        mOnTagSelectedListener.onReaderTagSelected(tagToDisplay);
                     }
                 }
             });
@@ -281,7 +281,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+                    mPostSelectedListener.onReaderPostSelected(post.blogId, post.postId);
                 }
             });
         }
@@ -304,11 +304,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         setHasStableIds(true);
     }
 
-    public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
+    public void setOnPostSelectedListener(ReaderInterfaces.OnReaderPostSelectedListener listener) {
         mPostSelectedListener = listener;
     }
 
-    public void setOnTagSelectedListener(ReaderInterfaces.OnTagSelectedListener listener) {
+    public void setOnTagSelectedListener(ReaderInterfaces.OnReaderTagSelectedListener listener) {
         mOnTagSelectedListener = listener;
     }
 

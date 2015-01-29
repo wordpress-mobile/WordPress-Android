@@ -21,8 +21,6 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostSelectedListener;
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
@@ -45,8 +43,8 @@ import javax.annotation.Nonnull;
  */
 
 public class ReaderPostListActivity extends WPDrawerActivity
-                                    implements OnPostSelectedListener,
-                                               OnTagSelectedListener {
+                                    implements ReaderInterfaces.OnReaderPostSelectedListener,
+        ReaderInterfaces.OnReaderTagSelectedListener {
 
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
@@ -346,7 +344,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
      * user tapped a post in the list fragment
      */
     @Override
-    public void onPostSelected(long blogId, long postId) {
+    public void onReaderPostSelected(long blogId, long postId) {
         // skip if this activity no longer has the focus - this prevents the post detail from
         // being shown multiple times if the user quickly taps a post more than once
         if (!this.hasWindowFocus()) {
@@ -382,7 +380,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
      * user tapped a tag in the list fragment
      */
     @Override
-    public void onTagSelected(String tagName) {
+    public void onReaderTagSelected(String tagName) {
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
         if (hasListFragment() && getListFragment().getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
             // user is already previewing a tag, so change current tag in existing preview

@@ -1,30 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <org.wordpress.android.widgets.WPMainViewPager
-        android:id="@+id/viewpager_main"
+    <org.wordpress.android.widgets.SlidingTabLayout
+        android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar">
-
-        <android.support.v4.view.PagerTabStrip
-            android:id="@+id/tabstrip_main"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:background="@color/tab_background"
-            android:paddingBottom="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_large"
-            android:textAppearance="@style/ReaderTabStripTextAppearance" />
-
-    </org.wordpress.android.widgets.WPMainViewPager>
+        android:background="@color/tab_background" />
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-</RelativeLayout>
+    <org.wordpress.android.widgets.WPMainViewPager
+        android:id="@+id/viewpager_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
