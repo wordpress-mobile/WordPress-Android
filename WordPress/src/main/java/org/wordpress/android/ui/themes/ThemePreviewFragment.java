@@ -134,8 +134,11 @@ public class ThemePreviewFragment extends Fragment {
         mWebView.getSettings().setUserAgentString(DESKTOP_UA);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 
-        mWebView.setWebChromeClient(new WPWebChromeClient(getActivity(), (ProgressBar) view.findViewById(
-                R.id.progress_bar)));
+        mWebView.setWebChromeClient(
+                new WPWebChromeClient(
+                        getActivity(),
+                        (ProgressBar) view.findViewById(R.id.progress_bar),
+                        false));
 
         mWebView.setWebViewClient(new WPWebViewClient(mBlog));
 
