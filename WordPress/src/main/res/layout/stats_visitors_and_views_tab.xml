@@ -27,6 +27,7 @@
                 android:layout_width="12dp"
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
+                android:layout_marginEnd="3dp"
                 android:src="@drawable/ic_like" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
