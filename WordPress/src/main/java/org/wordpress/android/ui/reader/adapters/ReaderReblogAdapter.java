@@ -158,7 +158,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
                 // don't add if this is the blog we're excluding (prevents reblogging to
                 // the same blog the post is from)
                 if (blogId != mExcludeBlogId) {
-                    String blogName =  BlogUtils.getBlogNameFromAccountMap(curHash);
+                    String blogName =  BlogUtils.getBlogNameOrHostNameFromAccountMap(curHash);
                     SimpleAccountItem item = new SimpleAccountItem(blogId, blogName);
 
                     // if this is the current blog, insert it at the top so it's automatically selected
