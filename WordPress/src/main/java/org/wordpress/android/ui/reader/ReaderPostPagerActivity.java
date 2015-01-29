@@ -34,10 +34,10 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
-import org.wordpress.android.widgets.WPMainViewPager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPMainViewPager;
 
 import javax.annotation.Nonnull;
 
@@ -193,7 +193,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             fragment.hideCustomView();
         } else {
             super.onBackPressed();
-            overridePendingTransition(R.anim.reader_activity_scale_in, R.anim.reader_activity_slide_out);
         }
     }
 

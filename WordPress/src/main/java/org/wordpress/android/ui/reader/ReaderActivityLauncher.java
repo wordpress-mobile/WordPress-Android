@@ -89,17 +89,8 @@ public class ReaderActivityLauncher {
     }
 
     private static void showReaderPostPager(Context context, Intent intent) {
-        if (context instanceof Activity) {
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                    context,
-                    R.anim.reader_activity_slide_in,
-                    R.anim.reader_activity_scale_out);
-            ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
-        } else {
-            context.startActivity(intent);
-        }
+        context.startActivity(intent);
     }
-
 
     /*
      * show a list of posts in a specific blog
