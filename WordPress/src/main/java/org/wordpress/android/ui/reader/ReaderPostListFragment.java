@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +42,7 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.WPTabFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -71,11 +71,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-public class ReaderPostListFragment extends Fragment
+public class ReaderPostListFragment extends WPTabFragment
     implements ReaderInterfaces.OnReaderPostSelectedListener,
-        ReaderInterfaces.OnReaderTagSelectedListener,
-        ReaderInterfaces.OnPostPopupListener {
-
+               ReaderInterfaces.OnReaderTagSelectedListener,
+               ReaderInterfaces.OnPostPopupListener
+{
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
 
