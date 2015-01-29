@@ -14,8 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -73,6 +71,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsBlockBlogDisabled;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
+    private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
 
     private ReaderResourceVars mResourceVars;
 
@@ -120,6 +119,9 @@ public class ReaderPostDetailFragment extends Fragment
         if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
             mOnPopupListener = (ReaderInterfaces.OnPostPopupListener) activity;
         }
+        if (activity instanceof ReaderInterfaces.AutoHideToolbarListener) {
+            mAutoHideToolbarListener = (ReaderInterfaces.AutoHideToolbarListener) activity;
+        }
     }
 
     @Override
@@ -143,6 +145,11 @@ public class ReaderPostDetailFragment extends Fragment
         mScrollView.setVisibility(View.INVISIBLE);
         mLayoutIcons.setVisibility(View.INVISIBLE);
 
+        // spacer that's set to the same height as the toolbar needs to be visible if fragment is
+        // in an activity that supports toolbar auto-hiding (e.g. ReaderPostPagerActivity)
+        View spacer = view.findViewById(R.id.spacer_autohide_toolbar);
+        spacer.setVisibility(mAutoHideToolbarListener != null ? View.VISIBLE : View.GONE);
+
         return view;
     }
 
@@ -154,22 +161,31 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
+
     @Override
     public void onScrollUp() {
-        animateIconBar(true);
+        showIconBar(true);
+        showToolbar(true);
     }
 
     @Override
     public void onScrollDown() {
         if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
-            animateIconBar(false);
+            showIconBar(false);
+            showToolbar(false);
         }
     }
 
     @Override
     public void onScrollCompleted() {
         if (!mScrollView.canScrollDown()) {
-            animateIconBar(true);
+            showIconBar(true);
+        }
+    }
+
+    private void showToolbar(boolean show) {
+        if (mAutoHideToolbarListener != null) {
+            mAutoHideToolbarListener.onShowHideToolbar(show);
         }
     }
 
@@ -221,30 +237,10 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * animate in/out the layout containing the reblog/comment/like icons
      */
-    private void animateIconBar(boolean isAnimatingIn) {
-        if (isAnimatingIn && mLayoutIcons.getVisibility() == View.VISIBLE) {
-            return;
+    private void showIconBar(boolean show) {
+        if (isAdded()) {
+            ReaderAnim.animateBottomBar(mLayoutIcons, show);
         }
-        if (!isAnimatingIn && mLayoutIcons.getVisibility() != View.VISIBLE) {
-            return;
-        }
-
-        final Animation animation;
-        if (isAnimatingIn) {
-            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                    1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        } else {
-            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                    0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
-        }
-
-        animation.setDuration(mResourceVars.mediumAnimTime);
-
-        mLayoutIcons.clearAnimation();
-        mLayoutIcons.startAnimation(animation);
-        mLayoutIcons.setVisibility(isAnimatingIn ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -263,15 +259,7 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setHasOptionsMenu(true);
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        }
-
         restoreState(savedInstanceState);
     }
 
