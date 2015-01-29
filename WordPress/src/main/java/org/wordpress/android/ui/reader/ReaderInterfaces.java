@@ -15,6 +15,13 @@ public class ReaderInterfaces {
     }
 
     /*
+     * called from post detail fragment so toolbar can animate in/out when scrolling
+     */
+    public static interface AutoHideToolbarListener {
+        public void onShowHideToolbar(boolean show);
+    }
+
+    /*
      * called when user taps the dropdown arrow next to a post to show the popup menu
      */
     public static interface OnPostPopupListener {
