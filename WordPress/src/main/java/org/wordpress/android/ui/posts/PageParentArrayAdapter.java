@@ -15,28 +15,51 @@ import org.wordpress.android.models.PageNode;
 import java.util.List;
 
 public class PageParentArrayAdapter extends ArrayAdapter<PageNode> {
-    int mResourceId;
+    private final int mResourceId;
 
     public PageParentArrayAdapter(Context context, int resource, List<PageNode> objects) {
         super(context, resource, objects);
         mResourceId = resource;
     }
 
+    static class ViewHolder {
+        TextView title;
+        ImageView levelIndicator;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(mResourceId, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.pagesRowText);
-        ImageView levelIndicatorView = (ImageView) rowView.findViewById(R.id.pageRowLevelIndicator);
-        textView.setText(Html.fromHtml(getItem(position).getName()));
-        int level = getItem(position).getLevel();
-        if (level == 1) { // hide ImageView
-            levelIndicatorView.setVisibility(View.GONE);
+        ViewHolder viewHolder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(mResourceId, parent, false);
+
+            viewHolder = new ViewHolder();
+            viewHolder.title = (TextView) convertView.findViewById(R.id.pagesRowText);
+            viewHolder.levelIndicator = (ImageView) convertView.findViewById(R.id.pageRowLevelIndicator);
+
+            convertView.setTag(viewHolder);
         } else {
-            ViewGroup.LayoutParams params = levelIndicatorView.getLayoutParams();
-            params.width = (params.width / 2) * level;
-            levelIndicatorView.setLayoutParams(params);
+            viewHolder = (ViewHolder) convertView.getTag();
         }
-        return rowView;
+
+        viewHolder.title.setText(Html.fromHtml(getItem(position).getName()));
+
+        // Handle indicator visibility and indentation
+        int level = getItem(position).getLevel();
+        ViewGroup.LayoutParams params = viewHolder.levelIndicator.getLayoutParams();
+        int baseWidth = (int) getContext().getResources().getDimension(R.dimen.category_row_height);
+        if (level == 1) {
+            params.width = baseWidth;
+            viewHolder.levelIndicator.setLayoutParams(params);
+            viewHolder.levelIndicator.setVisibility(View.GONE);
+        } else {
+            params.width = (baseWidth / 2) * level;
+            viewHolder.levelIndicator.setLayoutParams(params);
+            viewHolder.levelIndicator.setVisibility(View.VISIBLE);
+        }
+
+        return convertView;
     }
 }
