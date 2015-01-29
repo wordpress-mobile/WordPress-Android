@@ -1,7 +1,9 @@
 package org.wordpress.android.ui;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -9,12 +11,18 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.ui.reader.ReaderSubsActivity;
 import org.wordpress.android.ui.reader.ReaderTypes;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
@@ -64,6 +72,70 @@ public class WPMainActivity extends ActionBarActivity {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_tags:
+                ReaderActivityLauncher.showReaderSubsForResult(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ReaderConstants.INTENT_READER_SUBS:
+            case ReaderConstants.INTENT_READER_REBLOG:
+                handleReaderActivityResult(requestCode, resultCode, data);
+                break;
+        }
+    }
+
+    /*
+     * called by onActivityResult() for reader-related intents
+     */
+    private void handleReaderActivityResult(int requestCode, int resultCode, Intent data) {
+        boolean isResultOK = (resultCode == Activity.RESULT_OK);
+        final ReaderPostListFragment listFragment = getReaderListFragment();
+        if (listFragment == null || !isResultOK || data == null) {
+            return;
+        }
+
+        switch (requestCode) {
+            // user just returned from the tag editor
+            case ReaderConstants.INTENT_READER_SUBS :
+                if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
+                    // reload tags if they were changed, and set the last tag added as the current one
+                    String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
+                    listFragment.doTagsChanged(lastAddedTag);
+                } else if (data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false)) {
+                    // update posts if any blog was followed or unfollowed and user is viewing "Blogs I Follow"
+                    if (listFragment.getPostListType().isTagType()
+                            && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
+                        listFragment.updatePostsWithTag(
+                                listFragment.getCurrentTag(),
+                                ReaderActions.RequestDataAction.LOAD_NEWER,
+                                ReaderTypes.ReaderRefreshType.AUTOMATIC);
+                    }
+                }
+                break;
+
+            // user just returned from reblogging activity, reload the displayed post if reblogging
+            // succeeded
+            case ReaderConstants.INTENT_READER_REBLOG:
+                long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+                long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+                listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId, true));
+                break;
+        }
+    }
+
+    /*
+     * returns the reader post list fragment
+     */
     private ReaderPostListFragment getReaderListFragment() {
         Fragment fragment = mTabAdapter.getFragment(WPTabAdapter.TAB_READER);
         if (fragment != null && fragment instanceof ReaderPostListFragment) {
@@ -73,8 +145,8 @@ public class WPMainActivity extends ActionBarActivity {
     }
 
     /**
-     * pager adapter containing post detail fragments
-     **/
+     * pager adapter containing tab fragments
+     */
     private class WPTabAdapter extends FragmentStatePagerAdapter {
         private static final int NUM_TABS = 4;
         private static final int TAB_READER = 0;
@@ -84,7 +156,7 @@ public class WPMainActivity extends ActionBarActivity {
 
         final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_TABS);
 
-        WPTabAdapter(FragmentManager fm) {
+        public WPTabAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -128,8 +200,7 @@ public class WPMainActivity extends ActionBarActivity {
                 case TAB_NOTIFS:
                     break;
             }
-            Fragment fragment = ReaderPostListFragment.newInstance(ReaderTag.getDefaultTag(), ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
-            return fragment;
+            return ReaderPostListFragment.newInstance(ReaderTag.getDefaultTag(), ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
         }
 
         @Override

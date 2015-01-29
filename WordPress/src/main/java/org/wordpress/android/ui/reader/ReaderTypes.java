@@ -19,7 +19,7 @@ public class ReaderTypes {
         }
     }
 
-    protected static enum RefreshType {
+    public static enum ReaderRefreshType {
         AUTOMATIC, // refresh was performed by the app without user requesting it
         MANUAL     // refresh was requested by the user
     }

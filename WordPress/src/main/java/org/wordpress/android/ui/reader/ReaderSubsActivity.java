@@ -79,9 +79,9 @@ public class ReaderSubsActivity extends ActionBarActivity
     private String mLastAddedTagName;
     private boolean mHasPerformedUpdate;
 
-    static final String KEY_TAGS_CHANGED   = "tags_changed";
-    static final String KEY_BLOGS_CHANGED  = "blogs_changed";
-    static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
+    public static final String KEY_TAGS_CHANGED   = "tags_changed";
+    public static final String KEY_BLOGS_CHANGED  = "blogs_changed";
+    public static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_SUGGESTED_TAGS = 1;

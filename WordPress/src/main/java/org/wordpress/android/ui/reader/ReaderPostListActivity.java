@@ -216,7 +216,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
                             listFragment.updatePostsWithTag(
                                     listFragment.getCurrentTag(),
                                     RequestDataAction.LOAD_NEWER,
-                                    ReaderTypes.RefreshType.AUTOMATIC);
+                                    ReaderTypes.ReaderRefreshType.AUTOMATIC);
                         }
                     }
                 }
