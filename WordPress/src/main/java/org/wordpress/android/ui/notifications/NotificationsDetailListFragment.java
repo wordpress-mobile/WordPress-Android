@@ -135,7 +135,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         mNote = note;
     }
 
-    // TODO: load in async task
     public void setNoteWithNoteId(String noteId) {
         if (noteId == null) return;
 

@@ -121,7 +121,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         Fragment fragment;
         if (note.isCommentType()) {
             // show comment detail for comment notifications
-            fragment = CommentDetailFragment.newInstance(note);
+            fragment = CommentDetailFragment.newInstance(note.getId());
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above
