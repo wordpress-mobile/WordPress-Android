@@ -6,14 +6,17 @@ package org.wordpress.android.ui.notifications.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketNameInvalid;
 import com.simperium.client.BucketObject;
+import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.User;
 
+import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
@@ -33,6 +36,8 @@ public class SimperiumUtils {
     public static Bucket<BucketObject> getMetaBucket() {
         return mMetaBucket;
     }
+
+    private static NoteLoadedCallback mNoteLoadedCallback;
 
     public static Simperium configureSimperium(final Context context, String token) {
         // Create a new instance of Simperium if it doesn't exist yet.
@@ -124,5 +129,49 @@ public class SimperiumUtils {
         if (mSimperium != null) {
             mSimperium.getUser().setStatus(User.Status.UNKNOWN);
         }
+    }
+
+    public static void getNoteAsync(String noteId, NoteLoadedCallback callback) {
+        if (noteId == null || callback == null) return;
+
+        mNoteLoadedCallback = callback;
+
+        new LoadNoteTask().execute(noteId);
+    }
+
+    private static class LoadNoteTask extends AsyncTask<String, Void, Note> {
+        @Override
+        protected Note doInBackground(String[] params) {
+            if (params.length < 1 || params[0] == null) return null;
+
+            String noteId = params[0];
+
+            if (getNotesBucket() != null) {
+                try {
+                    return SimperiumUtils.getNotesBucket().get(noteId);
+                } catch (BucketObjectMissingException e) {
+                    return null;
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Note note) {
+            if (mNoteLoadedCallback == null) return;
+
+            if (note != null) {
+                mNoteLoadedCallback.onNoteLoaded(note);
+            } else {
+                mNoteLoadedCallback.onError();
+            }
+        }
+    }
+
+    public interface NoteLoadedCallback {
+        void onNoteLoaded(Note note);
+
+        void onError();
     }
 }

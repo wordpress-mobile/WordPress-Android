@@ -129,6 +129,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
     private static final String KEY_COMMENT_ID = "comment_id";
+    private static final String KEY_NOTE_ID = "note_id";
 
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
@@ -183,6 +184,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (hasComment()) {
             outState.putInt(KEY_LOCAL_BLOG_ID, getLocalBlogId());
             outState.putLong(KEY_COMMENT_ID, getCommentId());
+            if (mNote != null) {
+                outState.putString(KEY_NOTE_ID, mNote.getId());
+            }
         }
     }
 
