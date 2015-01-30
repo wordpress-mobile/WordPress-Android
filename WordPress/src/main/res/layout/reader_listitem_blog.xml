@@ -63,9 +63,10 @@
 
     </LinearLayout>
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_follow"
-        style="@style/ReaderTextView.Follow"
+    <org.wordpress.android.ui.reader.views.ReaderFollowButton
+        android:id="@+id/follow_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_weight="0" />
 
 </LinearLayout>

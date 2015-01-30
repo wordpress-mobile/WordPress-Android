@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,8 +55,8 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView.ReaderItemDecoration;
 import org.wordpress.android.util.AniUtils;
@@ -91,7 +92,7 @@ public class ReaderPostListFragment extends Fragment {
 
     private ViewGroup mTagInfoView;
     private ReaderBlogInfoView mBlogInfoView;
-    private TextView mFollowButton;
+    private ReaderFollowButton mFollowButton;
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -450,11 +451,22 @@ public class ReaderPostListFragment extends Fragment {
             return;
         }
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View followView = inflater.inflate(R.layout.reader_toolbar_follow_button, toolbar, false);
-        mFollowButton = (TextView) followView.findViewById(R.id.text_follow);
-        toolbar.addView(followView);
+        Context context = toolbar.getContext();
+        int padding = context.getResources().getDimensionPixelSize(R.dimen.margin_small);
+        int paddingRight = context.getResources().getDimensionPixelSize(R.dimen.reader_card_content_padding);
+        int marginRight = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing);
 
+        mFollowButton = new ReaderFollowButton(context);
+        mFollowButton.setPadding(padding, padding, paddingRight, padding);
+
+        Toolbar.LayoutParams params =
+                new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                                             ViewGroup.LayoutParams.WRAP_CONTENT,
+                                             Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+        params.setMargins(0, 0, marginRight, 0);
+        mFollowButton.setLayoutParams(params);
+
+        toolbar.addView(mFollowButton);
         updateFollowButton();
 
         mFollowButton.setOnClickListener(new View.OnClickListener() {
@@ -476,7 +488,7 @@ public class ReaderPostListFragment extends Fragment {
         boolean isFollowing = getPostListType() == ReaderPostListType.BLOG_PREVIEW
                 ? ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl)
                 : ReaderTagTable.isFollowedTagName(getCurrentTagName());
-        ReaderUtils.showFollowStatus(mFollowButton, isFollowing);
+        mFollowButton.setIsFollowed(isFollowing);
     }
 
     @Override
@@ -1209,7 +1221,7 @@ public class ReaderPostListFragment extends Fragment {
                                     updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
                                 }
                                 if (mFollowButton != null) {
-                                    ReaderUtils.showFollowStatus(mFollowButton, blogInfo.isFollowing);
+                                    mFollowButton.setIsFollowed(blogInfo.isFollowing);
                                 }
                             }
                         }
@@ -1237,12 +1249,12 @@ public class ReaderPostListFragment extends Fragment {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && isAdded()) {
-                    ReaderUtils.showFollowStatus(mFollowButton, !isAskingToFollow);
+                    mFollowButton.setIsFollowed(!isAskingToFollow);
                 }
             }
         };
 
-        ReaderAnim.animateFollowButton(mFollowButton, isAskingToFollow);
+        mFollowButton.setIsFollowedAnimated(isAskingToFollow);
         ReaderBlogActions.performFollowAction(
                 mCurrentBlogId,
                 mCurrentBlogUrl,
@@ -1259,7 +1271,7 @@ public class ReaderPostListFragment extends Fragment {
         }
 
         boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(getCurrentTagName());
-        ReaderAnim.animateFollowButton(mFollowButton, isAskingToFollow);
+        mFollowButton.setIsFollowedAnimated(isAskingToFollow);
         ReaderTagActions.TagAction action = (isAskingToFollow ? ReaderTagActions.TagAction.ADD : ReaderTagActions.TagAction.DELETE);
         ReaderTagActions.performTagAction(getCurrentTag(), action, null);
     }
