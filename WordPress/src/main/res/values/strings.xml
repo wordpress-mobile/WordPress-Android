@@ -381,7 +381,7 @@
     <string name="stats_view_totals_followers_and_shares">Totals, followers, &amp; shares</string>
     <string name="stats_view_clicks">Clicks</string>
     <string name="stats_view_tags_and_categories">Tags &amp; categories</string>
-    <string name="stats_view_top_authors">Top authors</string>
+    <string name="stats_view_authors">Authors</string>
     <string name="stats_view_referrers">Referrers</string>
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_comments">Comments</string>

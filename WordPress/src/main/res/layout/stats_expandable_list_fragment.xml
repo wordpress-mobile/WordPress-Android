@@ -24,6 +24,15 @@
                 android:layout_marginBottom="@dimen/margin_small"
                 style="@style/StatsModuleTitle" />
 
+            <include
+                android:id="@+id/stats_empty_module_placeholder"
+                layout="@layout/stats_empty_module_placeholder"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <LinearLayout
                 android:id="@+id/stats_pager_tabs"
                 android:layout_width="match_parent"
@@ -59,7 +68,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_large"
                     android:layout_marginRight="@dimen/margin_large"
-                    android:paddingBottom="@dimen/margin_small"
                     android:paddingTop="@dimen/margin_small">
 
                     <org.wordpress.android.widgets.WPTextView

@@ -18,13 +18,49 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:visibility="gone" >
+
+            <!-- VIEWS tab-->
+            <include
+                layout="@layout/stats_visitors_and_views_tab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"/>
+
+            <!-- VISITORS tab -->
+            <include
+                layout="@layout/stats_visitors_and_views_tab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"/>
+
+            <!-- LIKES tab -->
+            <include
+                layout="@layout/stats_visitors_and_views_tab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"/>
+
+            <!-- COMMENTS tab -->
+            <include
+                layout="@layout/stats_visitors_and_views_tab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"/>
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/stats_bar_chart_fragment_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_large"
+            android:paddingTop="@dimen/margin_large"
+            android:paddingLeft="@dimen/margin_medium"
+            android:paddingRight="@dimen/margin_extra_small"
+            android:paddingBottom="@dimen/margin_large"
             android:minHeight="@dimen/stats_barchart_height"
             android:orientation="vertical" />
 
@@ -35,7 +71,8 @@
         android:textAppearance="?android:attr/textAppearance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
-        android:textColor="#587295"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:textColor="@color/stats_blue_labels"
         android:text="Date"/>
 </LinearLayout>

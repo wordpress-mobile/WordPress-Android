@@ -58,6 +58,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected Button mPaginationGoBackButton;
     protected Button mPaginationGoForwardButton;
     protected TextView mPaginationText;
+    protected LinearLayout mEmptyModulePlaceholder;
 
     protected Serializable[] mDatamodels;
 
@@ -90,6 +91,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             view = inflater.inflate(R.layout.stats_list_fragment, container, false);
         }
 
+        mEmptyModulePlaceholder = (LinearLayout) view.findViewById(R.id.stats_empty_module_placeholder);
         mModuleTitleTextView = (TextView) view.findViewById(R.id.stats_module_title);
         mModuleTitleTextView.setText(getTitle());
 
@@ -181,10 +183,12 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mList.setVisibility(View.GONE);
         mViewAll.setVisibility(View.GONE);
         mPaginationContainer.setVisibility(View.GONE);
+        mEmptyModulePlaceholder.setVisibility(View.VISIBLE);
     }
 
     protected void showHideNoResultsUI(boolean showNoResultsUI) {
         mModuleTitleTextView.setVisibility(View.VISIBLE);
+        mEmptyModulePlaceholder.setVisibility(View.GONE);
 
         if (showNoResultsUI) {
             mGroupIdToExpandedMap.clear();
@@ -232,6 +236,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
         mGroupIdToExpandedMap.clear();
         mModuleTitleTextView.setVisibility(View.VISIBLE);
+        mEmptyModulePlaceholder.setVisibility(View.GONE);
 
         String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
 
