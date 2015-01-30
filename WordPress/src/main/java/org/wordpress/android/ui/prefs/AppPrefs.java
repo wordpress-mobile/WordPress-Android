@@ -26,6 +26,9 @@ public class AppPrefs {
 
         // email retrieved and attached to mixpanel profile
         MIXPANEL_EMAIL_ADDRESS_RETRIEVED,
+
+        // index of the last active tab in main activity
+        MAIN_TAB_INDEX,
     }
 
     private static SharedPreferences prefs() {
@@ -156,12 +159,18 @@ public class AppPrefs {
 
 
     // Mixpanel email retrieval check
-
     public static Boolean getMixpanelEmailRetrievalCheck() {
         return getBoolean(PrefKey.MIXPANEL_EMAIL_ADDRESS_RETRIEVED, false);
     }
 
     public static void setMixpanelEmailRetrievalCheck(boolean b) {
         setBoolean(PrefKey.MIXPANEL_EMAIL_ADDRESS_RETRIEVED, b);
+    }
+
+    public static int getMainTabIndex() {
+        return getInt(PrefKey.MAIN_TAB_INDEX);
+    }
+    public static void setMainTabIndex(int index) {
+        setInt(PrefKey.MAIN_TAB_INDEX, index);
     }
 }

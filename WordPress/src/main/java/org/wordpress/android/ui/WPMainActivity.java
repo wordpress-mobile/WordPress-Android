@@ -24,6 +24,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
@@ -55,18 +56,6 @@ public class WPMainActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                super.onPageScrollStateChanged(state);
-            }
-        });
-
         mTabAdapter = new WPTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
@@ -75,6 +64,22 @@ public class WPMainActivity extends ActionBarActivity {
         mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.tab_indicator));
         mTabs.setDistributeEvenly(true);
         mTabs.setViewPager(mViewPager);
+
+        // return to the tab that was showing the last time
+        if (savedInstanceState == null) {
+            int position = AppPrefs.getMainTabIndex();
+            if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
+                mViewPager.setCurrentItem(position);
+            }
+        }
+
+        // page change listener must be set on the tab layout rather than the ViewPager
+        mTabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                AppPrefs.setMainTabIndex(position);
+            }
+        });
     }
 
     @Override
@@ -115,8 +120,6 @@ public class WPMainActivity extends ActionBarActivity {
                 break;
         }
     }
-
-
 
     /*
      * called by onActivityResult() for reader-related intents
