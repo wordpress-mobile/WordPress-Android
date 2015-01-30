@@ -2,6 +2,11 @@
 
 <resources>
 
+    <!-- MediaPicker defaults -->
+    <dimen name="media_grid_padding">2dp</dimen>
+    <dimen name="media_grid_column_spacing_vertical">2dp</dimen>
+    <dimen name="media_grid_column_spacing_horizontal">2dp</dimen>
+
     <!-- MediaItem View layout defaults -->
     <dimen name="media_item_height">128dp</dimen>
     <dimen name="media_item_frame_margin_left">0dp</dimen>
