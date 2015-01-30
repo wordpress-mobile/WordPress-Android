@@ -43,7 +43,7 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.WPTabFragment;
+import org.wordpress.android.ui.WPMainTabFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -72,7 +72,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-public class ReaderPostListFragment extends WPTabFragment
+public class ReaderPostListFragment extends WPMainTabFragment
     implements ReaderInterfaces.OnReaderPostSelectedListener,
                ReaderInterfaces.OnReaderTagSelectedListener,
                ReaderInterfaces.OnPostPopupListener
@@ -488,6 +488,17 @@ public class ReaderPostListFragment extends WPTabFragment
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_tags:
+                ReaderActivityLauncher.showReaderSubsForResult(getActivity());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     /*
      * blocks the blog associated with the passed post and removes all posts in that blog
      * from the adapter
@@ -549,6 +560,7 @@ public class ReaderPostListFragment extends WPTabFragment
         if (!isAdded() || !(getActivity() instanceof ActionBarActivity)) {
             return;
         }
+
         final android.support.v7.app.ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
         if (actionBar == null) {
             return;

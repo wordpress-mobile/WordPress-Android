@@ -22,7 +22,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
     static final int TAB_ME     = 2;
     static final int TAB_NOTIFS = 3;
 
-    private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_TABS);
+    private final SparseArray<WPMainTabFragment> mFragments = new SparseArray<>(NUM_TABS);
 
     public WPMainTabAdapter(FragmentManager fm) {
         super(fm);
@@ -85,8 +85,8 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Object item = super.instantiateItem(container, position);
-        if (item instanceof Fragment) {
-            mFragments.put(position, (Fragment) item);
+        if (item instanceof WPMainTabFragment) {
+            mFragments.put(position, (WPMainTabFragment) item);
         }
         return item;
     }
@@ -96,7 +96,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
         mFragments.remove(position);
     }
 
-    public Fragment getFragment(int position) {
+    public WPMainTabFragment getFragment(int position) {
         if (isValidPosition(position)) {
             return mFragments.get(position);
         } else {
@@ -104,7 +104,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
         }
     }
 
-    public static class DummyFragment extends Fragment {
+    public static class DummyFragment extends WPMainTabFragment {
 
     }
 }

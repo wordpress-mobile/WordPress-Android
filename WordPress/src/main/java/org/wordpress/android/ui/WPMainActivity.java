@@ -11,7 +11,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -20,7 +19,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderSubsActivity;
@@ -36,18 +34,21 @@ import javax.annotation.Nonnull;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends ActionBarActivity {
+public class WPMainActivity extends ActionBarActivity
+    implements ViewPager.OnPageChangeListener
+{
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
+    private Toolbar mToolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
@@ -59,6 +60,9 @@ public class WPMainActivity extends ActionBarActivity {
         mTabs.setDistributeEvenly(true);
         mTabs.setViewPager(mViewPager);
 
+        // page change listener must be set on the tab layout rather than the ViewPager
+        mTabs.setOnPageChangeListener(this);
+
         // return to the tab that was showing the last time
         if (savedInstanceState == null) {
             int position = AppPrefs.getMainTabIndex();
@@ -66,14 +70,6 @@ public class WPMainActivity extends ActionBarActivity {
                 mViewPager.setCurrentItem(position);
             }
         }
-
-        // page change listener must be set on the tab layout rather than the ViewPager
-        mTabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                AppPrefs.setMainTabIndex(position);
-            }
-        });
     }
 
     @Override
@@ -94,14 +90,18 @@ public class WPMainActivity extends ActionBarActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_tags:
-                ReaderActivityLauncher.showReaderSubsForResult(this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    public void onPageSelected(int position) {
+        AppPrefs.setMainTabIndex(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        // nop
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        // nop
     }
 
     @Override
@@ -166,7 +166,7 @@ public class WPMainActivity extends ActionBarActivity {
     }
 
     public void onSignout() {
-
+        // TODO
     }
 
     /**
