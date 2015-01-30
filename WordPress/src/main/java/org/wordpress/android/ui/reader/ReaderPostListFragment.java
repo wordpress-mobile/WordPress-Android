@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -67,7 +66,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
-import org.wordpress.android.widgets.ScrollDirectionListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,7 +82,6 @@ public class ReaderPostListFragment extends WPTabFragment
 
     private ReaderPostAdapter mPostAdapter;
     private ReaderRecyclerView mRecyclerView;
-    private ScrollDirectionListener mScrollDirectionListener;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private View mNewPostsBar;
@@ -388,14 +385,6 @@ public class ReaderPostListFragment extends WPTabFragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof ScrollDirectionListener) {
-            mScrollDirectionListener = (ScrollDirectionListener) activity;
-        }
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -404,9 +393,6 @@ public class ReaderPostListFragment extends WPTabFragment
 
         boolean adapterAlreadyExists = hasPostAdapter();
         mRecyclerView.setAdapter(getPostAdapter());
-        if (mScrollDirectionListener != null) {
-            mRecyclerView.setScrollDirectionListener(mScrollDirectionListener);
-        }
 
         // if adapter didn't already exist, populate it now then update the tag - this
         // check is important since without it the adapter would be reset and posts would

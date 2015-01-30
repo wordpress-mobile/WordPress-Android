@@ -18,14 +18,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderSubsActivity;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.widgets.ScrollDirectionListener;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
 
@@ -34,9 +32,7 @@ import javax.annotation.Nonnull;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends ActionBarActivity
-    implements ScrollDirectionListener
-{
+public class WPMainActivity extends ActionBarActivity {
     private WPMainViewPager mViewPager;
     private WPTabAdapter mTabAdapter;
     private Toolbar mToolbar;
@@ -148,27 +144,6 @@ public class WPMainActivity extends ActionBarActivity
             return (ReaderPostListFragment)fragment;
         }
         return null;
-    }
-
-    @Override
-    public void onScrollUp() {
-        showToolbar(true);
-    }
-
-    @Override
-    public void onScrollDown() {
-        showToolbar(false);
-    }
-
-    @Override
-    public void onScrollCompleted() {
-        showToolbar(true);
-    }
-
-    private void showToolbar(boolean show) {
-        if (!isFinishing()) {
-            ReaderAnim.animateTopBar(mTabs, show);
-        }
     }
 
     /**

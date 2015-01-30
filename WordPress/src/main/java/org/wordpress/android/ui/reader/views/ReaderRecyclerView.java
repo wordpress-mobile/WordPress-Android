@@ -7,9 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-import org.wordpress.android.widgets.WPRecyclerView;
-
-public class ReaderRecyclerView extends WPRecyclerView {
+public class ReaderRecyclerView extends RecyclerView {
 
     public ReaderRecyclerView(Context context) {
         super(context);
