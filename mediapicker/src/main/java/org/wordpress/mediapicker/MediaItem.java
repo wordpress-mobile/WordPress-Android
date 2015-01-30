@@ -23,6 +23,7 @@ public class MediaItem implements Parcelable {
     private String mContentTitle;
     private Uri mContentPreviewSource;
     private Uri mContentSource;
+    private int mRotation;
 
     /**
      * @param tag
@@ -105,6 +106,22 @@ public class MediaItem implements Parcelable {
         return mContentSource;
     }
 
+    /**
+     * @param rotation
+     *  value to set; not filtered
+     */
+    public void setRotation(int rotation) {
+        mRotation = rotation;
+    }
+
+    /**
+     * @return
+     *  current Rotation value; defaults to 0
+     */
+    public int getRotation() {
+        return mRotation;
+    }
+
     /*
         Parcelable interface
     */
@@ -112,6 +129,7 @@ public class MediaItem implements Parcelable {
     private static final String PARCEL_KEY_TITLE = "title";
     private static final String PARCEL_KEY_PREVIEW = "preview";
     private static final String PARCEL_KEY_SOURCE = "source";
+    private static final String PARCEL_KEY_ROTATION = "rotation";
 
     public static final Creator<MediaItem> CREATOR =
             new Creator<MediaItem>() {
@@ -141,6 +159,9 @@ public class MediaItem implements Parcelable {
                                     case PARCEL_KEY_SOURCE:
                                         newItem.setSource(value);
                                         break;
+                                    case PARCEL_KEY_ROTATION:
+                                        newItem.setRotation(Integer.parseInt(value));
+                                        break;
                                 }
                             }
                         }
@@ -165,6 +186,7 @@ public class MediaItem implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         List<String> dataList = new ArrayList<>();
 
+        dataList.add(PARCEL_KEY_ROTATION + "=" + mRotation);
         if (mTag != null && !mTag.isEmpty()) {
             dataList.add(PARCEL_KEY_TAG + "=" + mTag);
         }
