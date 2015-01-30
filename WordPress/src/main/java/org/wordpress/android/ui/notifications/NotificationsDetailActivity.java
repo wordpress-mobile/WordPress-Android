@@ -68,8 +68,6 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setTitle(note.getTitle());
                     }
-
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
                 } catch (BucketObjectMissingException e) {
                     AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
                     ToastUtils.showToast(this, R.string.error_notification_open);
