@@ -10,19 +10,19 @@ import android.view.ViewGroup;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderTypes;
-import org.wordpress.android.util.AppLog;
 
 /**
  * pager adapter containing tab fragments used by WPMainActivity
  */
 class WPMainTabAdapter extends FragmentStatePagerAdapter {
-    static final int NUM_TABS = 4;
-    static final int TAB_READER = 0;
-    static final int TAB_SITES = 1;
-    static final int TAB_ME = 2;
+
+    private static final int NUM_TABS = 4;
+    static final int TAB_SITES  = 0;
+    static final int TAB_READER = 1;
+    static final int TAB_ME     = 2;
     static final int TAB_NOTIFS = 3;
 
-    final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_TABS);
+    private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_TABS);
 
     public WPMainTabAdapter(FragmentManager fm) {
         super(fm);
@@ -34,17 +34,10 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
         // by catching the IllegalStateException
         // https://code.google.com/p/android/issues/detail?id=42601
         try {
-            AppLog.v(AppLog.T.READER, "WPTabAdapter pager > adapter restoreState");
             super.restoreState(state, loader);
         } catch (IllegalStateException e) {
-            AppLog.e(AppLog.T.READER, e);
+            // nop
         }
-    }
-
-    @Override
-    public Parcelable saveState() {
-        AppLog.v(AppLog.T.READER, "WPTabAdapter pager > adapter saveState");
-        return super.saveState();
     }
 
     @Override
@@ -60,15 +53,16 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case TAB_SITES:
-                break;
+                return new DummyFragment();
             case TAB_READER:
-                break;
+                return ReaderPostListFragment.newInstance(ReaderTag.getDefaultTag(), ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
             case TAB_ME:
-                break;
+                return new DummyFragment();
             case TAB_NOTIFS:
-                break;
+                return new DummyFragment();
+            default:
+                return null;
         }
-        return ReaderPostListFragment.newInstance(ReaderTag.getDefaultTag(), ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
     }
 
     @Override
@@ -108,5 +102,9 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
         } else {
             return null;
         }
+    }
+
+    public static class DummyFragment extends Fragment {
+
     }
 }
