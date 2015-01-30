@@ -358,7 +358,6 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
                     .listener(new UndoBarController.AdvancedUndoListener() {
                         @Override
                         public void onHide(Parcelable parcelable) {
-                            if (!isAdded()) return;
                             // Deleted notifications in Simperium never come back, so we won't
                             // make the request until the undo bar fades away
                             CommentActions.moderateCommentForNote(note, newStatus,
