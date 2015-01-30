@@ -42,7 +42,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (mDatamodels != null && mDatamodels[0] != null
+        return (!isDataEmpty(0)
                 && ((ClicksModel) mDatamodels[0]).getClickGroups() != null
                 && ((ClicksModel) mDatamodels[0]).getClickGroups().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
     }
@@ -111,6 +111,9 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             }
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
+
+            // The link icon
+            holder.showLinkIcon();
 
             // name, url
             holder.setEntryTextOrLink(children.getUrl(), children.getTitle());
@@ -184,8 +187,12 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(icon, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.STATS_SITE_AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
-            // expand/collapse chevron
-            holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
+            if (children == 0) {
+                holder.showLinkIcon();
+            } else {
+                holder.showChevronIcon();
+            }
+
             return convertView;
         }
 

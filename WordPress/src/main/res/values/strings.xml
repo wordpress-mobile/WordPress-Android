@@ -381,7 +381,7 @@
     <string name="stats_view_totals_followers_and_shares">Totals, followers, &amp; shares</string>
     <string name="stats_view_clicks">Clicks</string>
     <string name="stats_view_tags_and_categories">Tags &amp; categories</string>
-    <string name="stats_view_top_authors">Top authors</string>
+    <string name="stats_view_authors">Authors</string>
     <string name="stats_view_referrers">Referrers</string>
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_comments">Comments</string>
@@ -561,8 +561,8 @@
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
-    <string name="publisher">Publisher: Automattic, Inc</string>
-    <string name="copyright">©2014 Automattic, Inc</string>
+    <string name="publisher">Publisher:</string>
+    <string name="automattic_inc" translatable="false">Automattic, Inc</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>

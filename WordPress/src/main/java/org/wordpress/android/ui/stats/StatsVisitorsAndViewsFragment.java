@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Gravity;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -90,28 +92,89 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
         mModuleButtonsContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
 
-        for (int i = 0; i < overviewItems.length; i++) {
-            CheckedTextView rb = (CheckedTextView) inflater.inflate(R.layout.stats_visitors_and_views_button, container, false);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
-                    RadioGroup.LayoutParams.MATCH_PARENT);
-            params.weight = 1;
-            rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
-            params.setMargins(0, 0, 0, 0);
-            rb.setGravity(Gravity.CENTER);
-            rb.setLayoutParams(params);
-            rb.setText(overviewItems[i].getLabel());
-            rb.setTag(overviewItems[i]);
-            rb.setChecked(i == mSelectedOverviewItemIndex);
-            rb.setOnClickListener(TopButtonsOnClickListener);
-
-            if (i == (overviewItems.length -1)) {
-                rb.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_selector);
+        // Make sure we've all the info to build the tab correctly. This is ALWAYS true
+        if (mModuleButtonsContainer.getChildCount() == overviewItems.length) {
+            for (int i = 0; i < mModuleButtonsContainer.getChildCount(); i++) {
+                LinearLayout currentTab = (LinearLayout) mModuleButtonsContainer.getChildAt(i);
+                boolean isLastItem = i == (overviewItems.length - 1);
+                boolean isChecked = i == mSelectedOverviewItemIndex;
+                TabViewHolder currentTabViewHolder = new TabViewHolder(currentTab, overviewItems[i], isChecked, isLastItem);
+                currentTab.setOnClickListener(TopButtonsOnClickListener);
+                currentTab.setTag(currentTabViewHolder);
             }
-            mModuleButtonsContainer.addView(rb);
+            mModuleButtonsContainer.setVisibility(View.VISIBLE);
+        }
+        return view;
+    }
+
+    private class TabViewHolder {
+        LinearLayout tab;
+        LinearLayout innerContainer;
+        TextView label;
+        TextView value;
+        ImageView icon;
+        OverviewLabel labelItem;
+        boolean isChecked = false;
+        boolean isLastItem = false;
+
+        public TabViewHolder(LinearLayout currentTab, OverviewLabel labelItem, boolean checked, boolean isLastItem) {
+            tab = currentTab;
+            innerContainer = (LinearLayout) currentTab.findViewById(R.id.stats_visitors_and_views_tab_inner_container);
+            label = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
+            label.setText(labelItem.getLabel());
+            value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
+            icon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
+            this.labelItem = labelItem;
+            this.isChecked = checked;
+            this.isLastItem = isLastItem;
+            updateBackGroundAndIcon();
         }
 
-        mModuleButtonsContainer.setVisibility(View.VISIBLE);
-        return view;
+        private Drawable getTabIcon() {
+            switch (labelItem) {
+                case VISITORS:
+                    return isChecked ? getResources().getDrawable(R.drawable.stats_icon_visitors_active) :
+                            getResources().getDrawable(R.drawable.stats_icon_visitors);
+                case COMMENTS:
+                    return isChecked ? getResources().getDrawable(R.drawable.stats_icon_comments_active) :
+                            getResources().getDrawable(R.drawable.stats_icon_comments);
+                case LIKES:
+                    return isChecked ? getResources().getDrawable(R.drawable.stats_icon_likes_active) :
+                            getResources().getDrawable(R.drawable.stats_icon_likes);
+                default:
+                    // Views and when no prev match
+                    return isChecked ? getResources().getDrawable(R.drawable.stats_icon_views_active) :
+                            getResources().getDrawable(R.drawable.stats_icon_views);
+            }
+        }
+
+        public void updateBackGroundAndIcon() {
+            if (isChecked) {
+                value.setTextColor(getResources().getColor(R.color.calypso_orange_dark));
+            } else {
+                value.setTextColor(getResources().getColor(R.color.calypso_blue_unread));
+            }
+
+            icon.setImageDrawable(getTabIcon());
+
+            if (isLastItem) {
+                if (isChecked) {
+                    tab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_white);
+                } else {
+                    tab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_blue_light);
+                }
+            } else {
+                if (isChecked) {
+                    tab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_white);
+                } else {
+                    tab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_blue_light);
+                }
+            }
+        }
+
+        public void setChecked(boolean checked) {
+            this.isChecked = checked;
+        }
     }
 
     private View.OnClickListener TopButtonsOnClickListener = new View.OnClickListener() {
@@ -121,21 +184,24 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 return;
             }
 
-            CheckedTextView ctv = (CheckedTextView) v;
-            if (ctv.isChecked()) {
+            //LinearLayout tab = (LinearLayout) v;
+            TabViewHolder tabViewHolder = (TabViewHolder) v.getTag();
+
+            if (tabViewHolder.isChecked) {
                 // already checked. Do nothing
                 return;
             }
 
-            int numberOfButtons = mModuleButtonsContainer.getChildCount();
+            int numberOfTabs = mModuleButtonsContainer.getChildCount();
             int checkedId = -1;
-            for (int i = 0; i < numberOfButtons; i++) {
-                CheckedTextView currentCheckedTextView = (CheckedTextView) mModuleButtonsContainer.getChildAt(i);
-                if (ctv == currentCheckedTextView) {
+            for (int i = 0; i < numberOfTabs; i++) {
+                LinearLayout currentTab = (LinearLayout) mModuleButtonsContainer.getChildAt(i);
+                TabViewHolder currentTabViewHolder = (TabViewHolder) currentTab.getTag();
+                if (tabViewHolder == currentTab.getTag()) {
                     checkedId = i;
-                    currentCheckedTextView.setChecked(true);
+                    currentTabViewHolder.setChecked(true);
                 } else {
-                    currentCheckedTextView.setChecked(false);
+                    currentTabViewHolder.setChecked(false);
                 }
             }
 
@@ -323,8 +389,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph((VisitsModel)mVisitsData);
 
+        // Make sure we've data to show on the screen
+        if (dataToShowOnGraph.length == 0) {
+            return;
+        }
+
         // This check should never be true, since we put a check on the index in the calling function updateUI()
-        if (dataToShowOnGraph.length <= itemPosition) {
+        if (dataToShowOnGraph.length <= itemPosition || itemPosition == -1) {
             // Make sure we're not highlighting
             itemPosition = dataToShowOnGraph.length -1;
         }
@@ -340,22 +411,21 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         VisitModel modelTapped = dataToShowOnGraph[itemPosition];
         for (int i=0 ; i < mModuleButtonsContainer.getChildCount(); i++) {
             View o = mModuleButtonsContainer.getChildAt(i);
-            if (o instanceof CheckedTextView) {
-                CheckedTextView currentBtm = (CheckedTextView)o;
-                OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
-                String labelPrefix = overviewItem.getLabel() + "\n";
-                switch (overviewItem) {
+            if (o instanceof LinearLayout && o.getTag() instanceof  TabViewHolder) {
+                TabViewHolder tabViewHolder = (TabViewHolder)o.getTag();
+                tabViewHolder.updateBackGroundAndIcon();
+                switch (tabViewHolder.labelItem) {
                     case VIEWS:
-                        currentBtm.setText(labelPrefix + FormatUtils.formatDecimal(modelTapped.getViews()));
+                        tabViewHolder.value.setText(FormatUtils.formatDecimal(modelTapped.getViews()));
                         break;
                     case VISITORS:
-                        currentBtm.setText(labelPrefix + FormatUtils.formatDecimal(modelTapped.getVisitors()));
+                        tabViewHolder.value.setText(FormatUtils.formatDecimal(modelTapped.getVisitors()));
                         break;
                     case LIKES:
-                        currentBtm.setText(labelPrefix + FormatUtils.formatDecimal(modelTapped.getLikes()));
+                        tabViewHolder.value.setText(FormatUtils.formatDecimal(modelTapped.getLikes()));
                         break;
                     case COMMENTS:
-                        currentBtm.setText(labelPrefix + FormatUtils.formatDecimal(modelTapped.getComments()));
+                        tabViewHolder.value.setText(FormatUtils.formatDecimal(modelTapped.getComments()));
                         break;
                 }
             }
@@ -516,7 +586,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mSelectedBarGraphBarIndex = tappedBar;
         updateUIBelowTheGraph(tappedBar);
 
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
@@ -606,7 +676,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         public String getLabel() {
-            return WordPress.getContext().getString(mLabelResId);
+            return WordPress.getContext().getString(mLabelResId).toUpperCase();
         }
 
         public static String[] toStringArray(OverviewLabel[] timeframes) {

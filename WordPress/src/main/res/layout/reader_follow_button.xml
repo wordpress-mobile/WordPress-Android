@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frame_follow_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/reader_follow_button_selector"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/margin_small"
+    android:paddingLeft="@dimen/margin_medium"
+    android:paddingRight="@dimen/margin_medium"
+    android:paddingTop="@dimen/margin_small">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_follow_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minWidth="90dp"
+        android:text="@string/reader_btn_follow"
+        android:textColor="@color/reader_follow_button_text"
+        android:textSize="@dimen/text_sz_small" />
+
+</LinearLayout>

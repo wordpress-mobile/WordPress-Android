@@ -14,8 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,6 +32,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
@@ -73,6 +72,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsBlockBlogDisabled;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
+    private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
 
     private ReaderResourceVars mResourceVars;
 
@@ -120,6 +120,9 @@ public class ReaderPostDetailFragment extends Fragment
         if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
             mOnPopupListener = (ReaderInterfaces.OnPostPopupListener) activity;
         }
+        if (activity instanceof ReaderInterfaces.AutoHideToolbarListener) {
+            mAutoHideToolbarListener = (ReaderInterfaces.AutoHideToolbarListener) activity;
+        }
     }
 
     @Override
@@ -143,6 +146,11 @@ public class ReaderPostDetailFragment extends Fragment
         mScrollView.setVisibility(View.INVISIBLE);
         mLayoutIcons.setVisibility(View.INVISIBLE);
 
+        // spacer that's set to the same height as the toolbar needs to be visible if fragment is
+        // in an activity that supports toolbar auto-hiding (e.g. ReaderPostPagerActivity)
+        View spacer = view.findViewById(R.id.spacer_autohide_toolbar);
+        spacer.setVisibility(mAutoHideToolbarListener != null ? View.VISIBLE : View.GONE);
+
         return view;
     }
 
@@ -154,22 +162,31 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
+
     @Override
     public void onScrollUp() {
-        animateIconBar(true);
+        showIconBar(true);
+        showToolbar(true);
     }
 
     @Override
     public void onScrollDown() {
         if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
-            animateIconBar(false);
+            showIconBar(false);
+            showToolbar(false);
         }
     }
 
     @Override
     public void onScrollCompleted() {
         if (!mScrollView.canScrollDown()) {
-            animateIconBar(true);
+            showIconBar(true);
+        }
+    }
+
+    private void showToolbar(boolean show) {
+        if (mAutoHideToolbarListener != null) {
+            mAutoHideToolbarListener.onShowHideToolbar(show);
         }
     }
 
@@ -221,30 +238,10 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * animate in/out the layout containing the reblog/comment/like icons
      */
-    private void animateIconBar(boolean isAnimatingIn) {
-        if (isAnimatingIn && mLayoutIcons.getVisibility() == View.VISIBLE) {
-            return;
+    private void showIconBar(boolean show) {
+        if (isAdded()) {
+            ReaderAnim.animateBottomBar(mLayoutIcons, show);
         }
-        if (!isAnimatingIn && mLayoutIcons.getVisibility() != View.VISIBLE) {
-            return;
-        }
-
-        final Animation animation;
-        if (isAnimatingIn) {
-            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                    1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        } else {
-            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                    0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
-        }
-
-        animation.setDuration(mResourceVars.mediumAnimTime);
-
-        mLayoutIcons.clearAnimation();
-        mLayoutIcons.startAnimation(animation);
-        mLayoutIcons.setVisibility(isAnimatingIn ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -263,15 +260,7 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setHasOptionsMenu(true);
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        }
-
         restoreState(savedInstanceState);
     }
 
@@ -342,14 +331,14 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
-        final TextView txtFollow = (TextView) getView().findViewById(R.id.text_follow);
-        ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
+        final ReaderFollowButton followButton = (ReaderFollowButton) getView().findViewById(R.id.follow_button);
+        followButton.setIsFollowedAnimated(isAskingToFollow);
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && isAdded()) {
-                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
+                    followButton.setIsFollowed(!isAskingToFollow);
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(getActivity(), resId);
                 }
@@ -646,11 +635,11 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtTitle;
         TextView txtBlogName;
         TextView txtDateAndAuthor;
-        TextView txtFollow;
 
         ImageView imgBtnReblog;
         ImageView imgMore;
 
+        ReaderFollowButton followButton;
         WPNetworkImageView imgAvatar;
         ViewGroup layoutDetailHeader;
 
@@ -678,15 +667,14 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
-            txtFollow = (TextView) container.findViewById(R.id.text_follow);
             txtDateAndAuthor = (TextView) container.findViewById(R.id.text_date_and_author);
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
             imgMore = (ImageView) container.findViewById(R.id.image_more);
-
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
+            followButton = (ReaderFollowButton) container.findViewById(R.id.follow_button);
 
             return true;
         }
@@ -719,8 +707,8 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            ReaderUtils.showFollowStatus(txtFollow, mPost.isFollowedByCurrentUser);
-            txtFollow.setOnClickListener(new View.OnClickListener() {
+            followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
+            followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     togglePostFollowed();

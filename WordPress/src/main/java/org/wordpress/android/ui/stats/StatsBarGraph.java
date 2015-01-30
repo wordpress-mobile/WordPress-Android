@@ -13,6 +13,8 @@ import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
+import com.jjoe64.graphview.GraphViewStyle;
+import com.jjoe64.graphview.IndexDependentColor;
 
 import org.wordpress.android.R;
 import org.wordpress.android.widgets.TypefaceCache;
@@ -98,13 +100,36 @@ class StatsBarGraph extends GraphView {
         return super.onTouchEvent(event);
     }
 
+    private class HorizontalLabelsColor implements IndexDependentColor {
+        public int get(int index) {
+            if (mBarPositionToHighlight == index) {
+                return getResources().getColor(R.color.calypso_orange_dark);
+            } else {
+                return getResources().getColor(R.color.blue_dark);
+            }
+        }
+    }
+
+    private class HorizontalLabelsBackgroundColor implements IndexDependentColor {
+        public int get(int index) {
+            if (mBarPositionToHighlight == index) {
+                return getResources().getColor(R.color.calypso_orange_dark);
+            } else {
+                return Color.WHITE;
+            }
+        }
+    }
+
     private void setProperties() {
-        getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.blue_dark));
-        getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.stats_bar_graph_vertical_label));
-        getGraphViewStyle().setTextSize(getResources().getDimensionPixelSize(R.dimen.graph_font_size));
-        getGraphViewStyle().setGridXColor(Color.TRANSPARENT);
-        getGraphViewStyle().setGridYColor(getResources().getColor(R.color.stats_bar_graph_grid));
-        getGraphViewStyle().setNumVerticalLabels(3);
+        GraphViewStyle gStyle =  getGraphViewStyle();
+        gStyle.setHorizontalLabelsIndexDependentColor(new HorizontalLabelsColor());
+        gStyle.setHorizontalLabelsBackgroundIndexDependentColor(new HorizontalLabelsBackgroundColor());
+        gStyle.setHorizontalLabelsColor(getResources().getColor(R.color.blue_dark));
+        gStyle.setVerticalLabelsColor(getResources().getColor(R.color.stats_bar_graph_vertical_label));
+        gStyle.setTextSize(getResources().getDimensionPixelSize(R.dimen.text_sz_extra_small));
+        gStyle.setGridXColor(Color.TRANSPARENT);
+        gStyle.setGridYColor(getResources().getColor(R.color.stats_bar_graph_grid));
+        gStyle.setNumVerticalLabels(3);
 
         setCustomLabelFormatter(new CustomLabelFormatter() {
             private NumberFormat numberFormatter;
@@ -160,7 +185,7 @@ class StatsBarGraph extends GraphView {
 
             // Draw the orange selection behind the selected bar
             if (mBarPositionToHighlight == i) {
-                paint.setColor(getResources().getColor(R.color.stats_views_hover_color));
+                paint.setColor(getResources().getColor(R.color.calypso_orange_dark));
                 paint.setAlpha(50);
                 canvas.drawRect(left, 10f, right, bottom, paint);
             }
@@ -179,7 +204,7 @@ class StatsBarGraph extends GraphView {
                 // draw a real bar
                 paint.setAlpha(255);
                 if (mBarPositionToHighlight == i) {
-                    paint.setColor(getResources().getColor(R.color.stats_views_hover_color));
+                    paint.setColor(getResources().getColor(R.color.calypso_orange_dark));
                 } else {
                     paint.setColor(style.color);
                 }
@@ -250,30 +275,6 @@ class StatsBarGraph extends GraphView {
     protected double getMinY() {
         return 0;
     }
-
-    @Override
-    protected double getMaxY() {
-        double maxY = super.getMaxY();
-
-        final int divideBy;
-        if (maxY < 100) {
-            divideBy = 10;
-        } else if (maxY < 1000) {
-            divideBy = 100;
-        } else if (maxY < 10000) {
-            divideBy = 1000;
-        } else if (maxY < 100000) {
-            divideBy = 10000;
-        } else if (maxY < 1000000) {
-            divideBy = 100000;
-        } else {
-            divideBy = 1000000;
-        }
-
-        maxY = Math.rint((maxY / divideBy) + 1) * divideBy;
-        return maxY;
-    }
-
 
     /**
      * Private class that is used to hold the local (to the canvas) coordinate on the screen

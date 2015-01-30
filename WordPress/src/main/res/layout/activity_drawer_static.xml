@@ -14,13 +14,13 @@
         <include
             layout="@layout/drawer"
             android:layout_width="@dimen/drawer_width_static"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/margin_extra_small" />
 
         <LinearLayout
             android:id="@+id/activity_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/margin_extra_small"
             android:orientation="vertical" />
     </LinearLayout>
 
