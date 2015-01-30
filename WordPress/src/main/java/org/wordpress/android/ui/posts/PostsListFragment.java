@@ -611,10 +611,15 @@ public class PostsListFragment extends ListFragment
         public boolean isLowerThan(AnimationStage animationStage) {
             return (ordinal() < animationStage.ordinal());
         }
+
+        public int stagesRemaining() {
+            return (IN_BETWEEN.ordinal() - ordinal());
+        }
     }
 
     private class EmptyViewAnimationHandler implements ObjectAnimator.AnimatorListener {
         private static final int ANIMATION_DURATION = 150;
+        private static final int MINIMUM_LOADING_DURATION = 500;
 
         private AnimationStage mAnimationStage = AnimationStage.PRE_ANIMATION;
         private boolean mHasDisplayedLoadingSequence;
@@ -670,8 +675,9 @@ public class PostsListFragment extends ListFragment
             }
 
             if (isShowingLoadingAnimation()) {
-                // Delay starting the LOADING > NO_CONTENT sequence if NO_CONTENT > LOADING hasn't finished yet
-                int delayTime = ((7-mAnimationStage.ordinal()) * ANIMATION_DURATION);
+                // Delay by enough time to complete the remaining stages of the currently on-going animation,
+                // additionally allowing the loading message to display for MINIMUM_LOADING_DURATION
+                int delayTime = (mAnimationStage.stagesRemaining() * ANIMATION_DURATION) + MINIMUM_LOADING_DURATION;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
