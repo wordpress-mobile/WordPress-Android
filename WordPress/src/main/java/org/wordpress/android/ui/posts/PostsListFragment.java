@@ -358,7 +358,7 @@ public class PostsListFragment extends ListFragment
                 if (!isAdded())
                     return;
 
-                if (mEmptyViewAnimationHandler.isAnimating() || mEmptyViewAnimationHandler.isBetweenSequences()) {
+                if (mEmptyViewAnimationHandler.isShowingLoadingAnimation() || mEmptyViewAnimationHandler.isBetweenSequences()) {
                     // Keep the SwipeRefreshLayout animation visible until the EmptyViewAnimationHandler dismisses it
                     mKeepSwipeRefreshLayoutVisible = true;
                 } else {
@@ -597,11 +597,26 @@ public class PostsListFragment extends ListFragment
         public void onSinglePostLoaded();
     }
 
+    public enum AnimationStage {
+        PRE_ANIMATION,
+        FADE_OUT_IMAGE, SLIDE_TEXT_UP, FADE_OUT_NO_CONTENT_TEXT, FADE_IN_LOADING_TEXT,
+        IN_BETWEEN,
+        FADE_OUT_LOADING_TEXT, FADE_IN_NO_CONTENT_TEXT, SLIDE_TEXT_DOWN, FADE_IN_IMAGE,
+        FINISHED;
+
+        public AnimationStage next() {
+            return AnimationStage.values()[ordinal()+1];
+        }
+
+        public boolean isLowerThan(AnimationStage animationStage) {
+            return (ordinal() < animationStage.ordinal());
+        }
+    }
+
     private class EmptyViewAnimationHandler implements ObjectAnimator.AnimatorListener {
         private static final int ANIMATION_DURATION = 150;
 
-        private boolean mIsInLoadingPhase;
-        private int mAnimationStage;
+        private AnimationStage mAnimationStage = AnimationStage.PRE_ANIMATION;
         private boolean mHasDisplayedLoadingSequence;
 
         private ObjectAnimator mObjectAnimator;
@@ -613,21 +628,17 @@ public class PostsListFragment extends ListFragment
             mSlideDistance = -((layoutParams.height + layoutParams.bottomMargin + layoutParams.topMargin) / 2);
         }
 
-        public void setInLoadingPhase(boolean isLoading) {
-            mIsInLoadingPhase = isLoading;
-        }
-
-        public boolean isAnimating() {
-            return (0 < mAnimationStage && mAnimationStage < 5);
+        public boolean isShowingLoadingAnimation() {
+            return (mAnimationStage != AnimationStage.PRE_ANIMATION &&
+                    mAnimationStage.isLowerThan(AnimationStage.IN_BETWEEN));
         }
 
         public boolean isBetweenSequences() {
-            return (mIsInLoadingPhase && mAnimationStage > 4);
+            return (mAnimationStage == AnimationStage.IN_BETWEEN);
         }
 
         public void clear() {
-            mAnimationStage = 0;
-            mIsInLoadingPhase = false;
+            mAnimationStage = AnimationStage.PRE_ANIMATION;
             mHasDisplayedLoadingSequence = false;
         }
 
@@ -644,8 +655,7 @@ public class PostsListFragment extends ListFragment
         }
 
         public void showLoadingSequence() {
-            setInLoadingPhase(true);
-            mAnimationStage = 1;
+            mAnimationStage = AnimationStage.FADE_OUT_IMAGE;
             mEmptyViewMessage = MessageType.LOADING;
             startAnimation(mEmptyViewImage, "alpha", 1f, 0f);
         }
@@ -653,26 +663,24 @@ public class PostsListFragment extends ListFragment
         public void showNoContentSequence() {
             // If the data was auto-refreshed, the NO_CONTENT > LOADING sequence was not shown before this one, and
             // some special handling will be needed
-            if (isAnimating() || isBetweenSequences()) {
+            if (isShowingLoadingAnimation() || isBetweenSequences()) {
                 mHasDisplayedLoadingSequence = true;
             } else {
                 mHasDisplayedLoadingSequence = false;
             }
 
-            if (isAnimating()) {
+            if (isShowingLoadingAnimation()) {
                 // Delay starting the LOADING > NO_CONTENT sequence if NO_CONTENT > LOADING hasn't finished yet
-                int delayTime = ((7-mAnimationStage) * ANIMATION_DURATION);
+                int delayTime = ((7-mAnimationStage.ordinal()) * ANIMATION_DURATION);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        setInLoadingPhase(false);
-                        mAnimationStage = 1;
+                        mAnimationStage = AnimationStage.FADE_OUT_LOADING_TEXT;
                         startAnimation(mEmptyViewTitle, "alpha", 1f, 0.1f);
                     }
                 }, delayTime);
             } else {
-                setInLoadingPhase(false);
-                mAnimationStage = 1;
+                mAnimationStage = AnimationStage.FADE_OUT_LOADING_TEXT;
                 startAnimation(mEmptyViewTitle, "alpha", 1f, 0.1f);
             }
         }
@@ -683,65 +691,60 @@ public class PostsListFragment extends ListFragment
                 return;
             }
 
-            mAnimationStage++;
+            mAnimationStage = mAnimationStage.next();
 
-            if (mIsInLoadingPhase) {
-                switch (mAnimationStage) {
-                    // A step in the NO_CONTENT > LOADING sequence completed. Set up the next animation in the chain
-                    case 2:
-                        startAnimation(mEmptyViewTitle, "translationY", 0, mSlideDistance);
-                        break;
-                    case 3:
-                        startAnimation(mEmptyViewTitle, "alpha", 1f, 0.1f);
-                        break;
-                    case 4:
-                        mEmptyViewTitle.setText(mIsPage ? R.string.loading_pages : R.string.loading_posts);
+            // A step in the animation has completed. Set up the next animation in the chain
+            switch (mAnimationStage) {
+                // NO_CONTENT > LOADING section
+                case SLIDE_TEXT_UP:
+                    startAnimation(mEmptyViewTitle, "translationY", 0, mSlideDistance);
+                    break;
+                case FADE_OUT_NO_CONTENT_TEXT:
+                    startAnimation(mEmptyViewTitle, "alpha", 1f, 0.1f);
+                    break;
+                case FADE_IN_LOADING_TEXT:
+                    mEmptyViewTitle.setText(mIsPage ? R.string.loading_pages : R.string.loading_posts);
 
-                        startAnimation(mEmptyViewTitle, "alpha", 0.1f, 1f);
-                        break;
-                    default:
-                        return;
-                }
-            } else {
-                switch (mAnimationStage) {
-                    // A step in the LOADING > NO_CONTENT sequence completed. Set up the next animation in the chain
-                    case 2:
-                        mSwipeToRefreshHelper.setRefreshing(false);
-                        mKeepSwipeRefreshLayoutVisible = false;
+                    startAnimation(mEmptyViewTitle, "alpha", 0.1f, 1f);
+                    break;
 
-                        mEmptyViewTitle.setText(mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list);
-                        mEmptyViewMessage = MessageType.NO_CONTENT;
+                // LOADING > NO_CONTENT section
+                case FADE_IN_NO_CONTENT_TEXT:
+                    mSwipeToRefreshHelper.setRefreshing(false);
+                    mKeepSwipeRefreshLayoutVisible = false;
 
-                        startAnimation(mEmptyViewTitle, "alpha", 0.1f, 1f);
-                        break;
-                    case 3:
-                        startAnimation(mEmptyViewTitle, "translationY", mSlideDistance, 0);
+                    mEmptyViewTitle.setText(mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list);
+                    mEmptyViewMessage = MessageType.NO_CONTENT;
 
-                        if (!mHasDisplayedLoadingSequence) {
-                            // Force mEmptyViewImage to take up space in the layout, so that mEmptyViewTitle lands
-                            // where it should at the end of its slide animation
-                            mEmptyViewImage.setVisibility(View.INVISIBLE);
-                        }
-                        break;
-                    case 4:
-                        if (!mHasDisplayedLoadingSequence) {
-                            // Uses AlphaAnimation instead of an ObjectAnimator to address a display glitch
-                            // in the auto-refresh case
-                            AniUtils.startAnimation(mEmptyViewImage, android.R.anim.fade_in, ANIMATION_DURATION);
-                            mEmptyViewImage.setVisibility(View.VISIBLE);
-                        } else {
-                            startAnimation(mEmptyViewImage, "alpha", 0f, 1f);
-                        }
-                        break;
-                    default:
-                        return;
-                }
+                    startAnimation(mEmptyViewTitle, "alpha", 0.1f, 1f);
+                    break;
+                case SLIDE_TEXT_DOWN:
+                    startAnimation(mEmptyViewTitle, "translationY", mSlideDistance, 0);
+
+                    if (!mHasDisplayedLoadingSequence) {
+                        // Force mEmptyViewImage to take up space in the layout, so that mEmptyViewTitle lands
+                        // where it should at the end of its slide animation
+                        mEmptyViewImage.setVisibility(View.INVISIBLE);
+                    }
+                    break;
+                case FADE_IN_IMAGE:
+                    if (!mHasDisplayedLoadingSequence) {
+                        // Uses AlphaAnimation instead of an ObjectAnimator to address a display glitch
+                        // in the auto-refresh case
+                        AniUtils.startAnimation(mEmptyViewImage, android.R.anim.fade_in, ANIMATION_DURATION);
+                        mEmptyViewImage.setVisibility(View.VISIBLE);
+                    } else {
+                        startAnimation(mEmptyViewImage, "alpha", 0f, 1f);
+                    }
+                    break;
+                default:
+                    return;
             }
         }
 
         @Override
         public void onAnimationCancel(Animator animation) {
-            mAnimationStage = 0;
+            mAnimationStage = AnimationStage.PRE_ANIMATION;
         }
 
         @Override
