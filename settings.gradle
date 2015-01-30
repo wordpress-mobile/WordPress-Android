@@ -1,2 +1,2 @@
-include ':sample'
 include ':mediapicker'
+include ':sample'

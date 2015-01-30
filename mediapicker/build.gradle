@@ -1,5 +1,9 @@
 apply plugin: 'com.android.library'
 
+repositories {
+    mavenCentral()
+}
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -29,4 +33,5 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v13:21.0.2'
+    compile 'com.mcxiaoke.volley:library:1.0.+'
 }
