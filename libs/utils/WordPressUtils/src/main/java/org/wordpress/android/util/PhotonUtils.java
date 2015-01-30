@@ -20,8 +20,9 @@ public class PhotonUtils {
             return "";
 
         // if this isn't a gravatar image, return as resized photon image url
-        if (!imageUrl.contains("gravatar.com"))
+        if (!imageUrl.contains("gravatar.com")) {
             return getPhotonImageUrl(imageUrl, avatarSz, avatarSz);
+        }
 
         // remove all other params, then add query string for size and "mystery man" default
         return UrlUtils.removeQuery(imageUrl) + "?s=" + avatarSz + "&d=mm";
@@ -35,9 +36,18 @@ public class PhotonUtils {
     }
 
     /*
-     * returns a photon url for the passed image with the resize query set to the passed dimensions
+     * returns a photon url for the passed image with the resize query set to the passed
+     * dimensions - note that the passed quality parameter will only affect JPEGs
      */
+    public static enum Quality {
+        HIGH,
+        MEDIUM,
+        LOW
+    }
     public static String getPhotonImageUrl(String imageUrl, int width, int height) {
+        return getPhotonImageUrl(imageUrl, width, height, Quality.MEDIUM);
+    }
+    public static String getPhotonImageUrl(String imageUrl, int width, int height, Quality quality) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
         }
@@ -54,30 +64,39 @@ public class PhotonUtils {
         // don't use with GIFs - photon breaks animated GIFs, and sometimes returns a GIF that
         // can't be read by BitmapFactory.decodeByteArray (used by Volley in ImageRequest.java
         // to decode the downloaded image)
-        // ex: http://i0.wp.com/lusianne.files.wordpress.com/2013/08/193.gif?resize=768,320
         if (imageUrl.endsWith(".gif")) {
             return imageUrl;
         }
 
         // if this is an "mshots" url, skip photon and return it with a query that sets the width/height
-        // (these are screenshots of the blog that often appear in freshly pressed posts)
-        // see http://wp.tutsplus.com/tutorials/how-to-generate-website-screenshots-for-your-wordpress-site/
-        // ex: http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
         if (isMshotsUrl(imageUrl)) {
             return imageUrl + "?w=" + width + "&h=" + height;
         }
 
+        final String qualityParam;
+        switch (quality) {
+            case HIGH:
+                qualityParam = "quality=100";
+                break;
+            case LOW:
+                qualityParam = "quality=35";
+                break;
+            default: // medium
+                qualityParam = "quality=65";
+                break;
+        }
+
         // if both width & height are passed use the "resize" param, use only "w" or "h" if just
-        // one of them is set, otherwise no query string
+        // one of them is set
         final String query;
         if (width > 0 && height > 0) {
-            query = "?resize=" + width + "," + height;
+            query = "?resize=" + width + "," + height + "&" + qualityParam;
         } else if (width > 0) {
-            query = "?w=" + width;
+            query = "?w=" + width + "&" + qualityParam;
         } else if (height > 0) {
-            query = "?h=" + height;
+            query = "?h=" + height + "&" + qualityParam;
         } else {
-            query = "";
+            query = "?" + qualityParam;
         }
 
         // return passed url+query if it's already a photon url

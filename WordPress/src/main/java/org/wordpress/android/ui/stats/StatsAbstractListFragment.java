@@ -257,8 +257,18 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mList.setVisibility(View.GONE);
     }
 
+    /**
+     * Check if the current datamodel is populated and is NOT an error response.
+     *
+     */
     protected boolean isDataEmpty() {
-        return mDatamodels == null || mDatamodels[mTopPagerSelectedButtonIndex] == null;
+        return isDataEmpty(mTopPagerSelectedButtonIndex);
+    }
+
+    protected boolean isDataEmpty(int index) {
+        return mDatamodels == null
+                || mDatamodels[index] == null
+                || isErrorResponse(index);
     }
 
     /**

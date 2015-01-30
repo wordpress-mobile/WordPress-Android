@@ -42,7 +42,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (mDatamodels != null && mDatamodels[0] != null
+        return (!isDataEmpty(0)
                 && ((ClicksModel) mDatamodels[0]).getClickGroups() != null
                 && ((ClicksModel) mDatamodels[0]).getClickGroups().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
     }
