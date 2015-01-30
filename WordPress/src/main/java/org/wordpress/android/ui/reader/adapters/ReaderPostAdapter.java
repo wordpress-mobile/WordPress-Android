@@ -134,7 +134,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             }
 
             // follow/following
-            holder.followButton.setIsFollowed(post.isFollowedByCurrentUser, false);
+            holder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
             holder.followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -535,7 +535,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         }
 
         final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
-        followButton.setIsFollowed(isAskingToFollow, true);
+        followButton.setIsFollowedAnimated(isAskingToFollow);
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
@@ -543,7 +543,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
                 if (!succeeded) {
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(followButton.getContext(), resId);
-                    followButton.setIsFollowed(!isAskingToFollow, false);
+                    followButton.setIsFollowed(!isAskingToFollow);
                 }
             }
         };

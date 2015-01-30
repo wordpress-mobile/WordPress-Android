@@ -46,7 +46,13 @@ public class ReaderFollowButton extends LinearLayout {
         mTextFollow.setText(mIsFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
     }
 
-    public void setIsFollowed(boolean isFollowed, boolean animateChanges) {
+    public void setIsFollowed(boolean isFollowed) {
+        setIsFollowed(isFollowed, false);
+    }
+    public void setIsFollowedAnimated(boolean isFollowed) {
+        setIsFollowed(isFollowed, true);
+    }
+    private void setIsFollowed(boolean isFollowed, boolean animateChanges) {
         if (isFollowed == mIsFollowed && mTextFollow.isSelected() == isFollowed) {
             return;
         }

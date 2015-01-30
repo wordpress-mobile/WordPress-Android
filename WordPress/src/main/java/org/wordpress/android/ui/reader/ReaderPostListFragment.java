@@ -488,7 +488,7 @@ public class ReaderPostListFragment extends Fragment {
         boolean isFollowing = getPostListType() == ReaderPostListType.BLOG_PREVIEW
                 ? ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl)
                 : ReaderTagTable.isFollowedTagName(getCurrentTagName());
-        mFollowButton.setIsFollowed(isFollowing, false);
+        mFollowButton.setIsFollowed(isFollowing);
     }
 
     @Override
@@ -1221,7 +1221,7 @@ public class ReaderPostListFragment extends Fragment {
                                     updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
                                 }
                                 if (mFollowButton != null) {
-                                    mFollowButton.setIsFollowed(blogInfo.isFollowing, false);
+                                    mFollowButton.setIsFollowed(blogInfo.isFollowing);
                                 }
                             }
                         }
@@ -1249,12 +1249,12 @@ public class ReaderPostListFragment extends Fragment {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && isAdded()) {
-                    mFollowButton.setIsFollowed(!isAskingToFollow, false);
+                    mFollowButton.setIsFollowed(!isAskingToFollow);
                 }
             }
         };
 
-        mFollowButton.setIsFollowed(isAskingToFollow, true);
+        mFollowButton.setIsFollowedAnimated(isAskingToFollow);
         ReaderBlogActions.performFollowAction(
                 mCurrentBlogId,
                 mCurrentBlogUrl,
@@ -1271,7 +1271,7 @@ public class ReaderPostListFragment extends Fragment {
         }
 
         boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(getCurrentTagName());
-        mFollowButton.setIsFollowed(isAskingToFollow, true);
+        mFollowButton.setIsFollowedAnimated(isAskingToFollow);
         ReaderTagActions.TagAction action = (isAskingToFollow ? ReaderTagActions.TagAction.ADD : ReaderTagActions.TagAction.DELETE);
         ReaderTagActions.performTagAction(getCurrentTag(), action, null);
     }

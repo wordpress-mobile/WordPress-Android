@@ -332,13 +332,13 @@ public class ReaderPostDetailFragment extends Fragment
 
         final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
         final ReaderFollowButton followButton = (ReaderFollowButton) getView().findViewById(R.id.follow_button);
-        followButton.setIsFollowed(isAskingToFollow, true);
+        followButton.setIsFollowedAnimated(isAskingToFollow);
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && isAdded()) {
-                    followButton.setIsFollowed(!isAskingToFollow, false);
+                    followButton.setIsFollowed(!isAskingToFollow);
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(getActivity(), resId);
                 }
@@ -707,7 +707,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            followButton.setIsFollowed(mPost.isFollowedByCurrentUser, false);
+            followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
             followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

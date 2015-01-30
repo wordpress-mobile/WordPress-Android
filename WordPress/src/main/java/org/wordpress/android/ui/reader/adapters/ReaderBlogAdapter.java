@@ -171,7 +171,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     break;
             }
 
-            blogHolder.followButton.setIsFollowed(isFollowing, false);
+            blogHolder.followButton.setIsFollowed(isFollowing);
             blogHolder.followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -259,13 +259,13 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (!succeeded && context != null) {
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(context, resId);
-                    followButton.setIsFollowed(!isAskingToFollow, false);
+                    followButton.setIsFollowed(!isAskingToFollow);
                     checkFollowStatus();
                 }
             }
         };
 
-        followButton.setIsFollowed(isAskingToFollow, true);
+        followButton.setIsFollowedAnimated(isAskingToFollow);
 
         if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, actionListener)) {
             if (getBlogType() == ReaderBlogType.FOLLOWED) {
