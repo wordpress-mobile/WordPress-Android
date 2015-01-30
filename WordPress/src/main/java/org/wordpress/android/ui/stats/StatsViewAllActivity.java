@@ -331,7 +331,7 @@ public class StatsViewAllActivity extends ActionBarActivity
         mIsUpdatingStats = true;
         final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
         final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-        StatsService.StatsEndpointsEnum[] sections = mFragment.getSectionToUpdate();
+        StatsService.StatsEndpointsEnum[] sections = mFragment.getSectionsToUpdate();
         for (int i = 0; i < sections.length; i++) {
             StatsService.StatsEndpointsEnum currentSection = sections[i];
             String singlePostRestPath = getRestPath(currentSection, 1);

@@ -68,7 +68,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract int getTotalsLabelResId();
     protected abstract int getEmptyLabelTitleResId();
     protected abstract int getEmptyLabelDescResId();
-    protected abstract StatsService.StatsEndpointsEnum[] getSectionToUpdate();
+    protected abstract StatsService.StatsEndpointsEnum[] getSectionsToUpdate();
     protected abstract void updateUI();
     protected abstract boolean isExpandableList();
     protected abstract boolean isViewAllOptionAvailable();
@@ -172,7 +172,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         } else {
             //showHideNoResultsUI(true);
             showEmptyUI();
-            mMoreDataListener.onRefreshRequested(getSectionToUpdate());
+            mMoreDataListener.onRefreshRequested(getSectionsToUpdate());
         }
     }
 
@@ -415,9 +415,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             }
 
             StatsService.StatsEndpointsEnum sectionToUpdate = (StatsService.StatsEndpointsEnum) intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_NAME);
-            StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionToUpdate();
+            StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionsToUpdate();
             int indexOfDatamodelMatch = -1;
-            for (int i = 0; i < getSectionToUpdate().length; i++) {
+            for (int i = 0; i < getSectionsToUpdate().length; i++) {
                 if (sectionToUpdate == sectionsToUpdate[i]) {
                     indexOfDatamodelMatch = i;
                     break;
@@ -433,7 +433,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_DATA);
 
                 if (mDatamodels == null) {
-                    mDatamodels = new Serializable[getSectionToUpdate().length];
+                    mDatamodels = new Serializable[getSectionsToUpdate().length];
                 }
 
                 //dataObj = (dataObj == null || dataObj instanceof VolleyError) ? null : dataObj;
