@@ -2,26 +2,12 @@ package org.wordpress.android.ui.reader.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;
 
 public class ReaderUtils {
-
-    /*
-     * used with TextViews that have the ReaderTextView.Follow style to show
-     * the passed follow state
-     */
-    public static void showFollowStatus(final TextView txtFollow, boolean isFollowed) {
-        // selected state is same as followed state, so do nothing if they already match
-        if (txtFollow == null || txtFollow.isSelected() == isFollowed) {
-            return;
-        }
-        txtFollow.setText(txtFollow.getContext().getString(isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow));
-        txtFollow.setSelected(isFollowed);
-    }
 
     public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate) {
         return getResizedImageUrl(imageUrl, width, height, isPrivate, PhotonUtils.Quality.MEDIUM);

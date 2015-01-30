@@ -14,9 +14,6 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.TextView;
-
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 
 public class ReaderAnim {
 
@@ -181,40 +178,6 @@ public class ReaderAnim {
     }
 
     /*
-     * animation when user taps a follow button
-     */
-    public static void animateFollowButton(final TextView txtFollow,
-                                           final boolean isAskingToFollow) {
-        if (txtFollow == null) {
-            return;
-        }
-
-        ObjectAnimator animX = ObjectAnimator.ofFloat(txtFollow, View.SCALE_X, 1f, 0.75f);
-        animX.setRepeatMode(ValueAnimator.REVERSE);
-        animX.setRepeatCount(1);
-
-        ObjectAnimator animY = ObjectAnimator.ofFloat(txtFollow, View.SCALE_Y, 1f, 0.75f);
-        animY.setRepeatMode(ValueAnimator.REVERSE);
-        animY.setRepeatCount(1);
-
-        // change the button text and selection state before scaling back in
-        animX.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-                ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
-            }
-        });
-
-        long durationMillis = Duration.SHORT.toMillis(txtFollow.getContext());
-        AnimatorSet set = new AnimatorSet();
-        set.play(animX).with(animY);
-        set.setDuration(durationMillis / 2);
-        set.setInterpolator(new AccelerateDecelerateInterpolator());
-
-        set.start();
-    }
-
-    /*
      * used when animating a toolbar in/out
      */
     public static void animateTopBar(View view, boolean show) {
@@ -257,5 +220,4 @@ public class ReaderAnim {
         view.startAnimation(animation);
         view.setVisibility(newVisibility);
     }
-
 }
