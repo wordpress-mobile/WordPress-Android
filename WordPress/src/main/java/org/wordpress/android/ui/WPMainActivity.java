@@ -24,6 +24,7 @@ import org.wordpress.android.ui.reader.ReaderSubsActivity;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.widgets.ScrollDirectionListener;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
 
@@ -32,7 +33,8 @@ import javax.annotation.Nonnull;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends ActionBarActivity {
+public class WPMainActivity extends ActionBarActivity
+    implements ScrollDirectionListener {
     private WPMainViewPager mViewPager;
     private WPTabAdapter mTabAdapter;
 
@@ -142,6 +144,21 @@ public class WPMainActivity extends ActionBarActivity {
             return (ReaderPostListFragment)fragment;
         }
         return null;
+    }
+
+    @Override
+    public void onScrollUp() {
+
+    }
+
+    @Override
+    public void onScrollDown() {
+
+    }
+
+    @Override
+    public void onScrollCompleted() {
+
     }
 
     /**
