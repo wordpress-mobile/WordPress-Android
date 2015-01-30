@@ -227,7 +227,7 @@ public class MediaPickerFragment extends Fragment
         int gridPadding = Math.round(resources.getDimension(R.dimen.media_grid_padding));
         int columnSpacingY = Math.round(resources.getDimension(R.dimen.media_grid_column_spacing_vertical));
         int columnSpacingX = Math.round(resources.getDimension(R.dimen.media_grid_column_spacing_horizontal));
-        int backgroundColor = resources.getColor(R.color.media_grid_background_color);
+        int backgroundColor = resources.getColor(R.color.grey_medium);
         ImageLoader.ImageCache imageCache = mListener != null ? mListener.getImageCache() : null;
 
         mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache);
