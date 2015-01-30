@@ -419,9 +419,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     getString(R.string.cancel));
             ft.add(nuxAlert, "alert");
             ft.commitAllowingStateLoss();
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     private void signIn() {
@@ -429,7 +429,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             return;
         }
 
-        if (checkNetworkConnectivity()) {
+        if (!checkNetworkConnectivity()) {
             return;
         }
 
