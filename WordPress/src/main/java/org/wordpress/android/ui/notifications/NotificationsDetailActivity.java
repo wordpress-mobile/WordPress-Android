@@ -50,11 +50,6 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
                 return;
             }
 
-            // Hide the keyboard, unless we arrived here from the 'Reply' action in a push notification
-            if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
-                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            }
-
             if (SimperiumUtils.getNotesBucket() != null) {
                 try {
                     Note note = SimperiumUtils.getNotesBucket().get(noteId);
@@ -82,6 +77,11 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
             }
         } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
             getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
+        }
+
+        // Hide the keyboard, unless we arrived here from the 'Reply' action in a push notification
+        if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
 
         GCMIntentService.clearNotificationsMap();
