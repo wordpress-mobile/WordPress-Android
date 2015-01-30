@@ -404,6 +404,9 @@ public class ReaderPostListFragment extends WPTabFragment
 
         boolean adapterAlreadyExists = hasPostAdapter();
         mRecyclerView.setAdapter(getPostAdapter());
+        if (mScrollDirectionListener != null) {
+            mRecyclerView.setScrollDirectionListener(mScrollDirectionListener);
+        }
 
         // if adapter didn't already exist, populate it now then update the tag - this
         // check is important since without it the adapter would be reset and posts would

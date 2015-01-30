@@ -18,6 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderSubsActivity;
@@ -34,17 +35,20 @@ import javax.annotation.Nonnull;
  * Main activity which hosts sites, reader, me and notifications tabs
  */
 public class WPMainActivity extends ActionBarActivity
-    implements ScrollDirectionListener {
+    implements ScrollDirectionListener
+{
     private WPMainViewPager mViewPager;
     private WPTabAdapter mTabAdapter;
+    private Toolbar mToolbar;
+    private SlidingTabLayout mTabs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -62,11 +66,11 @@ public class WPMainActivity extends ActionBarActivity
         mTabAdapter = new WPTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
-        SlidingTabLayout tabs = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-        tabs.setCustomTabView(R.layout.tab_text, R.id.text_tab);
-        tabs.setSelectedIndicatorColors(getResources().getColor(R.color.tab_indicator));
-        tabs.setDistributeEvenly(true);
-        tabs.setViewPager(mViewPager);
+        mTabs = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        mTabs.setCustomTabView(R.layout.tab_text, R.id.text_tab);
+        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.tab_indicator));
+        mTabs.setDistributeEvenly(true);
+        mTabs.setViewPager(mViewPager);
     }
 
     @Override
@@ -148,17 +152,23 @@ public class WPMainActivity extends ActionBarActivity
 
     @Override
     public void onScrollUp() {
-
+        showToolbar(true);
     }
 
     @Override
     public void onScrollDown() {
-
+        showToolbar(false);
     }
 
     @Override
     public void onScrollCompleted() {
+        showToolbar(true);
+    }
 
+    private void showToolbar(boolean show) {
+        if (!isFinishing()) {
+            ReaderAnim.animateTopBar(mTabs, show);
+        }
     }
 
     /**
