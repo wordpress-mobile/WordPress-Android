@@ -142,6 +142,9 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
+            // The link icon
+            holder.showLinkIcon();
+
             // name, url
             holder.setEntryTextOpenDetailsPage(children);
 
@@ -228,8 +231,12 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
                 });
             }
 
-            // expand/collapse chevron
-            holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
+            if (children == 0) {
+                holder.showLinkIcon();
+            } else {
+                holder.showChevronIcon();
+            }
+
             return convertView;
         }
 
@@ -247,6 +254,6 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
     @Override
     public String getTitle() {
-        return getString(R.string.stats_view_top_authors);
+        return getString(R.string.stats_view_authors);
     }
 }

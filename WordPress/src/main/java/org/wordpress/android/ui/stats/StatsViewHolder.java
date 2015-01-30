@@ -29,6 +29,7 @@ public class StatsViewHolder {
     public final TextView totalsTextView;
     public final WPNetworkImageView networkImageView;
     public final ImageView chevronImageView;
+    public final ImageView linkImageView;
     public final ImageView imgMore;
     public final LinearLayout rowContent;
 
@@ -37,7 +38,7 @@ public class StatsViewHolder {
         entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
         totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
         chevronImageView = (ImageView) view.findViewById(R.id.stats_list_cell_chevron);
-
+        linkImageView = (ImageView) view.findViewById(R.id.stats_list_cell_link);
         networkImageView = (WPNetworkImageView) view.findViewById(R.id.stats_list_cell_image);
 
         imgMore = (ImageView) view.findViewById(R.id.image_more);
@@ -163,5 +164,16 @@ public class StatsViewHolder {
                 popup.show();
             }
         });
+    }
+
+
+    public void showChevronIcon() {
+        linkImageView.setVisibility(View.GONE);
+        chevronImageView.setVisibility(View.VISIBLE);
+    }
+
+    public void showLinkIcon() {
+        linkImageView.setVisibility(View.VISIBLE);
+        chevronImageView.setVisibility(View.GONE);
     }
 }

@@ -125,7 +125,9 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             String name = children.getTitle();
             int total = children.getTotals();
-            String icon = children.getIcon();
+
+            // The link icon
+            holder.showLinkIcon();
 
             // name, url
             holder.setEntryTextOrLink(children.getUrl(), name);
@@ -197,8 +199,13 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(icon, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.STATS_SITE_AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
-            // expand/collapse chevron
-            holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
+            holder.chevronImageView.setVisibility(View.VISIBLE);
+            if (children == 0) {
+                holder.showLinkIcon();
+            } else {
+                holder.showChevronIcon();
+            }
+
             return convertView;
         }
 
