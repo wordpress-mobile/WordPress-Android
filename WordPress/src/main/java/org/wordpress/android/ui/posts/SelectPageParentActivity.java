@@ -85,7 +85,15 @@ public class SelectPageParentActivity extends ActionBarActivity {
     }
 
     private void populatePageList() {
-        PageNode pageTree = PageNode.createPageTreeFromDB(mBlog.getLocalTableBlogId());
+        int blogId = mBlog.getLocalTableBlogId();
+        PageNode pageTree;
+
+        if (WordPress.wpDB.getPageListSize(blogId) == 0) {
+            // If we haven't fetched a full list of pages for this blogId yet, use the posts table to populate the list
+            pageTree = PageNode.createPageTreeFromDB(blogId, true);
+        } else {
+            pageTree = PageNode.createPageTreeFromDB(blogId, false);
+        }
         mPageLevels = PageNode.getSortedListOfPagesFromRoot(pageTree);
 
         // Add default "(no parent)" option to the top of the list

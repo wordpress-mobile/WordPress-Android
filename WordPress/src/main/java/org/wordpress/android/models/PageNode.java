@@ -76,32 +76,28 @@ public class PageNode {
         return level;
     }
 
-    public static PageNode createPageTreeFromDB(int blogId) {
+    public static PageNode createPageTreeFromDB(int blogId, boolean posts_table) {
         PageNode rootPage = new PageNode(-1, -1, "");
         if (WordPress.wpDB == null) {
             return rootPage;
         }
-        List<PostsListPost> postsListPosts = WordPress.wpDB.getPostsListPosts(blogId, true);
 
         // First pass instantiate PageNode objects
         SparseArray<PageNode> postsMap = new SparseArray<>();
         PageNode currentRootNode;
 
-        for (PostsListPost postsListPost : postsListPosts) {
-            Post post = WordPress.wpDB.getPostForLocalTablePostId(postsListPost.getPostId());
+        List<PageHierarchyPage> postList = WordPress.wpDB.getPageList(blogId, posts_table);
 
-            // Ignore local drafts, since they don't have remote IDs yet and can't be parents
-            if (!post.isLocalDraft()) {
-                int postId = Integer.parseInt(post.getRemotePostId());
-                int parentId = Integer.parseInt(post.getPageParentId());
-                String title = postsListPost.getTitle();
-                if (TextUtils.isEmpty(title)) {
-                    title = "#" + postId + " (" + WordPress.getContext().getString(R.string.untitled) + ")";
-                }
-
-                PageNode node = new PageNode(postId, parentId, title);
-                postsMap.put(postId, node);
+        for (PageHierarchyPage page : postList) {
+            int postId = Integer.parseInt(page.getRemotePostId());
+            int parentId = Integer.parseInt(page.getPageParentId());
+            String title = page.getTitle();
+            if (TextUtils.isEmpty(title)) {
+                title = "#" + postId + " (" + WordPress.getContext().getString(R.string.untitled) + ")";
             }
+
+            PageNode node = new PageNode(postId, parentId, title);
+            postsMap.put(postId, node);
         }
 
         // Second pass associate nodes to form a tree
