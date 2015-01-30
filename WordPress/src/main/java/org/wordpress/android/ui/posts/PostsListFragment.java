@@ -67,8 +67,6 @@ public class PostsListFragment extends ListFragment
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
-    private static final int ANIMATION_DURATION = 150;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -600,6 +598,8 @@ public class PostsListFragment extends ListFragment
     }
 
     private class EmptyViewAnimationHandler implements ObjectAnimator.AnimatorListener {
+        private static final int ANIMATION_DURATION = 150;
+
         private boolean mIsInLoadingPhase;
         private int mAnimationStage;
         private boolean mHasDisplayedLoadingSequence;
