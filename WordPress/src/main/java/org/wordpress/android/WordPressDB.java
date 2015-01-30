@@ -17,6 +17,7 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.PageHierarchyPage;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
@@ -51,7 +52,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 28;
+    private static final int DATABASE_VERSION = 29;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -142,6 +143,11 @@ public class WordPressDB {
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
+
+    // add new table for full list of pages with minimal information
+    private static final String CREATE_TABLE_PAGE_LIST = "create table if not exists page_list (id integer primary key autoincrement, blogID text, "
+            + "postid text, title text default '', wp_page_parent_id text);";
+    private static final String PAGE_LIST_TABLE = "page_list";
 
     private SQLiteDatabase db;
 
@@ -252,6 +258,10 @@ public class WordPressDB {
             case 27:
                 // Add isUploading column to POSTS
                 db.execSQL(ADD_IS_UPLOADING);
+                currentVersion++;
+            case 28:
+                // Add PAGE_LIST table
+                db.execSQL(CREATE_TABLE_PAGE_LIST);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -1089,6 +1099,98 @@ public class WordPressDB {
 
         c.close();
         return post;
+    }
+
+    // Page parent hierarchy
+    /**
+     * Saves a list of pages with minimal information to the db (post ID, title, parent ID).
+     * @param pageList: list of page objects
+     * @param localBlogId: the table blog ID the pages belong to
+     */
+    public void savePageList(List<?> pageList, int localBlogId) {
+        if (pageList != null && pageList.size() != 0) {
+            db.beginTransaction();
+            try {
+                for (Object page : pageList) {
+                    ContentValues values = new ContentValues();
+
+                    // Sanity checks
+                    if (!(page instanceof Map)) {
+                        continue;
+                    }
+                    Map<?, ?> postMap = (Map<?, ?>) page;
+                    String postId = MapUtils.getMapStr(postMap, "post_id");
+                    if (TextUtils.isEmpty(postId)) {
+                        // If we don't have an ID, move on
+                        continue;
+                    }
+
+                    values.put("blogID", localBlogId);
+                    values.put("postid", postId);
+                    values.put("title", MapUtils.getMapStr(postMap, "post_title"));
+                    values.put("wp_page_parent_id", MapUtils.getMapStr(postMap, "post_parent"));
+
+                    db.insert(PAGE_LIST_TABLE, null, values);
+                }
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        }
+    }
+
+    public void clearPageList(int id) {
+        db.delete(PAGE_LIST_TABLE, "blogID=" + id, null);
+    }
+
+    /**
+     * Returns a list of pages with minimal information (local ID, post ID, title, parent ID). Ignores local drafts.
+     * @param blogId the table blog ID the pages belong to
+     * @param fromPostsTable whether to fetch data from POSTS_TABLE or PAGE_LIST_TABLE
+     * @return A list of pages with minimal information
+     */
+    public List<PageHierarchyPage> getPageList(int blogId, boolean fromPostsTable) {
+        List<PageHierarchyPage> pages = new ArrayList<>();
+        Cursor c;
+        if (fromPostsTable) {
+            c = db.query(POSTS_TABLE,
+                    new String[]{"id", "blogID", "postid", "title", "wp_page_parent_id"},
+                    "blogID=? AND isPage=? AND localDraft != 1",
+                    new String[]{String.valueOf(blogId), "1"}, null, null, null);
+        } else {
+            c = db.query(PAGE_LIST_TABLE,
+                    new String[]{"id", "blogID", "postid", "title", "wp_page_parent_id"},
+                    "blogID=?",
+                    new String[]{String.valueOf(blogId)}, null, null, null);
+        }
+        int numRows = c.getCount();
+        c.moveToFirst();
+
+        for (int i = 0; i < numRows; ++i) {
+            // Create and populate the PageHierarchyPage and add it to the list
+            PageHierarchyPage page = new PageHierarchyPage(c.getInt(c.getColumnIndex("blogID")));
+            page.setLocalTablePostId(c.getInt(c.getColumnIndex("id")));
+            page.setRemotePostId(Integer.toString(c.getInt(c.getColumnIndex("postid"))));
+            String postTitle = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title")));
+            page.setTitle(postTitle);
+            page.setPageParentId(Integer.toString(c.getInt(c.getColumnIndex("wp_page_parent_id"))));
+
+            pages.add(i, page);
+            c.moveToNext();
+        }
+        c.close();
+
+        return pages;
+    }
+
+    public int getPageListSize(int blogId) {
+        Cursor c = db.query(PAGE_LIST_TABLE,
+                new String[] {  "id" },
+                "blogID=?",
+                new String[] {String.valueOf(blogId)}, null, null, null);
+        int total = c.getCount();
+        c.close();
+        return total;
     }
 
     // Categories
