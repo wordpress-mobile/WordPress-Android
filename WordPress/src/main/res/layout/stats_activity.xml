@@ -113,7 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                android:textColor="#587295"
+                android:textColor="@color/stats_blue_labels"
                 android:gravity="center"
                 android:text="@string/stats_other_recent_stats_label"/>
 

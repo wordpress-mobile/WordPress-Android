@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#80e8f0f5"
+        android:background="@color/stats_empty_placeholder_color"
         android:minWidth="250dp"
         android:minHeight="30dp"
         />
