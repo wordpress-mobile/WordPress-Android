@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -15,20 +16,33 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.PageNode;
 import org.wordpress.android.util.ListScrollPositionManager;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
+import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 public class SelectPageParentActivity extends ActionBarActivity {
+    public static final int PAGES_REQUEST_COUNT = 100;
+
     private ListView mListView;
     private ListScrollPositionManager mListScrollPositionManager;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private int mSelectedParentId;
 
     private Blog mBlog;
     private int mPageId;
     private ArrayList<PageNode> mPageLevels;
     private Map<Integer, Integer> mPageIds = new HashMap<>();
+
+    private ApiHelper.FetchPageListTask mCurrentFetchPageListTask;
 
     private boolean mFirstRefresh = false;
 
@@ -77,11 +91,30 @@ public class SelectPageParentActivity extends ActionBarActivity {
             mSelectedParentId = extras.getInt("parentId");
         }
 
+        // Swipe to refresh setup
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!NetworkUtils.checkConnection(getBaseContext())) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        refreshPages();
+                    }
+                });
+
         if (savedInstanceState == null) {
             mFirstRefresh = true;
         }
 
         populatePageList();
+
+        // Refresh blog list if network is available and activity really starts
+        if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
+            mSwipeToRefreshHelper.setRefreshing(true);
+            refreshPages();
+        }
     }
 
     private void populatePageList() {
@@ -99,6 +132,7 @@ public class SelectPageParentActivity extends ActionBarActivity {
         // Add default "(no parent)" option to the top of the list
         mPageLevels.add(0, new PageNode(0, 0, getString(R.string.no_parent)));
 
+        mPageIds.clear();
         for (int i = 0; i < mPageLevels.size(); i++) {
             mPageIds.put(mPageLevels.get(i).getPageId(), i);
         }
@@ -128,6 +162,42 @@ public class SelectPageParentActivity extends ActionBarActivity {
         }
     }
 
+    public void fetchPosts() {
+        List<Object> apiArgs = new Vector<>();
+        apiArgs.add(WordPress.getCurrentBlog());
+        apiArgs.add(PAGES_REQUEST_COUNT);
+        apiArgs.add(0);
+
+        mCurrentFetchPageListTask = new ApiHelper.FetchPageListTask(new ApiHelper.FetchPageListTask.Callback() {
+            @Override
+            public void onSuccess(int postCount) {
+                mCurrentFetchPageListTask = null;
+                mSwipeToRefreshHelper.setRefreshing(false);
+                populatePageList();
+            }
+
+            @Override
+            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                mCurrentFetchPageListTask = null;
+                mSwipeToRefreshHelper.setRefreshing(false);
+
+                if (errorType != ApiHelper.ErrorType.TASK_CANCELLED && errorType != ApiHelper.ErrorType.NO_ERROR) {
+                    switch (errorType) {
+                        case UNAUTHORIZED:
+                            ToastUtils.showToast(getBaseContext(), R.string.error_refresh_unauthorized_pages,
+                                    Duration.LONG);
+                            break;
+                        default:
+                            ToastUtils.showToast(getBaseContext(), R.string.error_refresh_pages, Duration.LONG);
+                            break;
+                    }
+                }
+            }
+        });
+
+        mCurrentFetchPageListTask.execute(apiArgs);
+    }
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
@@ -137,6 +207,11 @@ public class SelectPageParentActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshPages() {
+        mListScrollPositionManager.saveScrollOffset();
+        fetchPosts();
     }
 
     @Override
