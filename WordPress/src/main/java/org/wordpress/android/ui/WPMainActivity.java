@@ -3,10 +3,14 @@ package org.wordpress.android.ui;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,8 +19,11 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
@@ -24,6 +31,8 @@ import org.wordpress.android.ui.reader.ReaderSubsActivity;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AuthenticationDialogUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
 
@@ -35,7 +44,6 @@ import javax.annotation.Nonnull;
 public class WPMainActivity extends ActionBarActivity {
     private WPMainViewPager mViewPager;
     private WPTabAdapter mTabAdapter;
-    private Toolbar mToolbar;
     private SlidingTabLayout mTabs;
 
     @Override
@@ -43,8 +51,8 @@ public class WPMainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -75,6 +83,18 @@ public class WPMainActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_tags:
@@ -95,6 +115,8 @@ public class WPMainActivity extends ActionBarActivity {
                 break;
         }
     }
+
+
 
     /*
      * called by onActivityResult() for reader-related intents
@@ -145,6 +167,73 @@ public class WPMainActivity extends ActionBarActivity {
         }
         return null;
     }
+
+    public void onSignout() {
+
+    }
+
+    /**
+     * broadcast receiver which detects when user signs out of the app and calls onSignout()
+     * so descendants of this activity can do cleanup upon signout
+     */
+    private void registerReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WordPress.BROADCAST_ACTION_SIGNOUT);
+        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
+        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
+        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
+        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
+        filter.addAction(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED);
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.registerReceiver(mReceiver, filter);
+    }
+
+    private void unregisterReceiver() {
+        try {
+            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+            lbm.unregisterReceiver(mReceiver);
+        } catch (IllegalArgumentException e) {
+            // exception occurs if receiver already unregistered (safe to ignore)
+        }
+    }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent == null || intent.getAction() == null) {
+                return;
+            }
+            String action = intent.getAction();
+            switch (action) {
+                case WordPress.BROADCAST_ACTION_SIGNOUT:
+                    onSignout();
+                    break;
+                case WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS:
+                    AuthenticationDialogUtils.showAuthErrorDialog(WPMainActivity.this);
+                    break;
+                case SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED:
+                    // TODO: only show when notifications are active (?)
+                    AuthenticationDialogUtils.showAuthErrorDialog(
+                            WPMainActivity.this,
+                            R.string.sign_in_again,
+                            R.string.simperium_connection_error);
+                    break;
+                case WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH:
+                    // TODO: add a specific message like "you must use a specific app password"
+                    AuthenticationDialogUtils.showAuthErrorDialog(WPMainActivity.this);
+                    break;
+                case WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE:
+                    SelfSignedSSLCertsManager.askForSslTrust(WPMainActivity.this, null);
+                    break;
+                case WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT:
+                    ToastUtils.showToast(context, R.string.limit_reached, ToastUtils.Duration.LONG);
+                    break;
+                case WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED:
+                    // TODO: reload blog list if showing
+                    break;
+            }
+        }
+    };
 
     /**
      * pager adapter containing tab fragments
