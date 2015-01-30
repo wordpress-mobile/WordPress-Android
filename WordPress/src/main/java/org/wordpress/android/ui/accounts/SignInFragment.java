@@ -409,10 +409,30 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         fetchBlogListWPOrg.execute(mFecthBlogListCallback);
     }
 
+    private boolean checkNetworkConnectivity() {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            SignInDialogFragment nuxAlert;
+            nuxAlert = SignInDialogFragment.newInstance(getString(R.string.no_network_title),
+                    getString(R.string.no_network_message),
+                    R.drawable.noticon_alert_big,
+                    getString(R.string.cancel));
+            ft.add(nuxAlert, "alert");
+            ft.commitAllowingStateLoss();
+            return true;
+        }
+        return false;
+    }
+
     private void signIn() {
         if (!isUserDataValid()) {
             return;
         }
+
+        if (checkNetworkConnectivity()) {
+            return;
+        }
+
         mUsername = EditTextUtils.getText(mUsernameEditText).trim();
         mPassword = EditTextUtils.getText(mPasswordEditText).trim();
         if (isWPComLogin()) {
@@ -632,12 +652,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         AnalyticsTracker.track(Stat.LOGIN_FAILED);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert;
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            nuxAlert = SignInDialogFragment.newInstance(getString(R.string.no_network_title),
-                    getString(R.string.no_network_message),
-                    R.drawable.noticon_alert_big,
-                    getString(R.string.cancel));
-        } else if (messageId == org.wordpress.android.R.string.account_two_step_auth_enabled) {
+        if (messageId == org.wordpress.android.R.string.account_two_step_auth_enabled) {
             nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                     getString(messageId), org.wordpress.android.R.drawable.noticon_alert_big, 2, getString(
                             org.wordpress.android.R.string.cancel), getString(
