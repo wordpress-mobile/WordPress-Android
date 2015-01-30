@@ -11,6 +11,8 @@ import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.AppLog;
 
 public class NotificationsActivity extends WPDrawerActivity {
+    private static final String TAG_NOTES_LIST = "notesList";
+
     private NotificationsListFragment mNotesListFragment;
 
     @Override
@@ -29,12 +31,14 @@ public class NotificationsActivity extends WPDrawerActivity {
         if (savedInstanceState == null) {
             mNotesListFragment = new NotificationsListFragment();
             getFragmentManager().beginTransaction()
-                    .add(R.id.notifications_container, mNotesListFragment)
+                    .add(R.id.notifications_container, mNotesListFragment, TAG_NOTES_LIST)
                     .commit();
 
             launchWithNoteId();
 
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+        } else {
+            mNotesListFragment = (NotificationsListFragment)getFragmentManager().findFragmentByTag(TAG_NOTES_LIST);
         }
     }
 
