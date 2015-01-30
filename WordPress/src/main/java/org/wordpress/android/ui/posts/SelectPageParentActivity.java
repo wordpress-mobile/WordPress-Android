@@ -44,7 +44,8 @@ public class SelectPageParentActivity extends ActionBarActivity {
 
     private ApiHelper.FetchPageListTask mCurrentFetchPageListTask;
 
-    private boolean mFirstRefresh = false;
+    private boolean mAutoScrollToCheckedPosition = false;
+    private boolean mIsRecreated = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,8 +105,8 @@ public class SelectPageParentActivity extends ActionBarActivity {
                     }
                 });
 
-        if (savedInstanceState == null) {
-            mFirstRefresh = true;
+        if (savedInstanceState != null) {
+            mIsRecreated = true;
         }
 
         populatePageList();
@@ -113,6 +114,7 @@ public class SelectPageParentActivity extends ActionBarActivity {
         // Refresh blog list if network is available and activity really starts
         if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
             mSwipeToRefreshHelper.setRefreshing(true);
+            mAutoScrollToCheckedPosition = true;
             refreshPages();
         }
     }
@@ -140,25 +142,27 @@ public class SelectPageParentActivity extends ActionBarActivity {
         PageParentArrayAdapter pageAdapter = new PageParentArrayAdapter(this, R.layout.page_parents_row, mPageLevels);
         mListView.setAdapter(pageAdapter);
 
-        if (mFirstRefresh) {
-            mFirstRefresh = false;
-            if (mPageIds.containsKey(mSelectedParentId)) {
-                final int checkedPosition = mPageIds.get(mSelectedParentId);
 
-                mListView.setItemChecked(checkedPosition, true);
+        if (mPageIds.containsKey(mSelectedParentId)) {
+            final int checkedPosition = mPageIds.get(mSelectedParentId);
 
-                // Auto-scroll to initial selected position
-                mListView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mListView.getLastVisiblePosition() < checkedPosition) {
-                            mListView.setSelectionFromTop(checkedPosition - 1, 0);
+            mListView.setItemChecked(checkedPosition, true);
+
+            if (mIsRecreated) {
+                mListScrollPositionManager.restoreScrollOffset();
+            } else {
+                if (mAutoScrollToCheckedPosition) {
+                    // Auto-scroll to current page's parent (highlighted)
+                    mListView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mListView.getLastVisiblePosition() < checkedPosition) {
+                                mListView.setSelectionFromTop(checkedPosition - 1, 0);
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
-        } else {
-            mListScrollPositionManager.restoreScrollOffset();
         }
     }
 
