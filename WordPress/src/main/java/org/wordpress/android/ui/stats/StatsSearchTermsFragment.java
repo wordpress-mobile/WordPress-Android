@@ -40,7 +40,9 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
              *  - A list of search terms + Encrypted item
              *  - Encrypted item only
              *
-             *  We want to display max 10 items regardless the kind of the item.
+             *  We want to display max 10 items regardless the kind of the items, AND Encrypted
+             *  must be present if available.
+             *
              *  We need to do some counts then...
              */
 
