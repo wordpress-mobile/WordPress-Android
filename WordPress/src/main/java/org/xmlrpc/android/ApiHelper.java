@@ -638,7 +638,7 @@ public class ApiHelper {
                         // Retrieving the full list of pages. Clear the page_list table before populating it
                         WordPress.wpDB.clearPageList(mBlog.getLocalTableBlogId());
                     }
-                    WordPress.wpDB.savePageList(pageList, mBlog.getLocalTableBlogId());
+                    WordPress.wpDB.savePageList(pageList, mBlog.getLocalTableBlogId(), true, false);
                 }
                 return true;
             } catch (XMLRPCFault e) {

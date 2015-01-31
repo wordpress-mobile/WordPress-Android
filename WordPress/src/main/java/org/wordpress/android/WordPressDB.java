@@ -146,7 +146,7 @@ public class WordPressDB {
 
     // add new table for full list of pages with minimal information
     private static final String CREATE_TABLE_PAGE_LIST = "create table if not exists page_list (id integer primary key autoincrement, blogID text, "
-            + "postid text, title text default '', wp_page_parent_id text);";
+            + "postid text, title text default '', wp_page_parent_id text, isLocalChange boolean default 0);";
     private static final String PAGE_LIST_TABLE = "page_list";
 
     private SQLiteDatabase db;
@@ -867,6 +867,11 @@ public class WordPressDB {
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
+
+                if (isPage) {
+                    // Apply the same changes to the page_list table
+                    savePageList(postsList, localBlogId, shouldOverwrite, true);
+                }
             }
         }
     }
@@ -1107,7 +1112,7 @@ public class WordPressDB {
      * @param pageList: list of page objects
      * @param localBlogId: the table blog ID the pages belong to
      */
-    public void savePageList(List<?> pageList, int localBlogId) {
+    public void savePageList(List<?> pageList, int localBlogId, boolean shouldOverwrite, boolean fromWpGetPages) {
         if (pageList != null && pageList.size() != 0) {
             db.beginTransaction();
             try {
@@ -1119,7 +1124,12 @@ public class WordPressDB {
                         continue;
                     }
                     Map<?, ?> postMap = (Map<?, ?>) page;
-                    String postId = MapUtils.getMapStr(postMap, "post_id");
+                    String postId;
+                    if (fromWpGetPages) {
+                        postId = MapUtils.getMapStr(postMap, "page_id");
+                    } else {
+                        postId = MapUtils.getMapStr(postMap, "post_id");
+                    }
                     if (TextUtils.isEmpty(postId)) {
                         // If we don't have an ID, move on
                         continue;
@@ -1127,10 +1137,26 @@ public class WordPressDB {
 
                     values.put("blogID", localBlogId);
                     values.put("postid", postId);
-                    values.put("title", MapUtils.getMapStr(postMap, "post_title"));
-                    values.put("wp_page_parent_id", MapUtils.getMapStr(postMap, "post_parent"));
+                    if (fromWpGetPages) {
+                        values.put("title", MapUtils.getMapStr(postMap, "title"));
+                        values.put("wp_page_parent_id", MapUtils.getMapStr(postMap, "wp_page_parent_id"));
+                    } else {
+                        values.put("title", MapUtils.getMapStr(postMap, "post_title"));
+                        values.put("wp_page_parent_id", MapUtils.getMapStr(postMap, "post_parent"));
+                    }
 
-                    db.insert(PAGE_LIST_TABLE, null, values);
+                    values.put("isLocalChange", "0");
+
+                    String whereClause = "blogID=? AND postID=?";
+                    if (!shouldOverwrite) {
+                        whereClause += " AND NOT isLocalChange=1";
+                    }
+
+                    int result = db.update(PAGE_LIST_TABLE, values, whereClause,
+                            new String[]{String.valueOf(localBlogId), postId});
+                    if (result == 0) {
+                        db.insert(PAGE_LIST_TABLE, null, values);
+                    }
                 }
                 db.setTransactionSuccessful();
             } finally {
@@ -1154,12 +1180,12 @@ public class WordPressDB {
         Cursor c;
         if (fromPostsTable) {
             c = db.query(POSTS_TABLE,
-                    new String[]{"id", "blogID", "postid", "title", "wp_page_parent_id"},
+                    new String[]{"id", "blogID", "postid", "title", "wp_page_parent_id", "isLocalChange"},
                     "blogID=? AND isPage=? AND localDraft != 1",
                     new String[]{String.valueOf(blogId), "1"}, null, null, null);
         } else {
             c = db.query(PAGE_LIST_TABLE,
-                    new String[]{"id", "blogID", "postid", "title", "wp_page_parent_id"},
+                    new String[]{"id", "blogID", "postid", "title", "wp_page_parent_id", "isLocalChange"},
                     "blogID=?",
                     new String[]{String.valueOf(blogId)}, null, null, null);
         }
@@ -1174,6 +1200,7 @@ public class WordPressDB {
             String postTitle = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title")));
             page.setTitle(postTitle);
             page.setPageParentId(Integer.toString(c.getInt(c.getColumnIndex("wp_page_parent_id"))));
+            page.setLocalChange(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))));
 
             pages.add(i, page);
             c.moveToNext();
