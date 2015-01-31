@@ -60,11 +60,6 @@ public class SearchTermsModel implements Serializable {
             }
         }
 
-        // Add the Unknown Search Terms item to the list
-        if (this.mEncryptedSearchTerms > 0) {
-            list.add(new SearchTermModel(blogID, mDate, "Unknown Search Terms", mEncryptedSearchTerms, true));
-        }
-
         this.mSearchTerms = list;
     }
 
