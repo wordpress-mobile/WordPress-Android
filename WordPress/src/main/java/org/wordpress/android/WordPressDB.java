@@ -748,6 +748,12 @@ public class WordPressDB {
                 "blogID=? AND id=?",
                 new String[]{String.valueOf(post.getLocalTableBlogId()), String.valueOf(post.getLocalTablePostId())});
 
+        if (post.isPage()) {
+            db.delete(PAGE_LIST_TABLE,
+                    "blogID=? AND postid=?",
+                    new String[]{String.valueOf(post.getLocalTableBlogId()), String.valueOf(post.getRemotePostId())});
+        }
+
         return (result == 1);
     }
 
