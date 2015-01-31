@@ -207,7 +207,7 @@ public class ReaderPostDetailFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.reader_native_detail, menu);
+        inflater.inflate(R.menu.reader_menu_detail, menu);
     }
 
     @Override

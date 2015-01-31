@@ -84,7 +84,6 @@ public class ReaderPostListFragment extends WPMainTabFragment
     private View mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
-    private Toolbar mFragmentToolbar;
 
     private ViewGroup mTagInfoView;
     private ReaderBlogInfoView mBlogInfoView;
@@ -268,12 +267,8 @@ public class ReaderPostListFragment extends WPMainTabFragment
 
         // fragment toolbar (not to be mistaken for the activity toolbar) contains the tag spinner
         // when viewing followed tag, otherwise it's hidden
-        mFragmentToolbar = (Toolbar) rootView.findViewById(R.id.toolbar_reader);
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            mFragmentToolbar.setVisibility(View.VISIBLE);
-            setupToolbarSpinner();
-        } else {
-            mFragmentToolbar.setVisibility(View.GONE);
+            setupFragmentToolbar(rootView);
         }
 
         mRecyclerView = (ReaderRecyclerView) rootView.findViewById(R.id.recycler_view);
@@ -486,17 +481,6 @@ public class ReaderPostListFragment extends WPMainTabFragment
         mFollowButton.setIsFollowed(isFollowing);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_tags:
-                ReaderActivityLauncher.showReaderSubsForResult(getActivity());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     /*
      * blocks the blog associated with the passed post and removes all posts in that blog
      * from the adapter
@@ -551,16 +535,30 @@ public class ReaderPostListFragment extends WPMainTabFragment
         }
     }
 
-    private void setupToolbarSpinner() {
-        if (!isAdded() || mFragmentToolbar == null) return;
+    /*
+     * sets up the toolbar that appears above the list fragement when showing a followed tag
+     */
+    private void setupFragmentToolbar(View rootView) {
+        if (!isAdded()) return;
 
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar_reader);
+        toolbar.setVisibility(View.VISIBLE);
 
-        // check if it was already added to the toolbar
-        mSpinner = (Spinner) mFragmentToolbar.findViewById(R.id.reader_spinner);
-        if (mSpinner == null) {
-            return;
-        }
+        toolbar.inflateMenu(R.menu.reader_menu);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_tags:
+                        ReaderActivityLauncher.showReaderSubsForResult(getActivity());
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
 
+        mSpinner = (Spinner) toolbar.findViewById(R.id.reader_spinner);
         mSpinner.setAdapter(getSpinnerAdapter());
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

@@ -3,15 +3,19 @@
 <!--
     toolbar above the reader list fragment
 -->
-<android.support.v7.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
     android:minHeight="?attr/actionBarSize"
+    android:visibility="gone"
+    app:contentInsetLeft="@dimen/reader_card_spacing"
+    app:contentInsetStart="@dimen/reader_card_spacing"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    tools:visibility="visible">
 
     <Spinner
         android:id="@+id/reader_spinner"
