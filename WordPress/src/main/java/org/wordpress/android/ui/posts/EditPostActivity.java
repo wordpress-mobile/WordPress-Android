@@ -336,6 +336,10 @@ public class EditPostActivity extends ActionBarActivity {
         return mPost;
     }
 
+    public Post getOriginalPost() {
+        return mOriginalPost;
+    }
+
     private void trackEditorCreatedPost(String action, Intent intent) {
         Map<String, Object> properties = new HashMap<String, Object>();
         // Post created from the post list (new post button).
