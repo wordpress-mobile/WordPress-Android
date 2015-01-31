@@ -11,10 +11,6 @@
         android:layout_height="wrap_content"
         android:background="@color/tab_background" />
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_main" />
-
     <org.wordpress.android.widgets.WPMainViewPager
         android:id="@+id/viewpager_main"
         android:layout_width="match_parent"

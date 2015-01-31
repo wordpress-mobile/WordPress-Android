@@ -8,15 +8,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -87,6 +84,7 @@ public class ReaderPostListFragment extends WPMainTabFragment
     private View mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
+    private Toolbar mFragmentToolbar;
 
     private ViewGroup mTagInfoView;
     private ReaderBlogInfoView mBlogInfoView;
@@ -267,6 +265,17 @@ public class ReaderPostListFragment extends WPMainTabFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_cards, container, false);
+
+        // fragment toolbar (not to be mistaken for the activity toolbar) contains the tag spinner
+        // when viewing followed tag, otherwise it's hidden
+        mFragmentToolbar = (Toolbar) rootView.findViewById(R.id.toolbar_reader);
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            mFragmentToolbar.setVisibility(View.VISIBLE);
+            setupToolbarSpinner();
+        } else {
+            mFragmentToolbar.setVisibility(View.GONE);
+        }
+
         mRecyclerView = (ReaderRecyclerView) rootView.findViewById(R.id.recycler_view);
 
         Context context = container.getContext();
@@ -388,8 +397,7 @@ public class ReaderPostListFragment extends WPMainTabFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setHasOptionsMenu(true);
-        setupActionBar();
+        setHasOptionsMenu(false);
 
         boolean adapterAlreadyExists = hasPostAdapter();
         mRecyclerView.setAdapter(getPostAdapter());
@@ -426,14 +434,14 @@ public class ReaderPostListFragment extends WPMainTabFragment
     }
 
     /*
-     * adds a follow button to the toolbar for tag/blog preview
+     * adds a follow button to the activity toolbar (not the fragment toolbar!) for tag/blog preview
      */
     private void createFollowButton() {
         if (!isAdded()) {
             return;
         }
 
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         if (toolbar == null) {
             return;
         }
@@ -476,16 +484,6 @@ public class ReaderPostListFragment extends WPMainTabFragment
                 ? ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl)
                 : ReaderTagTable.isFollowedTagName(getCurrentTagName());
         mFollowButton.setIsFollowed(isFollowing);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        // only followed tag list has a menu
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            inflater.inflate(R.menu.reader_native, menu);
-            setupActionBar();
-        }
     }
 
     @Override
@@ -553,48 +551,16 @@ public class ReaderPostListFragment extends WPMainTabFragment
         }
     }
 
-    /*
-     * ensures that the toolbar is correctly configured based on the type of list
-     */
-    private void setupActionBar() {
-        if (!isAdded() || !(getActivity() instanceof ActionBarActivity)) {
-            return;
-        }
+    private void setupToolbarSpinner() {
+        if (!isAdded() || mFragmentToolbar == null) return;
 
-        final android.support.v7.app.ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-        if (actionBar == null) {
-            return;
-        }
-
-        if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(false);
-            if (mSpinner == null) {
-                setupSpinner();
-            }
-            selectTagInSpinner(getCurrentTag());
-        } else {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    private void setupSpinner() {
-        if (!isAdded()) return;
-
-        final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        if (toolbar == null) {
-            return;
-        }
 
         // check if it was already added to the toolbar
-        mSpinner = (Spinner) toolbar.findViewById(R.id.action_bar_spinner);
-        if (mSpinner != null) {
+        mSpinner = (Spinner) mFragmentToolbar.findViewById(R.id.reader_spinner);
+        if (mSpinner == null) {
             return;
         }
 
-        View view = View.inflate(getActivity(), R.layout.reader_spinner, toolbar);
-        mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
         mSpinner.setAdapter(getSpinnerAdapter());
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -1217,7 +1183,7 @@ public class ReaderPostListFragment extends WPMainTabFragment
     }
 
     /*
-    * user tapped follow button in toolbar to follow/unfollow the current blog
+    * user tapped follow button to follow/unfollow the current blog
     */
     private void toggleBlogFollowStatus() {
         if (!isAdded() || mFollowButton == null) {

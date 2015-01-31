@@ -5,10 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/toolbar_reader"
+        layout="@layout/toolbar_reader" />
+
     <FrameLayout
         android:id="@+id/frame_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_reader"
         android:visibility="gone" />
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -33,6 +38,7 @@
         android:id="@+id/layout_new_posts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_reader"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_medium"
         android:background="@drawable/reader_new_posts_bar_background"

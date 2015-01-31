@@ -188,7 +188,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         if (!mNoMenuDrawer && actionBar != null && mSpinner == null) {
             final Toolbar toolbar = getToolbar();
             if (toolbar != null) {
-                View view = View.inflate(this, R.layout.reader_spinner, toolbar);
+                View view = View.inflate(this, R.layout.toolbar_spinner, toolbar);
                 mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
 
                 StatsTimeframe[] timeframes = {StatsTimeframe.DAY, StatsTimeframe.WEEK,
@@ -822,7 +822,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         public View getView(int position, View convertView, ViewGroup parent) {
             final View view;
             if (convertView == null) {
-                view = mInflater.inflate(R.layout.reader_spinner_item, parent, false);
+                view = mInflater.inflate(R.layout.toolbar_spinner_item, parent, false);
             } else {
                 view = convertView;
             }
@@ -839,7 +839,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             final TagViewHolder holder;
 
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.reader_spinner_dropdown_item, parent, false);
+                convertView = mInflater.inflate(R.layout.toolbar_spinner_dropdown_item, parent, false);
                 holder = new TagViewHolder(convertView);
                 convertView.setTag(holder);
             } else {

@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    toolbar when shown above a fragment on the main tab activity
+    toolbar above the reader list fragment
 -->
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
     android:minHeight="?attr/actionBarSize"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    <Spinner
+        android:id="@+id/reader_spinner"
+        style="?android:actionDropDownStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/toolbar_height" />
+
+</android.support.v7.widget.Toolbar>
