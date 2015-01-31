@@ -1210,6 +1210,24 @@ public class WordPressDB {
         return pages;
     }
 
+    public int updatePageListPage(Post post) {
+        int result = 0;
+        if (post != null && !post.isLocalDraft()) {
+            ContentValues values = new ContentValues();
+            values.put("title", post.getTitle());
+            values.put("wp_page_parent_id", post.getPageParentId());
+            values.put("isLocalChange", post.isLocalChange());
+
+            result = db.update(PAGE_LIST_TABLE, values, "blogID=? AND postid=?",
+                    new String[]{
+                            String.valueOf(post.getLocalTableBlogId()),
+                            String.valueOf(post.getRemotePostId())
+                    });
+        }
+
+        return result;
+    }
+
     public int getPageListSize(int blogId) {
         Cursor c = db.query(PAGE_LIST_TABLE,
                 new String[] {  "id" },
