@@ -2,15 +2,22 @@ package org.wordpress.android.ui;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 
-import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.R;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
-import org.wordpress.android.ui.reader.ReaderTypes;
 
 /**
  * pager adapter containing tab fragments used by WPMainActivity
@@ -60,7 +67,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
             case TAB_ME:
                 return new DummyFragment();
             case TAB_NOTIFS:
-                return new NotificationsListFragment();
+                return NotificationsListFragment.newInstance();
             default:
                 return null;
         }
@@ -106,6 +113,25 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
     }
 
     public static class DummyFragment extends WPMainTabFragment {
-
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.dummy_fragment, container, false);
+            Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+            toolbar.inflateMenu(R.menu.dummy_menu);
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.menu_settings:
+                            getActivity().startActivityForResult(new Intent(getActivity(), SettingsActivity.class), WPMainActivity.SETTINGS_REQUEST);
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+            });
+            return view;
+        }
     }
 }

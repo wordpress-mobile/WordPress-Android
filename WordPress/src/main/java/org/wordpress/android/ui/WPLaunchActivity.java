@@ -12,7 +12,7 @@ public class WPLaunchActivity extends ActionBarActivity {
 
     /*
      * this the main (default) activity, which does nothing more than launch the
-     * previously active activity on startup
+     * main activity on startup
      */
 
     @Override

@@ -16,6 +16,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -40,6 +41,20 @@ public class WPMainActivity extends ActionBarActivity
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
 
+    /**
+     * AuthenticatorRequest code used when no accounts exist, and user is prompted to add an
+     * account.
+     */
+    private static final int ADD_ACCOUNT_REQUEST = 100;
+    /**
+     * AuthenticatorRequest code for reloading menu after returning from  the PreferencesActivity.
+     */
+    static final int SETTINGS_REQUEST = 200;
+    /**
+     * AuthenticatorRequest code for re-authentication
+     */
+    private static final int AUTHENTICATE_REQUEST = 300;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,11 +73,13 @@ public class WPMainActivity extends ActionBarActivity
         // page change listener must be set on the tab layout rather than the ViewPager
         mTabs.setOnPageChangeListener(this);
 
-        // return to the tab that was showing the last time
         if (savedInstanceState == null) {
-            int position = AppPrefs.getMainTabIndex();
-            if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
-                mViewPager.setCurrentItem(position);
+            if (showSignInIfRequired()) {
+                // return to the tab that was showing the last time
+                int position = AppPrefs.getMainTabIndex();
+                if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
+                    mViewPager.setCurrentItem(position);
+                }
             }
         }
     }
@@ -107,10 +124,30 @@ public class WPMainActivity extends ActionBarActivity
             case ReaderConstants.INTENT_READER_REBLOG:
                 handleReaderActivityResult(requestCode, resultCode, data);
                 break;
+            case ADD_ACCOUNT_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    WordPress.registerForCloudMessaging(this);
+                } else {
+                    finish();
+                }
+                break;
+            case AUTHENTICATE_REQUEST:
+                if (resultCode == RESULT_CANCELED) {
+                    showSignIn();
+                } else {
+                    WordPress.registerForCloudMessaging(this);
+                }
+                break;
+            case SETTINGS_REQUEST:
+                // user returned from settings
+                if (showSignInIfRequired()) {
+                    WordPress.registerForCloudMessaging(this);
+                }
+                break;
         }
     }
 
-    /*
+    /**
      * called by onActivityResult() for reader-related intents
      */
     private void handleReaderActivityResult(int requestCode, int resultCode, Intent data) {
@@ -150,6 +187,23 @@ public class WPMainActivity extends ActionBarActivity
     }
 
     /*
+    * displays the sign-in activity if the user isn't logged in - returns true if user
+    * is already signed in
+    */
+    private boolean showSignInIfRequired() {
+        if (WordPress.isSignedIn(this)) {
+            return true;
+        }
+        showSignIn();
+        return false;
+    }
+
+    private void showSignIn() {
+        startActivityForResult(new Intent(this, SignInActivity.class), ADD_ACCOUNT_REQUEST);
+    }
+
+
+    /*
      * returns the reader post list fragment
      */
     private ReaderPostListFragment getReaderListFragment() {
@@ -158,10 +212,6 @@ public class WPMainActivity extends ActionBarActivity
             return (ReaderPostListFragment)fragment;
         }
         return null;
-    }
-
-    public void onSignout() {
-        // TODO
     }
 
     /**
@@ -198,7 +248,7 @@ public class WPMainActivity extends ActionBarActivity
             String action = intent.getAction();
             switch (action) {
                 case WordPress.BROADCAST_ACTION_SIGNOUT:
-                    onSignout();
+                    showSignIn();
                     break;
                 case WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS:
                     AuthenticationDialogUtils.showAuthErrorDialog(WPMainActivity.this);
