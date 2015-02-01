@@ -1178,23 +1178,14 @@ public class WordPressDB {
     /**
      * Returns a list of pages with minimal information (local ID, post ID, title, parent ID). Ignores local drafts.
      * @param blogId the table blog ID the pages belong to
-     * @param fromPostsTable whether to fetch data from POSTS_TABLE or PAGE_LIST_TABLE
      * @return A list of pages with minimal information
      */
-    public List<PageHierarchyPage> getPageList(int blogId, boolean fromPostsTable) {
+    public List<PageHierarchyPage> getPageList(int blogId) {
         List<PageHierarchyPage> pages = new ArrayList<>();
-        Cursor c;
-        if (fromPostsTable) {
-            c = db.query(POSTS_TABLE,
-                    new String[]{"id", "blogID", "postid", "title", "wp_page_parent_id", "isLocalChange"},
-                    "blogID=? AND isPage=? AND localDraft != 1",
-                    new String[]{String.valueOf(blogId), "1"}, null, null, null);
-        } else {
-            c = db.query(PAGE_LIST_TABLE,
-                    new String[]{"id", "blogID", "postid", "title", "wp_page_parent_id", "isLocalChange"},
-                    "blogID=?",
-                    new String[]{String.valueOf(blogId)}, null, null, null);
-        }
+        Cursor c = db.query(PAGE_LIST_TABLE,
+                new String[]{"id", "blogID", "postid", "title", "wp_page_parent_id", "isLocalChange"},
+                "blogID=?",
+                new String[]{String.valueOf(blogId)}, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
 
@@ -1232,16 +1223,6 @@ public class WordPressDB {
         }
 
         return result;
-    }
-
-    public int getPageListSize(int blogId) {
-        Cursor c = db.query(PAGE_LIST_TABLE,
-                new String[] {  "id" },
-                "blogID=?",
-                new String[] {String.valueOf(blogId)}, null, null, null);
-        int total = c.getCount();
-        c.close();
-        return total;
     }
 
     // Categories

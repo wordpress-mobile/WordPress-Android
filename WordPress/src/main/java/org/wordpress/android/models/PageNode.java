@@ -76,7 +76,7 @@ public class PageNode {
         return level;
     }
 
-    public static PageNode createPageTreeFromDB(int blogId, boolean posts_table) {
+    public static PageNode createPageTreeFromDB(int blogId) {
         PageNode rootPage = new PageNode(-1, -1, "");
         if (WordPress.wpDB == null) {
             return rootPage;
@@ -86,7 +86,7 @@ public class PageNode {
         SparseArray<PageNode> postsMap = new SparseArray<>();
         PageNode currentRootNode;
 
-        List<PageHierarchyPage> postList = WordPress.wpDB.getPageList(blogId, posts_table);
+        List<PageHierarchyPage> postList = WordPress.wpDB.getPageList(blogId);
 
         for (PageHierarchyPage page : postList) {
             int postId = Integer.parseInt(page.getRemotePostId());
