@@ -126,6 +126,17 @@ public class ReaderPostListFragment extends WPMainTabFragment
     }
 
     /*
+     * show posts with the last selected followed tag
+     */
+    public static ReaderPostListFragment newInstance() {
+        ReaderTag tag = AppPrefs.getReaderTag();
+        if (!ReaderTagTable.tagExists(tag)) {
+            tag = ReaderTag.getDefaultTag();
+        }
+        return newInstance(tag, ReaderPostListType.TAG_FOLLOWED);
+    }
+
+    /*
      * show posts with a specific tag
      */
     public static ReaderPostListFragment newInstance(ReaderTag tag, ReaderPostListType listType) {

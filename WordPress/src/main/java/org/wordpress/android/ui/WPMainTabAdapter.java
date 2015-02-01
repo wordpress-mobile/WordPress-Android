@@ -8,6 +8,7 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderTypes;
 
@@ -55,11 +56,11 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
             case TAB_SITES:
                 return new DummyFragment();
             case TAB_READER:
-                return ReaderPostListFragment.newInstance(ReaderTag.getDefaultTag(), ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
+                return ReaderPostListFragment.newInstance();
             case TAB_ME:
                 return new DummyFragment();
             case TAB_NOTIFS:
-                return new DummyFragment();
+                return new NotificationsListFragment();
             default:
                 return null;
         }
