@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.TypedValue;
+import android.os.*;
 
 import org.wordpress.android.util.R;
 
@@ -43,7 +44,17 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
     @Override
     public void onRefresh() {
         mRefreshListener.onRefreshStarted();
+        stopRefreshingDelayed();}
+
+    void stopRefreshingDelayed() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 10000);
     }
+
 
     public void setEnabled(boolean enabled) {
         mSwipeRefreshLayout.setEnabled(enabled);
