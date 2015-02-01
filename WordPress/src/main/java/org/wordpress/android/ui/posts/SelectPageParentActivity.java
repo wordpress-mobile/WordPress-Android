@@ -35,6 +35,7 @@ public class SelectPageParentActivity extends ActionBarActivity {
     public static final int PAGES_REQUEST_COUNT = 100;
 
     private ListView mListView;
+    PageParentArrayAdapter mPageAdapter;
     private ListScrollPositionManager mListScrollPositionManager;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private int mSelectedParentId;
@@ -142,9 +143,13 @@ public class SelectPageParentActivity extends ActionBarActivity {
             mPageIds.put(mPageLevels.get(i).getPageId(), i);
         }
 
-        PageParentArrayAdapter pageAdapter = new PageParentArrayAdapter(this, R.layout.page_parents_row, mPageLevels);
-        mListView.setAdapter(pageAdapter);
+        // Re-assign current selected parent id in case it was changed in a recent refresh
+        if (mPageIds.containsKey(mPageId)) {
+            mSelectedParentId = mPageLevels.get(mPageIds.get(mPageId)).getParentId();
+        }
 
+        mPageAdapter = new PageParentArrayAdapter(this, R.layout.page_parents_row, mPageLevels);
+        mListView.setAdapter(mPageAdapter);
 
         if (mPageIds.containsKey(mSelectedParentId)) {
             final int checkedPosition = mPageIds.get(mSelectedParentId);
