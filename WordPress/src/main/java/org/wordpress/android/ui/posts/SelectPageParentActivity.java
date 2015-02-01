@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,6 +22,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
@@ -82,7 +84,15 @@ public class SelectPageParentActivity extends ActionBarActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             int blogId = extras.getInt("blogId");
-            mPageId = extras.getInt("pageId");
+
+            String pageId = extras.getString("pageId");
+            if (pageId.length() == 0) {
+                // The page being edited is a local draft, and therefore doesn't have a remote id yet
+                mPageId = -1;
+            } else {
+                mPageId = Integer.parseInt(pageId);
+            }
+
             mBlog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
             if (mBlog == null) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
@@ -214,8 +224,23 @@ public class SelectPageParentActivity extends ActionBarActivity {
     }
 
     private void refreshPages() {
-        mListScrollPositionManager.saveScrollOffset();
-        fetchPosts();
+        if (WordPress.wpDB.findLocalChanges(mBlog.getLocalTableBlogId(), true)) {
+            // Don't update if there are local changes to pages
+            mSwipeToRefreshHelper.setRefreshing(false);
+            if (mAutoScrollToCheckedPosition) {
+                mAutoScrollToCheckedPosition = false;
+            } else {
+                // If manually refreshed, let the user know why they're unable to refresh
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(getString(R.string.local_changes),
+                        getString(R.string.unable_to_refresh_local_changes));
+                ft.add(alert, "alert");
+                ft.commitAllowingStateLoss();
+            }
+        } else {
+            mListScrollPositionManager.saveScrollOffset();
+            fetchPosts();
+        }
     }
 
     @Override
