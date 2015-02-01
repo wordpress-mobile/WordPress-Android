@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,7 +30,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.WPMainTabFragment;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -41,7 +41,7 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 
 import javax.annotation.Nonnull;
 
-public class NotificationsListFragment extends WPMainTabFragment implements Bucket.Listener<Note> {
+public class NotificationsListFragment extends Fragment implements Bucket.Listener<Note> {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";

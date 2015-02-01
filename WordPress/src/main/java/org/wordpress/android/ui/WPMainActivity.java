@@ -122,7 +122,7 @@ public class WPMainActivity extends ActionBarActivity
         }
     }
 
-    /*
+   /*
     * displays the sign-in activity if the user isn't logged in - returns true if user
     * is already signed in
     */
@@ -144,7 +144,7 @@ public class WPMainActivity extends ActionBarActivity
     private ReaderPostListFragment getReaderListFragment() {
         Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_READER);
         if (fragment != null && fragment instanceof ReaderPostListFragment) {
-            return (ReaderPostListFragment)fragment;
+            return (ReaderPostListFragment) fragment;
         }
         return null;
     }
