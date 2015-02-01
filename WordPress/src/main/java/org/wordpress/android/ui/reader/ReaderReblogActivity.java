@@ -26,6 +26,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -52,7 +53,6 @@ public class ReaderReblogActivity extends ActionBarActivity {
     private long mDestinationBlogId;
     private boolean mIsSubmittingReblog = false;
 
-    private static final int INTENT_SETTINGS = 200;
     private static final String KEY_DESTINATION_BLOG_ID = "destination_blog_id";
 
     @Override
@@ -174,7 +174,7 @@ public class ReaderReblogActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // reload adapter if user returned from settings since blog visibility may have changed
-        if (requestCode == INTENT_SETTINGS) {
+        if (requestCode == RequestCodes.SETTINGS) {
             getReblogAdapter().reload();
         }
     }
@@ -201,7 +201,7 @@ public class ReaderReblogActivity extends ActionBarActivity {
                             @Override
                             public void onClick(View v) {
                                 Intent i = new Intent(ReaderReblogActivity.this, SettingsActivity.class);
-                                startActivityForResult(i, INTENT_SETTINGS);
+                                startActivityForResult(i, RequestCodes.SETTINGS);
                             }
                         });
                     }

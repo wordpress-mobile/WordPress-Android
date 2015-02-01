@@ -41,20 +41,6 @@ public class WPMainActivity extends ActionBarActivity
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
 
-    /**
-     * AuthenticatorRequest code used when no accounts exist, and user is prompted to add an
-     * account.
-     */
-    private static final int ADD_ACCOUNT_REQUEST = 100;
-    /**
-     * AuthenticatorRequest code for reloading menu after returning from  the PreferencesActivity.
-     */
-    static final int SETTINGS_REQUEST = 200;
-    /**
-     * AuthenticatorRequest code for re-authentication
-     */
-    private static final int AUTHENTICATE_REQUEST = 300;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,25 +106,25 @@ public class WPMainActivity extends ActionBarActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case ReaderConstants.INTENT_READER_SUBS:
-            case ReaderConstants.INTENT_READER_REBLOG:
+            case RequestCodes.READER_SUBS:
+            case RequestCodes.READER_REBLOG:
                 handleReaderActivityResult(requestCode, resultCode, data);
                 break;
-            case ADD_ACCOUNT_REQUEST:
+            case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
                     WordPress.registerForCloudMessaging(this);
                 } else {
                     finish();
                 }
                 break;
-            case AUTHENTICATE_REQUEST:
+            case RequestCodes.REAUTHENTICATE:
                 if (resultCode == RESULT_CANCELED) {
                     showSignIn();
                 } else {
                     WordPress.registerForCloudMessaging(this);
                 }
                 break;
-            case SETTINGS_REQUEST:
+            case RequestCodes.SETTINGS:
                 // user returned from settings
                 if (showSignInIfRequired()) {
                     WordPress.registerForCloudMessaging(this);
@@ -159,7 +145,7 @@ public class WPMainActivity extends ActionBarActivity
 
         switch (requestCode) {
             // user just returned from the tag editor
-            case ReaderConstants.INTENT_READER_SUBS :
+            case RequestCodes.READER_SUBS:
                 if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
                     // reload tags if they were changed, and set the last tag added as the current one
                     String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
@@ -178,7 +164,7 @@ public class WPMainActivity extends ActionBarActivity
 
             // user just returned from reblogging activity, reload the displayed post if reblogging
             // succeeded
-            case ReaderConstants.INTENT_READER_REBLOG:
+            case RequestCodes.READER_REBLOG:
                 long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                 long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
                 listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId, true));
@@ -199,7 +185,7 @@ public class WPMainActivity extends ActionBarActivity
     }
 
     private void showSignIn() {
-        startActivityForResult(new Intent(this, SignInActivity.class), ADD_ACCOUNT_REQUEST);
+        startActivityForResult(new Intent(this, SignInActivity.class), RequestCodes.ADD_ACCOUNT);
     }
 
     /*

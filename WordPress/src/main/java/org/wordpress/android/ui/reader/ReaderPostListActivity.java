@@ -18,6 +18,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -203,7 +204,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
 
         switch (requestCode) {
             // user just returned from the tag editor
-            case ReaderConstants.INTENT_READER_SUBS :
+            case RequestCodes.READER_SUBS :
                 if (isResultOK && listFragment != null && data != null) {
                     if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
                         // reload tags if they were changed, and set the last tag added as the current one
@@ -224,7 +225,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
 
             // user just returned from reblogging activity, reload the displayed post if reblogging
             // succeeded
-            case ReaderConstants.INTENT_READER_REBLOG:
+            case RequestCodes.READER_REBLOG:
                 if (isResultOK && data != null && listFragment != null) {
                     long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);

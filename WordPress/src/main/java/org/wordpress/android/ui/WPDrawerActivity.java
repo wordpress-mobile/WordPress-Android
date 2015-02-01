@@ -66,19 +66,6 @@ import java.util.Map;
 public abstract class WPDrawerActivity extends ActionBarActivity {
     public static final int NEW_BLOG_CANCELED = 10;
     private static final String SCROLL_POSITION_ID = "WPDrawerActivity";
-    /**
-     * AuthenticatorRequest code used when no accounts exist, and user is prompted to add an
-     * account.
-     */
-    private static final int ADD_ACCOUNT_REQUEST = 100;
-    /**
-     * AuthenticatorRequest code for reloading menu after returning from  the PreferencesActivity.
-     */
-    private static final int SETTINGS_REQUEST = 200;
-    /**
-     * AuthenticatorRequest code for re-authentication
-     */
-    private static final int AUTHENTICATE_REQUEST = 300;
 
     private static int[] mBlogIDs;
     private boolean isAnimatingRefreshButton;
@@ -609,7 +596,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             mShouldFinish = false;
             Intent intent = new Intent(this, SignInActivity.class);
             intent.putExtra("request", SignInActivity.SIGN_IN_REQUEST);
-            startActivityForResult(intent, ADD_ACCOUNT_REQUEST);
+            startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
             return false;
         }
         return true;
@@ -631,7 +618,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     private void showSettings() {
-        startActivityForResult(new Intent(this, SettingsActivity.class), SETTINGS_REQUEST);
+        startActivityForResult(new Intent(this, SettingsActivity.class), RequestCodes.SETTINGS);
     }
 
     /*
@@ -651,7 +638,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case ADD_ACCOUNT_REQUEST:
+            case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
                     // new blog has been added, so rebuild cache of blogs and setup current blog
                     getBlogNames();
@@ -666,7 +653,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                     finish();
                 }
                 break;
-            case SETTINGS_REQUEST:
+            case RequestCodes.SETTINGS:
                 // user returned from settings - skip if user signed out
                 if (mDrawerListView != null && resultCode != SettingsActivity.RESULT_SIGNED_OUT) {
                     // If we need to add or remove the blog spinner, init the drawer again
@@ -683,10 +670,10 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 }
 
                 break;
-            case AUTHENTICATE_REQUEST:
+            case RequestCodes.REAUTHENTICATE:
                 if (resultCode == RESULT_CANCELED) {
                     Intent i = new Intent(this, SignInActivity.class);
-                    startActivityForResult(i, ADD_ACCOUNT_REQUEST);
+                    startActivityForResult(i, RequestCodes.ADD_ACCOUNT);
                 } else {
                     WordPress.registerForCloudMessaging(this);
                 }

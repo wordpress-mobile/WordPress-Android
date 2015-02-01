@@ -10,10 +10,6 @@ public class ReaderConstants {
 
     public static final int MIN_FEATURED_IMAGE_WIDTH = 640;              // min width for an image to be suitable featured image
 
-    // intent IDs
-    public static final int INTENT_READER_SUBS        = 1000;
-    public static final int INTENT_READER_REBLOG      = 1001;
-
     // intent arguments / keys
     public static final String ARG_TAG               = "tag";
     public static final String ARG_BLOG_ID           = "blog_id";

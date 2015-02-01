@@ -16,6 +16,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.ToastUtils;
@@ -171,7 +172,7 @@ public class ReaderActivityLauncher {
      */
     public static void showReaderSubsForResult(Activity activity) {
         Intent intent = new Intent(activity, ReaderSubsActivity.class);
-        activity.startActivityForResult(intent, ReaderConstants.INTENT_READER_SUBS);
+        activity.startActivityForResult(intent, RequestCodes.READER_SUBS);
     }
 
     /*
@@ -231,7 +232,7 @@ public class ReaderActivityLauncher {
         } else {
             options = ActivityOptionsCompat.makeCustomAnimation(activity, R.anim.reader_flyin, 0);
         }
-        ActivityCompat.startActivityForResult(activity, intent, ReaderConstants.INTENT_READER_REBLOG, options.toBundle());
+        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.READER_REBLOG, options.toBundle());
 
     }
 
