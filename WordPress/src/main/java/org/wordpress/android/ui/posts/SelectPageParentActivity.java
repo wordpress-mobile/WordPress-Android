@@ -2,7 +2,9 @@ package org.wordpress.android.ui.posts;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -48,7 +50,6 @@ public class SelectPageParentActivity extends ActionBarActivity {
     private ApiHelper.FetchPageListTask mCurrentFetchPageListTask;
 
     private boolean mAutoScrollToCheckedPosition = false;
-    private boolean mIsRecreated = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,12 +64,12 @@ public class SelectPageParentActivity extends ActionBarActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mListView = (ListView)findViewById(android.R.id.list);
+        mListView = (ListView) findViewById(android.R.id.list);
         mListScrollPositionManager = new ListScrollPositionManager(mListView, true);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setItemsCanFocus(false);
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 PageNode selectedParent = mPageLevels.get(position);
@@ -82,6 +83,7 @@ public class SelectPageParentActivity extends ActionBarActivity {
             }
         });
 
+        // Get extras from intent
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             int blogId = extras.getInt("blogId");
@@ -117,20 +119,41 @@ public class SelectPageParentActivity extends ActionBarActivity {
                 });
 
         if (savedInstanceState != null) {
-            mIsRecreated = true;
+            // Activity was recreated
+            populatePageList(true);
+            return;
+        } else {
+            populatePageList(false);
         }
 
-        populatePageList();
-
-        // Refresh blog list if network is available and activity really starts
-        if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
-            mSwipeToRefreshHelper.setRefreshing(true);
-            mAutoScrollToCheckedPosition = true;
-            refreshPages();
+        // Auto-refresh if it hasn't been done yet for this blog
+        if (hasBeenUpdated()) {
+            if (mPageIds.size() <= PostsListFragment.POSTS_REQUEST_COUNT) {
+                // The number of pages is less than POSTS_REQUEST_COUNT, so there won't be any more to pull
+                setUpdated();
+            } else {
+                if (NetworkUtils.isNetworkAvailable(this)) {
+                    mSwipeToRefreshHelper.setRefreshing(true);
+                    mAutoScrollToCheckedPosition = true;
+                    refreshPages();
+                    return;
+                }
+            }
         }
+
+        // Adjust the ListView to focus on the position of the checked page parent
+        mListView.post(new Runnable() {
+            @Override
+            public void run() {
+                int checkedPosition = mListView.getCheckedItemPosition();
+                if (mListView.getLastVisiblePosition() < checkedPosition) {
+                    mListView.setSelectionFromTop(checkedPosition - 1, 0);
+                }
+            }
+        });
     }
 
-    private void populatePageList() {
+    private void populatePageList(boolean recreated) {
         int blogId = mBlog.getLocalTableBlogId();
         PageNode pageTree = PageNode.createPageTreeFromDB(blogId);
         mPageLevels = PageNode.getSortedListOfPagesFromRoot(pageTree);
@@ -156,7 +179,7 @@ public class SelectPageParentActivity extends ActionBarActivity {
 
             mListView.setItemChecked(checkedPosition, true);
 
-            if (mIsRecreated) {
+            if (recreated) {
                 mListScrollPositionManager.restoreScrollOffset();
             } else {
                 if (mAutoScrollToCheckedPosition) {
@@ -183,9 +206,10 @@ public class SelectPageParentActivity extends ActionBarActivity {
         mCurrentFetchPageListTask = new ApiHelper.FetchPageListTask(new ApiHelper.FetchPageListTask.Callback() {
             @Override
             public void onSuccess(int postCount) {
+                setUpdated();
                 mCurrentFetchPageListTask = null;
                 mSwipeToRefreshHelper.setRefreshing(false);
-                populatePageList();
+                populatePageList(false);
             }
 
             @Override
@@ -252,7 +276,7 @@ public class SelectPageParentActivity extends ActionBarActivity {
 
         // If nothing is checked, the parent id initially passed was not found. Don't modify the page data
         if (mListView.getCheckedItemPosition() >= 0) {
-            String parentTitle =  "";
+            String parentTitle = "";
             if (mSelectedParentId != 0) {
                 parentTitle = mPageLevels.get(mListView.getCheckedItemPosition()).getName();
             }
@@ -265,5 +289,18 @@ public class SelectPageParentActivity extends ActionBarActivity {
 
         setResult(RESULT_OK, mIntent);
         finish();
+    }
+
+    public boolean hasBeenUpdated() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        long timeStamp = preferences.getLong("last_updated_blog_" + mBlog.getLocalTableBlogId(), 0);
+        return (timeStamp == 0);
+    }
+
+    public void setUpdated() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong("last_updated_blog_" + mBlog.getLocalTableBlogId(), System.currentTimeMillis());
+        editor.commit();
     }
 }
