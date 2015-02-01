@@ -202,7 +202,6 @@ public class WPMainActivity extends ActionBarActivity
         startActivityForResult(new Intent(this, SignInActivity.class), ADD_ACCOUNT_REQUEST);
     }
 
-
     /*
      * returns the reader post list fragment
      */

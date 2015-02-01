@@ -2,11 +2,15 @@ package org.wordpress.android.ui.reader;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +54,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
@@ -65,15 +70,22 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ReaderPostListFragment extends WPMainTabFragment
     implements ReaderInterfaces.OnReaderPostSelectedListener,
                ReaderInterfaces.OnReaderTagSelectedListener,
                ReaderInterfaces.OnPostPopupListener
 {
+
+    private ScheduledExecutorService mUpdateScheduler;
+
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
 
@@ -216,14 +228,22 @@ public class ReaderPostListFragment extends WPMainTabFragment
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopUpdater();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
+        unregisterReceiver();
         mWasPaused = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        registerReceiver();
 
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
@@ -437,6 +457,40 @@ public class ReaderPostListFragment extends WPMainTabFragment
         getPostAdapter().setOnPostSelectedListener(this);
         getPostAdapter().setOnTagSelectedListener(this);
         getPostAdapter().setOnPostPopupListener(this);
+
+        startUpdater();
+    }
+
+    /*
+     * start updating tags & blogs after 500ms, then update them hourly
+     */
+    private void startUpdater() {
+        if (mUpdateScheduler == null) {
+            mUpdateScheduler = Executors.newScheduledThreadPool(1);
+            mUpdateScheduler.scheduleWithFixedDelay(
+                    new Runnable() {
+                        public void run() {
+                            updateReaderFollowed();
+                        }
+                    }, 500, (1000 * 60) * 60, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    private void stopUpdater() {
+        if (mUpdateScheduler != null) {
+            mUpdateScheduler.shutdownNow();
+        }
+    }
+
+    /*
+    * start background service to get the latest reader followed tags and blogs
+    */
+    void updateReaderFollowed() {
+        if (!isAdded()) return;
+        AppLog.d(AppLog.T.READER, "updating reader followed tags and blogs");
+        ReaderUpdateService.startService(getActivity(),
+                EnumSet.of(ReaderUpdateService.UpdateTask.TAGS,
+                           ReaderUpdateService.UpdateTask.FOLLOWED_BLOGS));
     }
 
     /*
@@ -751,7 +805,7 @@ public class ReaderPostListFragment extends WPMainTabFragment
         return (mPostAdapter != null);
     }
 
-    boolean isPostAdapterEmpty() {
+    public boolean isEmpty() {
         return (mPostAdapter == null || mPostAdapter.isEmpty());
     }
 
@@ -907,7 +961,7 @@ public class ReaderPostListFragment extends WPMainTabFragment
                 setIsUpdating(false, updateAction);
                 if (result.isNewOrChanged()) {
                     refreshPosts();
-                } else if (isPostAdapterEmpty()) {
+                } else if (isEmpty()) {
                     setEmptyTitleAndDescription();
                 }
             }
@@ -915,7 +969,7 @@ public class ReaderPostListFragment extends WPMainTabFragment
         ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, resultListener);
     }
 
-    void updateCurrentTag() {
+    public void updateCurrentTag() {
         updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.ReaderRefreshType.AUTOMATIC);
     }
 
@@ -971,7 +1025,7 @@ public class ReaderPostListFragment extends WPMainTabFragment
 
                 // show "new posts" bar only if there are new posts and the list isn't empty
                 if (result == ReaderActions.UpdateResult.HAS_NEW
-                        && !isPostAdapterEmpty()
+                        && !isEmpty()
                         && updateAction == RequestDataAction.LOAD_NEWER) {
                     showNewPostsBar();
                     refreshPosts();
@@ -1018,7 +1072,7 @@ public class ReaderPostListFragment extends WPMainTabFragment
         if (updateAction == RequestDataAction.LOAD_OLDER) {
             // show/hide progress bar at bottom if these are older posts
             showLoadingProgress(isUpdating);
-        } else if (isUpdating && isPostAdapterEmpty()) {
+        } else if (isUpdating && isEmpty()) {
             // show swipe-to-refresh if update started and no posts are showing
             showSwipeToRefreshProgress(true);
         } else if (!isUpdating) {
@@ -1087,7 +1141,7 @@ public class ReaderPostListFragment extends WPMainTabFragment
     /*
      * refresh the list of tags shown in the toolbar spinner
      */
-    void refreshTags() {
+    public void refreshTags() {
         if (!isAdded()) {
             return;
         }
@@ -1171,7 +1225,7 @@ public class ReaderPostListFragment extends WPMainTabFragment
                             if (isAdded()) {
                                 mCurrentBlogId = blogInfo.blogId;
                                 mCurrentBlogUrl = blogInfo.getUrl();
-                                if (isPostAdapterEmpty()) {
+                                if (isEmpty()) {
                                     getPostAdapter().setCurrentBlog(mCurrentBlogId);
                                     updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
                                 }
@@ -1289,4 +1343,33 @@ public class ReaderPostListFragment extends WPMainTabFragment
         });
         popup.show();
     }
+
+    private void registerReceiver() {
+        if (!isAdded()) return;
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED);
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.registerReceiver(mReceiver, filter);
+    }
+
+    private void unregisterReceiver() {
+        if (!isAdded()) return;
+        try {
+            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+            lbm.unregisterReceiver(mReceiver);
+        } catch (IllegalArgumentException e) {
+            // exception occurs if receiver already unregistered (safe to ignore)
+        }
+    }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // followed tags have changed so update tag list
+            refreshTags();
+            if (isEmpty()) {
+                updateCurrentTag();
+            }
+        }
+    };
 }

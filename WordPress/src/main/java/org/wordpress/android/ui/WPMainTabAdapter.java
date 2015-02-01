@@ -124,7 +124,8 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.menu_settings:
-                            getActivity().startActivityForResult(new Intent(getActivity(), SettingsActivity.class), WPMainActivity.SETTINGS_REQUEST);
+                            getActivity().startActivityForResult(
+                                    new Intent(getActivity(), SettingsActivity.class), WPMainActivity.SETTINGS_REQUEST);
                             return true;
                         default:
                             return false;
