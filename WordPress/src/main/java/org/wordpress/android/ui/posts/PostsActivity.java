@@ -427,8 +427,8 @@ public class PostsActivity extends WPDrawerActivity
                 }
             } else {
                 String deletePostMessage = getResources().getText(
-                        (post.isPage()) ? R.string.delete_page
-                                : R.string.delete_post).toString();
+                        (post.isPage()) ? R.string.delete_sure_page
+                                : R.string.delete_sure_post).toString();
                 if (!post.getTitle().isEmpty()) {
                     String postTitleEnclosedByQuotes = "'" + post.getTitle() + "'";
                     deletePostMessage += " " + postTitleEnclosedByQuotes;
