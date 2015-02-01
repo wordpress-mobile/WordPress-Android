@@ -1,6 +1,5 @@
 package org.wordpress.android.ui;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,23 +12,15 @@ import android.support.v7.app.ActionBarActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
-import org.wordpress.android.ui.reader.ReaderSubsActivity;
-import org.wordpress.android.ui.reader.ReaderTypes;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
-
-import javax.annotation.Nonnull;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -71,11 +62,6 @@ public class WPMainActivity extends ActionBarActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@Nonnull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         registerReceiver();
@@ -108,7 +94,10 @@ public class WPMainActivity extends ActionBarActivity
         switch (requestCode) {
             case RequestCodes.READER_SUBS:
             case RequestCodes.READER_REBLOG:
-                handleReaderActivityResult(requestCode, resultCode, data);
+                ReaderPostListFragment readerFragment = getReaderListFragment();
+                if (readerFragment != null) {
+                    readerFragment.handleActivityResult(requestCode, resultCode, data);
+                }
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
@@ -129,45 +118,6 @@ public class WPMainActivity extends ActionBarActivity
                 if (showSignInIfRequired()) {
                     WordPress.registerForCloudMessaging(this);
                 }
-                break;
-        }
-    }
-
-    /**
-     * called by onActivityResult() for reader-related intents
-     */
-    private void handleReaderActivityResult(int requestCode, int resultCode, Intent data) {
-        boolean isResultOK = (resultCode == Activity.RESULT_OK);
-        final ReaderPostListFragment listFragment = getReaderListFragment();
-        if (listFragment == null || !isResultOK || data == null) {
-            return;
-        }
-
-        switch (requestCode) {
-            // user just returned from the tag editor
-            case RequestCodes.READER_SUBS:
-                if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
-                    // reload tags if they were changed, and set the last tag added as the current one
-                    String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
-                    listFragment.doTagsChanged(lastAddedTag);
-                } else if (data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false)) {
-                    // update posts if any blog was followed or unfollowed and user is viewing "Blogs I Follow"
-                    if (listFragment.getPostListType().isTagType()
-                            && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
-                        listFragment.updatePostsWithTag(
-                                listFragment.getCurrentTag(),
-                                ReaderActions.RequestDataAction.LOAD_NEWER,
-                                ReaderTypes.ReaderRefreshType.AUTOMATIC);
-                    }
-                }
-                break;
-
-            // user just returned from reblogging activity, reload the displayed post if reblogging
-            // succeeded
-            case RequestCodes.READER_REBLOG:
-                long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-                listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId, true));
                 break;
         }
     }

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -44,6 +45,7 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPMainTabFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -231,6 +233,7 @@ public class ReaderPostListFragment extends WPMainTabFragment
     public void onDestroy() {
         super.onDestroy();
         stopUpdater();
+        AppLog.d(T.READER, "reader post list > onDestroy");
     }
 
     @Override
@@ -544,6 +547,42 @@ public class ReaderPostListFragment extends WPMainTabFragment
                 ? ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl)
                 : ReaderTagTable.isFollowedTagName(getCurrentTagName());
         mFollowButton.setIsFollowed(isFollowing);
+    }
+
+    /*
+     * called from WPMainActivity.onActivityResult() for reader-related request codes
+     */
+    public void handleActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK || data == null) {
+            return;
+        }
+
+        switch (requestCode) {
+            // user just returned from the tag editor
+            case RequestCodes.READER_SUBS:
+                if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
+                    // reload tags if they were changed, and set the last tag added as the current one
+                    String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
+                    doTagsChanged(lastAddedTag);
+                } else if (data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false)) {
+                    // update posts if any blog was followed or unfollowed and user is viewing "Blogs I Follow"
+                    if (getPostListType().isTagType() && ReaderTag.TAG_NAME_FOLLOWING.equals(getCurrentTagName())) {
+                        updatePostsWithTag(
+                                getCurrentTag(),
+                                ReaderActions.RequestDataAction.LOAD_NEWER,
+                                ReaderTypes.ReaderRefreshType.AUTOMATIC);
+                    }
+                }
+                break;
+
+            // user just returned from reblogging activity, reload the displayed post if reblogging
+            // succeeded
+            case RequestCodes.READER_REBLOG:
+                long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+                long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+                reloadPost(ReaderPostTable.getPost(blogId, postId, true));
+                break;
+        }
     }
 
     /*
