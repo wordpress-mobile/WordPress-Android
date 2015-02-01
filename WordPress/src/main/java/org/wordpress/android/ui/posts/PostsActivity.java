@@ -248,6 +248,9 @@ public class PostsActivity extends WPDrawerActivity
         ViewPostFragment viewPostFragment = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
 
         if (post != null) {
+            if (post.isUploading()){
+                return;
+            }
             WordPress.currentPost = post;
             if (viewPostFragment == null || !viewPostFragment.isInLayout()) {
                 FragmentTransaction ft = fm.beginTransaction();
