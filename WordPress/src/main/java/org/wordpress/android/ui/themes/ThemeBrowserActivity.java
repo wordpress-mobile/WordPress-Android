@@ -478,7 +478,8 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
                 ft.hide(mDetailsFragment);
             }
         }
-        ft.add(R.id.theme_browser_container, mPreviewFragment, ThemePreviewFragment.TAG);
+
+        ft.replace(R.id.theme_browser_container, mPreviewFragment, ThemePreviewFragment.TAG);
         ft.addToBackStack(null);
         ft.commit();
         setupBaseLayout();

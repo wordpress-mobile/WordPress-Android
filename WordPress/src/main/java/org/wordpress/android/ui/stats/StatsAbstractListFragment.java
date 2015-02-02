@@ -58,6 +58,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected Button mPaginationGoBackButton;
     protected Button mPaginationGoForwardButton;
     protected TextView mPaginationText;
+    protected LinearLayout mEmptyModulePlaceholder;
 
     protected Serializable[] mDatamodels;
 
@@ -67,7 +68,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract int getTotalsLabelResId();
     protected abstract int getEmptyLabelTitleResId();
     protected abstract int getEmptyLabelDescResId();
-    protected abstract StatsService.StatsEndpointsEnum[] getSectionToUpdate();
+    protected abstract StatsService.StatsEndpointsEnum[] getSectionsToUpdate();
     protected abstract void updateUI();
     protected abstract boolean isExpandableList();
     protected abstract boolean isViewAllOptionAvailable();
@@ -90,6 +91,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             view = inflater.inflate(R.layout.stats_list_fragment, container, false);
         }
 
+        mEmptyModulePlaceholder = (LinearLayout) view.findViewById(R.id.stats_empty_module_placeholder);
         mModuleTitleTextView = (TextView) view.findViewById(R.id.stats_module_title);
         mModuleTitleTextView.setText(getTitle());
 
@@ -170,7 +172,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         } else {
             //showHideNoResultsUI(true);
             showEmptyUI();
-            mMoreDataListener.onRefreshRequested(getSectionToUpdate());
+            mMoreDataListener.onRefreshRequested(getSectionsToUpdate());
         }
     }
 
@@ -181,10 +183,12 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mList.setVisibility(View.GONE);
         mViewAll.setVisibility(View.GONE);
         mPaginationContainer.setVisibility(View.GONE);
+        mEmptyModulePlaceholder.setVisibility(View.VISIBLE);
     }
 
     protected void showHideNoResultsUI(boolean showNoResultsUI) {
         mModuleTitleTextView.setVisibility(View.VISIBLE);
+        mEmptyModulePlaceholder.setVisibility(View.GONE);
 
         if (showNoResultsUI) {
             mGroupIdToExpandedMap.clear();
@@ -232,6 +236,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
         mGroupIdToExpandedMap.clear();
         mModuleTitleTextView.setVisibility(View.VISIBLE);
+        mEmptyModulePlaceholder.setVisibility(View.GONE);
 
         String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
 
@@ -257,8 +262,18 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mList.setVisibility(View.GONE);
     }
 
+    /**
+     * Check if the current datamodel is populated and is NOT an error response.
+     *
+     */
     protected boolean isDataEmpty() {
-        return mDatamodels == null || mDatamodels[mTopPagerSelectedButtonIndex] == null;
+        return isDataEmpty(mTopPagerSelectedButtonIndex);
+    }
+
+    protected boolean isDataEmpty(int index) {
+        return mDatamodels == null
+                || mDatamodels[index] == null
+                || isErrorResponse(index);
     }
 
     /**
@@ -400,9 +415,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             }
 
             StatsService.StatsEndpointsEnum sectionToUpdate = (StatsService.StatsEndpointsEnum) intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_NAME);
-            StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionToUpdate();
+            StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionsToUpdate();
             int indexOfDatamodelMatch = -1;
-            for (int i = 0; i < getSectionToUpdate().length; i++) {
+            for (int i = 0; i < getSectionsToUpdate().length; i++) {
                 if (sectionToUpdate == sectionsToUpdate[i]) {
                     indexOfDatamodelMatch = i;
                     break;
@@ -418,7 +433,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_DATA);
 
                 if (mDatamodels == null) {
-                    mDatamodels = new Serializable[getSectionToUpdate().length];
+                    mDatamodels = new Serializable[getSectionsToUpdate().length];
                 }
 
                 //dataObj = (dataObj == null || dataObj instanceof VolleyError) ? null : dataObj;

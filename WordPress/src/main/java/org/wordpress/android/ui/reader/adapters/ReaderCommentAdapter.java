@@ -220,7 +220,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
             holder.imgReply.setOnClickListener(replyClickListener);
         }
 
-        showLikeStatus(holder, comment, position);
+        showLikeStatus(holder, position);
 
         // if we're nearing the end of the comments and we know more exist on the server,
         // fire request to load more
@@ -239,13 +239,15 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
     }
 
     private boolean isValidPosition(int position) {
-        return (position > 0 && position < mComments.size());
+        return (position >= 0 && position < mComments.size());
     }
 
+    private void showLikeStatus(final CommentHolder holder, final int position) {
+        if (!isValidPosition(position)) {
+            return;
+        }
 
-    private void showLikeStatus(final CommentHolder holder,
-                                final ReaderComment comment,
-                                final int position) {
+        final ReaderComment comment = mComments.get(position);
         if (mPost.isLikesEnabled) {
             holder.layoutLikes.setVisibility(View.VISIBLE);
             holder.imgLike.setSelected(comment.isLikedByCurrentUser);
@@ -273,7 +275,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
             holder.layoutLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleLike(v.getContext(), holder, comment, position);
+                    toggleLike(v.getContext(), holder, position);
                 }
             });
 
@@ -290,14 +292,17 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
         }
     }
 
-    private void toggleLike(Context context,
-                            CommentHolder holder,
-                            ReaderComment comment,
-                            int position) {
+    private void toggleLike(Context context, CommentHolder holder, int position) {
         if (!NetworkUtils.checkConnection(context)) {
             return;
         }
 
+        if (!isValidPosition(position)) {
+            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
+            return;
+        }
+
+        ReaderComment comment = mComments.get(position);
         boolean isAskingToLike = !comment.isLikedByCurrentUser;
         ReaderAnim.animateLikeButton(holder.imgLike, isAskingToLike);
 
@@ -308,7 +313,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
 
         ReaderComment updatedComment = ReaderCommentTable.getComment(comment.blogId, comment.postId, comment.commentId);
         mComments.set(position, updatedComment);
-        showLikeStatus(holder, updatedComment, position);
+        showLikeStatus(holder, position);
     }
 
     /*

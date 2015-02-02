@@ -77,7 +77,11 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (isErrorResponse()) {
+        // This module is a kind of exception to the normal way we build page interface.
+        // In this module only the first rest endpoint StatsService.StatsEndpointsEnum.COMMENTS
+        // is used to populate 99% of the UI even if there is a tab on the top.
+        // Switching to a different tab on the UI doesn't switch the underlying datamodel index as in all other modules.
+        if (isErrorResponse(0)) {
             showErrorUI();
             return;
         }
@@ -112,7 +116,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasAuthors() {
-        return mDatamodels != null && mDatamodels[0] != null
+        return !isDataEmpty(0)
                 && ((CommentsModel) mDatamodels[0]).getAuthors() != null
                 && ((CommentsModel) mDatamodels[0]).getAuthors().size() > 0;
     }
@@ -125,7 +129,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasPosts() {
-        return mDatamodels != null && mDatamodels[0] != null
+        return !isDataEmpty(0)
                 && ((CommentsModel) mDatamodels[0]).getPosts() != null
                 && ((CommentsModel) mDatamodels[0]).getPosts().size() > 0;
     }
@@ -139,6 +143,10 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
+        if (isDataEmpty(0)) {
+            return false;
+        }
+
         if (mTopPagerSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
         } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
@@ -233,7 +241,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.COMMENTS, StatsService.StatsEndpointsEnum.COMMENT_FOLLOWERS
         };

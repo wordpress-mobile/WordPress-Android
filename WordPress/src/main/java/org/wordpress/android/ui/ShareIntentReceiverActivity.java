@@ -157,7 +157,7 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
             Blog blog;
             for (int i = 0; i < accounts.size(); i++) {
                 Map<String, Object> account = accounts.get(i);
-                blogNames[i] = BlogUtils.getBlogNameFromAccountMap(account);
+                blogNames[i] = BlogUtils.getBlogNameOrHostNameFromAccountMap(account);
                 mAccountIDs[i] = (Integer) account.get("id");
                 blog = WordPress.wpDB.instantiateBlogByLocalId(mAccountIDs[i]);
                 if (blog == null) {

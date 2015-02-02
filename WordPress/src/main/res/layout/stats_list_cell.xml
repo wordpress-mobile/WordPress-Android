@@ -17,20 +17,31 @@
         android:gravity="center_vertical"
         android:layout_gravity="center_vertical">
 
-        <org.wordpress.android.widgets.WPNetworkImageView
-            android:id="@+id/stats_list_cell_image"
-            android:layout_width="@dimen/avatar_sz_small"
-            android:layout_height="@dimen/avatar_sz_small"
-            android:layout_marginRight="@dimen/margin_large"
-            android:visibility="gone" />
+        <ImageView
+            android:id="@+id/stats_list_cell_link"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone"
+            android:src="@drawable/stats_link" />
 
         <ImageView
             android:id="@+id/stats_list_cell_chevron"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
             android:visibility="gone"
             android:src="@drawable/stats_chevron_right" />
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/stats_list_cell_image"
+            android:layout_width="@dimen/avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:visibility="gone" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_list_cell_entry"
@@ -39,6 +50,7 @@
             android:layout_height="wrap_content"
             android:minHeight="@dimen/avatar_sz_small"
             android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
             android:maxLines="3"
             android:gravity="center_vertical"
             android:autoLink="none"
@@ -54,7 +66,9 @@
             android:layout_height="@dimen/avatar_sz_small"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
             android:background="?android:selectableItemBackground"
             android:paddingLeft="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small"

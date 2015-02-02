@@ -11,13 +11,9 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import android.view.animation.TranslateAnimation;
 
 public class ReaderAnim {
 
@@ -82,22 +78,6 @@ public class ReaderAnim {
         getFadeOutAnim(target, duration).start();
     }
 
-    public static void fadeInFadeOut(final View target, Duration duration) {
-        if (target == null || duration == null) {
-            return;
-        }
-
-        ObjectAnimator fadeIn = getFadeInAnim(target, duration);
-        ObjectAnimator fadeOut = getFadeOutAnim(target, duration);
-
-        // keep view visible for passed duration before fading it out
-        fadeOut.setStartDelay(duration.toMillis(target.getContext()));
-
-        AnimatorSet set = new AnimatorSet();
-        set.play(fadeOut).after(fadeIn);
-        set.start();
-    }
-
     public static void scaleIn(final View target, Duration duration) {
         if (target == null || duration == null) {
             return;
@@ -146,35 +126,6 @@ public class ReaderAnim {
         });
 
         animator.start();
-    }
-
-    public static void scaleInScaleOut(final View target, Duration duration) {
-        if (target == null || duration == null) {
-            return;
-        }
-
-        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 0f, 1f);
-        animX.setRepeatMode(ValueAnimator.REVERSE);
-        animX.setRepeatCount(1);
-        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 0f, 1f);
-        animY.setRepeatMode(ValueAnimator.REVERSE);
-        animY.setRepeatCount(1);
-
-        AnimatorSet set = new AnimatorSet();
-        set.play(animX).with(animY);
-        set.setDuration(duration.toMillis(target.getContext()));
-        set.setInterpolator(new AccelerateDecelerateInterpolator());
-        set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                target.setVisibility(View.VISIBLE);
-            }
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                target.setVisibility(View.GONE);
-            }
-        });
-        set.start();
     }
 
     /*
@@ -227,86 +178,46 @@ public class ReaderAnim {
     }
 
     /*
-     * animation when user taps a follow button
+     * used when animating a toolbar in/out
      */
-    public static void animateFollowButton(final TextView txtFollow,
-                                           final boolean isAskingToFollow) {
-        if (txtFollow == null) {
-            return;
-        }
-
-        ObjectAnimator animX = ObjectAnimator.ofFloat(txtFollow, View.SCALE_X, 1f, 0.75f);
-        animX.setRepeatMode(ValueAnimator.REVERSE);
-        animX.setRepeatCount(1);
-
-        ObjectAnimator animY = ObjectAnimator.ofFloat(txtFollow, View.SCALE_Y, 1f, 0.75f);
-        animY.setRepeatMode(ValueAnimator.REVERSE);
-        animY.setRepeatCount(1);
-
-        // change the button text and selection state before scaling back in
-        animX.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-                ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
-            }
-        });
-
-        long durationMillis = Duration.SHORT.toMillis(txtFollow.getContext());
-        AnimatorSet set = new AnimatorSet();
-        set.play(animX).with(animY);
-        set.setDuration(durationMillis / 2);
-        set.setInterpolator(new AccelerateDecelerateInterpolator());
-
-        set.start();
+    public static void animateTopBar(View view, boolean show) {
+        animateBar(view, show, true);
     }
-
-    /*
-     * called when adding or removing an item from a listView
-     */
-    public static enum AnimateListItemStyle {
-        ADD,
-        REMOVE,
-        SHRINK }
-    public static void animateListItem(ListView listView,
-                                       int positionAbsolute,
-                                       AnimateListItemStyle style,
-                                       Animation.AnimationListener listener) {
-        if (listView == null) {
-            return;
-        }
-
-        // passed value is the absolute position of this item, convert to relative or else we'll
-        // remove the wrong item if list is scrolled
-        int firstVisible = listView.getFirstVisiblePosition();
-        int positionRelative = positionAbsolute - firstVisible;
-
-        View listItem = listView.getChildAt(positionRelative);
-        if (listItem == null) {
-            return;
-        }
-
-        final int animResId;
-        switch (style) {
-            case ADD:
-                animResId = R.anim.reader_listitem_add;
-                break;
-            case REMOVE:
-                animResId = R.anim.reader_listitem_remove;
-                break;
-            case SHRINK:
-                animResId = R.anim.reader_listitem_shrink;
-                break;
-            default:
-                return;
-        }
-
-        Animation animation = AnimationUtils.loadAnimation(listView.getContext(), animResId);
-
-        if (listener != null) {
-            animation.setAnimationListener(listener);
-        }
-
-        listItem.startAnimation(animation);
+    public static void animateBottomBar(View view, boolean show) {
+        animateBar(view, show, false);
     }
+    private static void animateBar(View view, boolean show, boolean isTopBar) {
+        int newVisibility = (show ? View.VISIBLE : View.GONE);
+        if (view == null || view.getVisibility() == newVisibility) {
+            return;
+        }
 
+        float fromY;
+        float toY;
+        if (isTopBar) {
+            fromY = (show ? -1f : 0f);
+            toY   = (show ? 0f : -1f);
+        } else {
+            fromY = (show ? 1f : 0f);
+            toY   = (show ? 0f : 1f);
+        }
+        Animation animation = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, fromY,
+                Animation.RELATIVE_TO_SELF, toY);
+
+        long durationMillis = Duration.MEDIUM.toMillis(view.getContext());
+        animation.setDuration(durationMillis);
+
+        if (show) {
+            animation.setInterpolator(new DecelerateInterpolator());
+        } else {
+            animation.setInterpolator(new AccelerateInterpolator());
+        }
+
+        view.clearAnimation();
+        view.startAnimation(animation);
+        view.setVisibility(newVisibility);
+    }
 }

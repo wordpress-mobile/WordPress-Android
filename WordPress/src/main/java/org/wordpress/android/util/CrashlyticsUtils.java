@@ -7,7 +7,7 @@ public class CrashlyticsUtils {
     final private static String TAG_KEY = "tag";
     final private static String MESSAGE_KEY = "message";
     public enum ExceptionType {USUAL, SPECIFIC}
-    public enum ExtraKey {IMAGE_ANGLE, IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_RESIZE_SCALE, NOTE_HTMLDATA}
+    public enum ExtraKey {IMAGE_ANGLE, IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_RESIZE_SCALE, NOTE_HTMLDATA, ENTERED_URL}
 
     public static void logException(Throwable tr, ExceptionType exceptionType, AppLog.T tag, String message) {
         if (tag != null) {
