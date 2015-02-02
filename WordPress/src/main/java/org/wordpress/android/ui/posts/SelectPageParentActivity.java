@@ -37,9 +37,10 @@ import java.util.Vector;
 
 public class SelectPageParentActivity extends ActionBarActivity {
     public static final int PAGES_REQUEST_COUNT = 100;
+    public static final int BASE_SCROLL_DURATION = 200;
 
     private ListView mListView;
-    HierarchyListAdapter mListAdapter;
+    private HierarchyListAdapter mListAdapter;
     private ListScrollPositionManager mListScrollPositionManager;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private int mSelectedParentId;
@@ -47,7 +48,7 @@ public class SelectPageParentActivity extends ActionBarActivity {
     private Blog mBlog;
     private int mPageId;
     private ArrayList<HierarchyNode> mPageLevels;
-    private Map<Integer, Integer> mPageIds = new HashMap<>();
+    private final Map<Integer, Integer> mPageIds = new HashMap<>();
 
     private ApiHelper.FetchPageListTask mCurrentFetchPageListTask;
 
@@ -157,7 +158,7 @@ public class SelectPageParentActivity extends ActionBarActivity {
             public void run() {
                 int checkedPosition = mListView.getCheckedItemPosition();
                 if (mListView.getLastVisiblePosition() < checkedPosition) {
-                    mListView.setSelectionFromTop(checkedPosition - 1, 0);
+                    mListView.setSelection(checkedPosition - 1);
                 }
             }
         });
@@ -197,8 +198,22 @@ public class SelectPageParentActivity extends ActionBarActivity {
                     mListView.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (mListView.getLastVisiblePosition() < checkedPosition) {
-                                mListView.setSelectionFromTop(checkedPosition - 1, 0);
+                            // Emulates smoothScrollToPosition, but with a more consistent scroll time
+                            // (smoothScrollToPosition takes many seconds to scroll through hundreds of items)
+                            int distance = checkedPosition - mListView.getLastVisiblePosition();
+                            if (distance >= 0) {
+                                // Scale the duration logarithmically with distance
+                                int duration = (int) (Math.log10(distance)) * BASE_SCROLL_DURATION;
+                                // Set the ListView to a fast scroll, then halfway through jump to the real target
+                                // This makes the ListView appear to have scrolled smoothly to the checked position
+                                mListView.smoothScrollBy(mListView.getHeight() * mPageLevels.size(), 2 * duration);
+                                mListView.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mListView.smoothScrollBy(0, 0); // Keep the scroll from overshooting
+                                        mListView.setSelection(checkedPosition - 1);
+                                    }
+                                }, duration);
                             }
                         }
                     });
@@ -207,7 +222,7 @@ public class SelectPageParentActivity extends ActionBarActivity {
         }
     }
 
-    public void fetchPosts() {
+    private void fetchPosts() {
         List<Object> apiArgs = new Vector<>();
         apiArgs.add(WordPress.getCurrentBlog());
         apiArgs.add(PAGES_REQUEST_COUNT);
@@ -311,6 +326,6 @@ public class SelectPageParentActivity extends ActionBarActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong("last_updated_blog_" + mBlog.getLocalTableBlogId(), System.currentTimeMillis());
-        editor.commit();
+        editor.apply();
     }
 }
