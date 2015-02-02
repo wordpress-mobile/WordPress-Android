@@ -58,7 +58,7 @@ public class SelectCategoriesActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.select_categories);
+        setContentView(R.layout.hierarchy_activity);
         setTitle(getResources().getString(R.string.select_categories));
 
         ActionBar actionBar = getSupportActionBar();
