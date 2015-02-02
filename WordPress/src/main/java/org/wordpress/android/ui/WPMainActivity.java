@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
@@ -25,6 +26,11 @@ import org.wordpress.android.widgets.WPMainViewPager;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
+
+/*
+ * TODO: handle notifications & reader with no wp.com account
+ */
+
 public class WPMainActivity extends ActionBarActivity
     implements ViewPager.OnPageChangeListener
 {
@@ -34,6 +40,10 @@ public class WPMainActivity extends ActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.color_status_bar));
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -139,7 +149,7 @@ public class WPMainActivity extends ActionBarActivity
     }
 
     /*
-     * returns the reader post list fragment
+     * returns the reader list fragment from the reader tab
      */
     private ReaderPostListFragment getReaderListFragment() {
         Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_READER);
@@ -180,8 +190,7 @@ public class WPMainActivity extends ActionBarActivity
             if (intent == null || intent.getAction() == null) {
                 return;
             }
-            String action = intent.getAction();
-            switch (action) {
+            switch (intent.getAction()) {
                 case WordPress.BROADCAST_ACTION_SIGNOUT:
                     showSignIn();
                     break;
@@ -189,7 +198,7 @@ public class WPMainActivity extends ActionBarActivity
                     AuthenticationDialogUtils.showAuthErrorDialog(WPMainActivity.this);
                     break;
                 case SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED:
-                    // TODO: only show when notifications are active (?)
+                    // TODO: this applies to the notifications tab, should show message there
                     AuthenticationDialogUtils.showAuthErrorDialog(
                             WPMainActivity.this,
                             R.string.sign_in_again,

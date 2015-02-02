@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -203,12 +201,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
         detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
         detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard);
-
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.reader_activity_slide_in,
-                R.anim.reader_activity_scale_out);
-        ActivityCompat.startActivityForResult(activity, detailIntent, RequestCodes.NOTE_DETAIL, options.toBundle());
+        activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }

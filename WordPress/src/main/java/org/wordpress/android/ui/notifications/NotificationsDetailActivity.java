@@ -12,7 +12,6 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -93,12 +92,6 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.reader_activity_scale_in, R.anim.reader_activity_slide_out);
     }
 
     @Override
