@@ -426,15 +426,20 @@ public class PostsActivity extends WPDrawerActivity
                     dialogBuilder.create().show();
                 }
             } else {
+                String deletePostMessage = getResources().getText(
+                        (post.isPage()) ? R.string.delete_sure_page
+                                : R.string.delete_sure_post).toString();
+                if (!post.getTitle().isEmpty()) {
+                    String postTitleEnclosedByQuotes = "'" + post.getTitle() + "'";
+                    deletePostMessage += " " + postTitleEnclosedByQuotes;
+                }
+
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                         PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(
                         (post.isPage()) ? R.string.delete_page
                                 : R.string.delete_post));
-                dialogBuilder.setMessage(getResources().getText(
-                        (post.isPage()) ? R.string.delete_sure_page
-                                : R.string.delete_sure_post)
-                        + " '" + post.getTitle() + "'?");
+                dialogBuilder.setMessage(deletePostMessage + "?");
                 dialogBuilder.setPositiveButton(
                         getResources().getText(R.string.yes),
                         new DialogInterface.OnClickListener() {
