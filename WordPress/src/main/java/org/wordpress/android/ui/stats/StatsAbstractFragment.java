@@ -71,6 +71,9 @@ public abstract class StatsAbstractFragment extends Fragment {
             case FOLLOWERS:
                 fragment = new StatsFollowersFragment();
                 break;
+            case SEARCH_TERMS:
+                fragment = new StatsSearchTermsFragment();
+                break;
         }
 
         Bundle args = new Bundle();

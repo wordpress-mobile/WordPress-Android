@@ -36,7 +36,8 @@ public class StatsService extends Service {
     public static final String ARG_UPDATE_ALLTIME_STATS = "ARG_UPDATE_ALLTIME_STATS";
     public static final String ARG_UPDATE_GRAPH_STATS = "ARG_UPDATE_GRAPH_STATS";
     public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS,
-        VIDEO_PLAYS, COMMENTS, FOLLOWERS_WPCOM, FOLLOWERS_EMAIL, COMMENT_FOLLOWERS, TAGS_AND_CATEGORIES, PUBLICIZE}
+        VIDEO_PLAYS, COMMENTS, FOLLOWERS_WPCOM, FOLLOWERS_EMAIL, COMMENT_FOLLOWERS, TAGS_AND_CATEGORIES,
+        PUBLICIZE, SEARCH_TERMS}
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "ACTION_STATS_UPDATING";
@@ -204,6 +205,11 @@ public class StatsService extends Service {
                     RestListener videoPlaysListener = new RestListener(StatsEndpointsEnum.VIDEO_PLAYS, mServiceBlogId, mServiceRequestedTimeframe);
                     final String videoPlaysPath = String.format("/sites/%s/stats/video-plays?period=%s&date=%s&max=%s", mServiceBlogId, period, mServiceRequestedDate, 12);
                     mStatsNetworkRequests.add(restClientUtils.get(videoPlaysPath, videoPlaysListener, videoPlaysListener));
+
+                    // Video plays
+                    RestListener searchTermsListener = new RestListener(StatsEndpointsEnum.SEARCH_TERMS, mServiceBlogId, mServiceRequestedTimeframe);
+                    final String searchTermsPath = String.format("/sites/%s/stats/search-terms?period=%s&date=%s&max=%s", mServiceBlogId, period, mServiceRequestedDate, 12);
+                    mStatsNetworkRequests.add(restClientUtils.get(searchTermsPath, searchTermsListener, searchTermsListener));
 
                     if (updateAlltimeStats) {
                         // Comments

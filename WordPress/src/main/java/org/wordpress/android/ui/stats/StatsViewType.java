@@ -17,4 +17,5 @@ public enum StatsViewType {
     TAGS_AND_CATEGORIES,
     PUBLICIZE,
     FOLLOWERS,
+    SEARCH_TERMS,
 }
