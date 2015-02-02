@@ -25,6 +25,7 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 class WPMainTabAdapter extends FragmentStatePagerAdapter {
 
     private static final int NUM_TABS = 4;
+
     static final int TAB_SITES  = 0;
     static final int TAB_READER = 1;
     static final int TAB_ME     = 2;
@@ -70,23 +71,6 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
                 return NotificationsListFragment.newInstance();
             default:
                 return null;
-        }
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        // TODO: use icons rather than text
-        switch (position) {
-            case TAB_SITES:
-                return "Sites";
-            case TAB_READER:
-                return "Reader";
-            case TAB_ME:
-                return "Me";
-            case TAB_NOTIFS:
-                return "Notes";
-            default:
-                return super.getPageTitle(position);
         }
     }
 
