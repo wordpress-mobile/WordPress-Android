@@ -135,9 +135,17 @@ public class SelectPageParentActivity extends ActionBarActivity {
                 setUpdated();
             } else {
                 if (NetworkUtils.isNetworkAvailable(this)) {
-                    mSwipeToRefreshHelper.setRefreshing(true);
-                    mAutoScrollToCheckedPosition = true;
-                    refreshPages();
+                    // Workaround for swipe to refresh bug: https://code.google.com/p/android/issues/detail?id=77712
+                    // Runnable can be removed once bug is fixed or a workaround is built into SwipeToRefreshHelper
+                    // Delay starting the refresh to make sure the SwipeRefreshLayout animation displays
+                    mListView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mSwipeToRefreshHelper.setRefreshing(true);
+                            mAutoScrollToCheckedPosition = true;
+                            refreshPages();
+                        }
+                    }, 250);
                     return;
                 }
             }
