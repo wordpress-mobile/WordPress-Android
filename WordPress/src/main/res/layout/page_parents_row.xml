@@ -6,11 +6,11 @@
         android:layout_height="@dimen/category_row_height"
         android:orientation="horizontal"
         android:background="@drawable/page_parents_selector"
-        android:id="@+id/pagesRow" android:clickable="false">
+        android:id="@+id/hierarchyRow" android:clickable="false">
     <ImageView android:layout_width="@dimen/category_row_height"
                android:layout_height="@dimen/category_row_height"
                android:src="@drawable/ic_level_indicator"
-               android:id="@+id/pageRowLevelIndicator" android:scaleType="fitEnd"/>
+               android:id="@+id/hierarchyRowLevelIndicator" android:scaleType="fitEnd"/>
     <TextView
             android:orientation="vertical"
             android:layout_width="fill_parent"
@@ -21,5 +21,5 @@
             android:paddingLeft="6dip"
             android:paddingRight="6dip"
             android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-            android:id="@+id/pagesRowText"/>
+            android:id="@+id/hierarchyRowText"/>
 </LinearLayout>

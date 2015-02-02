@@ -17,7 +17,9 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.PageNode;
+import org.wordpress.android.models.HierarchyNode;
+import org.wordpress.android.models.HierarchyNode.HierarchyType;
+import org.wordpress.android.ui.posts.adapters.HierarchyListAdapter;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -37,14 +39,14 @@ public class SelectPageParentActivity extends ActionBarActivity {
     public static final int PAGES_REQUEST_COUNT = 100;
 
     private ListView mListView;
-    PageParentArrayAdapter mPageAdapter;
+    HierarchyListAdapter mListAdapter;
     private ListScrollPositionManager mListScrollPositionManager;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private int mSelectedParentId;
 
     private Blog mBlog;
     private int mPageId;
-    private ArrayList<PageNode> mPageLevels;
+    private ArrayList<HierarchyNode> mPageLevels;
     private Map<Integer, Integer> mPageIds = new HashMap<>();
 
     private ApiHelper.FetchPageListTask mCurrentFetchPageListTask;
@@ -72,13 +74,13 @@ public class SelectPageParentActivity extends ActionBarActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                PageNode selectedParent = mPageLevels.get(position);
-                if (selectedParent.getPageId() == mPageId || selectedParent.isDescendantOfPageWithId(mPageId)) {
+                HierarchyNode selectedParent = mPageLevels.get(position);
+                if (selectedParent.getId() == mPageId || selectedParent.isDescendantOfId(mPageId)) {
                     // Can't set the parent of a page to the page itself or its descendants
                     // Return to previously selected parent
                     mListView.setItemChecked(mPageIds.get(mSelectedParentId), true);
                 } else {
-                    mSelectedParentId = selectedParent.getPageId();
+                    mSelectedParentId = selectedParent.getId();
                 }
             }
         });
@@ -155,15 +157,15 @@ public class SelectPageParentActivity extends ActionBarActivity {
 
     private void populatePageList(boolean recreated) {
         int blogId = mBlog.getLocalTableBlogId();
-        PageNode pageTree = PageNode.createPageTreeFromDB(blogId);
-        mPageLevels = PageNode.getSortedListOfPagesFromRoot(pageTree);
+        HierarchyNode pageTree = HierarchyNode.createTreeFromDB(blogId, HierarchyType.PAGE);
+        mPageLevels = HierarchyNode.getSortedListFromRoot(pageTree);
 
         // Add default "(no parent)" option to the top of the list
-        mPageLevels.add(0, new PageNode(0, 0, getString(R.string.no_parent)));
+        mPageLevels.add(0, new HierarchyNode(0, 0, getString(R.string.no_parent)));
 
         mPageIds.clear();
         for (int i = 0; i < mPageLevels.size(); i++) {
-            mPageIds.put(mPageLevels.get(i).getPageId(), i);
+            mPageIds.put(mPageLevels.get(i).getId(), i);
         }
 
         // Re-assign current selected parent id in case it was changed in a recent refresh
@@ -171,8 +173,8 @@ public class SelectPageParentActivity extends ActionBarActivity {
             mSelectedParentId = mPageLevels.get(mPageIds.get(mPageId)).getParentId();
         }
 
-        mPageAdapter = new PageParentArrayAdapter(this, R.layout.page_parents_row, mPageLevels);
-        mListView.setAdapter(mPageAdapter);
+        mListAdapter = new HierarchyListAdapter(this, R.layout.page_parents_row, mPageLevels);
+        mListView.setAdapter(mListAdapter);
 
         if (mPageIds.containsKey(mSelectedParentId)) {
             final int checkedPosition = mPageIds.get(mSelectedParentId);

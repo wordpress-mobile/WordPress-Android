@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts;
+package org.wordpress.android.ui.posts.adapters;
 
 import android.content.Context;
 import android.text.Html;
@@ -10,14 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.PageNode;
+import org.wordpress.android.models.HierarchyNode;
 
 import java.util.List;
 
-public class PageParentArrayAdapter extends ArrayAdapter<PageNode> {
+public class HierarchyListAdapter extends ArrayAdapter<HierarchyNode> {
     private final int mResourceId;
 
-    public PageParentArrayAdapter(Context context, int resource, List<PageNode> objects) {
+    public HierarchyListAdapter(Context context, int resource, List<HierarchyNode> objects) {
         super(context, resource, objects);
         mResourceId = resource;
     }
@@ -36,8 +36,8 @@ public class PageParentArrayAdapter extends ArrayAdapter<PageNode> {
             convertView = inflater.inflate(mResourceId, parent, false);
 
             viewHolder = new ViewHolder();
-            viewHolder.title = (TextView) convertView.findViewById(R.id.pagesRowText);
-            viewHolder.levelIndicator = (ImageView) convertView.findViewById(R.id.pageRowLevelIndicator);
+            viewHolder.title = (TextView) convertView.findViewById(R.id.hierarchyRowText);
+            viewHolder.levelIndicator = (ImageView) convertView.findViewById(R.id.hierarchyRowLevelIndicator);
 
             convertView.setTag(viewHolder);
         } else {
