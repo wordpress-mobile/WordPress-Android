@@ -256,6 +256,9 @@
         <activity
             android:name=".ui.notifications.NotificationsActivity"
             android:theme="@style/WordPress.DrawerActivity" />
+        <activity
+            android:name=".ui.notifications.NotificationsDetailActivity"
+            android:theme="@style/CalypsoTheme" />
 
         <!--  Passcode lock activities -->
         <activity

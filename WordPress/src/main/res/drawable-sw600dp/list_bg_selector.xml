@@ -14,6 +14,5 @@
     android:state_activated="true"
     android:drawable="@color/list_selected" />
 
-<item
-    android:drawable="@android:color/transparent" />
+<item android:drawable="@color/white" />
 </selector>
