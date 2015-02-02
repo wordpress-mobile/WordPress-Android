@@ -49,7 +49,7 @@ public class HierarchyListAdapter extends ArrayAdapter<HierarchyNode> {
         // Handle indicator visibility and indentation
         int level = getItem(position).getLevel();
         ViewGroup.LayoutParams params = viewHolder.levelIndicator.getLayoutParams();
-        int baseWidth = (int) getContext().getResources().getDimension(R.dimen.category_row_height);
+        int baseWidth = (int) getContext().getResources().getDimension(R.dimen.hierarchy_row_height);
         if (level == 1) {
             params.width = baseWidth;
             viewHolder.levelIndicator.setLayoutParams(params);

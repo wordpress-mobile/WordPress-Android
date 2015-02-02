@@ -6,8 +6,8 @@
         android:layout_height="@dimen/category_parent_spinner_row_height"
         android:orientation="horizontal"
         android:id="@+id/categoryRow" android:clickable="false">
-    <ImageView android:layout_width="@dimen/category_row_height"
-               android:layout_height="@dimen/category_row_height"
+    <ImageView android:layout_width="@dimen/hierarchy_row_height"
+               android:layout_height="@dimen/hierarchy_row_height"
                android:src="@drawable/ic_level_indicator"
                android:id="@+id/categoryRowLevelIndicator" android:scaleType="fitEnd"/>
     <TextView
