@@ -627,10 +627,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Selected Install Jetpack");
                 break;
-            case MEMORY_TRIMMED_COMPLETE:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Memory Trimmed Complete");
-                break;
             case PUSH_NOTIFICATION_RECEIVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Push Notification Received");
