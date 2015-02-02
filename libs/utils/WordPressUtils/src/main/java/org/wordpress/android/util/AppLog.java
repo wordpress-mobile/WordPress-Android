@@ -33,31 +33,37 @@ public class AppLog {
     }
 
     public static void v(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.v(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.v, message);
     }
 
     public static void d(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.d(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.d, message);
     }
 
     public static void i(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.i(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.i, message);
     }
 
     public static void w(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.w(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.w, message);
     }
 
     public static void e(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.e(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.e, message);
     }
 
     public static void e(T tag, String message, Throwable tr) {
+        message = StringUtils.notNullStr(message);
         Log.e(TAG + "-" + tag.toString(), message, tr);
         addEntry(tag, LogLevel.e, message + " - exception: " + tr.getMessage());
         addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(tr));
