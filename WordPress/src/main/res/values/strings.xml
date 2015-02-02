@@ -385,7 +385,7 @@
     <string name="stats_view_referrers">Referrers</string>
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_comments">Comments</string>
-    <string name="stats_view_search_engine_terms">Search engine terms</string>
+    <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
 
@@ -400,6 +400,7 @@
     <string name="stats_entry_top_commenter">Author</string>
     <string name="stats_entry_publicize">Service</string>
     <string name="stats_entry_followers">Follower</string>
+    <string name="stats_entry_search_terms">Search Term</string>
 
     <!-- stats: label for the totals -->
     <string name="stats_totals_views">Views</string>
@@ -434,6 +435,8 @@
     <string name="stats_empty_publicize_desc">Keep track of your followers from various social networking services using publicize.</string>
     <string name="stats_empty_followers">No followers</string>
     <string name="stats_empty_followers_desc">Keep track of your overall number of followers, and how long each one has been following your site.</string>
+    <string name="stats_empty_search_terms">No search terms recorded</string>
+    <string name="stats_empty_search_terms_desc">Learn more about your search traffic by looking at the terms your visitors searched for to find your site.</string>
 
     <!-- stats: views and visitors -->
     <string name="stats_visitors_and_views_header_today">Today</string>
@@ -461,6 +464,9 @@
     <string name="stats_followers_months">%1$d months</string>
     <string name="stats_followers_a_year">A year</string>
     <string name="stats_followers_years">%1$d years</string>
+
+    <!-- stats: search terms -->
+    <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
 
     <!-- Stats: Single post details view -->
     <string name="stats_period">Period</string>

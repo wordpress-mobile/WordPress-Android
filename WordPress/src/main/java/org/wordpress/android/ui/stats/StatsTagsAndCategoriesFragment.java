@@ -63,7 +63,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.TAGS_AND_CATEGORIES
         };
