@@ -527,6 +527,7 @@
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
     <string name="more">More</string>
+    <string name="error_notification_open">Could not open notification</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
