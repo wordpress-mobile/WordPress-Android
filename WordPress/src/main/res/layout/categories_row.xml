@@ -5,11 +5,11 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/category_row_height"
         android:orientation="horizontal"
-        android:id="@+id/categoryRow" android:clickable="false">
+        android:id="@+id/hierarchyRow" android:clickable="false">
     <ImageView android:layout_width="@dimen/category_row_height"
                android:layout_height="@dimen/category_row_height"
                android:src="@drawable/ic_level_indicator"
-               android:id="@+id/categoryRowLevelIndicator" android:scaleType="fitEnd"/>
+               android:id="@+id/hierarchyRowLevelIndicator" android:scaleType="fitEnd"/>
     <CheckedTextView
             android:orientation="vertical"
             android:layout_width="fill_parent"
@@ -20,5 +20,5 @@
             android:paddingLeft="6dip"
             android:paddingRight="6dip"
             android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-            android:id="@+id/categoryRowText"/>
+            android:id="@+id/hierarchyRowText"/>
 </org.wordpress.android.widgets.CheckedLinearLayout>

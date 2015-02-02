@@ -10,21 +10,21 @@ import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import org.wordpress.android.R;
-import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.models.HierarchyNode;
 
 import java.util.List;
 
 
 public class ParentCategorySpinnerAdapter extends BaseAdapter implements SpinnerAdapter {
     int mResourceId;
-    List<CategoryNode> mObjects;
+    List<HierarchyNode> mObjects;
     Context mContext;
 
     public int getCount() {
         return mObjects.size();
     }
 
-    public CategoryNode getItem(int position) {
+    public HierarchyNode getItem(int position) {
         return mObjects.get(position);
     }
 
@@ -32,7 +32,7 @@ public class ParentCategorySpinnerAdapter extends BaseAdapter implements Spinner
         return position;
     }
 
-    public ParentCategorySpinnerAdapter(Context context, int resource, List<CategoryNode> objects) {
+    public ParentCategorySpinnerAdapter(Context context, int resource, List<HierarchyNode> objects) {
         super();
         mContext = context;
         mObjects = objects;

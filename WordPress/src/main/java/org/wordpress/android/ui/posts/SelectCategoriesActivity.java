@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,7 +19,9 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.models.HierarchyNode;
+import org.wordpress.android.models.HierarchyNode.HierarchyType;
+import org.wordpress.android.ui.posts.adapters.HierarchyListAdapter;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListScrollPositionManager;
@@ -48,8 +49,8 @@ public class SelectCategoriesActivity extends ActionBarActivity {
     private ListScrollPositionManager mListScrollPositionManager;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private HashSet<String> mSelectedCategories;
-    private CategoryNode mCategories;
-    private ArrayList<CategoryNode> mCategoryLevels;
+    private HierarchyNode mCategories;
+    private ArrayList<HierarchyNode> mCategoryLevels;
     private Map<String, Integer> mCategoryNames = new HashMap<String, Integer>();
     XMLRPCClientInterface mClient;
 
@@ -125,13 +126,13 @@ public class SelectCategoriesActivity extends ActionBarActivity {
     }
 
     private void populateCategoryList() {
-        mCategories = CategoryNode.createCategoryTreeFromDB(blog.getLocalTableBlogId());
-        mCategoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(mCategories);
+        mCategories = HierarchyNode.createTreeFromDB(blog.getLocalTableBlogId(), HierarchyType.CATEGORY);
+        mCategoryLevels = HierarchyNode.getSortedListFromRoot(mCategories);
         for (int i = 0; i < mCategoryLevels.size(); i++) {
             mCategoryNames.put(StringUtils.unescapeHTML(mCategoryLevels.get(i).getName()), i);
         }
 
-        CategoryArrayAdapter categoryAdapter = new CategoryArrayAdapter(this, R.layout.categories_row, mCategoryLevels);
+        HierarchyListAdapter categoryAdapter = new HierarchyListAdapter(this, R.layout.categories_row, mCategoryLevels);
         mListView.setAdapter(categoryAdapter);
         if (mSelectedCategories != null) {
             for (String selectedCategory : mSelectedCategories) {
