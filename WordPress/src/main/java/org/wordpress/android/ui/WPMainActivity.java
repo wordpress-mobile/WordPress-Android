@@ -40,6 +40,12 @@ public class WPMainActivity extends ActionBarActivity
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
 
+    private int mPreviousPosition = -1;
+
+    public interface FragmentVisibilityListener {
+        public void onVisibilityChanged(boolean isVisible);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -91,7 +97,22 @@ public class WPMainActivity extends ActionBarActivity
 
     @Override
     public void onPageSelected(int position) {
+        // remember the index of this page
         AppPrefs.setMainTabIndex(position);
+
+        // tell the previous fragment that it's being hidden
+        Fragment previousFragment = mTabAdapter.getFragment(mPreviousPosition);
+        if (previousFragment instanceof FragmentVisibilityListener) {
+            ((FragmentVisibilityListener) previousFragment).onVisibilityChanged(false);
+        }
+
+        // tell this fragment that it's being shown
+        Fragment thisFragment = mTabAdapter.getFragment(position);
+        if (thisFragment instanceof FragmentVisibilityListener) {
+            ((FragmentVisibilityListener) thisFragment).onVisibilityChanged(true);
+        }
+
+        mPreviousPosition = position;
     }
 
     @Override
@@ -151,6 +172,7 @@ public class WPMainActivity extends ActionBarActivity
     }
 
     private void showSignIn() {
+        mPreviousPosition = -1;
         startActivityForResult(new Intent(this, SignInActivity.class), RequestCodes.ADD_ACCOUNT);
     }
 

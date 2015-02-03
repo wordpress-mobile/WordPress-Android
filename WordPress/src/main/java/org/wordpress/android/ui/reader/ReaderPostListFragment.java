@@ -47,8 +47,10 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderRefreshType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -95,8 +97,8 @@ import java.util.concurrent.TimeUnit;
 public class ReaderPostListFragment extends Fragment
     implements ReaderInterfaces.OnReaderPostSelectedListener,
                ReaderInterfaces.OnReaderTagSelectedListener,
-               ReaderInterfaces.OnPostPopupListener
-{
+               ReaderInterfaces.OnPostPopupListener,
+               WPMainActivity.FragmentVisibilityListener {
 
     private ScheduledExecutorService mUpdateScheduler;
 
@@ -251,14 +253,12 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        unregisterReceiver();
         mWasPaused = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        registerReceiver();
 
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
@@ -268,14 +268,28 @@ public class ReaderPostListFragment extends Fragment
             refreshPosts();
             // likewise for tags
             refreshTags();
+        }
+    }
 
+    /*
+     * called by the main activity when the page containing this fragment is shown/hidden
+     */
+    @Override
+    public void onVisibilityChanged(boolean isVisible) {
+        AppLog.d(T.READER, "reader post list > onVisibilityChanged " + isVisible);
+
+        if (isVisible) {
             // auto-update the current tag if it's time
             if (!isUpdating()
                     && getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                    && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
-                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.ReaderRefreshType.AUTOMATIC);
+                    && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag())) {
+                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderRefreshType.AUTOMATIC);
             }
+
+            startUpdater();
+            registerReceiver();
+        } else {
+            unregisterReceiver();
         }
     }
 
@@ -376,7 +390,7 @@ public class ReaderPostListFragment extends Fragment
                         switch (getPostListType()) {
                             case TAG_FOLLOWED:
                             case TAG_PREVIEW:
-                                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.ReaderRefreshType.MANUAL);
+                                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderRefreshType.MANUAL);
                                 break;
                             case BLOG_PREVIEW:
                                 updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
@@ -449,9 +463,6 @@ public class ReaderPostListFragment extends Fragment
         if (!adapterAlreadyExists && getPostListType().isTagType()) {
             boolean isRecreated = (savedInstanceState != null);
             getPostAdapter().setCurrentTag(mCurrentTag);
-            if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.ReaderRefreshType.AUTOMATIC);
-            }
         }
 
         if (getPostListType().isPreviewType()) {
@@ -472,12 +483,10 @@ public class ReaderPostListFragment extends Fragment
         getPostAdapter().setOnPostSelectedListener(this);
         getPostAdapter().setOnTagSelectedListener(this);
         getPostAdapter().setOnPostPopupListener(this);
-
-        startUpdater();
     }
 
     /*
-     * start updating tags & blogs after 500ms, then update them hourly
+     * start updating followed tags & blogs after 500ms, then update them hourly
      */
     private void startUpdater() {
         if (mUpdateScheduler == null) {
@@ -501,7 +510,9 @@ public class ReaderPostListFragment extends Fragment
     * start background service to get the latest reader followed tags and blogs
     */
     void updateReaderFollowed() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
         AppLog.d(AppLog.T.READER, "updating reader followed tags and blogs");
         ReaderUpdateService.startService(getActivity(),
                 EnumSet.of(ReaderUpdateService.UpdateTask.TAGS,
@@ -582,7 +593,7 @@ public class ReaderPostListFragment extends Fragment
                         updatePostsWithTag(
                                 getCurrentTag(),
                                 ReaderActions.RequestDataAction.LOAD_NEWER,
-                                ReaderTypes.ReaderRefreshType.AUTOMATIC);
+                                ReaderRefreshType.AUTOMATIC);
                     }
                 }
                 break;
@@ -813,7 +824,7 @@ public class ReaderPostListFragment extends Fragment
                     // skip if we already have the max # of posts
                     if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         // request older posts
-                        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_OLDER, ReaderTypes.ReaderRefreshType.MANUAL);
+                        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_OLDER, ReaderRefreshType.MANUAL);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                     }
                     break;
@@ -929,7 +940,7 @@ public class ReaderPostListFragment extends Fragment
 
         // update posts in this tag if it's time to do so
         if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
-            updatePostsWithTag(tag, RequestDataAction.LOAD_NEWER, ReaderTypes.ReaderRefreshType.AUTOMATIC);
+            updatePostsWithTag(tag, RequestDataAction.LOAD_NEWER, ReaderRefreshType.AUTOMATIC);
         }
     }
 
@@ -1021,7 +1032,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     public void updateCurrentTag() {
-        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.ReaderRefreshType.AUTOMATIC);
+        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderRefreshType.AUTOMATIC);
     }
 
     /*
@@ -1029,7 +1040,7 @@ public class ReaderPostListFragment extends Fragment
      */
     public void updatePostsWithTag(final ReaderTag tag,
                             final RequestDataAction updateAction,
-                            final ReaderTypes.ReaderRefreshType refreshType) {
+                            final ReaderRefreshType refreshType) {
         if (tag == null) {
             return;
         }
@@ -1054,7 +1065,7 @@ public class ReaderPostListFragment extends Fragment
 
         // if this is "Posts I Like" or "Blogs I Follow" and it's a manual refresh (user tapped refresh icon),
         // refresh the posts so posts that were unliked/unfollowed no longer appear
-        if (refreshType == ReaderTypes.ReaderRefreshType.MANUAL && isCurrentTag(tag)) {
+        if (refreshType == ReaderRefreshType.MANUAL && isCurrentTag(tag)) {
             if (tag.getTagName().equals(ReaderTag.TAG_NAME_LIKED) || tag.getTagName().equals(ReaderTag.TAG_NAME_FOLLOWING))
                 refreshPosts();
         }
