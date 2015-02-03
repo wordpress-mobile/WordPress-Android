@@ -307,7 +307,7 @@ public class WPNetworkImageView extends ImageView {
                 setImageResource(R.drawable.shape_oval_grey_light);
                 break;
             case STATS_SITE_AVATAR:
-                setImageDrawable(new ColorDrawable(getColorRes(R.color.calypso_blue_border)));
+                setImageResource(R.drawable.stats_icon_default_site_avatar);
                 break;
             default :
                 // light grey box for all others
@@ -334,7 +334,7 @@ public class WPNetworkImageView extends ImageView {
                 setImageResource(R.drawable.gravatar_placeholder);
                 break;
             case STATS_SITE_AVATAR:
-                setImageDrawable(new ColorDrawable(getColorRes(R.color.calypso_blue_border)));
+                setImageResource(R.drawable.stats_icon_default_site_avatar);
                 break;
             default :
                 // medium grey box for all others

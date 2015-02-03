@@ -339,6 +339,11 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
         }
 
+        if (fm.findFragmentByTag(StatsSearchTermsFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.SEARCH_TERMS, mLocalBlogID);
+            ft.replace(R.id.stats_search_terms_container, fragment, StatsSearchTermsFragment.TAG);
+        }
+
         if (loadAlltimeFragmets) {
             if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
                 fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID);
