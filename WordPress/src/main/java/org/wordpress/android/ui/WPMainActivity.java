@@ -60,7 +60,7 @@ public class WPMainActivity extends ActionBarActivity
                            R.drawable.main_tabicon_reader,
                            R.drawable.main_tabicon_me,
                            R.drawable.main_tabicon_notes};
-        mTabs.setCustomIconView(R.layout.tab_icon, R.id.image_icon, icons);
+        mTabs.setCustomTabView(R.layout.tab_icon, R.id.image_icon, icons);
         mTabs.setViewPager(mViewPager);
 
         // page change listener must be set on the tab layout rather than the ViewPager

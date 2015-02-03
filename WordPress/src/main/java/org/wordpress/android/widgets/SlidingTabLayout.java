@@ -20,8 +20,8 @@
 
 
 /***
- * IMPORTANT!! this differs from the original in that it has been hacked to optionally
- * support icons rather than text via the setIcons() method
+ * IMPORTANT!! this differs from the original in that it has been hacked for WordPress Android
+ * to optionally support icons rather than text via the setIcons() method
  */
 
 package org.wordpress.android.widgets;
@@ -84,7 +84,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private Integer[] mIcons;
     private int mTabViewIconViewId;
-    private boolean mUseIcons;
 
     private ViewPager mViewPager;
     private SparseArray<String> mContentDescriptions = new SparseArray<String>();
@@ -159,11 +158,13 @@ public class SlidingTabLayout extends HorizontalScrollView {
         mTabViewTextViewId = textViewId;
     }
 
-    public void setCustomIconView(int layoutResId, int imageViewId, Integer[] icons) {
+    /*
+     * use this version to display icons rather than text
+     */
+    public void setCustomTabView(int layoutResId, int imageViewId, Integer[] icons) {
         mTabViewLayoutId = layoutResId;
         mTabViewIconViewId = imageViewId;
         mIcons = icons;
-        mUseIcons = true;
     }
 
     /**
@@ -207,10 +208,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private void populateTabStrip() {
         final PagerAdapter adapter = mViewPager.getAdapter();
         final View.OnClickListener tabClickListener = new TabClickListener();
+        boolean showIcons = (mIcons != null && mIcons.length == adapter.getCount() && mTabViewIconViewId != 0);
 
         for (int i = 0; i < adapter.getCount(); i++) {
             View tabView = null;
-            if (mUseIcons) {
+            if (showIcons) {
                 tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip, false);
                 ImageView imgIcon = (ImageView) tabView.findViewById(mTabViewIconViewId);
                 imgIcon.setImageDrawable(getContext().getResources().getDrawable(mIcons[i]));
@@ -218,20 +220,16 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 TextView tabTitleView = null;
 
                 if (mTabViewLayoutId != 0) {
-                    // If there is a custom tab view layout id set, try and inflate it
-                    tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip,
-                            false);
+                    tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip, false);
                     tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
-                }
-
-                if (tabView == null) {
+                } else {
                     tabView = createDefaultTabView(getContext());
-                }
-
-                if (tabTitleView == null && TextView.class.isInstance(tabView)) {
                     tabTitleView = (TextView) tabView;
                 }
-                tabTitleView.setText(adapter.getPageTitle(i));
+
+                if (tabTitleView != null) {
+                    tabTitleView.setText(adapter.getPageTitle(i));
+                }
             }
 
             if (mDistributeEvenly) {
