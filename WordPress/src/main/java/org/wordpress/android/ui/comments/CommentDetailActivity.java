@@ -46,9 +46,9 @@ public class CommentDetailActivity extends ActionBarActivity {
                     );
 
                     if (intent.hasExtra(KEY_COMMENT_DETAIL_IS_REMOTE)) {
-                        commentDetailFragment = CommentDetailFragment.newInstanceForRemoteNoteComment(note);
+                        commentDetailFragment = CommentDetailFragment.newInstanceForRemoteNoteComment(note.getId());
                     } else {
-                        commentDetailFragment = CommentDetailFragment.newInstance(note);
+                        commentDetailFragment = CommentDetailFragment.newInstance(note.getId());
                     }
                 } catch (BucketObjectMissingException e) {
                     AppLog.e(AppLog.T.NOTIFS, "CommentDetailActivity was passed an invalid note id.");

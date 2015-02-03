@@ -39,7 +39,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
 
     private Context mContext;
 
-    NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
+    static NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
 
     public NotesAdapter(Context context, Bucket<Note> bucket) {
         super(context, null);
@@ -61,7 +61,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
                         Note.Schema.LOCAL_STATUS)
                 .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
 
-        mAvatarSz = (int) context.getResources().getDimension(R.dimen.avatar_sz_large);
+        mAvatarSz = (int) context.getResources().getDimension(R.dimen.avatar_sz_medium);
         mReadBackgroundResId = R.drawable.list_bg_selector;
         mUnreadBackgroundResId = R.drawable.list_unread_bg_selector;
     }
@@ -158,9 +158,9 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
     @Override
     public void onBindViewHolder(NoteViewHolder noteViewHolder, Cursor cursor) {
         final Bucket.ObjectCursor<Note> objectCursor = (Bucket.ObjectCursor<Note>) cursor;
-        final String noteId = objectCursor.getSimperiumKey();
+        noteViewHolder.noteId = objectCursor.getSimperiumKey();
 
-                // Display group header
+        // Display group header
         Note.NoteTimeGroup timeGroup = Note.getTimeGroupForTimestamp(getLongForColumnName(objectCursor, Note.Schema.TIMESTAMP_INDEX));
 
         Note.NoteTimeGroup previousTimeGroup = null;
@@ -252,15 +252,6 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         } else {
             noteViewHolder.itemView.setBackgroundResource(mReadBackgroundResId);
         }
-
-        noteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnNoteClickListener != null) {
-                    mOnNoteClickListener.onClickNote(noteId);
-                }
-            }
-        });
     }
 
     public int getPositionForNote(String noteId) {
@@ -293,6 +284,8 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         private final NoticonTextView noteIcon;
         private final View progressBar;
 
+        private String noteId;
+
         public NoteViewHolder(View view) {
             super(view);
             headerView = view.findViewById(R.id.time_header);
@@ -303,6 +296,15 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             noteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);
             progressBar = view.findViewById(R.id.moderate_progress);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnNoteClickListener != null && noteId != null) {
+                        mOnNoteClickListener.onClickNote(noteId);
+                    }
+                }
+            });
         }
     }
 }
