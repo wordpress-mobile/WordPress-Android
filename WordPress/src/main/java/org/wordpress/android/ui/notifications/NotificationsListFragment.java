@@ -78,36 +78,16 @@ public class NotificationsListFragment extends Fragment
         View view = inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notes);
-        RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
-        animator.setSupportsChangeAnimations(true);
-        mRecyclerView.setItemAnimator(animator);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        // setup the initial notes adapter, starts listening to the bucket
-        mBucket = SimperiumUtils.getNotesBucket();
-        if (mBucket != null) {
-            if (mNotesAdapter == null) {
-                mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
-                mNotesAdapter.setOnNoteClickListener(new OnNoteClickListener() {
-                    @Override
-                    public void onClickNote(String noteId) {
-                        if (TextUtils.isEmpty(noteId)) return;
-
-                        // open the latest version of this note just in case it has changed - this can
-                        // happen if the note was tapped from the list fragment after it was updated
-                        // by another fragment (such as NotificationCommentLikeFragment)
-                        openNote(noteId, getActivity(), false);
-                    }
-                });
-            }
-
-            mRecyclerView.setAdapter(mNotesAdapter);
-        } else {
-            ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
-        }
+        RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
+        animator.setSupportsChangeAnimations(true);
+        mRecyclerView.setItemAnimator(animator);
 
         mEmptyTextView = (TextView) view.findViewById(R.id.empty_view);
+
+        createBucketAndAdapter();
 
         return view;
     }
@@ -132,13 +112,40 @@ public class NotificationsListFragment extends Fragment
         AppLog.d(AppLog.T.NOTIFS, "notification list > onVisibilityChanged " + isVisible);
 
         if (isVisible) {
-            if (isAdded() && !mHasPerformedInitialUpdate) {
+            if (!mHasPerformedInitialUpdate) {
                 mHasPerformedInitialUpdate = true;
                 ReaderAuthActions.updateCookies(getActivity());
             }
         } else {
 
         }
+    }
+
+    private void createBucketAndAdapter() {
+        if (mBucket == null) {
+            mBucket = SimperiumUtils.getNotesBucket();
+            if (mBucket == null) {
+                ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
+                return;
+            }
+        }
+
+        if (mNotesAdapter == null) {
+            mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
+            mNotesAdapter.setOnNoteClickListener(new OnNoteClickListener() {
+                @Override
+                public void onClickNote(String noteId) {
+                    if (TextUtils.isEmpty(noteId)) return;
+
+                    // open the latest version of this note just in case it has changed - this can
+                    // happen if the note was tapped from the list fragment after it was updated
+                    // by another fragment (such as NotificationCommentLikeFragment)
+                    openNote(noteId, getActivity(), false);
+                }
+            });
+        }
+
+        mRecyclerView.setAdapter(mNotesAdapter);
     }
 
     /*
