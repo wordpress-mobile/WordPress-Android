@@ -121,12 +121,14 @@ public class SelectPageParentActivity extends ActionBarActivity {
                     }
                 });
 
+        populatePageList();
+
         if (savedInstanceState != null) {
             // Activity was recreated
-            populatePageList(true);
+            updateCheckedPosition(true);
             return;
         } else {
-            populatePageList(false);
+            updateCheckedPosition(false);
         }
 
         // Auto-refresh if it hasn't been done yet for this blog
@@ -164,7 +166,7 @@ public class SelectPageParentActivity extends ActionBarActivity {
         });
     }
 
-    private void populatePageList(boolean recreated) {
+    private void populatePageList() {
         int blogId = mBlog.getLocalTableBlogId();
         HierarchyNode pageTree = HierarchyNode.createTreeFromDB(blogId, HierarchyType.PAGE);
         mPageLevels = HierarchyNode.getSortedListFromRoot(pageTree);
@@ -177,14 +179,18 @@ public class SelectPageParentActivity extends ActionBarActivity {
             mPageIds.put(mPageLevels.get(i).getId(), i);
         }
 
+        mListAdapter = new HierarchyListAdapter(this, R.layout.page_parents_row, mPageLevels);
+        mListView.setAdapter(mListAdapter);
+    }
+
+    private void updateSelectedParentId() {
         // Re-assign current selected parent id in case it was changed in a recent refresh
         if (mPageIds.containsKey(mPageId)) {
             mSelectedParentId = mPageLevels.get(mPageIds.get(mPageId)).getParentId();
         }
+    }
 
-        mListAdapter = new HierarchyListAdapter(this, R.layout.page_parents_row, mPageLevels);
-        mListView.setAdapter(mListAdapter);
-
+    private void updateCheckedPosition(boolean recreated) {
         if (mPageIds.containsKey(mSelectedParentId)) {
             final int checkedPosition = mPageIds.get(mSelectedParentId);
 
@@ -222,6 +228,26 @@ public class SelectPageParentActivity extends ActionBarActivity {
         }
     }
 
+    private void refreshPages() {
+        if (WordPress.wpDB.findLocalChanges(mBlog.getLocalTableBlogId(), true)) {
+            // Don't update if there are local changes to pages
+            mSwipeToRefreshHelper.setRefreshing(false);
+            if (mAutoScrollToCheckedPosition) {
+                mAutoScrollToCheckedPosition = false;
+            } else {
+                // If manually refreshed, let the user know why they're unable to refresh
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(getString(R.string.local_changes),
+                        getString(R.string.unable_to_refresh_local_changes));
+                ft.add(alert, "alert");
+                ft.commitAllowingStateLoss();
+            }
+        } else {
+            mListScrollPositionManager.saveScrollOffset();
+            fetchPosts();
+        }
+    }
+
     private void fetchPosts() {
         List<Object> apiArgs = new Vector<>();
         apiArgs.add(WordPress.getCurrentBlog());
@@ -234,7 +260,9 @@ public class SelectPageParentActivity extends ActionBarActivity {
                 setUpdated();
                 mCurrentFetchPageListTask = null;
                 mSwipeToRefreshHelper.setRefreshing(false);
-                populatePageList(false);
+                populatePageList();
+                updateSelectedParentId();
+                updateCheckedPosition(false);
             }
 
             @Override
@@ -270,26 +298,6 @@ public class SelectPageParentActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshPages() {
-        if (WordPress.wpDB.findLocalChanges(mBlog.getLocalTableBlogId(), true)) {
-            // Don't update if there are local changes to pages
-            mSwipeToRefreshHelper.setRefreshing(false);
-            if (mAutoScrollToCheckedPosition) {
-                mAutoScrollToCheckedPosition = false;
-            } else {
-                // If manually refreshed, let the user know why they're unable to refresh
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(getString(R.string.local_changes),
-                        getString(R.string.unable_to_refresh_local_changes));
-                ft.add(alert, "alert");
-                ft.commitAllowingStateLoss();
-            }
-        } else {
-            mListScrollPositionManager.saveScrollOffset();
-            fetchPosts();
-        }
-    }
-
     @Override
     public void onBackPressed() {
         saveAndFinish();
@@ -302,8 +310,10 @@ public class SelectPageParentActivity extends ActionBarActivity {
         // If nothing is checked, the parent id initially passed was not found. Don't modify the page data
         if (mListView.getCheckedItemPosition() >= 0) {
             String parentTitle = "";
+            HierarchyNode selectedParent = mPageLevels.get(mListView.getCheckedItemPosition());
+            mSelectedParentId = selectedParent.getId();
             if (mSelectedParentId != 0) {
-                parentTitle = mPageLevels.get(mListView.getCheckedItemPosition()).getName();
+                parentTitle = selectedParent.getName();
             }
             Bundle bundle = new Bundle();
             bundle.putInt("parentId", mSelectedParentId);

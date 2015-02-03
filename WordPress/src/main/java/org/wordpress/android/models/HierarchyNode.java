@@ -159,6 +159,6 @@ public class HierarchyNode {
         if (mParentId == id) {
             return true;
         }
-        return (mParentId != 0 && mParent.isDescendantOfId(id));
+        return (mParentId != 0 && mParent != null && mParent.isDescendantOfId(id));
     }
 }
