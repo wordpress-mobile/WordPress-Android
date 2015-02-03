@@ -2,7 +2,6 @@ package org.wordpress.android.ui.notifications;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,12 +21,12 @@ import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
 
-import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.WPMainActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -40,8 +39,9 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import javax.annotation.Nonnull;
 
 public class NotificationsListFragment extends Fragment
-        implements Bucket.Listener<Note>
-{
+        implements Bucket.Listener<Note>,
+                   WPMainActivity.FragmentVisibilityListener {
+
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
@@ -124,19 +124,52 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
+    /*
+     * called by the main activity when the page containing this fragment is shown/hidden
+     */
     @Override
-    public void onResume() {
-        super.onResume();
-        refreshNotes();
+    public void onVisibilityChanged(boolean isVisible) {
+        AppLog.d(AppLog.T.NOTIFS, "notification list > onVisibilityChanged " + isVisible);
 
-        // start listening to bucket change events
+        if (isVisible) {
+            if (isAdded() && !mHasPerformedInitialUpdate) {
+                mHasPerformedInitialUpdate = true;
+                ReaderAuthActions.updateCookies(getActivity());
+            }
+        } else {
+
+        }
+    }
+
+    /*
+     * start listening to bucket change events
+     */
+    private void startBucketListener() {
         if (mBucket != null) {
             mBucket.addListener(this);
         }
+    }
 
+    /*
+     * stop listening to bucket change events
+     */
+    private void stopBucketListener() {
+        if (mBucket != null) {
+            mBucket.addListener(this);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        refreshNotes();
+        startBucketListener();
+
+        // TODO: determine where this should be handled (doesn't make sense here now it's a ViewPager fragment)
         // Remove notification if it is showing when we resume this activity.
-        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
-        notificationManager.cancel(GCMIntentService.PUSH_NOTIFICATION_ID);
+        // NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
+        // notificationManager.cancel(GCMIntentService.PUSH_NOTIFICATION_ID);
 
         if (SimperiumUtils.isUserAuthorized()) {
             SimperiumUtils.startBuckets();
@@ -146,20 +179,8 @@ public class NotificationsListFragment extends Fragment
 
     @Override
     public void onPause() {
-        // unregister the listener
-        if (mBucket != null) {
-            mBucket.removeListener(this);
-        }
+        stopBucketListener();
         super.onPause();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (isAdded() && !mHasPerformedInitialUpdate) {
-            mHasPerformedInitialUpdate = true;
-            ReaderAuthActions.updateCookies(getActivity());
-        }
     }
 
     @Override
