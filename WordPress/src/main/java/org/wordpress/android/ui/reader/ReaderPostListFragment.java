@@ -66,6 +66,7 @@ import org.wordpress.android.ui.reader.views.ReaderRecyclerView.ReaderItemDecora
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -74,13 +75,11 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Displays a list of reader posts, relies on the post list type to determine which posts are shown:
@@ -99,8 +98,6 @@ public class ReaderPostListFragment extends Fragment
                ReaderInterfaces.OnReaderTagSelectedListener,
                ReaderInterfaces.OnPostPopupListener,
                WPMainActivity.FragmentVisibilityListener {
-
-    private ScheduledExecutorService mUpdateScheduler;
 
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
@@ -123,10 +120,10 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostListType mPostListType;
 
     private int mRestorePosition;
-
     private boolean mIsUpdating;
     private boolean mWasPaused;
     private boolean mIsAnimatingOutNewPostsBar;
+    private Date mLastFollowedUpdate;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -246,7 +243,6 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopUpdater();
         AppLog.d(T.READER, "reader post list > onDestroy");
     }
 
@@ -272,21 +268,16 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * called by the main activity when the page containing this fragment is shown/hidden
+     * called by the main activity when the page containing this fragment is
+     * shown/hidden - only occurs when the postListType is TAG_FOLLOWED
      */
     @Override
     public void onVisibilityChanged(boolean isVisible) {
         AppLog.d(T.READER, "reader post list > onVisibilityChanged " + isVisible);
 
         if (isVisible) {
-            // auto-update the current tag if it's time
-            if (!isUpdating()
-                    && getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                    && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag())) {
-                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderRefreshType.AUTOMATIC);
-            }
-
-            startUpdater();
+            updateReaderFollowedIfTime();
+            updateCurrentTagIfTime();
             registerReceiver();
         } else {
             unregisterReceiver();
@@ -454,17 +445,11 @@ public class ReaderPostListFragment extends Fragment
 
         setHasOptionsMenu(false);
 
-        boolean adapterAlreadyExists = hasPostAdapter();
         mRecyclerView.setAdapter(getPostAdapter());
 
-        // if adapter didn't already exist, populate it now then update the tag - this
-        // check is important since without it the adapter would be reset and posts would
-        // be updated every time the user moves between fragments
-        if (!adapterAlreadyExists && getPostListType().isTagType()) {
-            boolean isRecreated = (savedInstanceState != null);
+        if (getPostListType().isTagType()) {
             getPostAdapter().setCurrentTag(mCurrentTag);
         }
-
         if (getPostListType().isPreviewType()) {
             createFollowButton();
         }
@@ -476,6 +461,7 @@ public class ReaderPostListFragment extends Fragment
                 break;
             case TAG_PREVIEW:
                 updateTagPreviewHeader();
+                updateCurrentTagIfTime();
                 animateHeader();
                 break;
         }
@@ -486,37 +472,27 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * start updating followed tags & blogs after 500ms, then update them hourly
+     * start background service to get the latest reader followed tags and blogs
+     * if we haven't done this in the past hour
      */
-    private void startUpdater() {
-        if (mUpdateScheduler == null) {
-            mUpdateScheduler = Executors.newScheduledThreadPool(1);
-            mUpdateScheduler.scheduleWithFixedDelay(
-                    new Runnable() {
-                        public void run() {
-                            updateReaderFollowed();
-                        }
-                    }, 500, (1000 * 60) * 60, TimeUnit.MILLISECONDS);
-        }
-    }
-
-    private void stopUpdater() {
-        if (mUpdateScheduler != null) {
-            mUpdateScheduler.shutdownNow();
-        }
-    }
-
-    /*
-    * start background service to get the latest reader followed tags and blogs
-    */
-    void updateReaderFollowed() {
+    void updateReaderFollowedIfTime() {
         if (!isAdded()) {
             return;
         }
+
+        if (mLastFollowedUpdate != null) {
+            Date dtNow = new Date();
+            int minutes = DateTimeUtils.minutesBetween(dtNow, mLastFollowedUpdate);
+            if (minutes < 60) {
+                return;
+            }
+        }
+
         AppLog.d(AppLog.T.READER, "updating reader followed tags and blogs");
         ReaderUpdateService.startService(getActivity(),
                 EnumSet.of(ReaderUpdateService.UpdateTask.TAGS,
                            ReaderUpdateService.UpdateTask.FOLLOWED_BLOGS));
+        mLastFollowedUpdate = new Date();
     }
 
     /*
@@ -583,17 +559,19 @@ public class ReaderPostListFragment extends Fragment
         switch (requestCode) {
             // user just returned from the tag editor
             case RequestCodes.READER_SUBS:
-                if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
-                    // reload tags if they were changed, and set the last tag added as the current one
-                    String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
-                    doTagsChanged(lastAddedTag);
-                } else if (data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false)) {
-                    // update posts if any blog was followed or unfollowed and user is viewing "Blogs I Follow"
-                    if (getPostListType().isTagType() && ReaderTag.TAG_NAME_FOLLOWING.equals(getCurrentTagName())) {
-                        updatePostsWithTag(
-                                getCurrentTag(),
-                                ReaderActions.RequestDataAction.LOAD_NEWER,
-                                ReaderRefreshType.AUTOMATIC);
+                if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+                    if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
+                        // reload tags if they were changed, and set the last tag added as the current one
+                        String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
+                        doTagsChanged(lastAddedTag);
+                    } else if (data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false)) {
+                        // update posts if any blog was followed or unfollowed and user is viewing "Blogs I Follow"
+                        if (ReaderTag.TAG_NAME_FOLLOWING.equals(getCurrentTagName())) {
+                            updatePostsWithTag(
+                                    getCurrentTag(),
+                                    ReaderActions.RequestDataAction.LOAD_NEWER,
+                                    ReaderRefreshType.AUTOMATIC);
+                        }
                     }
                 }
                 break;
@@ -702,7 +680,7 @@ public class ReaderPostListFragment extends Fragment
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
                     }
                 }
-                setCurrentTag(tag);
+                setCurrentTag(tag, true);
                 AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
             }
 
@@ -867,7 +845,7 @@ public class ReaderPostListFragment extends Fragment
         return (mPostAdapter != null);
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return (mPostAdapter == null || mPostAdapter.isEmpty());
     }
 
@@ -878,11 +856,11 @@ public class ReaderPostListFragment extends Fragment
         return (tagName != null && tagName.equalsIgnoreCase(getCurrentTagName()));
     }
 
-    public ReaderTag getCurrentTag() {
+    ReaderTag getCurrentTag() {
         return mCurrentTag;
     }
 
-    public String getCurrentTagName() {
+    String getCurrentTagName() {
         return (mCurrentTag != null ? mCurrentTag.getTagName() : "");
     }
 
@@ -890,18 +868,6 @@ public class ReaderPostListFragment extends Fragment
         return mCurrentTag != null;
     }
 
-    void setCurrentTagName(String tagName) {
-        setCurrentTagName(tagName, true);
-    }
-    void setCurrentTagName(String tagName, boolean allowAutoUpdate) {
-        if (TextUtils.isEmpty(tagName)) {
-            return;
-        }
-        setCurrentTag(new ReaderTag(tagName, ReaderTagType.FOLLOWED), allowAutoUpdate);
-    }
-    public void setCurrentTag(final ReaderTag tag) {
-        setCurrentTag(tag, true);
-    }
     void setCurrentTag(final ReaderTag tag, boolean allowAutoUpdate) {
         if (tag == null) {
             return;
@@ -938,9 +904,8 @@ public class ReaderPostListFragment extends Fragment
             updateFollowButton();
         }
 
-        // update posts in this tag if it's time to do so
-        if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
-            updatePostsWithTag(tag, RequestDataAction.LOAD_NEWER, ReaderRefreshType.AUTOMATIC);
+        if (allowAutoUpdate) {
+            updateCurrentTagIfTime();
         }
     }
 
@@ -954,15 +919,16 @@ public class ReaderPostListFragment extends Fragment
             return false;
         }
 
-        String tag = mTagPreviewHistory.pop();
-        if (isCurrentTagName(tag)) {
+        String tagName = mTagPreviewHistory.pop();
+        if (isCurrentTagName(tagName)) {
             if (mTagPreviewHistory.empty()) {
                 return false;
             }
-            tag = mTagPreviewHistory.pop();
+            tagName = mTagPreviewHistory.pop();
         }
 
-        setCurrentTagName(tag, false);
+        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
+        setCurrentTag(tag, false);
         updateFollowButton();
 
         return true;
@@ -997,7 +963,7 @@ public class ReaderPostListFragment extends Fragment
      * tell the adapter to reload a single post - called when user returns from detail, where the
      * post may have been changed (either by the user, or because it updated)
      */
-    public void reloadPost(ReaderPost post) {
+    void reloadPost(ReaderPost post) {
         if (post != null && hasPostAdapter()) {
             getPostAdapter().reloadPost(post);
         }
@@ -1031,14 +997,22 @@ public class ReaderPostListFragment extends Fragment
         ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, resultListener);
     }
 
-    public void updateCurrentTag() {
+    private void updateCurrentTagIfTime() {
+        if (!isUpdating()
+                && getPostListType().isTagType()
+                && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag())) {
+            updateCurrentTag();
+        }
+    }
+
+    void updateCurrentTag() {
         updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderRefreshType.AUTOMATIC);
     }
 
     /*
      * get latest posts for this tag from the server
      */
-    public void updatePostsWithTag(final ReaderTag tag,
+    void updatePostsWithTag(final ReaderTag tag,
                             final RequestDataAction updateAction,
                             final ReaderRefreshType refreshType) {
         if (tag == null) {
@@ -1203,7 +1177,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * refresh the list of tags shown in the toolbar spinner
      */
-    public void refreshTags() {
+    void refreshTags() {
         if (!isAdded()) {
             return;
         }
@@ -1214,13 +1188,14 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * called from host activity after user adds/removes tags
+     * called after user adds/removes tags
      */
-    public void doTagsChanged(final String newCurrentTag) {
+    void doTagsChanged(final String newCurrentTag) {
         checkCurrentTag();
         getSpinnerAdapter().reloadTags();
         if (!TextUtils.isEmpty(newCurrentTag)) {
-            setCurrentTagName(newCurrentTag);
+            ReaderTag tag = new ReaderTag(newCurrentTag, ReaderTagType.FOLLOWED);
+            setCurrentTag(tag, true);
         }
     }
 
@@ -1228,7 +1203,7 @@ public class ReaderPostListFragment extends Fragment
      * are we showing all posts with a specific tag (followed or previewed), or all
      * posts in a specific blog?
      */
-    public ReaderPostListType getPostListType() {
+    ReaderPostListType getPostListType() {
         return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
@@ -1377,7 +1352,7 @@ public class ReaderPostListFragment extends Fragment
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
         if (getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
             // user is already previewing a tag, so change current tag in existing preview
-            setCurrentTag(tag);
+            setCurrentTag(tag, true);
         } else {
             // user isn't previewing a tag, so open in tag preview
             ReaderActivityLauncher.showReaderTagPreview(getActivity(), tag);
@@ -1406,8 +1381,13 @@ public class ReaderPostListFragment extends Fragment
         popup.show();
     }
 
+    /*
+     * listen for changes to followed tags/blogs - only used for TAG_FOLLOWED
+     */
     private void registerReceiver() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
         IntentFilter filter = new IntentFilter();
         filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED);
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
@@ -1415,7 +1395,9 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void unregisterReceiver() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
         try {
             LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
             lbm.unregisterReceiver(mReceiver);
