@@ -80,6 +80,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Displays a list of reader posts, relies on the post list type to determine which posts are shown:
+ *
+ *  TAG_FOLLOWED - posts in a followed tag, displayed as a ViewPager tab inside the main activity
+ *  with a fragment toolbar containing a spinner that enables switching tags
+ *
+ *  TAG_PREVIEW - posts with a specific tag, displayed in ReaderPostListActivity when user taps
+ *  a tag in a post, adds a "Follow" button to the activity toolbar to enable easily following
+ *
+ *  BLOG_PREVIEW - similar to TAG_PREVIEW except it shows posts in a specific blog
+ *
+ */
 public class ReaderPostListFragment extends Fragment
     implements ReaderInterfaces.OnReaderPostSelectedListener,
                ReaderInterfaces.OnReaderTagSelectedListener,
