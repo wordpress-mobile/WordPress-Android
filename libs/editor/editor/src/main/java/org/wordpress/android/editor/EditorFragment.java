@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,7 +65,6 @@ public class EditorFragment extends Fragment {
         super.onDetach();
     }
 
-    // TODO: use AppLog instead of Log
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
         WebSettings webSettings = mWebView.getSettings();
@@ -71,24 +72,24 @@ public class EditorFragment extends Fragment {
         webSettings.setDefaultTextEncodingName("utf-8");
         mWebView.setWebViewClient(new WebViewClient() {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                Log.e("WordPress-Editor", description);
+                AppLog.e(T.EDITOR, description);
             }
         });
         mWebView.setWebChromeClient(new WebChromeClient() {
             public boolean onConsoleMessage(ConsoleMessage cm) {
-                Log.e("WordPress-Editor", cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
+                AppLog.e(T.EDITOR, cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
                 return true;
             }
 
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                Log.e("WordPress-Editor", message);
+                AppLog.e(T.EDITOR, message);
                 return true;
             }
 
             @Override
             public void onConsoleMessage(String message, int lineNumber, String sourceId) {
-                Log.e("WordPress-Editor", message + " -- from line " + lineNumber + " of " + sourceId);
+                AppLog.e(T.EDITOR, message + " -- from line " + lineNumber + " of " + sourceId);
             }
         });
         String htmlEditor = getHtmlEditor();
@@ -117,7 +118,7 @@ public class EditorFragment extends Fragment {
         try {
             return getStringFromAsset("android-editor.html");
         } catch (IOException e) {
-            Log.e("WordPress-Editor", e.getMessage());
+            AppLog.e(T.EDITOR, e.getMessage());
             return null;
         }
     }
