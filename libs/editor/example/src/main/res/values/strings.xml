@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">EditorExample</string>
+    <string name="title_activity_example">ExampleActivity</string>
+</resources>
