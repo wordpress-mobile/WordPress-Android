@@ -68,6 +68,7 @@ public class WPMainActivity extends ActionBarActivity
                            R.drawable.main_tab_notifications};
         mTabs.setCustomTabView(R.layout.tab_icon, R.id.tab_icon, R.id.tab_badge, icons);
         mTabs.setViewPager(mViewPager);
+        mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, true);
 
         // page change listener must be set on the tab layout rather than the ViewPager
         mTabs.setOnPageChangeListener(this);
@@ -112,9 +113,6 @@ public class WPMainActivity extends ActionBarActivity
             ((FragmentVisibilityListener) thisFragment).onVisibilityChanged(true);
         }
 
-        if (position == WPMainTabAdapter.TAB_NOTIFS) {
-            mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, true);
-        }
         mPreviousPosition = position;
     }
 

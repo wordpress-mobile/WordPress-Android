@@ -19,12 +19,13 @@
  */
 
 
-/***
- * IMPORTANT!! this differs from the original in that it has been hacked for WordPress Android
- * to optionally support icons rather than text via the setIcons() method
- */
 
 package org.wordpress.android.widgets;
+
+/***
+ * IMPORTANT!! this differs from the original in that it has been hacked for WordPress
+ * Android to optionally support icons & badges rather than text
+ */
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -83,7 +84,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private boolean mDistributeEvenly;
 
     private Integer[] mIcons;
-    private Boolean[] mBadges;
     private int mTabViewIconViewId;
     private int mTabBadgeViewId;
 
@@ -168,23 +168,23 @@ public class SlidingTabLayout extends HorizontalScrollView {
         mTabViewIconViewId = imageViewId;
         mTabBadgeViewId = badgeViewId;
         mIcons = icons;
-        mBadges = new Boolean[mIcons.length];
-        for (int i = 0; i < mBadges.length; i++) {
-            mBadges[i] = Boolean.FALSE;
-        }
     }
 
     /*
      * adds or removes a badge for the tab at the passed index - only enabled when showing icons
      */
     public void setBadge(int position, boolean isBadged) {
-        if (position < 0 || position > mBadges.length) {
-            throw new IndexOutOfBoundsException("invalid badge index " + position);
+        View badgeView = mTabStrip.findViewWithTag(makeBadgeTag(position));
+        if (badgeView != null) {
+            badgeView.setVisibility(isBadged ? View.VISIBLE : View.GONE);
         }
-        if (mBadges[position] != isBadged) {
-            mBadges[position] = isBadged;
-            populateTabStrip();
-        }
+    }
+
+    /*
+     * creates a unique string to use as a tag for tab-specific badges
+     */
+    private static String makeBadgeTag(int position) {
+        return "slidingtablayout-badgeview-" + Integer.toString(position);
     }
 
     /**
@@ -226,10 +226,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
     }
 
     private void populateTabStrip() {
-        if (mTabStrip.getChildCount() > 0) {
-            mTabStrip.removeAllViews();
-        }
-
         final PagerAdapter adapter = mViewPager.getAdapter();
         final View.OnClickListener tabClickListener = new TabClickListener();
         boolean showIcons = (mIcons != null && mIcons.length == adapter.getCount() && mTabViewIconViewId != 0);
@@ -240,10 +236,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip, false);
                 ImageView imgIcon = (ImageView) tabView.findViewById(mTabViewIconViewId);
                 imgIcon.setImageDrawable(getContext().getResources().getDrawable(mIcons[i]));
+                // tag the badge for this tab so it can be found by setBadge()
                 if (mTabBadgeViewId != 0) {
                     View badgeView = tabView.findViewById(mTabBadgeViewId);
                     if (badgeView != null) {
-                        badgeView.setVisibility(mBadges[i] ? View.VISIBLE : View.GONE);
+                        badgeView.setTag(makeBadgeTag(i));
                     }
                 }
             } else {
