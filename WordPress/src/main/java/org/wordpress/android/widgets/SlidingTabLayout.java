@@ -83,7 +83,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private boolean mDistributeEvenly;
 
     private Integer[] mIcons;
+    private Boolean[] mBadges;
     private int mTabViewIconViewId;
+    private int mTabBadgeViewId;
 
     private ViewPager mViewPager;
     private SparseArray<String> mContentDescriptions = new SparseArray<String>();
@@ -161,10 +163,28 @@ public class SlidingTabLayout extends HorizontalScrollView {
     /*
      * use this version to display icons rather than text
      */
-    public void setCustomTabView(int layoutResId, int imageViewId, Integer[] icons) {
+    public void setCustomTabView(int layoutResId, int imageViewId, int badgeViewId, Integer[] icons) {
         mTabViewLayoutId = layoutResId;
         mTabViewIconViewId = imageViewId;
+        mTabBadgeViewId = badgeViewId;
         mIcons = icons;
+        mBadges = new Boolean[mIcons.length];
+        for (int i = 0; i < mBadges.length; i++) {
+            mBadges[i] = Boolean.FALSE;
+        }
+    }
+
+    /*
+     * adds or removes a badge for the tab at the passed index - only enabled when showing icons
+     */
+    public void setBadge(int position, boolean isBadged) {
+        if (position < 0 || position > mBadges.length) {
+            throw new IndexOutOfBoundsException("invalid badge index " + position);
+        }
+        if (mBadges[position] != isBadged) {
+            mBadges[position] = isBadged;
+            populateTabStrip();
+        }
     }
 
     /**
@@ -206,6 +226,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
     }
 
     private void populateTabStrip() {
+        if (mTabStrip.getChildCount() > 0) {
+            mTabStrip.removeAllViews();
+        }
+
         final PagerAdapter adapter = mViewPager.getAdapter();
         final View.OnClickListener tabClickListener = new TabClickListener();
         boolean showIcons = (mIcons != null && mIcons.length == adapter.getCount() && mTabViewIconViewId != 0);
@@ -216,6 +240,12 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip, false);
                 ImageView imgIcon = (ImageView) tabView.findViewById(mTabViewIconViewId);
                 imgIcon.setImageDrawable(getContext().getResources().getDrawable(mIcons[i]));
+                if (mTabBadgeViewId != 0) {
+                    View badgeView = tabView.findViewById(mTabBadgeViewId);
+                    if (badgeView != null) {
+                        badgeView.setVisibility(mBadges[i] ? View.VISIBLE : View.GONE);
+                    }
+                }
             } else {
                 TextView tabTitleView = null;
 
