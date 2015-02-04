@@ -1,5 +1,6 @@
 package org.xmlrpc.android;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Xml;
 
@@ -92,6 +93,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         mPostMethod.addHeader("Content-Type", "text/xml");
         mPostMethod.addHeader("charset", "UTF-8");
         mPostMethod.addHeader("User-Agent", WordPress.getUserAgent());
+        addWPComAuthorizationHeaderIfNeeded();
 
         mHttpParams = mPostMethod.getParams();
         HttpProtocolParams.setUseExpectContinue(mHttpParams, false);
@@ -625,7 +627,32 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 tempFile.delete();
             }
         }
+    }
 
+    private void addWPComAuthorizationHeaderIfNeeded() {
+        Context ctx = WordPress.getContext();
+        if (ctx == null) return;
+
+        if (isDotComXMLRPCEndpoint(mPostMethod.getURI())) {
+            String token = WordPress.getWPComAuthToken(ctx);
+            if (!TextUtils.isEmpty(token)) {
+                setAuthorizationHeader(token);
+            }
+        }
+    }
+
+    // Return true if wpcom XML-RPC Endpoint is called on a secure connection (https).
+    public boolean isDotComXMLRPCEndpoint(URI clientUri) {
+        if (clientUri == null) return false;
+
+        String path = clientUri.getPath();
+        String host = clientUri.getHost();
+        String protocol = clientUri.getScheme();
+        if (path == null || host == null || protocol == null) {
+            return false;
+        }
+
+        return path.equals("/xmlrpc.php") && host.endsWith("wordpress.com") && protocol.equals("https");
     }
 
     private class CancelException extends RuntimeException {
