@@ -1,4 +1,4 @@
-package org.wordpress.android.editorexample;
+package org.wordpress.android.editor.example;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
