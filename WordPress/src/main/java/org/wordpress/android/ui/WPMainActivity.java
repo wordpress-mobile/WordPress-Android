@@ -99,6 +99,9 @@ public class WPMainActivity extends ActionBarActivity
         // remember the index of this page
         AppPrefs.setMainTabIndex(position);
 
+        mTabs.setBadge(mPreviousPosition, false);
+        mTabs.setBadge(position, true);
+
         // tell the previous fragment that it's being hidden
         Fragment previousFragment = mTabAdapter.getFragment(mPreviousPosition);
         if (previousFragment instanceof FragmentVisibilityListener) {

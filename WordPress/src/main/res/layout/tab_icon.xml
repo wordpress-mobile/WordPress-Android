@@ -26,8 +26,7 @@
             android:id="@+id/tab_badge"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:layout_gravity="top|right"
-            android:layout_marginLeft="22dp"
+            android:layout_gravity="top|left"
             android:background="@drawable/badge"
             android:visibility="gone"
             tools:visibility="visible" />
