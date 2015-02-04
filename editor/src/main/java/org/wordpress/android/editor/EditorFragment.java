@@ -1,10 +1,13 @@
-package org.wordpress.editor;
+package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -17,19 +20,55 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class EditorActivity extends ActionBarActivity {
-    WebView mWebView;
+public class EditorFragment extends Fragment {
+    private static final String ARG_PARAM_TITLE = "param_title";
+    private static final String ARG_PARAM_CONTENT = "param_content";
 
-    @SuppressLint("SetJavaScriptEnabled")
+    private String mParamTitle;
+    private String mParamContent;
+    private WebView mWebView;
+
+    public static EditorFragment newInstance(String title, String content) {
+        EditorFragment fragment = new EditorFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM_TITLE, title);
+        args.putString(ARG_PARAM_CONTENT, content);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public EditorFragment() {
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_editor);
-        mWebView = (WebView) findViewById(R.id.webview);
+        if (getArguments() != null) {
+            mParamTitle = getArguments().getString(ARG_PARAM_TITLE);
+            mParamContent = getArguments().getString(ARG_PARAM_CONTENT);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_editor, container, false);
+        mWebView = (WebView) view.findViewById(R.id.webview);
+        initWebView();
+        return view;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    // TODO: use AppLog instead of Log
+    @SuppressLint("SetJavaScriptEnabled")
+    private void initWebView() {
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDefaultTextEncodingName("utf-8");
-        mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.setWebViewClient(new WebViewClient() {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 Log.e("WordPress-Editor", description);
@@ -57,7 +96,10 @@ public class EditorActivity extends ActionBarActivity {
     }
 
     private String getStringFromAsset(String filename) throws IOException {
-        AssetManager assetManager = getAssets();
+        if (!isAdded()) {
+            return null;
+        }
+        AssetManager assetManager = getActivity().getAssets();
         InputStream in = assetManager.open(filename);
         InputStreamReader is = new InputStreamReader(in);
         StringBuilder sb = new StringBuilder();

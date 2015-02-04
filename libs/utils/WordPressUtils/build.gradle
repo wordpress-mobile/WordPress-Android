@@ -1,0 +1,51 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+repositories {
+    mavenCentral()
+    maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
+}
+
+dependencies {
+    compile 'commons-lang:commons-lang:2.6'
+    compile 'com.mcxiaoke.volley:library:1.0.+'
+    compile 'com.android.support:support-v13:21.0.+'
+}
+
+android {
+    publishNonDefault true
+
+    compileSdkVersion 19
+    buildToolsVersion "21.1.1"
+
+    defaultConfig {
+        versionName "1.2.0"
+        minSdkVersion 14
+        targetSdkVersion 19
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            def repo_url = ""
+            if (project.hasProperty("repository")) {
+                repo_url = project.repository
+            }
+            repository(url: repo_url)
+            pom.version = android.defaultConfig.versionName
+            pom.groupId = "org.wordpress"
+            pom.artifactId = "wordpress-utils"
+        }
+    }
+}
