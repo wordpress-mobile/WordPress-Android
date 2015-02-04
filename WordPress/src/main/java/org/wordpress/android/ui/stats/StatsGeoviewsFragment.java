@@ -1,10 +1,15 @@
 package org.wordpress.android.ui.stats;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.GeoviewModel;
@@ -20,6 +25,93 @@ import java.util.List;
 public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsGeoviewsFragment.class.getSimpleName();
 
+
+    private void hideMap() {
+        if (!isAdded()) {
+            return;
+        }
+
+        mTopPagerContainer.setVisibility(View.GONE);
+    }
+
+    @SuppressLint("NewApi")
+    private void showMap(final List<GeoviewModel> countries) {
+        if (!isAdded()) {
+            return;
+        }
+
+        mTopPagerContainer.removeAllViews();
+
+        // must wait for mTopPagerContainer to be fully laid out (ie: measured). Then we can read the width and
+        // calculate the right height for the map div
+        mTopPagerContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mTopPagerContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                String dataToLoad = "";
+
+                for (int i = 0; i < countries.size(); i++) {
+                    final GeoviewModel currentCountry = countries.get(i);
+                    dataToLoad += "['" + currentCountry.getCountryFullName() + "'," + currentCountry.getViews() + "],";
+                }
+
+                String label = getResources().getString(getTotalsLabelResId());
+
+                String html_value = "<html>\n" +
+                        "  <head>\n" +
+                        "    <script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>\n" +
+                        "    <script type=\"text/javascript\">\n" +
+                        "      google.load(\"visualization\", \"1\", {packages:[\"geochart\"]});\n" +
+                        "      google.setOnLoadCallback(drawRegionsMap);\n" +
+                        "\n" +
+                        "      function drawRegionsMap() {\n" +
+                        "\n" +
+                        "        var data = google.visualization.arrayToDataTable([" +
+                                            "['Country', '" + label + "'],"+
+                                            dataToLoad +
+                        "        ]);" +
+                        "\n" +
+                        "        var options = {" +
+                        "legend: 'none'," +
+                        "keepAspectRatio: true," +
+                        "region: 'world'," +
+                        "enableRegionInteractivity: true," +
+                        "};\n" +
+                        "\n" +
+                        "        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));\n" +
+                        "\n" +
+                        "        chart.draw(data, options);\n" +
+                        "      }\n" +
+                        "    </script>\n" +
+                        "  </head>\n" +
+                        "  <body>\n" +
+                        "    <div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>\n" +
+                        "  </body>\n" +
+                        "</html>";
+
+
+                WebView webView = new WebView(getActivity());
+                mTopPagerContainer.addView(webView);
+
+                int width = mTopPagerContainer.getWidth();
+                int height = width * 3 / 4;
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) webView.getLayoutParams();
+                params.width = WebView.LayoutParams.MATCH_PARENT;
+                params.height = height;
+
+                webView.setLayoutParams(params);
+
+                webView.getSettings().setJavaScriptEnabled(true);
+                webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+                webView.loadData(html_value, "text/html", "UTF-8");
+
+            }
+        });
+        mTopPagerContainer.setVisibility(View.VISIBLE);
+    }
+
     @Override
     protected void updateUI() {
         if (!isAdded()) {
@@ -28,15 +120,19 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
         if (isErrorResponse()) {
             showErrorUI();
+            hideMap();
             return;
         }
 
         if (hasCountries()) {
-            ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), getCountries());
+            List<GeoviewModel> countries = getCountries();
+            ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), countries);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
+            showMap(countries);
         } else {
             showHideNoResultsUI(true);
+            hideMap();
         }
     }
 
