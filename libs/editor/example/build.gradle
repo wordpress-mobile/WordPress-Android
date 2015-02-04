@@ -11,7 +11,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         applicationId "org.wordpress.editorexample"
