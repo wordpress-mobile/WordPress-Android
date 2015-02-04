@@ -104,8 +104,9 @@ dependencies {
     debugCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'debug')
     releaseCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'release')
     debugCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'debug')
+    releaseCompile project(path:':libs:editor:editor', configuration: 'release')
+    debugCompile project(path:':libs:editor:editor', configuration: 'debug')
 }
-
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
