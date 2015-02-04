@@ -250,7 +250,7 @@ public class PostsActivity extends WPDrawerActivity
 
         if (post != null) {
             if (post.isUploading()){
-                ToastUtils.showToast(this, "Unable to open this post", ToastUtils.Duration.SHORT);
+                ToastUtils.showToast(this, R.string.toast_err_post_uploading, ToastUtils.Duration.SHORT);
                 return;
             }
             WordPress.currentPost = post;

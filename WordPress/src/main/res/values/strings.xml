@@ -189,6 +189,7 @@
     <string name="share_url">Share URL</string>
     <string name="loading_posts">Loading posts…</string>
     <string name="loading_pages">Loading pages…</string>
+    <string name="toast_err_post_uploading">Unable to open this post while it's uploading</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
