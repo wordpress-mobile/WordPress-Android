@@ -62,10 +62,10 @@ public class WPMainActivity extends ActionBarActivity
         mTabs = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.tab_indicator));
         mTabs.setDistributeEvenly(true);
-        Integer icons[] = {R.drawable.main_tabicon_sites,
-                           R.drawable.main_tabicon_reader,
-                           R.drawable.main_tabicon_me,
-                           R.drawable.main_tabicon_notes};
+        Integer icons[] = {R.drawable.main_tab_sites,
+                           R.drawable.main_tab_reader,
+                           R.drawable.main_tab_me,
+                           R.drawable.main_tab_notifications};
         mTabs.setCustomTabView(R.layout.tab_icon, R.id.image_icon, icons);
         mTabs.setViewPager(mViewPager);
 
