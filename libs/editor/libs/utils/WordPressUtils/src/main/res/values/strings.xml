@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ptr_tip_message">Tip: Pull down to refresh</string>
+    <string name="pull_to_refresh_pull_no_network_label">No network, can\'t refresh</string>
+    <string name="no_network_message">There is no network available</string>
+</resources>

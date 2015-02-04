@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="swipeToRefreshStyle" format="reference"/>
+    <declare-styleable name="RefreshIndicator">
+        <attr name="refreshIndicatorColor" format="reference|color"/>
+    </declare-styleable>
+</resources>
