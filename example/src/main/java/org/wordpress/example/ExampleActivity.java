@@ -1,4 +1,4 @@
-package org.wordpress.android.editorexample;
+package org.wordpress.android.editor.example;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import org.wordpress.android.editor.EditorActivity;
+import org.wordpress.android.editor.example.R;
 
 public class ExampleActivity extends ActionBarActivity {
     @Override

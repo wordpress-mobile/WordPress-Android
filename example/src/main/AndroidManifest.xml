@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.wordpress.android.editorexample" >
+    package="org.wordpress.android.editor.example" >
 
     <application
         android:allowBackup="true"
@@ -10,6 +10,9 @@
         <activity
             android:name=".ExampleActivity"
             android:label="@string/title_activity_example" >
+        </activity>
+        <activity
+            android:name="org.wordpress.android.editor.EditorActivity" >
         </activity>
     </application>
 
