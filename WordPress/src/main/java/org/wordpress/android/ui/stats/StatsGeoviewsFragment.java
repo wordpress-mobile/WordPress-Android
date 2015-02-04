@@ -2,12 +2,16 @@ package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.net.http.SslError;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 
@@ -15,6 +19,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.GeoviewModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -40,6 +46,20 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             return;
         }
 
+        // removeOnGlobalLayoutListener is available on >= JELLY_BEAN. The map is hidden on older devices.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            mTopPagerContainer.setVisibility(View.GONE);
+            return;
+        }
+
+        // setting up different margins for the map. We're basically remove left margins since the
+        // chart service produce a map that's slightly shifted on the right. See the Web version.
+        int dp4 = DisplayUtils.dpToPx(mTopPagerContainer.getContext(), 4);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 0, dp4, 0);
+        mTopPagerContainer.setLayoutParams(layoutParams);
+
         mTopPagerContainer.removeAllViews();
 
         // must wait for mTopPagerContainer to be fully laid out (ie: measured). Then we can read the width and
@@ -49,46 +69,40 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             public void onGlobalLayout() {
                 mTopPagerContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                String dataToLoad = "";
+                StringBuilder dataToLoad = new StringBuilder();
 
                 for (int i = 0; i < countries.size(); i++) {
                     final GeoviewModel currentCountry = countries.get(i);
-                    dataToLoad += "['" + currentCountry.getCountryFullName() + "'," + currentCountry.getViews() + "],";
+                    dataToLoad.append("['").append(currentCountry.getCountryFullName()).append("',")
+                            .append(currentCountry.getViews()).append("],");
                 }
 
+                // This is the label that is shown when the user taps on a region
                 String label = getResources().getString(getTotalsLabelResId());
 
-                String html_value = "<html>\n" +
-                        "  <head>\n" +
-                        "    <script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>\n" +
-                        "    <script type=\"text/javascript\">\n" +
-                        "      google.load(\"visualization\", \"1\", {packages:[\"geochart\"]});\n" +
-                        "      google.setOnLoadCallback(drawRegionsMap);\n" +
-                        "\n" +
-                        "      function drawRegionsMap() {\n" +
-                        "\n" +
-                        "        var data = google.visualization.arrayToDataTable([" +
-                                            "['Country', '" + label + "'],"+
-                                            dataToLoad +
-                        "        ]);" +
-                        "\n" +
-                        "        var options = {" +
-                        "legend: 'none'," +
-                        "keepAspectRatio: true," +
-                        "region: 'world'," +
-                        "enableRegionInteractivity: true," +
-                        "};\n" +
-                        "\n" +
-                        "        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));\n" +
-                        "\n" +
-                        "        chart.draw(data, options);\n" +
-                        "      }\n" +
-                        "    </script>\n" +
-                        "  </head>\n" +
-                        "  <body>\n" +
-                        "    <div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>\n" +
-                        "  </body>\n" +
-                        "</html>";
+                // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
+                StringBuilder htmlPage = new StringBuilder().append("<html>")
+                        .append("<head>")
+                        .append("<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>")
+                        .append("<script type=\"text/javascript\">")
+                            .append("google.load(\"visualization\", \"1\", {packages:[\"geochart\"]});")
+                            .append("google.setOnLoadCallback(drawRegionsMap);")
+                            .append("function drawRegionsMap() {")
+                                .append("var data = google.visualization.arrayToDataTable(" +
+                                        "[")
+                                .append("['Country', '" + label + "'],"
+                                        + dataToLoad +
+                                        "]);")
+                                .append("var options = {legend: 'none', keepAspectRatio: true, region: 'world', enableRegionInteractivity: true};")
+                                .append("var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));")
+                                .append("chart.draw(data, options);")
+                            .append("}")
+                            .append("</script>")
+                        .append("</head>")
+                        .append("<body>")
+                        .append("<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>")
+                        .append("</body>")
+                        .append("</html>");
 
 
                 WebView webView = new WebView(getActivity());
@@ -103,13 +117,33 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
                 webView.setLayoutParams(params);
 
+                webView.setWebViewClient(new MyWebViewClient()); // Hide map in case of unrecoverable errors
                 webView.getSettings().setJavaScriptEnabled(true);
                 webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-                webView.loadData(html_value, "text/html", "UTF-8");
+                webView.loadData(htmlPage.toString(), "text/html", "UTF-8");
 
             }
         });
         mTopPagerContainer.setVisibility(View.VISIBLE);
+    }
+
+    // Hide the Map in case of errors
+    private class MyWebViewClient extends WebViewClient {
+        @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            super.onReceivedError(view, errorCode, description, failingUrl);
+            mTopPagerContainer.setVisibility(View.GONE);
+            AppLog.e(AppLog.T.STATS, "Cannot load geochart."
+                    + " ErrorCode: " + errorCode
+                    + " Description: " + description
+                    + " Failing URL: " + failingUrl);
+        }
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            super.onReceivedSslError(view, handler, error);
+            mTopPagerContainer.setVisibility(View.GONE);
+            AppLog.e(AppLog.T.STATS, "Cannot load geochart. SSL ERROR. " + error.toString());
+        }
     }
 
     @Override
