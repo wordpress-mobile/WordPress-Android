@@ -1,4 +1,4 @@
-package org.wordpress.editor;
+package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+// TODO: use AppLog instead of Log
 public class EditorActivity extends ActionBarActivity {
     WebView mWebView;
 
