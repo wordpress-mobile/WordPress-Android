@@ -29,7 +29,6 @@ package org.wordpress.android.widgets;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Context;
@@ -43,10 +42,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.BounceInterpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -182,7 +179,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     /*
      * adds or removes a badge for the tab at the passed index - only enabled when showing icons
      */
-    public void setBadge(int position, final boolean isBadged) {
+    public void setBadge(int position, boolean isBadged) {
         final View badgeView = mTabStrip.findViewWithTag(makeBadgeTag(position));
         if (badgeView == null) {
             return;
@@ -192,49 +189,34 @@ public class SlidingTabLayout extends HorizontalScrollView {
             return;
         }
 
-        long duration = getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
         float start = isBadged ? 0f : 1f;
-        float end = isBadged ? 1.5f : 0f;
+        float end = isBadged ? 1f : 0f;
+
         PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, start, end);
         PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, start, end);
-
         ObjectAnimator animScale = ObjectAnimator.ofPropertyValuesHolder(badgeView, scaleX, scaleY);
-        animScale.setDuration(duration);
 
         if (isBadged) {
-            animScale.setInterpolator(new LinearInterpolator());
-        } else {
-            animScale.setInterpolator(new AccelerateInterpolator());
-        }
-
-        animScale.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                if (isBadged) {
+            animScale.setInterpolator(new BounceInterpolator());
+            animScale.setDuration(getContext().getResources().getInteger(android.R.integer.config_longAnimTime));
+            animScale.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
                     badgeView.setVisibility(View.VISIBLE);
                 }
-            }
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (!isBadged) {
+            });
+        } else {
+            animScale.setInterpolator(new AccelerateInterpolator());
+            animScale.setDuration(getContext().getResources().getInteger(android.R.integer.config_shortAnimTime));
+            animScale.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
                     badgeView.setVisibility(View.GONE);
                 }
-            }
-        });
-
-        AnimatorSet set = new AnimatorSet();
-        if (isBadged) {
-            PropertyValuesHolder shrinkX = PropertyValuesHolder.ofFloat(View.SCALE_X, end, 1f);
-            PropertyValuesHolder shrinkY = PropertyValuesHolder.ofFloat(View.SCALE_Y, end, 1f);
-            ObjectAnimator animShrink = ObjectAnimator.ofPropertyValuesHolder(badgeView, shrinkX, shrinkY);
-            animShrink.setInterpolator(new BounceInterpolator());
-            animShrink.setDuration(duration);
-            set.play(animScale).before(animShrink);
-        } else {
-            set.play(animScale);
+            });
         }
 
-        set.start();
+        animScale.start();
     }
 
     /*
