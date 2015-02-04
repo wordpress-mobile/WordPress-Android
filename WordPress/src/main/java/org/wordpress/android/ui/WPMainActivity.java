@@ -28,7 +28,6 @@ import org.wordpress.android.widgets.WPMainViewPager;
  */
 
 /*
- * TODO: tab icons are currently placeholders for the real icons
  * TODO: handle notifications & reader with no wp.com account
  * TODO: notifications tab needs a badge when their are unseen notes
  */
@@ -68,7 +67,6 @@ public class WPMainActivity extends ActionBarActivity
                            R.drawable.main_tab_notifications};
         mTabs.setCustomTabView(R.layout.tab_icon, R.id.tab_icon, R.id.tab_badge, icons);
         mTabs.setViewPager(mViewPager);
-        mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, true);
 
         // page change listener must be set on the tab layout rather than the ViewPager
         mTabs.setOnPageChangeListener(this);

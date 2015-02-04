@@ -27,6 +27,10 @@ package org.wordpress.android.widgets;
  * Android to optionally support icons & badges rather than text
  */
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
@@ -38,6 +42,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -173,11 +179,47 @@ public class SlidingTabLayout extends HorizontalScrollView {
     /*
      * adds or removes a badge for the tab at the passed index - only enabled when showing icons
      */
-    public void setBadge(int position, boolean isBadged) {
-        View badgeView = mTabStrip.findViewWithTag(makeBadgeTag(position));
-        if (badgeView != null) {
-            badgeView.setVisibility(isBadged ? View.VISIBLE : View.GONE);
+    public void setBadge(int position, final boolean isBadged) {
+        final View badgeView = mTabStrip.findViewWithTag(makeBadgeTag(position));
+        if (badgeView == null) {
+            return;
         }
+        boolean wasBadged = (badgeView.getVisibility() == View.VISIBLE);
+        if (isBadged == wasBadged) {
+            return;
+        }
+
+        float start = isBadged ? 0f : 1f;
+        float end = isBadged ? 1f : 0f;
+        long duration = getContext().getResources().getInteger(android.R.integer.config_mediumAnimTime);
+
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, start, end);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, start, end);
+        ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(badgeView, scaleX, scaleY);
+        animator.setDuration(duration);
+
+        if (isBadged) {
+            animator.setInterpolator(new OvershootInterpolator());
+        } else {
+            animator.setInterpolator(new AccelerateInterpolator());
+        }
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                if (isBadged) {
+                    badgeView.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (!isBadged) {
+                    badgeView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        animator.start();
     }
 
     /*
