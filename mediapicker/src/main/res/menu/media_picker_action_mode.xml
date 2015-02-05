@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/menu_media_selection_confirmed"
-        android:title="@string/cancel"
+        android:title="@string/confirm"
         android:icon="@drawable/action_mode_confirm_checkmark"
         android:enabled="true"
         android:visible="true"

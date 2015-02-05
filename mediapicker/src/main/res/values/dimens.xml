@@ -10,8 +10,12 @@
     <dimen name="media_spacing_vertical">2dp</dimen>
     <dimen name="media_spacing_horizontal">2dp</dimen>
 
-    <!-- MediaItem View layout defaults -->
+    <!-- Height of the media item view cell -->
     <dimen name="media_item_height">128dp</dimen>
+
+    <!-- MediaItem View layout defaults -->
+    <!-- New media item layouts should contain their views in a CheckableFrameLayout (provided). -->
+    <!-- Note that these padding resources should be used in order to display the checked frame. -->
     <dimen name="media_item_frame_margin_left">2dp</dimen>
     <dimen name="media_item_frame_margin_top">2dp</dimen>
     <dimen name="media_item_frame_margin_right">2dp</dimen>

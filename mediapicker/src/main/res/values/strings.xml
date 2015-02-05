@@ -2,10 +2,11 @@
 
     <string name="app_name">Media Picker</string>
 
-    <string name="cancel">Cancel</string>
-
+    <!-- Menu item titles -->
     <string name="new_media_gallery">Create gallery</string>
+    <string name="confirm">Confirm</string>
 
+    <!-- Content descriptions -->
     <string name="cd_media_item_image">media item image</string>
     <string name="cd_media_item_overlay">media item overlay image</string>
 

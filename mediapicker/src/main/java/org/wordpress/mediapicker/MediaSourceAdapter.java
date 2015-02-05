@@ -17,7 +17,6 @@ import java.util.List;
  * {@link org.wordpress.mediapicker.MediaItem}'s provided by
  * {@link org.wordpress.mediapicker.source.MediaSource}'s.
  *
- * // TODO: invalid doc
  * Customizing the MediaItem view:
  *
  * There are two ways to modify the layout of MediaItem views, either by overriding the
@@ -41,8 +40,6 @@ import java.util.List;
  *     <li>@dimen/media_item_height            : height of the entire MediaItem view</li>
  *     <li>@dimen/media_item_frame_margin_*    : frame margins; * = left/top/right/bottom</li>
  *     <li>@dimen/media_item_frame_padding_*   : frame padding; * = left/top/right/bottom</li>
- *     <li>@dimen/media_item_title_margin_*    : title margins; * = left/top/right/bottom</li>
- *     <li>@dimen/media_item_title_padding_*   : title padding; * = left/top/right/bottom</li>
  * </ul>
  */
 

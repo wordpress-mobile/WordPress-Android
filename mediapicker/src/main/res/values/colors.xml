@@ -2,6 +2,7 @@
 
 <resources>
 
+    <!-- Used as the default background color -->
     <color name="grey">#999999</color>
 
 </resources>
