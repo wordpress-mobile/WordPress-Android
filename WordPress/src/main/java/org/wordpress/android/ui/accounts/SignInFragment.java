@@ -119,6 +119,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mPasswordEditText.addTextChangedListener(this);
         mPasswordEditText.setOnClickListener(mOnLoginFormClickListener);
         mTwoStepEditText = (EditText) rootView.findViewById(R.id.nux_two_factor);
+        mTwoStepEditText.addTextChangedListener(this);
         mUrlEditText = (EditText) rootView.findViewById(R.id.nux_url);
         mSignInButton = (WPTextView) rootView.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
@@ -244,8 +245,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private boolean isWPComLogin() {
-        String selfHosteUrl = EditTextUtils.getText(mUrlEditText).trim();
-        return !mSelfHosted || TextUtils.isEmpty(selfHosteUrl) || selfHosteUrl.contains("wordpress.com");
+        String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
+        return !mSelfHosted || TextUtils.isEmpty(selfHostedUrl) || selfHostedUrl.contains("wordpress.com");
     }
 
     private View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
@@ -422,7 +423,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         if (isVisible) {
             mTwoStepEditText.requestFocus();
+            mTwoStepEditText.setText("");
         } else {
+            mTwoStepEditText.setText("");
             mTwoStepEditText.clearFocus();
         }
     }
@@ -512,11 +515,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
         mPasswordEditText.setError(null);
         mUsernameEditText.setError(null);
+        mTwoStepEditText.setError(null);
     }
 
     private boolean fieldsFilled() {
         return EditTextUtils.getText(mUsernameEditText).trim().length() > 0
-               && EditTextUtils.getText(mPasswordEditText).trim().length() > 0;
+               && EditTextUtils.getText(mPasswordEditText).trim().length() > 0
+               && (mTwoStepLayout.getVisibility() == View.GONE || EditTextUtils.getText(mTwoStepEditText).trim().length() > 0);
     }
 
     protected boolean isUserDataValid() {
