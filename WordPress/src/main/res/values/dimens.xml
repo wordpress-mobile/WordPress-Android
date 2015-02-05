@@ -126,4 +126,21 @@
     <dimen name="stats_button_corner_radius">4dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
 
+    <!-- MediaPicker -->
+    <dimen name="media_padding_left">2dp</dimen>
+    <dimen name="media_padding_top">2dp</dimen>
+    <dimen name="media_padding_right">2dp</dimen>
+    <dimen name="media_padding_bottom">0dp</dimen>
+    <dimen name="media_spacing_vertical">2dp</dimen>
+    <dimen name="media_spacing_horizontal">2dp</dimen>
+    <dimen name="media_item_height">128dp</dimen>
+    <dimen name="media_item_frame_margin_left">0dp</dimen>
+    <dimen name="media_item_frame_margin_top">0dp</dimen>
+    <dimen name="media_item_frame_margin_right">0dp</dimen>
+    <dimen name="media_item_frame_margin_bottom">0dp</dimen>
+    <dimen name="media_item_frame_padding_left">8dp</dimen>
+    <dimen name="media_item_frame_padding_top">8dp</dimen>
+    <dimen name="media_item_frame_padding_right">8dp</dimen>
+    <dimen name="media_item_frame_padding_bottom">8dp</dimen>
+
 </resources>

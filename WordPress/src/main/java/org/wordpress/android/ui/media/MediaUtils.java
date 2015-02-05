@@ -191,7 +191,6 @@ public class MediaUtils {
         return sdf.format(date);
     }
 
-
     public static void launchPictureLibrary(Fragment fragment) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
