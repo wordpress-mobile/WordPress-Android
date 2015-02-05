@@ -4,9 +4,12 @@ import android.net.Uri;
 import android.webkit.MimeTypeMap;
 import android.webkit.URLUtil;
 
+import org.wordpress.android.util.AppLog.T;
+
 import java.io.UnsupportedEncodingException;
 import java.net.IDN;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -52,10 +55,39 @@ public class UrlUtils {
         return url;
     }
 
+    /**
+     * Remove leading double slash, and inherit protocol scheme
+     */
+    public static String removeLeadingDoubleSlash(String url, String scheme) {
+        if (url != null && url.startsWith("//")) {
+            url = url.substring(2);
+            if (scheme != null) {
+                if (scheme.endsWith("://")){
+                    url = scheme + url;
+                } else {
+                    AppLog.e(T.UTILS, "Invalid scheme used: " + scheme);
+                }
+            }
+        }
+        return url;
+    }
+
+    /**
+     * Add scheme prefix to an URL. This method must be called on all user entered or server fetched URLs to ensure
+     * http client will work as expected.
+     *
+     * @param url url entered by the user or fetched from a server
+     * @param isHTTPS true will make the url starts with https;//
+     * @return transformed url prefixed by its http;// or https;// scheme
+     */
     public static String addUrlSchemeIfNeeded(String url, boolean isHTTPS) {
         if (url == null) {
             return null;
         }
+
+        // Remove leading double slash (eg. //example.com), needed for some wporg instances configured to
+        // switch between http or https
+        url = removeLeadingDoubleSlash(url, (isHTTPS ? "https" : "http") + "://");
 
         if (!URLUtil.isValidUrl(url)) {
             if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
@@ -78,7 +110,8 @@ public class UrlUtils {
         // this routine is called from some performance-critical code and creating a URI from a string
         // is slow, so skip it when possible - if we know it's not a relative path (and 99.9% of the
         // time it won't be for our purposes) then we can normalize it without java.net.URI.normalize()
-        if (urlString.startsWith("http") && !urlString.contains("build/intermediates/exploded-aar/org.wordpress/graphview/3.1.1")) {
+        if (urlString.startsWith("http") &&
+                !urlString.contains("build/intermediates/exploded-aar/org.wordpress/graphview/3.1.1")) {
             // return without a trailing slash
             if (urlString.endsWith("/")) {
                 return urlString.substring(0, urlString.length() - 1);
