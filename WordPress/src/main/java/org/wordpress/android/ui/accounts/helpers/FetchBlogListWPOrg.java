@@ -120,9 +120,8 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         // Validate the URL found before calling the client. Prevent a crash that can occur
         // during the setup of self-hosted sites.
         URI xmlrpcUri;
-            xmlrpcUri = URI.create(xmlrpcUrl);
-            getBlogList(xmlrpcUri, callback);
-
+        xmlrpcUri = URI.create(xmlrpcUrl);
+        getBlogList(xmlrpcUri, callback);
     }
 
     private String getRsdUrl(String baseUrl) throws SSLHandshakeException {
@@ -243,7 +242,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         // Attempt to get the XMLRPC URL via RSD
         String rsdUrl;
         try {
-            rsdUrl = getRsdUrl(url);
+            rsdUrl = UrlUtils.addUrlSchemeIfNeeded(getRsdUrl(url), false);
         } catch (SSLHandshakeException e) {
             if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
                 mErroneousSslCertificate = true;
@@ -254,12 +253,12 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
 
         try {
             if (rsdUrl != null) {
-                xmlrpcUrl = ApiHelper.getXMLRPCUrl(rsdUrl);
+                xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(ApiHelper.getXMLRPCUrl(rsdUrl), false);
                 if (xmlrpcUrl == null) {
-                    xmlrpcUrl = rsdUrl.replace("?rsd", "");
+                    xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(rsdUrl.replace("?rsd", ""), false);
                 }
             } else {
-                xmlrpcUrl = getXmlrpcByUserEnteredPath(url);
+                xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(getXmlrpcByUserEnteredPath(url), false);
             }
         } catch (SSLHandshakeException e) {
             if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
