@@ -91,7 +91,7 @@ public class MediaUtils {
         return false;
     }
 
-    private static boolean isVideo(String url) {
+    public static boolean isVideo(String url) {
         if (url == null)
             return false;
         if (url.endsWith(".ogv") || url.endsWith(".mp4") || url.endsWith(".m4v") || url.endsWith(".mov") ||
