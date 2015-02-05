@@ -17,6 +17,7 @@ import android.webkit.MimeTypeMap;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -270,13 +271,13 @@ public class MediaUtils {
             return null;
         }
 
-        String url = cursor.getString(cursor.getColumnIndex("fileURL"));
+        String url = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
         if (url == null) {
             cursor.close();
             return null;
         }
 
-        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
+        String mimeType = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MIME_TYPE));
         boolean isVideo = mimeType != null && mimeType.contains("video");
 
         Uri uri = Uri.parse(url);
@@ -285,17 +286,17 @@ public class MediaUtils {
         MediaFile mediaFile = imageSpan.getMediaFile();
         mediaFile.setMediaId(mediaId);
         mediaFile.setBlogId(blogId);
-        mediaFile.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
-        mediaFile.setDescription(cursor.getString(cursor.getColumnIndex("description")));
-        mediaFile.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-        mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
-        mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
+        mediaFile.setCaption(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION)));
+        mediaFile.setDescription(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DESCRIPTION)));
+        mediaFile.setTitle(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE)));
+        mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH)));
+        mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT)));
         mediaFile.setMimeType(mimeType);
-        mediaFile.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
-        mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
-        mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-        mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex("videoPressShortcode")));
-        mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex("fileURL")));
+        mediaFile.setFileName(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME)));
+        mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL)));
+        mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
+        mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_VIDEO_PRESS_SHORTCODE)));
+        mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL)));
         mediaFile.setVideo(isVideo);
         mediaFile.save();
         cursor.close();

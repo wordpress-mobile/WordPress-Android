@@ -51,6 +51,27 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
+    public static final String COLUMN_NAME_POST_ID               = "postID";
+    public static final String COLUMN_NAME_FILE_PATH             = "filePath";
+    public static final String COLUMN_NAME_FILE_NAME             = "fileName";
+    public static final String COLUMN_NAME_TITLE                 = "title";
+    public static final String COLUMN_NAME_DESCRIPTION           = "description";
+    public static final String COLUMN_NAME_CAPTION               = "caption";
+    public static final String COLUMN_NAME_HORIZONTAL_ALIGNMENT  = "horizontalAlignment";
+    public static final String COLUMN_NAME_WIDTH                 = "width";
+    public static final String COLUMN_NAME_HEIGHT                = "height";
+    public static final String COLUMN_NAME_MIME_TYPE             = "mimeType";
+    public static final String COLUMN_NAME_FEATURED              = "featured";
+    public static final String COLUMN_NAME_IS_VIDEO              = "isVideo";
+    public static final String COLUMN_NAME_IS_FEATURED_IN_POST   = "isFeaturedInPost";
+    public static final String COLUMN_NAME_FILE_URL              = "fileURL";
+    public static final String COLUMN_NAME_THUMBNAIL_URL         = "thumbnailURL";
+    public static final String COLUMN_NAME_MEDIA_ID              = "mediaId";
+    public static final String COLUMN_NAME_BLOG_ID               = "blogId";
+    public static final String COLUMN_NAME_DATE_CREATED_GMT      = "date_created_gmt";
+    public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
+    public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
+
     private static final int DATABASE_VERSION = 28;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
@@ -1305,29 +1326,29 @@ public class WordPressDB {
 
     public void saveMediaFile(MediaFile mf) {
         ContentValues values = new ContentValues();
-        values.put("postID", mf.getPostID());
-        values.put("filePath", mf.getFilePath());
-        values.put("fileName", mf.getFileName());
-        values.put("title", mf.getTitle());
-        values.put("description", mf.getDescription());
-        values.put("caption", mf.getCaption());
-        values.put("horizontalAlignment", mf.getHorizontalAlignment());
-        values.put("width", mf.getWidth());
-        values.put("height", mf.getHeight());
-        values.put("mimeType", mf.getMimeType());
-        values.put("featured", mf.isFeatured());
-        values.put("isVideo", mf.isVideo());
-        values.put("isFeaturedInPost", mf.isFeaturedInPost());
-        values.put("fileURL", mf.getFileURL());
-        values.put("thumbnailURL", mf.getThumbnailURL());
-        values.put("mediaId", mf.getMediaId());
-        values.put("blogId", mf.getBlogId());
-        values.put("date_created_gmt", mf.getDateCreatedGMT());
-        values.put("videoPressShortcode", mf.getVideoPressShortCode());
+        values.put(COLUMN_NAME_POST_ID, mf.getPostID());
+        values.put(COLUMN_NAME_FILE_PATH, mf.getFilePath());
+        values.put(COLUMN_NAME_FILE_NAME, mf.getFileName());
+        values.put(COLUMN_NAME_TITLE, mf.getTitle());
+        values.put(COLUMN_NAME_DESCRIPTION, mf.getDescription());
+        values.put(COLUMN_NAME_CAPTION, mf.getCaption());
+        values.put(COLUMN_NAME_HORIZONTAL_ALIGNMENT, mf.getHorizontalAlignment());
+        values.put(COLUMN_NAME_WIDTH, mf.getWidth());
+        values.put(COLUMN_NAME_HEIGHT, mf.getHeight());
+        values.put(COLUMN_NAME_MIME_TYPE, mf.getMimeType());
+        values.put(COLUMN_NAME_FEATURED, mf.isFeatured());
+        values.put(COLUMN_NAME_IS_VIDEO, mf.isVideo());
+        values.put(COLUMN_NAME_IS_FEATURED_IN_POST, mf.isFeaturedInPost());
+        values.put(COLUMN_NAME_FILE_URL, mf.getFileURL());
+        values.put(COLUMN_NAME_THUMBNAIL_URL, mf.getThumbnailURL());
+        values.put(COLUMN_NAME_MEDIA_ID, mf.getMediaId());
+        values.put(COLUMN_NAME_BLOG_ID, mf.getBlogId());
+        values.put(COLUMN_NAME_DATE_CREATED_GMT, mf.getDateCreatedGMT());
+        values.put(COLUMN_NAME_VIDEO_PRESS_SHORTCODE, mf.getVideoPressShortCode());
         if (mf.getUploadState() != null)
-            values.put("uploadState", mf.getUploadState());
+            values.put(COLUMN_NAME_UPLOAD_STATE, mf.getUploadState());
         else
-            values.putNull("uploadState");
+            values.putNull(COLUMN_NAME_UPLOAD_STATE);
 
         synchronized (this) {
             int result = 0;
