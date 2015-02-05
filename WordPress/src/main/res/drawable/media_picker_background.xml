@@ -3,6 +3,7 @@
 <selector
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@color/calypso_grey"/>
+    <item
+        android:drawable="@color/calypso_blue_light"/>
 
 </selector>
