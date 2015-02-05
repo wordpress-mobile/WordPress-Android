@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.stats;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.net.http.SslError;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,15 +38,8 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
         mTopPagerContainer.setVisibility(View.GONE);
     }
 
-    @SuppressLint("NewApi")
     private void showMap(final List<GeoviewModel> countries) {
         if (!isAdded()) {
-            return;
-        }
-
-        // removeOnGlobalLayoutListener is available on >= JELLY_BEAN. The map is hidden on older devices.
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            mTopPagerContainer.setVisibility(View.GONE);
             return;
         }
 
@@ -67,7 +58,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
         mTopPagerContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                mTopPagerContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                mTopPagerContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
                 StringBuilder dataToLoad = new StringBuilder();
 
