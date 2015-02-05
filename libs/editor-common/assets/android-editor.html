@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ZSSRichTextEditor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="underscore-min.js"></script>
+    <script type="text/javascript" src="shortcode.js"></script>
+    <script type="text/javascript" src="jquery.mobile-events.min.js"></script>
+    <script type="text/javascript" src="ZSSRichTextEditor.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+          ZSSEditor.init();
+          ZSSEditor.domLoadedCallback();
+          console.log("ZSSEditor initialized");
+        });
+    </script>
+  </head>
+  <body>
+      <div contenteditable="false" id="zss_field_title" class="field" nostyle>
+      </div>
+      <div contenteditable="false" id="separatorDiv" >
+          <hr/>
+      </div>
+      <div contenteditable="false" id="zss_field_content" class="field">
+      </div>
+  </body>
+</html>
