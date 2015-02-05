@@ -75,6 +75,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
+    private EditText mTwoStepEditText;
     private boolean mSelfHosted;
     private WPTextView mSignInButton;
     private WPTextView mCreateAccountButton;
@@ -82,8 +83,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private WPTextView mProgressTextSignIn;
     private WPTextView mForgotPassword;
     private LinearLayout mBottomButtonsLayout;
+    private RelativeLayout mUsernameLayout;
+    private RelativeLayout mPasswordLayout;
     private RelativeLayout mProgressBarSignIn;
     private RelativeLayout mUrlButtonLayout;
+    private RelativeLayout mTwoStepLayout;
     private ImageView mInfoButton;
     private ImageView mInfoButtonSecondary;
     private EmailChecker mEmailChecker;
@@ -91,6 +95,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private int mErroneousLogInCount;
     private String mUsername;
     private String mPassword;
+    private String mTwoStepCode;
     private String mHttpUsername;
     private String mHttpPassword;
 
@@ -102,10 +107,18 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.signin_fragment, container, false);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
+        mTwoStepLayout = (RelativeLayout) rootView.findViewById(R.id.two_factor_layout);
+        mUsernameLayout = (RelativeLayout) rootView.findViewById(R.id.nux_username_layout);
+        mUsernameLayout.setOnClickListener(mOnLoginFormClickListener);
+        mPasswordLayout = (RelativeLayout) rootView.findViewById(R.id.nux_password_layout);
+        mPasswordLayout.setOnClickListener(mOnLoginFormClickListener);
         mUsernameEditText = (EditText) rootView.findViewById(R.id.nux_username);
         mUsernameEditText.addTextChangedListener(this);
+        mUsernameEditText.setOnClickListener(mOnLoginFormClickListener);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.nux_password);
         mPasswordEditText.addTextChangedListener(this);
+        mPasswordEditText.setOnClickListener(mOnLoginFormClickListener);
+        mTwoStepEditText = (EditText) rootView.findViewById(R.id.nux_two_factor);
         mUrlEditText = (EditText) rootView.findViewById(R.id.nux_url);
         mSignInButton = (WPTextView) rootView.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
@@ -200,6 +213,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             setSecondaryButtonVisible(false);
         }
     }
+
+    private OnClickListener mOnLoginFormClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mTwoStepLayout.getVisibility() == View.VISIBLE) {
+                setTwoStepAuthVisibility(false);
+            }
+        }
+    };
 
     private void autocorrectUsername() {
         if (mEmailAutoCorrected) {
@@ -327,7 +349,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         });
     }
 
-    private Callback mFecthBlogListCallback = new Callback() {
+    private Callback mFetchBlogListCallback = new Callback() {
         @Override
         public void onSuccess(final List<Map<String, Object>> userBlogList) {
             if (userBlogList != null) {
@@ -358,7 +380,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
 
         @Override
-        public void onError(final int messageId, final boolean httpAuthRequired,
+        public void onError(final int messageId, final boolean twoStepCodeRequired, final boolean httpAuthRequired,
                             final boolean erroneousSslCertificate, final String clientResponse) {
             if (!isAdded()) {
                 return;
@@ -366,6 +388,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (twoStepCodeRequired) {
+                        setTwoStepAuthVisibility(true);
+                        endProgress();
+                        return;
+                    }
+
                     if (erroneousSslCertificate) {
                         askForSslTrust();
                         return;
@@ -378,24 +406,39 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                         signInError(messageId, clientResponse);
                         return;
                     }
+
                     endProgress();
                 }
             });
         }
     };
 
+    private void setTwoStepAuthVisibility(boolean isVisible) {
+        mTwoStepLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mUsernameEditText.setFocusableInTouchMode(!isVisible);
+        mUsernameLayout.setAlpha(isVisible ? 0.6f : 1.0f);
+        mPasswordEditText.setFocusableInTouchMode(!isVisible);
+        mPasswordLayout.setAlpha(isVisible ? 0.6f : 1.0f);
+
+        if (isVisible) {
+            mTwoStepEditText.requestFocus();
+        } else {
+            mTwoStepEditText.clearFocus();
+        }
+    }
+
     private void signInAndFetchBlogListWPCom() {
-        LoginWPCom login = new LoginWPCom(mUsername, mPassword);
+        LoginWPCom login = new LoginWPCom(mUsername, mPassword, mTwoStepCode);
         login.execute(new LoginAbstract.Callback() {
             @Override
             public void onSuccess() {
                 FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
-                fetchBlogListWPCom.execute(mFecthBlogListCallback);
+                fetchBlogListWPCom.execute(mFetchBlogListCallback);
             }
 
             @Override
-            public void onError(int errorMessageId, boolean httpAuthRequired, boolean erroneousSslCertificate) {
-                mFecthBlogListCallback.onError(errorMessageId, httpAuthRequired, erroneousSslCertificate, "");
+            public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate) {
+                mFetchBlogListCallback.onError(errorMessageId, twoStepCodeRequired, httpAuthRequired, erroneousSslCertificate, "");
             }
         });
     }
@@ -406,7 +449,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (mHttpUsername != null && mHttpPassword != null) {
             fetchBlogListWPOrg.setHttpCredentials(mHttpUsername, mHttpPassword);
         }
-        fetchBlogListWPOrg.execute(mFecthBlogListCallback);
+        fetchBlogListWPOrg.execute(mFetchBlogListCallback);
     }
 
     private boolean checkNetworkConnectivity() {
@@ -435,6 +478,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         mUsername = EditTextUtils.getText(mUsernameEditText).trim();
         mPassword = EditTextUtils.getText(mPasswordEditText).trim();
+        mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
         if (isWPComLogin()) {
             startProgress(getString(R.string.connecting_wpcom));
             signInAndFetchBlogListWPCom();
@@ -511,6 +555,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private void showUrlError(int messageId) {
         mUrlEditText.setError(getString(messageId));
         mUrlEditText.requestFocus();
+    }
+
+    private void showTwoStepCodeError(int messageId) {
+        mTwoStepEditText.setError(getString(messageId));
+        mTwoStepEditText.requestFocus();
     }
 
     protected boolean specificShowError(int messageId) {
@@ -652,18 +701,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         AnalyticsTracker.track(Stat.LOGIN_FAILED);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert;
-        if (messageId == org.wordpress.android.R.string.account_two_step_auth_enabled) {
-            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                    getString(messageId), org.wordpress.android.R.drawable.noticon_alert_big, 2, getString(
-                            org.wordpress.android.R.string.cancel), getString(
-                            org.wordpress.android.R.string.visit_security_settings), "",
-                    SignInDialogFragment.ACTION_OPEN_URL, 0);
-            Bundle bundle = nuxAlert.getArguments();
-            bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM,
-                    "https://wordpress.com/settings/security/?ssl=forced");
-            nuxAlert.setArguments(bundle);
-        } else if (messageId == org.wordpress.android.R.string.username_or_password_incorrect) {
+        if (messageId == org.wordpress.android.R.string.username_or_password_incorrect) {
             handleInvalidUsernameOrPassword(messageId);
+            return;
+        } else if (messageId == R.string.invalid_verification_code) {
+            endProgress();
+            showTwoStepCodeError(messageId);
             return;
         } else if (messageId == org.wordpress.android.R.string.invalid_url_message) {
             showUrlError(messageId);

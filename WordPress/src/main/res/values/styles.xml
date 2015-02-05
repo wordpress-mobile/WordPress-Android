@@ -206,7 +206,7 @@
     </style>
 
     <style name="WordPress.NUXEditText">
-        <item name="android:background">#FFFFFF</item>
+        <item name="android:background">@color/white</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColor">#444444</item>
         <item name="android:textColorHint">#AAAAAA</item>

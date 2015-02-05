@@ -73,7 +73,7 @@ public class FetchBlogListWPCom extends FetchBlogListAbstract {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 JSONObject errorObject = VolleyUtils.volleyErrorToJSON(volleyError);
-                callback.onError(LoginWPCom.restLoginErrorToMsgId(errorObject), false, false, "");
+                callback.onError(LoginWPCom.restLoginErrorToMsgId(errorObject), false, false, false, "");
             }
         });
     }

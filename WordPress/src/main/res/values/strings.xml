@@ -812,6 +812,9 @@
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ptr_tip_message">Tip: Pull down to refresh</string>
+    <string name="two_step_label">Enter two-step verification code. <u>What\'s this?</u></string>
+    <string name="verification_code">Verification code</string>
+    <string name="invalid_verification_code">Invalid verification code</string>
 
     <!-- Help view -->
     <string name="help">Help</string>

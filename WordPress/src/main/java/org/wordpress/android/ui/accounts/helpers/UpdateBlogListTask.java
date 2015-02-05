@@ -50,7 +50,7 @@ public class UpdateBlogListTask extends AsyncTask<Void, Void, List<Map<String, O
             }
 
             @Override
-            public void onError(int messageId, boolean httpAuthRequired, boolean erroneousSslCertificate,
+            public void onError(int messageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate,
                                 String clientResponse) {
                 mErrorMsgId = messageId;
                 countDownLatch.countDown();
