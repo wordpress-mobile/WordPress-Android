@@ -17,26 +17,11 @@ import java.util.List;
  * {@link org.wordpress.mediapicker.MediaItem}'s provided by
  * {@link org.wordpress.mediapicker.source.MediaSource}'s.
  *
- * Customizing the MediaItem view:
- *
- * There are two ways to modify the layout of MediaItem views, either by overriding the
- * media_item_view layout resource or by overriding various convenience resources.
- *
- * The following resource IDs are recognized in the media_item_view layout:
- * <ul>
- *     <li>media_item_frame</li>
- *     <li>media_item_image</li>
- *     <li>media_item_overlay</li>
- *     <li>media_item_title</li>
- * </ul>
- *
  * The following resources are provided for convenience to modify the default layout:
  * <ul>
  *     <li>@drawable/camera                    : overlay image for image capture sources</li>
  *     <li>@drawable/video                     : overlay image for video capture sources</li>
  *     <li>@drawable/media_item_frame_selector : defines frame background based on check state</li>
- *     <li>@string/cd_media_item_image         : content description for media image</li>
- *     <li>@string/cd_media_item_overlay       : content description for overlay image</li>
  *     <li>@dimen/media_item_height            : height of the entire MediaItem view</li>
  *     <li>@dimen/media_item_frame_margin_*    : frame margins; * = left/top/right/bottom</li>
  *     <li>@dimen/media_item_frame_padding_*   : frame padding; * = left/top/right/bottom</li>
@@ -47,9 +32,6 @@ public class MediaSourceAdapter extends BaseAdapter {
     private final LayoutInflater  mLayoutInflater;
     private final ImageLoader.ImageCache mImageCache;
     private final List<MediaSource> mMediaSources;
-
-    // TODO
-//    private final NavigableMap<Integer, MediaSource> mMediaSources2;
 
     public MediaSourceAdapter(Context context, List<MediaSource> sources, ImageLoader.ImageCache imageCache) {
         mMediaSources = sources;
