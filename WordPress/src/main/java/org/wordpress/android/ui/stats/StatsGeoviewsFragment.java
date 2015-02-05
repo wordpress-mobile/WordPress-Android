@@ -79,11 +79,11 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                             .append("google.load(\"visualization\", \"1\", {packages:[\"geochart\"]});")
                             .append("google.setOnLoadCallback(drawRegionsMap);")
                             .append("function drawRegionsMap() {")
-                                .append("var data = google.visualization.arrayToDataTable(" +
-                                        "[")
-                                .append("['Country', '" + label + "'],"
-                                        + dataToLoad +
-                                        "]);")
+                                .append("var data = google.visualization.arrayToDataTable(")
+                                .append("[")
+                                .append("['Country', '").append(label).append("'],")
+                                        .append(dataToLoad)
+                                .append("]);")
                                 .append("var options = {legend: 'none', keepAspectRatio: true, region: 'world', enableRegionInteractivity: true};")
                                 .append("var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));")
                                 .append("chart.draw(data, options);")
