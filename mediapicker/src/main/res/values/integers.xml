@@ -3,6 +3,6 @@
 <resources>
 
     <!-- MediaPicker defaults -->
-    <integer name="media_grid_num_columns">2</integer>
+    <integer name="num_media_columns">2</integer>
 
 </resources>

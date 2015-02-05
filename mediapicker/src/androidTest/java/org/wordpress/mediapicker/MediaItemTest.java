@@ -2,7 +2,6 @@ package org.wordpress.mediapicker;
 
 import android.test.AndroidTestCase;
 
-
 public class MediaItemTest extends AndroidTestCase {
     public void testSourceParsing() {
         final MediaItem testItem = new MediaItem();

@@ -3,6 +3,7 @@ package org.wordpress.mediapicker;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -223,20 +224,23 @@ public class MediaPickerFragment extends Fragment
     private void layoutGridView() {
         Activity activity = getActivity();
         Resources resources = activity.getResources();
-        int numColumns = resources.getInteger(R.integer.media_grid_num_columns);
-        int gridPadding = Math.round(resources.getDimension(R.dimen.media_grid_padding));
-        int columnSpacingY = Math.round(resources.getDimension(R.dimen.media_grid_column_spacing_vertical));
-        int columnSpacingX = Math.round(resources.getDimension(R.dimen.media_grid_column_spacing_horizontal));
-        int backgroundColor = resources.getColor(R.color.grey_medium);
+        int numColumns = resources.getInteger(R.integer.num_media_columns);
+        int paddingLeft = Math.round(resources.getDimension(R.dimen.media_padding_left));
+        int paddingTop = Math.round(resources.getDimension(R.dimen.media_padding_top));
+        int paddingRight = Math.round(resources.getDimension(R.dimen.media_padding_right));
+        int paddingBottom = Math.round(resources.getDimension(R.dimen.media_padding_bottom));
+        int columnSpacingY = Math.round(resources.getDimension(R.dimen.media_spacing_vertical));
+        int columnSpacingX = Math.round(resources.getDimension(R.dimen.media_spacing_horizontal));
+        Drawable background = resources.getDrawable(R.drawable.media_picker_background);
         ImageLoader.ImageCache imageCache = mListener != null ? mListener.getImageCache() : null;
 
         mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache);
 
-        mGridView.setBackgroundColor(backgroundColor);
+        mGridView.setBackgroundDrawable(background);
         mGridView.setNumColumns(numColumns);
         mGridView.setVerticalSpacing(columnSpacingY);
         mGridView.setHorizontalSpacing(columnSpacingX);
-        mGridView.setPadding(gridPadding, gridPadding, gridPadding, gridPadding);
+        mGridView.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
         mGridView.setClipToPadding(false);
         mGridView.setMultiChoiceModeListener(this);
         mGridView.setOnItemClickListener(this);
