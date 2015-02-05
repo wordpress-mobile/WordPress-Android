@@ -249,6 +249,32 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         return rootView;
     }
 
+    private ArrayList<MediaSource> imageMediaSelectionSources() {
+        ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
+        imageMediaSources.add(new MediaSourceWPImages());
+        imageMediaSources.add(new MediaSourceDeviceImages(getActivity().getContentResolver()));
+
+        return imageMediaSources;
+    }
+
+    private ArrayList<MediaSource> videoMediaSelectionSources() {
+        ArrayList<MediaSource> videoMediaSources = new ArrayList<>();
+        videoMediaSources.add(new MediaSourceWPVideos());
+        videoMediaSources.add(new MediaSourceDeviceVideos(getActivity().getContentResolver()));
+
+        return videoMediaSources;
+    }
+
+    private void startMediaSelection() {
+        Intent intent = new Intent(mActivity, MediaPickerActivity.class);
+        intent.putExtra(MediaPickerActivity.ACTIVITY_TITLE_KEY, getString(R.string.add_to_post));
+        intent.putParcelableArrayListExtra(MediaPickerActivity.IMAGE_MEDIA_SOURCES_KEY, imageMediaSelectionSources());
+        intent.putParcelableArrayListExtra(MediaPickerActivity.VIDEO_MEDIA_SOURCES_KEY, videoMediaSelectionSources());
+
+        startActivityForResult(intent, MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
+        mActivity.overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -339,6 +365,14 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         if (data != null || ((requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
             Bundle extras;
             switch (requestCode) {
+                case MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
+                    if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_MEDIA_SELECTED) {
+                        handleMediaSelectionResult(data);
+                    } else if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_GALLERY_CREATED) {
+                        // TODO: Remove other request code that deals with it
+                        handleMediaGalleryResult2(data);
+                    }
+                    break;
                 case MediaGalleryActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
                         handleMediaGalleryResult(data);
@@ -956,6 +990,30 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         addExistingMediaToEditor(mediaId);
     }
 
+    private void handleMediaSelectionResult(Intent data) {
+        if (data != null) {
+            List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
+
+            if (selectedContent != null && selectedContent.size() > 0) {
+                for (MediaItem selectedItem : selectedContent) {
+                    if (selectedItem.getSource().getHost() == null) {
+                        // Local media
+                        if (!addMedia(selectedItem.getSource(), null, getActivity())) {
+                            Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        // WordPress.com media
+                        addExistingMediaToEditor(selectedItem.getTag());
+                    }
+                }
+            }
+        }
+    }
+
+    private void handleMediaGalleryResult2(Intent data) {
+        // TODO
+    }
+
     private void handleMediaGalleryResult(Intent data) {
         MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
 
@@ -1024,7 +1082,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
         Bitmap thumbnailBitmap;
         String mediaTitle;
-        if (imageUri.toString().contains("video") && !MediaUtils.isInMediaStore(imageUri)) {
+        if (MediaUtils.isVideo(imageUri.toString())) {
             thumbnailBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.media_movieclip);
             mediaTitle = getResources().getString(R.string.video);
         } else {
