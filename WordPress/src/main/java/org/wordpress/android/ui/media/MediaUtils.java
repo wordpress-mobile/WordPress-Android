@@ -8,12 +8,15 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -36,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -43,6 +47,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import static org.wordpress.mediapicker.MediaUtils.fadeInImage;
 
 public class MediaUtils {
     public class RequestCode {
@@ -119,6 +125,45 @@ public class MediaUtils {
         }
 
         return WordPress.wpDB.getMediaFilesForBlog(String.valueOf(blog.getLocalTableBlogId()));
+    }
+
+    public static class BackgroundDownloadWebImage extends AsyncTask<Uri, String, Bitmap> {
+        WeakReference<ImageView> mReference;
+
+        public BackgroundDownloadWebImage(ImageView resultStore) {
+            mReference = new WeakReference<>(resultStore);
+        }
+
+        @Override
+        protected Bitmap doInBackground(Uri... params) {
+            try {
+                String uri = params[0].toString();
+                Bitmap bitmap = WordPress.getBitmapCache().getBitmap(uri);
+
+                if (bitmap == null) {
+                    URL url = new URL(uri);
+                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    WordPress.getBitmapCache().put(uri, bitmap);
+                }
+
+                return bitmap;
+            }
+            catch(IOException notFoundException) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            ImageView imageView = mReference.get();
+
+            if (imageView != null) {
+                if (imageView.getTag() == this) {
+                    imageView.setImageBitmap(result);
+                    fadeInImage(imageView, result);
+                }
+            }
+        }
     }
 
     public static int getPlaceholder(String url) {
