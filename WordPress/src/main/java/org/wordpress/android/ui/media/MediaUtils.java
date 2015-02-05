@@ -18,6 +18,7 @@ import android.webkit.MimeTypeMap;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -98,6 +99,26 @@ public class MediaUtils {
                 url.endsWith(".wmv") || url.endsWith(".avi") || url.endsWith(".mpg") || url.endsWith(".3gp") || url.endsWith(".3g2"))
             return true;
         return false;
+    }
+
+    public static Cursor getWordPressMediaImages() {
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (blog == null) {
+            return null;
+        }
+
+        return WordPress.wpDB.getMediaImagesForBlog(String.valueOf(blog.getLocalTableBlogId()));
+    }
+
+    public static Cursor getWordPressMediaVideos() {
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (blog == null) {
+            return null;
+        }
+
+        return WordPress.wpDB.getMediaFilesForBlog(String.valueOf(blog.getLocalTableBlogId()));
     }
 
     public static int getPlaceholder(String url) {
