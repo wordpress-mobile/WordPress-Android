@@ -72,11 +72,21 @@ public class UrlUtils {
         return url;
     }
 
+    /**
+     * Add scheme prefix to an URL. This method must be called on all user entered or server fetched URLs to ensure
+     * http client will work as expected.
+     *
+     * @param url url entered by the user or fetched from a server
+     * @param isHTTPS true will make the url starts with https;//
+     * @return transformed url prefixed by its http;// or https;// scheme
+     */
     public static String addUrlSchemeIfNeeded(String url, boolean isHTTPS) {
         if (url == null) {
             return null;
         }
 
+        // Remove leading double slash (eg. //example.com), needed for some wporg instances configured to
+        // switch between http or https
         url = removeLeadingDoubleSlash(url, (isHTTPS ? "https" : "http") + "://");
 
         if (!URLUtil.isValidUrl(url)) {
