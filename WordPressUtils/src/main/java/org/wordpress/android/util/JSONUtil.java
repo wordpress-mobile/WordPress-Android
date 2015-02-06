@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class JSONUtil {
     private static String QUERY_SEPERATOR=".";

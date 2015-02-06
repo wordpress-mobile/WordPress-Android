@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
  */
 public class AppLog {
     // T for Tag
-    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS, PROFILING, SIMPERIUM}
+    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS, PROFILING, SIMPERIUM, SUGGESTION}
     public static final String TAG = "WordPress";
     public static final int HEADER_LINE_COUNT = 2;
 
@@ -33,40 +33,46 @@ public class AppLog {
     }
 
     public static void v(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.v(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.v, message);
     }
 
     public static void d(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.d(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.d, message);
     }
 
     public static void i(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.i(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.i, message);
     }
 
     public static void w(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.w(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.w, message);
     }
 
     public static void e(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.e(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.e, message);
     }
 
     public static void e(T tag, String message, Throwable tr) {
+        message = StringUtils.notNullStr(message);
         Log.e(TAG + "-" + tag.toString(), message, tr);
         addEntry(tag, LogLevel.e, message + " - exception: " + tr.getMessage());
-        addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(tr));
+        addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(tr));
     }
 
     public static void e(T tag, Throwable tr) {
         Log.e(TAG + "-" + tag.toString(), tr.getMessage(), tr);
         addEntry(tag, LogLevel.e, tr.getMessage());
-        addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(tr));
+        addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(tr));
     }
 
     public static void e(T tag, String volleyErrorMsg, int statusCode) {
@@ -113,15 +119,15 @@ public class AppLog {
 
         private String toHtml() {
             StringBuilder sb = new StringBuilder()
-                    .append("<font color='")
+                    .append("<font color=\"")
                     .append(logLevel.toHtmlColor())
-                    .append("'>")
+                    .append("\">")
                     .append("[")
                     .append(logTag.name())
                     .append("] ")
                     .append(logLevel.name())
                     .append(": ")
-                    .append(logText)
+                    .append(TextUtils.htmlEncode(logText).replace("\n", "<br />"))
                     .append("</font>");
             return sb.toString();
         }
@@ -164,9 +170,6 @@ public class AppLog {
         return errors.toString();
     }
 
-    private static String getHTMLStringStackTrace(Throwable throwable) {
-        return getStringStackTrace(throwable).replace("\n", "<br/>");
-    }
 
     /*
      * returns entire log as html for display (see AppLogViewerActivity)
