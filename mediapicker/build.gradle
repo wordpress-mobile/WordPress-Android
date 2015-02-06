@@ -26,11 +26,13 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.10'
 
     androidTestCompile 'junit:junit:4.10'
-    androidTestCompile 'junit:junit:4.10'
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'org.robolectric:robolectric:2.4'
 
     // Workaround for IDE bug
     // http://stackoverflow.com/questions/22246183/android-studio-doesnt-recognize-espresso-classes
     provided 'junit:junit:4.10'
+    provided 'org.mockito:mockito-core:1.10.19'
     provided 'org.robolectric:robolectric:2.4'
 }
 
