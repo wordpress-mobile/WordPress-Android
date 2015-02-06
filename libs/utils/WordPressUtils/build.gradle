@@ -1,4 +1,3 @@
-
 buildscript {
     repositories {
         mavenCentral()
@@ -10,16 +9,16 @@ buildscript {
 
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 repositories {
     mavenCentral()
-    maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
 }
 
 dependencies {
     compile 'commons-lang:commons-lang:2.6'
-    compile 'com.mcxiaoke.volley:library:1.0.+'
-    compile 'com.android.support:support-v13:21.0.+'
+    compile 'com.mcxiaoke.volley:library:1.0.10'
+    compile 'com.android.support:support-v13:21.0.3'
 }
 
 android {
@@ -29,23 +28,62 @@ android {
     buildToolsVersion "21.1.1"
 
     defaultConfig {
-        versionName "1.2.0"
+        versionName "1.3.0"
         minSdkVersion 14
         targetSdkVersion 19
     }
 }
 
+version android.defaultConfig.versionName
+group = "org.wordpress"
+archivesBaseName = "utils"
+
+signing {
+    required {
+        has("release") && project.properties.containsKey("signing.keyId") && project.properties.containsKey("signing.secretKeyRingFile")
+    }
+    sign configurations.archives
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
-            def repo_url = ""
-            if (project.hasProperty("repository")) {
-                repo_url = project.repository
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: project.properties.ossrhUsername, password: project.properties.ossrhPassword)
             }
-            repository(url: repo_url)
-            pom.version = android.defaultConfig.versionName
-            pom.groupId = "org.wordpress"
-            pom.artifactId = "wordpress-utils"
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: project.properties.ossrhUsername, password: project.properties.ossrhPassword)
+            }
+
+            pom.project {
+                name 'WordPress-Utils-Android'
+                packaging 'aar'
+                description 'Utils lib for WordPress-Android'
+                url 'https://github.com/wordpress-mobile/WordPress-Utils-Android'
+                scm {
+                    connection 'scm:git:https://github.com/wordpress-mobile/WordPress-Utils-Android.git'
+                    developerConnection 'scm:git:https://github.com/wordpress-mobile/WordPress-Utils-Android.git'
+                    url 'https://github.com/wordpress-mobile/WordPress-Utils-Android'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)'
+                        url 'http://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'maxme'
+                        name 'Maxime Biais'
+                        email 'maxime@automattic.com'
+                    }
+                }
+            }
         }
     }
 }
