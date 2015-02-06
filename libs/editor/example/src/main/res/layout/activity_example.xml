@@ -7,10 +7,19 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit Example Post 1"
-        android:id="@+id/button1"
+        android:text="New Editor - Post 1"
+        android:id="@+id/new_editor_post_1"
         android:layout_alignParentTop="true"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Old Editor - Post 1"
+        android:id="@+id/old_editor_post_1"
+        android:layout_marginTop="32dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/new_editor_post_1"/>
 
 </RelativeLayout>

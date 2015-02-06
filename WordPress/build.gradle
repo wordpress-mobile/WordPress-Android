@@ -105,6 +105,8 @@ dependencies {
     debugCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'debug')
     releaseCompile project(path:':libs:analytics:analytics', configuration: 'release')
     debugCompile project(path:':libs:analytics:analytics', configuration: 'debug')
+    releaseCompile project(path:':libs:editor:editor', configuration: 'release')
+    debugCompile project(path:':libs:editor:editor', configuration: 'debug')
 }
 
 configurations.all {
