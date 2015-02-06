@@ -54,12 +54,12 @@ public class MediaSourceDeviceImages implements MediaSource {
 
     @Override
     public int getCount() {
-        return mMediaItems.size();
+        return mMediaItems != null ? mMediaItems.size() : 0;
     }
 
     @Override
     public MediaItem getMedia(int position) {
-        return mMediaItems.get(position);
+        return mMediaItems != null ? mMediaItems.get(position) : null;
     }
 
     @Override

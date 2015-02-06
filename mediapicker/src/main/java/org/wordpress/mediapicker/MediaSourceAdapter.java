@@ -76,6 +76,21 @@ public class MediaSourceAdapter extends BaseAdapter {
     }
 
     /**
+     * Helper method; determines the total number of items in all MediaSources
+     *
+     * @return
+     *  the total number of MediaItems contained in the MediaSource
+     */
+    private int totalItems() {
+        int count = 0;
+        for (int i = 0; i < mMediaSources.size(); ++i) {
+            count += mMediaSources.get(i).getCount();
+        }
+
+        return count;
+    }
+
+    /**
      * Determines the MediaSource that contains the MediaItem at the specified position.
      *
      * @param position
@@ -94,21 +109,6 @@ public class MediaSourceAdapter extends BaseAdapter {
         }
 
         return null;
-    }
-
-    /**
-     * Helper method; determines the total number of items in all MediaSources
-     *
-     * @return
-     *  the total number of MediaItems contained in the MediaSource
-     */
-    private int totalItems() {
-        int count = 0;
-        for (int i = 0; i < mMediaSources.size(); ++i) {
-            count += mMediaSources.get(i).getCount();
-        }
-
-        return count;
     }
 
     /**
