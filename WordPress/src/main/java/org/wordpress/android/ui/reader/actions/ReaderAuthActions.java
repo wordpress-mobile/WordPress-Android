@@ -46,10 +46,6 @@ public class ReaderAuthActions {
         final CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
 
-        // nothing more to do if login doesn't exist yet
-        if (!WordPress.hasValidWPComCredentials(context))
-            return;
-
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         final String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
         final String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, ""));

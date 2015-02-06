@@ -18,6 +18,8 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
+import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
@@ -39,11 +41,14 @@ public class WPMainActivity extends ActionBarActivity
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
 
+    private boolean mHasPerformedInitialUpdate;
     private int mPreviousPosition = -1;
 
     public interface FragmentVisibilityListener {
         public void onVisibilityChanged(boolean isVisible);
     }
+
+    private static final String KEY_INITIAL_UPDATE = "initial_update_performed";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,26 @@ public class WPMainActivity extends ActionBarActivity
                     mViewPager.setCurrentItem(position);
                 }
             }
+        } else {
+            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
+        }
+
+        if (!mHasPerformedInitialUpdate) {
+            performInitialUpdate();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
+        super.onSaveInstanceState(outState);
+    }
+
+    void performInitialUpdate() {
+        if (WordPress.hasValidWPComCredentials(this)) {
+            ReaderAuthActions.updateCookies(this);
+            ReaderUserActions.updateCurrentUser();
+            mHasPerformedInitialUpdate = true;
         }
     }
 
@@ -141,6 +166,7 @@ public class WPMainActivity extends ActionBarActivity
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
                     WordPress.registerForCloudMessaging(this);
+                    performInitialUpdate();
                 } else {
                     finish();
                 }
@@ -175,6 +201,7 @@ public class WPMainActivity extends ActionBarActivity
 
     private void showSignIn() {
         mPreviousPosition = -1;
+        mHasPerformedInitialUpdate = false;
         startActivityForResult(new Intent(this, SignInActivity.class), RequestCodes.ADD_ACCOUNT);
     }
 

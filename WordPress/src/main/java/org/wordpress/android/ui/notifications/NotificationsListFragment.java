@@ -30,7 +30,6 @@ import org.wordpress.android.ui.WPMainActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -48,7 +47,6 @@ public class NotificationsListFragment extends Fragment
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
 
-    private static final String KEY_INITIAL_UPDATE = "initialUpdate";
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
 
     private SwipeToRefreshHelper mFauxSwipeToRefreshHelper;
@@ -58,7 +56,6 @@ public class NotificationsListFragment extends Fragment
     private TextView mEmptyTextView;
 
     private int mRestoredScrollPosition;
-    private boolean mHasPerformedInitialUpdate;
 
     private Bucket<Note> mBucket;
 
@@ -99,7 +96,6 @@ public class NotificationsListFragment extends Fragment
         initSwipeToRefreshHelper();
 
         if (savedInstanceState != null) {
-            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE, false);
             setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
         }
     }
@@ -112,10 +108,7 @@ public class NotificationsListFragment extends Fragment
         AppLog.d(AppLog.T.NOTIFS, "notification list > onVisibilityChanged " + isVisible);
 
         if (isVisible) {
-            if (!mHasPerformedInitialUpdate) {
-                mHasPerformedInitialUpdate = true;
-                ReaderAuthActions.updateCookies(getActivity());
-            }
+
         } else {
 
         }
@@ -311,8 +304,6 @@ public class NotificationsListFragment extends Fragment
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
-
-        outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
 
         // Save list view scroll position
         outState.putInt(KEY_LIST_SCROLL_POSITION, getScrollPosition());
