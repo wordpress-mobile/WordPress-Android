@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- MediaPicker options -->
+    <dimen name="media_grid_padding">4dp</dimen>
+    <dimen name="media_grid_column_spacing_vertical">8dp</dimen>
+    <dimen name="media_grid_column_spacing_horizontal">6dp</dimen>
+
+    <!-- MediaItem View options -->
+
+</resources>

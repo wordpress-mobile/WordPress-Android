@@ -1,0 +1,105 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+version = "0.9.1"
+group = "org.wordpress"
+archivesBaseName = "mediapicker"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.android.support:support-v13:21.0.2'
+    compile 'com.mcxiaoke.volley:library:1.0.10'
+}
+
+android {
+    publishNonDefault true
+
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 21
+        versionCode 1
+        versionName "0.9.1"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        androidTest {
+            resources {
+                srcDir 'src/resources'
+            }
+        }
+    }
+}
+
+signing {
+    required {
+        project.properties.containsKey("signing.keyId") && project.properties.containsKey("signing.secretKeyRingFile")
+    }
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: project.properties.ossrhUsername, password: project.properties.ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: project.properties.ossrhUsername, password: project.properties.ossrhPassword)
+            }
+
+            pom.project {
+                name 'MediaPicker'
+                packaging 'aar'
+                description 'MediaPicker is an Android Fragment that enables users to select multiple media from a variety of sources.'
+                url 'https://github.com/wordpress-mobile/MediaPicker'
+
+                scm {
+                    url 'https://github.com/wordpress-mobile/MediaPicker'
+                    connection 'scm:git:https://github.com/wordpress-mobile/MediaPicker.git'
+                    developerConnection 'scm:git:https://github.com/wordpress-mobile/MediaPicker.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)'
+                        url 'http://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'tonyr59h'
+                        name 'Anthony Rankin'
+                        email 'tonyr@automattic.com'
+                    }
+                }
+            }
+        }
+    }
+}
