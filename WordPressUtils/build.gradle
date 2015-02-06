@@ -17,8 +17,8 @@ repositories {
 
 dependencies {
     compile 'commons-lang:commons-lang:2.6'
-    compile 'com.mcxiaoke.volley:library:1.0.+'
-    compile 'com.android.support:support-v13:21.0.+'
+    compile 'com.mcxiaoke.volley:library:1.0.10'
+    compile 'com.android.support:support-v13:21.0.3'
 }
 
 android {
@@ -34,18 +34,16 @@ android {
     }
 }
 
-signing {
-    required {
-        project.properties.containsKey("signing.keyId") && project.properties.containsKey("signing.secretKeyRingFile")
-    }
-    sign configurations.archives
-}
-
 version android.defaultConfig.versionName
 group = "org.wordpress"
 archivesBaseName = "utils"
 
-// http://central.sonatype.org/pages/gradle.html
+signing {
+    required {
+        has("release") && project.properties.containsKey("signing.keyId") && project.properties.containsKey("signing.secretKeyRingFile")
+    }
+    sign configurations.archives
+}
 
 uploadArchives {
     repositories {
@@ -61,9 +59,9 @@ uploadArchives {
             }
 
             pom.project {
-                name 'PersistentEditText'
+                name 'WordPress-Utils-Android'
                 packaging 'aar'
-                description 'Android EditText subclass with persistence'
+                description 'Utils lib for WordPress-Android'
                 url 'https://github.com/wordpress-mobile/WordPress-Utils-Android'
                 scm {
                     connection 'scm:git:https://github.com/wordpress-mobile/WordPress-Utils-Android.git'
