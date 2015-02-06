@@ -4,10 +4,12 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'org.robolectric:robolectric-gradle-plugin:0.14.1'
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'robolectric'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
@@ -22,6 +24,14 @@ repositories {
 dependencies {
     compile 'com.android.support:support-v13:21.0.2'
     compile 'com.mcxiaoke.volley:library:1.0.10'
+
+    androidTestCompile 'junit:junit:4.10'
+    androidTestCompile 'junit:junit:4.10'
+
+    // Workaround for IDE bug
+    // http://stackoverflow.com/questions/22246183/android-studio-doesnt-recognize-espresso-classes
+    provided 'junit:junit:4.10'
+    provided 'org.robolectric:robolectric:2.4'
 }
 
 android {
@@ -43,14 +53,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
 
-    sourceSets {
-        androidTest {
-            resources {
-                srcDir 'src/resources'
-            }
-        }
-    }
+robolectric {
+    include '**/*Test.class'
 }
 
 signing {
