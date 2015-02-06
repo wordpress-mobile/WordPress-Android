@@ -14,8 +14,16 @@ public class ExampleActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_example);
-        Button button1 = (Button) findViewById(R.id.button1);
-        button1.setOnClickListener(new OnClickListener() {
+
+        Button newEditorPost1 = (Button) findViewById(R.id.new_editor_post_1);
+        newEditorPost1.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                startActivity(new Intent(ExampleActivity.this, EditorActivity.class));
+            }
+        });
+
+        Button oldEditorPost1 = (Button) findViewById(R.id.old_editor_post_1);
+        oldEditorPost1.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
                 startActivity(new Intent(ExampleActivity.this, EditorActivity.class));
             }
