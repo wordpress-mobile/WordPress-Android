@@ -1,22 +1,18 @@
 package org.wordpress.android.util;
 
-import android.text.TextUtils;
-
 public class GravatarUtils {
     /*
      * see https://en.gravatar.com/site/implement/images/
      */
-    public static String gravatarUrlFromEmail(final String email, int size) {
-        if (TextUtils.isEmpty(email))
-            return "";
+    public static String gravatarFromEmail(final String email, int size) {
+        return "http://gravatar.com/avatar/"
+              + StringUtils.getMd5Hash(StringUtils.notNullStr(email))
+              + "?d=mm&size=" + Integer.toString(size);
+    }
 
-        String url = "http://gravatar.com/avatar/"
-                    + StringUtils.getMd5Hash(email)
-                    + "?d=mm";
-
-        if (size > 0)
-            url += "&s=" + Integer.toString(size);
-
-        return url;
+    public static String blavatarFromUrl(final String url, int size) {
+        return "http://gravatar.com/blavatar/"
+              + StringUtils.getMd5Hash(UrlUtils.getDomainFromUrl(url))
+              + "?d=mm&size=" + Integer.toString(size);
     }
 }

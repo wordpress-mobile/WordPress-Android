@@ -553,7 +553,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mComment.hasProfileImageUrl()) {
             imgAvatar.setImageUrl(PhotonUtils.fixAvatar(mComment.getProfileImageUrl(), avatarSz), WPNetworkImageView.ImageType.AVATAR);
         } else if (mComment.hasAuthorEmail()) {
-            String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.getAuthorEmail(), avatarSz);
+            String avatarUrl = GravatarUtils.gravatarFromEmail(mComment.getAuthorEmail(), avatarSz);
             imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
         } else {
             imgAvatar.setImageUrl(null, WPNetworkImageView.ImageType.AVATAR);
