@@ -10,9 +10,13 @@ public class GravatarUtils {
               + "?d=mm&size=" + Integer.toString(size);
     }
 
+    /*
+     * important: the 404 default means the request will 404 if there is no blavatar
+     * for the passed site - so the caller needs to trap the 404 to provide a default
+     */
     public static String blavatarFromUrl(final String url, int size) {
         return "http://gravatar.com/blavatar/"
-              + StringUtils.getMd5Hash(UrlUtils.getDomainFromUrl(url))
-              + "?d=mm&size=" + Integer.toString(size);
+                + StringUtils.getMd5Hash(UrlUtils.getDomainFromUrl(url))
+                + "?d=404&size=" + Integer.toString(size);
     }
 }
