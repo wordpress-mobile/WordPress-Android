@@ -108,7 +108,7 @@ dependencies {
 }
 
 configurations.all {
-    // Exclude packaged utils, force the use of sources in project :libs:utils:WordPressUtils
+    // Exclude packaged utils, force the use of the source project :libs:utils:WordPressUtils
     exclude group: 'org.wordpress', module: 'utils'
 }
 
