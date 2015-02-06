@@ -429,6 +429,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private void setTwoStepAuthVisibility(boolean isVisible) {
         mTwoStepLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mForgotPassword.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        mBottomButtonsLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
         mUsernameEditText.setFocusableInTouchMode(!isVisible);
         mUsernameLayout.setAlpha(isVisible ? 0.6f : 1.0f);
         mPasswordEditText.setFocusableInTouchMode(!isVisible);
