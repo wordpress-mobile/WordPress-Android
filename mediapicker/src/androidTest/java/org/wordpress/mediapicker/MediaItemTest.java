@@ -1,8 +1,17 @@
 package org.wordpress.mediapicker;
 
-import android.test.AndroidTestCase;
+import junit.framework.Assert;
 
-public class MediaItemTest extends AndroidTestCase {
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+
+@Config(emulateSdk = 18)
+@RunWith(RobolectricTestRunner.class)
+public class MediaItemTest {
+    @Test
     public void testSourceParsing() {
         final MediaItem testItem = new MediaItem();
         final String testValidSource = "file://test.img";
@@ -10,19 +19,20 @@ public class MediaItemTest extends AndroidTestCase {
 
         testItem.setPreviewSource(testValidSource);
         testItem.setSource(testValidSource);
-        assertTrue("Failed to parse preview source.", testItem.getPreviewSource().isAbsolute());
-        assertTrue("Failed to parse source.", testItem.getSource().isAbsolute());
+        Assert.assertTrue("Failed to parse preview source.", testItem.getPreviewSource().isAbsolute());
+        Assert.assertTrue("Failed to parse source.", testItem.getSource().isAbsolute());
 
         testItem.setPreviewSource(testInvalidSource);
         testItem.setSource(testInvalidSource);
-        assertFalse(testItem.getPreviewSource().isAbsolute());
-        assertFalse(testItem.getSource().isAbsolute());
+        Assert.assertFalse(testItem.getPreviewSource().isAbsolute());
+        Assert.assertFalse(testItem.getSource().isAbsolute());
     }
 
+    @Test
     public void testDescribeContents() {
         final MediaItem testItem = new MediaItem();
         final int expectedContents = 0;
 
-        assertEquals(expectedContents, testItem.describeContents());
+        Assert.assertEquals(expectedContents, testItem.describeContents());
     }
 }
