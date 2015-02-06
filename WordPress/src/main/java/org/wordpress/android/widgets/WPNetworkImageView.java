@@ -330,8 +330,8 @@ public class WPNetworkImageView extends ImageView {
                 ));
                 break;
             case BLAVATAR:
-                // square "mystery man" for failed site avatars
-                setImageResource(R.drawable.gravatar_placeholder);
+                // wp icon for failed blavatars
+                setImageResource(R.drawable.app_icon);
                 break;
             case STATS_SITE_AVATAR:
                 setImageResource(R.drawable.stats_icon_default_site_avatar);
