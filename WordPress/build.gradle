@@ -77,7 +77,6 @@ dependencies {
     compile 'commons-lang:commons-lang:2.6'
     compile 'com.cocosw:undobar:1.6@aar'
 
-    compile 'com.mixpanel.android:mixpanel-android:4.3.0@aar'
     compile 'com.mcxiaoke.volley:library:1.0.+'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
@@ -104,8 +103,13 @@ dependencies {
     debugCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'debug')
     releaseCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'release')
     debugCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'debug')
-    releaseCompile project(path:':libs:editor:editor', configuration: 'release')
-    debugCompile project(path:':libs:editor:editor', configuration: 'debug')
+    releaseCompile project(path:':libs:analytics:analytics', configuration: 'release')
+    debugCompile project(path:':libs:analytics:analytics', configuration: 'debug')
+}
+
+configurations.all {
+    // Exclude packaged utils, force the use of sources in project :libs:utils:WordPressUtils
+    exclude group: 'org.wordpress', module: 'utils'
 }
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
