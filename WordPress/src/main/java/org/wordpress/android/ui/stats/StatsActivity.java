@@ -41,6 +41,7 @@ import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
@@ -447,7 +448,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                             if (result != null && (result instanceof HashMap)) {
                                 Map<?, ?> blogOptions = (HashMap<?, ?>) result;
                                 ApiHelper.updateBlogOptions(currentBlog, blogOptions);
-                                AnalyticsTracker.refreshMetadata();
+                                AnalyticsUtils.refreshMetadata();
                                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK);
                                 AnalyticsTracker.track(
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);

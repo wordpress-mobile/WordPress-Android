@@ -25,11 +25,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.util.AlertUtil;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.UserEmail;
-import org.wordpress.persistentedittext.PersistentEditTextHelper;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
+import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -279,7 +280,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
                     @Override
                     public void onSuccess(JSONObject createSiteResponse) {
-                        AnalyticsTracker.refreshMetadata();
+                        AnalyticsUtils.refreshMetadata(username, email);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                         endProgress();
                         if (isAdded()) {

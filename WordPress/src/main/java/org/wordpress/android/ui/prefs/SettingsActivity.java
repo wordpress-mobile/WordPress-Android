@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AnalyticsUtils;
 
 public class SettingsActivity extends ActionBarActivity {
     public static final int RESULT_SIGNED_OUT = 1;
@@ -76,7 +77,8 @@ public class SettingsActivity extends ActionBarActivity {
         }
         data.putExtra(SettingsActivity.CURRENT_BLOG_CHANGED, currentBlogChanged);
         setResult(Activity.RESULT_OK, data);
-        AnalyticsTracker.loadPrefHasUserOptedOut(true);
+        AnalyticsTracker.loadPrefHasUserOptedOut(this, true);
+        AnalyticsUtils.refreshMetadata();
         super.finish();
     }
 

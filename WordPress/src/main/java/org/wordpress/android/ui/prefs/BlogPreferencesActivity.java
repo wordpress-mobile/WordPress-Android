@@ -24,6 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.DashboardActivity;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.Locale;
@@ -270,7 +271,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
                 boolean deleteSuccess =
                         WordPress.wpDB.deleteAccount(BlogPreferencesActivity.this, blog.getLocalTableBlogId());
                 if (deleteSuccess) {
-                    AnalyticsTracker.refreshMetadata();
+                    AnalyticsUtils.refreshMetadata();
                     Toast.makeText(activity, getResources().getText(R.string.blog_removed_successfully),
                             Toast.LENGTH_SHORT)
                             .show();

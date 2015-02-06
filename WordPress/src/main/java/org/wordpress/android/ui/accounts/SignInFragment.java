@@ -47,6 +47,7 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -306,7 +307,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         Map<String, Boolean> properties = new HashMap<String, Boolean>();
         properties.put("dotcom_user", isWPComLogin());
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
-        AnalyticsTracker.refreshMetadata();
+        AnalyticsUtils.refreshMetadata();
         if (!isWPComLogin()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
         }
