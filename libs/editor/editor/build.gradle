@@ -38,8 +38,7 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:21.0.+'
     compile 'com.android.support:support-v4:21.0.+'
-    releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
-    debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
+    compile 'org.wordpress:analytics:1.0.0'
 }
 
 signing {
