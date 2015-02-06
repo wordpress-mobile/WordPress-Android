@@ -118,9 +118,11 @@ public class Oauth {
             mParams.put(USERNAME_PARAM_NAME, username);
             mParams.put(PASSWORD_PARAM_NAME, password);
             mParams.put(GRANT_TYPE_PARAM_NAME, PASSWORD_GRANT_TYPE);
+
             if (!TextUtils.isEmpty(twoStepCode)) {
                 mParams.put("wpcom_otp", twoStepCode);
-                mParams.put("wpcom_supports_2fa", "");
+            } else {
+                mParams.put("wpcom_supports_2fa", "true");
             }
         }
     }

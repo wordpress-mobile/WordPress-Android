@@ -148,28 +148,60 @@
                 android:animateLayoutChanges="true"
                 android:visibility="gone">
 
-                <org.wordpress.android.widgets.WPTextView
+                <LinearLayout
                     android:id="@+id/two_factor_label"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_small"
+                    android:orientation="horizontal"
                     android:gravity="center_horizontal"
-                    android:text="@string/two_step_label"
-                    android:textColor="@color/white" />
+                    android:layout_marginBottom="@dimen/margin_small">
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/two_factor_label_message"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="@string/two_step_label"
+                        android:textColor="@color/white" />
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/two_factor_help"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_small"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:background="@drawable/selectable_background_wordpress"
+                        android:clickable="true"
+                        android:gravity="center_horizontal"
+                        android:text="@string/two_step_help"
+                        android:textColor="@color/white" />
+                </LinearLayout>
 
                 <org.wordpress.android.widgets.OpenSansEditText
-                    android:id="@+id/nux_two_factor"
+                    android:id="@+id/nux_two_step"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/two_factor_label"
-                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:layout_marginBottom="@dimen/margin_small"
                     android:layout_marginLeft="0dp"
                     android:layout_marginStart="0dp"
                     android:gravity="center_horizontal"
                     android:hint="@string/verification_code"
                     android:inputType="number"
                     android:maxLength="7" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/two_factor_send_sms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/nux_two_step"
+                    android:background="@drawable/selectable_background_wordpress"
+                    android:clickable="true"
+                    android:gravity="center_horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:text="Send code via text"
+                    android:textColor="@color/white" />
             </RelativeLayout>
 
             <RelativeLayout

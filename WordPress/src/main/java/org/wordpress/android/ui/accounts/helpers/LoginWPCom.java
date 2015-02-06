@@ -40,9 +40,8 @@ public class LoginWPCom extends LoginAbstract {
                     if (errorDescription.contains("Incorrect username or password.")) {
                         errorMsgId = org.wordpress.android.R.string.username_or_password_incorrect;
                     }
-                    if (errorDescription.contains("This account has two step authentication enabled.")) {
-                        errorMsgId = org.wordpress.android.R.string.account_two_step_auth_enabled;
-                    }
+                } else if (error.equals("needs_2fa")) {
+                    errorMsgId = org.wordpress.android.R.string.account_two_step_auth_enabled;
                 } else if (error.equals("invalid_otp")) {
                     errorMsgId = org.wordpress.android.R.string.invalid_verification_code;
                 }

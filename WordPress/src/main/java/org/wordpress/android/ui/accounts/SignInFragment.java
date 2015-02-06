@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -77,6 +78,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private EditText mUrlEditText;
     private EditText mTwoStepEditText;
     private boolean mSelfHosted;
+    private WPTextView mTwoStepMessage;
     private WPTextView mSignInButton;
     private WPTextView mCreateAccountButton;
     private WPTextView mAddSelfHostedButton;
@@ -118,7 +120,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mPasswordEditText = (EditText) rootView.findViewById(R.id.nux_password);
         mPasswordEditText.addTextChangedListener(this);
         mPasswordEditText.setOnClickListener(mOnLoginFormClickListener);
-        mTwoStepEditText = (EditText) rootView.findViewById(R.id.nux_two_factor);
+        mTwoStepMessage = (WPTextView)rootView.findViewById(R.id.two_factor_label_message);
+        mTwoStepEditText = (EditText) rootView.findViewById(R.id.nux_two_step);
         mTwoStepEditText.addTextChangedListener(this);
         mUrlEditText = (EditText) rootView.findViewById(R.id.nux_url);
         mSignInButton = (WPTextView) rootView.findViewById(R.id.nux_sign_in_button);
@@ -153,6 +156,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         });
         mPasswordEditText.setOnEditorActionListener(mEditorAction);
         mUrlEditText.setOnEditorActionListener(mEditorAction);
+
+        TextView twoStepHelpButton = (TextView)rootView.findViewById(R.id.two_factor_help);
+        twoStepHelpButton.setText(Html.fromHtml("<u>" + getResources().getString(R.string.two_step_help) + "</u>"));
+        twoStepHelpButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTwoStepHelpDialog();
+            }
+        });
+
         mBottomButtonsLayout = (LinearLayout) rootView.findViewById(R.id.nux_bottom_buttons);
         initPasswordVisibilityButton(rootView, mPasswordEditText);
         initInfoButtons(rootView);
@@ -668,6 +681,44 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                             org.wordpress.android.R.string.forgot_password), getString(
                             org.wordpress.android.R.string.contact_us), SignInDialogFragment.ACTION_OPEN_URL,
                     SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
+        } else {
+            // create a 2 buttons dialog ("Forget your password?" and "Cancel")
+            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+                    getString(org.wordpress.android.R.string.username_or_password_incorrect),
+                    org.wordpress.android.R.drawable.noticon_alert_big, 2, getString(
+                            org.wordpress.android.R.string.cancel), getString(
+                            org.wordpress.android.R.string.forgot_password), null, SignInDialogFragment.ACTION_OPEN_URL,
+                    0);
+        }
+
+        // Put entered url and entered username args, that could help our support team
+        Bundle bundle = nuxAlert.getArguments();
+        bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
+        bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
+        bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+        nuxAlert.setArguments(bundle);
+        ft.add(nuxAlert, "alert");
+        ft.commitAllowingStateLoss();
+    }
+
+    private void showTwoStepHelpDialog() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        SignInDialogFragment nuxAlert;
+        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+            // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
+            /*nuxAlert = SignInDialogFragment.newInstance("Two Step Authentication",
+                    "This account has two step authentication enabled. Enter the verification code that was provided by your Authenticator mobile app.",
+                            R.drawable.dashicon_lock, 3, getString(
+                            org.wordpress.android.R.string.cancel), getString(
+                            org.wordpress.android.R.string.forgot_password), getString(
+                            org.wordpress.android.R.string.contact_us), SignInDialogFragment.ACTION_OPEN_URL,
+                    SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT);*/
+            nuxAlert = SignInDialogFragment.newInstance("Two Step Authentication",
+                    "This account has two step authentication enabled. Enter the verification code that was provided by your authenticator app or text message.",
+                    org.wordpress.android.R.drawable.noticon_alert_big, 2, getString(
+                            org.wordpress.android.R.string.cancel), getString(org.wordpress.android.R.string.contact_us),
+                    null, SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
+                    0);
         } else {
             // create a 2 buttons dialog ("Forget your password?" and "Cancel")
             nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
