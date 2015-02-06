@@ -6,7 +6,8 @@
     android:paddingBottom="@dimen/margin_large"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingRight="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_large">
+    android:paddingTop="@dimen/margin_large"
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"

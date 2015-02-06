@@ -7,6 +7,7 @@ import android.text.TextUtils;
  * http://developer.wordpress.com/docs/photon/
  */
 public class PhotonUtils {
+
     private PhotonUtils() {
         throw new AssertionError();
     }
@@ -73,30 +74,29 @@ public class PhotonUtils {
             return imageUrl + "?w=" + width + "&h=" + height;
         }
 
-        final String qualityParam;
+        // strip=all removes EXIF and other non-visual data from JPEGs
+        String query = "?strip=all";
+
         switch (quality) {
             case HIGH:
-                qualityParam = "quality=100";
+                query += "&quality=100";
                 break;
             case LOW:
-                qualityParam = "quality=35";
+                query += "&quality=35";
                 break;
             default: // medium
-                qualityParam = "quality=65";
+                query += "&quality=65";
                 break;
         }
 
         // if both width & height are passed use the "resize" param, use only "w" or "h" if just
         // one of them is set
-        final String query;
         if (width > 0 && height > 0) {
-            query = "?resize=" + width + "," + height + "&" + qualityParam;
+            query += "&resize=" + width + "," + height;
         } else if (width > 0) {
-            query = "?w=" + width + "&" + qualityParam;
+            query += "&w=" + width;
         } else if (height > 0) {
-            query = "?h=" + height + "&" + qualityParam;
-        } else {
-            query = "?" + qualityParam;
+            query += "&h=" + height;
         }
 
         // return passed url+query if it's already a photon url
