@@ -2,12 +2,9 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="?android:attr/colorControlHighlight">
     <item>
-        <selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-            <!-- Not Pressed -->
-            <item android:state_checked="false" android:state_pressed="false" android:drawable="@drawable/stats_pager_button_white" />
-            <item android:state_checked="true"  android:state_pressed="false" android:drawable="@drawable/stats_pager_button_blue_light" />
-
+        <selector>
+            <item android:drawable="@drawable/stats_pager_button_blue_light" android:state_checked="true" />
+            <item android:drawable="@drawable/stats_pager_button_white" />
         </selector>
     </item>
 </ripple>
