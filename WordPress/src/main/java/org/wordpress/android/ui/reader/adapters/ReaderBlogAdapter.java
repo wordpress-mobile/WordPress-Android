@@ -150,7 +150,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     blogHolder.txtTitle.setText(blog.getTitle());
                     blogHolder.txtDescription.setText(blog.getReason());
                     blogHolder.txtUrl.setText(UrlUtils.getDomainFromUrl(blog.getBlogUrl()));
-                    blogHolder.imgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.SITE_AVATAR);
+                    blogHolder.imgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.BLAVATAR);
                     break;
 
                 case FOLLOWED:
@@ -163,7 +163,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         blogHolder.txtTitle.setText(domain);
                     }
                     blogHolder.txtUrl.setText(domain);
-                    blogHolder.imgBlog.setImageUrl(blogInfo.getImageUrl(), WPNetworkImageView.ImageType.SITE_AVATAR);
+                    blogHolder.imgBlog.setImageUrl(blogInfo.getImageUrl(), WPNetworkImageView.ImageType.BLAVATAR);
                     break;
 
                 default:

@@ -206,7 +206,7 @@ public class Comment {
             if (hasProfileImageUrl()) {
                 avatarForDisplay = PhotonUtils.fixAvatar(profileImageUrl, avatarSize);
             } else if (hasAuthorEmail()) {
-                avatarForDisplay = GravatarUtils.gravatarUrlFromEmail(authorEmail, avatarSize);
+                avatarForDisplay = GravatarUtils.gravatarFromEmail(authorEmail, avatarSize);
             } else {
                 avatarForDisplay = "";
             }
