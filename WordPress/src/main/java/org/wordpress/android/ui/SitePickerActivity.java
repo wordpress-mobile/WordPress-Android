@@ -30,9 +30,10 @@ import java.util.Map;
 
 public class SitePickerActivity extends ActionBarActivity {
 
-    private RecyclerView mRecycler;
     public static final String KEY_LOCAL_ID = "local_id";
-    public static final String KEY_BLOG_ID  = "blog_id";
+    private static final String KEY_BLOG_ID  = "blog_id";
+
+    private RecyclerView mRecycler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,30 +118,36 @@ public class SitePickerActivity extends ActionBarActivity {
 
     class SiteAdapter extends RecyclerView.Adapter<SiteViewHolder> {
 
-        private List<Map<String, Object>> mAccounts;
+        private final List<Map<String, Object>> mAccounts;
         private final int mBlavatarSz;
         private final LayoutInflater mInflater;
 
         public SiteAdapter(Context context, List<Map<String, Object>> accounts) {
             super();
+            setHasStableIds(true);
             mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
             mInflater = LayoutInflater.from(context);
             mAccounts = accounts;
         }
 
         @Override
+        public int getItemCount() {
+            return mAccounts.size();
+        }
+
+        @Override
         public long getItemId(int position) {
-            return position;
+            return MapUtils.getMapInt(getItem(position), "id");
+        }
+
+        Map<String, Object> getItem(int position) {
+            return mAccounts.get(position);
         }
 
         @Override
         public SiteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = mInflater.inflate(R.layout.site_picker_listitem, parent, false);
             return new SiteViewHolder(itemView);
-        }
-
-        Map<String, Object> getItem(int position) {
-            return mAccounts.get(position);
         }
 
         @Override
@@ -158,11 +165,6 @@ public class SitePickerActivity extends ActionBarActivity {
                     onItemSelected(getItem(position));
                 }
             });
-        }
-
-        @Override
-        public int getItemCount() {
-            return mAccounts.size();
         }
     }
 
