@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
     android:padding="@dimen/margin_large">
 
     <org.wordpress.android.widgets.WPNetworkImageView
