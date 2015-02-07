@@ -1,12 +1,14 @@
 package org.wordpress.android.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MapUtils;
@@ -27,6 +30,8 @@ import java.util.Map;
 public class SitePickerActivity extends ActionBarActivity {
 
     private RecyclerView mRecycler;
+    public static final String KEY_LOCAL_ID = "local_id";
+    public static final String KEY_BLOG_ID  = "blog_id";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,7 @@ public class SitePickerActivity extends ActionBarActivity {
 
         mRecycler = (RecyclerView) findViewById(R.id.recycler_view);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
+
         new LoadAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -62,6 +68,20 @@ public class SitePickerActivity extends ActionBarActivity {
         }
         ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
         progress.setVisibility(show ? View.VISIBLE : View. GONE);
+    }
+
+    void onItemSelected(Map<String, Object> item) {
+        int id = MapUtils.getMapInt(item, "id");
+        String blogId = MapUtils.getMapStr(item, "blogId");
+        if (TextUtils.isEmpty(blogId)) {
+            AppLog.w(AppLog.T.UTILS, "site picker > empty blogId selected");
+            return;
+        }
+        Intent data = new Intent();
+        data.putExtra(KEY_LOCAL_ID, id);
+        data.putExtra(KEY_BLOG_ID, blogId);
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     private class LoadAccountsTask extends AsyncTask<Void, Void, Boolean> {
@@ -101,7 +121,7 @@ public class SitePickerActivity extends ActionBarActivity {
 
         public SiteAdapter(Context context, List<Map<String, Object>> accounts) {
             super();
-            mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+            mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
             mInflater = LayoutInflater.from(context);
             mAccounts = accounts;
         }
@@ -117,15 +137,25 @@ public class SitePickerActivity extends ActionBarActivity {
             return new SiteViewHolder(itemView);
         }
 
+        Map<String, Object> getItem(int position) {
+            return mAccounts.get(position);
+        }
+
         @Override
         public void onBindViewHolder(SiteViewHolder holder, final int position) {
-            Map<String, Object> item = mAccounts.get(position);
+            Map<String, Object> item = getItem(position);
             holder.txtTitle.setText(BlogUtils.getBlogNameFromAccountMap(item));
             holder.txtDomain.setText(BlogUtils.getHostNameFromAccountMap(item));
             String url = MapUtils.getMapStr(item, "url");
             holder.imgBlavatar.setImageUrl(
                     GravatarUtils.blavatarFromUrl(url, mBlavatarSz),
                     WPNetworkImageView.ImageType.BLAVATAR);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemSelected(getItem(position));
+                }
+            });
         }
 
         @Override
@@ -141,11 +171,9 @@ public class SitePickerActivity extends ActionBarActivity {
 
         public SiteViewHolder(View view) {
             super(view);
-
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtDomain = (TextView) view.findViewById(R.id.text_domain);
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
         }
     }
-
 }

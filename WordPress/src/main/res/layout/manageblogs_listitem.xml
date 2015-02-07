@@ -8,8 +8,8 @@
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_blavatar"
-        android:layout_width="@dimen/avatar_sz_medium"
-        android:layout_height="@dimen/avatar_sz_medium"
+        android:layout_width="@dimen/blavatar_sz"
+        android:layout_height="@dimen/blavatar_sz"
         android:layout_marginEnd="@dimen/margin_large"
         android:layout_marginRight="@dimen/margin_large"
         tools:src="@drawable/gravatar_placeholder" />

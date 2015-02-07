@@ -61,7 +61,7 @@ public class DummyFragment extends Fragment implements WPMainActivity.FragmentVi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SitePickerActivity.class);
-                getActivity().startActivity(intent);
+                getActivity().startActivityForResult(intent, RequestCodes.SITE_PICKER);
             }
         });
 

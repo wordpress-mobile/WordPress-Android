@@ -147,7 +147,7 @@ public class ManageBlogsActivity extends ActionBarActivity {
         public BlogsAdapter(Context context, int resource, List<Map<String, Object>> objects) {
             super(context, resource, objects);
             mResource = resource;
-            mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+            mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
             mInflater = LayoutInflater.from(context);
         }
 

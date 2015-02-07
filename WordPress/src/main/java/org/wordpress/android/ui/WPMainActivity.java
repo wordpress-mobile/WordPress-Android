@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -182,6 +183,15 @@ public class WPMainActivity extends ActionBarActivity
                 // user returned from settings
                 if (showSignInIfRequired()) {
                     WordPress.registerForCloudMessaging(this);
+                }
+                break;
+            case RequestCodes.SITE_PICKER:
+                // TODO: remove this - it's just here to test the site picker called from dummy fragment
+                if (resultCode == RESULT_OK && data != null) {
+                    int localId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, 0);
+                    //String blogId = data.getStringExtra(SitePickerActivity.KEY_BLOG_ID);
+                    Blog blog = WordPress.getBlog(localId);
+                    ToastUtils.showToast(this, "You selected " + blog.getBlogName());
                 }
                 break;
         }
