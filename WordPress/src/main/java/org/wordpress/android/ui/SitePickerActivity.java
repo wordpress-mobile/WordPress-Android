@@ -22,6 +22,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
@@ -47,6 +48,7 @@ public class SitePickerActivity extends ActionBarActivity {
 
         mRecycler = (RecyclerView) findViewById(R.id.recycler_view);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
+        mRecycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
         new LoadAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
