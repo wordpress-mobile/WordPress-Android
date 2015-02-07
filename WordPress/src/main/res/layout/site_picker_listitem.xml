@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
     android:padding="@dimen/margin_large">
 
     <org.wordpress.android.widgets.WPNetworkImageView
@@ -14,40 +15,25 @@
         android:layout_marginRight="@dimen/margin_large"
         tools:src="@drawable/gravatar_placeholder" />
 
-    <TextView
-        android:id="@+id/blog_name"
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/image_blavatar"
-        android:layout_toLeftOf="@+id/checkbox"
         android:layout_toRightOf="@+id/image_blavatar"
-        android:layout_toStartOf="@+id/checkbox"
-        android:text="@string/title"
         android:textAppearance="?android:attr/textAppearanceListItem"
-        tools:text="Blog Name" />
+        tools:text="text_title" />
 
-    <TextView
-        android:id="@+id/blog_url"
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_domain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/blog_name"
+        android:layout_below="@id/text_title"
         android:layout_toEndOf="@+id/image_blavatar"
-        android:layout_toLeftOf="@+id/checkbox"
         android:layout_toRightOf="@+id/image_blavatar"
-        android:layout_toStartOf="@+id/checkbox"
         android:ellipsize="end"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="@android:color/tertiary_text_dark"
-        tools:text="verylonglonglonglonglonglonglonglonglonglonglongblogurl.wordpress.com" />
-
-    <CheckBox
-        android:id="@+id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/margin_large"
-        android:layout_marginStart="@dimen/margin_large" />
+        tools:text="text_domain" />
 </RelativeLayout>

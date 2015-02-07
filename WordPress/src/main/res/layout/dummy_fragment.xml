@@ -60,6 +60,18 @@
                 android:textColor="@color/grey_medium_dark"
                 android:textSize="@dimen/text_sz_extra_large" />
 
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/btn_site_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_small"
+                android:background="@drawable/list_bg_selector"
+                android:gravity="center_vertical"
+                android:padding="@dimen/margin_large"
+                android:text="Site Picker"
+                android:textColor="@color/grey_medium_dark"
+                android:textSize="@dimen/text_sz_extra_large" />
+
         </LinearLayout>
 
     </ScrollView>

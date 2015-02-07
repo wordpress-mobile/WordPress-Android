@@ -256,6 +256,11 @@
             android:name=".ui.ViewSiteActivity"
             android:theme="@style/WordPress.DrawerActivity" />
 
+        <activity
+            android:name=".ui.SitePickerActivity"
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/site_picker_title" />
+
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsActivity"

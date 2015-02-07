@@ -10,4 +10,5 @@ public class RequestCodes {
     public static final int READER_SUBS     = 400;
     public static final int READER_REBLOG   = 500;
     public static final int NOTE_DETAIL     = 600;
+    public static final int SITE_PICKER     = 700;
 }

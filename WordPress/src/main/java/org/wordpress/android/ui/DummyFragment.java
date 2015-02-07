@@ -56,6 +56,15 @@ public class DummyFragment extends Fragment implements WPMainActivity.FragmentVi
             }
         });
 
+        final TextView txtSitePicker = (TextView) view.findViewById(R.id.btn_site_picker);
+        txtSitePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SitePickerActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
+
         final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
