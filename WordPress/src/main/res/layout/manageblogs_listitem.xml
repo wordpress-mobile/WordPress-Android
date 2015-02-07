@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
     android:padding="@dimen/margin_large">
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_blavatar"
-        android:layout_width="@dimen/avatar_sz_medium"
-        android:layout_height="@dimen/avatar_sz_medium"
+        android:layout_width="@dimen/blavatar_sz"
+        android:layout_height="@dimen/blavatar_sz"
         android:layout_marginEnd="@dimen/margin_large"
         android:layout_marginRight="@dimen/margin_large"
         tools:src="@drawable/gravatar_placeholder" />
