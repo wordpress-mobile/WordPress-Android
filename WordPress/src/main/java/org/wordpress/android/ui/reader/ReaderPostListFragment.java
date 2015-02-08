@@ -96,6 +96,7 @@ public class ReaderPostListFragment extends Fragment {
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
+    private long mCurrentFeedId;
     private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
 
@@ -957,7 +958,11 @@ public class ReaderPostListFragment extends Fragment {
                 }
             }
         };
-        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, resultListener);
+        if (mCurrentFeedId != 0) {
+            ReaderPostActions.requestPostsForFeed(mCurrentFeedId, resultListener);
+        } else {
+            ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, resultListener);
+        }
     }
 
     void updateCurrentTag() {
@@ -1216,6 +1221,7 @@ public class ReaderPostListFragment extends Fragment {
                             if (isAdded()) {
                                 mCurrentBlogId = blogInfo.blogId;
                                 mCurrentBlogUrl = blogInfo.getUrl();
+                                mCurrentFeedId = blogInfo.feedId;
                                 if (isPostAdapterEmpty()) {
                                     getPostAdapter().setCurrentBlog(mCurrentBlogId);
                                     updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);

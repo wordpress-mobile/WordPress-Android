@@ -382,6 +382,28 @@ public class ReaderPostActions {
         WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
 
+    public static void requestPostsForFeed(final long feedId,
+                                           final UpdateResultListener resultListener) {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleUpdatePostsResponse(null, jsonObject, resultListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                if (resultListener != null) {
+                    resultListener.onUpdateResult(UpdateResult.FAILED);
+                }
+            }
+        };
+        AppLog.d(T.READER, "updating posts in feed " + feedId);
+        String path = "/read/feed/" + feedId + "/posts/?meta=site,likes";
+        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
+    }
+
     /*
      * called after requesting posts with a specific tag or in a specific blog
      */
