@@ -103,15 +103,17 @@ dependencies {
     debugCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'debug')
     releaseCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'release')
     debugCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'debug')
-    releaseCompile project(path:':libs:analytics:analytics', configuration: 'release')
-    debugCompile project(path:':libs:analytics:analytics', configuration: 'debug')
-    releaseCompile project(path:':libs:editor:editor', configuration: 'release')
-    debugCompile project(path:':libs:editor:editor', configuration: 'debug')
+    releaseCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'release')
+    debugCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'debug')
+    releaseCompile project(path:':libs:editor:WordPressEditor', configuration: 'release')
+    debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
 }
 
 configurations.all {
-    // Exclude packaged utils, force the use of the source project :libs:utils:WordPressUtils
+    // Exclude packaged wordpress sub projects, force the use of the source project
+    // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
     exclude group: 'org.wordpress', module: 'utils'
+    exclude group: 'org.wordpress', module: 'analytics'
 }
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
