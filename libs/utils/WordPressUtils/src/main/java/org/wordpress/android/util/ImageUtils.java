@@ -562,17 +562,15 @@ public class ImageUtils {
     /**
      * Get the maximum size a thumbnail can be to fit in either portrait or landscape orientations.
      */
-    private static int sMaximumThumbnailWidthForEditor;
     public static int getMaximumThumbnailWidthForEditor(Context context) {
-        if (sMaximumThumbnailWidthForEditor == 0) {
-            Point size = DisplayUtils.getDisplayPixelSize(context);
-            int screenWidth = size.x;
-            int screenHeight = size.y;
-            sMaximumThumbnailWidthForEditor = (screenWidth > screenHeight) ? screenHeight : screenWidth;
-            // 48dp of padding on each side so you can still place the cursor next to the image.
-            int padding = DisplayUtils.dpToPx(context, 48) * 2;
-            sMaximumThumbnailWidthForEditor -= padding;
-        }
-        return sMaximumThumbnailWidthForEditor;
+        int maximumThumbnailWidthForEditor;
+        Point size = DisplayUtils.getDisplayPixelSize(context);
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+        maximumThumbnailWidthForEditor = (screenWidth > screenHeight) ? screenHeight : screenWidth;
+        // 48dp of padding on each side so you can still place the cursor next to the image.
+        int padding = DisplayUtils.dpToPx(context, 48) * 2;
+        maximumThumbnailWidthForEditor -= padding;
+        return maximumThumbnailWidthForEditor;
     }
 }
