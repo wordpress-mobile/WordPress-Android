@@ -40,6 +40,9 @@ public class MediaPickerFragmentTest {
         tGalleryCreated = false;
     }
 
+    /**
+     * Verifies that the listener is notified when media selection begins.
+     */
     @Test
     public void testMediaSelectionStart() {
         final MediaPickerFragment testFragment = new MediaPickerFragment();
@@ -54,6 +57,9 @@ public class MediaPickerFragmentTest {
         Assert.assertTrue(tSelectionStarted);
     }
 
+    /**
+     * Verifies that the listener is notified when media selection is cancelled.
+     */
     @Test
     public void testMediaSelectionCancelled() {
         final MediaPickerFragment testFragment = new MediaPickerFragment();
@@ -67,6 +73,9 @@ public class MediaPickerFragmentTest {
         Assert.assertTrue(tSelectionCancelled);
     }
 
+    /**
+     * Verifies that gallery creation is requested when the gallery option item is selected.
+     */
     @Test
     public void testGalleryRequest() {
         final MediaPickerFragment testFragment = new MediaPickerFragment();
@@ -83,8 +92,26 @@ public class MediaPickerFragmentTest {
         Assert.assertTrue(tGalleryCreated);
     }
 
+    /**
+     * Verifies that a single item being clicked confirms selection.
+     */
     @Test
-    public void testMediaSelectionConfirmed() {
+    public void testMediaSelectionConfirmedFromSingleClick() {
+        final MediaPickerFragment testFragment = new MediaPickerFragment();
+        final MediaActivity testListener = new MediaActivity();
+
+        FragmentTestUtil.startFragment(testFragment);
+        testFragment.setListener(testListener);
+        testFragment.onItemClick(null, null, 0, 0);
+
+        Assert.assertTrue(tSelectionConfirmed);
+    }
+
+    /**
+     * Verifies that selecting the confirm option in Action Mode confirms selection.
+     */
+    @Test
+    public void testMediaSelectionConfirmedFromActionModeMenu() {
         final MediaPickerFragment testFragment = new MediaPickerFragment();
         final ActionMode mockActionMode = mock(ActionMode.class);
         final MenuItem mockMenuItem = mock(MenuItem.class);
@@ -100,6 +127,9 @@ public class MediaPickerFragmentTest {
         Assert.assertTrue(tSelectionConfirmed);
     }
 
+    /**
+     * Dummy class for testing various media selection interface calls.
+     */
     public class MediaActivity extends Activity implements MediaPickerFragment.OnMediaSelected {
         @Override
         public void onMediaSelectionStarted() {

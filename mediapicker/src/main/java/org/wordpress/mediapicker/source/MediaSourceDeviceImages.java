@@ -132,6 +132,9 @@ public class MediaSourceDeviceImages implements MediaSource {
         }
     }
 
+    /**
+     * Helper method; creates {@link org.wordpress.mediapicker.MediaItem}'s from MediaStore data
+     */
     private void createMediaItems() {
         mMediaItems = new ArrayList<>();
         final List<String> imageIds = new ArrayList<>();
@@ -154,6 +157,11 @@ public class MediaSourceDeviceImages implements MediaSource {
         cursor.close();
     }
 
+    /**
+     * Helper method; creates a {@link java.util.Map} of media IDs to thumbnail data
+     * @return
+     *  thumbnail data map
+     */
     private Map<String, String> getImageThumbnailData() {
         final Map<String, String> data = new HashMap<>();
         Cursor thumbnailCursor = MediaUtils.getMediaStoreThumbnails(mContentResolver, THUMBNAIL_QUERY_COLUMNS);

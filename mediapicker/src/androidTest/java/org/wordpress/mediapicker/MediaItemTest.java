@@ -2,8 +2,7 @@ package org.wordpress.mediapicker;
 
 import android.os.Parcel;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,6 +20,49 @@ import static org.mockito.Mockito.mock;
 @Config(emulateSdk = 18)
 @RunWith(RobolectricTestRunner.class)
 public class MediaItemTest {
+    /**
+     * Verifies that the CREATOR correctly constructs a {@link org.wordpress.mediapicker.MediaItem}
+     * from valid {@link android.os.Parcel} data.
+     */
+    @Test
+    public void testCreator() {
+        final String testTitle = "test-title";
+        final String testTag = "test-tag";
+        final String testSource = "test-source";
+        final String testPreview = "test-preview";
+        final int testRotation = 180;
+        final Parcel mockParcel = mock(Parcel.class);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Object parameter = invocationOnMock.getArguments()[0];
+                Assert.assertTrue(parameter instanceof List<?>);
+                List<String> parcelData = (List<String>) parameter;
+
+                parcelData.add(MediaItem.PARCEL_KEY_TAG + "=" + testTag);
+                parcelData.add(MediaItem.PARCEL_KEY_TITLE + "=" + testTitle);
+                parcelData.add(MediaItem.PARCEL_KEY_SOURCE + "=" + testSource);
+                parcelData.add(MediaItem.PARCEL_KEY_PREVIEW + "=" + testPreview);
+                parcelData.add(MediaItem.PARCEL_KEY_ROTATION + "=" + testRotation);
+
+                return null;
+            }
+        }).when(mockParcel).readStringList(anyListOf(String.class));
+
+        final MediaItem testItem = MediaItem.CREATOR.createFromParcel(mockParcel);
+
+        Assert.assertEquals(testTag, testItem.getTag());
+        Assert.assertEquals(testTitle, testItem.getTitle());
+        Assert.assertEquals(testSource, testItem.getSource().toString());
+        Assert.assertEquals(testPreview, testItem.getPreviewSource().toString());
+        Assert.assertEquals(testRotation, testItem.getRotation());
+    }
+
+    /**
+     * Verifies that a {@link java.lang.String} representation of a {@link android.net.Uri} is
+     * parsed correctly.
+     */
     @Test
     public void testSourceParsing() {
         final MediaItem testItem = new MediaItem();
@@ -38,6 +80,9 @@ public class MediaItemTest {
         Assert.assertFalse(testItem.getSource().isAbsolute());
     }
 
+    /**
+     * Verifies that the correct data is written to an outbound {@link android.os.Parcel}.
+     */
     @Test
     public void testWriteToParcelWithValidData() {
         final String testTitle = "test-title";
@@ -97,6 +142,9 @@ public class MediaItemTest {
         testItem.writeToParcel(mockParcel, 0);
     }
 
+    /**
+     * Verifies that null data is not written to an outbound {@link android.os.Parcel}.
+     */
     @Test
     public void testWriteToParcelWithNullData() {
         final MediaItem testItem = new MediaItem();
@@ -152,6 +200,9 @@ public class MediaItemTest {
         testItem.writeToParcel(mockParcel, 0);
     }
 
+    /**
+     * Verifies that the Parcelable interface to describe contents returns 0.
+     */
     @Test
     public void testDescribeContents() {
         final MediaItem testItem = new MediaItem();
