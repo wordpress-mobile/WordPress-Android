@@ -33,5 +33,5 @@ android {
 }
 
 dependencies {
-    compile project(":editor");
+    compile project(":WordPressEditor");
 }
