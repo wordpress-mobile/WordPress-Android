@@ -146,7 +146,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             switch (getBlogType()) {
                 case RECOMMENDED:
                     final ReaderRecommendedBlog blog = mRecommendedBlogs.get(position);
-                    isFollowing = ReaderBlogTable.isFollowedBlog(blog.blogId, blog.getBlogUrl());
+                    isFollowing = ReaderBlogTable.isFollowedBlog(blog.blogId);
                     blogHolder.txtTitle.setText(blog.getTitle());
                     blogHolder.txtDescription.setText(blog.getReason());
                     blogHolder.txtUrl.setText(UrlUtils.getDomainFromUrl(blog.getBlogUrl()));

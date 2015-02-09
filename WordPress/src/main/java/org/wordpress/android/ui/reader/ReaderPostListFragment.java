@@ -512,7 +512,7 @@ public class ReaderPostListFragment extends Fragment {
                 if (mCurrentFeedId != 0) {
                     isFollowing = ReaderBlogTable.isFollowedFeed(mCurrentFeedId);
                 } else {
-                    isFollowing = ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl);
+                    isFollowing = ReaderBlogTable.isFollowedBlog(mCurrentBlogId);
                 }
                 break;
             default:
@@ -1280,7 +1280,7 @@ public class ReaderPostListFragment extends Fragment {
             return;
         }
 
-        final boolean isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl);
+        final boolean isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mCurrentBlogId);
         ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {

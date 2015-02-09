@@ -306,7 +306,7 @@ public class ReaderBlogActions {
         final BlockedBlogResult blockResult = new BlockedBlogResult();
         blockResult.blogId = blogId;
         blockResult.deletedPosts = ReaderPostTable.getPostsInBlog(blogId, 0, false);
-        blockResult.wasFollowing = ReaderBlogTable.isFollowedBlog(blogId, null);
+        blockResult.wasFollowing = ReaderBlogTable.isFollowedBlog(blogId);
 
         ReaderPostTable.deletePostsInBlog(blogId);
 

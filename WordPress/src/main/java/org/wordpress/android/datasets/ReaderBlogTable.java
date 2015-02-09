@@ -238,34 +238,15 @@ public class ReaderBlogTable {
     }
 
     public static boolean isFollowedBlogUrl(String blogUrl) {
-        return isFollowedBlog(0, blogUrl);
+        String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_url=?";
+        String[] args = {blogUrl};
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
-    public static boolean isFollowedBlog(long blogId, String blogUrl) {
-        boolean hasBlogId = (blogId != 0);
-        boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
-
-        if (!hasBlogId && !hasBlogUrl) {
-            return false;
-        }
-
-        String sql;
-        if (hasBlogId && hasBlogUrl) {
-            // both id and url were passed, match on either
-            sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND (blog_id=? OR blog_url=?)";
-            String[] args = {Long.toString(blogId), blogUrl};
-            return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
-        } else if (hasBlogId) {
-            // only id passed, match on id
-            sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_id=?";
-            String[] args = {Long.toString(blogId)};
-            return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
-        } else {
-            // only url passed, match on url
-            sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_url=?";
-            String[] args = {blogUrl};
-            return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
-        }
+    public static boolean isFollowedBlog(long blogId) {
+        String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_id=?";
+        String[] args = {Long.toString(blogId)};
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
     public static boolean isFollowedFeed(long feedId) {
