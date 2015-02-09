@@ -252,6 +252,12 @@ public class ReaderBlogTable {
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
+    public static boolean hasBlogId(long blogId) {
+        String sql = "SELECT 1 FROM tbl_blog_info WHERE blog_id=?";
+        String[] args = {Long.toString(blogId)};
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
+    }
+
     public static ReaderRecommendBlogList getRecommendedBlogs() {
         return getRecommendedBlogs(0, 0);
     }

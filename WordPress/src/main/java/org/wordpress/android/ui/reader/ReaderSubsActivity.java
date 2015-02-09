@@ -39,7 +39,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
-import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -64,7 +63,6 @@ import javax.annotation.Nonnull;
  */
 public class ReaderSubsActivity extends ActionBarActivity
                                 implements ReaderTagAdapter.TagActionListener,
-                                           ReaderBlogAdapter.BlogFollowChangeListener,
                                            ActionBar.TabListener {
 
     private EditText mEditAdd;
@@ -392,7 +390,7 @@ public class ReaderSubsActivity extends ActionBarActivity
                     mEditAdd.setText(null);
                     EditTextUtils.hideSoftInput(mEditAdd);
                     showInfoToast(getString(R.string.reader_label_followed_blog));
-                    onFollowBlogChanged();
+                    mBlogsChanged = true;
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 } else {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
@@ -420,15 +418,6 @@ public class ReaderSubsActivity extends ActionBarActivity
         progress.setVisibility(View.GONE);
         mEditAdd.setEnabled(true);
         mBtnAdd.setEnabled(true);
-    }
-
-    /*
-     * called from ReaderBlogFragment and this activity when a blog is successfully
-     * followed or unfollowed
-     */
-    @Override
-    public void onFollowBlogChanged() {
-        mBlogsChanged = true;
     }
 
     /*
