@@ -74,7 +74,7 @@ public class ReaderBlogActions {
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
-        final String path = "/sites/" + blogId + "/follows/" + (isAskingToFollow ? "new" : "delete");
+        final String path = "/sites/" + blogId + "/follows/" + (isAskingToFollow ? "new" : "mine/delete");
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
