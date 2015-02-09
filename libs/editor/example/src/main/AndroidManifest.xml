@@ -12,7 +12,7 @@
             android:label="@string/title_activity_example" >
         </activity>
         <activity
-            android:name="org.wordpress.android.editor.EditorActivity" >
+            android:name="org.wordpress.android.editor.EditorExampleActivity" >
         </activity>
     </application>
 

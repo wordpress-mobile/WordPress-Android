@@ -40,6 +40,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.editor.EditorFragmentInterface.EditorFragmentListener;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.MediaGallery;
@@ -77,7 +78,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
-public class EditPostActivity extends ActionBarActivity {
+public class EditPostActivity extends ActionBarActivity implements EditorFragmentListener {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -473,10 +474,6 @@ public class EditPostActivity extends ActionBarActivity {
         finish();
     }
 
-    public void showPostSettings() {
-        mViewPager.setCurrentItem(PAGE_SETTINGS);
-    }
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -504,13 +501,14 @@ public class EditPostActivity extends ActionBarActivity {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             switch (position) {
                 case 0:
-                    mEditPostContentFragment = (EditPostContentFragment)fragment;
+                    mEditPostContentFragment = (EditPostContentFragment) fragment;
+                    initContentEditor();
                     break;
                 case 1:
-                    mEditPostSettingsFragment = (EditPostSettingsFragment)fragment;
+                    mEditPostSettingsFragment = (EditPostSettingsFragment) fragment;
                     break;
                 case 2:
-                    mEditPostPreviewFragment = (EditPostPreviewFragment)fragment;
+                    mEditPostPreviewFragment = (EditPostPreviewFragment) fragment;
                     break;
             }
             return fragment;
@@ -688,7 +686,6 @@ public class EditPostActivity extends ActionBarActivity {
         }, 0, 0);
     }
 
-
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
         @Override
         protected Spanned doInBackground(String... params) {
@@ -709,7 +706,6 @@ public class EditPostActivity extends ActionBarActivity {
         }
     }
 
-    // TODO: call this on fragment ihit
     private void initContentEditor() {
         Post post = getPost();
         if (post != null) {
@@ -726,7 +722,6 @@ public class EditPostActivity extends ActionBarActivity {
             if (!TextUtils.isEmpty(post.getTitle())) {
                 mEditPostContentFragment.setTitle(post.getTitle());
             }
-
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
             mEditPostContentFragment.setLocalDraft(post.isLocalDraft());
         }
@@ -751,7 +746,6 @@ public class EditPostActivity extends ActionBarActivity {
             }
         }
     }
-
 
     private void launchPictureLibrary() {
         MediaUtils.launchPictureLibrary(this);
@@ -891,7 +885,8 @@ public class EditPostActivity extends ActionBarActivity {
     public void updatePostContent(boolean isAutoSave) {
         Post post = getPost();
 
-        if (post == null || mEditPostContentFragment.getContentEditText().getText() == null) {
+        if (post == null || mEditPostContentFragment == null || mEditPostContentFragment.getContentEditText() == null
+                || mEditPostContentFragment.getContentEditText().getText() == null) {
             return;
         }
 
@@ -1301,5 +1296,15 @@ public class EditPostActivity extends ActionBarActivity {
         AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
         s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         s.insert(selectionEnd + 1, "\n\n");
+    }
+
+    @Override
+    public void onSettingsClicked() {
+        mViewPager.setCurrentItem(PAGE_SETTINGS);
+    }
+
+    @Override
+    public void onAddMediaButtonClicked() {
+        // TODO:
     }
 }

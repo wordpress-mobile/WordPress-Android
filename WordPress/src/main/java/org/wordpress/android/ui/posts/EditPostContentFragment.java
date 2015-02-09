@@ -96,11 +96,19 @@ public class EditPostContentFragment extends EditorFragmentInterface implements 
     }
 
     public void setTitle(CharSequence text) {
-        mTitleEditText.setText(text);
+        if (mTitleEditText != null) {
+            mTitleEditText.setText(text);
+        } else {
+            // TODO
+        }
     }
 
     public void setContent(CharSequence text) {
-        mContentEditText.setText(text);
+        if (mContentEditText != null) {
+            mContentEditText.setText(text);
+        } else {
+            // TODO
+        }
     }
 
     public void setLocalDraft(boolean isLocalDraft) {
@@ -133,6 +141,7 @@ public class EditPostContentFragment extends EditorFragmentInterface implements 
         postSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mEditorFragmentListener.onSettingsClicked();
                 // TODO: mActivity.showPostSettings();
             }
         });
@@ -258,7 +267,7 @@ public class EditPostContentFragment extends EditorFragmentInterface implements 
 
 
 
-    // TODO: call MediaPicker-Android instead
+    // TODO: call MediaPicker-Android instead (see EditPostActivity.onAddMediaButtonClicked)
     /*
     @Override
     public boolean onContextItemSelected(MenuItem item) {
