@@ -20,6 +20,7 @@ public class ReaderBlog {
     private String description;
     private String url;
     private String imageUrl;
+    private String feedUrl;
 
     public static ReaderBlog fromJson(JSONObject json) {
         ReaderBlog blog = new ReaderBlog();
@@ -29,7 +30,7 @@ public class ReaderBlog {
 
         // if meta/data/site exists then JSON is for a read/following/mine?meta=site subscription,
         // if meta/data/feed exists then JSON is for a read/following/mine?meta=feed subscription,
-        // otherwise JSON the response for a single site/$siteId
+        // otherwise JSON the response for a single site/$siteId or read/feed/$feedId
         JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
         JSONObject jsonFeed = JSONUtil.getJSONChild(json, "meta/data/feed");
         if (jsonSite != null) {
@@ -47,6 +48,7 @@ public class ReaderBlog {
             }
         } else if (jsonFeed != null) {
             blog.feedId = jsonFeed.optLong("feed_ID");
+            blog.setFeedUrl(JSONUtil.getString(jsonFeed, "feed_URL"));
             blog.setName(JSONUtil.getStringDecoded(jsonFeed, "name"));
             blog.setUrl(JSONUtil.getString(jsonFeed, "URL"));
             blog.numSubscribers = jsonFeed.optInt("subscribers_count");
@@ -54,16 +56,18 @@ public class ReaderBlog {
             blog.isFollowing = true;
         } else {
             blog.blogId = json.optLong("ID");
+            blog.feedId = json.optLong("feed_ID");
             blog.setName(JSONUtil.getStringDecoded(json, "name"));
             blog.setDescription(JSONUtil.getStringDecoded(json, "description"));
             blog.setUrl(JSONUtil.getString(json, "URL"));
+            blog.setFeedUrl(JSONUtil.getString(json, "feed_URL"));
             blog.isJetpack = JSONUtil.getBool(json, "jetpack");
             blog.isPrivate = JSONUtil.getBool(json, "is_private");
             blog.isFollowing = JSONUtil.getBool(json, "is_following");
             blog.numSubscribers = json.optInt("subscribers_count");
         }
 
-        // blogId will be empty for feeds, which is inconsistent with /read/ endpoints
+        // blogId will be empty for feeds, so set it to the feedId (consistent with /read/ endpoints)
         if (blog.blogId == 0 && blog.feedId != 0) {
             blog.blogId = blog.feedId;
         }
@@ -99,8 +103,18 @@ public class ReaderBlog {
         this.url = StringUtils.notNullStr(url);
     }
 
+    public String getFeedUrl() {
+        return StringUtils.notNullStr(feedUrl);
+    }
+    public void setFeedUrl(String url) {
+        this.feedUrl = StringUtils.notNullStr(feedUrl);
+    }
+
     public boolean hasUrl() {
         return !TextUtils.isEmpty(url);
+    }
+    public boolean hasFeedUrl() {
+        return !TextUtils.isEmpty(feedUrl);
     }
     public boolean hasName() {
         return !TextUtils.isEmpty(name);

@@ -226,6 +226,24 @@ public class ReaderBlogActions {
             WordPress.getRestClientUtils().get("/sites/" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl)), listener, errorListener);
         }
     }
+    public static void updateFeedInfo(long feedId, final UpdateBlogInfoListener infoListener) {
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleUpdateBlogInfoResponse(jsonObject, infoListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                if (infoListener != null) {
+                    infoListener.onResult(null);
+                }
+            }
+        };
+        WordPress.getRestClientUtilsV1_1().get("/read/feed/" + feedId, listener, errorListener);
+    }
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, UpdateBlogInfoListener infoListener) {
         if (jsonObject == null) {
             if (infoListener != null) {

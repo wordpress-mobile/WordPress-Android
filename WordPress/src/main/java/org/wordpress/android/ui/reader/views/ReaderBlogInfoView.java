@@ -67,6 +67,12 @@ public class ReaderBlogInfoView extends FrameLayout {
         requestBlogInfo(blogId, blogUrl);
     }
 
+    public void loadFeedInfo(long feedId, BlogInfoListener blogInfoListener) {
+        mBlogInfoListener = blogInfoListener;
+        showBlogInfo(ReaderBlogTable.getBlogInfo(feedId, null), false);
+        requestFeedInfo(feedId);
+    }
+
     /*
      * show blog header with info from passed blog filled in
      */
@@ -159,28 +165,30 @@ public class ReaderBlogInfoView extends FrameLayout {
         return mBlogInfo == null;
     }
 
-    /*
-    * request latest info for this blog
-    */
     private void requestBlogInfo(long blogId, String blogUrl) {
-        ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
-            @Override
-            public void onResult(ReaderBlog blogInfo) {
-                if (blogInfo != null) {
-                    // animate it in if it wasn't already loaded from local db
-                    boolean animateIn = isEmpty();
-                    showBlogInfo(blogInfo, animateIn);
-                } else if (isEmpty() && mBlogInfoListener != null) {
-                    // only fire the failed event if blogInfo is empty - we don't want to fire
-                    // the failed event if the blogInfo successfully loaded from the local db
-                    // already, since ReaderPostListFragment interprets failure here to mean
-                    // the blog is invalid
-                    mBlogInfoListener.onBlogInfoFailed();
-                }
-            }
-        };
-        ReaderBlogActions.updateBlogInfo(blogId, blogUrl, listener);
+        ReaderBlogActions.updateBlogInfo(blogId, blogUrl, mInfoListener);
     }
+
+    private void requestFeedInfo(long feedId) {
+        ReaderBlogActions.updateFeedInfo(feedId, mInfoListener);
+    }
+
+    ReaderActions.UpdateBlogInfoListener mInfoListener = new ReaderActions.UpdateBlogInfoListener() {
+        @Override
+        public void onResult(ReaderBlog blogInfo) {
+            if (blogInfo != null) {
+                // animate it in if it wasn't already loaded from local db
+                boolean animateIn = isEmpty();
+                showBlogInfo(blogInfo, animateIn);
+            } else if (isEmpty() && mBlogInfoListener != null) {
+                // only fire the failed event if blogInfo is empty - we don't want to fire
+                // the failed event if the blogInfo successfully loaded from the local db
+                // already, since ReaderPostListFragment interprets failure here to mean
+                // the blog is invalid
+                mBlogInfoListener.onBlogInfoFailed();
+            }
+        }
+    };
 
     private void loadMshotImage(final ReaderBlog blogInfo) {
         if (blogInfo == null || !blogInfo.hasUrl()) {

@@ -280,7 +280,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
         if (isFinishing()) {
             return;
         }
-        Fragment fragment = ReaderPostListFragment.newInstance(tag, listType);
+        Fragment fragment = ReaderPostListFragment.newInstanceForTag(tag, listType);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
@@ -294,7 +294,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
         if (isFinishing()) {
             return;
         }
-        Fragment fragment = ReaderPostListFragment.newInstance(blogId, blogUrl);
+        Fragment fragment = ReaderPostListFragment.newInstanceForBlog(blogId, blogUrl);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))

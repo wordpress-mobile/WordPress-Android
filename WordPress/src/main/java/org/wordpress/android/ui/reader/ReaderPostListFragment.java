@@ -132,9 +132,9 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     /*
-     * show posts with a specific tag
+     * show posts with a specific tag (either TAG_FOLLOWED or TAG_PREVIEW)
      */
-    static ReaderPostListFragment newInstance(ReaderTag tag, ReaderPostListType listType) {
+    static ReaderPostListFragment newInstanceForTag(ReaderTag tag, ReaderPostListType listType) {
         AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
         Bundle args = new Bundle();
@@ -150,7 +150,7 @@ public class ReaderPostListFragment extends Fragment {
     /*
      * show posts in a specific blog
      */
-    public static ReaderPostListFragment newInstance(long blogId, String blogUrl) {
+    public static ReaderPostListFragment newInstanceForBlog(long blogId, String blogUrl) {
         AppLog.d(T.READER, "reader post list > newInstance (blog)");
 
         Bundle args = new Bundle();
@@ -1212,33 +1212,34 @@ public class ReaderPostListFragment extends Fragment {
     private void loadBlogInfo() {
         if (mBlogInfoView != null && mBlogInfoView.isEmpty()) {
             AppLog.d(T.READER, "reader post list > loading blogInfo");
-            mBlogInfoView.loadBlogInfo(
-                    mCurrentBlogId,
-                    mCurrentBlogUrl,
-                    new ReaderBlogInfoView.BlogInfoListener() {
-                        @Override
-                        public void onBlogInfoLoaded(ReaderBlog blogInfo) {
-                            if (isAdded()) {
-                                mCurrentBlogId = blogInfo.blogId;
-                                mCurrentBlogUrl = blogInfo.getUrl();
-                                mCurrentFeedId = blogInfo.feedId;
-                                if (isPostAdapterEmpty()) {
-                                    getPostAdapter().setCurrentBlog(mCurrentBlogId);
-                                    updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
-                                }
-                                if (mFollowButton != null) {
-                                    mFollowButton.setIsFollowed(blogInfo.isFollowing);
-                                }
-                            }
+            ReaderBlogInfoView.BlogInfoListener listener = new ReaderBlogInfoView.BlogInfoListener() {
+                @Override
+                public void onBlogInfoLoaded(ReaderBlog blogInfo) {
+                    if (isAdded()) {
+                        mCurrentBlogId = blogInfo.blogId;
+                        mCurrentBlogUrl = blogInfo.getUrl();
+                        mCurrentFeedId = blogInfo.feedId;
+                        if (isPostAdapterEmpty()) {
+                            getPostAdapter().setCurrentBlog(mCurrentBlogId);
+                            updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
                         }
-                        @Override
-                        public void onBlogInfoFailed() {
-                            if (isAdded()) {
-                                ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_blog_info, ToastUtils.Duration.LONG);
-                            }
+                        if (mFollowButton != null) {
+                            mFollowButton.setIsFollowed(blogInfo.isFollowing);
                         }
                     }
-            );
+                }
+                @Override
+                public void onBlogInfoFailed() {
+                    if (isAdded()) {
+                        ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_blog_info, ToastUtils.Duration.LONG);
+                    }
+                }
+            };
+            if (mCurrentFeedId != 0) {
+                mBlogInfoView.loadFeedInfo(mCurrentFeedId, listener);
+            } else {
+                mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentBlogUrl, listener);
+            }
         }
     }
 
