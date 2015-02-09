@@ -21,12 +21,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask;
 import org.wordpress.android.util.BlogUtils;
-import org.wordpress.android.util.helpers.ListScrollPositionManager;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.helpers.ListScrollPositionManager;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +39,7 @@ public class ManageBlogsActivity extends ActionBarActivity {
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ListView mListView;
 
-    protected ListView getListView() {
+    ListView getListView() {
         if (mListView == null) {
             mListView = (ListView) findViewById(android.R.id.list);
         }
@@ -138,12 +140,14 @@ public class ManageBlogsActivity extends ActionBarActivity {
     }
 
     private class BlogsAdapter extends ArrayAdapter<Map<String, Object>> {
-        private int mResource;
+        private final int mResource;
+        private final int mBlavatarSz;
         private final LayoutInflater mInflater;
 
         public BlogsAdapter(Context context, int resource, List<Map<String, Object>> objects) {
             super(context, resource, objects);
             mResource = resource;
+            mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
             mInflater = LayoutInflater.from(context);
         }
 
@@ -157,15 +161,23 @@ public class ManageBlogsActivity extends ActionBarActivity {
             } else {
                 holder = (BlogItemViewHolder) convertView.getTag();
             }
+
             holder.nameView.setText(BlogUtils.getBlogNameFromAccountMap(getItem(position)));
             holder.urlView.setText(BlogUtils.getHostNameFromAccountMap(getItem(position)));
             holder.checkBox.setChecked(!MapUtils.getMapBool(getItem(position), "isHidden"));
+
+            String url = MapUtils.getMapStr(getItem(position), "url");
+            holder.imgBlavatar.setImageUrl(
+                    GravatarUtils.blavatarFromUrl(url, mBlavatarSz),
+                    WPNetworkImageView.ImageType.BLAVATAR);
+
             convertView.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View v) {
                     holder.checkBox.setChecked(!holder.checkBox.isChecked());
                     setItemChecked(position, holder.checkBox.isChecked());
                 }
             });
+
             return convertView;
         }
 
@@ -173,10 +185,12 @@ public class ManageBlogsActivity extends ActionBarActivity {
             private final TextView nameView;
             private final CheckBox checkBox;
             private final TextView urlView;
+            private final WPNetworkImageView imgBlavatar;
 
             BlogItemViewHolder(final View rowView) {
                 nameView = (TextView) rowView.findViewById(R.id.blog_name);
                 urlView = (TextView) rowView.findViewById(R.id.blog_url);
+                imgBlavatar = (WPNetworkImageView) rowView.findViewById(R.id.image_blavatar);
                 checkBox = (CheckBox) rowView.findViewById(R.id.checkbox);
                 checkBox.setClickable(false);
             }

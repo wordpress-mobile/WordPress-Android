@@ -40,7 +40,7 @@ public class WPNetworkImageView extends ImageView {
                                   MSHOT,
                                   VIDEO,
                                   AVATAR,
-                             SITE_AVATAR,
+                                BLAVATAR,
                        STATS_SITE_AVATAR}
 
     private ImageType mImageType = ImageType.NONE;
@@ -329,9 +329,9 @@ public class WPNetworkImageView extends ImageView {
                         R.drawable.gravatar_placeholder
                 ));
                 break;
-            case SITE_AVATAR:
-                // square "mystery man" for failed site avatars
-                setImageResource(R.drawable.gravatar_placeholder);
+            case BLAVATAR:
+                // wp icon for failed blavatars
+                setImageResource(R.drawable.app_icon);
                 break;
             case STATS_SITE_AVATAR:
                 setImageResource(R.drawable.stats_icon_default_site_avatar);
