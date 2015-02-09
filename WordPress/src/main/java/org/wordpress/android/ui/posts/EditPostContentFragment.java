@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
@@ -60,7 +61,7 @@ import org.wordpress.android.widgets.WPUnderlineSpan;
 
 public class EditPostContentFragment extends Fragment implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
-    EditPostActivity mActivity;
+    ActionBarActivity mActivity;
 
     private static final String TAG_FORMAT_BAR_BUTTON_STRONG = "strong";
     private static final String TAG_FORMAT_BAR_BUTTON_EM = "em";
@@ -108,7 +109,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mActivity = (EditPostActivity) getActivity();
+        mActivity = (ActionBarActivity) getActivity();
 
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_edit_post_content, container, false);
 
@@ -118,8 +119,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 // Go to full screen editor when 'next' button is tapped on soft keyboard
-                if (actionId == EditorInfo.IME_ACTION_NEXT && mActivity.getSupportActionBar() != null && mActivity
-                        .getSupportActionBar().isShowing()) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT && isAdded() && mActivity.getSupportActionBar() != null &&
+                        mActivity.getSupportActionBar().isShowing()) {
                     setContentEditingModeVisible(true);
                 }
                 return false;
@@ -132,7 +133,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         postSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActivity.showPostSettings();
+                // TODO: mActivity.showPostSettings();
             }
         });
         mBoldToggleButton = (ToggleButton) rootView.findViewById(R.id.bold);
@@ -153,8 +154,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             public void onImeBack(WPEditText ctrl, String text) {
                 // Go back to regular editor if IME keyboard is dismissed
                 // Bottom comparison is there to ensure that the keyboard is actually showing
-                if (mRootView.getBottom() < mFullViewBottom && mActivity.getSupportActionBar() != null && !mActivity
-                        .getSupportActionBar().isShowing()) {
+                if (mRootView.getBottom() < mFullViewBottom && isAdded() && mActivity.getSupportActionBar() != null
+                        && !mActivity.getSupportActionBar().isShowing()) {
                     setContentEditingModeVisible(false);
                 }
             }
@@ -186,8 +187,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     };
 
     public void setContentEditingModeVisible(boolean isVisible) {
-        if (mActivity == null)
+        if (!isAdded()) {
             return;
+        }
         ActionBar actionBar = mActivity.getSupportActionBar();
         if (isVisible) {
             Animation fadeAnimation = new AlphaAnimation(1, 0);
@@ -519,7 +521,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         mLastYPos = pos;
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (mActivity != null && mActivity.getSupportActionBar() != null && mActivity.getSupportActionBar().isShowing()) {
+            if (isAdded() && mActivity.getSupportActionBar() != null && mActivity.getSupportActionBar().isShowing()) {
                 setContentEditingModeVisible(true);
                 return false;
             }
