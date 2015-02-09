@@ -108,7 +108,7 @@ public class MediaPickerFragment extends Fragment
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (notifyMediaSelected(position, true)) {
+        if (!notifyMediaSelected(position, true)) {
             notifyMediaSelectionConfirmed();
         }
     }
