@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,19 +47,20 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.editor.EditorFragmentInterface;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.widgets.MediaGalleryImageSpan;
 import org.wordpress.android.util.widgets.WPEditText;
+import org.wordpress.android.widgets.MediaGalleryImageSpan;
 import org.wordpress.android.widgets.WPImageSpan;
 import org.wordpress.android.widgets.WPUnderlineSpan;
 
-public class EditPostContentFragment extends Fragment implements TextWatcher, WPEditText.OnSelectionChangedListener,
-        View.OnTouchListener {
+public class EditPostContentFragment extends EditorFragmentInterface implements TextWatcher,
+        WPEditText.OnSelectionChangedListener, View.OnTouchListener {
     ActionBarActivity mActivity;
 
     private static final String TAG_FORMAT_BAR_BUTTON_STRONG = "strong";

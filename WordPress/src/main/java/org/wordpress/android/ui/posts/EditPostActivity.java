@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,8 +24,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AlignmentSpan;
 import android.text.style.CharacterStyle;
-import android.text.style.ImageSpan;
-import android.text.style.URLSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -58,7 +55,6 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -540,10 +536,9 @@ public class EditPostActivity extends ActionBarActivity {
     public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
     public static final String NEW_MEDIA_POST_EXTRA = "NEW_MEDIA_POST_ID";
     private String mMediaCapturePath = "";
+    private int mMaxThumbWidth = 0;
 
-    private int mMaxThumbWidth = MIN_THUMBNAIL_WIDTH;
     private int getMaximumThumbnailWidthForEditor() {
-        // FIXME:
         if (mMaxThumbWidth == 0) {
             mMaxThumbWidth = ImageUtils.getMaximumThumbnailWidthForEditor(this);
         }
@@ -641,18 +636,18 @@ public class EditPostActivity extends ActionBarActivity {
             public void onResponse(ImageLoader.ImageContainer container, boolean arg1) {
                 Bitmap downloadedBitmap = container.getBitmap();
                 if (downloadedBitmap == null) {
-                    //no bitmap downloaded from the server.
+                    // no bitmap downloaded from the server.
                     return;
                 }
 
                 if (downloadedBitmap.getWidth() < MIN_THUMBNAIL_WIDTH) {
-                    //Picture is too small. Show the placeholder in this case.
+                    // Picture is too small. Show the placeholder in this case.
                     return;
                 }
 
                 Bitmap resizedBitmap;
                 int maxWidth = getMaximumThumbnailWidthForEditor();
-                //resize the downloaded bitmap
+                // resize the downloaded bitmap
                 try {
                     resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
                 } catch (OutOfMemoryError er) {
@@ -733,11 +728,9 @@ public class EditPostActivity extends ActionBarActivity {
             }
 
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
+            mEditPostContentFragment.setLocalDraft(post.isLocalDraft());
         }
 
-        // TODO: setIsLocalDraft
-
-        // Check for Android share action
         String action = getIntent().getAction();
         int quickMediaType = getIntent().getIntExtra("quick-media", -1);
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
@@ -875,8 +868,9 @@ public class EditPostActivity extends ActionBarActivity {
     private void startMediaGalleryActivity(MediaGallery mediaGallery) {
         Intent intent = new Intent(this, MediaGalleryActivity.class);
         intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
-        if (mediaGallery == null)
+        if (mediaGallery == null) {
             intent.putExtra(MediaGalleryActivity.PARAMS_LAUNCH_PICKER, true);
+        }
         startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
 
@@ -1024,16 +1018,16 @@ public class EditPostActivity extends ActionBarActivity {
         @Override
         protected void onPreExecute() {
             Toast.makeText(EditPostActivity.this, R.string.download, Toast.LENGTH_SHORT).show();
-    }
-
-    protected void onPostExecute(Uri newUri) {
-        if (newUri != null) {
-            addMedia(newUri, null, EditPostActivity.this);
-        } else {
-            Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image), Toast.LENGTH_SHORT)
-                    .show();
         }
-    }
+
+        protected void onPostExecute(Uri newUri) {
+            if (newUri != null) {
+                addMedia(newUri, null, EditPostActivity.this);
+            } else {
+                Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image), Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
     }
 
     private void updateMediaFileOnServer(WPImageSpan wpIS) {
@@ -1204,7 +1198,7 @@ public class EditPostActivity extends ActionBarActivity {
                             AppLog.e(T.POSTS, e);
                         }
                     } else if (TextUtils.isEmpty(mEditPostContentFragment.getContentEditText().getText())) {
-                        // FIXME: check if it was mQuickMediaType > -1
+                        // TODO: check if it was mQuickMediaType > -1
                         // Quick Photo was cancelled, delete post and finish activity
                         WordPress.wpDB.deletePost(getPost());
                         finish();
@@ -1221,7 +1215,7 @@ public class EditPostActivity extends ActionBarActivity {
                             ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                         }
                     } else if (TextUtils.isEmpty(mEditPostContentFragment.getContentEditText().getText())) {
-                        // FIXME: check if it was mQuickMediaType > -1
+                        // TODO: check if it was mQuickMediaType > -1
                         // Quick Photo was cancelled, delete post and finish activity
                         WordPress.wpDB.deletePost(getPost());
                         finish();
@@ -1308,5 +1302,4 @@ public class EditPostActivity extends ActionBarActivity {
         s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         s.insert(selectionEnd + 1, "\n\n");
     }
-
 }
