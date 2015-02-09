@@ -1,5 +1,5 @@
 //This Handy-Dandy class acquired and tweaked from http://stackoverflow.com/a/3145655/309558
-package org.wordpress.android.util;
+package org.wordpress.android.util.helpers;
 
 import java.util.Timer;
 import java.util.TimerTask;

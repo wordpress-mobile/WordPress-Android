@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.util.widgets;
 
 import android.content.Context;
 import android.text.Layout;

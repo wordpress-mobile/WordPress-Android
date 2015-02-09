@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.util.helpers;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,7 +10,9 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.PhotonUtils;
 
 import java.lang.ref.WeakReference;
 

@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.util.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;

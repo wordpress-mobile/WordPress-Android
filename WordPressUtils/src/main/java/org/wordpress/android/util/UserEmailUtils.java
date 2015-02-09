@@ -7,7 +7,7 @@ import android.util.Patterns;
 
 import java.util.regex.Pattern;
 
-public class UserEmail {
+public class UserEmailUtils {
     /**
      * Get primary account and return its name if it matches the email address pattern.
      *
