@@ -21,10 +21,12 @@ import org.wordpress.android.util.VolleyUtils;
 public class LoginWPCom extends LoginAbstract {
 
     private String mTwoStepCode;
+    private boolean mShouldSendTwoStepSMS;
 
-    public LoginWPCom(String username, String password, String twoStepCode) {
+    public LoginWPCom(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS) {
         super(username, password);
         mTwoStepCode = twoStepCode;
+        mShouldSendTwoStepSMS = shouldSendTwoStepSMS;
     }
 
     public static int restLoginErrorToMsgId(JSONObject errorObject) {
@@ -52,19 +54,19 @@ public class LoginWPCom extends LoginAbstract {
         return errorMsgId;
     }
 
-    private Request makeOAuthRequest(final String username, final String password, String twoStepCode, final Listener listener,
+    private Request makeOAuthRequest(final String username, final String password, final Listener listener,
                                      final ErrorListener errorListener) {
         Oauth oauth = new Oauth(org.wordpress.android.BuildConfig.OAUTH_APP_ID,
                 org.wordpress.android.BuildConfig.OAUTH_APP_SECRET,
                 org.wordpress.android.BuildConfig.OAUTH_REDIRECT_URI);
         Request oauthRequest;
-        oauthRequest = oauth.makeRequest(username, password, twoStepCode, listener, errorListener);
+        oauthRequest = oauth.makeRequest(username, password, mTwoStepCode, mShouldSendTwoStepSMS, listener, errorListener);
         return oauthRequest;
     }
 
     protected void login() {
         // Get OAuth token for the first time and check for errors
-        WordPress.requestQueue.add(makeOAuthRequest(mUsername, mPassword, mTwoStepCode, new Oauth.Listener() {
+        WordPress.requestQueue.add(makeOAuthRequest(mUsername, mPassword, new Oauth.Listener() {
             @SuppressLint("CommitPrefEdits")
             @Override
             public void onResponse(final Oauth.Token token) {

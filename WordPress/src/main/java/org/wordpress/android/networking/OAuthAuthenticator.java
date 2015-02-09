@@ -76,7 +76,7 @@ public class OAuthAuthenticator implements Authenticator {
         final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         Oauth oauth = new Oauth(BuildConfig.OAUTH_APP_ID, BuildConfig.OAUTH_APP_SECRET, BuildConfig.OAUTH_REDIRECT_URI);
         Request oauthRequest;
-        oauthRequest = oauth.makeRequest(username, password, null, new Oauth.Listener() {
+        oauthRequest = oauth.makeRequest(username, password, null, false, new Oauth.Listener() {
                     @SuppressLint("CommitPrefEdits")
                     @Override
                     public void onResponse(Oauth.Token token) {

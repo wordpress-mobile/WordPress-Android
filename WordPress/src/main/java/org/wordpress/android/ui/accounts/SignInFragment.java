@@ -21,10 +21,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.wordpress.rest.RestRequest;
@@ -54,6 +56,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GenericCallback;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 import org.xmlrpc.android.ApiHelper;
@@ -78,22 +81,24 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private EditText mUrlEditText;
     private EditText mTwoStepEditText;
     private boolean mSelfHosted;
-    private WPTextView mTwoStepMessage;
     private WPTextView mSignInButton;
     private WPTextView mCreateAccountButton;
     private WPTextView mAddSelfHostedButton;
     private WPTextView mProgressTextSignIn;
     private WPTextView mForgotPassword;
     private LinearLayout mBottomButtonsLayout;
+    private ScrollView mScrollView;
     private RelativeLayout mUsernameLayout;
     private RelativeLayout mPasswordLayout;
     private RelativeLayout mProgressBarSignIn;
     private RelativeLayout mUrlButtonLayout;
     private RelativeLayout mTwoStepLayout;
+    private RelativeLayout mTwoStepFooter;
     private ImageView mInfoButton;
     private ImageView mInfoButtonSecondary;
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
+    private boolean mShouldSendTwoStepSMS;
     private int mErroneousLogInCount;
     private String mUsername;
     private String mPassword;
@@ -108,8 +113,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.signin_fragment, container, false);
+        mScrollView = (ScrollView) rootView.findViewById(R.id.sign_in_scroll_view);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
         mTwoStepLayout = (RelativeLayout) rootView.findViewById(R.id.two_factor_layout);
+        mTwoStepFooter = (RelativeLayout) rootView.findViewById(R.id.two_step_footer);
         mUsernameLayout = (RelativeLayout) rootView.findViewById(R.id.nux_username_layout);
         mUsernameLayout.setOnClickListener(mOnLoginFormClickListener);
         mPasswordLayout = (RelativeLayout) rootView.findViewById(R.id.nux_password_layout);
@@ -120,9 +127,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mPasswordEditText = (EditText) rootView.findViewById(R.id.nux_password);
         mPasswordEditText.addTextChangedListener(this);
         mPasswordEditText.setOnClickListener(mOnLoginFormClickListener);
-        mTwoStepMessage = (WPTextView)rootView.findViewById(R.id.two_factor_label_message);
-        mTwoStepEditText = (EditText) rootView.findViewById(R.id.nux_two_step);
-        mTwoStepEditText.addTextChangedListener(this);
         mUrlEditText = (EditText) rootView.findViewById(R.id.nux_url);
         mSignInButton = (WPTextView) rootView.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
@@ -157,12 +161,27 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mPasswordEditText.setOnEditorActionListener(mEditorAction);
         mUrlEditText.setOnEditorActionListener(mEditorAction);
 
-        TextView twoStepHelpButton = (TextView)rootView.findViewById(R.id.two_factor_help);
-        twoStepHelpButton.setText(Html.fromHtml("<u>" + getResources().getString(R.string.two_step_help) + "</u>"));
-        twoStepHelpButton.setOnClickListener(new OnClickListener() {
+        mTwoStepEditText = (EditText) rootView.findViewById(R.id.nux_two_step);
+        mTwoStepEditText.addTextChangedListener(this);
+        mTwoStepEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (keyCode == EditorInfo.IME_ACTION_DONE)) {
+                    if (fieldsFilled()) {
+                        signIn();
+                    }
+                }
+
+                return false;
+            }
+        });
+
+        WPTextView twoStepFooterButton = (WPTextView) rootView.findViewById(R.id.two_step_footer_button);
+        twoStepFooterButton.setText(Html.fromHtml(String.format(getString(R.string.two_step_footer_message), "<u>", "</u>")));
+        twoStepFooterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTwoStepHelpDialog();
+                requestSMSTwoStepCode();
             }
         });
 
@@ -429,6 +448,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private void setTwoStepAuthVisibility(boolean isVisible) {
         mTwoStepLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mTwoStepFooter.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mSignInButton.setText(isVisible ? getString(R.string.verify) : getString(R.string.sign_in));
         mForgotPassword.setVisibility(isVisible ? View.GONE : View.VISIBLE);
         mBottomButtonsLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
         mUsernameEditText.setFocusableInTouchMode(!isVisible);
@@ -446,17 +467,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void signInAndFetchBlogListWPCom() {
-        LoginWPCom login = new LoginWPCom(mUsername, mPassword, mTwoStepCode);
+        LoginWPCom login = new LoginWPCom(mUsername, mPassword, mTwoStepCode, mShouldSendTwoStepSMS);
         login.execute(new LoginAbstract.Callback() {
             @Override
             public void onSuccess() {
                 FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
                 fetchBlogListWPCom.execute(mFetchBlogListCallback);
+                mShouldSendTwoStepSMS = false;
             }
 
             @Override
             public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate) {
                 mFetchBlogListCallback.onError(errorMessageId, twoStepCodeRequired, httpAuthRequired, erroneousSslCertificate, "");
+                mShouldSendTwoStepSMS = false;
             }
         });
     }
@@ -504,6 +527,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             startProgress(getString(R.string.signing_in));
             signInAndFetchBlogListWPOrg();
         }
+    }
+
+    private void requestSMSTwoStepCode() {
+        if (!isAdded()) return;
+
+        ToastUtils.showToast(getActivity(), R.string.two_step_sms_sent);
+        mTwoStepEditText.setText("");
+        mShouldSendTwoStepSMS = true;
+
+        signIn();
     }
 
     private OnClickListener mSignInClickListener = new OnClickListener() {
@@ -683,44 +716,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                             org.wordpress.android.R.string.forgot_password), getString(
                             org.wordpress.android.R.string.contact_us), SignInDialogFragment.ACTION_OPEN_URL,
                     SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
-        } else {
-            // create a 2 buttons dialog ("Forget your password?" and "Cancel")
-            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                    getString(org.wordpress.android.R.string.username_or_password_incorrect),
-                    org.wordpress.android.R.drawable.noticon_alert_big, 2, getString(
-                            org.wordpress.android.R.string.cancel), getString(
-                            org.wordpress.android.R.string.forgot_password), null, SignInDialogFragment.ACTION_OPEN_URL,
-                    0);
-        }
-
-        // Put entered url and entered username args, that could help our support team
-        Bundle bundle = nuxAlert.getArguments();
-        bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
-        bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
-        bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
-        nuxAlert.setArguments(bundle);
-        ft.add(nuxAlert, "alert");
-        ft.commitAllowingStateLoss();
-    }
-
-    private void showTwoStepHelpDialog() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        SignInDialogFragment nuxAlert;
-        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
-            /*nuxAlert = SignInDialogFragment.newInstance("Two Step Authentication",
-                    "This account has two step authentication enabled. Enter the verification code that was provided by your Authenticator mobile app.",
-                            R.drawable.dashicon_lock, 3, getString(
-                            org.wordpress.android.R.string.cancel), getString(
-                            org.wordpress.android.R.string.forgot_password), getString(
-                            org.wordpress.android.R.string.contact_us), SignInDialogFragment.ACTION_OPEN_URL,
-                    SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT);*/
-            nuxAlert = SignInDialogFragment.newInstance("Two Step Authentication",
-                    "This account has two step authentication enabled. Enter the verification code that was provided by your authenticator app or text message.",
-                    org.wordpress.android.R.drawable.noticon_alert_big, 2, getString(
-                            org.wordpress.android.R.string.cancel), getString(org.wordpress.android.R.string.contact_us),
-                    null, SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
-                    0);
         } else {
             // create a 2 buttons dialog ("Forget your password?" and "Cancel")
             nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
