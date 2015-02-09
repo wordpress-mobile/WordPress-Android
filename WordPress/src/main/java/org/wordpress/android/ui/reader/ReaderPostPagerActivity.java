@@ -562,7 +562,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
 
                     ReaderPostActions.requestPostsForBlog(
                             mBlogId,
-                            null,
                             ReaderActions.RequestDataAction.LOAD_OLDER,
                             resultListener);
                     break;

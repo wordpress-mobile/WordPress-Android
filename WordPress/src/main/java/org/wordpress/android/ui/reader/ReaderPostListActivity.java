@@ -103,12 +103,11 @@ public class ReaderPostListActivity extends WPDrawerActivity
 
             if (mPostListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
                 long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                String blogUrl = intent.getStringExtra(ReaderConstants.ARG_BLOG_URL);
                 long feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
                 if (feedId != 0) {
                     showListFragmentForFeed(feedId);
                 } else {
-                    showListFragmentForBlog(blogId, blogUrl);
+                    showListFragmentForBlog(blogId);
                 }
             } else {
                 // get the tag name from the intent, if not there get it from prefs
@@ -295,11 +294,11 @@ public class ReaderPostListActivity extends WPDrawerActivity
     /*
      * show fragment containing list of latest posts in a specific blog
      */
-    private void showListFragmentForBlog(long blogId, String blogUrl) {
+    private void showListFragmentForBlog(long blogId) {
         if (isFinishing()) {
             return;
         }
-        Fragment fragment = ReaderPostListFragment.newInstanceForBlog(blogId, blogUrl);
+        Fragment fragment = ReaderPostListFragment.newInstanceForBlog(blogId);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))

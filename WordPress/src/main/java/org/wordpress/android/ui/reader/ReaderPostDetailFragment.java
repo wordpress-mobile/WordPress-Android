@@ -347,7 +347,7 @@ public class ReaderPostDetailFragment extends Fragment
 
 
         // action returns before api call completes, but local post will have been changed
-        if (ReaderBlogActions.performFollowAction(mPost, isAskingToFollow, actionListener)) {
+        if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, actionListener)) {
             mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
         }
     }
@@ -753,7 +753,7 @@ public class ReaderPostDetailFragment extends Fragment
                         if (mPost.feedId != 0) {
                             ReaderActivityLauncher.showReaderFeedPreview(v.getContext(), mPost.feedId);
                         } else {
-                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId, mPost.getBlogUrl());
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId);
                         }
                     }
                 });

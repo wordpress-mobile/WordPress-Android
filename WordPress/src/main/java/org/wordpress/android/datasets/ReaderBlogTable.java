@@ -13,6 +13,7 @@ import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
+import org.wordpress.android.util.UrlUtils;
 
 /**
  * tbl_blog_info contains information about blogs viewed in the reader, and blogs the
@@ -59,28 +60,9 @@ public class ReaderBlogTable {
         db.execSQL("DROP TABLE IF EXISTS tbl_recommended_blogs");
     }
 
-    /*
-     * get a blog's info by either id or url
-     */
-    public static ReaderBlog getBlogInfo(long blogId, String blogUrl) {
-        boolean hasBlogId = (blogId != 0);
-        boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
-
-        if (!hasBlogId && !hasBlogUrl) {
-            return null;
-        }
-
-        // search by id if it's passed (may be zero for feeds), otherwise search by url
-        final Cursor cursor;
-        SQLiteDatabase db = ReaderDatabase.getReadableDb();
-        if (hasBlogId) {
-            String[] args = {Long.toString(blogId)};
-            cursor = db.rawQuery("SELECT * FROM tbl_blog_info WHERE blog_id=?", args);
-        } else {
-            String[] args = {blogUrl};
-            cursor = db.rawQuery("SELECT * FROM tbl_blog_info WHERE blog_url=?", args);
-        }
-
+    public static ReaderBlog getBlogInfo(long blogId) {
+        String[] args = {Long.toString(blogId)};
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_blog_info WHERE blog_id=?", args);
         try {
             if (!cursor.moveToFirst()) {
                 return null;
@@ -89,6 +71,38 @@ public class ReaderBlogTable {
         } finally {
             SqlUtils.closeCursor(cursor);
         }
+    }
+
+    public static long getBlogIdFromUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return 0;
+        }
+        String normUrl = UrlUtils.normalizeUrl(url);
+        String[] args = {normUrl, normUrl};
+        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT blog_id FROM tbl_blog_info WHERE feed_url=? OR blog_url=?",
+                args);
+    }
+
+    public static long getFeedIdFromUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return 0;
+        }
+        String normUrl = UrlUtils.normalizeUrl(url);
+        String[] args = {normUrl, normUrl};
+        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT feed_id FROM tbl_blog_info WHERE feed_url=? OR blog_url=?",
+                args);
+    }
+
+    public static String getFeedUrlFromId(long feedId) {
+        if (feedId == 0) {
+            return null;
+        }
+        String[] args = {Long.toString(feedId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT feed_url FROM tbl_blog_info WHERE feed_id=?",
+                args);
     }
 
     private static ReaderBlog getBlogInfoFromCursor(Cursor c) {
@@ -212,29 +226,12 @@ public class ReaderBlogTable {
                 new String[]{Long.toString(blogId)});
     }
 
-    /*
-     * sets the followed state for the passed blog, creating a record for it if it doesn't exist
-     */
-    public static void setIsFollowedBlog(long blogId, String url, boolean isFollowed) {
-        if (TextUtils.isEmpty(url)) {
-            return;
-        }
-
-        // get existing info for this blog
-        ReaderBlog blogInfo = getBlogInfo(blogId, url);
-
-        if (blogInfo == null) {
-            // blogInfo doesn't exist, create it with just the passed id & url
-            blogInfo = new ReaderBlog();
-            blogInfo.blogId = blogId;
-            blogInfo.setUrl(url);
-        } else if (blogInfo.isFollowing == isFollowed) {
-            // blogInfo already has passed following status, so nothing more to do
-            return;
-        }
-
-        blogInfo.isFollowing = isFollowed;
-        addOrUpdateBlog(blogInfo);
+    public static void setIsFollowedFeedId(long feedId, boolean isFollowed) {
+        ReaderDatabase.getWritableDb().execSQL(
+                "UPDATE tbl_blog_info SET is_following="
+                        + SqlUtils.boolToSql(isFollowed)
+                        + " WHERE feed_id=?",
+                new String[]{Long.toString(feedId)});
     }
 
     public static boolean isFollowedBlogUrl(String blogUrl) {

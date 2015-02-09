@@ -149,7 +149,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
                     if (post.feedId != 0) {
                         ReaderActivityLauncher.showReaderFeedPreview(view.getContext(), post.feedId);
                     } else {
-                        ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post.blogId, post.getBlogUrl());
+                        ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post.blogId);
                     }
                 }
             });
@@ -548,7 +548,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             }
         };
 
-        if (ReaderBlogActions.performFollowAction(post, isAskingToFollow, actionListener)) {
+        if (ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
             ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
             if (updatedPost != null) {
                 mPosts.set(position, updatedPost);

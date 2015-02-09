@@ -266,8 +266,14 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         followButton.setIsFollowedAnimated(isAskingToFollow);
+        boolean success;
+        if (blogId != 0) {
+            success = ReaderBlogActions.followBlogById(blogId, isAskingToFollow, actionListener);
+        } else {
+            success = ReaderBlogActions.followBlogByUrl(blogUrl, isAskingToFollow, actionListener);
+        }
 
-        if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, actionListener)) {
+        if (success) {
             if (getBlogType() == ReaderBlogType.FOLLOWED) {
                 mFollowedBlogs.get(position).isFollowing = isAskingToFollow;
             }

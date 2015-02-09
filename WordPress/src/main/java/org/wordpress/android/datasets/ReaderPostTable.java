@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -404,34 +403,41 @@ public class ReaderPostTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(feedId)});
     }
 
-    /*
-     * sets the following status for all posts in the passed blog
-     */
-    public static void setFollowStatusForPostsInBlog(long blogId, String blogUrl, boolean isFollowed) {
-        if (blogId == 0 && TextUtils.isEmpty(blogUrl)) {
+    public static void setFollowStatusForPostsInBlog(long blogId, boolean isFollowed) {
+        setFollowStatusForPosts(blogId, 0, isFollowed);
+    }
+    public static void setFollowStatusForPostsInFeed(long feedId, boolean isFollowed) {
+        setFollowStatusForPosts(0, feedId, isFollowed);
+    }
+    private static void setFollowStatusForPosts(long blogId, long feedId, boolean isFollowed) {
+        if (blogId == 0 && feedId == 0) {
             return;
         }
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
         try {
-            // change is_followed in tbl_posts for this blog - use blogId if we have it,
-            // otherwise use url
             if (blogId != 0) {
                 String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
                           + " WHERE blog_id=?";
                 db.execSQL(sql, new String[]{Long.toString(blogId)});
             } else {
                 String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
-                          + " WHERE blog_url=?";
-                db.execSQL(sql, new String[]{blogUrl});
+                          + " WHERE feed_id=?";
+                db.execSQL(sql, new String[]{Long.toString(feedId)});
             }
 
-            // if blog is no longer followed, remove its posts tagged with "Blogs I Follow" in
-            // tbl_post_tags - note that this requires the blogId
-            if (!isFollowed && blogId != 0) {
-                db.delete("tbl_post_tags", "blog_id=? AND tag_name=?",
-                        new String[]{Long.toString(blogId), ReaderTag.TAG_NAME_FOLLOWING});
+
+            // if blog/feed is no longer followed, remove its posts tagged with "Blogs I Follow" in
+            // tbl_post_tags
+            if (!isFollowed) {
+                if (blogId != 0) {
+                    db.delete("tbl_post_tags", "blog_id=? AND tag_name=?",
+                            new String[]{Long.toString(blogId), ReaderTag.TAG_NAME_FOLLOWING});
+                } else {
+                    db.delete("tbl_post_tags", "feed_id=? AND tag_name=?",
+                            new String[]{Long.toString(feedId), ReaderTag.TAG_NAME_FOLLOWING});
+                }
             }
 
             db.setTransactionSuccessful();

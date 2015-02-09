@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -168,17 +167,14 @@ public class ReaderBlogFragment extends Fragment
     @Override
     public void onBlogClicked(Object item) {
         final long blogId;
-        final String blogUrl;
         final long feedId;
         if (item instanceof ReaderRecommendedBlog) {
             ReaderRecommendedBlog blog = (ReaderRecommendedBlog) item;
             blogId = blog.blogId;
-            blogUrl = blog.getBlogUrl();
             feedId = 0;
         } else if (item instanceof ReaderBlog) {
             ReaderBlog blog = (ReaderBlog) item;
             blogId = blog.blogId;
-            blogUrl = blog.getUrl();
             feedId = blog.feedId;
         } else {
             return;
@@ -186,8 +182,8 @@ public class ReaderBlogFragment extends Fragment
 
         if (feedId != 0) {
             ReaderActivityLauncher.showReaderFeedPreview(getActivity(), feedId);
-        } else if (blogId != 0 || !TextUtils.isEmpty(blogUrl)) {
-            ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId, blogUrl);
+        } else if (blogId != 0) {
+            ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
         }
     }
 }

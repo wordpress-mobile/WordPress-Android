@@ -345,16 +345,9 @@ public class ReaderPostActions {
      * get the latest posts in the passed blog
      */
     public static void requestPostsForBlog(final long blogId,
-                                           final String blogUrl,
                                            final RequestDataAction updateAction,
                                            final UpdateResultListener resultListener) {
-        String path;
-        if (blogId == 0) {
-            path = "sites/" + UrlUtils.getDomainFromUrl(blogUrl);
-        } else {
-            path = "sites/" + blogId;
-        }
-        path += "/posts/?meta=site,likes";
+        String path = "sites/" + blogId + "/posts/?meta=site,likes";
 
         // append the date of the oldest cached post in this blog when requesting older posts
         if (updateAction == RequestDataAction.LOAD_OLDER) {

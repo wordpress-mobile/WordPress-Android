@@ -61,15 +61,14 @@ public class ReaderBlogInfoView extends FrameLayout {
     /*
      * shows the blogInfo from local db (if available) then request latest blogInfo from server
      */
-    public void loadBlogInfo(long blogId, String blogUrl, BlogInfoListener blogInfoListener) {
+    public void loadBlogInfo(long blogId, BlogInfoListener blogInfoListener) {
         mBlogInfoListener = blogInfoListener;
-        showBlogInfo(ReaderBlogTable.getBlogInfo(blogId, blogUrl), false);
-        requestBlogInfo(blogId, blogUrl);
+        showBlogInfo(ReaderBlogTable.getBlogInfo(blogId), false);
+        requestBlogInfo(blogId);
     }
-
     public void loadFeedInfo(long feedId, BlogInfoListener blogInfoListener) {
         mBlogInfoListener = blogInfoListener;
-        showBlogInfo(ReaderBlogTable.getBlogInfo(feedId, null), false);
+        showBlogInfo(ReaderBlogTable.getBlogInfo(feedId), false);
         requestFeedInfo(feedId);
     }
 
@@ -165,8 +164,8 @@ public class ReaderBlogInfoView extends FrameLayout {
         return mBlogInfo == null;
     }
 
-    private void requestBlogInfo(long blogId, String blogUrl) {
-        ReaderBlogActions.updateBlogInfo(blogId, blogUrl, mInfoListener);
+    private void requestBlogInfo(long blogId) {
+        ReaderBlogActions.updateBlogInfo(blogId, null, mInfoListener);
     }
 
     private void requestFeedInfo(long feedId) {

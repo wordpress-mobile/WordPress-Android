@@ -19,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.URLUtil;
@@ -33,7 +32,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
-import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -352,10 +350,9 @@ public class ReaderSubsActivity extends ActionBarActivity
     }
 
     /*
-     * start a three-step process to follow a blog by url:
+     * start a two-step process to follow a blog by url:
      *    1. test whether the url is reachable (API will follow any url, even if it doesn't exist)
-     *    2. get the blogInfo for this url (so we can follow by id)
-     *    3. perform the actual follow
+     *    2. perform the actual follow
      * note that the passed URL is assumed to be normalized and validated
      */
     private void performAddUrl(final String blogUrl) {
@@ -372,7 +369,7 @@ public class ReaderSubsActivity extends ActionBarActivity
                     return;
                 }
                 if (succeeded) {
-                    getBlogInfo(blogUrl);
+                    followBlogUrl(blogUrl);
                 } else {
                     hideAddUrlProgress();
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
@@ -382,24 +379,7 @@ public class ReaderSubsActivity extends ActionBarActivity
         ReaderBlogActions.checkBlogUrlReachable(blogUrl, urlActionListener);
     }
 
-    private void getBlogInfo(final String blogUrl) {
-        ReaderActions.UpdateBlogInfoListener infoListener = new ReaderActions.UpdateBlogInfoListener() {
-            @Override
-            public void onResult(ReaderBlog blogInfo) {
-                if (isFinishing()) {
-                    return;
-                }
-                if (blogInfo != null) {
-                    followBlog(blogInfo.blogId, blogInfo.getUrl());
-                } else {
-                    followBlog(0, blogUrl);
-                }
-            }
-        };
-        ReaderBlogActions.updateBlogInfo(0, blogUrl, infoListener);
-    }
-
-    private void followBlog(long blogId, String normUrl) {
+    private void followBlogUrl(String normUrl) {
         ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
@@ -419,7 +399,7 @@ public class ReaderSubsActivity extends ActionBarActivity
                 }
             }
         };
-        ReaderBlogActions.performFollowAction(blogId, normUrl, true, followListener);
+        ReaderBlogActions.followBlogByUrl(normUrl, true, followListener);
     }
 
     /*

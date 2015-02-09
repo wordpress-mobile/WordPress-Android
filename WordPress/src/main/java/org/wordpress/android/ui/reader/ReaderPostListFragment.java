@@ -97,7 +97,6 @@ public class ReaderPostListFragment extends Fragment {
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
-    private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
 
     private int mRestorePosition;
@@ -150,12 +149,11 @@ public class ReaderPostListFragment extends Fragment {
     /*
      * show posts in a specific blog
      */
-    public static ReaderPostListFragment newInstanceForBlog(long blogId, String blogUrl) {
+    public static ReaderPostListFragment newInstanceForBlog(long blogId) {
         AppLog.d(T.READER, "reader post list > newInstance (blog)");
 
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
-        args.putString(ReaderConstants.ARG_BLOG_URL, blogUrl);
         args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
@@ -191,7 +189,6 @@ public class ReaderPostListFragment extends Fragment {
             }
 
             mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
-            mCurrentBlogUrl = args.getString(ReaderConstants.ARG_BLOG_URL);
             mCurrentFeedId = args.getLong(ReaderConstants.ARG_FEED_ID);
 
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
@@ -211,9 +208,6 @@ public class ReaderPostListFragment extends Fragment {
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_BLOG_ID)) {
                 mCurrentBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
-            }
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_BLOG_URL)) {
-                mCurrentBlogUrl = savedInstanceState.getString(ReaderConstants.ARG_BLOG_URL);
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_FEED_ID)) {
                 mCurrentFeedId = savedInstanceState.getLong(ReaderConstants.ARG_FEED_ID);
@@ -270,7 +264,6 @@ public class ReaderPostListFragment extends Fragment {
         }
 
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
-        outState.putString(ReaderConstants.ARG_BLOG_URL, mCurrentBlogUrl);
         outState.putLong(ReaderConstants.ARG_FEED_ID, mCurrentFeedId);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
@@ -991,7 +984,7 @@ public class ReaderPostListFragment extends Fragment {
         if (mCurrentFeedId != 0) {
             ReaderPostActions.requestPostsForFeed(mCurrentFeedId, updateAction, resultListener);
         } else {
-            ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, resultListener);
+            ReaderPostActions.requestPostsForBlog(mCurrentBlogId, updateAction, resultListener);
         }
     }
 
@@ -1246,7 +1239,6 @@ public class ReaderPostListFragment extends Fragment {
                 public void onBlogInfoLoaded(ReaderBlog blogInfo) {
                     if (isAdded()) {
                         mCurrentBlogId = blogInfo.blogId;
-                        mCurrentBlogUrl = blogInfo.getUrl();
                         mCurrentFeedId = blogInfo.feedId;
                         if (isPostAdapterEmpty()) {
                             getPostAdapter().setCurrentBlog(mCurrentBlogId);
@@ -1267,7 +1259,7 @@ public class ReaderPostListFragment extends Fragment {
             if (mCurrentFeedId != 0) {
                 mBlogInfoView.loadFeedInfo(mCurrentFeedId, listener);
             } else {
-                mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentBlogUrl, listener);
+                mBlogInfoView.loadBlogInfo(mCurrentBlogId, listener);
             }
         }
     }
@@ -1291,11 +1283,11 @@ public class ReaderPostListFragment extends Fragment {
         };
 
         mFollowButton.setIsFollowedAnimated(isAskingToFollow);
-        ReaderBlogActions.performFollowAction(
-                mCurrentBlogId,
-                mCurrentBlogUrl,
-                isAskingToFollow,
-                followListener);
+        if (mCurrentFeedId != 0) {
+            ReaderBlogActions.followFeedById(mCurrentFeedId, isAskingToFollow, followListener);
+        } else {
+            ReaderBlogActions.followBlogById(mCurrentBlogId, isAskingToFollow, followListener);
+        }
     }
 
     /*
