@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class EditorFragment extends Fragment {
+public class EditorFragment extends EditorFragmentInterface {
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
 
@@ -121,5 +121,15 @@ public class EditorFragment extends Fragment {
             AppLog.e(T.EDITOR, e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public void setTitle(CharSequence text) {
+        // TODO
+    }
+
+    @Override
+    public void setContent(CharSequence text) {
+        // TODO
     }
 }
