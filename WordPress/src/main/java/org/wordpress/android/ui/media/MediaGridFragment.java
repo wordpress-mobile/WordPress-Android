@@ -39,7 +39,6 @@ import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -725,8 +724,8 @@ public class MediaGridFragment extends Fragment
             }
             ArrayList<String> ids = mGridAdapter.getSelectedItems();
             Intent i = new Intent(getActivity(), EditPostActivity.class);
-            i.setAction(EditPostContentFragment.NEW_MEDIA_POST);
-            i.putExtra(EditPostContentFragment.NEW_MEDIA_POST_EXTRA, ids.iterator().next());
+            i.setAction(EditPostActivity.NEW_MEDIA_POST);
+            i.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA, ids.iterator().next());
             startActivity(i);
         }
 
@@ -755,8 +754,8 @@ public class MediaGridFragment extends Fragment
                 return;
             }
             Intent i = new Intent(getActivity(), EditPostActivity.class);
-            i.setAction(EditPostContentFragment.NEW_MEDIA_GALLERY);
-            i.putStringArrayListExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS,
+            i.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
+            i.putStringArrayListExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS,
                     mGridAdapter.getSelectedItems());
             startActivity(i);
         }

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.media;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -125,22 +124,22 @@ public class MediaUtils {
     }
 
 
-    public static void launchPictureLibrary(Fragment fragment) {
+    public static void launchPictureLibrary(Activity activity) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-
         AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(Intent.createChooser(intent, fragment.getString(R.string.pick_photo)), RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+        activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.pick_photo)),
+                RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
 
-    public static void launchCamera(Fragment fragment, LaunchCameraCallback callback) {
+    public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
         String state = android.os.Environment.getExternalStorageState();
         if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-            showSDCardRequiredDialog(fragment.getActivity());
+            showSDCardRequiredDialog(activity);
         } else {
             Intent intent = prepareLaunchCameraIntent(callback);
-            fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+            activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
             AppLockManager.getInstance().setExtendedTimeout();
         }
     }
@@ -181,29 +180,29 @@ public class MediaUtils {
         dialogBuilder.create().show();
     }
 
-    public static void launchVideoLibrary(Fragment fragment) {
+    public static void launchVideoLibrary(Activity activity) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
 
         AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(Intent.createChooser(intent, fragment.getString(R.string.pick_video)), RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+        activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.pick_video)),
+                RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
 
-    public static void launchVideoCamera(Fragment fragment) {
+    public static void launchVideoCamera(Activity activity) {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
     public static boolean isLocalFile(String state) {
-        if (state == null)
+        if (state == null) {
             return false;
+        }
 
-        if (state.equals("queued") || state.equals("uploading") || state.equals("retry") || state.equals("failed"))
-            return true;
-
-        return false;
+        return  (state.equals("queued") || state.equals("uploading") || state.equals("retry")
+                || state.equals("failed"));
     }
 
     public static Uri getLastRecordedVideoUri(Activity activity) {

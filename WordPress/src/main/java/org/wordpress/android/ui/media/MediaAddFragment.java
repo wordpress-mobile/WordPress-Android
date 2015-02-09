@@ -232,20 +232,27 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         mMediaCapturePath = mediaCapturePath;
     }
 
-    public void launchCamera(){
-        MediaUtils.launchCamera(this, this);
+    public void launchCamera() {
+        if (isAdded()) {
+            MediaUtils.launchCamera(getActivity(), this);
+        }
     }
 
     public void launchVideoCamera() {
-        MediaUtils.launchVideoCamera(this);
-    }
+        if (isAdded()) {
+            MediaUtils.launchVideoCamera(getActivity());
+        }    }
 
     public void launchVideoLibrary() {
-        MediaUtils.launchVideoLibrary(this);
+        if (isAdded()) {
+            MediaUtils.launchVideoLibrary(getActivity());
+        }
     }
 
     public void launchPictureLibrary() {
-        MediaUtils.launchPictureLibrary(this);
+        if (isAdded()) {
+            MediaUtils.launchPictureLibrary(getActivity());
+        }
     }
 
     public void addToQueue(String mediaId) {
