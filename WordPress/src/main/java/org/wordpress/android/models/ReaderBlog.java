@@ -106,7 +106,7 @@ public class ReaderBlog {
     public String getFeedUrl() {
         return StringUtils.notNullStr(feedUrl);
     }
-    public void setFeedUrl(String url) {
+    public void setFeedUrl(String feedUrl) {
         this.feedUrl = StringUtils.notNullStr(feedUrl);
     }
 
