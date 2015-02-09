@@ -56,7 +56,9 @@ public class MediaSourceAdapter extends BaseAdapter {
 
     @Override
     public MediaItem getItem(int position) {
-        return sourceAtPosition(position).getMedia(position - offsetAtPosition(position));
+        MediaSource sourceAtPositon = sourceAtPosition(position);
+
+        return sourceAtPositon != null ? sourceAtPositon.getMedia(position - offsetAtPosition(position)) : null;
     }
 
     @Override

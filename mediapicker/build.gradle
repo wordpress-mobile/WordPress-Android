@@ -55,6 +55,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            res.srcDir 'src/main/res'
+        }
+        androidTest {
+            res.srcDir 'src/main/res'
+        }
+    }
 }
 
 robolectric {
