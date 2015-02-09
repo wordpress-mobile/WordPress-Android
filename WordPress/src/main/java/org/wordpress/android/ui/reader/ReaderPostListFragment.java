@@ -345,7 +345,7 @@ public class ReaderPostListFragment extends Fragment {
                                 updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
                                 break;
                             case BLOG_PREVIEW:
-                                updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
+                                updatePostsInCurrentBlogOrFeed(RequestDataAction.LOAD_NEWER);
                                 break;
                         }
                         // make sure swipe-to-refresh progress shows since this is a manual refresh
@@ -770,10 +770,10 @@ public class ReaderPostListFragment extends Fragment {
                 return;
             }
 
+            // request older posts unless we already have the max # to show
             switch (getPostListType()) {
                 case TAG_FOLLOWED:
                 case TAG_PREVIEW:
-                    // skip if we already have the max # of posts
                     if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         // request older posts
                         updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_OLDER, RefreshType.MANUAL);
@@ -782,8 +782,14 @@ public class ReaderPostListFragment extends Fragment {
                     break;
 
                 case BLOG_PREVIEW:
-                    if (ReaderPostTable.getNumPostsInBlog(mCurrentBlogId) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
-                        updatePostsInCurrentBlog(RequestDataAction.LOAD_OLDER);
+                    int numPosts;
+                    if (mCurrentFeedId != 0) {
+                        numPosts = ReaderPostTable.getNumPostsInFeed(mCurrentFeedId);
+                    } else {
+                        numPosts = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
+                    }
+                    if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                        updatePostsInCurrentBlogOrFeed(RequestDataAction.LOAD_OLDER);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                     }
                     break;
@@ -959,7 +965,7 @@ public class ReaderPostListFragment extends Fragment {
     /*
      * get posts for the current blog from the server
      */
-    void updatePostsInCurrentBlog(final RequestDataAction updateAction) {
+    void updatePostsInCurrentBlogOrFeed(final RequestDataAction updateAction) {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             AppLog.i(T.READER, "reader post list > network unavailable, canceled blog update");
             return;
@@ -1229,7 +1235,7 @@ public class ReaderPostListFragment extends Fragment {
 
     /*
      * used by blog preview - tell the blog info view to show the current blog/feed
-     * if it's not already loaded, then shows/updates posts once the info is laoded
+     * if it's not already loaded, then shows/updates posts once the info is loaded
      */
     private void loadBlogOrFeedInfo() {
         if (mBlogInfoView != null && mBlogInfoView.isEmpty()) {
@@ -1242,7 +1248,7 @@ public class ReaderPostListFragment extends Fragment {
                         mCurrentFeedId = blogInfo.feedId;
                         if (isPostAdapterEmpty()) {
                             getPostAdapter().setCurrentBlog(mCurrentBlogId);
-                            updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
+                            updatePostsInCurrentBlogOrFeed(RequestDataAction.LOAD_NEWER);
                         }
                         if (mFollowButton != null) {
                             mFollowButton.setIsFollowed(blogInfo.isFollowing);

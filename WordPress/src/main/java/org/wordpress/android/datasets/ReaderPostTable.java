@@ -203,9 +203,21 @@ public class ReaderPostTable {
     }
 
     public static int getNumPostsInBlog(long blogId) {
+        if (blogId == 0) {
+            return 0;
+        }
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT count(*) FROM tbl_posts WHERE blog_id=?",
                 new String[]{Long.toString(blogId)});
+    }
+
+    public static int getNumPostsInFeed(long feedId) {
+        if (feedId == 0) {
+            return 0;
+        }
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT count(*) FROM tbl_posts WHERE feed_id=?",
+                new String[]{Long.toString(feedId)});
     }
 
     public static int getNumPostsWithTag(ReaderTag tag) {

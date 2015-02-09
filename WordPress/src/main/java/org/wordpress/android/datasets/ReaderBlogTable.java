@@ -22,15 +22,15 @@ import org.wordpress.android.util.UrlUtils;
  *      1. sites/{$siteId}
  *      2. read/following/mine?meta=site,feed
  *
- *  The first endpoint is called when the user views blog preview, the second endpoint is called
- *  at startup to get the full list of blogs the user is following
+ *  The first endpoint is called when the user views blog preview, the second is called
+ *  to get the full list of blogs the user is following
  */
 public class ReaderBlogTable {
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_blog_info ("
-                 + "    blog_id       INTEGER DEFAULT 0,"
-                 + "    feed_id       INTEGER DEFAULT 0,"
+                 + "    blog_id       INTEGER DEFAULT 0,"   // will be same as feedId for feeds
+                 + "    feed_id       INTEGER DEFAULT 0,"   // will be 0 for blogs
                  + "	blog_url      TEXT NOT NULL COLLATE NOCASE,"
                  + "    image_url     TEXT,"
                  + "    feed_url      TEXT,"
@@ -40,7 +40,7 @@ public class ReaderBlogTable {
                  + "    is_jetpack    INTEGER DEFAULT 0,"
                  + "    is_following  INTEGER DEFAULT 0,"
                  + "    num_followers INTEGER DEFAULT 0,"
-                 + "    PRIMARY KEY (blog_id, feed_id, blog_url)"
+                 + "    PRIMARY KEY (blog_id, feed_id)"
                  + ")");
 
         db.execSQL("CREATE TABLE tbl_recommended_blogs ("

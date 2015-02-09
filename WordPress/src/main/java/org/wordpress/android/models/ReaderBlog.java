@@ -113,9 +113,6 @@ public class ReaderBlog {
     public boolean hasUrl() {
         return !TextUtils.isEmpty(url);
     }
-    public boolean hasFeedUrl() {
-        return !TextUtils.isEmpty(feedUrl);
-    }
     public boolean hasName() {
         return !TextUtils.isEmpty(name);
     }
@@ -123,10 +120,6 @@ public class ReaderBlog {
         return !TextUtils.isEmpty(description);
     }
 
-    // returns true if this is a feed rather than wp blog
-    public boolean isExternal() {
-        return (feedId != 0 || blogId == 0);
-    }
     /*
      * returns the mshot url to use for this blog, ex:
      *   http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
@@ -150,6 +143,7 @@ public class ReaderBlog {
             && this.getName().equals(blogInfo.getName())
             && this.getDescription().equals(blogInfo.getDescription())
             && this.getUrl().equals(blogInfo.getUrl())
+            && this.getFeedUrl().equals(blogInfo.getFeedUrl())
             && this.getImageUrl().equals(blogInfo.getImageUrl());
     }
 }
