@@ -397,6 +397,13 @@ public class ReaderPostTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(blogId)});
     }
 
+    public static String getOldestPubDateInFeed(long feedId) {
+        String sql = "SELECT published FROM tbl_posts"
+                  + " WHERE feed_id = ?"
+                  + " ORDER BY published LIMIT 1";
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(feedId)});
+    }
+
     /*
      * sets the following status for all posts in the passed blog
      */

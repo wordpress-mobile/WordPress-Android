@@ -41,9 +41,9 @@ public class ReaderBlogActions {
      * solely by url may cause the blog to be followed as a feed
      */
     public static boolean performFollowAction(final long blogId,
-                                               final String blogUrl,
-                                               final boolean isAskingToFollow,
-                                               final ActionListener actionListener) {
+                                              final String blogUrl,
+                                              final boolean isAskingToFollow,
+                                              final ActionListener actionListener) {
         // either blogId or blogUrl are required
         final boolean hasBlogId = (blogId != 0);
         final boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);

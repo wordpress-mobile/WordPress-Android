@@ -506,9 +506,19 @@ public class ReaderPostListFragment extends Fragment {
         if (!isAdded() || mFollowButton == null) {
             return;
         }
-        boolean isFollowing = getPostListType() == ReaderPostListType.BLOG_PREVIEW
-                ? ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl)
-                : ReaderTagTable.isFollowedTagName(getCurrentTagName());
+        boolean isFollowing;
+        switch (getPostListType()) {
+            case BLOG_PREVIEW:
+                if (mCurrentFeedId != 0) {
+                    isFollowing = ReaderBlogTable.isFollowedFeed(mCurrentFeedId);
+                } else {
+                    isFollowing = ReaderBlogTable.isFollowedBlog(mCurrentBlogId, mCurrentBlogUrl);
+                }
+                break;
+            default:
+                isFollowing = ReaderTagTable.isFollowedTagName(getCurrentTagName());
+                break;
+        }
         mFollowButton.setIsFollowed(isFollowing);
     }
 
@@ -979,7 +989,7 @@ public class ReaderPostListFragment extends Fragment {
             }
         };
         if (mCurrentFeedId != 0) {
-            ReaderPostActions.requestPostsForFeed(mCurrentFeedId, resultListener);
+            ReaderPostActions.requestPostsForFeed(mCurrentFeedId, updateAction, resultListener);
         } else {
             ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, resultListener);
         }

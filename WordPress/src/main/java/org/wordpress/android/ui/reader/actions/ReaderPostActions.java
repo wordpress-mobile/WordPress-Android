@@ -383,7 +383,16 @@ public class ReaderPostActions {
     }
 
     public static void requestPostsForFeed(final long feedId,
+                                           final RequestDataAction updateAction,
                                            final UpdateResultListener resultListener) {
+        String path = "/read/feed/" + feedId + "/posts/?meta=site,likes";
+        if (updateAction == RequestDataAction.LOAD_OLDER) {
+            String dateOldest = ReaderPostTable.getOldestPubDateInFeed(feedId);
+            if (!TextUtils.isEmpty(dateOldest)) {
+                path += "&before=" + UrlUtils.urlEncode(dateOldest);
+            }
+        }
+
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -399,8 +408,8 @@ public class ReaderPostActions {
                 }
             }
         };
+
         AppLog.d(T.READER, "updating posts in feed " + feedId);
-        String path = "/read/feed/" + feedId + "/posts/?meta=site,likes";
         WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
     }
 
