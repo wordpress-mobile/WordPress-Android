@@ -63,6 +63,11 @@ public class ReaderBlog {
             blog.numSubscribers = json.optInt("subscribers_count");
         }
 
+        // blogId will be empty for feeds, which is inconsistent with /read/ endpoints
+        if (blog.blogId == 0 && blog.feedId != 0) {
+            blog.blogId = blog.feedId;
+        }
+
         return blog;
     }
 

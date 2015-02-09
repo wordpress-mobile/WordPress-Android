@@ -401,7 +401,7 @@ public class ReaderPostActions {
         };
         AppLog.d(T.READER, "updating posts in feed " + feedId);
         String path = "/read/feed/" + feedId + "/posts/?meta=site,likes";
-        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
     }
 
     /*
