@@ -112,6 +112,13 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void showReaderFeedPreview(Context context, long feedId) {
+        Intent intent = new Intent(context, ReaderPostListActivity.class);
+        intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
+        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
+        context.startActivity(intent);
+    }
+
     /*
      * show a list of posts with a specific tag
      */

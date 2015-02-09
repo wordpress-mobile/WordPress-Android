@@ -683,6 +683,7 @@ public class ReaderPostTable {
 
         post.postId = c.getLong(c.getColumnIndex("post_id"));
         post.blogId = c.getLong(c.getColumnIndex("blog_id"));
+        post.feedId = c.getLong(c.getColumnIndex("feed_id"));
         post.authorId = c.getLong(c.getColumnIndex("author_id"));
         post.setPseudoId(c.getString(c.getColumnIndex("pseudo_id")));
 

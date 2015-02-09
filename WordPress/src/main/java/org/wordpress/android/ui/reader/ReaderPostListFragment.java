@@ -164,6 +164,20 @@ public class ReaderPostListFragment extends Fragment {
         return fragment;
     }
 
+    public static ReaderPostListFragment newInstanceForFeed(long feedId) {
+        AppLog.d(T.READER, "reader post list > newInstance (blog)");
+
+        Bundle args = new Bundle();
+        args.putLong(ReaderConstants.ARG_FEED_ID, feedId);
+        args.putLong(ReaderConstants.ARG_BLOG_ID, feedId);
+        args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
+
+        ReaderPostListFragment fragment = new ReaderPostListFragment();
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
@@ -175,8 +189,10 @@ public class ReaderPostListFragment extends Fragment {
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
+
             mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mCurrentBlogUrl = args.getString(ReaderConstants.ARG_BLOG_URL);
+            mCurrentFeedId = args.getLong(ReaderConstants.ARG_FEED_ID);
 
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
                 mTagPreviewHistory.push(getCurrentTagName());
@@ -198,6 +214,9 @@ public class ReaderPostListFragment extends Fragment {
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_BLOG_URL)) {
                 mCurrentBlogUrl = savedInstanceState.getString(ReaderConstants.ARG_BLOG_URL);
+            }
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_FEED_ID)) {
+                mCurrentFeedId = savedInstanceState.getLong(ReaderConstants.ARG_FEED_ID);
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
@@ -252,6 +271,7 @@ public class ReaderPostListFragment extends Fragment {
 
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putString(ReaderConstants.ARG_BLOG_URL, mCurrentBlogUrl);
+        outState.putLong(ReaderConstants.ARG_FEED_ID, mCurrentFeedId);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
@@ -426,7 +446,7 @@ public class ReaderPostListFragment extends Fragment {
 
         switch (getPostListType()) {
             case BLOG_PREVIEW:
-                loadBlogInfo();
+                loadBlogOrFeedInfo();
                 animateHeader();
                 break;
             case TAG_PREVIEW:
@@ -1205,11 +1225,10 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     /*
-     * used by blog preview - tell the blog info view to show the current blog
-     * if it's not already loaded, then shows/updates posts once the blog info
-     * is loaded
+     * used by blog preview - tell the blog info view to show the current blog/feed
+     * if it's not already loaded, then shows/updates posts once the info is laoded
      */
-    private void loadBlogInfo() {
+    private void loadBlogOrFeedInfo() {
         if (mBlogInfoView != null && mBlogInfoView.isEmpty()) {
             AppLog.d(T.READER, "reader post list > loading blogInfo");
             ReaderBlogInfoView.BlogInfoListener listener = new ReaderBlogInfoView.BlogInfoListener() {

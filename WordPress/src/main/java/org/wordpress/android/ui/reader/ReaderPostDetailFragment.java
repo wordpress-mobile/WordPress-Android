@@ -746,11 +746,15 @@ public class ReaderPostDetailFragment extends Fragment
             // avatar in header shows blog preview unless this post is from an external feed
             if (isBlogPreview()) {
                 layoutDetailHeader.setVisibility(View.GONE);
-            } else if (!mPost.isExternal) {
+            } else {
                 imgAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId, mPost.getBlogUrl());
+                        if (mPost.feedId != 0) {
+                            ReaderActivityLauncher.showReaderFeedPreview(v.getContext(), mPost.feedId);
+                        } else {
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId, mPost.getBlogUrl());
+                        }
                     }
                 });
             }

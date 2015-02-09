@@ -142,17 +142,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
                 }
             });
 
-            // tapping avatar shows blog preview unless this post is from an external feed
-            if (!post.isExternal) {
-                holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+            // show blog/feed preview when avatar is tapped
+            holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (post.feedId != 0) {
+                        ReaderActivityLauncher.showReaderFeedPreview(view.getContext(), post.feedId);
+                    } else {
                         ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post.blogId, post.getBlogUrl());
                     }
-                });
-            } else {
-                holder.imgAvatar.setOnClickListener(null);
-            }
+                }
+            });
         }
 
         if (post.hasExcerpt()) {

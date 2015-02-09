@@ -169,20 +169,24 @@ public class ReaderBlogFragment extends Fragment
     public void onBlogClicked(Object item) {
         final long blogId;
         final String blogUrl;
+        final long feedId;
         if (item instanceof ReaderRecommendedBlog) {
             ReaderRecommendedBlog blog = (ReaderRecommendedBlog) item;
             blogId = blog.blogId;
             blogUrl = blog.getBlogUrl();
+            feedId = 0;
         } else if (item instanceof ReaderBlog) {
             ReaderBlog blog = (ReaderBlog) item;
             blogId = blog.blogId;
             blogUrl = blog.getUrl();
+            feedId = blog.feedId;
         } else {
             return;
         }
 
-        // make sure we have either the blog id or url
-        if (blogId != 0 || !TextUtils.isEmpty(blogUrl)) {
+        if (feedId != 0) {
+            ReaderActivityLauncher.showReaderFeedPreview(getActivity(), feedId);
+        } else if (blogId != 0 || !TextUtils.isEmpty(blogUrl)) {
             ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId, blogUrl);
         }
     }
