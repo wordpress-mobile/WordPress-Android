@@ -3,7 +3,7 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -27,16 +27,16 @@ public class ReaderUser {
         user.userId = json.optLong("ID");
         user.blogId = json.optLong("site_ID");
 
-        user.userName = JSONUtil.getString(json, "username");
-        user.url = JSONUtil.getString(json, "URL"); // <-- this isn't necessarily a wp blog
-        user.profileUrl = JSONUtil.getString(json, "profile_URL");
-        user.avatarUrl = JSONUtil.getString(json, "avatar_URL");
+        user.userName = JSONUtils.getString(json, "username");
+        user.url = JSONUtils.getString(json, "URL"); // <-- this isn't necessarily a wp blog
+        user.profileUrl = JSONUtils.getString(json, "profile_URL");
+        user.avatarUrl = JSONUtils.getString(json, "avatar_URL");
 
         // "me" api call (current user) has "display_name", others have "name"
         if (json.has("display_name")) {
-            user.displayName = JSONUtil.getStringDecoded(json, "display_name");
+            user.displayName = JSONUtils.getStringDecoded(json, "display_name");
         } else {
-            user.displayName = JSONUtil.getStringDecoded(json, "name");
+            user.displayName = JSONUtils.getStringDecoded(json, "name");
         }
 
         return user;

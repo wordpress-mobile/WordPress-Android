@@ -10,6 +10,9 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.QuoteSpan;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.wordpress.android.util.helpers.WPHtmlTagHandler;
+import org.wordpress.android.util.helpers.WPImageGetter;
+import org.wordpress.android.util.helpers.WPQuoteSpan;
 
 public class HtmlUtils {
     /*
@@ -111,7 +114,7 @@ public class HtmlUtils {
     }
 
     /**
-     * an alternative to Html.fromHtml() supporting <ul>, <ol>, <blockquote> tags and replacing Emoticons with Emojis
+     * an alternative to Html.fromHtml() supporting <ul>, <ol>, <blockquote> tags and replacing EmoticonsUtils with Emojis
      */
     public static SpannableStringBuilder fromHtml(String source, WPImageGetter wpImageGetter) {
         SpannableStringBuilder html;
@@ -121,7 +124,7 @@ public class HtmlUtils {
             // In case our tag handler fails
             html = (SpannableStringBuilder) Html.fromHtml(source, wpImageGetter, null);
         }
-        Emoticons.replaceEmoticonsWithEmoji(html);
+        EmoticonsUtils.replaceEmoticonsWithEmoji(html);
         QuoteSpan spans[] = html.getSpans(0, html.length(), QuoteSpan.class);
         for (QuoteSpan span : spans) {
             html.setSpan(new WPQuoteSpan(), html.getSpanStart(span), html.getSpanEnd(span), html.getSpanFlags(span));

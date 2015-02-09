@@ -50,7 +50,7 @@ import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ListScrollPositionManager;
+import org.wordpress.android.util.helpers.ListScrollPositionManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;

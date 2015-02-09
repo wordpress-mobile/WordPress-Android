@@ -22,7 +22,7 @@ import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.HashMap;
@@ -92,7 +92,7 @@ public class ReaderCommentActions {
                             serverComments.add(comment);
 
                             // extract and save likes for this comment
-                            JSONObject jsonLikes = JSONUtil.getJSONChild(jsonComment, "meta/data/likes");
+                            JSONObject jsonLikes = JSONUtils.getJSONChild(jsonComment, "meta/data/likes");
                             if (jsonLikes != null) {
                                 ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonLikes);
                                 ReaderUserTable.addOrUpdateUsers(likingUsers);
@@ -249,7 +249,7 @@ public class ReaderCommentActions {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                boolean success = (jsonObject != null && JSONUtil.getBool(jsonObject, "success"));
+                boolean success = (jsonObject != null && JSONUtils.getBool(jsonObject, "success"));
                 if (success) {
                     AppLog.d(T.READER, String.format("comment %s succeeded", actionName));
                 } else {

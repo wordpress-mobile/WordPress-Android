@@ -27,7 +27,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;

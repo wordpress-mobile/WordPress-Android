@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.util.helpers;
 
 //See: http://stackoverflow.com/a/11024200
 public class Version implements Comparable<Version> {

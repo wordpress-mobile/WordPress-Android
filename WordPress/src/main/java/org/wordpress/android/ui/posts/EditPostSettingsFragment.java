@@ -51,8 +51,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
-import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.LocationHelper;
+import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.helpers.LocationHelper;
 import org.xmlrpc.android.ApiHelper;
 
 import java.lang.reflect.Type;
@@ -265,7 +265,7 @@ public class EditPostSettingsFragment extends Fragment
 
             if (!post.isPage()) {
                 if (post.getJSONCategories() != null) {
-                    mCategories = JSONUtil.fromJSONArrayToStringList(post.getJSONCategories());
+                    mCategories = JSONUtils.fromJSONArrayToStringList(post.getJSONCategories());
                 }
             }
             String tags = post.getKeywords();

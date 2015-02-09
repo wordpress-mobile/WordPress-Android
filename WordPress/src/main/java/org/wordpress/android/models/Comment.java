@@ -9,7 +9,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -62,13 +62,13 @@ public class Comment {
 
         Comment comment = new Comment();
         comment.commentID = json.optLong("ID");
-        comment.status = JSONUtil.getString(json, "status");
-        comment.published = JSONUtil.getString(json, "date");
+        comment.status = JSONUtils.getString(json, "status");
+        comment.published = JSONUtils.getString(json, "date");
 
         // note that the content often contains html, and on rare occasions may contain
         // script blocks that need to be removed (only seen with blogs that use the
         // sociable plugin)
-        comment.comment = HtmlUtils.stripScript(JSONUtil.getString(json, "content"));
+        comment.comment = HtmlUtils.stripScript(JSONUtils.getString(json, "content"));
 
         JSONObject jsonPost = json.optJSONObject("post");
         if (jsonPost != null) {
@@ -79,15 +79,15 @@ public class Comment {
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor!=null) {
             // author names may contain html entities (esp. pingbacks)
-            comment.authorName = JSONUtil.getStringDecoded(jsonAuthor, "name");
-            comment.authorUrl = JSONUtil.getString(jsonAuthor, "URL");
+            comment.authorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
+            comment.authorUrl = JSONUtils.getString(jsonAuthor, "URL");
 
             // email address will be set to "false" when there isn't an email address
-            comment.authorEmail = JSONUtil.getString(jsonAuthor, "email");
+            comment.authorEmail = JSONUtils.getString(jsonAuthor, "email");
             if (comment.authorEmail.equals("false"))
                 comment.authorEmail = "";
 
-            comment.profileImageUrl = JSONUtil.getString(jsonAuthor, "avatar_URL");
+            comment.profileImageUrl = JSONUtils.getString(jsonAuthor, "avatar_URL");
         }
 
         return comment;

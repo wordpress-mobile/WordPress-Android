@@ -2,7 +2,7 @@ package org.wordpress.android.models;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -35,9 +35,9 @@ public class Suggestion {
             return null;
         }
 
-        String userLogin = JSONUtil.getString(json, "user_login");
-        String displayName = JSONUtil.getString(json, "display_name");
-        String imageUrl = JSONUtil.getString(json, "image_URL");
+        String userLogin = JSONUtils.getString(json, "user_login");
+        String displayName = JSONUtils.getString(json, "display_name");
+        String imageUrl = JSONUtils.getString(json, "image_URL");
 
         // the api currently doesn't return a taxonomy field but we want to be ready for when it does
         return new Suggestion(siteID, userLogin, displayName, imageUrl, MENTION_TAXONOMY);

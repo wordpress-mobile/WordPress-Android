@@ -17,7 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public class Note extends Syncable {
 
     public Boolean isCommentType() {
         synchronized (mSyncLock) {
-            return (isAutomattcherType() && JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1) ||
+            return (isAutomattcherType() && JSONUtils.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1) ||
                     isType(NOTE_COMMENT_TYPE);
         }
     }
@@ -150,7 +150,7 @@ public class Note extends Syncable {
         synchronized (mSyncLock) {
             JSONArray subjectArray = mNoteJSON.optJSONArray("subject");
             if (subjectArray != null) {
-                String commentSubject = JSONUtil.queryJSON(subjectArray, "subject[1].text", "");
+                String commentSubject = JSONUtils.queryJSON(subjectArray, "subject[1].text", "");
 
                 // Trim down the comment preview if the comment text is too large.
                 if (commentSubject != null && commentSubject.length() > MAX_COMMENT_PREVIEW_LENGTH) {
@@ -298,7 +298,7 @@ public class Note extends Syncable {
     private <U> U queryJSON(String query, U defaultObject) {
         synchronized (mSyncLock) {
             if (mNoteJSON == null) return defaultObject;
-            return JSONUtil.queryJSON(mNoteJSON, query, defaultObject);
+            return JSONUtils.queryJSON(mNoteJSON, query, defaultObject);
         }
     }
 
@@ -348,7 +348,7 @@ public class Note extends Syncable {
             try {
                 JSONObject bodyItem = bodyArray.getJSONObject(i);
                 if (bodyItem.has("type") && bodyItem.optString("type").equals("user")) {
-                    return JSONUtil.queryJSON(bodyItem, "meta.links.home", "");
+                    return JSONUtils.queryJSON(bodyItem, "meta.links.home", "");
                 }
             } catch (JSONException e) {
                 return "";

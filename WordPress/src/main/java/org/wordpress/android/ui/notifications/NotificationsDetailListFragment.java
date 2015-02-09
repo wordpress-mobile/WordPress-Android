@@ -33,7 +33,7 @@ import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -259,7 +259,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         JSONObject noteObject = bodyArray.getJSONObject(i);
                         // Determine NoteBlock type and add it to the array
                         NoteBlock noteBlock;
-                        String noteBlockTypeString = JSONUtil.queryJSON(noteObject, "type", "");
+                        String noteBlockTypeString = JSONUtils.queryJSON(noteObject, "type", "");
 
                         if (NoteBlockRangeType.fromString(noteBlockTypeString) == NoteBlockRangeType.USER) {
                             if (mNote.isCommentType()) {

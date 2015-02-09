@@ -23,8 +23,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 
 /**
  * A fragment display the themes on a grid view.

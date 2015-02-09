@@ -26,7 +26,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListene
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
@@ -114,7 +114,7 @@ public class ReaderPostActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                boolean isReblogged = (jsonObject != null && JSONUtil.getBool(jsonObject, "is_reblogged"));
+                boolean isReblogged = (jsonObject != null && JSONUtils.getBool(jsonObject, "is_reblogged"));
                 if (isReblogged) {
                     ReaderPostTable.setPostReblogged(post, true);
                 }
@@ -236,7 +236,7 @@ public class ReaderPostActions {
             return false;
         }
 
-        JSONObject jsonLikes = JSONUtil.getJSONChild(jsonPost, "meta/data/likes");
+        JSONObject jsonLikes = JSONUtils.getJSONChild(jsonPost, "meta/data/likes");
         if (jsonLikes == null) {
             return false;
         }

@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.HashMap;
@@ -31,8 +31,8 @@ public class ImageSizeMap extends HashMap<String, ImageSizeMap.ImageSize> {
 
             while (it.hasNext()) {
                 JSONObject jsonAttach = json.optJSONObject(it.next());
-                if (jsonAttach != null && JSONUtil.getString(jsonAttach, "mime_type").startsWith("image")) {
-                    String normUrl = UrlUtils.normalizeUrl(UrlUtils.removeQuery(JSONUtil.getString(jsonAttach, "URL")));
+                if (jsonAttach != null && JSONUtils.getString(jsonAttach, "mime_type").startsWith("image")) {
+                    String normUrl = UrlUtils.normalizeUrl(UrlUtils.removeQuery(JSONUtils.getString(jsonAttach, "URL")));
                     int width = jsonAttach.optInt("width");
                     int height = jsonAttach.optInt("height");
                     this.put(normUrl, new ImageSize(width, height));

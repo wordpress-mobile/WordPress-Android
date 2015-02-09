@@ -23,7 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
-import org.wordpress.android.util.AlertUtil;
+import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -159,7 +159,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
     private void validateAndCreateUserAndBlog() {
         if (mSystemService.getActiveNetworkInfo() == null) {
-            AlertUtil.showAlert(getActivity(), R.string.no_network_title, R.string.no_network_message);
+            AlertUtils.showAlert(getActivity(), R.string.no_network_title, R.string.no_network_message);
             return;
         }
         if (!isUserDataValid()) {

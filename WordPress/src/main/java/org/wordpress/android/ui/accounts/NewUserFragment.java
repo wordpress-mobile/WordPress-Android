@@ -24,10 +24,10 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
-import org.wordpress.android.util.AlertUtil;
+import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.UserEmail;
+import org.wordpress.android.util.UserEmailUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
@@ -230,7 +230,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
     private void validateAndCreateUserAndBlog() {
         if (mSystemService.getActiveNetworkInfo() == null) {
-            AlertUtil.showAlert(getActivity(), R.string.no_network_title, R.string.no_network_message);
+            AlertUtils.showAlert(getActivity(), R.string.no_network_title, R.string.no_network_message);
             return;
         }
         if (!isUserDataValid()) {
@@ -349,7 +349,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mProgressBarSignIn = (RelativeLayout) rootView.findViewById(R.id.nux_sign_in_progress_bar);
 
         mEmailTextField = (EditText) rootView.findViewById(R.id.email_address);
-        mEmailTextField.setText(UserEmail.getPrimaryEmail(getActivity()));
+        mEmailTextField.setText(UserEmailUtils.getPrimaryEmail(getActivity()));
         mEmailTextField.setSelection(EditTextUtils.getText(mEmailTextField).length());
         mPasswordTextField = (EditText) rootView.findViewById(R.id.password);
         mUsernameTextField = (EditText) rootView.findViewById(R.id.username);

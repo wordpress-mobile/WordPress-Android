@@ -1,4 +1,4 @@
-package org.wordpress.android.widgets;
+package org.wordpress.android.util.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -23,8 +23,9 @@ public class WPEditText extends EditText {
 
     @Override
     protected void onSelectionChanged(int selStart, int selEnd) {
-        if (onSelectionChangedListener != null)
+        if (onSelectionChangedListener != null) {
             onSelectionChangedListener.onSelectionChanged();
+        }
     }
 
     @Override

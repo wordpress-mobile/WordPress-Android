@@ -10,7 +10,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class JSONUtil {
+public class JSONUtils {
     private static String QUERY_SEPERATOR=".";
     private static String QUERY_ARRAY_INDEX_START="[";
     private static String QUERY_ARRAY_INDEX_END="]";
@@ -19,7 +19,7 @@ public class JSONUtil {
 
     private static final String JSON_NULL_STR = "null";
 
-    private static final String TAG="JSONUtil";
+    private static final String TAG="JSONUtils";
     /**
      * Given a JSONObject and a key path (e.g property.child) and a default it will
      * traverse the object graph and pull out the desired property

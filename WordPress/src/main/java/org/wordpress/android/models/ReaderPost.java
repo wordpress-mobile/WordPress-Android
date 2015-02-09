@@ -9,7 +9,7 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -69,31 +69,31 @@ public class ReaderPost {
         post.blogId = json.optLong("site_ID");
 
         if (json.has("pseudo_ID")) {
-            post.pseudoId = JSONUtil.getString(json, "pseudo_ID");  // read/ endpoint
+            post.pseudoId = JSONUtils.getString(json, "pseudo_ID");  // read/ endpoint
         } else {
-            post.pseudoId = JSONUtil.getString(json, "global_ID");  // sites/ endpoint
+            post.pseudoId = JSONUtils.getString(json, "global_ID");  // sites/ endpoint
         }
 
         // remove HTML from the excerpt
-        post.excerpt = HtmlUtils.fastStripHtml(JSONUtil.getString(json, "excerpt"));
+        post.excerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt"));
 
-        post.text = JSONUtil.getString(json, "content");
-        post.title = JSONUtil.getStringDecoded(json, "title");
-        post.url = JSONUtil.getString(json, "URL");
-        post.shortUrl = JSONUtil.getString(json, "short_URL");
-        post.setBlogUrl(JSONUtil.getString(json, "site_URL"));
+        post.text = JSONUtils.getString(json, "content");
+        post.title = JSONUtils.getStringDecoded(json, "title");
+        post.url = JSONUtils.getString(json, "URL");
+        post.shortUrl = JSONUtils.getString(json, "short_URL");
+        post.setBlogUrl(JSONUtils.getString(json, "site_URL"));
 
         post.numReplies = json.optInt("comment_count");
         post.numLikes = json.optInt("like_count");
-        post.isLikedByCurrentUser = JSONUtil.getBool(json, "i_like");
-        post.isFollowedByCurrentUser = JSONUtil.getBool(json, "is_following");
-        post.isRebloggedByCurrentUser = JSONUtil.getBool(json, "is_reblogged");
-        post.isCommentsOpen = JSONUtil.getBool(json, "comments_open");
-        post.isExternal = JSONUtil.getBool(json, "is_external");
-        post.isPrivate = JSONUtil.getBool(json, "site_is_private");
+        post.isLikedByCurrentUser = JSONUtils.getBool(json, "i_like");
+        post.isFollowedByCurrentUser = JSONUtils.getBool(json, "is_following");
+        post.isRebloggedByCurrentUser = JSONUtils.getBool(json, "is_reblogged");
+        post.isCommentsOpen = JSONUtils.getBool(json, "comments_open");
+        post.isExternal = JSONUtils.getBool(json, "is_external");
+        post.isPrivate = JSONUtils.getBool(json, "site_is_private");
 
-        post.isLikesEnabled = JSONUtil.getBool(json, "likes_enabled");
-        post.isSharingEnabled = JSONUtil.getBool(json, "sharing_enabled");
+        post.isLikesEnabled = JSONUtils.getBool(json, "likes_enabled");
+        post.isSharingEnabled = JSONUtils.getBool(json, "sharing_enabled");
 
         // parse the author section
         assignAuthorFromJson(post, json.optJSONObject("author"));
@@ -102,21 +102,22 @@ public class ReaderPost {
         JSONObject jsonEditorial = json.optJSONObject("editorial");
         if (jsonEditorial != null) {
             post.blogId = jsonEditorial.optLong("blog_id");
-            post.blogName = JSONUtil.getStringDecoded(jsonEditorial, "blog_name");
-            post.featuredImage = ReaderImageScanner.getImageUrlFromFPFeaturedImageUrl(JSONUtil.getString(jsonEditorial, "image"));
-            post.setPrimaryTag(JSONUtil.getString(jsonEditorial, "highlight_topic_title")); //  highlight_topic?
+            post.blogName = JSONUtils.getStringDecoded(jsonEditorial, "blog_name");
+            post.featuredImage = ReaderImageScanner.getImageUrlFromFPFeaturedImageUrl(
+                    JSONUtils.getString(jsonEditorial, "image"));
+            post.setPrimaryTag(JSONUtils.getString(jsonEditorial, "highlight_topic_title")); //  highlight_topic?
             // we want freshly-pressed posts to show & store the date they were chosen rather than the day they were published
-            post.published = JSONUtil.getString(jsonEditorial, "displayed_on");
+            post.published = JSONUtils.getString(jsonEditorial, "displayed_on");
         } else {
-            post.featuredImage = JSONUtil.getString(json, "featured_image");
-            post.blogName = JSONUtil.getStringDecoded(json, "site_name");
-            post.published = JSONUtil.getString(json, "date");
+            post.featuredImage = JSONUtils.getString(json, "featured_image");
+            post.blogName = JSONUtils.getStringDecoded(json, "site_name");
+            post.published = JSONUtils.getString(json, "date");
         }
 
         // the date a post was liked is only returned by the read/liked/ endpoint - if this exists,
         // set it as the timestamp so posts are sorted by the date they were liked rather than the
         // date they were published (the timestamp is used to sort posts when querying)
-        String likeDate = JSONUtil.getString(json, "date_liked");
+        String likeDate = JSONUtils.getString(json, "date_liked");
         if (!TextUtils.isEmpty(likeDate)) {
             post.timestamp = DateTimeUtils.iso8601ToTimestamp(likeDate);
         } else {
@@ -143,14 +144,14 @@ public class ReaderPost {
         }
 
         // site metadata - returned when ?meta=site was added to the request
-        JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
+        JSONObject jsonSite = JSONUtils.getJSONChild(json, "meta/data/site");
         if (jsonSite != null) {
             post.blogId = jsonSite.optInt("ID");
-            post.blogName = JSONUtil.getString(jsonSite, "name");
-            post.setBlogUrl(JSONUtil.getString(jsonSite, "URL"));
-            post.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
+            post.blogName = JSONUtils.getString(jsonSite, "name");
+            post.setBlogUrl(JSONUtils.getString(jsonSite, "URL"));
+            post.isPrivate = JSONUtils.getBool(jsonSite, "is_private");
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
-            post.isJetpack = JSONUtil.getBool(jsonSite, "jetpack");
+            post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
         }
 
         // if there's no featured image, check if featured media has been set - this is sometimes
@@ -159,9 +160,9 @@ public class ReaderPost {
         if (!post.hasFeaturedImage()) {
             JSONObject jsonMedia = json.optJSONObject("featured_media");
             if (jsonMedia != null && jsonMedia.length() > 0) {
-                String mediaUrl = JSONUtil.getString(jsonMedia, "uri");
+                String mediaUrl = JSONUtils.getString(jsonMedia, "uri");
                 if (!TextUtils.isEmpty(mediaUrl)) {
-                    String type = JSONUtil.getString(jsonMedia, "type");
+                    String type = JSONUtils.getString(jsonMedia, "type");
                     boolean isVideo = (type != null && type.equals("video"));
                     if (isVideo) {
                         post.featuredVideo = mediaUrl;
@@ -195,13 +196,13 @@ public class ReaderPost {
             return;
         }
 
-        post.authorName = JSONUtil.getString(jsonAuthor, "name");
-        post.postAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
+        post.authorName = JSONUtils.getString(jsonAuthor, "name");
+        post.postAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
         post.authorId = jsonAuthor.optLong("ID");
 
         // site_URL doesn't exist for /sites/ endpoints, so get it from the author
         if (TextUtils.isEmpty(post.blogUrl)) {
-            post.setBlogUrl(JSONUtil.getString(jsonAuthor, "URL"));
+            post.setBlogUrl(JSONUtils.getString(jsonAuthor, "URL"));
         }
     }
 
@@ -232,7 +233,7 @@ public class ReaderPost {
             int postCount = jsonThisTag.optInt("post_count");
             if (postCount > popularCount) {
                 nextMostPopularTag = mostPopularTag;
-                mostPopularTag = JSONUtil.getString(jsonThisTag, "name");
+                mostPopularTag = JSONUtils.getString(jsonThisTag, "name");
                 popularCount = postCount;
             }
         }

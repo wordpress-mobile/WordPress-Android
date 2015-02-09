@@ -21,12 +21,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask;
 import org.wordpress.android.util.BlogUtils;
-import org.wordpress.android.util.ListScrollPositionManager;
+import org.wordpress.android.util.helpers.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 
 import java.util.List;
 import java.util.Map;

@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
@@ -25,7 +24,7 @@ import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.util.AlertUtil;
+import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ProfilingUtils;
@@ -464,7 +463,7 @@ public class PostsActivity extends WPDrawerActivity
         } else if (action == POST_SHARE) {
             // Only share published posts
             if (post.getStatusEnum() != PostStatus.PUBLISHED && post.getStatusEnum() != PostStatus.SCHEDULED) {
-                AlertUtil.showAlert(this, R.string.error,
+                AlertUtils.showAlert(this, R.string.error,
                         post.isPage() ? R.string.page_not_published : R.string.post_not_published);
                 return;
             }

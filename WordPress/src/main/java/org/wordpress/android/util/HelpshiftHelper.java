@@ -156,7 +156,7 @@ public class HelpshiftHelper {
     }
 
     private HashMap getHelpshiftConfig(Context context) {
-        String emailAddress = UserEmail.getPrimaryEmail(context);
+        String emailAddress = UserEmailUtils.getPrimaryEmail(context);
         // Use the user entered username to pre-fill name
         String name = (String) getMetaData(MetadataKey.USER_ENTERED_USERNAME);
         // If it's null or empty, use split email address to pre-fill name

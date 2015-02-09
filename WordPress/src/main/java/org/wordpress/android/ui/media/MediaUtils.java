@@ -21,7 +21,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.Version;
+import org.wordpress.android.util.helpers.Version;
 import org.wordpress.android.widgets.WPImageSpan;
 import org.wordpress.passcodelock.AppLockManager;
 

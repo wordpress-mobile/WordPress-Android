@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONObject;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class ReaderComment {
@@ -43,12 +43,12 @@ public class ReaderComment {
 
         comment.blogId = blogId;
         comment.commentId = json.optLong("ID");
-        comment.status = JSONUtil.getString(json, "status");
+        comment.status = JSONUtils.getString(json, "status");
 
         // note that content may contain html, adapter needs to handle it
-        comment.text = HtmlUtils.stripScript(JSONUtil.getString(json, "content"));
+        comment.text = HtmlUtils.stripScript(JSONUtils.getString(json, "content"));
 
-        comment.published = JSONUtil.getString(json, "date");
+        comment.published = JSONUtils.getString(json, "date");
         comment.timestamp = DateTimeUtils.iso8601ToTimestamp(comment.published);
 
         JSONObject jsonPost = json.optJSONObject("post");
@@ -59,9 +59,9 @@ public class ReaderComment {
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor!=null) {
             // author names may contain html entities (esp. pingbacks)
-            comment.authorName = JSONUtil.getStringDecoded(jsonAuthor, "name");
-            comment.authorAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
-            comment.authorUrl = JSONUtil.getString(jsonAuthor, "URL");
+            comment.authorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
+            comment.authorAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
+            comment.authorUrl = JSONUtils.getString(jsonAuthor, "URL");
             comment.authorId = jsonAuthor.optLong("ID");
             comment.authorBlogId = jsonAuthor.optLong("site_ID");
         }
@@ -72,10 +72,10 @@ public class ReaderComment {
         }
 
         // like info is found under meta/data/likes when meta=likes query param is used
-        JSONObject jsonLikes = JSONUtil.getJSONChild(json, "meta/data/likes");
+        JSONObject jsonLikes = JSONUtils.getJSONChild(json, "meta/data/likes");
         if (jsonLikes != null) {
             comment.numLikes = jsonLikes.optInt("found");
-            comment.isLikedByCurrentUser = JSONUtil.getBool(jsonLikes, "i_like");
+            comment.isLikedByCurrentUser = JSONUtils.getBool(jsonLikes, "i_like");
         }
 
         return comment;

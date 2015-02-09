@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class FetchBlogListWPCom extends FetchBlogListAbstract {
                     site.put("blogid", jsonSite.get("ID"));
                     site.put("isAdmin", jsonSite.get("user_can_manage"));
                     site.put("isVisible", jsonSite.get("visible"));
-                    JSONObject jsonLinks = JSONUtil.getJSONChild(jsonSite, "meta/links");
+                    JSONObject jsonLinks = JSONUtils.getJSONChild(jsonSite, "meta/links");
                     if (jsonLinks != null) {
                         site.put("xmlrpc", jsonLinks.getString("xmlrpc"));
                         sites.add(site);

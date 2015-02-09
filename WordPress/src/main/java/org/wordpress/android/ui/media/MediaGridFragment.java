@@ -43,8 +43,8 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 

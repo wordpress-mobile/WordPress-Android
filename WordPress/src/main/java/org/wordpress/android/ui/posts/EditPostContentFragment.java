@@ -55,12 +55,12 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.MediaGalleryImageSpan;
-import org.wordpress.android.widgets.WPEditText;
+import org.wordpress.android.util.widgets.WPEditText;
 import org.wordpress.android.widgets.WPImageSpan;
 import org.wordpress.android.widgets.WPUnderlineSpan;
 
-public class EditPostContentFragment extends Fragment implements TextWatcher,
-        WPEditText.OnSelectionChangedListener, View.OnTouchListener {
+public class EditPostContentFragment extends Fragment implements TextWatcher, WPEditText.OnSelectionChangedListener,
+        View.OnTouchListener {
     ActionBarActivity mActivity;
 
     private static final String TAG_FORMAT_BAR_BUTTON_STRONG = "strong";

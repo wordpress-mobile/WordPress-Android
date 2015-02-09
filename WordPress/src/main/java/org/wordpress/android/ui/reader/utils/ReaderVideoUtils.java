@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 
 public class ReaderVideoUtils {
 	private ReaderVideoUtils() {
@@ -145,7 +145,7 @@ public class ReaderVideoUtils {
                 if (response!=null && response.length() > 0) {
                     JSONObject json = response.optJSONObject(0);
                     if (json!=null && json.has("thumbnail_large"))
-                        thumbnailUrl = JSONUtil.getString(json, "thumbnail_large");
+                        thumbnailUrl = JSONUtils.getString(json, "thumbnail_large");
                 }
                 if (TextUtils.isEmpty(thumbnailUrl)) {
                     thumbListener.onResponse(false, null);

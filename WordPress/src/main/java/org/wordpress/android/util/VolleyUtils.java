@@ -28,7 +28,7 @@ public class VolleyUtils {
         JSONObject json = volleyErrorToJSON(volleyError);
         if (json==null)
             return "";
-        return JSONUtil.getString(json, "error");
+        return JSONUtils.getString(json, "error");
     }
 
     public static int statusCodeFromVolleyError(VolleyError volleyError) {

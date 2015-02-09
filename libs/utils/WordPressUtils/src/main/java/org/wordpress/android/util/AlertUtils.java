@@ -21,7 +21,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-public class AlertUtil {
+public class AlertUtils {
     /**
      * Show Alert Dialog
      * @param context
