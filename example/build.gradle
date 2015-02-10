@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.editorexample"
-        minSdkVersion 15
+        minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -33,5 +33,5 @@ android {
 }
 
 dependencies {
-    compile project(":editor");
+    compile project(":WordPressEditor");
 }

@@ -8,11 +8,11 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".ExampleActivity"
+            android:name=".MainExampleActivity"
             android:label="@string/title_activity_example" >
         </activity>
         <activity
-            android:name="org.wordpress.android.editor.EditorActivity" >
+            android:name=".EditorExampleActivity" >
         </activity>
     </application>
 

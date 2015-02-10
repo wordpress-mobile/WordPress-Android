@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Editor</string>
+    <string name="post_settings">Settings</string>
+    <string name="post_content">Content</string>
+    <string name="post_title">Title</string>
+</resources>
