@@ -6,6 +6,9 @@ import android.app.Fragment;
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
+    public abstract CharSequence getTitle();
+    public abstract CharSequence getContent();
+
     protected EditorFragmentListener mEditorFragmentListener;
 
     @Override
