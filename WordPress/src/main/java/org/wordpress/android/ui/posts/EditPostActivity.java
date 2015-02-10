@@ -43,8 +43,9 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
+import org.wordpress.android.editor.legacy.WPEditImageSpan;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
@@ -64,7 +65,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.MediaGalleryImageSpan;
-import org.wordpress.android.widgets.WPImageSpan;
+import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
@@ -549,54 +550,12 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         if (WordPress.getCurrentBlog() == null) {
             return;
         }
-        EditText editText = mEditorFragment.getContentEditText();
-
         String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-
         WPImageSpan imageSpan = MediaUtils.prepareWPImageSpan(this, blogId, mediaId);
         if (imageSpan == null) {
             return;
         }
-
-        // based on addMedia()
-
-        int selectionStart = editText.getSelectionStart();
-        int selectionEnd = editText.getSelectionEnd();
-
-        if (selectionStart > selectionEnd) {
-            int temp = selectionEnd;
-            selectionEnd = selectionStart;
-            selectionStart = temp;
-        }
-
-        int line, column = 0;
-        if (editText.getLayout() != null) {
-            line = editText.getLayout().getLineForOffset(selectionStart);
-            column = editText.getSelectionStart() - editText.getLayout().getLineStart(line);
-        }
-
-        Editable s = editText.getText();
-        if (s != null) {
-            ImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
-            if (gallerySpans.length != 0) {
-                // insert a few line breaks if the cursor is already on an image
-                s.insert(selectionEnd, "\n\n");
-                selectionStart = selectionStart + 2;
-                selectionEnd = selectionEnd + 2;
-            } else if (column != 0) {
-                // insert one line break if the cursor is not at the first column
-                s.insert(selectionEnd, "\n");
-                selectionStart = selectionStart + 1;
-                selectionEnd = selectionEnd + 1;
-            }
-
-            s.insert(selectionStart, " ");
-            s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-            s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            s.insert(selectionEnd + 1, "\n\n");
-        }
-
+        mEditorFragment.addImageSpanOnSelection((ImageSpan) imageSpan);
         // load image from server
         loadWPImageSpanThumbnail(imageSpan);
     }
@@ -606,12 +565,14 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
      */
     private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
         MediaFile mediaFile = imageSpan.getMediaFile();
-        if (mediaFile == null)
+        if (mediaFile == null) {
             return;
+        }
 
         final String mediaId = mediaFile.getMediaId();
-        if (mediaId == null)
+        if (mediaId == null) {
             return;
+        }
 
         final EditText editText = mEditorFragment.getContentEditText();
         String imageURL;
@@ -625,8 +586,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             imageURL = mediaFile.getFileURL() != null ?  mediaFile.getFileURL() : mediaFile.getThumbnailURL();
         }
 
-        if (imageURL == null)
+        if (imageURL == null) {
             return;
+        }
 
         WordPress.imageLoader.get(imageURL, new ImageLoader.ImageListener() {
             @Override
@@ -675,7 +637,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                             // replace the existing span with a new one with the correct image, re-add it to the same position.
                             int spanStart = s.getSpanStart(is);
                             int spanEnd = s.getSpanEnd(is);
-                            WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, resizedBitmap,
+                            WPEditImageSpan imageSpan = new WPEditImageSpan(EditPostActivity.this, resizedBitmap,
                                     is.getImageSource());
                             imageSpan.setMediaFile(is.getMediaFile());
                             imageSpan.setNetworkImageLoaded(true);
@@ -937,7 +899,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                     } else {
                         mediaFile.setFileName(wpIS.getImageSource().toString());
                         mediaFile.setFilePath(wpIS.getImageSource().toString());
-                        mediaFile.save();
+                        WordPress.wpDB.saveMediaFile(mediaFile);
                     }
 
                     int tagStart = postContentEditable.getSpanStart(wpIS);
@@ -1075,7 +1037,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             mediaTitle = ImageUtils.getTitleForWPImageSpan(context, imageUri.getEncodedPath());
         }
 
-        WPImageSpan is = new WPImageSpan(context, thumbnailBitmap, imageUri);
+        WPEditImageSpan is = new WPEditImageSpan(context, thumbnailBitmap, imageUri);
         MediaFile mediaFile = is.getMediaFile();
         mediaFile.setPostID(getPost().getLocalTablePostId());
         mediaFile.setTitle(mediaTitle);
@@ -1084,7 +1046,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         if (imageUri.getEncodedPath() != null) {
             mediaFile.setVideo(imageUri.getEncodedPath().contains("video"));
         }
-        mediaFile.save();
+        WordPress.wpDB.saveMediaFile(mediaFile);
 
         // TODO: move the following back to the fragment (and remove WPImageSpan refs)
         if (ssb != null) {

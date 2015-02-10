@@ -30,7 +30,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;

@@ -16,13 +16,14 @@ import android.webkit.MimeTypeMap;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.editor.legacy.WPEditImageSpan;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.Version;
-import org.wordpress.android.widgets.WPImageSpan;
+import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.DataInputStream;
@@ -261,11 +262,12 @@ public class MediaUtils {
         return true;
     }
 
-    public static WPImageSpan prepareWPImageSpan(Context context, String blogId, final String mediaId) {
+    public static WPEditImageSpan prepareWPImageSpan(Context context, String blogId, final String mediaId) {
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
-        if (cursor == null || !cursor.moveToFirst()){
-            if (cursor != null)
+        if (cursor == null || !cursor.moveToFirst()) {
+            if (cursor != null) {
                 cursor.close();
+            }
             return null;
         }
 
@@ -279,7 +281,7 @@ public class MediaUtils {
         boolean isVideo = mimeType != null && mimeType.contains("video");
 
         Uri uri = Uri.parse(url);
-        WPImageSpan imageSpan = new WPImageSpan(context,
+        WPEditImageSpan imageSpan = new WPEditImageSpan(context,
                 isVideo ? R.drawable.media_movieclip : R.drawable.dashicon_format_image_big_grey, uri);
         MediaFile mediaFile = imageSpan.getMediaFile();
         mediaFile.setMediaId(mediaId);
@@ -296,7 +298,7 @@ public class MediaUtils {
         mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex("videoPressShortcode")));
         mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex("fileURL")));
         mediaFile.setVideo(isVideo);
-        mediaFile.save();
+        WordPress.wpDB.saveMediaFile(mediaFile);
         cursor.close();
 
         return imageSpan;

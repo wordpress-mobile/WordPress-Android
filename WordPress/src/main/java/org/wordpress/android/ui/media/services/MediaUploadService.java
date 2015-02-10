@@ -10,7 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;

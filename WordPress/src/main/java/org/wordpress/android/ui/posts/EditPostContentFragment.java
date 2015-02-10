@@ -16,6 +16,8 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
+import android.text.style.AlignmentSpan;
+import android.text.style.ImageSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -48,15 +50,16 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragmentAbstract;
-import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.editor.legacy.WPEditImageSpan;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.helpers.MediaFile;
+import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.widgets.WPEditText;
 import org.wordpress.android.widgets.MediaGalleryImageSpan;
-import org.wordpress.android.widgets.WPImageSpan;
 import org.wordpress.android.widgets.WPUnderlineSpan;
 
 public class EditPostContentFragment extends EditorFragmentAbstract implements TextWatcher,
@@ -701,13 +704,13 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
                                                         MediaFile postMediaFile = postImageSpan.getMediaFile();
                                                         postMediaFile.setFeatured(false);
                                                         postMediaFile.setFeaturedInPost(false);
-                                                        postMediaFile.save();
+                                                        WordPress.wpDB.saveMediaFile(postMediaFile);
                                                     }
                                                 }
                                             }
                                         }
                                         mediaFile.setFeaturedInPost(featuredInPostCheckBox.isChecked());
-                                        mediaFile.save();
+                                        WordPress.wpDB.saveMediaFile(mediaFile);
                                     }
                                 }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -851,5 +854,44 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
         }
         width = Math.min(max, Math.max(width, min));
         return width;
+    }
+
+    private void addImageSpanOnSelection(WPEditImageSpan imageSpan) {
+        int selectionStart = mContentEditText.getSelectionStart();
+        int selectionEnd = mContentEditText.getSelectionEnd();
+
+        if (selectionStart > selectionEnd) {
+            int temp = selectionEnd;
+            selectionEnd = selectionStart;
+            selectionStart = temp;
+        }
+
+        int line, column = 0;
+        if (mContentEditText.getLayout() != null) {
+            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+        }
+
+        Editable s = mContentEditText.getText();
+        if (s != null) {
+            WPEditImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, WPEditImageSpan.class);
+            if (gallerySpans.length != 0) {
+                // insert a few line breaks if the cursor is already on an image
+                s.insert(selectionEnd, "\n\n");
+                selectionStart = selectionStart + 2;
+                selectionEnd = selectionEnd + 2;
+            } else if (column != 0) {
+                // insert one line break if the cursor is not at the first column
+                s.insert(selectionEnd, "\n");
+                selectionStart = selectionStart + 1;
+                selectionEnd = selectionEnd + 1;
+            }
+
+            s.insert(selectionStart, " ");
+            s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+            s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            s.insert(selectionEnd + 1, "\n\n");
+        }
     }
 }

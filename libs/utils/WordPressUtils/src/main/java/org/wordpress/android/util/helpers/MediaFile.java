@@ -1,9 +1,8 @@
-package org.wordpress.android.models;
+package org.wordpress.android.util.helpers;
 
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
-import org.wordpress.android.WordPress;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -35,9 +34,7 @@ public class MediaFile {
 
     public static String VIDEOPRESS_SHORTCODE_ID = "videopress_shortcode";
 
-    public MediaFile(String blogId, Map<?, ?> resultMap) {
-        boolean isDotCom = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag());
-
+    public MediaFile(String blogId, Map<?, ?> resultMap, boolean isDotCom) {
         setBlogId(blogId);
         setMediaId(MapUtils.getMapStr(resultMap, "attachment_id"));
         setPostID(MapUtils.getMapLong(resultMap, "parent"));
@@ -57,23 +54,26 @@ public class MediaFile {
         // make the file urls be https://... so that we can get these images with oauth when the blogs are private
         // assume no https for images in self-hosted blogs
         String fileUrl = MapUtils.getMapStr(resultMap, "link");
-        if (isDotCom)
+        if (isDotCom) {
             fileUrl = fileUrl.replace("http:", "https:");
+        }
         setFileURL(fileUrl);
 
         String thumbnailURL = MapUtils.getMapStr(resultMap, "thumbnail");
         if (thumbnailURL.startsWith("http")) {
-            if (isDotCom)
+            if (isDotCom) {
                 thumbnailURL = thumbnailURL.replace("http:", "https:");
+            }
             setThumbnailURL(thumbnailURL);
         }
 
         Date date = MapUtils.getMapDate(resultMap, "date_created_gmt");
-        if (date != null)
+        if (date != null) {
             setDateCreatedGMT(date.getTime());
+        }
 
         Object meta = resultMap.get("metadata");
-        if(meta != null && meta instanceof Map) {
+        if (meta != null && meta instanceof Map) {
             Map<?, ?> metadata = (Map<?, ?>) meta;
             setWidth(MapUtils.getMapInt(metadata, "width"));
             setHeight(MapUtils.getMapInt(metadata, "height"));
@@ -108,7 +108,6 @@ public class MediaFile {
         this.uploadState = mediaFile.uploadState;
         this.mediaId = mediaFile.mediaId;
     }
-
 
     public int getId() {
         return id;
@@ -262,23 +261,17 @@ public class MediaFile {
         this.featuredInPost = featuredInPost;
     }
 
-    public void save() {
-        WordPress.wpDB.saveMediaFile(this);
-    }
-
     public String getBlogId() {
         return blogId;
     }
 
     public void setBlogId(String blogId) {
         this.blogId = blogId;
-
     }
 
     public void setDateCreatedGMT(long date_created_gmt) {
         this.dateCreatedGmt = date_created_gmt;
     }
-
 
     public long getDateCreatedGMT() {
         return dateCreatedGmt;
@@ -344,4 +337,3 @@ public class MediaFile {
         return content;
     }
 }
-

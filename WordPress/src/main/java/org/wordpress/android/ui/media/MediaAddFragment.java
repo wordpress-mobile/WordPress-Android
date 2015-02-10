@@ -23,7 +23,7 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.MediaUtils.RequestCode;
@@ -192,8 +192,9 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         Blog blog = WordPress.getCurrentBlog();
 
         File file = new File(path);
-        if (!file.exists())
+        if (!file.exists()) {
             return;
+        }
 
         String mimeType = MediaUtils.getMediaFileMimeType(file);
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
@@ -214,10 +215,10 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             mediaFile.setHeight(bfo.outHeight);
         }
 
-        if (!TextUtils.isEmpty(mimeType))
+        if (!TextUtils.isEmpty(mimeType)) {
             mediaFile.setMimeType(mimeType);
-        mediaFile.save();
-
+        }
+        WordPress.wpDB.saveMediaFile(mediaFile);
         mCallback.onMediaAdded(mediaFile.getMediaId());
 
         startMediaUploadService();
