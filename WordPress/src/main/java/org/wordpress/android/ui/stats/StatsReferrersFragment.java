@@ -172,12 +172,16 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
 
+            final StatsViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
-                convertView.setTag(new StatsViewHolder(convertView));
+                holder = new StatsViewHolder(convertView);
+                holder.networkImageView.setErrorImageResId(R.drawable.stats_icon_default_site_avatar);
+                holder.networkImageView.setDefaultImageResId(R.drawable.stats_icon_default_site_avatar);
+                convertView.setTag(holder);
+            } else {
+                holder = (StatsViewHolder) convertView.getTag();
             }
-
-            final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
             ReferrerGroupModel group = (ReferrerGroupModel) getGroup(groupPosition);
 
@@ -196,7 +200,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
-            holder.networkImageView.setImageUrl(GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.STATS_SITE_AVATAR);
+            holder.networkImageView.setImageUrl(GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.BLAVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             holder.chevronImageView.setVisibility(View.VISIBLE);

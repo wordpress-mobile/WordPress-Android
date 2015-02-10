@@ -78,15 +78,19 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             View rowView = convertView;
             // reuse views
+            final StatsViewHolder holder;
             if (rowView == null) {
                 rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
-                StatsViewHolder viewHolder = new StatsViewHolder(rowView);
-                rowView.setTag(viewHolder);
+                holder = new StatsViewHolder(rowView);
+                holder.networkImageView.setErrorImageResId(R.drawable.stats_icon_default_site_avatar);
+                holder.networkImageView.setDefaultImageResId(R.drawable.stats_icon_default_site_avatar);
+                rowView.setTag(holder);
+            } else {
+                holder = (StatsViewHolder) rowView.getTag();
             }
 
             final SingleItemModel currentRowData = list.get(position);
-            StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
             String serviceName = currentRowData.getTitle();
 
@@ -97,7 +101,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));
 
             // image
-            holder.networkImageView.setImageUrl(getServiceImage(serviceName), WPNetworkImageView.ImageType.STATS_SITE_AVATAR);
+            holder.networkImageView.setImageUrl(getServiceImage(serviceName), WPNetworkImageView.ImageType.BLAVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             return rowView;
