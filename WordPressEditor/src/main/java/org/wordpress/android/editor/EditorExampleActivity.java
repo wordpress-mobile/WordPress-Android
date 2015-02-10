@@ -3,7 +3,7 @@ package org.wordpress.android.editor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
-import org.wordpress.android.editor.EditorFragmentInterface.EditorFragmentListener;
+import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 
 public class EditorExampleActivity extends ActionBarActivity implements EditorFragmentListener {
     @Override
