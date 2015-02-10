@@ -8,14 +8,18 @@ MediaPicker is an Android Fragment that allows capture and selection of media as
 * MediaSource interface to provide media from anywhere
 
 ## Usage
-Coming soon...
+The MediaPicker library comes with two MediaSources for accessing media on device view the MediaStore.
 
-## Requirements
-Coming soon...
+The sample project is an example of how to configure the MediaPickerFragment to display different sets of media content (one for images, one for videos).
+
+## Testing
+Much of the functionality of the library is tested. You can run tests and generate a code coverage report by running the jacocoTestReport task.
+
+[Robolectric][2] is used to unit test Android elements in isolation, please use this framework when writing new tests to keep them lightweight.
 
 ## Installation
 The MediaPicker library is hosted on Maven Central. Example build.gradle dependency:
->dependencies {<br>compile 'org.wordpress:mediapicker:1.+'<br>}
+>dependencies {<br>&nbsp;&nbsp;&nbsp;&nbsp;compile 'org.wordpress:mediapicker:1.+'<br>}
 
 ## Author(s)
 WordPress, mobile@automattic.com
@@ -28,3 +32,4 @@ MediaPicker is available under the GNU GPL v2 or MIT licenses.
 * [WordPress for Android][1]
 
 [1]: https://github.com/wordpress-mobile/WordPress-Android
+[2]: http://robolectric.org/

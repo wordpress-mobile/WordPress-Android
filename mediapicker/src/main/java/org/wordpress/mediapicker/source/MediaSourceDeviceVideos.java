@@ -30,10 +30,10 @@ public class MediaSourceDeviceVideos implements MediaSource {
             MediaStore.Video.Media.DATA,
             MediaStore.Video.Media.DATE_TAKEN };
 
-    private final ContentResolver mContentResolver;
+    private ContentResolver mContentResolver;
     private List<MediaItem> mMediaItems;
 
-    private MediaSourceDeviceVideos() {
+    public MediaSourceDeviceVideos() {
         mContentResolver = null;
     }
 

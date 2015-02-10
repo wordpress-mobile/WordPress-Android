@@ -125,11 +125,11 @@ public class MediaItem implements Parcelable {
     /*
         Parcelable interface
     */
-    private static final String PARCEL_KEY_TAG = "tag";
-    private static final String PARCEL_KEY_TITLE = "title";
-    private static final String PARCEL_KEY_PREVIEW = "preview";
-    private static final String PARCEL_KEY_SOURCE = "source";
-    private static final String PARCEL_KEY_ROTATION = "rotation";
+    public static final String PARCEL_KEY_TAG = "tag";
+    public static final String PARCEL_KEY_TITLE = "title";
+    public static final String PARCEL_KEY_PREVIEW = "preview";
+    public static final String PARCEL_KEY_SOURCE = "source";
+    public static final String PARCEL_KEY_ROTATION = "rotation";
 
     public static final Creator<MediaItem> CREATOR =
             new Creator<MediaItem>() {

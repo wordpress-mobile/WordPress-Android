@@ -108,7 +108,7 @@ public class MediaPickerFragment extends Fragment
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (notifyMediaSelected(position, true)) {
+        if (!notifyMediaSelected(position, true)) {
             notifyMediaSelectionConfirmed();
         }
     }
@@ -125,7 +125,9 @@ public class MediaPickerFragment extends Fragment
             mSelectedContent.remove(mAdapter.getItem(position));
         }
 
-        mGalleryMenuItem.setVisible(mSelectedContent.size() > 0);
+        if (mGalleryMenuItem != null) {
+            mGalleryMenuItem.setVisible(mSelectedContent.size() > 0);
+        }
 
         mode.setTitle(getActivity().getTitle() + " (" + mSelectedContent.size() + ")");
     }
@@ -144,7 +146,10 @@ public class MediaPickerFragment extends Fragment
         getActivity().getMenuInflater().inflate(R.menu.media_picker_action_mode, menu);
 
         mGalleryMenuItem = menu.findItem(R.id.menu_media_content_selection_gallery);
-        mGalleryMenuItem.setVisible(false);
+
+        if (mGalleryMenuItem != null) {
+            mGalleryMenuItem.setVisible(false);
+        }
 
         return false;
     }
@@ -174,6 +179,10 @@ public class MediaPickerFragment extends Fragment
         getActivity().onActionModeFinished(mode);
     }
 
+    public void setListener(OnMediaSelected listener) {
+        mListener = listener;
+    }
+
     private void notifyMediaSelectionStarted() {
         if (mListener != null) {
             mListener.onMediaSelectionStarted();
@@ -193,11 +202,11 @@ public class MediaPickerFragment extends Fragment
 
                 mSelectedContent.add(mediaItem);
 
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     private void notifyMediaSelectionConfirmed() {

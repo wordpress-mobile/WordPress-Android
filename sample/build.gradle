@@ -35,6 +35,5 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
-
-    compile project(':mediapicker')
+    compile 'org.wordpress:mediapicker:0.9.0'
 }

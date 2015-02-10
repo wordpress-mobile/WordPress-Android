@@ -56,7 +56,9 @@ public class MediaSourceAdapter extends BaseAdapter {
 
     @Override
     public MediaItem getItem(int position) {
-        return sourceAtPosition(position).getMedia(position - offsetAtPosition(position));
+        MediaSource sourceAtPositon = sourceAtPosition(position);
+
+        return sourceAtPositon != null ? sourceAtPositon.getMedia(position - offsetAtPosition(position)) : null;
     }
 
     @Override
@@ -73,6 +75,21 @@ public class MediaSourceAdapter extends BaseAdapter {
         }
 
         return null;
+    }
+
+    /**
+     * Helper method; determines the total number of items in all MediaSources
+     *
+     * @return
+     *  the total number of MediaItems contained in the MediaSource
+     */
+    private int totalItems() {
+        int count = 0;
+        for (int i = 0; i < mMediaSources.size(); ++i) {
+            count += mMediaSources.get(i).getCount();
+        }
+
+        return count;
     }
 
     /**
@@ -94,21 +111,6 @@ public class MediaSourceAdapter extends BaseAdapter {
         }
 
         return null;
-    }
-
-    /**
-     * Helper method; determines the total number of items in all MediaSources
-     *
-     * @return
-     *  the total number of MediaItems contained in the MediaSource
-     */
-    private int totalItems() {
-        int count = 0;
-        for (int i = 0; i < mMediaSources.size(); ++i) {
-            count += mMediaSources.get(i).getCount();
-        }
-
-        return count;
     }
 
     /**
