@@ -49,13 +49,22 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_module_totals_label"
                 android:textColor="@color/stats_module_content_list_header"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/margin_small"
-                android:paddingTop="@dimen/margin_small"
+                android:gravity="center"
+                android:paddingTop="@dimen/margin_large"
+                android:paddingBottom="@dimen/margin_medium"
                 android:layout_marginLeft="@dimen/margin_large"
                 android:layout_marginRight="@dimen/margin_large"
                 android:visibility="gone" />
+
+            <include
+                android:id="@+id/stats_top_pagination_container"
+                layout="@layout/stats_pagination_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"/>
 
             <LinearLayout
                 android:id="@+id/stats_list_container"
@@ -97,41 +106,9 @@
                     android:scrollbarStyle="outsideOverlay"
                     android:visibility="gone"/>
 
-                <LinearLayout
-                    android:id="@+id/stats_pagination_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/stats_view_all_button_background"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <Button
-                        android:id="@+id/stats_pagination_go_back"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:background="?android:selectableItemBackground"
-                        android:textColor="@color/stats_link_text_color"
-                        android:text="&lt;" />
-
-                    <org.wordpress.android.widgets.WPTextView
-                        android:id="@+id/stats_pagination_text"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/margin_extra_large" />
-
-                    <Button
-                        android:id="@+id/stats_pagination_go_forward"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/stats_link_text_color"
-                        android:background="?android:selectableItemBackground"
-                        android:text="&gt;" />
-                </LinearLayout>
+                <include
+                    android:id="@+id/stats_bottom_pagination_container"
+                    layout="@layout/stats_pagination_item" />
 
             </LinearLayout>
 
