@@ -750,11 +750,7 @@ public class ReaderPostDetailFragment extends Fragment
                 imgAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mPost.feedId != 0) {
-                            ReaderActivityLauncher.showReaderFeedPreview(v.getContext(), mPost.feedId);
-                        } else {
-                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId);
-                        }
+                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
                     }
                 });
             }

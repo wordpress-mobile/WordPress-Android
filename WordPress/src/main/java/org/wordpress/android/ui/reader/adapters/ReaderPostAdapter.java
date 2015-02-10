@@ -146,11 +146,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (post.feedId != 0) {
-                        ReaderActivityLauncher.showReaderFeedPreview(view.getContext(), post.feedId);
-                    } else {
-                        ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post.blogId);
-                    }
+                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
                 }
             });
         }

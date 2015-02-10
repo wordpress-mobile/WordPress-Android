@@ -105,13 +105,30 @@ public class ReaderActivityLauncher {
      * show a list of posts in a specific blog
      */
     public static void showReaderBlogPreview(Context context, long blogId) {
+        if (blogId == 0) {
+            return;
+        }
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
     }
 
+    public static void showReaderBlogPreview(Context context, ReaderPost post) {
+        if (post == null) {
+            return;
+        }
+        if (post.isExternal) {
+            showReaderFeedPreview(context, post.feedId);
+        } else {
+            showReaderBlogPreview(context, post.blogId);
+        }
+    }
+
     public static void showReaderFeedPreview(Context context, long feedId) {
+        if (feedId == 0) {
+            return;
+        }
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
