@@ -46,3 +46,6 @@ WordPress/src/main/res/values/com_crashlytics_export_strings.xml
 
 # Monkey runner settings
 *.pyc
+
+# libs
+libs/utils
