@@ -89,12 +89,14 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
 
     private float mLastYPos = 0;
 
-    public EditText getContentEditText() {
-        return mContentEditText;
-    }
-
-    public EditText getTitleEditText() {
-        return mTitleEditText;
+    @Override
+    public boolean onBackPressed() {
+        // leave full screen mode back button is pressed
+        if (getActivity().getActionBar() != null && !getActivity().getActionBar().isShowing()) {
+            setContentEditingModeVisible(false);
+            return true;
+        }
+        return false;
     }
 
     @Override

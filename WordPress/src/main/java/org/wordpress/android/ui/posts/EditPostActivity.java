@@ -24,6 +24,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AlignmentSpan;
 import android.text.style.CharacterStyle;
+import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
@@ -112,7 +114,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     private Post mPost;
     private Post mOriginalPost;
 
-    private EditPostContentFragment mEditorFragment;
+    private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditPostPreviewFragment mEditPostPreviewFragment;
 
@@ -441,12 +443,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             return;
         }
 
-        if (getSupportActionBar() != null) {
-            if (getSupportActionBar().isShowing()) {
-                saveAndFinish();
-            } else if (mEditorFragment != null) {
-                mEditorFragment.setContentEditingModeVisible(false);
-            }
+        if (mEditorFragment != null && !mEditorFragment.onBackPressed()) {
+            saveAndFinish();
         }
     }
 
@@ -579,7 +577,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
         Editable s = editText.getText();
         if (s != null) {
-            WPImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
+            ImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
             if (gallerySpans.length != 0) {
                 // insert a few line breaks if the cursor is already on an image
                 s.insert(selectionEnd, "\n\n");
@@ -890,28 +888,13 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public void updatePostContent(boolean isAutoSave) {
         Post post = getPost();
 
-        // TODO: check for mEditorFragment and getters
+        // TODO: check for null mEditorFragment and getters
         if (post == null) {
             return;
         }
-
-        String title = "";
-        if (mEditorFragment.getTitleEditText().getText() != null) {
-            title = mEditorFragment.getTitleEditText().getText().toString();
-        }
-
+        String title = StringUtils.notNullStr((String) mEditorFragment.getTitle());
         Editable postContentEditable;
-        try {
-            postContentEditable = new SpannableStringBuilder(mEditorFragment.getContentEditText().getText());
-        } catch (IndexOutOfBoundsException e) {
-            // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
-            // See https://code.google.com/p/android/issues/detail?id=5164
-            postContentEditable = mEditorFragment.getContentEditText().getText();
-        }
-
-        if (postContentEditable == null) {
-            return;
-        }
+        postContentEditable = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
 
         String content;
         if (post.isLocalDraft()) {
@@ -1131,7 +1114,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 column = contentEditText.getSelectionStart() - contentEditText.getLayout().getLineStart(line);
             }
 
-            WPImageSpan[] image_spans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
+            ImageSpan[] image_spans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
             if (image_spans.length != 0) {
                 // insert a few line breaks if the cursor is already on an image
                 s.insert(selectionEnd, "\n\n");
@@ -1197,7 +1180,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         } catch (OutOfMemoryError e) {
                             AppLog.e(T.POSTS, e);
                         }
-                    } else if (TextUtils.isEmpty(mEditorFragment.getContentEditText().getText())) {
+                    } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
                         // TODO: check if it was mQuickMediaType > -1
                         // Quick Photo was cancelled, delete post and finish activity
                         WordPress.wpDB.deletePost(getPost());
@@ -1214,7 +1197,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         if (!addMedia(capturedVideoUri, null, this)) {
                             ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                         }
-                    } else if (TextUtils.isEmpty(mEditorFragment.getContentEditText().getText())) {
+                    } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
                         // TODO: check if it was mQuickMediaType > -1
                         // Quick Photo was cancelled, delete post and finish activity
                         WordPress.wpDB.deletePost(getPost());
