@@ -143,6 +143,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof BlogViewHolder) {
             final BlogViewHolder blogHolder = (BlogViewHolder) holder;
             final boolean isFollowing;
+            final String blogImageUrl;
             switch (getBlogType()) {
                 case RECOMMENDED:
                     final ReaderRecommendedBlog blog = mRecommendedBlogs.get(position);
@@ -150,7 +151,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     blogHolder.txtTitle.setText(blog.getTitle());
                     blogHolder.txtDescription.setText(blog.getReason());
                     blogHolder.txtUrl.setText(UrlUtils.getDomainFromUrl(blog.getBlogUrl()));
-                    blogHolder.imgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.BLAVATAR);
+                    blogImageUrl = blog.getImageUrl();
                     break;
 
                 case FOLLOWED:
@@ -163,13 +164,17 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         blogHolder.txtTitle.setText(domain);
                     }
                     blogHolder.txtUrl.setText(domain);
-                    blogHolder.imgBlog.setImageUrl(blogInfo.getImageUrl(), WPNetworkImageView.ImageType.BLAVATAR);
+                    blogImageUrl = blogInfo.getImageUrl();
                     break;
 
                 default:
                     isFollowing = false;
+                    blogImageUrl = null;
                     break;
             }
+
+            AppLog.w(T.READER, blogImageUrl);
+            blogHolder.imgBlog.setImageUrl(blogImageUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
             blogHolder.followButton.setIsFollowed(isFollowing);
             blogHolder.followButton.setOnClickListener(new View.OnClickListener() {

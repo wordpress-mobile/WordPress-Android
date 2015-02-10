@@ -18,7 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
-import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.NoticonTextView;
@@ -227,7 +227,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
             noteViewHolder.txtDetail.setVisibility(View.GONE);
         }
 
-        String avatarUrl = PhotonUtils.fixAvatar(getStringForColumnName(objectCursor, Note.Schema.ICON_URL_INDEX), mAvatarSz);
+        String avatarUrl = GravatarUtils.fixGravatarUrl(getStringForColumnName(objectCursor, Note.Schema.ICON_URL_INDEX), mAvatarSz);
         noteViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
         boolean isUnread = SqlUtils.sqlToBool(getIntForColumnName(objectCursor, Note.Schema.UNREAD_INDEX));
