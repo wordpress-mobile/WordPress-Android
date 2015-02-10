@@ -2,10 +2,10 @@ package org.wordpress.android.util;
 
 import android.text.TextUtils;
 
+/**
+ * see https://en.gravatar.com/site/implement/images/
+ */
 public class GravatarUtils {
-    /*
-     * see https://en.gravatar.com/site/implement/images/
-     */
 
     public static enum DefaultImage {
         MYSTERY_MAN,
@@ -42,6 +42,9 @@ public class GravatarUtils {
     * replace it with a new ?s= parameter which requests the avatar at the exact size needed
     */
     public static String fixGravatarUrl(final String imageUrl, int avatarSz) {
+        return fixGravatarUrl(imageUrl, avatarSz, DefaultImage.MYSTERY_MAN);
+    }
+    public static String fixGravatarUrl(final String imageUrl, int avatarSz, DefaultImage defaultImage) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
         }
@@ -51,8 +54,8 @@ public class GravatarUtils {
             return PhotonUtils.getPhotonImageUrl(imageUrl, avatarSz, avatarSz);
         }
 
-        // remove all other params, then add query string for size and "mystery man" default
-        return UrlUtils.removeQuery(imageUrl) + "?s=" + avatarSz + "&d=mm";
+        // remove all other params, then add query string for size and default image
+        return UrlUtils.removeQuery(imageUrl) + "?s=" + avatarSz + "&d=" + defaultImage.toString();
     }
 
     public static String gravatarFromEmail(final String email, int size) {

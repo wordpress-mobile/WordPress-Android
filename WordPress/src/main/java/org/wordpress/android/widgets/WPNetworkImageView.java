@@ -8,6 +8,8 @@ import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -46,6 +48,7 @@ public class WPNetworkImageView extends ImageView {
     private ImageType mImageType = ImageType.NONE;
     private String mUrl;
     private ImageLoader.ImageContainer mImageContainer;
+    private int mErrorImageResId;
 
     private int mRetryCnt;
     private static final int MAX_RETRIES = 3;
@@ -289,7 +292,7 @@ public class WPNetworkImageView extends ImageView {
         invalidate();
     }
 
-    private int getColorRes(int resId) {
+    private int getColorRes(@ColorRes int resId) {
         return getContext().getResources().getColor(resId);
     }
 
@@ -316,7 +319,18 @@ public class WPNetworkImageView extends ImageView {
         }
     }
 
+    public void setErrorImageResId(@DrawableRes int resourceId) {
+        mErrorImageResId = resourceId;
+    }
+
     void showErrorImage() {
+        // use error image if one was set...
+        if (mErrorImageResId != 0) {
+            setImageResource(mErrorImageResId);
+            return;
+        }
+
+        // ... otherwise use predefs
         switch (mImageType) {
             case NONE:
                 // do nothing
@@ -330,8 +344,12 @@ public class WPNetworkImageView extends ImageView {
                 ));
                 break;
             case BLAVATAR:
-                // wp icon for failed blavatars
-                setImageResource(R.drawable.app_icon);
+                // wp icon for failed blavatars that had 404 as the default image
+                if (mUrl != null && mUrl.contains("d=404")) {
+                    setImageResource(R.drawable.app_icon);
+                } else {
+                    setImageResource(R.drawable.gravatar_placeholder);
+                }
                 break;
             case STATS_SITE_AVATAR:
                 setImageResource(R.drawable.stats_icon_default_site_avatar);

@@ -20,6 +20,8 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.GravatarUtils.DefaultImage;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -45,6 +47,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private final ReaderBlogType mBlogType;
+    private final int mBlavatarSz;
     private BlogFollowChangeListener mFollowListener;
     private BlogClickListener mClickListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
@@ -57,6 +60,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         super();
         setHasStableIds(false);
         mBlogType = blogType;
+        mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
     }
 
     public void setFollowChangeListener(BlogFollowChangeListener listener) {
@@ -142,21 +146,25 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof BlogViewHolder) {
             final BlogViewHolder blogHolder = (BlogViewHolder) holder;
+
             final boolean isFollowing;
-            final String blogImageUrl;
+            boolean isWordPress;
+            String blogImageUrl;
             switch (getBlogType()) {
                 case RECOMMENDED:
                     final ReaderRecommendedBlog blog = mRecommendedBlogs.get(position);
                     isFollowing = ReaderBlogTable.isFollowedBlog(blog.blogId, blog.getBlogUrl());
+                    isWordPress = true;
                     blogHolder.txtTitle.setText(blog.getTitle());
                     blogHolder.txtDescription.setText(blog.getReason());
                     blogHolder.txtUrl.setText(UrlUtils.getDomainFromUrl(blog.getBlogUrl()));
                     blogImageUrl = blog.getImageUrl();
                     break;
 
-                case FOLLOWED:
+                default: // FOLLOWING
                     final ReaderBlog blogInfo = mFollowedBlogs.get(position);
                     isFollowing = blogInfo.isFollowing;
+                    isWordPress = !blogInfo.isExternal();
                     String domain = UrlUtils.getDomainFromUrl(blogInfo.getUrl());
                     if (blogInfo.hasName()) {
                         blogHolder.txtTitle.setText(blogInfo.getName());
@@ -166,14 +174,10 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     blogHolder.txtUrl.setText(domain);
                     blogImageUrl = blogInfo.getImageUrl();
                     break;
-
-                default:
-                    isFollowing = false;
-                    blogImageUrl = null;
-                    break;
             }
 
-            AppLog.w(T.READER, blogImageUrl);
+            blogImageUrl = GravatarUtils.fixGravatarUrl(blogImageUrl, mBlavatarSz, DefaultImage.STATUS_404);
+            blogHolder.imgBlog.setErrorImageResId(isWordPress ? R.drawable.app_icon : R.drawable.gravatar_placeholder);
             blogHolder.imgBlog.setImageUrl(blogImageUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
             blogHolder.followButton.setIsFollowed(isFollowing);
