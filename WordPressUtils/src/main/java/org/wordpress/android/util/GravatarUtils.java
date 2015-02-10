@@ -1,7 +1,8 @@
 package org.wordpress.android.util;
 
-public class GravatarUtils {
+import android.text.TextUtils;
 
+public class GravatarUtils {
     /*
      * see https://en.gravatar.com/site/implement/images/
      */
@@ -34,6 +35,24 @@ public class GravatarUtils {
                     return "blank";
             }
         }
+    }
+
+    /*
+    * gravatars often contain the ?s= parameter which determines their size - detect this and
+    * replace it with a new ?s= parameter which requests the avatar at the exact size needed
+    */
+    public static String fixGravatarUrl(final String imageUrl, int avatarSz) {
+        if (TextUtils.isEmpty(imageUrl)) {
+            return "";
+        }
+
+        // if this isn't a gravatar image, return as resized photon image url
+        if (!imageUrl.contains("gravatar.com")) {
+            return PhotonUtils.getPhotonImageUrl(imageUrl, avatarSz, avatarSz);
+        }
+
+        // remove all other params, then add query string for size and "mystery man" default
+        return UrlUtils.removeQuery(imageUrl) + "?s=" + avatarSz + "&d=mm";
     }
 
     public static String gravatarFromEmail(final String email, int size) {
