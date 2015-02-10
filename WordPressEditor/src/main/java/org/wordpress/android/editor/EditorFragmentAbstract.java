@@ -21,6 +21,22 @@ public abstract class EditorFragmentAbstract extends Fragment {
         }
     }
 
+    /**
+     * Called by the activity when back button is pressed.
+     */
+    public boolean onBackPressed() {
+        return false;
+    }
+
+    /**
+     * The editor may need to differentiate local draft and published articles
+     *
+     * @param isLocalDraft edited post is a local draft
+     */
+    public void setLocalDraft(boolean isLocalDraft) {
+        // Not unused in the new editor
+    }
+
     public interface EditorFragmentListener {
         public void onSettingsClicked();
         public void onAddMediaButtonClicked();
