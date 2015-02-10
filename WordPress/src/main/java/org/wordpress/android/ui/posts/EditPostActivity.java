@@ -885,8 +885,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public void updatePostContent(boolean isAutoSave) {
         Post post = getPost();
 
-        if (post == null || mEditPostContentFragment == null || mEditPostContentFragment.getContentEditText() == null
-                || mEditPostContentFragment.getContentEditText().getText() == null) {
+        if (post == null) {
             return;
         }
 

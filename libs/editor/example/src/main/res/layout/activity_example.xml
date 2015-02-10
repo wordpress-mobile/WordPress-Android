@@ -2,7 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="org.wordpress.android.editor.example.ExampleActivity">
+                tools:context="org.wordpress.android.editor.example.MainExampleActivity">
 
     <Button
         android:layout_width="wrap_content"
@@ -16,8 +16,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Old Editor - Post 1"
-        android:id="@+id/old_editor_post_1"
+        android:text="Legacy Editor - Post 1"
+        android:id="@+id/legacy_editor_post_1"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/new_editor_post_1"/>

@@ -142,7 +142,6 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
             @Override
             public void onClick(View v) {
                 mEditorFragmentListener.onSettingsClicked();
-                // TODO: mActivity.showPostSettings();
             }
         });
         mBoldToggleButton = (ToggleButton) rootView.findViewById(R.id.bold);
