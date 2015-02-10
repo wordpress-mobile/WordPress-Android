@@ -7,6 +7,8 @@ import android.text.TextUtils;
  */
 public class GravatarUtils {
 
+    private static final DefaultImage DEFAULT_GRAVATAR = DefaultImage.MYSTERY_MAN;
+
     public static enum DefaultImage {
         MYSTERY_MAN,
         STATUS_404,
@@ -42,7 +44,7 @@ public class GravatarUtils {
     * replace it with a new ?s= parameter which requests the avatar at the exact size needed
     */
     public static String fixGravatarUrl(final String imageUrl, int avatarSz) {
-        return fixGravatarUrl(imageUrl, avatarSz, DefaultImage.MYSTERY_MAN);
+        return fixGravatarUrl(imageUrl, avatarSz, DEFAULT_GRAVATAR);
     }
     public static String fixGravatarUrl(final String imageUrl, int avatarSz, DefaultImage defaultImage) {
         if (TextUtils.isEmpty(imageUrl)) {
@@ -59,7 +61,7 @@ public class GravatarUtils {
     }
 
     public static String gravatarFromEmail(final String email, int size) {
-        return gravatarFromEmail(email, size, DefaultImage.MYSTERY_MAN);
+        return gravatarFromEmail(email, size, DEFAULT_GRAVATAR);
     }
     public static String gravatarFromEmail(final String email, int size, DefaultImage defaultImage) {
         return "http://gravatar.com/avatar/"
@@ -68,6 +70,9 @@ public class GravatarUtils {
               + "&size=" + Integer.toString(size);
     }
 
+    public static String blavatarFromUrl(final String url, int size) {
+        return blavatarFromUrl(url, size, DEFAULT_GRAVATAR);
+    }
     public static String blavatarFromUrl(final String url, int size, DefaultImage defaultImage) {
         return "http://gravatar.com/blavatar/"
                 + StringUtils.getMd5Hash(UrlUtils.getDomainFromUrl(url))
