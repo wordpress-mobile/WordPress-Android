@@ -84,6 +84,8 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
 
     private int mStyleStart, mSelectionStart, mSelectionEnd, mFullViewBottom;
     private int mLastPosition = -1;
+    private CharSequence mTitle;
+    private CharSequence mContent;
 
     private float mLastYPos = 0;
 
@@ -92,10 +94,11 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
     }
 
     public EditText getTitleEditText() {
-        return mContentEditText;
+        return mTitleEditText;
     }
 
     public void setTitle(CharSequence text) {
+        mTitle = text;
         if (mTitleEditText != null) {
             mTitleEditText.setText(text);
         } else {
@@ -104,6 +107,7 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
     }
 
     public void setContent(CharSequence text) {
+        mContent = text;
         if (mContentEditText != null) {
             mContentEditText.setText(text);
         } else {
@@ -123,6 +127,7 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
 
         mFormatBar = (LinearLayout) rootView.findViewById(R.id.format_bar);
         mTitleEditText = (EditText) rootView.findViewById(R.id.post_title);
+        mTitleEditText.setText(mTitle);
         mTitleEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -135,6 +140,7 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
             }
         });
         mContentEditText = (WPEditText) rootView.findViewById(R.id.post_content);
+        mContentEditText.setText(mContent);
         mPostContentLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_content_wrapper);
         mPostSettingsLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_settings_wrapper);
         Button postSettingsButton = (Button) rootView.findViewById(R.id.post_settings_button);

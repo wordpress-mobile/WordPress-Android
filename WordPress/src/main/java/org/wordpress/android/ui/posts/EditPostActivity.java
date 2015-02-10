@@ -112,7 +112,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     private Post mPost;
     private Post mOriginalPost;
 
-    private EditPostContentFragment mEditPostContentFragment;
+    private EditPostContentFragment mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditPostPreviewFragment mEditPostPreviewFragment;
 
@@ -413,7 +413,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
 
         // Update post object from fragment fields
-        if (mEditPostContentFragment != null) {
+        if (mEditorFragment != null) {
             updatePostContent(isAutosave);
         }
         if (mEditPostSettingsFragment != null) {
@@ -444,15 +444,15 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         if (getSupportActionBar() != null) {
             if (getSupportActionBar().isShowing()) {
                 saveAndFinish();
-            } else if (mEditPostContentFragment != null) {
-                mEditPostContentFragment.setContentEditingModeVisible(false);
+            } else if (mEditorFragment != null) {
+                mEditorFragment.setContentEditingModeVisible(false);
             }
         }
     }
 
     private void saveAndFinish() {
         savePost(true);
-        if (mEditPostContentFragment != null && mEditPostContentFragment.hasEmptyContentFields()) {
+        if (mEditorFragment != null && mEditorFragment.hasEmptyContentFields()) {
             // new and empty post? delete it
             if (mIsNewPost) {
                 WordPress.wpDB.deletePost(mPost);
@@ -501,7 +501,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             switch (position) {
                 case 0:
-                    mEditPostContentFragment = (EditPostContentFragment) fragment;
+                    mEditorFragment = (EditPostContentFragment) fragment;
                     initContentEditor();
                     break;
                 case 1:
@@ -547,7 +547,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         if (WordPress.getCurrentBlog() == null) {
             return;
         }
-        EditText editText = mEditPostContentFragment.getContentEditText();
+        EditText editText = mEditorFragment.getContentEditText();
 
         String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
 
@@ -599,9 +599,10 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         loadWPImageSpanThumbnail(imageSpan);
     }
 
-    /** Loads the thumbnail url in the imagespan from a server **/
+    /**
+     * Loads the thumbnail url in the imagespan from a server
+     */
     private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
-
         MediaFile mediaFile = imageSpan.getMediaFile();
         if (mediaFile == null)
             return;
@@ -610,7 +611,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         if (mediaId == null)
             return;
 
-        final EditText editText = mEditPostContentFragment.getContentEditText();
+        final EditText editText = mEditorFragment.getContentEditText();
         String imageURL;
         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
             String photonUrl = imageSpan.getImageSource().toString();
@@ -701,7 +702,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         @Override
         protected void onPostExecute(Spanned spanned) {
             if (spanned != null) {
-                mEditPostContentFragment.setContent(spanned);
+                mEditorFragment.setContent(spanned);
             }
         }
     }
@@ -716,14 +717,14 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                             post.getContent().replaceAll("\uFFFC", ""));
                 }
                 else {
-                    mEditPostContentFragment.setContent(post.getContent().replaceAll("\uFFFC", ""));
+                    mEditorFragment.setContent(post.getContent().replaceAll("\uFFFC", ""));
                 }
             }
             if (!TextUtils.isEmpty(post.getTitle())) {
-                mEditPostContentFragment.setTitle(post.getTitle());
+                mEditorFragment.setTitle(post.getTitle());
             }
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
-            mEditPostContentFragment.setLocalDraft(post.isLocalDraft());
+            mEditorFragment.setLocalDraft(post.isLocalDraft());
         }
 
         String action = getIntent().getAction();
@@ -780,11 +781,11 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
             if (title != null) {
-                mEditPostContentFragment.setTitle(title);
+                mEditorFragment.setTitle(title);
             }
             // Create an <a href> element around links
             text = AutolinkUtils.autoCreateLinks(text);
-            mEditPostContentFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, getPost(),
+            mEditorFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, getPost(),
                     getMaximumThumbnailWidthForEditor()));
         }
 
@@ -849,7 +850,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
         protected void onPostExecute(SpannableStringBuilder ssb) {
             if (ssb != null && ssb.length() > 0) {
-                Editable postContentEditable = mEditPostContentFragment.getContentEditText().getText();
+                Editable postContentEditable = mEditorFragment.getContentEditText().getText();
                 if (postContentEditable != null) {
                     postContentEditable.insert(0, ssb);
                 }
@@ -885,22 +886,23 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public void updatePostContent(boolean isAutoSave) {
         Post post = getPost();
 
+        // TODO: check for mEditorFragment and getters
         if (post == null) {
             return;
         }
 
         String title = "";
-        if (mEditPostContentFragment.getTitleEditText().getText() != null) {
-            title = mEditPostContentFragment.getTitleEditText().getText().toString();
+        if (mEditorFragment.getTitleEditText().getText() != null) {
+            title = mEditorFragment.getTitleEditText().getText().toString();
         }
 
         Editable postContentEditable;
         try {
-            postContentEditable = new SpannableStringBuilder(mEditPostContentFragment.getContentEditText().getText());
+            postContentEditable = new SpannableStringBuilder(mEditorFragment.getContentEditText().getText());
         } catch (IndexOutOfBoundsException e) {
             // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
             // See https://code.google.com/p/android/issues/detail?id=5164
-            postContentEditable = mEditPostContentFragment.getContentEditText().getText();
+            postContentEditable = mEditorFragment.getContentEditText().getText();
         }
 
         if (postContentEditable == null) {
@@ -1105,7 +1107,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             ssb.setSpan(as, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             ssb.append("\n");
         } else {
-            EditText contentEditText = mEditPostContentFragment.getContentEditText();
+            EditText contentEditText = mEditorFragment.getContentEditText();
             int selectionStart = contentEditText.getSelectionStart();
             int selectionEnd = contentEditText.getSelectionEnd();
 
@@ -1191,7 +1193,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         } catch (OutOfMemoryError e) {
                             AppLog.e(T.POSTS, e);
                         }
-                    } else if (TextUtils.isEmpty(mEditPostContentFragment.getContentEditText().getText())) {
+                    } else if (TextUtils.isEmpty(mEditorFragment.getContentEditText().getText())) {
                         // TODO: check if it was mQuickMediaType > -1
                         // Quick Photo was cancelled, delete post and finish activity
                         WordPress.wpDB.deletePost(getPost());
@@ -1208,7 +1210,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         if (!addMedia(capturedVideoUri, null, this)) {
                             ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                         }
-                    } else if (TextUtils.isEmpty(mEditPostContentFragment.getContentEditText().getText())) {
+                    } else if (TextUtils.isEmpty(mEditorFragment.getContentEditText().getText())) {
                         // TODO: check if it was mQuickMediaType > -1
                         // Quick Photo was cancelled, delete post and finish activity
                         WordPress.wpDB.deletePost(getPost());
@@ -1222,7 +1224,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                     }
                     String linkURL = extras.getString("linkURL");
                     String linkText = extras.getString("linkText");
-                    mEditPostContentFragment.createLinkFromSelection(linkURL, linkText);
+                    mEditorFragment.createLinkFromSelection(linkURL, linkText);
                     break;
             }
         }
@@ -1250,7 +1252,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         if (gallery == null || gallery.getIds().size() == 0)
             return;
 
-        EditText contentEditText = mEditPostContentFragment.getContentEditText();
+        EditText contentEditText = mEditorFragment.getContentEditText();
         int selectionStart = contentEditText.getSelectionStart();
         int selectionEnd = contentEditText.getSelectionEnd();
 
