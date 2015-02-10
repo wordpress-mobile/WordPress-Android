@@ -202,11 +202,11 @@ public class MediaPickerFragment extends Fragment
 
                 mSelectedContent.add(mediaItem);
 
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     private void notifyMediaSelectionConfirmed() {
