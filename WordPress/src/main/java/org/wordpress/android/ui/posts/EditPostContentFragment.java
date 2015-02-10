@@ -47,7 +47,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.editor.EditorFragmentInterface;
+import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
@@ -59,7 +59,7 @@ import org.wordpress.android.widgets.MediaGalleryImageSpan;
 import org.wordpress.android.widgets.WPImageSpan;
 import org.wordpress.android.widgets.WPUnderlineSpan;
 
-public class EditPostContentFragment extends EditorFragmentInterface implements TextWatcher,
+public class EditPostContentFragment extends EditorFragmentAbstract implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
     ActionBarActivity mActivity;
 
