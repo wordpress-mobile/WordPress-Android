@@ -450,9 +450,13 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
     }
 
+    private boolean hasEmptyContentFields() {
+        return TextUtils.isEmpty(mEditorFragment.getTitle()) && TextUtils.isEmpty(mEditorFragment.getContent());
+    }
+
     private void saveAndFinish() {
         savePost(true);
-        if (mEditorFragment != null && mEditorFragment.hasEmptyContentFields()) {
+        if (mEditorFragment != null && hasEmptyContentFields()) {
             // new and empty post? delete it
             if (mIsNewPost) {
                 WordPress.wpDB.deletePost(mPost);

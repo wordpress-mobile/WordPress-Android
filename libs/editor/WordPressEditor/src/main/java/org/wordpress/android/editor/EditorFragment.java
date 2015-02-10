@@ -131,4 +131,16 @@ public class EditorFragment extends EditorFragmentAbstract {
     public void setContent(CharSequence text) {
         // TODO
     }
+
+    @Override
+    public CharSequence getTitle() {
+        // TODO
+        return null;
+    }
+
+    @Override
+    public CharSequence getContent() {
+        // TODO
+        return null;
+    }
 }
