@@ -47,6 +47,11 @@ public class MediaSourceDeviceVideos implements MediaSource {
     }
 
     @Override
+    public void setListener(final OnMediaChange listener) {
+        // Ignored
+    }
+
+    @Override
     public int getCount() {
         return mMediaItems.size();
     }

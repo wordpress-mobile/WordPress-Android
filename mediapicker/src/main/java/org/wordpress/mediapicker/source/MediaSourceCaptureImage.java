@@ -48,6 +48,10 @@ public class MediaSourceCaptureImage implements MediaSource, Camera.PictureCallb
     }
 
     @Override
+    public void setListener(OnMediaChange listener) {
+    }
+
+    @Override
     public int getCount() {
         return 1 + mCapturedImages.size();
     }
