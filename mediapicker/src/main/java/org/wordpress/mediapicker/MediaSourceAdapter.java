@@ -37,6 +37,11 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
         mMediaSources = sources;
         mLayoutInflater = LayoutInflater.from(context);
         mImageCache = imageCache;
+
+        for (MediaSource source : mMediaSources) {
+            source.setListener(this);
+        }
+
     }
 
     @Override

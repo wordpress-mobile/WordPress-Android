@@ -103,7 +103,7 @@ public class MediaSourceDeviceImages implements MediaSource {
 
     @Override
     public boolean onMediaItemSelected(MediaItem mediaItem, boolean selected) {
-        return false;
+        return !selected;
     }
 
     private void setMediaItems(List<MediaItem> mediaItems) {
