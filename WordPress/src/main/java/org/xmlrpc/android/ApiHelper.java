@@ -579,6 +579,14 @@ public class ApiHelper {
         }
     }
 
+
+    /**
+     * Fetch a complete list of pages with minimal information (post ID, title, parent ID) from the XML-RPC API and
+     * store it in the DB (page_list table). Will recursively fetch pages in batches of mNumber.
+     *
+     * Note about porting to the REST API: the analogous REST call would be GET /sites/$site/posts/, with the fields
+     * query parameter set to ID,title,parent. mNumber must be limited to 100.
+     */
     public static class FetchPageListTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
         public interface Callback extends GenericErrorCallback {
             public void onSuccess(int postCount);
