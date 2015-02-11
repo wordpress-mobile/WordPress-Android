@@ -11,6 +11,8 @@ import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.GravatarUtils.DefaultImage;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -101,7 +103,9 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));
 
             // image
-            holder.networkImageView.setImageUrl(getServiceImage(serviceName), WPNetworkImageView.ImageType.BLAVATAR);
+            holder.networkImageView.setImageUrl(
+                    GravatarUtils.fixGravatarUrl(getServiceImage(serviceName), mResourceVars.headerAvatarSizePx, DefaultImage.STATUS_404),
+                    WPNetworkImageView.ImageType.BLAVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             return rowView;
