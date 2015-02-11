@@ -283,9 +283,9 @@ public class ReaderBlogActions {
         };
 
         if (hasBlogId) {
-            WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
+            WordPress.getRestClientUtilsV1_1().get("/sites/" + blogId, listener, errorListener);
         } else {
-            WordPress.getRestClientUtils().get("/sites/" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl)), listener, errorListener);
+            WordPress.getRestClientUtilsV1_1().get("/sites/" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl)), listener, errorListener);
         }
     }
     public static void updateFeedInfo(long feedId, final UpdateBlogInfoListener infoListener) {
