@@ -28,7 +28,7 @@ import java.util.List;
  * </ul>
  */
 
-public class MediaSourceAdapter extends BaseAdapter {
+public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMediaChange {
     private final LayoutInflater  mLayoutInflater;
     private final ImageLoader.ImageCache mImageCache;
     private final List<MediaSource> mMediaSources;
@@ -132,5 +132,20 @@ public class MediaSourceAdapter extends BaseAdapter {
         }
 
         return offset;
+    }
+
+    @Override
+    public void onMediaAdded(MediaSource source, List<MediaItem> addedItems) {
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMediaRemoved(MediaSource source, List<MediaItem> removedItems) {
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMediaChanged(MediaSource source, List<MediaItem> changedItems) {
+        notifyDataSetChanged();
     }
 }
