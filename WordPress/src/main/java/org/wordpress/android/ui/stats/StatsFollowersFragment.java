@@ -21,7 +21,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -269,10 +268,9 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    long blogId = StringUtils.stringToLong(currentRowData.getBlogId());
                                     ReaderActivityLauncher.showReaderBlogPreview(
                                             context,
-                                            blogId
+                                            currentRowData.getURL()
                                     );
                                 }
                             });
