@@ -126,7 +126,7 @@ public class MediaUploadService extends Service {
                 // once the file has been uploaded, delete the local database entry and
                 // download the new one so that we are up-to-date and so that users can edit it.
                 WordPress.wpDB.deleteMediaFile(blogIdStr, mediaId);
-                sendUpdateBroadcast(mediaId, null);
+                sendUpdateBroadcast(mediaId, id);
                 fetchMediaFile(id);
             }
 
