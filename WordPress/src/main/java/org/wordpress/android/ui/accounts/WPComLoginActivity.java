@@ -48,12 +48,10 @@ import java.net.URISyntaxException;
  */
 public class WPComLoginActivity extends ActionBarActivity implements TextWatcher {
     public static final int REQUEST_CODE = 5000;
-    public static final String JETPACK_AUTH_REQUEST = "jetpackAuthRequest";
     private static final String NEED_HELP_URL = "http://android.wordpress.org/faq";
     private String mUsername;
     private String mPassword;
     private Button mSignInButton;
-    private boolean mIsJetpackAuthRequest;
     private boolean mIsWpcomAccountWith2FA;
     private boolean mIsInvalidUsernameOrPassword;
     private EditText mUsernameEditText;
@@ -65,10 +63,6 @@ public class WPComLoginActivity extends ActionBarActivity implements TextWatcher
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wp_dot_com_login_activity);
         setTitle(getString(R.string.wpcom_signin_dialog_title));
-
-        if (getIntent().hasExtra(JETPACK_AUTH_REQUEST)) {
-            mIsJetpackAuthRequest = true;
-        }
 
         mSignInButton = (Button) findViewById(R.id.saveDotcom);
         mSignInButton.setOnClickListener(new Button.OnClickListener() {
@@ -187,30 +181,27 @@ public class WPComLoginActivity extends ActionBarActivity implements TextWatcher
                     blog.setDotcom_password(mPassword);
                 }
 
-                // Don't change global WP.com settings if this is Jetpack auth request from stats
-                if (!mIsJetpackAuthRequest) {
-                    // New wpcom credetials inserted here. Reset the app state: there is the possibility a different
-                    // username/password is inserted here
-                    WordPress.removeWpComUserRelatedData(WPComLoginActivity.this);
-                    WordPress.sendLocalBroadcast(WPComLoginActivity.this, WordPress.BROADCAST_ACTION_SIGNOUT);
 
-                    Editor settings = PreferenceManager.getDefaultSharedPreferences(WPComLoginActivity.this).edit();
-                    settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
-                    settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
-                    settings.commit();
+                // New wpcom credetials inserted here. Reset the app state: there is the possibility a different
+                // username/password is inserted here
+                WordPress.removeWpComUserRelatedData(WPComLoginActivity.this);
+                WordPress.sendLocalBroadcast(WPComLoginActivity.this, WordPress.BROADCAST_ACTION_SIGNOUT);
 
-                    // Make sure to update credentials for .wpcom blog even if currentBlog is null
-                    WordPress.wpDB.updateWPComCredentials(mUsername, mPassword);
+                Editor settings = PreferenceManager.getDefaultSharedPreferences(WPComLoginActivity.this).edit();
+                settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
+                settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
+                settings.commit();
 
-                    // Update regular blog credentials for WP.com auth requests
-                    if (blog != null) {
-                        blog.setUsername(mUsername);
-                        blog.setPassword(mPassword);
-                    }
-                }
+                // Make sure to update credentials for .wpcom blog even if currentBlog is null
+                WordPress.wpDB.updateWPComCredentials(mUsername, mPassword);
+
+                // Update regular blog credentials for WP.com auth requests
                 if (blog != null) {
+                    blog.setUsername(mUsername);
+                    blog.setPassword(mPassword);
                     WordPress.wpDB.saveBlog(blog);
                 }
+
                 return true;
             } catch (XMLRPCFault xmlRpcFault) {
                 AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
@@ -236,21 +227,16 @@ public class WPComLoginActivity extends ActionBarActivity implements TextWatcher
         @Override
         protected void onPostExecute(Boolean isSignedIn) {
             if (isSignedIn && !isFinishing()) {
-                if (!mIsJetpackAuthRequest) {
-                    WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject jsonObject) {
-                            WPComLoginActivity.this.setResult(RESULT_OK);
-                            // Register the device again for Push Notifications
-                            WordPress.registerForCloudMessaging(WPComLoginActivity.this);
-                            ReaderUserActions.setCurrentUser(jsonObject);
-                            finish();
-                        }
-                    }, null);
-                } else {
-                    WPComLoginActivity.this.setResult(RESULT_OK);
-                    finish();
-                }
+                WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        WPComLoginActivity.this.setResult(RESULT_OK);
+                        // Register the device again for Push Notifications
+                        WordPress.registerForCloudMessaging(WPComLoginActivity.this);
+                        ReaderUserActions.setCurrentUser(jsonObject);
+                        finish();
+                    }
+                }, null);
             } else {
                 if (mIsInvalidUsernameOrPassword) {
                     mUsernameEditText.setError(getString(R.string.username_or_password_incorrect));
