@@ -81,12 +81,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
     private EditText mTwoStepEditText;
-    private boolean mSelfHosted;
+
     private WPTextView mSignInButton;
     private WPTextView mCreateAccountButton;
     private WPTextView mAddSelfHostedButton;
     private WPTextView mProgressTextSignIn;
     private WPTextView mForgotPassword;
+    private WPTextView mJetpackAuthLabel;
+
     private LinearLayout mBottomButtonsLayout;
     private RelativeLayout mUsernameLayout;
     private RelativeLayout mPasswordLayout;
@@ -94,9 +96,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private RelativeLayout mUrlButtonLayout;
     private RelativeLayout mTwoStepLayout;
     private RelativeLayout mTwoStepFooter;
+
     private ImageView mInfoButton;
     private ImageView mInfoButtonSecondary;
+
     private EmailChecker mEmailChecker;
+
+    private boolean mSelfHosted;
     private boolean mEmailAutoCorrected;
     private boolean mShouldSendTwoStepSMS;
     private int mErroneousLogInCount;
@@ -121,12 +127,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mUsernameLayout.setOnClickListener(mOnLoginFormClickListener);
         mPasswordLayout = (RelativeLayout) rootView.findViewById(R.id.nux_password_layout);
         mPasswordLayout.setOnClickListener(mOnLoginFormClickListener);
+
         mUsernameEditText = (EditText) rootView.findViewById(R.id.nux_username);
         mUsernameEditText.addTextChangedListener(this);
         mUsernameEditText.setOnClickListener(mOnLoginFormClickListener);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.nux_password);
         mPasswordEditText.addTextChangedListener(this);
         mPasswordEditText.setOnClickListener(mOnLoginFormClickListener);
+        mJetpackAuthLabel = (WPTextView) rootView.findViewById(R.id.nux_jetpack_auth_label);
         mUrlEditText = (EditText) rootView.findViewById(R.id.nux_url);
         mSignInButton = (WPTextView) rootView.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
@@ -149,6 +157,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 }
             }
         });
+
         mForgotPassword = (WPTextView) rootView.findViewById(R.id.forgot_password);
         mForgotPassword.setOnClickListener(mForgotPasswordListener);
         mUsernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -158,6 +167,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 }
             }
         });
+
         mPasswordEditText.setOnEditorActionListener(mEditorAction);
         mUrlEditText.setOnEditorActionListener(mEditorAction);
 
@@ -285,12 +295,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         return mJetpackBlog != null;
     }
 
+    // Set blog for Jetpack auth
     public void setBlog(Blog blog) {
         mJetpackBlog = blog;
 
         if (mAddSelfHostedButton != null) {
+            mJetpackAuthLabel.setVisibility(View.VISIBLE);
             mAddSelfHostedButton.setVisibility(View.GONE);
             mCreateAccountButton.setVisibility(View.GONE);
+            mUsernameEditText.setText("");
         }
     }
 

@@ -70,6 +70,18 @@
                     android:tint="@color/blue_dark" />
             </RelativeLayout>
 
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/nux_jetpack_auth_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:paddingLeft="@dimen/margin_extra_large"
+                android:paddingRight="@dimen/margin_extra_large"
+                android:paddingBottom="@dimen/margin_extra_large"
+                android:gravity="center_horizontal"
+                android:text="@string/sign_in_jetpack"
+                android:visibility="gone" />
+
             <RelativeLayout
                 android:id="@+id/nux_username_layout"
                 android:layout_width="fill_parent"
