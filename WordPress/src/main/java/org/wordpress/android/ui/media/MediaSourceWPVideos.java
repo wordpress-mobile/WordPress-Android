@@ -30,6 +30,10 @@ public class MediaSourceWPVideos implements MediaSource {
     }
 
     @Override
+    public void setListener(OnMediaChange onMediaChange) {
+    }
+
+    @Override
     public int getCount() {
         return mMediaItems.size();
     }
@@ -78,7 +82,7 @@ public class MediaSourceWPVideos implements MediaSource {
 
     @Override
     public boolean onMediaItemSelected(MediaItem mediaItem, boolean selected) {
-        return false;
+        return !selected;
     }
 
     /**

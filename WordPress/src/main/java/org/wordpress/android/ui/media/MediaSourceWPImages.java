@@ -27,18 +27,25 @@ import java.util.List;
 public class MediaSourceWPImages implements MediaSource {
     private final List<MediaItem> mMediaItems = new ArrayList<>();
 
+    private OnMediaChange mListener;
+
     public MediaSourceWPImages() {
         fetchImageData();
     }
 
     @Override
+    public void setListener(OnMediaChange listener) {
+        mListener = listener;
+    }
+
+    @Override
     public int getCount() {
-        return mMediaItems.size();
+        return mVerifiedItems.size();
     }
 
     @Override
     public MediaItem getMedia(int position) {
-        return mMediaItems.get(position);
+        return mVerifiedItems.get(position);
     }
 
     @Override
@@ -48,7 +55,7 @@ public class MediaSourceWPImages implements MediaSource {
         }
 
         if (convertView != null) {
-            MediaItem mediaItem = mMediaItems.get(position);
+            MediaItem mediaItem = mVerifiedItems.get(position);
             Uri imageSource = mediaItem.getPreviewSource();
             ImageView imageView = (ImageView) convertView.findViewById(R.id.wp_image_view_background);
             if (imageView != null) {
@@ -78,7 +85,7 @@ public class MediaSourceWPImages implements MediaSource {
 
     @Override
     public boolean onMediaItemSelected(MediaItem mediaItem, boolean selected) {
-        return false;
+        return !selected;
     }
 
     public static final Creator<MediaSourceWPImages> CREATOR =
@@ -159,8 +166,6 @@ public class MediaSourceWPImages implements MediaSource {
 
     private void removeDeletedEntries() {
         AsyncTask<List<MediaItem>, Void, Void> backgroundCheck = new AsyncTask<List<MediaItem>, Void, Void>() {
-            final ArrayList<MediaItem> removedMedia = new ArrayList<>();
-
             @Override
             protected Void doInBackground(List<MediaItem>[] params) {
                 for (MediaItem mediaItem : params[0]) {
@@ -171,8 +176,8 @@ public class MediaSourceWPImages implements MediaSource {
                         connection.connect();
                         int responseCode = connection.getResponseCode();
 
-                        if (responseCode == 404) {
-                            removedMedia.add(mediaItem);
+                        if (responseCode != 404) {
+                            mVerifiedItems.add(mediaItem);
                         }
                     } catch (MalformedURLException e) {
                     } catch (IOException ioException) {
@@ -186,11 +191,8 @@ public class MediaSourceWPImages implements MediaSource {
 
             @Override
             public void onPostExecute(Void result) {
-                for (MediaItem deletedItem : removedMedia) {
-                    mMediaItems.remove(deletedItem);
-                }
-
-                if (removedMedia.size() > 0 && mListener != null) {
+                if (mVerifiedItems.size() > 0 && mListener != null) {
+                    mListener.onMediaAdded(MediaSourceWPImages.this, mVerifiedItems);
                 }
             }
         };
