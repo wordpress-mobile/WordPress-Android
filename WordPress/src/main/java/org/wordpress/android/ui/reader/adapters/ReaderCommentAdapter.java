@@ -27,8 +27,8 @@ import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -167,7 +167,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
         final ReaderComment comment = mComments.get(position);
 
         holder.txtAuthor.setText(comment.getAuthorName());
-        holder.imgAvatar.setImageUrl(PhotonUtils.fixAvatar(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+        holder.imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
         CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), holder.itemView.getWidth());
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
