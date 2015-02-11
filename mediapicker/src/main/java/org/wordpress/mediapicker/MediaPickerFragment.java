@@ -183,6 +183,10 @@ public class MediaPickerFragment extends Fragment
         mListener = listener;
     }
 
+    public void setAdapter(MediaSourceAdapter adapter) {
+        mAdapter = adapter;
+    }
+
     private void notifyMediaSelectionStarted() {
         if (mListener != null) {
             mListener.onMediaSelectionStarted();
@@ -243,7 +247,9 @@ public class MediaPickerFragment extends Fragment
         Drawable background = resources.getDrawable(R.drawable.media_picker_background);
         ImageLoader.ImageCache imageCache = mListener != null ? mListener.getImageCache() : null;
 
-        mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache);
+        if (mAdapter == null) {
+            mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache);
+        }
 
         mGridView.setBackgroundDrawable(background);
         mGridView.setNumColumns(numColumns);
