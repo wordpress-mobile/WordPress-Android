@@ -551,20 +551,19 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             return;
         }
         String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        WPImageSpan imageSpan = MediaUtils.prepareWPImageSpan(this, blogId, mediaId);
-        if (imageSpan == null) {
+        MediaFile mediaFile = MediaUtils.createMediaFile(blogId, mediaId);
+        if (mediaFile == null) {
             return;
         }
-        mEditorFragment.addImageSpanOnSelection((ImageSpan) imageSpan);
+        mEditorFragment.startPostWithMediaFile(mediaFile);
         // load image from server
-        loadWPImageSpanThumbnail(imageSpan);
+        loadWPImageSpanThumbnail(mediaFile);
     }
 
     /**
      * Loads the thumbnail url in the imagespan from a server
      */
-    private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
-        MediaFile mediaFile = imageSpan.getMediaFile();
+    private void loadWPImageSpanThumbnail(MediaFile mediaFile) {
         if (mediaFile == null) {
             return;
         }
@@ -574,14 +573,13 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             return;
         }
 
-        final EditText editText = mEditorFragment.getContentEditText();
         String imageURL;
         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
-            String photonUrl = imageSpan.getImageSource().toString();
+            String photonUrl = mediaFile.getFileURL();
             imageURL = StringUtils.getPhotonUrl(photonUrl, getMaximumThumbnailWidthForEditor());
         } else {
             // Not a Jetpack or wpcom blog
-            // imageURL = mediaFile.getThumbnailURL(); //do not use fileURL here since downloading picture
+            // imageURL = mediaFile.getThumbnailURL(); // do not use fileURL here since downloading picture
             // of big dimensions can result in OOM Exception
             imageURL = mediaFile.getFileURL() != null ?  mediaFile.getFileURL() : mediaFile.getThumbnailURL();
         }
@@ -626,6 +624,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                     return;
                 }
 
+                // TODO: move this to the fragment
+                final EditText editText = mEditorFragment.getContentEditText();
                 Editable s = editText.getText();
                 if (s == null) return;
                 WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);

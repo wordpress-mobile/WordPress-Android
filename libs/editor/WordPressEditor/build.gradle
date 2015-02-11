@@ -43,6 +43,12 @@ dependencies {
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
 }
 
+configurations.all {
+    // Exclude packaged wordpress sub projects, force the use of the source project
+    // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
+    exclude group: 'org.wordpress', module: 'utils'
+}
+
 signing {
     required {
         project.properties.containsKey("signing.keyId") && project.properties.containsKey("signing.secretKeyRingFile")

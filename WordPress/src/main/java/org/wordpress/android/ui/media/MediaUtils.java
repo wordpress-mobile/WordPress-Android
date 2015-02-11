@@ -262,8 +262,9 @@ public class MediaUtils {
         return true;
     }
 
-    public static WPEditImageSpan prepareWPImageSpan(Context context, String blogId, final String mediaId) {
+    public static MediaFile createMediaFile(String blogId, final String mediaId) {
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
+
         if (cursor == null || !cursor.moveToFirst()) {
             if (cursor != null) {
                 cursor.close();
@@ -279,11 +280,7 @@ public class MediaUtils {
 
         String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
         boolean isVideo = mimeType != null && mimeType.contains("video");
-
-        Uri uri = Uri.parse(url);
-        WPEditImageSpan imageSpan = new WPEditImageSpan(context,
-                isVideo ? R.drawable.media_movieclip : R.drawable.dashicon_format_image_big_grey, uri);
-        MediaFile mediaFile = imageSpan.getMediaFile();
+        MediaFile mediaFile = new MediaFile();
         mediaFile.setMediaId(mediaId);
         mediaFile.setBlogId(blogId);
         mediaFile.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
@@ -300,7 +297,14 @@ public class MediaUtils {
         mediaFile.setVideo(isVideo);
         WordPress.wpDB.saveMediaFile(mediaFile);
         cursor.close();
+        return mediaFile;
+    }
 
+    public static WPEditImageSpan createWPEditImageSpan(Context context, MediaFile mediaFile) {
+        int drawable = mediaFile.isVideo() ? R.drawable.media_movieclip : R.drawable.dashicon_format_image_big_grey;
+        Uri uri = Uri.parse(mediaFile.getFileURL());
+        WPEditImageSpan imageSpan = new WPEditImageSpan(context, drawable, uri);
+        imageSpan.setMediaFile(mediaFile);
         return imageSpan;
     }
 

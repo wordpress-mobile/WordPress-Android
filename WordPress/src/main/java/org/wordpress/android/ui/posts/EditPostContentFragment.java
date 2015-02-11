@@ -894,4 +894,9 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
             s.insert(selectionEnd + 1, "\n\n");
         }
     }
+
+    @Override
+    public void appendMediaFile(MediaFile mediaFile) {
+        // TODO
+    }
 }

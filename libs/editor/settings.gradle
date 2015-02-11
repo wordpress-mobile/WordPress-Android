@@ -1,3 +1,3 @@
 include ':WordPressEditor'
 include ':example'
-include ':libs:WordPressUtils'
+include ':libs:utils:WordPressUtils'
