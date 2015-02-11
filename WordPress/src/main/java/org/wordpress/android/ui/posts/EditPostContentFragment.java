@@ -258,16 +258,16 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
     private ArrayList<MediaSource> imageMediaSelectionSources() {
         ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
-        imageMediaSources.add(new MediaSourceWPImages());
         imageMediaSources.add(new MediaSourceDeviceImages(getActivity().getContentResolver()));
+        imageMediaSources.add(new MediaSourceWPImages());
 
         return imageMediaSources;
     }
 
     private ArrayList<MediaSource> videoMediaSelectionSources() {
         ArrayList<MediaSource> videoMediaSources = new ArrayList<>();
-        videoMediaSources.add(new MediaSourceWPVideos());
         videoMediaSources.add(new MediaSourceDeviceVideos(getActivity().getContentResolver()));
+        videoMediaSources.add(new MediaSourceWPVideos());
 
         return videoMediaSources;
     }
