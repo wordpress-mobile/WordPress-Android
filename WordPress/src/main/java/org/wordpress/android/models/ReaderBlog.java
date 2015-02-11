@@ -72,6 +72,14 @@ public class ReaderBlog {
             blog.blogId = blog.feedId;
         }
 
+        JSONObject jsonIcon = JSONUtil.getJSONChild(json, "icon");
+        if (jsonIcon != null) {
+            blog.setImageUrl(JSONUtil.getString(jsonIcon, "img"));
+            if (!blog.hasImageUrl()) {
+                blog.setImageUrl(JSONUtil.getString(jsonIcon, "ico"));
+            }
+        }
+
         return blog;
     }
 
@@ -112,6 +120,9 @@ public class ReaderBlog {
 
     public boolean hasUrl() {
         return !TextUtils.isEmpty(url);
+    }
+    public boolean hasImageUrl() {
+        return !TextUtils.isEmpty(imageUrl);
     }
     public boolean hasName() {
         return !TextUtils.isEmpty(name);

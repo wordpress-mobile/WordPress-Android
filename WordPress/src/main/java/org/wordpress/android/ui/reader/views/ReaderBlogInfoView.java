@@ -109,11 +109,16 @@ public class ReaderBlogInfoView extends FrameLayout {
             txtDescription.setVisibility(View.GONE);
         }
 
-        int blavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_large);
         int imageResId = (blogInfo.isExternal() ? R.drawable.gravatar_placeholder : R.drawable.app_icon);
-        imgBlavatar.setDefaultImageResId(imageResId);
+        int imageSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+        String imageUrl;
+        if (blogInfo.hasImageUrl()) {
+            imageUrl = GravatarUtils.fixGravatarUrl(blogInfo.getImageUrl(), imageSz);
+        } else {
+            imageUrl = GravatarUtils.blavatarFromUrl(blogInfo.getUrl(), imageSz);
+        }
         imgBlavatar.setErrorImageResId(imageResId);
-        imgBlavatar.setImageUrl(GravatarUtils.blavatarFromUrl(blogInfo.getUrl(), blavatarSz), ImageType.BLAVATAR);
+        imgBlavatar.setImageUrl(imageUrl, ImageType.BLAVATAR);
 
         // layout is invisible at design time
         if (layoutInner.getVisibility() != View.VISIBLE) {
