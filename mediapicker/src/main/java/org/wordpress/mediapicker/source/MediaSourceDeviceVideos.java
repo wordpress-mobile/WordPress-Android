@@ -126,7 +126,7 @@ public class MediaSourceDeviceVideos implements MediaSource {
 
     @Override
     public boolean onMediaItemSelected(MediaItem mediaItem, boolean selected) {
-        return false;
+        return !selected;
     }
 
     private void createMediaItems() {
