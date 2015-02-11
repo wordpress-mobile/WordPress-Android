@@ -15,6 +15,7 @@ import android.webkit.WebViewClient;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -142,5 +143,10 @@ public class EditorFragment extends EditorFragmentAbstract {
     public CharSequence getContent() {
         // TODO
         return null;
+    }
+
+    @Override
+    public void appendMediaFile(MediaFile mediaFile) {
+        // TODO
     }
 }
