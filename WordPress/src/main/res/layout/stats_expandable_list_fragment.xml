@@ -49,6 +49,7 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_module_totals_label"
                 android:textColor="@color/stats_module_content_list_header"
+                android:textSize="@dimen/text_sz_small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
