@@ -76,6 +76,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
     public static final String FROM_LOGIN_SCREEN_KEY = "FROM_LOGIN_SCREEN_KEY";
+
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
@@ -87,7 +88,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private WPTextView mProgressTextSignIn;
     private WPTextView mForgotPassword;
     private LinearLayout mBottomButtonsLayout;
-    private ScrollView mScrollView;
     private RelativeLayout mUsernameLayout;
     private RelativeLayout mPasswordLayout;
     private RelativeLayout mProgressBarSignIn;
@@ -105,6 +105,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private String mTwoStepCode;
     private String mHttpUsername;
     private String mHttpPassword;
+    private Blog mJetpackBlog;
 
     public SignInFragment() {
         mEmailChecker = new EmailChecker();
@@ -113,7 +114,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.signin_fragment, container, false);
-        mScrollView = (ScrollView) rootView.findViewById(R.id.sign_in_scroll_view);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
         mTwoStepLayout = (RelativeLayout) rootView.findViewById(R.id.two_factor_layout);
         mTwoStepFooter = (RelativeLayout) rootView.findViewById(R.id.two_step_footer);
@@ -279,6 +279,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private boolean isWPComLogin() {
         String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
         return !mSelfHosted || TextUtils.isEmpty(selfHostedUrl) || selfHostedUrl.contains("wordpress.com");
+    }
+
+    private boolean isJetpackAuth() {
+        return mJetpackBlog != null;
+    }
+
+    public void setBlog(Blog blog) {
+        mJetpackBlog = blog;
+
+        if (mAddSelfHostedButton != null) {
+            mAddSelfHostedButton.setVisibility(View.GONE);
+            mCreateAccountButton.setVisibility(View.GONE);
+        }
     }
 
     private View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
@@ -467,13 +480,21 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void signInAndFetchBlogListWPCom() {
-        LoginWPCom login = new LoginWPCom(mUsername, mPassword, mTwoStepCode, mShouldSendTwoStepSMS);
+        LoginWPCom login = new LoginWPCom(mUsername, mPassword, mTwoStepCode, mShouldSendTwoStepSMS, mJetpackBlog);
         login.execute(new LoginAbstract.Callback() {
             @Override
             public void onSuccess() {
+                mShouldSendTwoStepSMS = false;
+
+                // Finish this activity if we've authenticated to a Jetpack site
+                if (isJetpackAuth() && getActivity() != null) {
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+                    return;
+                }
+
                 FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
                 fetchBlogListWPCom.execute(mFetchBlogListCallback);
-                mShouldSendTwoStepSMS = false;
             }
 
             @Override

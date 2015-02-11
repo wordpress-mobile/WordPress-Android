@@ -13,6 +13,7 @@ import com.wordpress.rest.Oauth.Listener;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.*;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -22,11 +23,13 @@ public class LoginWPCom extends LoginAbstract {
 
     private String mTwoStepCode;
     private boolean mShouldSendTwoStepSMS;
+    private Blog mJetpackBlog;
 
-    public LoginWPCom(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS) {
+    public LoginWPCom(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS, Blog blog) {
         super(username, password);
         mTwoStepCode = twoStepCode;
         mShouldSendTwoStepSMS = shouldSendTwoStepSMS;
+        mJetpackBlog = blog;
     }
 
     public static int restLoginErrorToMsgId(JSONObject errorObject) {
@@ -73,13 +76,21 @@ public class LoginWPCom extends LoginAbstract {
                 // Once we have a token, start up Simperium
                 SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
 
-                // login successful, store password
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
-                editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, mPassword);
-                editor.putString(WordPress.ACCESS_TOKEN_PREFERENCE, token.toString());
-                editor.commit();
+                if (mJetpackBlog != null) {
+                    // Store credentials in blog object for Jetpack sites
+                    mJetpackBlog.setDotcom_username(mUsername);
+                    mJetpackBlog.setDotcom_password(mPassword);
+                    mJetpackBlog.setApi_key(token.toString());
+                    WordPress.wpDB.saveBlog(mJetpackBlog);
+                } else {
+                    // Store credentials in token in global account
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
+                    editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, mPassword);
+                    editor.putString(WordPress.ACCESS_TOKEN_PREFERENCE, token.toString());
+                    editor.commit();
+                }
 
                 mCallback.onSuccess();
             }

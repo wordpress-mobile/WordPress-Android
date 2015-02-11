@@ -39,6 +39,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
@@ -421,9 +422,9 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
     private void startWPComLoginActivity() {
         mResultCode = RESULT_CANCELED;
-        Intent loginIntent = new Intent(this, WPComLoginActivity.class);
-        loginIntent.putExtra(WPComLoginActivity.JETPACK_AUTH_REQUEST, true);
-        startActivityForResult(loginIntent, WPComLoginActivity.REQUEST_CODE);
+        Intent signInIntent = new Intent(this, SignInActivity.class);
+        signInIntent.putExtra(SignInActivity.ARG_JETPACK_SITE_AUTH, mLocalBlogID);
+        startActivityForResult(signInIntent, WPComLoginActivity.REQUEST_CODE);
     }
 
     @Override
