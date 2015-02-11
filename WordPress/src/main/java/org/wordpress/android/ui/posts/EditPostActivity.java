@@ -530,7 +530,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     // Moved from EditPostContentFragment
 
-    private static final int MIN_THUMBNAIL_WIDTH = 200;
     public static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
     public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
     public static final String NEW_MEDIA_GALLERY_EXTRA_IDS = "NEW_MEDIA_GALLERY_EXTRA_IDS";
@@ -555,24 +554,16 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         if (mediaFile == null) {
             return;
         }
-        mEditorFragment.startPostWithMediaFile(mediaFile);
-        // load image from server
-        loadWPImageSpanThumbnail(mediaFile);
+        mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.imageLoader);
     }
 
     /**
-     * Loads the thumbnail url in the imagespan from a server
+     * Get media url from a MediaFile, returns a photon URL if the selected blog is Photon capable.
      */
-    private void loadWPImageSpanThumbnail(MediaFile mediaFile) {
+    private String getMediaUrl(MediaFile mediaFile) {
         if (mediaFile == null) {
-            return;
+            return null;
         }
-
-        final String mediaId = mediaFile.getMediaId();
-        if (mediaId == null) {
-            return;
-        }
-
         String imageURL;
         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
             String photonUrl = mediaFile.getFileURL();
@@ -583,72 +574,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             // of big dimensions can result in OOM Exception
             imageURL = mediaFile.getFileURL() != null ?  mediaFile.getFileURL() : mediaFile.getThumbnailURL();
         }
-
-        if (imageURL == null) {
-            return;
-        }
-
-        WordPress.imageLoader.get(imageURL, new ImageLoader.ImageListener() {
-            @Override
-            public void onErrorResponse(VolleyError arg0) {
-            }
-
-            @Override
-            public void onResponse(ImageLoader.ImageContainer container, boolean arg1) {
-                Bitmap downloadedBitmap = container.getBitmap();
-                if (downloadedBitmap == null) {
-                    // no bitmap downloaded from the server.
-                    return;
-                }
-
-                if (downloadedBitmap.getWidth() < MIN_THUMBNAIL_WIDTH) {
-                    // Picture is too small. Show the placeholder in this case.
-                    return;
-                }
-
-                Bitmap resizedBitmap;
-                int maxWidth = getMaximumThumbnailWidthForEditor();
-                // resize the downloaded bitmap
-                try {
-                    resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
-                } catch (OutOfMemoryError er) {
-                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, downloadedBitmap.getWidth());
-                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, downloadedBitmap.getHeight());
-                    CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE,
-                            ((float) maxWidth) / downloadedBitmap.getWidth());
-                    CrashlyticsUtils.logException(er, ExceptionType.SPECIFIC, T.POSTS);
-                    return;
-                }
-
-                if (resizedBitmap == null) {
-                    return;
-                }
-
-                // TODO: move this to the fragment
-                final EditText editText = mEditorFragment.getContentEditText();
-                Editable s = editText.getText();
-                if (s == null) return;
-                WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
-                if (spans.length != 0) {
-                    for (WPImageSpan is : spans) {
-                        MediaFile mediaFile = is.getMediaFile();
-                        if (mediaFile == null) continue;
-                        if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded()) {
-                            // replace the existing span with a new one with the correct image, re-add it to the same position.
-                            int spanStart = s.getSpanStart(is);
-                            int spanEnd = s.getSpanEnd(is);
-                            WPEditImageSpan imageSpan = new WPEditImageSpan(EditPostActivity.this, resizedBitmap,
-                                    is.getImageSource());
-                            imageSpan.setMediaFile(is.getMediaFile());
-                            imageSpan.setNetworkImageLoaded(true);
-                            s.removeSpan(is);
-                            s.setSpan(imageSpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            break;
-                        }
-                    }
-                }
-            }
-        }, 0, 0);
+        return imageURL;
     }
 
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
@@ -659,7 +585,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             }
 
             String content = StringUtils.notNullStr(params[0]);
-
             return WPHtml.fromHtml(content, EditPostActivity.this, getPost(), getMaximumThumbnailWidthForEditor());
         }
 
@@ -1255,6 +1180,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     @Override
     public void onAddMediaButtonClicked() {
-        // TODO:
+        // TODO: launch MediaPicker
     }
 }

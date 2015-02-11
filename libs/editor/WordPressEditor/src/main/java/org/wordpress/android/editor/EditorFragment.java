@@ -13,6 +13,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -146,7 +148,12 @@ public class EditorFragment extends EditorFragmentAbstract {
     }
 
     @Override
-    public void appendMediaFile(MediaFile mediaFile) {
+    public void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader) {
+        // TODO
+    }
+
+    @Override
+    public void createLinkFromSelection(String link, String text) {
         // TODO
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -45,6 +46,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -54,8 +58,13 @@ import org.wordpress.android.editor.legacy.WPEditImageSpan;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
+import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.widgets.WPEditText;
@@ -64,16 +73,15 @@ import org.wordpress.android.widgets.WPUnderlineSpan;
 
 public class EditPostContentFragment extends EditorFragmentAbstract implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
-    ActionBarActivity mActivity;
-
+    private static final int MIN_THUMBNAIL_WIDTH = 200;
+    private static final int CONTENT_ANIMATION_DURATION = 250;
     private static final String TAG_FORMAT_BAR_BUTTON_STRONG = "strong";
     private static final String TAG_FORMAT_BAR_BUTTON_EM = "em";
     private static final String TAG_FORMAT_BAR_BUTTON_UNDERLINE = "u";
     private static final String TAG_FORMAT_BAR_BUTTON_STRIKE = "strike";
     private static final String TAG_FORMAT_BAR_BUTTON_QUOTE = "blockquote";
 
-    private static final int CONTENT_ANIMATION_DURATION = 250;
-
+    private ActionBarActivity mActivity;
     private View mRootView;
     private WPEditText mContentEditText;
     private Button mAddPictureButton;
@@ -895,8 +903,123 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
         }
     }
 
+    private void loadWPImageSpanThumbnail(MediaFile mediaFile, String imageURL, ImageLoader imageLoader) {
+        if (mediaFile == null || imageURL == null) {
+            return;
+        }
+        final String mediaId = mediaFile.getMediaId();
+        if (mediaId == null) {
+            return;
+        }
+
+        final int maxThumbWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
+
+        imageLoader.get(imageURL, new ImageLoader.ImageListener() {
+            @Override
+            public void onErrorResponse(VolleyError arg0) {
+            }
+
+            @Override
+            public void onResponse(ImageLoader.ImageContainer container, boolean arg1) {
+                Bitmap downloadedBitmap = container.getBitmap();
+                if (downloadedBitmap == null) {
+                    // no bitmap downloaded from the server.
+                    return;
+                }
+
+                if (downloadedBitmap.getWidth() < MIN_THUMBNAIL_WIDTH) {
+                    // Picture is too small. Show the placeholder in this case.
+                    return;
+                }
+
+                Bitmap resizedBitmap;
+                // resize the downloaded bitmap
+                try {
+                    resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxThumbWidth);
+                } catch (OutOfMemoryError er) {
+                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, downloadedBitmap.getWidth());
+                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, downloadedBitmap.getHeight());
+                    CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE,
+                            ((float) maxThumbWidth) / downloadedBitmap.getWidth());
+                    CrashlyticsUtils.logException(er, ExceptionType.SPECIFIC, T.POSTS);
+                    return;
+                }
+
+                if (resizedBitmap == null) {
+                    return;
+                }
+
+                final EditText editText = mContentEditText;
+                Editable s = editText.getText();
+                if (s == null) return;
+                WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
+                if (spans.length != 0) {
+                    for (WPImageSpan is : spans) {
+                        MediaFile mediaFile = is.getMediaFile();
+                        if (mediaFile == null) continue;
+                        if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded()) {
+                            // replace the existing span with a new one with the correct image, re-add
+                            // it to the same position.
+                            int spanStart = s.getSpanStart(is);
+                            int spanEnd = s.getSpanEnd(is);
+                            WPEditImageSpan imageSpan = new WPEditImageSpan(getActivity(), resizedBitmap,
+                                    is.getImageSource());
+                            imageSpan.setMediaFile(is.getMediaFile());
+                            imageSpan.setNetworkImageLoaded(true);
+                            s.removeSpan(is);
+                            s.setSpan(imageSpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            break;
+                        }
+                    }
+                }
+            }
+        }, 0, 0);
+    }
+
     @Override
-    public void appendMediaFile(MediaFile mediaFile) {
-        // TODO
+    public void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader) {
+        // Create a WPImageSpan from the mediaFile
+        WPImageSpan imageSpan = MediaUtils.createWPEditImageSpan(getActivity(), mediaFile);
+
+        // Insert the WPImageSpan in the content field
+        int selectionStart = mContentEditText.getSelectionStart();
+        int selectionEnd = mContentEditText.getSelectionEnd();
+
+        if (selectionStart > selectionEnd) {
+            int temp = selectionEnd;
+            selectionEnd = selectionStart;
+            selectionStart = temp;
+        }
+
+        int line, column = 0;
+        if (mContentEditText.getLayout() != null) {
+            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+        }
+
+        Editable s = mContentEditText.getText();
+        if (s != null) {
+            WPImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
+            if (gallerySpans.length != 0) {
+                // insert a few line breaks if the cursor is already on an image
+                s.insert(selectionEnd, "\n\n");
+                selectionStart = selectionStart + 2;
+                selectionEnd = selectionEnd + 2;
+            } else if (column != 0) {
+                // insert one line break if the cursor is not at the first column
+                s.insert(selectionEnd, "\n");
+                selectionStart = selectionStart + 1;
+                selectionEnd = selectionEnd + 1;
+            }
+
+            s.insert(selectionStart, " ");
+            s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+            s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            s.insert(selectionEnd + 1, "\n\n");
+        }
+
+        // Fetch and replace the WPImageSpan if it's a network image and not cached yet
+        loadWPImageSpanThumbnail(mediaFile, imageUrl, imageLoader);
     }
 }
