@@ -15,14 +15,13 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 /*
- * header view showing blog name, description, follower count, and mshot of the
+ * header view showing blog name, description, and blavatar (if it exists) for a
  * blog - designed for use in ReaderPostListFragment when previewing posts in a
  * blog (blog preview) but can be reused elsewhere - call loadBlogInfo() to show
  * the info for a specific blog
@@ -110,8 +109,6 @@ public class ReaderBlogInfoView extends FrameLayout {
             txtDescription.setVisibility(View.GONE);
         }
 
-        showFollowerCount(blogInfo.numSubscribers);
-
         int blavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_large);
         int imageResId = (blogInfo.isExternal() ? R.drawable.gravatar_placeholder : R.drawable.app_icon);
         imgBlavatar.setDefaultImageResId(imageResId);
@@ -138,14 +135,6 @@ public class ReaderBlogInfoView extends FrameLayout {
         if (wasEmpty && mBlogInfoListener != null) {
             mBlogInfoListener.onBlogInfoLoaded(blogInfo);
         }
-    }
-
-    private void showFollowerCount(int numFollowers) {
-        final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
-        String count = getResources().getString(
-                R.string.reader_label_followers,
-                FormatUtils.formatInt(numFollowers));
-        txtFollowCnt.setText(count);
     }
 
     public boolean isEmpty() {
