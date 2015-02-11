@@ -158,37 +158,44 @@ public class MediaSourceWPImages implements MediaSource {
     }
 
     private void removeDeletedEntries() {
-        AsyncTask backgroundCheck = new AsyncTask() {
+        AsyncTask<List<MediaItem>, Void, Void> backgroundCheck = new AsyncTask<List<MediaItem>, Void, Void>() {
+            final ArrayList<MediaItem> removedMedia = new ArrayList<>();
+
             @Override
-            protected Object doInBackground(Object[] params) {
-                List<MediaItem> removed = new ArrayList<>();
+            protected Void doInBackground(List<MediaItem>[] params) {
+                for (MediaItem mediaItem : params[0]) {
+                    try {
+                        URL mediaUrl = new URL(mediaItem.getSource().toString());
+                        HttpURLConnection connection = (HttpURLConnection) mediaUrl.openConnection();
+                        connection.setRequestMethod("GET");
+                        connection.connect();
+                        int responseCode = connection.getResponseCode();
 
-                synchronized (mMediaItems) {
-                    for (MediaItem mediaItem : mMediaItems) {
-                        try {
-                            URL mediaUrl = new URL(mediaItem.getSource().toString());
-                            HttpURLConnection connection = (HttpURLConnection) mediaUrl.openConnection();
-                            connection.setRequestMethod("GET");
-                            connection.connect();
-                            int responseCode = connection.getResponseCode();
-
-                            if (responseCode == 404) {
-                                removed.add(mediaItem);
-                            }
-                        } catch (MalformedURLException e) {
-                        } catch (IOException ioException) {
+                        if (responseCode == 404) {
+                            removedMedia.add(mediaItem);
                         }
+                    } catch (MalformedURLException e) {
+                    } catch (IOException ioException) {
                     }
 
-                    for (MediaItem deletedItem : removed) {
-                        mMediaItems.remove(deletedItem);
-                    }
+                    Thread.yield();
                 }
 
                 return null;
             }
+
+            @Override
+            public void onPostExecute(Void result) {
+                for (MediaItem deletedItem : removedMedia) {
+                    mMediaItems.remove(deletedItem);
+                }
+
+                if (removedMedia.size() > 0 && mListener != null) {
+                }
+            }
         };
 
-        backgroundCheck.execute();
+        List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
+        backgroundCheck.execute(existingItems);
     }
 }
