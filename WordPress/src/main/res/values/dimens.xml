@@ -84,7 +84,9 @@
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">48dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
+
     <dimen name="blavatar_sz">40dp</dimen>
+    <dimen name="blavatar_sz_large">64dp</dimen>
 
     <dimen name="reader_button_icon">48dp</dimen>
 

@@ -22,10 +22,18 @@
         android:visibility="invisible"
         tools:visibility="visible">
 
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_blavatar"
+            android:layout_width="@dimen/blavatar_sz_large"
+            android:layout_height="@dimen/blavatar_sz_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            tools:src="@drawable/gravatar_placeholder" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/image_mshot"
+            android:layout_toRightOf="@+id/image_blavatar"
             android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
@@ -62,18 +70,6 @@
                 android:textColor="@color/blue_extra_light"
                 tools:text="followers" />
         </LinearLayout>
-
-        <!-- actual size is set at runtime based on display -->
-        <org.wordpress.android.widgets.WPNetworkImageView
-            android:id="@+id/image_mshot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:adjustViewBounds="true"
-            tools:layout_height="64dp"
-            tools:layout_width="96dp" />
 
     </RelativeLayout>
 

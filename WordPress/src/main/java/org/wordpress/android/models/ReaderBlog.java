@@ -120,6 +120,10 @@ public class ReaderBlog {
         return !TextUtils.isEmpty(description);
     }
 
+    public boolean isExternal() {
+        return (feedId != 0);
+    }
+
     /*
      * returns the mshot url to use for this blog, ex:
      *   http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
