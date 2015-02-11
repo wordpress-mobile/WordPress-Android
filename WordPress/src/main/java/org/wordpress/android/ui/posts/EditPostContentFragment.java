@@ -3,9 +3,11 @@ package org.wordpress.android.ui.posts;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +17,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.Layout;
@@ -74,6 +77,7 @@ import org.wordpress.android.ui.media.MediaPickerActivity;
 import org.wordpress.android.ui.media.MediaSourceWPImages;
 import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.MediaUtils;
+import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -84,6 +88,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.MediaGalleryImageSpan;
 import org.wordpress.android.widgets.WPEditText;
@@ -100,7 +105,9 @@ import java.io.File;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 public class EditPostContentFragment extends Fragment implements TextWatcher,
@@ -1010,8 +1017,147 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.registerReceiver(mReceiver, new IntentFilter(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION));
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION.equals(action)) {
+                String mediaId = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA);
+                String newId = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR);
+
+                if (mediaId != null && newId != null && mUploadingMedia.contains(mediaId)) {
+                    mGalleryIds.add(newId);
+
+                    if (mUploadingMedia.size() == mIdToPath.size()) {
+                        for (String id : mUploadingMedia) {
+                            String newText = mContentEditText.getText().toString().replace("<img android-uri=\"" + mIdToPath.get(id) + "\" />", "");
+                            mContentEditText.setText(newText);
+                        }
+
+                        createGallery();
+                        mUploadingMedia.clear();
+                        mIdToPath.clear();
+                    }
+                }
+            }
+        }
+    };
+
+    private void createGallery() {
+        if (mGalleryIds.size() > 0) {
+            ToastUtils.showToast(getActivity(), "Creating Gallery with " + mGalleryIds.size() + " items", ToastUtils.Duration.SHORT);
+
+            MediaGallery newGallery = new MediaGallery();
+            newGallery.setIds(mGalleryIds);
+
+            String text = mContentEditText.getText().toString();
+            text = text + "[gallery columns=\"3\" ids=\"";
+
+            for (String id : mGalleryIds) {
+                text += id + ",";
+            }
+
+            text = text.substring(0, text.length() - 1) + "\"]";
+
+            mContentEditText.setText(text);
+            mGalleryIds.clear();
+        }
+    }
+
+    private void queueFileForUpload(String path) {
+        if (path == null || path.equals("")) {
+            Toast.makeText(getActivity(), "Error opening file", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Blog blog = WordPress.getCurrentBlog();
+
+        File file = new File(path);
+        if (!file.exists())
+            return;
+
+        String mimeType = MediaUtils.getMediaFileMimeType(file);
+        String fileName = MediaUtils.getMediaFileName(file, mimeType);
+
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
+        mediaFile.setFileName(fileName);
+        mediaFile.setFilePath(path);
+        mediaFile.setUploadState("queued");
+        mediaFile.setDateCreatedGMT(System.currentTimeMillis());
+        mediaFile.setMediaId(String.valueOf(System.currentTimeMillis()));
+        if (mimeType != null && mimeType.startsWith("image")) {
+            // get width and height
+            BitmapFactory.Options bfo = new BitmapFactory.Options();
+            bfo.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, bfo);
+            mediaFile.setWidth(bfo.outWidth);
+            mediaFile.setHeight(bfo.outHeight);
+        }
+
+        if (!TextUtils.isEmpty(mimeType))
+            mediaFile.setMimeType(mimeType);
+        mediaFile.save();
+
+        mUploadingMedia.add(mediaFile.getMediaId());
+        mIdToPath.put(mediaFile.getMediaId(), path);
+
+        startMediaUploadService();
+    }
+
+    private void startMediaUploadService() {
+        getActivity().startService(new Intent(getActivity(), MediaUploadService.class));
+    }
+
+    private List<String> mUploadingMedia = new ArrayList<>();
+    private ArrayList<String> mGalleryIds = new ArrayList<>();
+    private Map<String, String> mIdToPath = new HashMap<>();
+
     private void handleMediaGalleryResult2(Intent data) {
-        // TODO
+        if (data != null) {
+            List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
+
+            if (selectedContent != null && selectedContent.size() > 0) {
+                for (MediaItem content : selectedContent) {
+                    Uri source = content.getSource();
+                    final String id = content.getTag();
+
+                    if (source != null && id != null) {
+                        final String sourceString = source.toString();
+
+                        if (sourceString.contains("wordpress.com")) {
+                            mGalleryIds.add(id);
+                        } else if (MediaUtils.isValidImage(sourceString)) {
+                            queueFileForUpload(sourceString);
+                            addMedia(source, null, getActivity());
+                        }
+                    }
+                }
+
+                // Notify of media upload
+                if (mUploadingMedia.size() > 0) {
+                    ToastUtils.showToast(getActivity(), "Gallery creation pending " + mUploadingMedia.size() + " uploads", ToastUtils.Duration.SHORT);
+                } else {
+                    createGallery();
+                }
+            }
+        }
     }
 
     private void handleMediaGalleryResult(Intent data) {
