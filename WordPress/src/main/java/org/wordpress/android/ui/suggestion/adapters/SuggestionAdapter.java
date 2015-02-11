@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Suggestion;
-import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
         Suggestion suggestion = getItem(position);
 
         if (suggestion != null) {
-            String avatarUrl = PhotonUtils.fixAvatar(suggestion.getImageUrl(), mAvatarSz);
+            String avatarUrl = GravatarUtils.fixGravatarUrl(suggestion.getImageUrl(), mAvatarSz);
             holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             holder.txtUserLogin.setText("@" + suggestion.getUserLogin());
             holder.txtDisplayName.setText(suggestion.getDisplayName());

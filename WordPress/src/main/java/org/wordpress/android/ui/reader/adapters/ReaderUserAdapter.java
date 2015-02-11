@@ -15,7 +15,7 @@ import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderInterfaces.DataLoadedListener;
-import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -118,7 +118,7 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
                 ReaderUrlList followedBlogUrls = ReaderBlogTable.getFollowedBlogUrls();
                 for (ReaderUser user: mUsers) {
                     user.isFollowed = user.hasUrl() && followedBlogUrls.contains(user.getUrl());
-                    user.setAvatarUrl(PhotonUtils.fixAvatar(user.getAvatarUrl(), mAvatarSz));
+                    user.setAvatarUrl(GravatarUtils.fixGravatarUrl(user.getAvatarUrl(), mAvatarSz));
                     user.getUrlDomain();
                 }
 
