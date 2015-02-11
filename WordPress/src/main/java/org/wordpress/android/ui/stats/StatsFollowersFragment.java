@@ -21,7 +21,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.GravatarUtils.DefaultImage;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -290,7 +289,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
 
             // Avatar
             holder.networkImageView.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx, DefaultImage.STATUS_404),
+                    GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx),
                     WPNetworkImageView.ImageType.AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 

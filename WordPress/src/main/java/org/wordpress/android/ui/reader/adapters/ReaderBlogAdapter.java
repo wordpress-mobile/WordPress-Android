@@ -21,7 +21,6 @@ import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.GravatarUtils.DefaultImage;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -176,7 +175,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     break;
             }
 
-            blogImageUrl = GravatarUtils.fixGravatarUrl(blogImageUrl, mBlavatarSz, DefaultImage.STATUS_404);
+            blogImageUrl = GravatarUtils.fixGravatarUrl(blogImageUrl, mBlavatarSz);
             blogHolder.imgBlog.setErrorImageResId(isWordPress ? R.drawable.app_icon : R.drawable.gravatar_placeholder);
             blogHolder.imgBlog.setImageUrl(blogImageUrl, WPNetworkImageView.ImageType.BLAVATAR);
 

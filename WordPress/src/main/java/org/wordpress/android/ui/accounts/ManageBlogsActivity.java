@@ -22,7 +22,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.GravatarUtils.DefaultImage;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -169,7 +168,7 @@ public class ManageBlogsActivity extends ActionBarActivity {
 
             String url = MapUtils.getMapStr(getItem(position), "url");
             holder.imgBlavatar.setImageUrl(
-                    GravatarUtils.blavatarFromUrl(url, mBlavatarSz, DefaultImage.STATUS_404),
+                    GravatarUtils.blavatarFromUrl(url, mBlavatarSz),
                     WPNetworkImageView.ImageType.BLAVATAR);
 
             convertView.setOnClickListener(new OnClickListener() {

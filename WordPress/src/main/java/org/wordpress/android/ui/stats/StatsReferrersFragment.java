@@ -13,7 +13,6 @@ import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.GravatarUtils.DefaultImage;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
@@ -202,7 +201,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             holder.networkImageView.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx, DefaultImage.STATUS_404),
+                    GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
                     WPNetworkImageView.ImageType.BLAVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 

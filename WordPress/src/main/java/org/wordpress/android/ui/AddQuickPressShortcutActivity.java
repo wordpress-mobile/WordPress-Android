@@ -29,7 +29,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.GravatarUtils.DefaultImage;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.List;
@@ -87,7 +86,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                 accountUsers[validBlogCtr] = curHash.get("username").toString();
                 accountIDs[validBlogCtr] = (Integer)curHash.get("id");
                 String url = curHash.get("url").toString();
-                blavatars[validBlogCtr] = GravatarUtils.blavatarFromUrl(url, 60, DefaultImage.STATUS_404);
+                blavatars[validBlogCtr] = GravatarUtils.blavatarFromUrl(url, 60);
                 accountNames.add(validBlogCtr, blogNames[i]);
                 validBlogCtr++;
             }
