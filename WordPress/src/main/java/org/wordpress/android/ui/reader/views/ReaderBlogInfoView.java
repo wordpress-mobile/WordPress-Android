@@ -154,7 +154,7 @@ public class ReaderBlogInfoView extends FrameLayout {
         ReaderBlogActions.updateFeedInfo(feedId, mInfoListener);
     }
 
-    ReaderActions.UpdateBlogInfoListener mInfoListener = new ReaderActions.UpdateBlogInfoListener() {
+    private final ReaderActions.UpdateBlogInfoListener mInfoListener = new ReaderActions.UpdateBlogInfoListener() {
         @Override
         public void onResult(ReaderBlog blogInfo) {
             if (blogInfo != null) {
