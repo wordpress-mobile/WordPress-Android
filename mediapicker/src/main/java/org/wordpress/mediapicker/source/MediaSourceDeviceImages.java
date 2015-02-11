@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Parcel;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -127,7 +128,7 @@ public class MediaSourceDeviceImages implements MediaSource {
                                 height,
                                 mediaItem.getRotation());
                 imageView.setTag(bgDownload);
-                bgDownload.execute(imageSource);
+                bgDownload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imageSource);
             } else {
                 MediaUtils.fadeInImage(imageView, imageBitmap);
             }

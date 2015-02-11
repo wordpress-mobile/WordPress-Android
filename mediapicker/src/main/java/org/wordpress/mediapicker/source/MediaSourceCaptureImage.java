@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Parcel;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -131,7 +132,7 @@ public class MediaSourceCaptureImage implements MediaSource, Camera.PictureCallb
                                 height,
                                 mediaItem.getRotation());
                 imageView.setTag(bgDownload);
-                bgDownload.execute(imageSource);
+                bgDownload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imageSource);
             } else {
                 MediaUtils.fadeInImage(imageView, imageBitmap);
             }
