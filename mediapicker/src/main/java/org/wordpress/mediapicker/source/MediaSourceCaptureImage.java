@@ -40,6 +40,8 @@ public class MediaSourceCaptureImage implements MediaSource, Camera.PictureCallb
     // Captured images
     private List<MediaItem> mCapturedImages = new ArrayList<>();
 
+    private OnMediaChange mMediaListener;
+
     public MediaSourceCaptureImage() {
         mMediaItem = new MediaItem();
         mIsCaptureReady = false;
@@ -49,6 +51,7 @@ public class MediaSourceCaptureImage implements MediaSource, Camera.PictureCallb
 
     @Override
     public void setListener(OnMediaChange listener) {
+        mMediaListener = listener;
     }
 
     @Override
@@ -185,6 +188,11 @@ public class MediaSourceCaptureImage implements MediaSource, Camera.PictureCallb
             MediaItem capturedItem = new MediaItem();
             capturedItem.setSource(url);
             mCapturedImages.add(capturedItem);
+            if (mMediaListener != null) {
+                List<MediaItem> newItem = new ArrayList<>();
+                newItem.add(capturedItem);
+                mMediaListener.onMediaAdded(this, newItem);
+            }
 
             mHasTakenPicture = true;
             mIsCaptureReady = false;
