@@ -1,10 +1,14 @@
 package org.wordpress.mediapicker;
 
 import android.app.Activity;
+import android.os.Parcel;
 import android.support.v4.app.FragmentActivity;
 import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -18,6 +22,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.FragmentTestUtil;
+import org.wordpress.mediapicker.source.MediaSource;
 
 import java.util.ArrayList;
 
@@ -99,9 +104,19 @@ public class MediaPickerFragmentTest {
     public void testMediaSelectionConfirmedFromSingleClick() {
         final MediaPickerFragment testFragment = new MediaPickerFragment();
         final MediaActivity testListener = new MediaActivity();
+        final ArrayList<MediaSource> testMediaSources = new ArrayList<>();
+        final MediaSourceAdapter mockAdapter = mock(MediaSourceAdapter.class);
+
+        when(mockAdapter.getItem(0)).thenReturn(new MediaItem());
+        when(mockAdapter.getCount()).thenReturn(1);
+        when(mockAdapter.getViewTypeCount()).thenReturn(1);
+        testFragment.setAdapter(mockAdapter);
+
+        testMediaSources.add(mMediaSourceOnMediaSelectedFalse);
+        testFragment.setListener(testListener);
+        testFragment.setMediaSources(testMediaSources);
 
         FragmentTestUtil.startFragment(testFragment);
-        testFragment.setListener(testListener);
         testFragment.onItemClick(null, null, 0, 0);
 
         Assert.assertTrue(tSelectionConfirmed);
@@ -126,6 +141,41 @@ public class MediaPickerFragmentTest {
 
         Assert.assertTrue(tSelectionConfirmed);
     }
+
+    private MediaSource mMediaSourceOnMediaSelectedFalse = new MediaSource() {
+        @Override
+        public void setListener(OnMediaChange listener) {
+        }
+
+        @Override
+        public int getCount() {
+            return 0;
+        }
+
+        @Override
+        public MediaItem getMedia(int position) {
+            return null;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent, LayoutInflater inflater, ImageLoader.ImageCache cache) {
+            return null;
+        }
+
+        @Override
+        public boolean onMediaItemSelected(MediaItem mediaItem, boolean selected) {
+            return false;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+        }
+    };
 
     /**
      * Dummy class for testing various media selection interface calls.
