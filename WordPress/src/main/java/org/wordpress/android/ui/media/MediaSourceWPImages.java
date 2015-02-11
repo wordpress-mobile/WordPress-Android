@@ -3,6 +3,7 @@ package org.wordpress.android.ui.media;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Parcel;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +17,15 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MediaSourceWPImages implements MediaSource {
-    private List<MediaItem> mMediaItems = new ArrayList<>();
+    private final List<MediaItem> mMediaItems = new ArrayList<>();
 
     public MediaSourceWPImages() {
         fetchImageData();
@@ -147,6 +152,43 @@ public class MediaSourceWPImages implements MediaSource {
 
                 mMediaItems.add(newContent);
             } while (cursor.moveToNext());
+
+            removeDeletedEntries();
         }
+    }
+
+    private void removeDeletedEntries() {
+        AsyncTask backgroundCheck = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] params) {
+                List<MediaItem> removed = new ArrayList<>();
+
+                synchronized (mMediaItems) {
+                    for (MediaItem mediaItem : mMediaItems) {
+                        try {
+                            URL mediaUrl = new URL(mediaItem.getSource().toString());
+                            HttpURLConnection connection = (HttpURLConnection) mediaUrl.openConnection();
+                            connection.setRequestMethod("GET");
+                            connection.connect();
+                            int responseCode = connection.getResponseCode();
+
+                            if (responseCode == 404) {
+                                removed.add(mediaItem);
+                            }
+                        } catch (MalformedURLException e) {
+                        } catch (IOException ioException) {
+                        }
+                    }
+
+                    for (MediaItem deletedItem : removed) {
+                        mMediaItems.remove(deletedItem);
+                    }
+                }
+
+                return null;
+            }
+        };
+
+        backgroundCheck.execute();
     }
 }
