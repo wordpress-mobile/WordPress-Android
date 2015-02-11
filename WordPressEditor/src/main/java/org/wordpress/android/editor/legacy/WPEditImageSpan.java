@@ -12,16 +12,20 @@ import org.wordpress.android.editor.R;
 import org.wordpress.android.util.helpers.WPImageSpan;
 
 public class WPEditImageSpan extends WPImageSpan {
-    private Context mContext;
+    private Bitmap mEditIconBitmap;
 
     public WPEditImageSpan(Context context, Bitmap b, Uri src) {
         super(context, b, src);
-        mContext = context;
+        init(context);
     }
 
     public WPEditImageSpan(Context context, int resId, Uri src) {
         super(context, resId, src);
-        mContext = context;
+        init(context);
+    }
+
+    private void init(Context context) {
+        mEditIconBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ab_icon_edit);
     }
 
     @Override
@@ -32,17 +36,17 @@ public class WPEditImageSpan extends WPImageSpan {
         if (!mMediaFile.isVideo()) {
             // Add 'edit' icon at bottom right of image
             int width = getSize(paint, text, start, end, paint.getFontMetricsInt());
+            float editIconXPosition = (x + width) - mEditIconBitmap.getWidth();
+            float editIconYPosition = bottom - mEditIconBitmap.getHeight();
 
-            Bitmap editIconBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ab_icon_edit);
-            float editIconXPosition = (x + width) - editIconBitmap.getWidth();
-            float editIconYPosition = bottom - editIconBitmap.getHeight();
             // Add a black background with a bit of alpha
             Paint bgPaint = new Paint();
             bgPaint.setColor(Color.argb(200, 0, 0, 0));
-            canvas.drawRect(editIconXPosition, editIconYPosition, editIconXPosition + editIconBitmap.getWidth(),
-                    editIconYPosition + editIconBitmap.getHeight(), bgPaint);
+            canvas.drawRect(editIconXPosition, editIconYPosition, editIconXPosition + mEditIconBitmap.getWidth(),
+                    editIconYPosition + mEditIconBitmap.getHeight(), bgPaint);
+
             // Add the icon to the canvas
-            canvas.drawBitmap(editIconBitmap, editIconXPosition, editIconYPosition, paint);
+            canvas.drawBitmap(mEditIconBitmap, editIconXPosition, editIconYPosition, paint);
         }
     }
 }
