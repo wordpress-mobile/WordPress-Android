@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MediaSourceWPImages implements MediaSource {
+    private final List<MediaItem> mVerifiedItems = new ArrayList<>();
     private final List<MediaItem> mMediaItems = new ArrayList<>();
 
     private OnMediaChange mListener;
@@ -69,7 +70,7 @@ public class MediaSourceWPImages implements MediaSource {
                         imageView.setImageResource(R.color.grey_medium);
                         MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(imageView);
                         imageView.setTag(bgDownload);
-                        bgDownload.execute(mediaItem.getPreviewSource());
+                        bgDownload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaItem.getPreviewSource());
                     } else {
                         org.wordpress.mediapicker.MediaUtils.fadeInImage(imageView, imageBitmap);
                     }
@@ -198,6 +199,6 @@ public class MediaSourceWPImages implements MediaSource {
         };
 
         List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
-        backgroundCheck.execute(existingItems);
+        backgroundCheck.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, existingItems);
     }
 }
