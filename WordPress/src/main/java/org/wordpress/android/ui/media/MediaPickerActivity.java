@@ -20,7 +20,6 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.mediapicker.MediaItem;
@@ -115,7 +114,7 @@ public class MediaPickerActivity extends ActionBarActivity
         if (mActionMode != null) {
             mActionMode.finish();
         } else {
-            finishWithResults(null);
+            finishWithResults(null, ACTIVITY_RESULT_CODE_MEDIA_SELECTED);
             super.onBackPressed();
         }
     }
@@ -156,7 +155,7 @@ public class MediaPickerActivity extends ActionBarActivity
     @Override
     public void onMediaSelectionConfirmed(ArrayList<MediaItem> mediaContent) {
         if (mediaContent != null) {
-            finishWithResults(mediaContent);
+            finishWithResults(mediaContent, ACTIVITY_RESULT_CODE_MEDIA_SELECTED);
         } else {
             finish();
         }
@@ -168,17 +167,12 @@ public class MediaPickerActivity extends ActionBarActivity
 
     @Override
     public void onGalleryCreated(ArrayList<MediaItem> mediaContent) {
-        finishWithGallery(mediaContent);
+        finishWithResults(mediaContent, ACTIVITY_RESULT_CODE_GALLERY_CREATED);
     }
 
     @Override
     public ImageLoader.ImageCache getImageCache() {
         return WordPress.getBitmapCache();
-    }
-
-    private boolean isMediaLibraryImage(MediaItem item) {
-        // TODO
-        return false;
     }
 
     /**
@@ -187,36 +181,10 @@ public class MediaPickerActivity extends ActionBarActivity
      * @param results
      *  list of selected media items
      */
-    private void finishWithResults(ArrayList<MediaItem> results) {
+    private void finishWithResults(ArrayList<MediaItem> results, int resultCode) {
         Intent result = new Intent();
         result.putParcelableArrayListExtra(SELECTED_CONTENT_RESULTS_KEY, results);
-        setResult(ACTIVITY_RESULT_CODE_MEDIA_SELECTED, result);
-        finish();
-    }
-
-    /**
-     * Finishes the activity after gallery creation has been requested by the user.
-     *
-     * @param results
-     *  list of selected media items
-     */
-    private void finishWithGallery(ArrayList<MediaItem> results) {
-        MediaGallery gallery = new MediaGallery();
-        ArrayList<String> galleryIds = new ArrayList<>();
-        ArrayList<MediaItem> images = new ArrayList<>();
-        for (MediaItem content : results) {
-            if (isMediaLibraryImage(content)) {
-                images.add(content);
-            }
-        }
-        gallery.setIds(galleryIds);
-
-        Intent result = new Intent();
-        if (images.size() > 0) {
-            result.putParcelableArrayListExtra(SELECTED_CONTENT_RESULTS_KEY, images);
-        }
-        result.putExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY, gallery);
-        setResult(ACTIVITY_RESULT_CODE_GALLERY_CREATED, result);
+        setResult(resultCode, result);
         finish();
     }
 
