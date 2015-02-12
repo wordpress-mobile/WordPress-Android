@@ -7,6 +7,7 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
@@ -17,11 +18,11 @@ import android.webkit.MimeTypeMap;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.editor.legacy.WPEditImageSpan;
-import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.Version;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.passcodelock.AppLockManager;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -295,9 +297,27 @@ public class MediaUtils {
         mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex("videoPressShortcode")));
         mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex("fileURL")));
         mediaFile.setVideo(isVideo);
+        // TODO: should not be saved here
         WordPress.wpDB.saveMediaFile(mediaFile);
         cursor.close();
         return mediaFile;
+    }
+
+    public static WPEditImageSpan createWPEditImageSpanLocal(Context context, MediaFile mediaFile) {
+        Uri imageUri = Uri.parse(mediaFile.getFilePath());
+        Bitmap thumbnailBitmap;
+        if (imageUri.toString().contains("video") && !MediaUtils.isInMediaStore(imageUri)) {
+            thumbnailBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.media_movieclip);
+        } else {
+            thumbnailBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(context, imageUri.getEncodedPath(),
+                    ImageUtils.getMaximumThumbnailWidthForEditor(context));
+            if (thumbnailBitmap == null) {
+                return null;
+            }
+        }
+        WPEditImageSpan imageSpan = new WPEditImageSpan(context, thumbnailBitmap, imageUri);
+        MediaUtils.setWPImageSpanWidth(context, imageUri, imageSpan);
+        return imageSpan;
     }
 
     public static WPEditImageSpan createWPEditImageSpan(Context context, MediaFile mediaFile) {
@@ -334,8 +354,9 @@ public class MediaUtils {
 
     public static void setWPImageSpanWidth(Context context, Uri curStream, WPImageSpan is) {
         MediaFile mediaFile = is.getMediaFile();
-        if (mediaFile != null)
+        if (mediaFile != null) {
             mediaFile.setWidth(getMinimumImageWidth(context, curStream));
+        }
     }
 
     public static boolean isInMediaStore(Uri mediaUri) {

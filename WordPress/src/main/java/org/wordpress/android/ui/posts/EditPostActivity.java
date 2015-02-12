@@ -3,10 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,24 +14,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.Html;
-import android.text.Layout;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.AlignmentSpan;
 import android.text.style.CharacterStyle;
-import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.Toast;
-
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -43,7 +31,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
-import org.wordpress.android.editor.legacy.WPEditImageSpan;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.MediaGallery;
@@ -56,9 +43,6 @@ import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
-import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
-import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -71,15 +55,12 @@ import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
-import java.io.Serializable;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Vector;
 
 public class EditPostActivity extends ActionBarActivity implements EditorFragmentListener {
     public static final String EXTRA_POSTID = "postId";
@@ -505,7 +486,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             switch (position) {
                 case 0:
                     mEditorFragment = (EditPostContentFragment) fragment;
-                    initContentEditor();
                     break;
                 case 1:
                     mEditPostSettingsFragment = (EditPostSettingsFragment) fragment;
@@ -596,7 +576,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
     }
 
-    private void initContentEditor() {
+    private void fillContentEditorFields() {
         Post post = getPost();
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent())) {
@@ -697,40 +677,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             }
 
             if (sharedUris != null) {
-                List<Serializable> params = new Vector<Serializable>();
-                params.add(sharedUris);
-                params.add(type);
-                new ProcessAttachmentsTask(this).execute(params);
-            }
-        }
-    }
-
-    private class ProcessAttachmentsTask extends AsyncTask<List<?>, Void, Void> {
-        private final WeakReference<Context> mWeakContext;
-        public ProcessAttachmentsTask(Context context) {
-            mWeakContext = new WeakReference<Context>(context);
-        }
-
-        protected void onPreExecute() {
-            Context context = mWeakContext.get();
-            if (context != null) {
-                Toast.makeText(context, R.string.loading, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        protected Void doInBackground(List<?>... args) {
-            ArrayList<?> multi_stream = (ArrayList<?>) args[0].get(0);
-            String type = (String) args[0].get(1);
-            for (Object streamUri : multi_stream) {
-                if (streamUri instanceof Uri) {
-                    Uri imageUri = (Uri) streamUri;
-                    if (type != null) {
-                        Context context = mWeakContext.get();
-                        if (context != null) {
-                            addMedia(imageUri);
-                        }
-                    }
+                for (Uri uri : sharedUris) {
+                    addMedia(uri);
                 }
             }
         }
@@ -931,32 +879,23 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             return false;
         }
 
-        Bitmap thumbnailBitmap;
         String mediaTitle;
         if (imageUri.toString().contains("video") && !MediaUtils.isInMediaStore(imageUri)) {
-            thumbnailBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.media_movieclip);
             mediaTitle = getResources().getString(R.string.video);
         } else {
-            thumbnailBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(this, imageUri.getEncodedPath(),
-                    getMaximumThumbnailWidthForEditor());
-            if (thumbnailBitmap == null) {
-                return false;
-            }
             mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
         }
 
-        WPEditImageSpan is = new WPEditImageSpan(this, thumbnailBitmap, imageUri);
-        MediaFile mediaFile = is.getMediaFile();
+        MediaFile mediaFile = new MediaFile();
         mediaFile.setPostID(getPost().getLocalTablePostId());
         mediaFile.setTitle(mediaTitle);
-        mediaFile.setFilePath(is.getImageSource().toString());
-        MediaUtils.setWPImageSpanWidth(this, imageUri, is);
+        mediaFile.setFilePath(imageUri.toString());
         if (imageUri.getEncodedPath() != null) {
             mediaFile.setVideo(imageUri.getEncodedPath().contains("video"));
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
 
-        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFileURL(), WordPress.imageLoader);
+        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
         return true;
     }
 
@@ -970,7 +909,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             switch (requestCode) {
                 case MediaGalleryActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
-                        handleMediaGalleryResult(data);
+                        // TODO: enable media gallery
+                        // handleMediaGalleryResult(data);
                     }
                     break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
@@ -1052,7 +992,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         String mediaId = ids.get(0);
         addExistingMediaToEditor(mediaId);
     }
-
+/*
     private void handleMediaGalleryResult(Intent data) {
         MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
 
@@ -1107,6 +1047,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         s.insert(selectionEnd + 1, "\n\n");
     }
+    */
 
     @Override
     public void onSettingsClicked() {
@@ -1116,5 +1057,10 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     @Override
     public void onAddMediaButtonClicked() {
         // TODO: launch MediaPicker
+    }
+
+    @Override
+    public void onEditorFragmentInitialized() {
+        fillContentEditorFields();
     }
 }

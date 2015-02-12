@@ -215,7 +215,7 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
         mStrikeToggleButton.setOnClickListener(mFormatBarButtonClickListener);
         mBquoteToggleButton.setOnClickListener(mFormatBarButtonClickListener);
         moreButton.setOnClickListener(mFormatBarButtonClickListener);
-
+        mEditorFragmentListener.onEditorFragmentInitialized();
         return rootView;
     }
 
@@ -987,8 +987,14 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
 
     @Override
     public void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader) {
-        // Create a WPImageSpan from the mediaFile
-        WPImageSpan imageSpan = MediaUtils.createWPEditImageSpan(getActivity(), mediaFile);
+        WPEditImageSpan imageSpan;
+        if (mediaFile.getFileURL() == null) {
+            // Create a WPImageSpan from a local media
+            imageSpan = MediaUtils.createWPEditImageSpanLocal(getActivity(), mediaFile);
+        } else {
+            // Create a WPImageSpan from a remote media
+            imageSpan = MediaUtils.createWPEditImageSpan(getActivity(), mediaFile);
+        }
 
         // Insert the WPImageSpan in the content field
         int selectionStart = mContentEditText.getSelectionStart();
