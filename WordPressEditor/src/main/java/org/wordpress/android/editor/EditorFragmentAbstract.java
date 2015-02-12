@@ -45,6 +45,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     }
 
     public interface EditorFragmentListener {
+        public void onEditorFragmentInitialized();
         public void onSettingsClicked();
         public void onAddMediaButtonClicked();
     }
