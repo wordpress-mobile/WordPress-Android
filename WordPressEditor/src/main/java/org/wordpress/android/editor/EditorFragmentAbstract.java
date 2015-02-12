@@ -49,11 +49,14 @@ public abstract class EditorFragmentAbstract extends Fragment {
     }
 
     /**
-     * Callbacks to communicate with the parent Activity
+     * Callbacks used to communicate with the parent Activity
      */
     public interface EditorFragmentListener {
         public void onEditorFragmentInitialized();
         public void onSettingsClicked();
         public void onAddMediaButtonClicked();
+        // TODO: remove saveMediaFile, it's currently needed for the legacy editor - we should have something like
+        // "EditorFragmentAbstract.getFeaturedImage()" returning the remote id
+        public void saveMediaFile(MediaFile mediaFile);
     }
 }
