@@ -320,12 +320,20 @@ public class MediaUtils {
         return imageSpan;
     }
 
-    public static WPEditImageSpan createWPEditImageSpan(Context context, MediaFile mediaFile) {
+    public static WPEditImageSpan createWPEditImageSpanRemote(Context context, MediaFile mediaFile) {
         int drawable = mediaFile.isVideo() ? R.drawable.media_movieclip : R.drawable.dashicon_format_image_big_grey;
         Uri uri = Uri.parse(mediaFile.getFileURL());
         WPEditImageSpan imageSpan = new WPEditImageSpan(context, drawable, uri);
         imageSpan.setMediaFile(mediaFile);
         return imageSpan;
+    }
+
+    public static WPEditImageSpan createWPEditImageSpan(Context context, MediaFile mediaFile) {
+        if (mediaFile.getFileURL() == null) {
+            return createWPEditImageSpanLocal(context, mediaFile);
+        } else {
+            return createWPEditImageSpanRemote(context, mediaFile);
+        }
     }
 
     // Calculate the minimun width between the blog setting and picture real width

@@ -948,14 +948,7 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
 
     @Override
     public void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader) {
-        WPEditImageSpan imageSpan;
-        if (mediaFile.getFileURL() == null) {
-            // Create a WPImageSpan from a local media
-            imageSpan = MediaUtils.createWPEditImageSpanLocal(getActivity(), mediaFile);
-        } else {
-            // Create a WPImageSpan from a remote media
-            imageSpan = MediaUtils.createWPEditImageSpan(getActivity(), mediaFile);
-        }
+        WPEditImageSpan imageSpan = MediaUtils.createWPEditImageSpan(getActivity(), mediaFile);
 
         // Insert the WPImageSpan in the content field
         int selectionStart = mContentEditText.getSelectionStart();

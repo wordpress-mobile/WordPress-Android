@@ -992,7 +992,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         String mediaId = ids.get(0);
         addExistingMediaToEditor(mediaId);
     }
-/*
+
+    /* TODO: re enable this
     private void handleMediaGalleryResult(Intent data) {
         MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
 
