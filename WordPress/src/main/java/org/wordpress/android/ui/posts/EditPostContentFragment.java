@@ -361,12 +361,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                         handleMediaGalleryResult(data);
                     }
                     break;
-                case MediaGalleryPickerActivity.REQUEST_CODE:
-                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
-                    if (resultCode == Activity.RESULT_OK) {
-                        handleMediaGalleryPickerResult(data);
-                    }
-                    break;
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     fetchMedia(imageUri);
@@ -899,21 +893,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         if (mediaGallery == null)
             intent.putExtra(MediaGalleryActivity.PARAMS_LAUNCH_PICKER, true);
         startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
-    }
-
-    private void startMediaGalleryAddActivity() {
-        Intent intent = new Intent(getActivity(), MediaGalleryPickerActivity.class);
-        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
-        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
-    }
-
-    private void handleMediaGalleryPickerResult(Intent data) {
-        ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
-        if (ids == null || ids.size() == 0)
-            return;
-
-        String mediaId = ids.get(0);
-        addExistingMediaToEditor(mediaId);
     }
 
     private void handleMediaGalleryResult(Intent data) {
