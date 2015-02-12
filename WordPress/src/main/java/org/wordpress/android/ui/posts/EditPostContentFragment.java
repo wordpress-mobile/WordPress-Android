@@ -1028,7 +1028,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
     private void createGallery() {
         if (mGalleryIds.size() > 0) {
-            ToastUtils.showToast(getActivity(), "Creating Gallery with " + mGalleryIds.size() + " items", ToastUtils.Duration.SHORT);
+            String galleryToast = getString(R.string.editor_toast_gallery_created_formatted, mGalleryIds.size());
+            ToastUtils.showToast(getActivity(), galleryToast, ToastUtils.Duration.SHORT);
 
             MediaGallery newGallery = new MediaGallery();
             newGallery.setIds(mGalleryIds);
