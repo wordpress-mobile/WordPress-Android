@@ -395,41 +395,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     fetchMedia(imageUri);
                     AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                     break;
-                case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
-                    if (resultCode == Activity.RESULT_OK) {
-                        try {
-                            File f = new File(mMediaCapturePath);
-                            Uri capturedImageUri = Uri.fromFile(f);
-                            if (!addMedia(capturedImageUri, null, getActivity()))
-                                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-                            getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                                    + Environment.getExternalStorageDirectory())));
-                            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
-                        } catch (RuntimeException e) {
-                            AppLog.e(T.POSTS, e);
-                        } catch (OutOfMemoryError e) {
-                            AppLog.e(T.POSTS, e);
-                        }
-                    } else if (mActivity != null && mQuickMediaType > -1 && TextUtils.isEmpty(mContentEditText.getText())) {
-                        // Quick Photo was cancelled, delete post and finish activity
-                        WordPress.wpDB.deletePost(mActivity.getPost());
-                        mActivity.finish();
-                    }
-                    break;
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
                     fetchMedia(videoUri);
-                    break;
-                case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
-                    if (resultCode == Activity.RESULT_OK) {
-                        Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(getActivity());
-                        if (!addMedia(capturedVideoUri, null, getActivity()))
-                            Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-                    } else if (mActivity != null && mQuickMediaType > -1 && TextUtils.isEmpty(mContentEditText.getText())) {
-                        // Quick Photo was cancelled, delete post and finish activity
-                        WordPress.wpDB.deletePost(mActivity.getPost());
-                        mActivity.finish();
-                    }
                     break;
                 case ACTIVITY_REQUEST_CODE_CREATE_LINK:
                     try {

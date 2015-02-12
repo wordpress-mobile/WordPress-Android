@@ -28,6 +28,7 @@ import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
 import org.wordpress.mediapicker.MediaPickerFragment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,6 +88,7 @@ public class MediaPickerActivity extends ActionBarActivity
     private SlidingTabLayout       mTabLayout;
     private WPViewPager            mViewPager;
     private ActionMode             mActionMode;
+    private String                 mCapturePath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +111,12 @@ public class MediaPickerActivity extends ActionBarActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.capture_image) {
+            MediaUtils.launchCamera(this, new MediaUtils.LaunchCameraCallback() {
+                @Override
+                public void onMediaCapturePathReady(String mediaCapturePath) {
+                    mCapturePath = mediaCapturePath;
+                }
+            });
             return true;
         } else if (item.getItemId() == R.id.capture_video) {
             MediaUtils.launchVideoCamera(this);
@@ -124,6 +132,17 @@ public class MediaPickerActivity extends ActionBarActivity
 
         switch (requestCode) {
             case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                File f = new File(mCapturePath);
+                Uri imageUri = Uri.fromFile(f);
+
+                if (MediaUtils.isValidImage(imageUri.toString())) {
+                    MediaItem newImage = new MediaItem();
+                    newImage.setSource(imageUri);
+                    newImage.setPreviewSource(imageUri);
+                    ArrayList<MediaItem> imageResult = new ArrayList<>();
+                    imageResult.add(newImage);
+                    finishWithResults(imageResult, ACTIVITY_RESULT_CODE_MEDIA_SELECTED);
+                }
                 break;
             case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                 Uri videoUri = data.getData();
