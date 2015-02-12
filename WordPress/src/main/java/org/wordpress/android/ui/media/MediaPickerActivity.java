@@ -145,7 +145,7 @@ public class MediaPickerActivity extends ActionBarActivity
                 }
                 break;
             case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
-                Uri videoUri = data.getData();
+                Uri videoUri = data != null ? data.getData() : null;
 
                 if (videoUri != null) {
                     MediaItem newVideo = new MediaItem();
