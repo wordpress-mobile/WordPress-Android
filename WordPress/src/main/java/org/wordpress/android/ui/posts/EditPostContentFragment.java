@@ -6,7 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -14,6 +16,7 @@ import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
@@ -64,7 +67,6 @@ import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.widgets.WPEditText;
@@ -605,6 +607,7 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
                         final CheckBox featuredInPostCheckBox = (CheckBox) alertView.findViewById(R.id.featuredInPost);
 
                         // show featured image checkboxes if theme support it
+                        // TODO: we should move that to EditPostActivity
                         if (WordPress.getCurrentBlog().isFeaturedImageCapable()) {
                             featuredCheckBox.setVisibility(View.VISIBLE);
                             featuredInPostCheckBox.setVisibility(View.VISIBLE);
@@ -712,12 +715,14 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
                                                         MediaFile postMediaFile = postImageSpan.getMediaFile();
                                                         postMediaFile.setFeatured(false);
                                                         postMediaFile.setFeaturedInPost(false);
+                                                        // TODO: we should move that to EditPostActivity.savePost()
                                                         WordPress.wpDB.saveMediaFile(postMediaFile);
                                                     }
                                                 }
                                             }
                                         }
                                         mediaFile.setFeaturedInPost(featuredInPostCheckBox.isChecked());
+                                        // TODO: we should move that to EditPostActivity.savePost()
                                         WordPress.wpDB.saveMediaFile(mediaFile);
                                     }
                                 }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -951,12 +956,16 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
 
                 final EditText editText = mContentEditText;
                 Editable s = editText.getText();
-                if (s == null) return;
+                if (s == null) {
+                    return;
+                }
                 WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
                 if (spans.length != 0) {
                     for (WPImageSpan is : spans) {
                         MediaFile mediaFile = is.getMediaFile();
-                        if (mediaFile == null) continue;
+                        if (mediaFile == null) {
+                            continue;
+                        }
                         if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded()) {
                             // replace the existing span with a new one with the correct image, re-add
                             // it to the same position.
@@ -998,26 +1007,28 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
         }
 
         Editable s = mContentEditText.getText();
-        if (s != null) {
-            WPImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
-            if (gallerySpans.length != 0) {
-                // insert a few line breaks if the cursor is already on an image
-                s.insert(selectionEnd, "\n\n");
-                selectionStart = selectionStart + 2;
-                selectionEnd = selectionEnd + 2;
-            } else if (column != 0) {
-                // insert one line break if the cursor is not at the first column
-                s.insert(selectionEnd, "\n");
-                selectionStart = selectionStart + 1;
-                selectionEnd = selectionEnd + 1;
-            }
-
-            s.insert(selectionStart, " ");
-            s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-            s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            s.insert(selectionEnd + 1, "\n\n");
+        if (s == null) {
+            return;
         }
+
+        WPImageSpan[] imageSpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
+        if (imageSpans.length != 0) {
+            // insert a few line breaks if the cursor is already on an image
+            s.insert(selectionEnd, "\n\n");
+            selectionStart = selectionStart + 2;
+            selectionEnd = selectionEnd + 2;
+        } else if (column != 0) {
+            // insert one line break if the cursor is not at the first column
+            s.insert(selectionEnd, "\n");
+            selectionStart = selectionStart + 1;
+            selectionEnd = selectionEnd + 1;
+        }
+
+        s.insert(selectionStart, " ");
+        s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+        s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.insert(selectionEnd + 1, "\n\n");
 
         // Fetch and replace the WPImageSpan if it's a network image and not cached yet
         loadWPImageSpanThumbnail(mediaFile, imageUrl, imageLoader);

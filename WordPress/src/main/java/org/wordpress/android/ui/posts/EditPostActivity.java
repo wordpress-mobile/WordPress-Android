@@ -705,7 +705,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
     }
 
-    private class ProcessAttachmentsTask extends AsyncTask<List<?>, Void, SpannableStringBuilder> {
+    private class ProcessAttachmentsTask extends AsyncTask<List<?>, Void, Void> {
         private final WeakReference<Context> mWeakContext;
         public ProcessAttachmentsTask(Context context) {
             mWeakContext = new WeakReference<Context>(context);
@@ -719,32 +719,19 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
 
         @Override
-        protected SpannableStringBuilder doInBackground(List<?>... args) {
+        protected Void doInBackground(List<?>... args) {
             ArrayList<?> multi_stream = (ArrayList<?>) args[0].get(0);
             String type = (String) args[0].get(1);
-            SpannableStringBuilder ssb = new SpannableStringBuilder();
             for (Object streamUri : multi_stream) {
                 if (streamUri instanceof Uri) {
                     Uri imageUri = (Uri) streamUri;
                     if (type != null) {
                         Context context = mWeakContext.get();
                         if (context != null) {
-                            addMedia(imageUri, ssb, context);
+                            addMedia(imageUri);
                         }
                     }
                 }
-            }
-            return ssb;
-        }
-
-        protected void onPostExecute(SpannableStringBuilder ssb) {
-            if (ssb != null && ssb.length() > 0) {
-                Editable postContentEditable = mEditorFragment.getContentEditText().getText();
-                if (postContentEditable != null) {
-                    postContentEditable.insert(0, ssb);
-                }
-            } else {
-                ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, Duration.SHORT);
             }
         }
     }
@@ -871,7 +858,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
             // It is a regular local image file
-            if (!addMedia(mediaUri, null, EditPostActivity.this)) {
+            if (!addMedia(mediaUri)) {
                 Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
                         .show();
             }
@@ -892,7 +879,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
         protected void onPostExecute(Uri newUri) {
             if (newUri != null) {
-                addMedia(newUri, null, EditPostActivity.this);
+                addMedia(newUri);
             } else {
                 Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image), Toast.LENGTH_SHORT)
                         .show();
@@ -935,13 +922,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         task.execute(apiArgs);
     }
 
-    private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb, Context context) {
-        if (context == null) {
-            return false;
-        }
-
-        if (ssb != null && !MediaUtils.isInMediaStore(imageUri)) {
-            imageUri = MediaUtils.downloadExternalMedia(context, imageUri);
+    private boolean addMedia(Uri imageUri) {
+        if (!MediaUtils.isInMediaStore(imageUri)) {
+            imageUri = MediaUtils.downloadExternalMedia(this, imageUri);
         }
 
         if (imageUri == null) {
@@ -951,80 +934,29 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         Bitmap thumbnailBitmap;
         String mediaTitle;
         if (imageUri.toString().contains("video") && !MediaUtils.isInMediaStore(imageUri)) {
-            thumbnailBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.media_movieclip);
+            thumbnailBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.media_movieclip);
             mediaTitle = getResources().getString(R.string.video);
         } else {
-            thumbnailBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(context, imageUri.getEncodedPath(),
+            thumbnailBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(this, imageUri.getEncodedPath(),
                     getMaximumThumbnailWidthForEditor());
             if (thumbnailBitmap == null) {
                 return false;
             }
-            mediaTitle = ImageUtils.getTitleForWPImageSpan(context, imageUri.getEncodedPath());
+            mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
         }
 
-        WPEditImageSpan is = new WPEditImageSpan(context, thumbnailBitmap, imageUri);
+        WPEditImageSpan is = new WPEditImageSpan(this, thumbnailBitmap, imageUri);
         MediaFile mediaFile = is.getMediaFile();
         mediaFile.setPostID(getPost().getLocalTablePostId());
         mediaFile.setTitle(mediaTitle);
         mediaFile.setFilePath(is.getImageSource().toString());
-        MediaUtils.setWPImageSpanWidth(context, imageUri, is);
+        MediaUtils.setWPImageSpanWidth(this, imageUri, is);
         if (imageUri.getEncodedPath() != null) {
             mediaFile.setVideo(imageUri.getEncodedPath().contains("video"));
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
 
-        // TODO: move the following back to the fragment (and remove WPImageSpan refs)
-        if (ssb != null) {
-            ssb.append(" ");
-            ssb.setSpan(is, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-            ssb.setSpan(as, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ssb.append("\n");
-        } else {
-            EditText contentEditText = mEditorFragment.getContentEditText();
-            int selectionStart = contentEditText.getSelectionStart();
-            int selectionEnd = contentEditText.getSelectionEnd();
-
-            if (selectionStart > selectionEnd) {
-                int temp = selectionEnd;
-                selectionEnd = selectionStart;
-                selectionStart = temp;
-            }
-
-            Editable s = contentEditText.getText();
-            if (s == null)
-                return false;
-
-            int line, column = 0;
-            if (contentEditText.getLayout() != null) {
-                line = contentEditText.getLayout().getLineForOffset(selectionStart);
-                column = contentEditText.getSelectionStart() - contentEditText.getLayout().getLineStart(line);
-            }
-
-            ImageSpan[] image_spans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
-            if (image_spans.length != 0) {
-                // insert a few line breaks if the cursor is already on an image
-                s.insert(selectionEnd, "\n\n");
-                selectionStart = selectionStart + 2;
-                selectionEnd = selectionEnd + 2;
-            } else if (column != 0) {
-                // insert one line break if the cursor is not at the first column
-                s.insert(selectionEnd, "\n");
-                selectionStart = selectionStart + 1;
-                selectionEnd = selectionEnd + 1;
-            }
-
-            s.insert(selectionStart, " ");
-            s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-            s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            s.insert(selectionEnd + 1, "\n\n");
-        }
-        // Show the soft keyboard after adding media
-        if (getSupportActionBar() != null && !getSupportActionBar().isShowing()) {
-            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
-                    InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        }
+        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFileURL(), WordPress.imageLoader);
         return true;
     }
 
@@ -1032,7 +964,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
+        if (data != null || ((requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
+                requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
             Bundle extras;
             switch (requestCode) {
                 case MediaGalleryActivity.REQUEST_CODE:
@@ -1056,7 +989,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         try {
                             File f = new File(mMediaCapturePath);
                             Uri capturedImageUri = Uri.fromFile(f);
-                            if (!addMedia(capturedImageUri, null, this)) {
+                            if (!addMedia(capturedImageUri)) {
                                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                             }
                             this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
@@ -1081,7 +1014,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
                         Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
-                        if (!addMedia(capturedVideoUri, null, this)) {
+                        if (!addMedia(capturedVideoUri)) {
                             ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                         }
                     } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
@@ -1112,8 +1045,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     private void handleMediaGalleryPickerResult(Intent data) {
         ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
-        if (ids == null || ids.size() == 0)
+        if (ids == null || ids.size() == 0) {
             return;
+        }
 
         String mediaId = ids.get(0);
         addExistingMediaToEditor(mediaId);
@@ -1123,8 +1057,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
 
         // if blank gallery returned, don't add to span
-        if (gallery == null || gallery.getIds().size() == 0)
+        if (gallery == null || gallery.getIds().size() == 0) {
             return;
+        }
 
         EditText contentEditText = mEditorFragment.getContentEditText();
         int selectionStart = contentEditText.getSelectionStart();
