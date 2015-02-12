@@ -32,6 +32,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
+import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
@@ -475,7 +476,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    return new EditPostContentFragment();
+                    // TODO: switch between legacy and new editor here (AB test?)
+                    return new LegacyEditorFragment();
                 case 1:
                     return new EditPostSettingsFragment();
                 default:
@@ -488,7 +490,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             switch (position) {
                 case 0:
-                    mEditorFragment = (EditPostContentFragment) fragment;
+                    mEditorFragment = (EditorFragmentAbstract) fragment;
                     break;
                 case 1:
                     mEditPostSettingsFragment = (EditPostSettingsFragment) fragment;
@@ -512,8 +514,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     }
 
     // Moved from EditPostContentFragment
-
-    public static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
     public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
     public static final String NEW_MEDIA_GALLERY_EXTRA_IDS = "NEW_MEDIA_GALLERY_EXTRA_IDS";
     public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
@@ -996,7 +996,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         finish();
                     }
                     break;
-                case ACTIVITY_REQUEST_CODE_CREATE_LINK:
+                // TODO: shouldn't be speacialized case in the activity
+                case  LegacyEditorFragment.ACTIVITY_REQUEST_CODE_CREATE_LINK:
                     extras = data.getExtras();
                     if (extras == null) {
                         return;

@@ -13,7 +13,7 @@
     android:layout_height="wrap_content"
     android:hint="@string/link_enter_url"
     android:imeOptions="actionNext" />
-  
+
   <EditText
     android:id="@+id/linkText"
     android:inputType="text"
@@ -29,7 +29,7 @@
     android:layout_below="@id/linkText"
     android:layout_alignParentRight="true"
     android:layout_marginLeft="@dimen/margin_medium"
-    android:text="@string/ok" />
+    android:text="@android:string/ok" />
 
   <Button
     android:id="@+id/cancel"
@@ -37,6 +37,6 @@
     android:layout_height="wrap_content"
     android:layout_alignTop="@id/ok"
     android:layout_toLeftOf="@id/ok"
-    android:text="@string/cancel" />
+    android:text="@android:string/cancel" />
 
 </RelativeLayout>

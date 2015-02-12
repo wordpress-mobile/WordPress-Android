@@ -112,7 +112,7 @@
             android:label="@string/add_new_category"
             android:theme="@style/WordPress.Dialog" />
         <activity
-            android:name=".ui.posts.EditLinkActivity"
+            android:name=".editor.legacy.EditLinkActivity"
             android:label="@string/create_a_link"
             android:theme="@style/WordPress.Dialog"
             android:windowSoftInputMode="stateVisible" />
