@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal">
+
+        <EditText
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title"
+            android:singleLine="true"/>
+
+        <EditText
+            android:id="@+id/caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/caption"
+            android:singleLine="true"
+            android:inputType="textCapSentences"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/horizontal_alignment"
+            android:textStyle="bold"
+            android:textColor="@color/image_options_label"/>
+
+        <Spinner
+            android:id="@+id/alignment_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/image_alignment"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/width"
+            android:textStyle="bold"
+            android:textColor="@color/image_options_label"/>
+
+        <SeekBar
+            android:layout_height="wrap_content"
+            android:id="@+id/imageWidth"
+            android:layout_width="match_parent"/>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:imeOptions="actionDone"
+            android:id="@+id/imageWidthText"
+            android:layout_gravity="left|center_vertical"
+            android:singleLine="true"
+            android:inputType="number"/>
+
+        <CheckBox
+            android:layout_gravity="left"
+            android:text="@string/featured"
+            android:id="@+id/featuredImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <CheckBox
+            android:layout_gravity="left"
+            android:text="@string/featured_in_post"
+            android:id="@+id/featuredInPost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+    </LinearLayout>
+</ScrollView>
