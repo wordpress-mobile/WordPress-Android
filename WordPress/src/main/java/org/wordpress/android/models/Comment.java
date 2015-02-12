@@ -10,7 +10,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class Comment {
@@ -204,7 +203,7 @@ public class Comment {
     public String getAvatarForDisplay(int avatarSize) {
         if (avatarForDisplay==null) {
             if (hasProfileImageUrl()) {
-                avatarForDisplay = PhotonUtils.fixAvatar(profileImageUrl, avatarSize);
+                avatarForDisplay = GravatarUtils.fixGravatarUrl(profileImageUrl, avatarSize);
             } else if (hasAuthorEmail()) {
                 avatarForDisplay = GravatarUtils.gravatarFromEmail(authorEmail, avatarSize);
             } else {

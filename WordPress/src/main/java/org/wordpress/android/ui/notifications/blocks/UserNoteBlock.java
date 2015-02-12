@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.notifications.NotificationsConstants;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -85,7 +85,7 @@ public class UserNoteBlock extends NoteBlock {
         }
 
         if (hasImageMediaItem()) {
-            String imageUrl = PhotonUtils.fixAvatar(getNoteMediaItem().optString("url", ""), getAvatarSize());
+            String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);

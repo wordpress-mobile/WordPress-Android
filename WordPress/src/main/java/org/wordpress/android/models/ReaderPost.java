@@ -8,9 +8,9 @@ import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.text.BreakIterator;
@@ -504,7 +504,7 @@ public class ReaderPost {
             if (!hasPostAvatar()) {
                 return "";
             }
-            avatarForDisplay = PhotonUtils.fixAvatar(postAvatar, avatarSize);
+            avatarForDisplay = GravatarUtils.fixGravatarUrl(postAvatar, avatarSize);
         }
         return avatarForDisplay;
     }

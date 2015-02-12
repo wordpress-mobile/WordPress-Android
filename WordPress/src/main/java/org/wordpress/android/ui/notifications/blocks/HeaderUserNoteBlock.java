@@ -11,7 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 // Note header, displayed at top of detail view
@@ -83,7 +83,7 @@ public class HeaderUserNoteBlock extends NoteBlock {
     }
 
     private String getAvatarUrl() {
-        return PhotonUtils.fixAvatar(JSONUtils.queryJSON(mHeaderArray, "[0].media[0].url", ""), mAvatarSize);
+        return GravatarUtils.fixGravatarUrl(JSONUtils.queryJSON(mHeaderArray, "[0].media[0].url", ""), mAvatarSize);
     }
 
     private String getUserUrl() {

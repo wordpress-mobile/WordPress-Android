@@ -11,7 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 // A user block with slightly different formatting for display in a comment detail
@@ -70,7 +70,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         }
 
         if (hasImageMediaItem()) {
-            String imageUrl = PhotonUtils.fixAvatar(getNoteMediaItem().optString("url", ""), getAvatarSize());
+            String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
