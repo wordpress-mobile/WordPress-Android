@@ -869,45 +869,6 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
         return width;
     }
 
-    private void addImageSpanOnSelection(WPEditImageSpan imageSpan) {
-        int selectionStart = mContentEditText.getSelectionStart();
-        int selectionEnd = mContentEditText.getSelectionEnd();
-
-        if (selectionStart > selectionEnd) {
-            int temp = selectionEnd;
-            selectionEnd = selectionStart;
-            selectionStart = temp;
-        }
-
-        int line, column = 0;
-        if (mContentEditText.getLayout() != null) {
-            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
-            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-        }
-
-        Editable s = mContentEditText.getText();
-        if (s != null) {
-            WPEditImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, WPEditImageSpan.class);
-            if (gallerySpans.length != 0) {
-                // insert a few line breaks if the cursor is already on an image
-                s.insert(selectionEnd, "\n\n");
-                selectionStart = selectionStart + 2;
-                selectionEnd = selectionEnd + 2;
-            } else if (column != 0) {
-                // insert one line break if the cursor is not at the first column
-                s.insert(selectionEnd, "\n");
-                selectionStart = selectionStart + 1;
-                selectionEnd = selectionEnd + 1;
-            }
-
-            s.insert(selectionStart, " ");
-            s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-            s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            s.insert(selectionEnd + 1, "\n\n");
-        }
-    }
-
     private void loadWPImageSpanThumbnail(MediaFile mediaFile, String imageURL, ImageLoader imageLoader) {
         if (mediaFile == null || imageURL == null) {
             return;
