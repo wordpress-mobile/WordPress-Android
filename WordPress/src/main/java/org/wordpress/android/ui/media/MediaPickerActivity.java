@@ -132,10 +132,10 @@ public class MediaPickerActivity extends ActionBarActivity
 
         switch (requestCode) {
             case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
-                File f = new File(mCapturePath);
-                Uri imageUri = Uri.fromFile(f);
+                File file = new File(mCapturePath);
+                Uri imageUri = Uri.fromFile(file);
 
-                if (MediaUtils.isValidImage(imageUri.toString())) {
+                if (file.exists() && MediaUtils.isValidImage(imageUri.toString())) {
                     MediaItem newImage = new MediaItem();
                     newImage.setSource(imageUri);
                     newImage.setPreviewSource(imageUri);
