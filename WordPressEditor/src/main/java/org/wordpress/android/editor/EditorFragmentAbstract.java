@@ -5,7 +5,6 @@ import android.app.Fragment;
 
 import com.android.volley.toolbox.ImageLoader;
 
-import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 public abstract class EditorFragmentAbstract extends Fragment {
@@ -17,6 +16,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void createLinkFromSelection(String link, String text);
 
     protected EditorFragmentListener mEditorFragmentListener;
+    protected boolean mFeaturedImageSupported;
 
     @Override
     public void onAttach(Activity activity) {
@@ -26,6 +26,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement EditorFragmentListener");
         }
+    }
+
+    public void setFeaturedImageSupported(boolean featuredImageSupported) {
+        mFeaturedImageSupported = featuredImageSupported;
     }
 
     /**
@@ -44,6 +48,9 @@ public abstract class EditorFragmentAbstract extends Fragment {
         // Not unused in the new editor
     }
 
+    /**
+     * Callbacks to communicate with the parent Activity
+     */
     public interface EditorFragmentListener {
         public void onEditorFragmentInitialized();
         public void onSettingsClicked();
