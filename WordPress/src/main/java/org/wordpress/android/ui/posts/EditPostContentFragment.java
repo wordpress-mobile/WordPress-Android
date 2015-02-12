@@ -256,6 +256,22 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         return rootView;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.registerReceiver(mReceiver, new IntentFilter(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION));
+    }
+
     private ArrayList<MediaSource> imageMediaSelectionSources() {
         ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
         imageMediaSources.add(new MediaSourceDeviceImages(getActivity().getContentResolver()));
@@ -984,22 +1000,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.unregisterReceiver(mReceiver);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION));
-    }
-
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -1011,7 +1011,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 if (mediaId != null && newId != null && mUploadingMedia.contains(mediaId)) {
                     mGalleryIds.add(newId);
 
-                    if (mUploadingMedia.size() == mIdToPath.size()) {
+                    if (mGalleryIds.size() == mIdToPath.size()) {
                         for (String id : mUploadingMedia) {
                             String newText = mContentEditText.getText().toString().replace("<img android-uri=\"" + mIdToPath.get(id) + "\" />", "");
                             mContentEditText.setText(newText);
