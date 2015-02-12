@@ -48,13 +48,14 @@ public class ReaderBlogActions {
         if (blogId != 0) {
             return followBlogById(blogId, isAskingToFollow, actionListener);
         }
+
         // then query server for the blog info so we can get the id
         ReaderActions.UpdateBlogInfoListener infoListener = new ReaderActions.UpdateBlogInfoListener() {
             @Override
             public void onResult(ReaderBlog blogInfo) {
                 if (blogInfo != null && blogInfo.blogId != 0) {
                     followBlogById(blogInfo.blogId, isAskingToFollow, actionListener);
-                } else if (actionListener != null) {
+                } else {
                     // blogInfo failed, try to follow as a feed
                     followFeedByUrl(blogUrl, isAskingToFollow, actionListener);
                 }
