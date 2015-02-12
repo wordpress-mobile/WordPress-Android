@@ -200,6 +200,17 @@ public class MediaUtils {
         fragment.startActivityForResult(Intent.createChooser(intent, fragment.getString(R.string.pick_photo)), RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
 
+    public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
+        String state = android.os.Environment.getExternalStorageState();
+        if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
+            showSDCardRequiredDialog(activity);
+        } else {
+            Intent intent = prepareLaunchCameraIntent(callback);
+            activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+            AppLockManager.getInstance().setExtendedTimeout();
+        }
+    }
+
     public static void launchCamera(Fragment fragment, LaunchCameraCallback callback) {
         String state = android.os.Environment.getExternalStorageState();
         if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
@@ -259,6 +270,12 @@ public class MediaUtils {
     public static void launchVideoCamera(Fragment fragment) {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        AppLockManager.getInstance().setExtendedTimeout();
+    }
+
+    public static void launchVideoCamera(Activity activity) {
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 

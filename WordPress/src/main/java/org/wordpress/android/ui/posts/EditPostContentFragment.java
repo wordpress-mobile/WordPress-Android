@@ -376,8 +376,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_MEDIA_SELECTED) {
                         handleMediaSelectionResult(data);
                     } else if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_GALLERY_CREATED) {
-                        // TODO: Remove other request code that deals with it
-                        handleMediaGalleryResult2(data);
+                        handleMediaGallery(data);
                     }
                     break;
                 case MediaGalleryActivity.REQUEST_CODE:
@@ -1003,7 +1002,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
             if (selectedContent != null && selectedContent.size() > 0) {
                 for (MediaItem selectedItem : selectedContent) {
-                    if (selectedItem.getSource().getHost() == null) {
+                    if (!selectedItem.getSource().toString().contains("wordpress.com")) {
                         // Local media
                         if (!addMedia(selectedItem.getSource(), null, getActivity())) {
                             Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
@@ -1129,7 +1128,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     private ArrayList<String> mGalleryIds = new ArrayList<>();
     private Map<String, String> mIdToPath = new HashMap<>();
 
-    private void handleMediaGalleryResult2(Intent data) {
+    private void handleMediaGallery(Intent data) {
         if (data != null) {
             List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
 

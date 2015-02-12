@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v7.app.ActionBar;
@@ -11,6 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
 import android.view.animation.Animation;
@@ -105,8 +107,39 @@ public class MediaPickerActivity extends ActionBarActivity
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.capture_image) {
+            return true;
+        } else if (item.getItemId() == R.id.capture_video) {
+            MediaUtils.launchVideoCamera(this);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                break;
+            case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                Uri videoUri = data.getData();
+
+                if (videoUri != null) {
+                    MediaItem newVideo = new MediaItem();
+                    newVideo.setSource(videoUri);
+                    newVideo.setPreviewSource(videoUri);
+                    ArrayList<MediaItem> videoResult = new ArrayList<>();
+                    videoResult.add(newVideo);
+                    finishWithResults(videoResult, ACTIVITY_RESULT_CODE_MEDIA_SELECTED);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

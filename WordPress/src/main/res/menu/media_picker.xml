@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/take_image"
+        android:id="@+id/capture_image"
         android:title="@string/take_photo"
         android:icon="@drawable/camera"
         android:enabled="true"
