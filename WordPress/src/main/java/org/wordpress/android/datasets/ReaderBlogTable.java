@@ -73,6 +73,19 @@ public class ReaderBlogTable {
         }
     }
 
+    public static ReaderBlog getFeedInfo(long feedId) {
+        String[] args = {Long.toString(feedId)};
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_blog_info WHERE feed_id=?", args);
+        try {
+            if (!cursor.moveToFirst()) {
+                return null;
+            }
+            return getBlogInfoFromCursor(cursor);
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
     public static long getBlogIdFromUrl(String url) {
         if (TextUtils.isEmpty(url)) {
             return 0;

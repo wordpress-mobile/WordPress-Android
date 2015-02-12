@@ -1278,7 +1278,13 @@ public class ReaderPostListFragment extends Fragment {
             return;
         }
 
-        final boolean isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mCurrentBlogId);
+        final boolean isAskingToFollow;
+        if (mCurrentFeedId != 0) {
+            isAskingToFollow = !ReaderBlogTable.isFollowedFeed(mCurrentFeedId);
+        } else {
+            isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mCurrentBlogId);
+        }
+
         ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {

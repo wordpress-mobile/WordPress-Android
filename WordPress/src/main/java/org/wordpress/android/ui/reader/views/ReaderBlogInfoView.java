@@ -53,7 +53,7 @@ public class ReaderBlogInfoView extends FrameLayout {
     }
     public void loadFeedInfo(long feedId, BlogInfoListener blogInfoListener) {
         mBlogInfoListener = blogInfoListener;
-        showBlogInfo(ReaderBlogTable.getBlogInfo(feedId), false);
+        showBlogInfo(ReaderBlogTable.getFeedInfo(feedId), false);
         requestFeedInfo(feedId);
     }
 
