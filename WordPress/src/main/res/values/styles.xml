@@ -15,6 +15,7 @@
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Dark.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
+        <item name="android:actionModeBackground">@color/color_primary_dark</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
         <item name="windowActionModeOverlay">true</item>
