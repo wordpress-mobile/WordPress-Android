@@ -415,6 +415,10 @@ public class ReaderPost {
         return !TextUtils.isEmpty(text);
     }
 
+    public boolean hasUrl() {
+        return !TextUtils.isEmpty(url);
+    }
+
     public boolean hasExcerpt() {
         return !TextUtils.isEmpty(excerpt);
     }

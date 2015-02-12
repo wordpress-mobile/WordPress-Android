@@ -211,6 +211,22 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        // browse & share require the post to have a URL (some feed-based posts don't have one)
+        boolean postHasUrl = hasPost() && mPost.hasUrl();
+        MenuItem mnuBrowse = menu.findItem(R.id.menu_browse);
+        if (mnuBrowse != null) {
+            mnuBrowse.setVisible(postHasUrl);
+        }
+        MenuItem mnuShare = menu.findItem(R.id.menu_share);
+        if (mnuShare != null) {
+            mnuShare.setVisible(postHasUrl);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_browse:
