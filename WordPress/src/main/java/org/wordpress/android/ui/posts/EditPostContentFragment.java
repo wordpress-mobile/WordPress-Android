@@ -1120,7 +1120,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
                 // Notify of media upload
                 if (mUploadingMedia.size() > 0) {
-                    ToastUtils.showToast(getActivity(), "Gallery creation pending " + mUploadingMedia.size() + " uploads", ToastUtils.Duration.SHORT);
+                    String galleryToast = getString(R.string.editor_toast_gallery_pending_formatted, mUploadingMedia.size());
+                    ToastUtils.showToast(getActivity(), galleryToast, ToastUtils.Duration.SHORT);
                 } else {
                     createGallery();
                 }

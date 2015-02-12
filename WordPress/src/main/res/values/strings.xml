@@ -738,6 +738,7 @@
     <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
     <string name="reader_toast_err_block_blog">Unable to block this blog</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
+    <string name="editor_toast_gallery_pending_formatted">Gallery creation pending %d uploads</string>
     <string name="editor_toast_gallery_created_formatted">Gallery created with %d items</string>
 
     <!-- empty list/grid text -->
