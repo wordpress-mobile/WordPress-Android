@@ -990,7 +990,9 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
         s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         s.insert(selectionEnd + 1, "\n\n");
 
-        // Fetch and replace the WPImageSpan if it's a network image and not cached yet
-        loadWPImageSpanThumbnail(mediaFile, imageUrl, imageLoader);
+        // Fetch and replace the WPImageSpan if it's a remote media
+        if (mediaFile.getFileURL() != null) {
+            loadWPImageSpanThumbnail(mediaFile, imageUrl, imageLoader);
+        }
     }
 }
