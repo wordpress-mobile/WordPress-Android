@@ -612,23 +612,38 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         protected void onPostExecute(Boolean result) {
             if (result) {
                 if (mPosts.size() == 0) {
+                    // full refresh if existing list was empty
                     mPosts.addAll(allPosts);
                     notifyDataSetChanged();
                 } else {
-                    // determine new & changed posts
-                    int index;
-                    int addIndex = 0;
-                    for (ReaderPost post : allPosts) {
-                        index = mPosts.indexOfPost(post);
-                        if (index == -1) {
-                            mPosts.add(addIndex, post);
-                            notifyItemInserted(addIndex);
-                            addIndex++;
-                        } else {
-                            addIndex = index + 1;
-                            if (!post.isSamePost(mPosts.get(index))) {
-                                mPosts.set(index, post);
-                                notifyItemChanged(index);
+                    // full refresh if any posts were removed (can happen after user unfollows a blog)
+                    boolean anyRemoved = false;
+                    for (ReaderPost post: mPosts) {
+                        if (allPosts.indexOfPost(post) == -1) {
+                            anyRemoved = true;
+                            mPosts.clear();
+                            mPosts.addAll(allPosts);
+                            notifyDataSetChanged();
+                            break;
+                        }
+                    }
+
+                    // do more optimal check for new/changed posts if none were removed
+                    if (!anyRemoved) {
+                        int addIndex = 0;
+                        int index;
+                        for (ReaderPost post : allPosts) {
+                            index = mPosts.indexOfPost(post);
+                            if (index == -1) {
+                                mPosts.add(addIndex, post);
+                                notifyItemInserted(addIndex);
+                                addIndex++;
+                            } else {
+                                addIndex = index + 1;
+                                if (!post.isSamePost(mPosts.get(index))) {
+                                    mPosts.set(index, post);
+                                    notifyItemChanged(index);
+                                }
                             }
                         }
                     }

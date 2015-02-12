@@ -28,20 +28,20 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
         return super.clone();
     }
 
-    private int indexOfPost(long blogId, long postId) {
-        for (int i = 0; i < size(); i++) {
-            if (this.get(i).blogId == blogId && this.get(i).postId == postId) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     public int indexOfPost(ReaderPost post) {
         if (post == null) {
             return -1;
         }
-        return indexOfPost(post.blogId, post.postId);
+        for (int i = 0; i < size(); i++) {
+            if (this.get(i).postId == post.postId) {
+                if (post.isExternal && post.feedId == this.get(i).feedId) {
+                    return i;
+                } else if (!post.isExternal && post.blogId == this.get(i).blogId) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     /*
@@ -53,7 +53,7 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
         }
 
         for (ReaderPost post: posts) {
-            int index = indexOfPost(post.blogId, post.postId);
+            int index = indexOfPost(post);
             if (index == -1 || !post.isSamePost(this.get(index))) {
                 return false;
             }

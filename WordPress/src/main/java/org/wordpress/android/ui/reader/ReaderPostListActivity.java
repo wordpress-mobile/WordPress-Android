@@ -23,7 +23,6 @@ import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnTagSelectedListener;
-import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -208,24 +207,20 @@ public class ReaderPostListActivity extends WPDrawerActivity
         final ReaderPostListFragment listFragment = getListFragment();
 
         switch (requestCode) {
-            // user just returned from the tag editor
+            // user just returned from the tags/subs activity
             case ReaderConstants.INTENT_READER_SUBS :
-                if (isResultOK && listFragment != null && data != null) {
-                    if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
-                        // reload tags if they were changed, and set the last tag added as the current one
-                        String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
-                        listFragment.doTagsChanged(lastAddedTag);
-                    }
-                    if (data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false)) {
-                        // update posts if any blog was followed or unfollowed and user is viewing "Blogs I Follow"
-                        if (listFragment.getPostListType().isTagType()
-                                && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
-                            listFragment.updatePostsWithTag(
-                                    listFragment.getCurrentTag(),
-                                    RequestDataAction.LOAD_NEWER,
-                                    ReaderTypes.RefreshType.AUTOMATIC);
-                        }
-                    }
+                // reload tags if they were changed, and set the last tag added as the current one
+                if (listFragment != null
+                        && data != null
+                        && data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
+                    String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
+                    listFragment.doTagsChanged(lastAddedTag);
+                }
+                // refresh posts if user is viewing "Blogs I Follow" to make sure changes are reflected
+                if (listFragment != null
+                        && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+                        && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
+                    listFragment.refreshPosts();
                 }
                 break;
 

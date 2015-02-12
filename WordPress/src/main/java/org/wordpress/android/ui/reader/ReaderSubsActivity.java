@@ -71,12 +71,10 @@ public class ReaderSubsActivity extends ActionBarActivity
     private SubsPageAdapter mPageAdapter;
 
     private boolean mTagsChanged;
-    private boolean mBlogsChanged;
     private String mLastAddedTagName;
     private boolean mHasPerformedUpdate;
 
     static final String KEY_TAGS_CHANGED   = "tags_changed";
-    static final String KEY_BLOGS_CHANGED  = "blogs_changed";
     static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
@@ -183,7 +181,6 @@ public class ReaderSubsActivity extends ActionBarActivity
     private void restoreState(Bundle state) {
         if (state != null) {
             mTagsChanged = state.getBoolean(KEY_TAGS_CHANGED);
-            mBlogsChanged = state.getBoolean(KEY_BLOGS_CHANGED);
             mLastAddedTagName = state.getString(KEY_LAST_ADDED_TAG_NAME);
             mHasPerformedUpdate = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
         }
@@ -214,7 +211,6 @@ public class ReaderSubsActivity extends ActionBarActivity
     @Override
     public void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
-        outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
         if (mLastAddedTagName != null) {
             outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
@@ -224,17 +220,12 @@ public class ReaderSubsActivity extends ActionBarActivity
 
     @Override
     public void onBackPressed() {
-        // let calling activity know if tags/blogs were added/removed
-        if (mTagsChanged || mBlogsChanged) {
+        // let calling activity know if tags were added/removed
+        if (mTagsChanged) {
             Bundle bundle = new Bundle();
-            if (mTagsChanged) {
-                bundle.putBoolean(KEY_TAGS_CHANGED, true);
-                if (mLastAddedTagName != null && ReaderTagTable.isFollowedTagName(mLastAddedTagName)) {
-                    bundle.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
-                }
-            }
-            if (mBlogsChanged) {
-                bundle.putBoolean(KEY_BLOGS_CHANGED, true);
+            bundle.putBoolean(KEY_TAGS_CHANGED, true);
+            if (mLastAddedTagName != null && ReaderTagTable.isFollowedTagName(mLastAddedTagName)) {
+                bundle.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
             }
             Intent intent = new Intent();
             intent.putExtras(bundle);
@@ -390,7 +381,6 @@ public class ReaderSubsActivity extends ActionBarActivity
                     mEditAdd.setText(null);
                     EditTextUtils.hideSoftInput(mEditAdd);
                     showInfoToast(getString(R.string.reader_label_followed_blog));
-                    mBlogsChanged = true;
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 } else {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
@@ -588,7 +578,6 @@ public class ReaderSubsActivity extends ActionBarActivity
                     getPageAdapter().refreshTagFragments();
                     break;
                 case ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED:
-                    mBlogsChanged = true;
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                     break;
                 case ReaderUpdateService.ACTION_RECOMMENDED_BLOGS_CHANGED:
