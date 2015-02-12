@@ -39,9 +39,10 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
         mImageCache = imageCache;
 
         for (MediaSource source : mMediaSources) {
-            source.setListener(this);
+            if (source != null) {
+                source.setListener(this);
+            }
         }
-
     }
 
     @Override
@@ -61,9 +62,9 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
 
     @Override
     public MediaItem getItem(int position) {
-        MediaSource sourceAtPositon = sourceAtPosition(position);
+        MediaSource sourceAtPosition = sourceAtPosition(position);
 
-        return sourceAtPositon != null ? sourceAtPositon.getMedia(position - offsetAtPosition(position)) : null;
+        return sourceAtPosition != null ? sourceAtPosition.getMedia(position - offsetAtPosition(position)) : null;
     }
 
     @Override
