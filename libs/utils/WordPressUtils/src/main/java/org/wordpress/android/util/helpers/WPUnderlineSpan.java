@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wordpress.android.widgets;
+package org.wordpress.android.util.helpers;
 
 import android.os.Parcel;
 import android.text.ParcelableSpan;

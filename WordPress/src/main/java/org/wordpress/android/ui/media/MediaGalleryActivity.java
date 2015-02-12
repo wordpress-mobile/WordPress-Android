@@ -15,7 +15,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.MediaGallery;
+import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.ui.media.MediaGallerySettingsFragment.MediaGallerySettingsCallback;
 import org.wordpress.android.util.DisplayUtils;
 

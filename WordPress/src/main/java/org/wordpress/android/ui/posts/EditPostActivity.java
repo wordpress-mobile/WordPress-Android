@@ -33,7 +33,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.helpers.MediaFile;
-import org.wordpress.android.models.MediaGallery;
+import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
@@ -48,7 +48,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.widgets.MediaGalleryImageSpan;
+import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.passcodelock.AppLockManager;
@@ -1043,7 +1043,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
 
         s.insert(selectionStart, " ");
-        MediaGalleryImageSpan is = new MediaGalleryImageSpan(this, gallery);
+        MediaGalleryImageSpan is = new MediaGalleryImageSpan(this, gallery, R.drawable.icon_mediagallery_placeholder);
         s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
         s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1064,5 +1064,10 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     @Override
     public void onEditorFragmentInitialized() {
         fillContentEditorFields();
+    }
+
+    @Override
+    public void saveMediaFile(MediaFile mediaFile) {
+        WordPress.wpDB.saveMediaFile(mediaFile);
     }
 }

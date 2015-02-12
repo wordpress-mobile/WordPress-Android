@@ -1,5 +1,5 @@
 
-package org.wordpress.android.models;
+package org.wordpress.android.util.helpers;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * It is used to uniquely determining the instance of the object, as it is
  * passed between post and media gallery editor.
  */
-public class MediaGallery implements Serializable{
+public class MediaGallery implements Serializable {
     private static final long serialVersionUID = 2359176987182027508L;
 
     private long uniqueId;
@@ -78,7 +78,9 @@ public class MediaGallery implements Serializable{
         this.ids = ids;
     }
 
-    /** An id to uniquely identify a media gallery object, so that the same object can be edited in the post editor **/
+    /**
+     * An id to uniquely identify a media gallery object, so that the same object can be edited in the post editor
+     */
     public long getUniqueId() {
         return uniqueId;
     }

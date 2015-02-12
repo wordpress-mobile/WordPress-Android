@@ -22,7 +22,6 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -49,7 +48,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -60,14 +58,13 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
-import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.widgets.WPEditText;
-import org.wordpress.android.widgets.MediaGalleryImageSpan;
-import org.wordpress.android.widgets.WPUnderlineSpan;
+import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
+import org.wordpress.android.util.helpers.WPUnderlineSpan;
 
 public class EditPostContentFragment extends EditorFragmentAbstract implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
@@ -284,22 +281,6 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
             }
         }
     }
-
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
-        if (DeviceUtils.getInstance().hasCamera(getActivity())) {
-            menu.add(0, 1, 0, getResources().getText(R.string.media_add_popup_capture_photo));
-        }
-        menu.add(0, 2, 0, getResources().getText(R.string.select_video));
-        if (DeviceUtils.getInstance().hasCamera(getActivity())) {
-            menu.add(0, 3, 0, getResources().getText(R.string.media_add_popup_capture_video));
-        }
-
-        menu.add(0, 4, 0, getResources().getText(R.string.media_add_new_media_gallery));
-        menu.add(0, 5, 0, getResources().getText(R.string.select_from_media_library));
-    }
-
-
 
     // TODO: call MediaPicker-Android instead (see EditPostActivity.onAddMediaButtonClicked)
     /*
@@ -546,6 +527,57 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
     /**
      * Rich Text Editor
      */
+    public void showImageSettings(final View alertView, final EditText titleText,
+                                  final EditText caption, final EditText imageWidthText,
+                                  final CheckBox featuredCheckBox, final CheckBox featuredInPostCheckBox,
+                                  final int maxWidth, final Spinner alignmentSpinner, final WPImageSpan imageSpan) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.image_settings));
+        builder.setView(alertView);
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String title = (titleText.getText() != null) ? titleText.getText().toString() : "";
+                MediaFile mediaFile = imageSpan.getMediaFile();
+                if (mediaFile == null) {
+                    return;
+                }
+                mediaFile.setTitle(title);
+                mediaFile.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
+                mediaFile.setWidth(getEditTextIntegerClamped(imageWidthText, 10, maxWidth));
+                String captionText = (caption.getText() != null) ? caption.getText().toString() : "";
+                mediaFile.setCaption(captionText);
+                mediaFile.setFeatured(featuredCheckBox.isChecked());
+                if (featuredCheckBox.isChecked()) {
+                    // remove featured flag from all other images
+                    Spannable contentSpannable = mContentEditText.getText();
+                    WPImageSpan[] imageSpans =
+                            contentSpannable.getSpans(0, contentSpannable.length(), WPImageSpan.class);
+                    if (imageSpans.length > 1) {
+                        for (WPImageSpan postImageSpan : imageSpans) {
+                            if (postImageSpan != imageSpan) {
+                                MediaFile postMediaFile = postImageSpan.getMediaFile();
+                                postMediaFile.setFeatured(false);
+                                postMediaFile.setFeaturedInPost(false);
+                                // TODO: remove this
+                                mEditorFragmentListener.saveMediaFile(postMediaFile);
+                            }
+                        }
+                    }
+                }
+                mediaFile.setFeaturedInPost(featuredInPostCheckBox.isChecked());
+                // TODO: remove this
+                mEditorFragmentListener.saveMediaFile(mediaFile);
+            }
+        });
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        alertDialog.show();
+    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -580,15 +612,16 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
                 int line = layout.getLineForVertical(y);
                 int charPosition = layout.getOffsetForHorizontal(line, x);
 
-                Spannable s = mContentEditText.getText();
-                if (s == null)
+                Spannable spannable = mContentEditText.getText();
+                if (spannable == null) {
                     return false;
+                }
                 // check if image span was tapped
-                WPImageSpan[] image_spans = s.getSpans(charPosition, charPosition, WPImageSpan.class);
+                WPImageSpan[] imageSpans = spannable.getSpans(charPosition, charPosition, WPImageSpan.class);
 
-                if (image_spans.length != 0) {
-                    final WPImageSpan span = image_spans[0];
-                    MediaFile mediaFile = span.getMediaFile();
+                if (imageSpans.length != 0) {
+                    final WPImageSpan imageSpan = imageSpans[0];
+                    MediaFile mediaFile = imageSpan.getMediaFile();
                     if (mediaFile == null)
                         return false;
                     if (!mediaFile.isVideo()) {
@@ -622,8 +655,9 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
 
                         final SeekBar seekBar = (SeekBar) alertView.findViewById(R.id.imageWidth);
                         final Spinner alignmentSpinner = (Spinner) alertView.findViewById(R.id.alignment_spinner);
-                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.alignment_array,
-                                android.R.layout.simple_spinner_item);
+                        ArrayAdapter<CharSequence> adapter =
+                                ArrayAdapter.createFromResource(getActivity(), R.array.alignment_array,
+                                        android.R.layout.simple_spinner_item);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         alignmentSpinner.setAdapter(adapter);
 
@@ -633,19 +667,21 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
                         caption.setText(mediaFile.getCaption());
                         featuredCheckBox.setChecked(mediaFile.isFeatured());
 
-                        if (mediaFile.isFeatured())
+                        if (mediaFile.isFeatured()) {
                             featuredInPostCheckBox.setVisibility(View.VISIBLE);
-                        else
+                        } else {
                             featuredInPostCheckBox.setVisibility(View.GONE);
+                        }
 
                         featuredInPostCheckBox.setChecked(mediaFile.isFeaturedInPost());
 
                         alignmentSpinner.setSelection(mediaFile.getHorizontalAlignment(), true);
 
-                        final int maxWidth = MediaUtils.getMinimumImageWidth(getActivity(), span.getImageSource());
+                        final int maxWidth = MediaUtils.getMinimumImageWidth(getActivity(), imageSpan.getImageSource());
                         seekBar.setMax(maxWidth / 10);
-                        if (mediaFile.getWidth() != 0)
+                        if (mediaFile.getWidth() != 0) {
                             seekBar.setProgress(mediaFile.getWidth() / 10);
+                        }
                         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                             @Override
                             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -679,7 +715,8 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
                                 seekBar.setProgress(width / 10);
                                 imageWidthText.setSelection((String.valueOf(width).length()));
 
-                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                InputMethodManager imm = (InputMethodManager) getActivity()
+                                        .getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm.hideSoftInputFromWindow(imageWidthText.getWindowToken(),
                                         InputMethodManager.RESULT_UNCHANGED_SHOWN);
 
@@ -687,46 +724,8 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
                             }
                         });
 
-                        AlertDialog ad = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.image_settings))
-                                .setView(alertView).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        String title = (titleText.getText() != null) ? titleText.getText().toString() : "";
-                                        MediaFile mediaFile = span.getMediaFile();
-                                        if (mediaFile == null)
-                                            return;
-                                        mediaFile.setTitle(title);
-                                        mediaFile.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
-                                        mediaFile.setWidth(getEditTextIntegerClamped(imageWidthText, 10, maxWidth));
-                                        String captionText = (caption.getText() != null) ? caption.getText().toString() : "";
-                                        mediaFile.setCaption(captionText);
-                                        mediaFile.setFeatured(featuredCheckBox.isChecked());
-                                        if (featuredCheckBox.isChecked()) {
-                                            // remove featured flag from all other images
-                                            Spannable contentSpannable = mContentEditText.getText();
-                                            WPImageSpan[] postImageSpans = contentSpannable.getSpans(0, contentSpannable.length(), WPImageSpan.class);
-                                            if (postImageSpans.length > 1) {
-                                                for (WPImageSpan postImageSpan : postImageSpans) {
-                                                    if (postImageSpan != span) {
-                                                        MediaFile postMediaFile = postImageSpan.getMediaFile();
-                                                        postMediaFile.setFeatured(false);
-                                                        postMediaFile.setFeaturedInPost(false);
-                                                        // TODO: we should move that to EditPostActivity.savePost()
-                                                        WordPress.wpDB.saveMediaFile(postMediaFile);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        mediaFile.setFeaturedInPost(featuredInPostCheckBox.isChecked());
-                                        // TODO: we should move that to EditPostActivity.savePost()
-                                        WordPress.wpDB.saveMediaFile(mediaFile);
-                                    }
-                                }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        dialog.dismiss();
-                                    }
-                                }).create();
-                        ad.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                        ad.show();
+                        showImageSettings(alertView, titleText, caption, imageWidthText, featuredCheckBox,
+                                featuredInPostCheckBox, maxWidth, alignmentSpinner, imageSpan);
                         mScrollDetected = false;
                         return true;
                     }
@@ -739,7 +738,7 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
                 }
 
                 // get media gallery spans
-                MediaGalleryImageSpan[] gallerySpans = s.getSpans(charPosition, charPosition, MediaGalleryImageSpan.class);
+                MediaGalleryImageSpan[] gallerySpans = spannable.getSpans(charPosition, charPosition, MediaGalleryImageSpan.class);
                 if (gallerySpans.length > 0) {
                     final MediaGalleryImageSpan gallerySpan = gallerySpans[0];
                     // TODO: send action to create media gallery
