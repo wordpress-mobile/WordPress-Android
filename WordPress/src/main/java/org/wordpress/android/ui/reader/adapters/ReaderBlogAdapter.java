@@ -67,24 +67,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         new LoadBlogsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    /*
-     * make sure the follow status of all blogs is accurate
-     */
-    public void checkFollowStatus() {
-        switch (getBlogType()) {
-            case FOLLOWED:
-                // followed blogs store their follow status in the local db, so refreshing from
-                // the local db will ensure the correct follow status is shown
-                refresh();
-                break;
-            case RECOMMENDED:
-                // recommended blogs check their follow status in getView(), so notifyDataSetChanged()
-                // will ensure the correct follow status is shown
-                notifyDataSetChanged();
-                break;
-        }
-    }
-
     private ReaderBlogType getBlogType() {
         return mBlogType;
     }

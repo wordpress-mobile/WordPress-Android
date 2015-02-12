@@ -110,14 +110,11 @@ public class ReaderBlogFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        // if the fragment is resuming from a paused state, reload the adapter to make sure
-        // the follow status of all blogs is accurate - this is necessary in case the user
-        // returned from an activity where the follow status may have been changed
+        // refresh the adapter if the fragment is resuming from a paused state so that changes
+        // made in another activity (such as follow state) are reflected here
         if (mWasPaused) {
             mWasPaused = false;
-            if (hasBlogAdapter()) {
-                getBlogAdapter().checkFollowStatus();
-            }
+            refresh();
         }
     }
 
