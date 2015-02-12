@@ -6,9 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -16,12 +14,10 @@ import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
-import android.text.style.ImageSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -606,9 +602,8 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
                         final CheckBox featuredCheckBox = (CheckBox) alertView.findViewById(R.id.featuredImage);
                         final CheckBox featuredInPostCheckBox = (CheckBox) alertView.findViewById(R.id.featuredInPost);
 
-                        // show featured image checkboxes if theme support it
-                        // TODO: we should move that to EditPostActivity
-                        if (WordPress.getCurrentBlog().isFeaturedImageCapable()) {
+                        // show featured image checkboxes if supported
+                        if (mFeaturedImageSupported) {
                             featuredCheckBox.setVisibility(View.VISIBLE);
                             featuredInPostCheckBox.setVisibility(View.VISIBLE);
                         }

@@ -578,6 +578,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     private void fillContentEditorFields() {
         Post post = getPost();
+        mEditorFragment.setFeaturedImageSupported(WordPress.getCurrentBlog().isFeaturedImageCapable());
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent())) {
                 if (post.isLocalDraft()) {
