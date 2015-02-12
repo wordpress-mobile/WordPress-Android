@@ -187,7 +187,6 @@ public class MediaPickerActivity extends ActionBarActivity
 
         mViewPager.setPagingEnabled(true);
         mActionMode = null;
-        mTabLayout.setVisibility(View.VISIBLE);
 
         animateTabAppear();
     }
@@ -334,8 +333,25 @@ public class MediaPickerActivity extends ActionBarActivity
     private void animateTabAppear() {
         TranslateAnimation tabAppearAnimation = new TranslateAnimation(0, 0, -mTabLayout.getHeight(), 0);
         tabAppearAnimation.setDuration(TAB_ANIMATION_DURATION_MS);
+        tabAppearAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mTabLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
         mTabLayout.startAnimation(tabAppearAnimation);
-        mViewPager.startAnimation(tabAppearAnimation);
+
+        TranslateAnimation pagerAppearAnimation = new TranslateAnimation(0, 0, 0, mTabLayout.getHeight());
+        pagerAppearAnimation.setDuration(TAB_ANIMATION_DURATION_MS);
+        mViewPager.startAnimation(pagerAppearAnimation);
     }
 
     /**
