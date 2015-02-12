@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,22 +33,24 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.helpers.MediaFile;
-import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
-import org.wordpress.android.ui.media.MediaUtils;
+import org.wordpress.android.ui.media.WordPressMediaUtils;
+import org.wordpress.android.ui.media.WordPressMediaUtils.RequestCode;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.helpers.MediaFile;
+import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.widgets.WPViewPager;
@@ -525,12 +528,50 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         return mMaxThumbWidth;
     }
 
+    private MediaFile createMediaFile(String blogId, final String mediaId) {
+        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
+
+        if (cursor == null || !cursor.moveToFirst()) {
+            if (cursor != null) {
+                cursor.close();
+            }
+            return null;
+        }
+
+        String url = cursor.getString(cursor.getColumnIndex("fileURL"));
+        if (url == null) {
+            cursor.close();
+            return null;
+        }
+
+        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
+        boolean isVideo = mimeType != null && mimeType.contains("video");
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setMediaId(mediaId);
+        mediaFile.setBlogId(blogId);
+        mediaFile.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
+        mediaFile.setDescription(cursor.getString(cursor.getColumnIndex("description")));
+        mediaFile.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+        mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
+        mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
+        mediaFile.setMimeType(mimeType);
+        mediaFile.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
+        mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
+        mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
+        mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex("videoPressShortcode")));
+        mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex("fileURL")));
+        mediaFile.setVideo(isVideo);
+        WordPress.wpDB.saveMediaFile(mediaFile);
+        cursor.close();
+        return mediaFile;
+    }
+
     private void addExistingMediaToEditor(String mediaId) {
         if (WordPress.getCurrentBlog() == null) {
             return;
         }
         String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        MediaFile mediaFile = MediaUtils.createMediaFile(blogId, mediaId);
+        MediaFile mediaFile = createMediaFile(blogId, mediaId);
         if (mediaFile == null) {
             return;
         }
@@ -577,8 +618,12 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     }
 
     private void fillContentEditorFields() {
-        Post post = getPost();
+        // Needed blog settings needed by the editor
         mEditorFragment.setFeaturedImageSupported(WordPress.getCurrentBlog().isFeaturedImageCapable());
+        mEditorFragment.setBlogSettingMaxImageWidth(WordPress.getCurrentBlog().getMaxImageWidth());
+
+        // Set post title and content
+        Post post = getPost();
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent())) {
                 if (post.isLocalDraft()) {
@@ -597,6 +642,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             mEditorFragment.setLocalDraft(post.isLocalDraft());
         }
 
+        // Special actions
         String action = getIntent().getAction();
         int quickMediaType = getIntent().getIntExtra("quick-media", -1);
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
@@ -610,7 +656,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             if (quickMediaType == Constants.QUICK_POST_PHOTO_CAMERA) {
                 launchCamera();
             } else if (quickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY) {
-                launchPictureLibrary();
+                WordPressMediaUtils.launchPictureLibrary(this);
             }
             if (post != null) {
                 post.setQuickPostType(Post.QUICK_MEDIA_TYPE_PHOTO);
@@ -618,29 +664,14 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
     }
 
-    private void launchPictureLibrary() {
-        MediaUtils.launchPictureLibrary(this);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-
     private void launchCamera() {
-        MediaUtils.launchCamera(this, new MediaUtils.LaunchCameraCallback() {
+        WordPressMediaUtils.launchCamera(this, new WordPressMediaUtils.LaunchCameraCallback() {
             @Override
             public void onMediaCapturePathReady(String mediaCapturePath) {
                 mMediaCapturePath = mediaCapturePath;
                 AppLockManager.getInstance().setExtendedTimeout();
             }
         });
-    }
-
-    private void launchVideoLibrary() {
-        MediaUtils.launchVideoLibrary(this);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-
-    private void launchVideoCamera() {
-        MediaUtils.launchVideoCamera(this);
-        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     protected void setPostContentFromShareAction() {
@@ -904,8 +935,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
-                requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
+        if (data != null || ((requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
+                requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
             Bundle extras;
             switch (requestCode) {
                 case MediaGalleryActivity.REQUEST_CODE:
@@ -920,12 +951,12 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         handleMediaGalleryPickerResult(data);
                     }
                     break;
-                case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+                case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     fetchMedia(imageUri);
                     AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                     break;
-                case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
                         try {
                             File f = new File(mMediaCapturePath);
@@ -948,11 +979,11 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         finish();
                     }
                     break;
-                case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
+                case RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
                     fetchMedia(videoUri);
                     break;
-                case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
                         Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
                         if (!addMedia(capturedVideoUri)) {

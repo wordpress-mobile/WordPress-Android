@@ -30,6 +30,7 @@ import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -283,7 +284,7 @@ public class MediaGridAdapter extends CursorAdapter {
             Uri uri = Uri.parse(thumbnailURL);
             String filepath = uri.getLastPathSegment();
 
-            int placeholderResId = MediaUtils.getPlaceholder(filepath);
+            int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
             imageView.setImageResource(0);
             imageView.setErrorImageResId(placeholderResId);
 

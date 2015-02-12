@@ -29,6 +29,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
+import org.wordpress.android.util.MediaUtils;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
@@ -161,7 +162,7 @@ public class MediaEditFragment extends Fragment {
     }
 
     private void disableEditingOnOldVersion() {
-        if (MediaUtils.isWordPressVersionWithMediaEditingCapabilities()) {
+        if (WordPressMediaUtils.isWordPressVersionWithMediaEditingCapabilities()) {
             return;
         }
 
@@ -343,7 +344,7 @@ public class MediaEditFragment extends Fragment {
             menu.findItem(R.id.menu_new_media).setVisible(false);
             menu.findItem(R.id.menu_search).setVisible(false);
 
-            if (!MediaUtils.isWordPressVersionWithMediaEditingCapabilities()) {
+            if (!WordPressMediaUtils.isWordPressVersionWithMediaEditingCapabilities()) {
                 menu.findItem(R.id.menu_save_media).setVisible(false);
             }
         }

@@ -6,7 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -52,7 +54,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.legacy.WPEditImageSpan;
-import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
@@ -60,11 +61,12 @@ import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.helpers.MediaFile;
-import org.wordpress.android.util.helpers.WPImageSpan;
-import org.wordpress.android.util.widgets.WPEditText;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
+import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.helpers.WPUnderlineSpan;
+import org.wordpress.android.util.widgets.WPEditText;
 
 public class EditPostContentFragment extends EditorFragmentAbstract implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
@@ -427,6 +429,39 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
         }
     };
 
+    private WPEditImageSpan createWPEditImageSpanLocal(Context context, MediaFile mediaFile) {
+        Uri imageUri = Uri.parse(mediaFile.getFilePath());
+        Bitmap thumbnailBitmap;
+        if (imageUri.toString().contains("video") && !MediaUtils.isInMediaStore(imageUri)) {
+            thumbnailBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.media_movieclip);
+        } else {
+            thumbnailBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(context, imageUri.getEncodedPath(),
+                    ImageUtils.getMaximumThumbnailWidthForEditor(context));
+            if (thumbnailBitmap == null) {
+                return null;
+            }
+        }
+        WPEditImageSpan imageSpan = new WPEditImageSpan(context, thumbnailBitmap, imageUri);
+        mediaFile.setWidth(MediaUtils.getMinimumImageWidth(context, imageUri, mBlogSettingMaxImageWidth));
+        return imageSpan;
+    }
+
+    private WPEditImageSpan createWPEditImageSpanRemote(Context context, MediaFile mediaFile) {
+        int drawable = mediaFile.isVideo() ? R.drawable.media_movieclip : R.drawable.dashicon_format_image_big_grey;
+        Uri uri = Uri.parse(mediaFile.getFileURL());
+        WPEditImageSpan imageSpan = new WPEditImageSpan(context, drawable, uri);
+        imageSpan.setMediaFile(mediaFile);
+        return imageSpan;
+    }
+
+    private WPEditImageSpan createWPEditImageSpan(Context context, MediaFile mediaFile) {
+        if (mediaFile.getFileURL() == null) {
+            return createWPEditImageSpanLocal(context, mediaFile);
+        } else {
+            return createWPEditImageSpanRemote(context, mediaFile);
+        }
+    }
+
     /**
      * Applies formatting to selected text, or marks the entry for a new text style
      * at the current cursor position
@@ -677,7 +712,8 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
 
                         alignmentSpinner.setSelection(mediaFile.getHorizontalAlignment(), true);
 
-                        final int maxWidth = MediaUtils.getMinimumImageWidth(getActivity(), imageSpan.getImageSource());
+                        final int maxWidth = MediaUtils.getMinimumImageWidth(getActivity(),
+                                imageSpan.getImageSource(), mBlogSettingMaxImageWidth);
                         seekBar.setMax(maxWidth / 10);
                         if (mediaFile.getWidth() != 0) {
                             seekBar.setProgress(mediaFile.getWidth() / 10);
@@ -693,8 +729,9 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
 
                             @Override
                             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                if (progress == 0)
+                                if (progress == 0) {
                                     progress = 1;
+                                }
                                 imageWidthText.setText(progress * 10 + "px");
                             }
                         });
@@ -942,7 +979,7 @@ public class EditPostContentFragment extends EditorFragmentAbstract implements T
 
     @Override
     public void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader) {
-        WPEditImageSpan imageSpan = MediaUtils.createWPEditImageSpan(getActivity(), mediaFile);
+        WPEditImageSpan imageSpan = createWPEditImageSpan(getActivity(), mediaFile);
 
         // Insert the WPImageSpan in the content field
         int selectionStart = mContentEditText.getSelectionStart();

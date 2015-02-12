@@ -23,11 +23,12 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.helpers.MediaFile;
+import org.wordpress.android.ui.media.WordPressMediaUtils.LaunchCameraCallback;
+import org.wordpress.android.ui.media.WordPressMediaUtils.RequestCode;
 import org.wordpress.android.ui.media.services.MediaUploadService;
-import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
-import org.wordpress.android.ui.media.MediaUtils.RequestCode;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
 import java.util.List;
@@ -110,7 +111,8 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO) {
+        if (data != null || requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
+                requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO) {
             String path;
 
             switch (requestCode) {
@@ -133,7 +135,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
                     }
                     break;
             }
-
         }
     }
 
@@ -235,24 +236,25 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
 
     public void launchCamera() {
         if (isAdded()) {
-            MediaUtils.launchCamera(getActivity(), this);
+            WordPressMediaUtils.launchCamera(getActivity(), this);
         }
     }
 
     public void launchVideoCamera() {
         if (isAdded()) {
-            MediaUtils.launchVideoCamera(getActivity());
-        }    }
+            WordPressMediaUtils.launchVideoCamera(getActivity());
+        }
+    }
 
     public void launchVideoLibrary() {
         if (isAdded()) {
-            MediaUtils.launchVideoLibrary(getActivity());
+            WordPressMediaUtils.launchVideoLibrary(getActivity());
         }
     }
 
     public void launchPictureLibrary() {
         if (isAdded()) {
-            MediaUtils.launchPictureLibrary(getActivity());
+            WordPressMediaUtils.launchPictureLibrary(getActivity());
         }
     }
 

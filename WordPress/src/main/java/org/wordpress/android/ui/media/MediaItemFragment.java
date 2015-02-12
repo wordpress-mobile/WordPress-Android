@@ -31,6 +31,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -314,7 +315,7 @@ public class MediaItemFragment extends Fragment {
         menu.findItem(R.id.menu_new_media).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
 
-        if (mIsLocal || !MediaUtils.isWordPressVersionWithMediaEditingCapabilities()) {
+        if (mIsLocal || !WordPressMediaUtils.isWordPressVersionWithMediaEditingCapabilities()) {
             menu.findItem(R.id.menu_edit_media).setVisible(false);
         }
     }
@@ -325,7 +326,7 @@ public class MediaItemFragment extends Fragment {
 
         if (itemId == R.id.menu_delete) {
             String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-            boolean canDeleteMedia = MediaUtils.canDeleteMedia(blogId, getMediaId());
+            boolean canDeleteMedia = WordPressMediaUtils.canDeleteMedia(blogId, getMediaId());
             if (!canDeleteMedia) {
                 Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
                 return true;

@@ -525,7 +525,7 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
 
         // Make sure there are no media in "uploading"
         for (String currentID : ids) {
-            if (MediaUtils.canDeleteMedia(blogId, currentID)) {
+            if (WordPressMediaUtils.canDeleteMedia(blogId, currentID)) {
                 sanitizedIds.add(currentID);
             }
         }
