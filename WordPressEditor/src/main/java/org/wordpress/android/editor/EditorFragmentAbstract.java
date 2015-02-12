@@ -17,6 +17,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
 
     protected EditorFragmentListener mEditorFragmentListener;
     protected boolean mFeaturedImageSupported;
+    protected String mBlogSettingMaxImageWidth;
 
     @Override
     public void onAttach(Activity activity) {
@@ -30,6 +31,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
 
     public void setFeaturedImageSupported(boolean featuredImageSupported) {
         mFeaturedImageSupported = featuredImageSupported;
+    }
+
+    public void setBlogSettingMaxImageWidth(String blogSettingMaxImageWidth) {
+        mBlogSettingMaxImageWidth = blogSettingMaxImageWidth;
     }
 
     /**
