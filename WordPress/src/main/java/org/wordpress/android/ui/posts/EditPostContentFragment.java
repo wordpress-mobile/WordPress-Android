@@ -367,20 +367,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         }
     }
 
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
-        if (DeviceUtils.getInstance().hasCamera(getActivity())) {
-            menu.add(0, 1, 0, getResources().getText(R.string.media_add_popup_capture_photo));
-        }
-        menu.add(0, 2, 0, getResources().getText(R.string.select_video));
-        if (DeviceUtils.getInstance().hasCamera(getActivity())) {
-            menu.add(0, 3, 0, getResources().getText(R.string.media_add_popup_capture_video));
-        }
-
-        menu.add(0, 4, 0, getResources().getText(R.string.media_add_new_media_gallery));
-        menu.add(0, 5, 0, getResources().getText(R.string.select_from_media_library));
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -472,31 +458,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     break;
             }
         }
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case 0:
-                launchPictureLibrary();
-                return true;
-            case 1:
-                launchCamera();
-                return true;
-            case 2:
-                launchVideoLibrary();
-                return true;
-            case 3:
-                launchVideoCamera();
-                return true;
-            case 4:
-                startMediaGalleryActivity(null);
-                return true;
-            case 5:
-                startMediaGalleryAddActivity();
-                return true;
-        }
-        return false;
     }
 
     protected void setPostContentFromShareAction() {
