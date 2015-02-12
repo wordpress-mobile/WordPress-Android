@@ -1551,8 +1551,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                         }
 
                         createGallery();
-                        mUploadingMedia.clear();
-                        mMediaIdToPath.clear();
                     }
                 }
             }
@@ -1697,7 +1695,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
             mContentEditText.setText(text);
             mGalleryIds.clear();
-
             mGalleryIds = null;
             mUploadingMedia = null;
             mMediaIdToPath = null;
