@@ -248,6 +248,10 @@ public class Note extends Syncable {
                     break;
                 }
             }
+
+            if (mActions == null) {
+                mActions = new JSONObject();
+            }
         }
 
         return mActions;
