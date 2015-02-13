@@ -2,18 +2,31 @@ package org.wordpress.android.ui.reader.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /*
  * WebView descendant used by ReaderPostDetailFragment - handles
@@ -43,11 +56,14 @@ public class ReaderWebView extends WebView {
     private ReaderWebViewPageFinishedListener mPageFinishedListener;
 
     private boolean mIsDestroyed;
+    private static String mToken;
 
     public ReaderWebView(Context context) {
         super(context);
-        init();
+        init(context);
     }
+
+
 
     @Override
     public void destroy() {
@@ -61,17 +77,20 @@ public class ReaderWebView extends WebView {
 
     public ReaderWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public ReaderWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init();
+        init(context);
     }
 
     @SuppressLint("NewApi")
-    private void init() {
+    private void init(Context context) {
         if (!isInEditMode()) {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+            mToken = settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, "");
+
             mReaderChromeClient = new ReaderWebChromeClient(this);
             this.setWebChromeClient(mReaderChromeClient);
             this.setWebViewClient(new ReaderWebViewClient(this));
@@ -159,6 +178,7 @@ public class ReaderWebView extends WebView {
 
     private static class ReaderWebViewClient extends WebViewClient {
         private final ReaderWebView mReaderWebView;
+        private final DefaultHttpClient mClient = new DefaultHttpClient();
 
         ReaderWebViewClient(ReaderWebView readerWebView) {
             if (readerWebView == null) {
@@ -188,6 +208,33 @@ public class ReaderWebView extends WebView {
                 return false;
             }
         }
+
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+            // Intercept requests and add the WP.com authorization header
+            if (!TextUtils.isEmpty(mToken) && isImageUrl(url)) {
+                HttpGet httpGet = new HttpGet(url);
+                httpGet.setHeader("Authorization", "Bearer " + mToken);
+                try {
+                    HttpResponse httpResponse = mClient.execute(httpGet);
+                    InputStream responseInputStream = httpResponse.getEntity().getContent();
+                    return new WebResourceResponse(httpResponse.getEntity().getContentType().toString(), "UTF-8", responseInputStream);
+                } catch (IOException e) {
+                    AppLog.e(AppLog.T.READER, "Invalid reader detail request: " + e.getMessage());
+                }
+            }
+
+            return super.shouldInterceptRequest(view, url);
+        }
+    }
+
+    private static boolean isImageUrl(String url) {
+        if (TextUtils.isEmpty(url)) return false;
+
+        String lowerCaseUrl = url.toLowerCase();
+
+        return lowerCaseUrl.endsWith("jpg") || url.endsWith("jpeg") || url.endsWith("gif") ||
+                url.endsWith("png");
     }
 
     private static class ReaderWebChromeClient extends WebChromeClient {

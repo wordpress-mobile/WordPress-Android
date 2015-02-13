@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 
@@ -57,9 +58,7 @@ public class AuthErrorDialogFragment extends DialogFragment {
             b.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent authIntent = new Intent(getActivity(), WPComLoginActivity.class);
-                    authIntent.putExtra("wpcom", true);
-                    authIntent.putExtra("auth-only", true);
+                    Intent authIntent = new Intent(getActivity(), SignInActivity.class);
                     getActivity().startActivityForResult(authIntent, WPComLoginActivity.REQUEST_CODE);
                 }
             });

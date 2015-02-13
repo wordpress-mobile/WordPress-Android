@@ -24,7 +24,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
-import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
@@ -327,10 +326,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
         // in case they changed their avatar, name, etc. since last time
         AppLog.d(T.READER, "reader post list > updating current user");
         ReaderUserActions.updateCurrentUser(null);
-
-        // update cookies so that we can show authenticated images in WebViews
-        AppLog.d(T.READER, "reader post list > updating cookies");
-        ReaderAuthActions.updateCookies(ReaderPostListActivity.this);
     }
 
     /*

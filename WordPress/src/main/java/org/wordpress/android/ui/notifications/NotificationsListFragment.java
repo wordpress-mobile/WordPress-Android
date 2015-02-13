@@ -32,7 +32,6 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -48,7 +47,6 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
     private static final int NOTE_DETAIL_REQUEST_CODE = 0;
 
-    private static final String KEY_INITIAL_UPDATE = "initialUpdate";
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
 
     private SwipeToRefreshHelper mFauxSwipeToRefreshHelper;
@@ -58,7 +56,6 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     private TextView mEmptyTextView;
 
     private int mRestoredScrollPosition;
-    private boolean mHasPerformedInitialUpdate;
 
     private Bucket<Note> mBucket;
 
@@ -118,7 +115,6 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         initSwipeToRefreshHelper();
 
         if (savedInstanceState != null) {
-            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE, false);
             setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
         }
     }
@@ -150,15 +146,6 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
             mBucket.removeListener(this);
         }
         super.onPause();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (isAdded() && !mHasPerformedInitialUpdate) {
-            mHasPerformedInitialUpdate = true;
-            ReaderAuthActions.updateCookies(getActivity());
-        }
     }
 
     @Override
@@ -287,8 +274,6 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
-
-        outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
 
         // Save list view scroll position
         outState.putInt(KEY_LIST_SCROLL_POSITION, getScrollPosition());
