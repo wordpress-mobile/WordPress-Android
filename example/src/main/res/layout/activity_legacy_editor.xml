@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/postEditor"
-        android:name="org.wordpress.android.editor.EditorFragment"
+        android:name="org.wordpress.android.editor.LegacyEditorFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

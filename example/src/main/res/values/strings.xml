@@ -3,4 +3,11 @@
     <string name="title_activity_example">ExampleActivity</string>
     <string name="starting_legacy_editor">Starting legacy editor</string>
     <string name="starting_new_editor">Starting new editor</string>
+
+    <string name="example_post_1_title">Post 1</string>
+    <string name="example_post_1_content">Post 1 Content:\nBest post ever!</string>
+    <string name="example_post_2_title">Post 2</string>
+    <string name="example_post_2_content">
+        <![CDATA[<p>Post 2 Content</p><blockquote>Quoted text</blockquote><br/>]]>
+    </string>
 </resources>
