@@ -454,6 +454,8 @@
     <string name="stats_followers_email_selector">Email</string>
     <string name="stats_followers_total_wpcom">Total WordPress.com Followers: %1$s</string>
     <string name="stats_followers_total_email">Total Email Followers: %1$s</string>
+    <string name="stats_followers_total_wpcom_paged">Showing %1$d - %2$d of %3$s WordPress.com Followers</string>
+    <string name="stats_followers_total_email_paged">Showing %1$d - %2$d of %3$s Email Followers</string>
     <string name="stats_followers_seconds_ago">seconds ago</string>
     <string name="stats_followers_a_minute_ago">a minute ago</string>
     <string name="stats_followers_minutes">%1$d minutes</string>
