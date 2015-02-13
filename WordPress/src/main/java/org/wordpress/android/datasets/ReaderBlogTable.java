@@ -96,10 +96,9 @@ public class ReaderBlogTable {
         if (TextUtils.isEmpty(url)) {
             return 0;
         }
-        String normUrl = UrlUtils.normalizeUrl(url);
-        String[] args = {normUrl, normUrl};
+        String[] args = {UrlUtils.normalizeUrl(url)};
         return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT blog_id FROM tbl_blog_info WHERE feed_url=? OR blog_url=?",
+                "SELECT blog_id FROM tbl_blog_info WHERE blog_url=?",
                 args);
     }
 
@@ -107,10 +106,9 @@ public class ReaderBlogTable {
         if (TextUtils.isEmpty(url)) {
             return 0;
         }
-        String normUrl = UrlUtils.normalizeUrl(url);
-        String[] args = {normUrl, normUrl};
+        String[] args = {UrlUtils.normalizeUrl(url)};
         return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT feed_id FROM tbl_blog_info WHERE feed_url=? OR blog_url=?",
+                "SELECT feed_id FROM tbl_blog_info WHERE feed_url=?",
                 args);
     }
 
