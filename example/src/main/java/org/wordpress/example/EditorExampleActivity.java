@@ -46,7 +46,7 @@ public class EditorExampleActivity extends ActionBarActivity implements EditorFr
     }
 
     @Override
-    public void onAddMediaButtonClicked() {
+    public void onAddMediaClicked() {
         // TODO
     }
 

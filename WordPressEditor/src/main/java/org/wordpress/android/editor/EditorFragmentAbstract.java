@@ -13,7 +13,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract CharSequence getTitle();
     public abstract CharSequence getContent();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
-    public abstract void createLinkFromSelection(String link, String text);
 
     protected EditorFragmentListener mEditorFragmentListener;
     protected boolean mFeaturedImageSupported;
@@ -59,7 +58,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public interface EditorFragmentListener {
         public void onEditorFragmentInitialized();
         public void onSettingsClicked();
-        public void onAddMediaButtonClicked();
+        public void onAddMediaClicked();
         // TODO: remove saveMediaFile, it's currently needed for the legacy editor - we should have something like
         // "EditorFragmentAbstract.getFeaturedImage()" returning the remote id
         public void saveMediaFile(MediaFile mediaFile);

@@ -282,7 +282,22 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         }
     }
 
-    // TODO: call MediaPicker-Android instead (see EditPostActivity.onAddMediaButtonClicked)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LegacyEditorFragment.ACTIVITY_REQUEST_CODE_CREATE_LINK) {
+            Bundle extras = data.getExtras();
+            if (extras == null) {
+                return;
+            }
+            String linkURL = extras.getString("linkURL");
+            String linkText = extras.getString("linkText");
+            createLinkFromSelection(linkURL, linkText);
+        }
+    }
+
+    // TODO: call MediaPicker-Android instead (see EditPostActivity.onAddMediaClicked)
     /*
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -320,7 +335,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         mFullViewBottom = mRootView.getBottom();
     }
 
-    public void createLinkFromSelection(String linkURL, String linkText) {
+    private void createLinkFromSelection(String linkURL, String linkText) {
         try {
             if (linkURL != null && !linkURL.equals("http://") && !linkURL.equals("")) {
                 if (mSelectionStart > mSelectionEnd) {
@@ -328,40 +343,42 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                     mSelectionEnd = mSelectionStart;
                     mSelectionStart = temp;
                 }
-                Editable str = mContentEditText.getText();
-                if (str == null)
+                Editable editable = mContentEditText.getText();
+                if (editable == null) {
                     return;
+                }
                 if (mIsLocalDraft) {
                     if (linkText == null) {
                         if (mSelectionStart < mSelectionEnd) {
-                            str.delete(mSelectionStart, mSelectionEnd);
+                            editable.delete(mSelectionStart, mSelectionEnd);
                         }
-                        str.insert(mSelectionStart, linkURL);
-                        str.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkURL.length(),
+                        editable.insert(mSelectionStart, linkURL);
+                        editable.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkURL.length(),
                                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         mContentEditText.setSelection(mSelectionStart + linkURL.length());
                     } else {
                         if (mSelectionStart < mSelectionEnd) {
-                            str.delete(mSelectionStart, mSelectionEnd);
+                            editable.delete(mSelectionStart, mSelectionEnd);
                         }
-                        str.insert(mSelectionStart, linkText);
-                        str.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkText.length(),
+                        editable.insert(mSelectionStart, linkText);
+                        editable.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkText.length(),
                                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         mContentEditText.setSelection(mSelectionStart + linkText.length());
                     }
                 } else {
                     if (linkText == null) {
-                        if (mSelectionStart < mSelectionEnd)
-                            str.delete(mSelectionStart, mSelectionEnd);
+                        if (mSelectionStart < mSelectionEnd) {
+                            editable.delete(mSelectionStart, mSelectionEnd);
+                        }
                         String urlHTML = "<a href=\"" + linkURL + "\">" + linkURL + "</a>";
-                        str.insert(mSelectionStart, urlHTML);
+                        editable.insert(mSelectionStart, urlHTML);
                         mContentEditText.setSelection(mSelectionStart + urlHTML.length());
                     } else {
                         if (mSelectionStart < mSelectionEnd) {
-                            str.delete(mSelectionStart, mSelectionEnd);
+                            editable.delete(mSelectionStart, mSelectionEnd);
                         }
                         String urlHTML = "<a href=\"" + linkURL + "\">" + linkText + "</a>";
-                        str.insert(mSelectionStart, urlHTML);
+                        editable.insert(mSelectionStart, urlHTML);
                         mContentEditText.setSelection(mSelectionStart + urlHTML.length());
                     }
                 }

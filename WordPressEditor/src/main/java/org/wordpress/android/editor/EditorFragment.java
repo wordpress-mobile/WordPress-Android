@@ -151,9 +151,4 @@ public class EditorFragment extends EditorFragmentAbstract {
     public void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader) {
         // TODO
     }
-
-    @Override
-    public void createLinkFromSelection(String link, String text) {
-        // TODO
-    }
 }
