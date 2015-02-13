@@ -248,14 +248,26 @@ public class ReaderBlogTable {
     }
 
     public static boolean isFollowedBlogUrl(String blogUrl) {
+        if (TextUtils.isEmpty(blogUrl)) {
+            return false;
+        }
         String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_url=?";
-        String[] args = {blogUrl};
+        String[] args = {UrlUtils.normalizeUrl(blogUrl)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
     public static boolean isFollowedBlog(long blogId) {
         String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_id=?";
         String[] args = {Long.toString(blogId)};
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
+    }
+
+    public static boolean isFollowedFeedUrl(String feedUrl) {
+        if (TextUtils.isEmpty(feedUrl)) {
+            return false;
+        }
+        String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND feed_url=?";
+        String[] args = {UrlUtils.normalizeUrl(feedUrl)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 

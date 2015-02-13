@@ -301,7 +301,7 @@ public class ReaderSubsActivity extends ActionBarActivity
         }
 
         // make sure it isn't already followed
-        if (ReaderBlogTable.isFollowedBlogUrl(normUrl)) {
+        if (ReaderBlogTable.isFollowedBlogUrl(normUrl) || ReaderBlogTable.isFollowedFeedUrl(normUrl)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_already_follow_blog);
             return;
         }
