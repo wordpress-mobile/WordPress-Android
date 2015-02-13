@@ -71,9 +71,10 @@ public class ReaderFollowButton extends LinearLayout {
                 }
             });
 
+            long duration = getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
             AnimatorSet set = new AnimatorSet();
             set.play(anim);
-            set.setDuration(200);
+            set.setDuration(duration);
             set.setInterpolator(new AccelerateDecelerateInterpolator());
 
             set.start();

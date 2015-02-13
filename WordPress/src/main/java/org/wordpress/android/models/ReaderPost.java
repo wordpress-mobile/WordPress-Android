@@ -20,6 +20,7 @@ public class ReaderPost {
     private String pseudoId;
     public long postId;
     public long blogId;
+    public long feedId;
     public long authorId;
 
     private String title;
@@ -67,6 +68,7 @@ public class ReaderPost {
 
         post.postId = json.optLong("ID");
         post.blogId = json.optLong("site_ID");
+        post.feedId = json.optLong("feed_ID");
 
         if (json.has("pseudo_ID")) {
             post.pseudoId = JSONUtil.getString(json, "pseudo_ID");  // read/ endpoint
@@ -411,6 +413,10 @@ public class ReaderPost {
 
     public boolean hasText() {
         return !TextUtils.isEmpty(text);
+    }
+
+    public boolean hasUrl() {
+        return !TextUtils.isEmpty(url);
     }
 
     public boolean hasExcerpt() {
