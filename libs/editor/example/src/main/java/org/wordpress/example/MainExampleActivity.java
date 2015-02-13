@@ -20,7 +20,9 @@ public class MainExampleActivity extends ActionBarActivity {
             @Override public void onClick(View v) {
                 Intent intent = new Intent(MainExampleActivity.this, EditorExampleActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putInt(EditorExampleActivity.EDITOR_CHOICE, EditorExampleActivity.USE_NEW_EDITOR);
+                bundle.putString(EditorExampleActivity.TITLE_PARAM, getString(R.string.example_post_1_title));
+                bundle.putString(EditorExampleActivity.CONTENT_PARAM, getString(R.string.example_post_1_content));
+                bundle.putInt(EditorExampleActivity.EDITOR_PARAM, EditorExampleActivity.USE_NEW_EDITOR);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -31,7 +33,9 @@ public class MainExampleActivity extends ActionBarActivity {
             @Override public void onClick(View v) {
                 Intent intent = new Intent(MainExampleActivity.this, EditorExampleActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putInt(EditorExampleActivity.EDITOR_CHOICE, EditorExampleActivity.USE_LEGACY_EDITOR);
+                bundle.putString(EditorExampleActivity.TITLE_PARAM, getString(R.string.example_post_1_title));
+                bundle.putString(EditorExampleActivity.CONTENT_PARAM, getString(R.string.example_post_1_content));
+                bundle.putInt(EditorExampleActivity.EDITOR_PARAM, EditorExampleActivity.USE_LEGACY_EDITOR);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
