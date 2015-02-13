@@ -14,6 +14,7 @@ public class EditorExampleActivity extends ActionBarActivity implements EditorFr
     public static final String EDITOR_PARAM = "EDITOR_PARAM";
     public static final String TITLE_PARAM = "TITLE_PARAM";
     public static final String CONTENT_PARAM = "CONTENT_PARAM";
+    public static final String DRAFT_PARAM = "DRAFT_PARAM";
     public static final int USE_NEW_EDITOR = 1;
     public static final int USE_LEGACY_EDITOR = 2;
 
@@ -52,15 +53,16 @@ public class EditorExampleActivity extends ActionBarActivity implements EditorFr
     @Override
     public void onEditorFragmentInitialized() {
         // arbitrary setup
-        mEditorFragment.setLocalDraft(false);
         mEditorFragment.setFeaturedImageSupported(true);
         mEditorFragment.setBlogSettingMaxImageWidth("600");
 
-        // set title and content
+        // get title and content and draft switch
         String title = getIntent().getStringExtra(TITLE_PARAM);
         String content = getIntent().getStringExtra(CONTENT_PARAM);
+        boolean isLocalDraft = getIntent().getBooleanExtra(DRAFT_PARAM, true);
         mEditorFragment.setTitle(title);
         mEditorFragment.setContent(content);
+        mEditorFragment.setLocalDraft(isLocalDraft);
     }
 
     @Override
