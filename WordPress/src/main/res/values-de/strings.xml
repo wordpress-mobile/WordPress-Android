@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_page_recommended_blogs">Blogs, die dir gefallen könnten</string>
+	<string name="stats_months_and_years">Monate und Jahre</string>
+	<string name="stats_average_per_day">Durchschnitt pro Tag</string>
+	<string name="stats_recent_weeks">Letzte Wochen</string>
+	<string name="reader_empty_posts_in_blog">Dieser Blog ist leer</string>
+	<string name="logs_copied_to_clipboard">Anwendungsprotokolle wurden in die Zwischenablage kopiert</string>
+	<string name="stats_total">Insgesamt</string>
+	<string name="stats_overall">Gesamt</string>
+	<string name="stats_period">Zeitraum</string>
+	<string name="post_uploading">Hochladen</string>
+	<string name="error_copy_to_clipboard">Beim Kopieren von Text in die Zwischenablage ist ein Fehler aufgetreten</string>
+	<string name="reader_label_new_posts">Neue Beiträge</string>
 	<string name="stats_pagination_label">Seite %1$s von %2$s</string>
 	<string name="stats_timeframe_years">Jahre</string>
 	<string name="stats_views">Aufrufe</string>
@@ -150,7 +162,6 @@
 	<string name="sign_in_again">Erneut anmelden</string>
 	<string name="simperium_connection_error">Anmeldung zum Abrufen von Benachrichtigungen war nicht erfolgreich.</string>
 	<string name="invalid_xmlrpc_url">Die von der WordPress-Instanz zurückgegebene XMLRPC-URL ist ungültig. Wenden Sie sich an Ihren Site-Administrator.</string>
-	<string name="reader_page_recommended_blogs">Empfohlene Blogs</string>
 	<string name="reader_page_followed_blogs">Abonnierte Blogs</string>
 	<string name="reader_page_popular_tags">Beliebte Tags</string>
 	<string name="reader_page_followed_tags">Abonnierte Tags</string>
@@ -162,8 +173,6 @@
 	<string name="reader_toast_err_already_follow_blog">Du folgst diesem Blog bereits</string>
 	<string name="reader_label_tag_preview">Beiträge getaggt mit %s</string>
 	<string name="reader_label_followers">%s Follower</string>
-	<string name="reader_label_new_posts">Zeige neue Beiträge</string>
-	<string name="reader_label_more_recommendations">Mehr Empfehlungen</string>
 	<string name="reader_title_tag_preview">Tag-Vorschau anzeigen</string>
 	<string name="reader_hint_add_tag_or_url">Geben Sie zum Folgen einen Tag oder eine URL ein.</string>
 	<string name="reader_label_followed_blog">Blog wird verfolgt</string>
