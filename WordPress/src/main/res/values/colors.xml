@@ -123,7 +123,7 @@
     <!-- Tints -->
     <color name="post_detail_icon_tint">@color/grey_darken_20</color>
 
-    <!-- Depreciated Colors and Variables -->
+    <!-- Deprecated Colors and Variables -->
     <color name="blue_extra_light">#c8eefc</color>
     <color name="blue_new_kid">#2EA2CC</color>
     <color name="blue_extra_dark">#005082</color>
@@ -154,5 +154,5 @@
     <color name="calypso_orange_light">#fff8e5</color>
     <color name="calypso_orange">#ffba00</color>
     <color name="calypso_orange_dark">#f0821e</color>
-    <!-- End Depreciated Colors and Variables -->
+    <!-- End Deprecated Colors and Variables -->
 </resources>
