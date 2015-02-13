@@ -240,7 +240,7 @@ public class Note extends Syncable {
                 return mNoteJSON.getJSONArray("body");
             }
         } catch (JSONException e) {
-            return null;
+            return new JSONArray();
         }
     }
 
@@ -249,9 +249,27 @@ public class Note extends Syncable {
         return queryJSON("noticon", "");
     }
 
-    JSONObject getCommentActions() {
+    private JSONObject getCommentActions() {
         if (mActions == null) {
-            mActions = queryJSON("body[last].actions", new JSONObject());
+            // Find comment block that matches the root note comment id
+            long commentId = getCommentId();
+            JSONArray bodyArray = getBody();
+            for (int i = 0; i < bodyArray.length(); i++) {
+                try {
+                    JSONObject bodyItem = bodyArray.getJSONObject(i);
+                    if (bodyItem.has("type") && bodyItem.optString("type").equals("comment")
+                            && commentId == JSONUtil.queryJSON(bodyItem, "meta.ids.comment", 0)) {
+                        mActions = JSONUtil.queryJSON(bodyItem, "actions", new JSONObject());
+                        break;
+                    }
+                } catch (JSONException e) {
+                    break;
+                }
+            }
+
+            if (mActions == null) {
+                mActions = new JSONObject();
+            }
         }
 
         return mActions;
