@@ -5,7 +5,6 @@ package org.wordpress.android.models;
 
 import android.text.Html;
 import android.text.Spannable;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.simperium.client.BucketSchema;
