@@ -61,6 +61,9 @@ public class ReaderBlogTable {
     }
 
     public static ReaderBlog getBlogInfo(long blogId) {
+        if (blogId == 0) {
+            return null;
+        }
         String[] args = {Long.toString(blogId)};
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_blog_info WHERE blog_id=?", args);
         try {
@@ -74,6 +77,9 @@ public class ReaderBlogTable {
     }
 
     public static ReaderBlog getFeedInfo(long feedId) {
+        if (feedId == 0) {
+            return null;
+        }
         String[] args = {Long.toString(feedId)};
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_blog_info WHERE feed_id=?", args);
         try {

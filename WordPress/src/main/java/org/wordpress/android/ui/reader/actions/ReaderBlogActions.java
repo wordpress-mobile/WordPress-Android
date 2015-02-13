@@ -111,16 +111,22 @@ public class ReaderBlogActions {
     public static boolean followFeedById(final long feedId,
                                          final boolean isAskingToFollow,
                                          final ActionListener actionListener) {
-        String feedUrl = ReaderBlogTable.getFeedUrlFromId(feedId);
-        if (!TextUtils.isEmpty(feedUrl)) {
-            return followFeedByUrl(feedUrl, isAskingToFollow, actionListener);
+        ReaderBlog blogInfo = ReaderBlogTable.getFeedInfo(feedId);
+        if (blogInfo != null) {
+            return internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), isAskingToFollow, actionListener);
         }
 
-        updateFeedInfo(feedId, new UpdateBlogInfoListener() {
+        updateFeedInfo(feedId, null, new UpdateBlogInfoListener() {
             @Override
             public void onResult(ReaderBlog blogInfo) {
                 if (blogInfo != null) {
-                    followFeedByUrl(blogInfo.getFeedUrl(), isAskingToFollow, actionListener);
+                    internalFollowFeed(
+                            blogInfo.feedId,
+                            blogInfo.getFeedUrl(),
+                            isAskingToFollow,
+                            actionListener);
+                } else if (actionListener != null) {
+                    actionListener.onActionResult(false);
                 }
             }
         });
@@ -129,8 +135,8 @@ public class ReaderBlogActions {
     }
 
     public static boolean followFeedByUrl(final String feedUrl,
-                                          final boolean isAskingToFollow,
-                                          final ActionListener actionListener) {
+                                           final boolean isAskingToFollow,
+                                           final ActionListener actionListener) {
         if (TextUtils.isEmpty(feedUrl)) {
             if (actionListener != null) {
                 actionListener.onActionResult(false);
@@ -138,7 +144,35 @@ public class ReaderBlogActions {
             return false;
         }
 
-        final long feedId = ReaderBlogTable.getFeedIdFromUrl(feedUrl);
+        ReaderBlog blogInfo = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl));
+        if (blogInfo != null) {
+            //return internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), isAskingToFollow, actionListener);
+        }
+
+        updateFeedInfo(0, feedUrl, new UpdateBlogInfoListener() {
+            @Override
+            public void onResult(ReaderBlog blogInfo) {
+                if (blogInfo != null) {
+                    internalFollowFeed(
+                            blogInfo.feedId,
+                            blogInfo.getFeedUrl(),
+                            isAskingToFollow,
+                            actionListener);
+                } else if (actionListener != null) {
+                    actionListener.onActionResult(false);
+                }
+            }
+        });
+
+        return true;
+    }
+
+    private static boolean internalFollowFeed(
+            final long feedId,
+            final String feedUrl,
+            final boolean isAskingToFollow,
+            final ActionListener actionListener)
+    {
         if (feedId != 0) {
             ReaderBlogTable.setIsFollowedFeedId(feedId, isAskingToFollow);
             ReaderPostTable.setFollowStatusForPostsInFeed(feedId, isAskingToFollow);
@@ -289,7 +323,7 @@ public class ReaderBlogActions {
             WordPress.getRestClientUtilsV1_1().get("/sites/" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl)), listener, errorListener);
         }
     }
-    public static void updateFeedInfo(long feedId, final UpdateBlogInfoListener infoListener) {
+    public static void updateFeedInfo(long feedId, String feedUrl, final UpdateBlogInfoListener infoListener) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -305,7 +339,13 @@ public class ReaderBlogActions {
                 }
             }
         };
-        WordPress.getRestClientUtilsV1_1().get("/read/feed/" + feedId, listener, errorListener);
+        String path;
+        if (feedId != 0) {
+            path = "/read/feed/" + feedId;
+        } else {
+            path = "/read/feed/" + UrlUtils.urlEncode(feedUrl);
+        }
+        WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, UpdateBlogInfoListener infoListener) {
         if (jsonObject == null) {
