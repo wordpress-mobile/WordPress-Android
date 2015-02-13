@@ -67,6 +67,13 @@ public class ReaderBlogActions {
     public static boolean followBlogById(final long blogId,
                                          final boolean isAskingToFollow,
                                          final ActionListener actionListener) {
+        if (blogId == 0) {
+            if (actionListener != null) {
+                actionListener.onActionResult(false);
+            }
+            return false;
+        }
+
         ReaderBlogTable.setIsFollowedBlogId(blogId, isAskingToFollow);
         ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
 
@@ -173,6 +180,14 @@ public class ReaderBlogActions {
             final boolean isAskingToFollow,
             final ActionListener actionListener)
     {
+        // feedUrl is required
+        if (TextUtils.isEmpty(feedUrl)) {
+            if (actionListener != null) {
+                actionListener.onActionResult(false);
+            }
+            return false;
+        }
+
         if (feedId != 0) {
             ReaderBlogTable.setIsFollowedFeedId(feedId, isAskingToFollow);
             ReaderPostTable.setFollowStatusForPostsInFeed(feedId, isAskingToFollow);
@@ -183,7 +198,9 @@ public class ReaderBlogActions {
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
-        final String path = "/read/following/mine/" + (isAskingToFollow ? "new" : "delete") + "?url=" + UrlUtils.urlEncode(feedUrl);
+        final String path = "/read/following/mine/"
+                + (isAskingToFollow ? "new" : "delete")
+                + "?url=" + UrlUtils.urlEncode(feedUrl);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
