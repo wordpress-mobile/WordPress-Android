@@ -996,16 +996,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         finish();
                     }
                     break;
-                // TODO: shouldn't be speacialized case in the activity
-                case  LegacyEditorFragment.ACTIVITY_REQUEST_CODE_CREATE_LINK:
-                    extras = data.getExtras();
-                    if (extras == null) {
-                        return;
-                    }
-                    String linkURL = extras.getString("linkURL");
-                    String linkText = extras.getString("linkText");
-                    mEditorFragment.createLinkFromSelection(linkURL, linkText);
-                    break;
             }
         }
     }
@@ -1089,7 +1079,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     }
 
     @Override
-    public void onAddMediaButtonClicked() {
+    public void onAddMediaClicked() {
         // TODO: launch MediaPicker
     }
 

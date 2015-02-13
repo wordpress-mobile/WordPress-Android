@@ -58,7 +58,6 @@ public class EditLinkActivity extends ActionBarActivity {
                 mIntent.putExtras(bundle);
                 setResult(RESULT_OK, mIntent);
                 finish();
-
             }
         });
 
