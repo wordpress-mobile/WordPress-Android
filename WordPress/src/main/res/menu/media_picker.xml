@@ -7,7 +7,7 @@
     <item
         android:id="@+id/capture_image"
         android:title="@string/take_photo"
-        android:icon="@drawable/camera"
+        android:icon="@drawable/ic_action_camera"
         android:enabled="true"
         android:visible="true"
         android:orderInCategory="100"
@@ -16,7 +16,7 @@
     <item
         android:id="@+id/capture_video"
         android:title="@string/capture_video"
-        android:icon="@drawable/video"
+        android:icon="@drawable/ic_action_video"
         android:enabled="true"
         android:visible="true"
         android:orderInCategory="101"
