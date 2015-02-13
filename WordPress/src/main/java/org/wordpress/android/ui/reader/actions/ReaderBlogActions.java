@@ -36,34 +36,6 @@ public class ReaderBlogActions {
         return (json != null ? json.toString() : "");
     }
 
-    /*
-     * follow/unfollow a blog - prefer followBlogById since following solely by url
-     * may cause the blog to be followed as a feed
-     */
-    public static boolean followBlogByUrl(final String blogUrl,
-                                          final boolean isAskingToFollow,
-                                          final ActionListener actionListener) {
-        // first see if we can get the blogId from local db
-        long blogId = ReaderBlogTable.getBlogIdFromUrl(blogUrl);
-        if (blogId != 0) {
-            return followBlogById(blogId, isAskingToFollow, actionListener);
-        }
-
-        // then query server for the blog info so we can get the id
-        ReaderActions.UpdateBlogInfoListener infoListener = new ReaderActions.UpdateBlogInfoListener() {
-            @Override
-            public void onResult(ReaderBlog blogInfo) {
-                if (blogInfo != null && blogInfo.blogId != 0) {
-                    followBlogById(blogInfo.blogId, isAskingToFollow, actionListener);
-                } else {
-                    // blogInfo failed, try to follow as a feed
-                    followFeedByUrl(blogUrl, isAskingToFollow, actionListener);
-                }
-            }
-        };
-        ReaderBlogActions.updateBlogInfo(0, blogUrl, infoListener);
-        return true;
-    }
     public static boolean followBlogById(final long blogId,
                                          final boolean isAskingToFollow,
                                          final ActionListener actionListener) {
