@@ -17,6 +17,7 @@ import android.view.Surface;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.LinearLayout;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -333,25 +334,10 @@ public class MediaPickerActivity extends ActionBarActivity
     private void animateTabAppear() {
         TranslateAnimation tabAppearAnimation = new TranslateAnimation(0, 0, -mTabLayout.getHeight(), 0);
         tabAppearAnimation.setDuration(TAB_ANIMATION_DURATION_MS);
-        tabAppearAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mTabLayout.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
+        mTabLayout.setVisibility(View.VISIBLE);
+        mViewPager.startAnimation(tabAppearAnimation);
         mTabLayout.startAnimation(tabAppearAnimation);
-
-        TranslateAnimation pagerAppearAnimation = new TranslateAnimation(0, 0, 0, mTabLayout.getHeight());
-        pagerAppearAnimation.setDuration(TAB_ANIMATION_DURATION_MS);
-        mViewPager.startAnimation(pagerAppearAnimation);
     }
 
     /**
@@ -359,7 +345,11 @@ public class MediaPickerActivity extends ActionBarActivity
      */
     private void animateTabGone() {
         TranslateAnimation tabGoneAnimation = new TranslateAnimation(0, 0, 0, -mTabLayout.getHeight());
+        TranslateAnimation pagerGoneAnimation = new TranslateAnimation(0, 0, 0, -mTabLayout.getHeight());
+        LinearLayout.LayoutParams newParams = new LinearLayout.LayoutParams(mViewPager.getWidth(), mViewPager.getHeight() + mTabLayout.getHeight());
+        mViewPager.setLayoutParams(newParams);
         tabGoneAnimation.setDuration(TAB_ANIMATION_DURATION_MS);
+        pagerGoneAnimation.setDuration(TAB_ANIMATION_DURATION_MS);
         tabGoneAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -368,14 +358,30 @@ public class MediaPickerActivity extends ActionBarActivity
             @Override
             public void onAnimationEnd(Animation animation) {
                 mTabLayout.setVisibility(View.GONE);
+                mTabLayout.clearAnimation();
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
             }
         });
+        pagerGoneAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mViewPager.clearAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
         mTabLayout.startAnimation(tabGoneAnimation);
-        mViewPager.startAnimation(tabGoneAnimation);
+        mViewPager.startAnimation(pagerGoneAnimation);
     }
 
     /**
