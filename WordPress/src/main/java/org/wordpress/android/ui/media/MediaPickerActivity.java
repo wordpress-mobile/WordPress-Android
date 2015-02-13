@@ -306,6 +306,7 @@ public class MediaPickerActivity extends ActionBarActivity
             actionBar.show();
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setHomeButtonEnabled(true);
+            actionBar.setElevation(0);
         }
 
         mMediaPickerAdapter = new MediaPickerAdapter(getFragmentManager());
