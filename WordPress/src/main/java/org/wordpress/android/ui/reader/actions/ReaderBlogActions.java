@@ -146,7 +146,7 @@ public class ReaderBlogActions {
 
         ReaderBlog blogInfo = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl));
         if (blogInfo != null) {
-            //return internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), isAskingToFollow, actionListener);
+            return internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), isAskingToFollow, actionListener);
         }
 
         updateFeedInfo(0, feedUrl, new UpdateBlogInfoListener() {
