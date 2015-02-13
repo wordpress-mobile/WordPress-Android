@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderComment;
@@ -114,6 +115,7 @@ public class ReaderActivityLauncher {
         if (blogId == 0) {
             return;
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
@@ -170,6 +172,7 @@ public class ReaderActivityLauncher {
         if (feedId == 0) {
             return;
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
@@ -183,6 +186,7 @@ public class ReaderActivityLauncher {
         if (tag == null) {
             return;
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEW);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
