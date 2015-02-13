@@ -138,8 +138,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     mTopPaginationContainer.setVisibility(View.VISIBLE);
                     String paginationLabel = String.format(
                             getString(R.string.stats_pagination_label),
-                            followersModel.getPage(),
-                            followersModel.getPages()
+                            FormatUtils.formatDecimal(followersModel.getPage()),
+                            FormatUtils.formatDecimal(followersModel.getPages())
                     );
                     mBottomPaginationText.setText(paginationLabel);
                     mTopPaginationText.setText(paginationLabel);
