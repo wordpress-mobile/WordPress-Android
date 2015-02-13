@@ -68,7 +68,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_large"
                     android:layout_marginRight="@dimen/margin_large"
-                    android:paddingTop="@dimen/margin_small">
+                    android:paddingTop="@dimen/margin_small"
+                    android:paddingBottom="@dimen/margin_small">
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_list_entry_label"
