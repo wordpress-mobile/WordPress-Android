@@ -92,7 +92,8 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
     private int totalItems() {
         int count = 0;
         for (int i = 0; i < mMediaSources.size(); ++i) {
-            count += mMediaSources.get(i).getCount();
+            MediaSource source = mMediaSources.get(i);
+            count += source != null ? source.getCount() : 0;
         }
 
         return count;
@@ -109,7 +110,8 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
     public MediaSource sourceAtPosition(int position) {
         int count = 0;
         for (int i = 0; i < mMediaSources.size(); ++i) {
-            count += mMediaSources.get(i).getCount();
+            MediaSource source = mMediaSources.get(i);
+            count += source != null ? source.getCount() : 0;
 
             if (position < count) {
                 return mMediaSources.get(i);
@@ -134,7 +136,8 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
                 return offset;
             }
 
-            offset += mMediaSources.get(i).getCount();
+            MediaSource source = mMediaSources.get(i);
+            offset += source != null ? source.getCount() : 0;
         }
 
         return offset;
