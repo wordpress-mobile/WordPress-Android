@@ -28,7 +28,7 @@
     <color name="default_background">@color/grey_lighten_30</color>
 
     <color name="image_options_label">@color/grey_lighten_20</color>
-    <color name="pressed_wordpress">semi_transparent_blue_light</color>
+    <color name="pressed_wordpress">@color/semi_transparent_blue_light</color>
     <color name="background_grey">@color/grey_lighten_30</color>
 
     <!-- WordPress.com Colors -->
