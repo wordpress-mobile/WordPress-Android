@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,15 +13,13 @@ import android.view.View;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderDatabase;
-import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.WPDrawerActivity;
-import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostSelectedListener;
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnTagSelectedListener;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnReaderPostSelectedListener;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnReaderTagSelectedListener;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -44,8 +41,8 @@ import javax.annotation.Nonnull;
  */
 
 public class ReaderPostListActivity extends WPDrawerActivity
-                                    implements OnPostSelectedListener,
-                                               OnTagSelectedListener {
+                                    implements OnReaderPostSelectedListener,
+                                               OnReaderTagSelectedListener {
 
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
@@ -200,53 +197,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        boolean isResultOK = (resultCode == Activity.RESULT_OK);
-        final ReaderPostListFragment listFragment = getListFragment();
-
-        switch (requestCode) {
-            // user just returned from the tags/subs activity
-            case ReaderConstants.INTENT_READER_SUBS :
-                // reload tags if they were changed, and set the last tag added as the current one
-                if (listFragment != null
-                        && data != null
-                        && data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
-                    String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
-                    listFragment.doTagsChanged(lastAddedTag);
-                }
-                // refresh posts if user is viewing "Blogs I Follow" to make sure changes are reflected
-                if (listFragment != null
-                        && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-                        && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
-                    listFragment.refreshPosts();
-                }
-                break;
-
-            // user just returned from reblogging activity, reload the displayed post if reblogging
-            // succeeded
-            case ReaderConstants.INTENT_READER_REBLOG:
-                if (isResultOK && data != null && listFragment != null) {
-                    long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                    long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-                    listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId, true));
-                }
-                break;
-
-            // user just returned from the login dialog, need to perform initial update again
-            // since creds have changed
-            case WPComLoginActivity.REQUEST_CODE:
-                if (isResultOK) {
-                    removeListFragment();
-                    mHasPerformedInitialUpdate = false;
-                    performInitialUpdate();
-                }
-                break;
-        }
-    }
-
-    @Override
     public void onSignout() {
         super.onSignout();
 
@@ -337,7 +287,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
         // update current user to ensure we have their user_id as well as their latest info
         // in case they changed their avatar, name, etc. since last time
         AppLog.d(T.READER, "reader post list > updating current user");
-        ReaderUserActions.updateCurrentUser(null);
+        ReaderUserActions.updateCurrentUser();
 
         // update cookies so that we can show authenticated images in WebViews
         AppLog.d(T.READER, "reader post list > updating cookies");
@@ -357,7 +307,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
      * user tapped a post in the list fragment
      */
     @Override
-    public void onPostSelected(long blogId, long postId) {
+    public void onReaderPostSelected(long blogId, long postId) {
         // skip if this activity no longer has the focus - this prevents the post detail from
         // being shown multiple times if the user quickly taps a post more than once
         if (!this.hasWindowFocus()) {
@@ -393,7 +343,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
      * user tapped a tag in the list fragment
      */
     @Override
-    public void onTagSelected(String tagName) {
+    public void onReaderTagSelected(String tagName) {
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
         if (hasListFragment() && getListFragment().getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
             // user is already previewing a tag, so change current tag in existing preview
