@@ -10,12 +10,16 @@ public class ReaderConstants {
 
     public static final int MIN_FEATURED_IMAGE_WIDTH = 640;              // min width for an image to be suitable featured image
 
+    // intent IDs
+    static final int INTENT_READER_SUBS        = 1000;
+    static final int INTENT_READER_REBLOG      = 1001;
+
     // intent arguments / keys
-    public static final String ARG_TAG               = "tag";
-    public static final String ARG_BLOG_ID           = "blog_id";
-    public static final String ARG_BLOG_URL          = "blog_url";
-    public static final String ARG_POST_ID           = "post_id";
-    public static final String ARG_COMMENT_ID        = "comment_id";
+    static final String ARG_TAG               = "tag";
+    static final String ARG_BLOG_ID           = "blog_id";
+    static final String ARG_FEED_ID           = "feed_id";
+    static final String ARG_POST_ID           = "post_id";
+    static final String ARG_COMMENT_ID        = "comment_id";
     static final String ARG_IMAGE_URL         = "image_url";
     static final String ARG_IS_PRIVATE        = "is_private";
     static final String ARG_POST_LIST_TYPE    = "post_list_type";

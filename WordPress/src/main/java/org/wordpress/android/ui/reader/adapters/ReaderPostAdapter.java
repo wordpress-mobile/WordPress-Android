@@ -142,17 +142,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
                 }
             });
 
-            // tapping avatar shows blog preview unless this post is from an external feed
-            if (!post.isExternal) {
-                holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post.blogId, post.getBlogUrl());
-                    }
-                });
-            } else {
-                holder.imgAvatar.setOnClickListener(null);
-            }
+            // show blog/feed preview when avatar is tapped
+            holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+                }
+            });
         }
 
         if (post.hasExcerpt()) {
@@ -548,7 +544,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             }
         };
 
-        if (ReaderBlogActions.performFollowAction(post, isAskingToFollow, actionListener)) {
+        if (ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
             ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
             if (updatedPost != null) {
                 mPosts.set(position, updatedPost);
@@ -616,23 +612,38 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         protected void onPostExecute(Boolean result) {
             if (result) {
                 if (mPosts.size() == 0) {
+                    // full refresh if existing list was empty
                     mPosts.addAll(allPosts);
                     notifyDataSetChanged();
                 } else {
-                    // determine new & changed posts
-                    int index;
-                    int addIndex = 0;
-                    for (ReaderPost post : allPosts) {
-                        index = mPosts.indexOfPost(post);
-                        if (index == -1) {
-                            mPosts.add(addIndex, post);
-                            notifyItemInserted(addIndex);
-                            addIndex++;
-                        } else {
-                            addIndex = index + 1;
-                            if (!post.isSamePost(mPosts.get(index))) {
-                                mPosts.set(index, post);
-                                notifyItemChanged(index);
+                    // full refresh if any posts were removed (can happen after user unfollows a blog)
+                    boolean anyRemoved = false;
+                    for (ReaderPost post: mPosts) {
+                        if (allPosts.indexOfPost(post) == -1) {
+                            anyRemoved = true;
+                            mPosts.clear();
+                            mPosts.addAll(allPosts);
+                            notifyDataSetChanged();
+                            break;
+                        }
+                    }
+
+                    // do more optimal check for new/changed posts if none were removed
+                    if (!anyRemoved) {
+                        int addIndex = 0;
+                        int index;
+                        for (ReaderPost post : allPosts) {
+                            index = mPosts.indexOfPost(post);
+                            if (index == -1) {
+                                mPosts.add(addIndex, post);
+                                notifyItemInserted(addIndex);
+                                addIndex++;
+                            } else {
+                                addIndex = index + 1;
+                                if (!post.isSamePost(mPosts.get(index))) {
+                                    mPosts.set(index, post);
+                                    notifyItemChanged(index);
+                                }
                             }
                         }
                     }

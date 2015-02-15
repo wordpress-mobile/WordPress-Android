@@ -140,10 +140,10 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         startActivity(intent);
     }
 
-    public void showBlogPreviewActivity(long siteId, String siteUrl) {
+    public void showBlogPreviewActivity(long siteId) {
         if (isFinishing()) return;
 
-        ReaderActivityLauncher.showReaderBlogPreview(this, siteId, siteUrl);
+        ReaderActivityLauncher.showReaderBlogPreview(this, siteId);
     }
 
     public void showPostActivity(long siteId, long postId) {

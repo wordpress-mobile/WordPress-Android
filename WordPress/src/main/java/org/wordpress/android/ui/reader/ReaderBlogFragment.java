@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.BlogFollowChangeListener;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
@@ -23,8 +21,7 @@ import org.wordpress.android.util.WPActivityUtils;
  * fragment hosted by ReaderSubsActivity which shows either recommended blogs and followed blogs
  */
 public class ReaderBlogFragment extends Fragment
-        implements BlogFollowChangeListener,
-                   ReaderBlogAdapter.BlogClickListener {
+        implements ReaderBlogAdapter.BlogClickListener {
     private ReaderRecyclerView mRecyclerView;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
@@ -113,14 +110,11 @@ public class ReaderBlogFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        // if the fragment is resuming from a paused state, reload the adapter to make sure
-        // the follow status of all blogs is accurate - this is necessary in case the user
-        // returned from an activity where the follow status may have been changed
+        // refresh the adapter if the fragment is resuming from a paused state so that changes
+        // made in another activity (such as follow state) are reflected here
         if (mWasPaused) {
             mWasPaused = false;
-            if (hasBlogAdapter()) {
-                getBlogAdapter().checkFollowStatus();
-            }
+            refresh();
         }
     }
 
@@ -138,7 +132,6 @@ public class ReaderBlogFragment extends Fragment
         if (mAdapter == null) {
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mAdapter = new ReaderBlogAdapter(context, getBlogType());
-            mAdapter.setFollowChangeListener(this);
             mAdapter.setBlogClickListener(this);
             mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override
@@ -155,35 +148,26 @@ public class ReaderBlogFragment extends Fragment
         return mBlogType;
     }
 
-    /*
-     * called from the adapter when a blog is followed or unfollowed - note that the network
-     * request has already occurred by the time this is called
-     */
-    public void onFollowBlogChanged() {
-        if (getActivity() instanceof BlogFollowChangeListener) {
-            ((BlogFollowChangeListener) getActivity()).onFollowBlogChanged();
-        }
-    }
-
     @Override
     public void onBlogClicked(Object item) {
         final long blogId;
-        final String blogUrl;
+        final long feedId;
         if (item instanceof ReaderRecommendedBlog) {
             ReaderRecommendedBlog blog = (ReaderRecommendedBlog) item;
             blogId = blog.blogId;
-            blogUrl = blog.getBlogUrl();
+            feedId = 0;
         } else if (item instanceof ReaderBlog) {
             ReaderBlog blog = (ReaderBlog) item;
             blogId = blog.blogId;
-            blogUrl = blog.getUrl();
+            feedId = blog.feedId;
         } else {
             return;
         }
 
-        // make sure we have either the blog id or url
-        if (blogId != 0 || !TextUtils.isEmpty(blogUrl)) {
-            ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId, blogUrl);
+        if (feedId != 0) {
+            ReaderActivityLauncher.showReaderFeedPreview(getActivity(), feedId);
+        } else if (blogId != 0) {
+            ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
         }
     }
 }
