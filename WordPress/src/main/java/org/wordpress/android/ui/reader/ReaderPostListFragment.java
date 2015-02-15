@@ -860,6 +860,7 @@ implements ReaderInterfaces.OnReaderPostSelectedListener,
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnTagSelectedListener(this);
+            mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             mPostAdapter.setOnReblogRequestedListener(mRequestReblogListener);
