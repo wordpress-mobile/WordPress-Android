@@ -737,6 +737,8 @@
     <string name="reader_toast_err_generic">Unable to perform this action</string>
 
     <!-- empty list/grid text -->
+    <string name="reader_empty_posts_no_connection">@string/no_network_title</string>
+    <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>

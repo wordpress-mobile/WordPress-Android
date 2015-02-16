@@ -685,19 +685,22 @@ public class ReaderPostListFragment extends Fragment {
         page3.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page3));
     }
 
-    private void setEmptyTitleAndDescription() {
+    private void setEmptyTitleAndDescription(boolean requestFailed) {
         if (!isAdded()) {
             return;
         }
 
         int titleResId;
         int descriptionResId = 0;
-        boolean isNetworkAvailable = NetworkUtils.isNetworkAvailable(getActivity());
 
-        if (isUpdating()) {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            titleResId = R.string.reader_empty_posts_no_connection;
+        } else if (requestFailed) {
+            titleResId = R.string.reader_empty_posts_request_failed;
+        } else if (isUpdating()) {
             titleResId = R.string.reader_empty_posts_in_tag_updating;
         } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            titleResId = (isNetworkAvailable ? R.string.reader_empty_posts_in_blog : R.string.no_network_title);
+            titleResId = R.string.reader_empty_posts_in_blog;
         } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getSpinnerAdapter() != null) {
             int tagIndex = getSpinnerAdapter().getIndexOfTag(mCurrentTag);
             String tagId;
@@ -716,11 +719,11 @@ public class ReaderPostListFragment extends Fragment {
                     titleResId = R.string.reader_empty_posts_liked;
                     break;
                 default:
-                    titleResId = (isNetworkAvailable ? R.string.reader_empty_posts_in_tag : R.string.no_network_title);
+                    titleResId = R.string.reader_empty_posts_in_tag;
                     break;
             }
         } else {
-            titleResId = (isNetworkAvailable ? R.string.reader_empty_posts_in_tag : R.string.no_network_title);
+            titleResId = R.string.reader_empty_posts_in_tag;
         }
 
         TextView titleView = (TextView) mEmptyView.findViewById(R.id.title_empty);
@@ -745,7 +748,7 @@ public class ReaderPostListFragment extends Fragment {
                 return;
             }
             if (isEmpty) {
-                setEmptyTitleAndDescription();
+                setEmptyTitleAndDescription(false);
                 mEmptyView.setVisibility(View.VISIBLE);
                 if (shouldShowBoxAndPagesAnimation()) {
                     startBoxAndPagesAnimation();
@@ -984,7 +987,8 @@ public class ReaderPostListFragment extends Fragment {
                 if (result.isNewOrChanged()) {
                     refreshPosts();
                 } else if (isPostAdapterEmpty()) {
-                    setEmptyTitleAndDescription();
+                    boolean requestFailed = (result == ReaderActions.UpdateResult.FAILED);
+                    setEmptyTitleAndDescription(requestFailed);
                 }
             }
         };
@@ -1015,7 +1019,7 @@ public class ReaderPostListFragment extends Fragment {
         }
 
         setIsUpdating(true, updateAction);
-        setEmptyTitleAndDescription();
+        setEmptyTitleAndDescription(false);
 
         // go no further if we're viewing a followed tag and the tag table is empty - this will
         // occur when the Reader is accessed for the first time (ie: fresh install) - note that
@@ -1058,7 +1062,8 @@ public class ReaderPostListFragment extends Fragment {
                 } else if (result.isNewOrChanged()) {
                     refreshPosts();
                 } else {
-                    setEmptyTitleAndDescription();
+                    boolean requestFailed = (result == ReaderActions.UpdateResult.FAILED);
+                    setEmptyTitleAndDescription(requestFailed);
                 }
             }
         };
