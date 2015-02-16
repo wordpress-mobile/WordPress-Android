@@ -94,10 +94,7 @@
 	<string name="reader_page_popular_tags">Popularne tagi</string>
 	<string name="reader_toast_err_already_follow_blog">Już śledzisz ten blog</string>
 	<string name="reader_page_followed_blogs">Obserwowane blogi</string>
-	<string name="reader_page_recommended_blogs">Polecane blogi</string>
 	<string name="reader_label_tag_preview">Wpisy otagowane %s</string>
-	<string name="reader_label_more_recommendations">Więcej rekomendacji</string>
-	<string name="reader_label_new_posts">Wyświetl nowe wpisy</string>
 	<string name="reader_empty_recommended_blogs">Brak polecanych blogów</string>
 	<string name="reader_title_blog_preview">Podgląd blogu</string>
 	<string name="reader_hint_add_tag_or_url">Wpisz tag lub adres blogu, który chcesz obserwować</string>
