@@ -135,6 +135,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     private boolean mIsBackspace;
     private boolean mScrollDetected;
 
+    private boolean mMediaUploadServiceStarted;
     private String mMediaCapturePath = "";
     private List<String> mUploadingMedia;
     private ArrayList<String> mGalleryIds;
@@ -1552,6 +1553,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                         }
 
                         createGallery();
+                        stopMediaUploadService();
                     }
                 }
             }
@@ -1562,7 +1564,20 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      * Starts the upload service to upload selected media.
      */
     private void startMediaUploadService() {
-        getActivity().startService(new Intent(getActivity(), MediaUploadService.class));
+        if (!mMediaUploadServiceStarted) {
+            getActivity().startService(new Intent(getActivity(), MediaUploadService.class));
+            mMediaUploadServiceStarted = true;
+        }
+    }
+
+    /**
+     * Stops the upload service.
+     */
+    private void stopMediaUploadService() {
+        if (mMediaUploadServiceStarted) {
+            getActivity().stopService(new Intent(getActivity(), MediaUploadService.class));
+            mMediaUploadServiceStarted = false;
+        }
     }
 
     /**
