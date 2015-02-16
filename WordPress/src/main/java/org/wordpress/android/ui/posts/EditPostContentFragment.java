@@ -82,6 +82,7 @@ import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
@@ -814,7 +815,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         String imageURL;
         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
             String photonUrl = imageSpan.getImageSource().toString();
-            imageURL = StringUtils.getPhotonUrl(photonUrl, getMaximumThumbnailWidth());
+            imageURL = PhotonUtils.getPhotonImageUrl(photonUrl, getMaximumThumbnailWidth(), 0);
         } else {
             // Not a Jetpack or wpcom blog
             // imageURL = mediaFile.getThumbnailURL(); //do not use fileURL here since downloading picture

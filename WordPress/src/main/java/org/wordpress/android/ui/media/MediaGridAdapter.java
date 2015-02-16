@@ -31,6 +31,7 @@ import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -276,7 +277,7 @@ public class MediaGridAdapter extends CursorAdapter {
         if (mIsCurrentBlogPhotonCapable){
             String imageURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
             if (imageURL != null) {
-                thumbnailURL = StringUtils.getPhotonUrl(imageURL, mGridItemWidth);
+                thumbnailURL = PhotonUtils.getPhotonImageUrl(imageURL, mGridItemWidth, 0);
             }
         }
 
