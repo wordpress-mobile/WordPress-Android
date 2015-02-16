@@ -692,11 +692,12 @@ public class ReaderPostListFragment extends Fragment {
 
         int titleResId;
         int descriptionResId = 0;
+        boolean isNetworkAvailable = NetworkUtils.isNetworkAvailable(getActivity());
 
         if (isUpdating()) {
             titleResId = R.string.reader_empty_posts_in_tag_updating;
         } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            titleResId = R.string.reader_empty_posts_in_blog;
+            titleResId = (isNetworkAvailable ? R.string.reader_empty_posts_in_blog : R.string.no_network_title);
         } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getSpinnerAdapter() != null) {
             int tagIndex = getSpinnerAdapter().getIndexOfTag(mCurrentTag);
             String tagId;
@@ -715,11 +716,11 @@ public class ReaderPostListFragment extends Fragment {
                     titleResId = R.string.reader_empty_posts_liked;
                     break;
                 default:
-                    titleResId = R.string.reader_empty_posts_in_tag;
+                    titleResId = (isNetworkAvailable ? R.string.reader_empty_posts_in_tag : R.string.no_network_title);
                     break;
             }
         } else {
-            titleResId = R.string.reader_empty_posts_in_tag;
+            titleResId = (isNetworkAvailable ? R.string.reader_empty_posts_in_tag : R.string.no_network_title);
         }
 
         TextView titleView = (TextView) mEmptyView.findViewById(R.id.title_empty);
