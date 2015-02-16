@@ -118,6 +118,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     blogHolder.txtTitle.setText(blog.getTitle());
                     blogHolder.txtDescription.setText(blog.getReason());
                     blogHolder.txtUrl.setText(UrlUtils.getDomainFromUrl(blog.getBlogUrl()));
+                    blogHolder.imgBlog.setErrorImageResId(R.drawable.blavatar_placeholder);
                     blogHolder.imgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.BLAVATAR);
                     break;
 
@@ -130,6 +131,9 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         blogHolder.txtTitle.setText(domain);
                     }
                     blogHolder.txtUrl.setText(domain);
+                    blogHolder.imgBlog.setErrorImageResId(blogInfo.isExternal() ?
+                            R.drawable.gravatar_placeholder :
+                            R.drawable.blavatar_placeholder);
                     blogHolder.imgBlog.setImageUrl(blogInfo.getImageUrl(), WPNetworkImageView.ImageType.BLAVATAR);
                     break;
             }
