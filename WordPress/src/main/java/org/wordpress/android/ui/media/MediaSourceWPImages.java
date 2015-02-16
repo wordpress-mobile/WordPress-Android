@@ -13,7 +13,9 @@ import android.widget.ImageView;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
 
@@ -110,11 +112,15 @@ public class MediaSourceWPImages implements MediaSource {
     }
 
     private void fetchImageData() {
-        Cursor imageCursor = MediaUtils.getWordPressMediaImages();
+        Blog blog = WordPress.getCurrentBlog();
 
-        if (imageCursor != null) {
-            addWordPressImagesFromCursor(imageCursor);
-            imageCursor.close();
+        if (blog != null) {
+            Cursor imageCursor = MediaUtils.getWordPressMediaImages(String.valueOf(blog.getLocalTableBlogId()));
+
+            if (imageCursor != null) {
+                addWordPressImagesFromCursor(imageCursor);
+                imageCursor.close();
+            }
         }
     }
 

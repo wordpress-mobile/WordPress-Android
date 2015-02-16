@@ -12,7 +12,9 @@ import android.widget.ImageView;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
 
@@ -125,11 +127,15 @@ public class MediaSourceWPVideos implements MediaSource {
     }
 
     private void fetchVideoData() {
-        Cursor videoCursor = MediaUtils.getWordPressMediaVideos();
+        Blog blog = WordPress.getCurrentBlog();
 
-        if (videoCursor != null) {
-            addWordPressVideosFromCursor(videoCursor);
-            videoCursor.close();
+        if (blog != null) {
+            Cursor videoCursor = MediaUtils.getWordPressMediaVideos(String.valueOf(blog.getLocalTableBlogId()));
+
+            if (videoCursor != null) {
+                addWordPressVideosFromCursor(videoCursor);
+                videoCursor.close();
+            }
         }
     }
 

@@ -107,24 +107,12 @@ public class MediaUtils {
         return false;
     }
 
-    public static Cursor getWordPressMediaImages() {
-        Blog blog = WordPress.getCurrentBlog();
-
-        if (blog == null) {
-            return null;
-        }
-
-        return WordPress.wpDB.getMediaImagesForBlog(String.valueOf(blog.getLocalTableBlogId()));
+    public static Cursor getWordPressMediaImages(String blogId) {
+        return WordPress.wpDB.getMediaImagesForBlog(blogId);
     }
 
-    public static Cursor getWordPressMediaVideos() {
-        Blog blog = WordPress.getCurrentBlog();
-
-        if (blog == null) {
-            return null;
-        }
-
-        return WordPress.wpDB.getMediaFilesForBlog(String.valueOf(blog.getLocalTableBlogId()));
+    public static Cursor getWordPressMediaVideos(String blogId) {
+        return WordPress.wpDB.getMediaFilesForBlog(blogId);
     }
 
     public static class BackgroundDownloadWebImage extends AsyncTask<Uri, String, Bitmap> {
