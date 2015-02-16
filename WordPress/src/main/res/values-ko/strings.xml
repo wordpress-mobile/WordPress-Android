@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_page_recommended_blogs">회원님이 좋아할 만한 블로그</string>
+	<string name="stats_months_and_years">월 및 연도</string>
+	<string name="stats_recent_weeks">최근 몇 주</string>
+	<string name="error_copy_to_clipboard">텍스트를 클립보드에 복사하는 동안 오류가 발생했습니다.</string>
+	<string name="reader_empty_posts_in_blog">이 블로그는 비었습니다.</string>
+	<string name="stats_average_per_day">하루 평균</string>
+	<string name="stats_total">총</string>
+	<string name="stats_overall">전체</string>
+	<string name="stats_period">기간</string>
+	<string name="logs_copied_to_clipboard">애플리케이션 로그가 클립보드에 복사되었습니다.</string>
+	<string name="post_uploading">업로드</string>
+	<string name="reader_label_new_posts">새 게시물</string>
 	<string name="stats_timeframe_years">년</string>
 	<string name="stats_views">조회수</string>
 	<string name="stats_visitors">방문자</string>
@@ -156,13 +168,10 @@
 	<string name="reader_page_followed_tags">팔로우된 태그</string>
 	<string name="reader_page_popular_tags">인기 태그</string>
 	<string name="reader_page_followed_blogs">팔로우된 블로그</string>
-	<string name="reader_page_recommended_blogs">추천 블로그</string>
 	<string name="reader_hint_add_tag_or_url">팔로우할 태그나 URL 입력</string>
-	<string name="reader_label_new_posts">새 글 표시</string>
 	<string name="reader_label_followers">팔로워 %s명</string>
 	<string name="reader_label_followed_blog">팔로우한 블로그</string>
 	<string name="reader_label_unfollowed_blog">팔로우 취소한 블로그</string>
-	<string name="reader_label_more_recommendations">추천 목록 더 보기</string>
 	<string name="reader_label_tag_preview">%s 태그가 지정된 글</string>
 	<string name="reader_toast_err_get_blog_info">이 블로그를 표시할 수 없습니다.</string>
 	<string name="reader_toast_err_already_follow_blog">이 블로그를 이미 팔로우하고 있습니다.</string>

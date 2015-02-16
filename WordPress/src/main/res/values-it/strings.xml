@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_months_and_years">Mesi ed anni</string>
+	<string name="stats_recent_weeks">Settimane recenti</string>
+	<string name="error_copy_to_clipboard">Si è verificato un errore durante la copia del testo negli appunti</string>
+	<string name="reader_page_recommended_blogs">Blog che potrebbero interessarti</string>
+	<string name="stats_total">Totale</string>
+	<string name="stats_overall">Tutto</string>
+	<string name="stats_period">Periodo</string>
+	<string name="logs_copied_to_clipboard">I log dell\'applicazione sono stati copiati negli appunti</string>
+	<string name="reader_label_new_posts">Nuovi articoli</string>
+	<string name="reader_empty_posts_in_blog">Il blog è vuoto</string>
+	<string name="stats_average_per_day">Media giornaliera</string>
+	<string name="post_uploading">Caricamento</string>
 	<string name="stats_follow">Segui</string>
 	<string name="stats_unfollow">Smetti di seguire</string>
 	<string name="stats_likes">Mi piace</string>
@@ -156,13 +168,10 @@
 	<string name="reader_page_followed_tags">Tag seguiti</string>
 	<string name="reader_page_popular_tags">Tag più amati</string>
 	<string name="reader_page_followed_blogs">Blog seguiti</string>
-	<string name="reader_page_recommended_blogs">Blog consigliati</string>
 	<string name="reader_hint_add_tag_or_url">Inserisci un tag o un URL da seguire</string>
-	<string name="reader_label_new_posts">Mostra nuovi articoli</string>
 	<string name="reader_label_followers">%s follower</string>
 	<string name="reader_label_followed_blog">Blog seguito</string>
 	<string name="reader_label_unfollowed_blog">Blog non più seguito</string>
-	<string name="reader_label_more_recommendations">Altri consigli</string>
 	<string name="reader_toast_err_get_blog_info">Impossibile mostrare questo blog</string>
 	<string name="reader_toast_err_already_follow_blog">Segui già questo blog</string>
 	<string name="reader_toast_err_follow_blog">Impossibile seguire questo blog</string>

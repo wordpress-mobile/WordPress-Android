@@ -93,13 +93,10 @@
 	<string name="reader_page_followed_tags">Followed tags</string>
 	<string name="reader_page_popular_tags">Popular tags</string>
 	<string name="reader_page_followed_blogs">Followed blogs</string>
-	<string name="reader_page_recommended_blogs">Recommended blogs</string>
 	<string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
-	<string name="reader_label_new_posts">Show new posts</string>
 	<string name="reader_label_followers">%s followers</string>
 	<string name="reader_label_followed_blog">Blog followed</string>
 	<string name="reader_label_unfollowed_blog">Blog unfollowed</string>
-	<string name="reader_label_more_recommendations">More recommendations</string>
 	<string name="reader_label_tag_preview">Posts tagged %s</string>
 	<string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
 	<string name="reader_toast_err_already_follow_blog">You already follow this blog</string>

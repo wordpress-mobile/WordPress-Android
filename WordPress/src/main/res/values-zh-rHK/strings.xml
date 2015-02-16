@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_page_recommended_blogs">你可能會喜歡的部落格</string>
+	<string name="stats_months_and_years">月份與年份</string>
+	<string name="stats_average_per_day">每天平均</string>
+	<string name="stats_recent_weeks">最近幾星期</string>
+	<string name="error_copy_to_clipboard">將文字複製到剪貼簿時發生錯誤</string>
+	<string name="reader_label_new_posts">新文章</string>
+	<string name="reader_empty_posts_in_blog">這個部落格沒有內容</string>
+	<string name="stats_period">期間</string>
+	<string name="logs_copied_to_clipboard">應用程式記錄已複製到剪貼簿</string>
+	<string name="stats_total">總計</string>
+	<string name="stats_overall">整體</string>
+	<string name="post_uploading">正在上傳</string>
 	<string name="stats_unfollow">取消關注</string>
 	<string name="stats_visitors">訪客</string>
 	<string name="stats_follow">關注</string>
@@ -156,13 +168,10 @@
 	<string name="reader_page_followed_tags">關注的標籤</string>
 	<string name="reader_page_popular_tags">熱門標籤</string>
 	<string name="reader_page_followed_blogs">關注的網誌</string>
-	<string name="reader_page_recommended_blogs">推薦的網誌</string>
 	<string name="reader_hint_add_tag_or_url">輸入要關注的標籤或網址</string>
-	<string name="reader_label_new_posts">顯示新文章</string>
 	<string name="reader_label_followers">%s 個追隨者</string>
 	<string name="reader_label_followed_blog">網誌已關注</string>
 	<string name="reader_label_unfollowed_blog">網誌已取消關注</string>
-	<string name="reader_label_more_recommendations">更多推薦內容</string>
 	<string name="reader_label_tag_preview">已下標籤的文章 %s</string>
 	<string name="reader_toast_err_get_blog_info">無法顯示此網誌</string>
 	<string name="reader_toast_err_already_follow_blog">你已經在關注此網誌</string>
