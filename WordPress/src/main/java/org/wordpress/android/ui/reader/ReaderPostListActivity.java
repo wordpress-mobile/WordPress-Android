@@ -23,7 +23,6 @@ import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnTagSelectedListener;
-import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
@@ -102,8 +101,12 @@ public class ReaderPostListActivity extends WPDrawerActivity
 
             if (mPostListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
                 long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                String blogUrl = intent.getStringExtra(ReaderConstants.ARG_BLOG_URL);
-                showListFragmentForBlog(blogId, blogUrl);
+                long feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
+                if (feedId != 0) {
+                    showListFragmentForFeed(feedId);
+                } else {
+                    showListFragmentForBlog(blogId);
+                }
             } else {
                 // get the tag name from the intent, if not there get it from prefs
                 ReaderTag tag;
@@ -203,23 +206,20 @@ public class ReaderPostListActivity extends WPDrawerActivity
         final ReaderPostListFragment listFragment = getListFragment();
 
         switch (requestCode) {
-            // user just returned from the tag editor
+            // user just returned from the tags/subs activity
             case ReaderConstants.INTENT_READER_SUBS :
-                if (isResultOK && listFragment != null && data != null) {
-                    if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
-                        // reload tags if they were changed, and set the last tag added as the current one
-                        String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
-                        listFragment.doTagsChanged(lastAddedTag);
-                    } else if (data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false)) {
-                        // update posts if any blog was followed or unfollowed and user is viewing "Blogs I Follow"
-                        if (listFragment.getPostListType().isTagType()
-                                && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
-                            listFragment.updatePostsWithTag(
-                                    listFragment.getCurrentTag(),
-                                    RequestDataAction.LOAD_NEWER,
-                                    ReaderTypes.RefreshType.AUTOMATIC);
-                        }
-                    }
+                // reload tags if they were changed, and set the last tag added as the current one
+                if (listFragment != null
+                        && data != null
+                        && data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
+                    String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
+                    listFragment.doTagsChanged(lastAddedTag);
+                }
+                // refresh posts if user is viewing "Blogs I Follow" to make sure changes are reflected
+                if (listFragment != null
+                        && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+                        && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
+                    listFragment.refreshPosts();
                 }
                 break;
 
@@ -279,7 +279,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
         if (isFinishing()) {
             return;
         }
-        Fragment fragment = ReaderPostListFragment.newInstance(tag, listType);
+        Fragment fragment = ReaderPostListFragment.newInstanceForTag(tag, listType);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
@@ -289,11 +289,22 @@ public class ReaderPostListActivity extends WPDrawerActivity
     /*
      * show fragment containing list of latest posts in a specific blog
      */
-    private void showListFragmentForBlog(long blogId, String blogUrl) {
+    private void showListFragmentForBlog(long blogId) {
         if (isFinishing()) {
             return;
         }
-        Fragment fragment = ReaderPostListFragment.newInstance(blogId, blogUrl);
+        Fragment fragment = ReaderPostListFragment.newInstanceForBlog(blogId);
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
+                .commit();
+    }
+
+    private void showListFragmentForFeed(long feedId) {
+        if (isFinishing()) {
+            return;
+        }
+        Fragment fragment = ReaderPostListFragment.newInstanceForFeed(feedId);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))

@@ -54,10 +54,16 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected LinearLayout mTopPagerContainer;
     protected int mTopPagerSelectedButtonIndex = 0;
 
-    protected LinearLayout mPaginationContainer;
-    protected Button mPaginationGoBackButton;
-    protected Button mPaginationGoForwardButton;
-    protected TextView mPaginationText;
+    // Bottom and Top Pagination for modules that has pagination enabled.
+    protected LinearLayout mBottomPaginationContainer;
+    protected Button mBottomPaginationGoBackButton;
+    protected Button mBottomPaginationGoForwardButton;
+    protected TextView mBottomPaginationText;
+    protected LinearLayout mTopPaginationContainer;
+    protected Button mTopPaginationGoBackButton;
+    protected Button mTopPaginationGoForwardButton;
+    protected TextView mTopPaginationText;
+
     protected LinearLayout mEmptyModulePlaceholder;
 
     protected Serializable[] mDatamodels;
@@ -106,10 +112,17 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mListContainer = (LinearLayout) view.findViewById(R.id.stats_list_container);
         mViewAll = (Button) view.findViewById(R.id.btnViewAll);
         mTopPagerContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
-        mPaginationContainer = (LinearLayout) view.findViewById(R.id.stats_pagination_container);
-        mPaginationGoBackButton = (Button) view.findViewById(R.id.stats_pagination_go_back);
-        mPaginationGoForwardButton = (Button) view.findViewById(R.id.stats_pagination_go_forward);
-        mPaginationText = (TextView) view.findViewById(R.id.stats_pagination_text);
+
+        // Load pagination items
+        mBottomPaginationContainer = (LinearLayout) view.findViewById(R.id.stats_bottom_pagination_container);
+        mBottomPaginationGoBackButton = (Button) mBottomPaginationContainer.findViewById(R.id.stats_pagination_go_back);
+        mBottomPaginationGoForwardButton = (Button) mBottomPaginationContainer.findViewById(R.id.stats_pagination_go_forward);
+        mBottomPaginationText = (TextView) mBottomPaginationContainer.findViewById(R.id.stats_pagination_text);
+        mTopPaginationContainer = (LinearLayout) view.findViewById(R.id.stats_top_pagination_container);
+        mTopPaginationContainer.setBackgroundResource(R.drawable.stats_pagination_item_background);
+        mTopPaginationGoBackButton = (Button) mTopPaginationContainer.findViewById(R.id.stats_pagination_go_back);
+        mTopPaginationGoForwardButton = (Button) mTopPaginationContainer.findViewById(R.id.stats_pagination_go_forward);
+        mTopPaginationText = (TextView) mTopPaginationContainer.findViewById(R.id.stats_pagination_text);
 
         return view;
     }
@@ -182,7 +195,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mListContainer.setVisibility(View.GONE);
         mList.setVisibility(View.GONE);
         mViewAll.setVisibility(View.GONE);
-        mPaginationContainer.setVisibility(View.GONE);
+        mBottomPaginationContainer.setVisibility(View.GONE);
+        mTopPaginationContainer.setVisibility(View.GONE);
         mEmptyModulePlaceholder.setVisibility(View.VISIBLE);
     }
 
@@ -207,7 +221,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             mListContainer.setVisibility(View.GONE);
             mList.setVisibility(View.GONE);
             mViewAll.setVisibility(View.GONE);
-            mPaginationContainer.setVisibility(View.GONE);
+            mBottomPaginationContainer.setVisibility(View.GONE);
+            mTopPaginationContainer.setVisibility(View.GONE);
         } else {
             mEmptyLabel.setVisibility(View.GONE);
             mListContainer.setVisibility(View.VISIBLE);

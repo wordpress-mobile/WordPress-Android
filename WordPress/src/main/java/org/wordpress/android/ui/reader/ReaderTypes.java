@@ -8,7 +8,7 @@ public class ReaderTypes {
     public static enum ReaderPostListType {
         TAG_FOLLOWED,   // list posts in a followed tag
         TAG_PREVIEW,    // list posts in a specific tag
-        BLOG_PREVIEW;   // list posts in a specific blog
+        BLOG_PREVIEW;   // list posts in a specific blog/feed
 
         public boolean isTagType() {
             return this.equals(TAG_FOLLOWED) || this.equals(TAG_PREVIEW);

@@ -8,6 +8,8 @@ import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -40,12 +42,14 @@ public class WPNetworkImageView extends ImageView {
                                   MSHOT,
                                   VIDEO,
                                   AVATAR,
-                             SITE_AVATAR,
-                       STATS_SITE_AVATAR}
+                                BLAVATAR}
 
     private ImageType mImageType = ImageType.NONE;
     private String mUrl;
     private ImageLoader.ImageContainer mImageContainer;
+
+    private int mDefaultImageResId;
+    private int mErrorImageResId;
 
     private int mRetryCnt;
     private static final int MAX_RETRIES = 3;
@@ -289,11 +293,26 @@ public class WPNetworkImageView extends ImageView {
         invalidate();
     }
 
-    private int getColorRes(int resId) {
+    private int getColorRes(@ColorRes int resId) {
         return getContext().getResources().getColor(resId);
     }
 
+    public void setDefaultImageResId(@DrawableRes int resourceId) {
+        mDefaultImageResId = resourceId;
+    }
+
+    public void setErrorImageResId(@DrawableRes int resourceId) {
+        mErrorImageResId = resourceId;
+    }
+
     private void showDefaultImage() {
+        // use default image resource if one was supplied...
+        if (mDefaultImageResId != 0) {
+            setImageResource(mDefaultImageResId);
+            return;
+        }
+
+        // ... otherwise use built-in default
         switch (mImageType) {
             case NONE:
                 // do nothing
@@ -306,9 +325,6 @@ public class WPNetworkImageView extends ImageView {
                 // Grey circle for avatars
                 setImageResource(R.drawable.shape_oval_grey_light);
                 break;
-            case STATS_SITE_AVATAR:
-                setImageResource(R.drawable.stats_icon_default_site_avatar);
-                break;
             default :
                 // light grey box for all others
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
@@ -317,6 +333,11 @@ public class WPNetworkImageView extends ImageView {
     }
 
     void showErrorImage() {
+        if (mErrorImageResId != 0) {
+            setImageResource(mErrorImageResId);
+            return;
+        }
+
         switch (mImageType) {
             case NONE:
                 // do nothing
@@ -329,12 +350,8 @@ public class WPNetworkImageView extends ImageView {
                         R.drawable.gravatar_placeholder
                 ));
                 break;
-            case SITE_AVATAR:
-                // square "mystery man" for failed site avatars
+            case BLAVATAR:
                 setImageResource(R.drawable.gravatar_placeholder);
-                break;
-            case STATS_SITE_AVATAR:
-                setImageResource(R.drawable.stats_icon_default_site_avatar);
                 break;
             default :
                 // medium grey box for all others
