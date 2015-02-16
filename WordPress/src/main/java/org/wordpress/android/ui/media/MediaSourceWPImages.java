@@ -72,7 +72,7 @@ public class MediaSourceWPImages implements MediaSource {
                         imageView.setTag(bgDownload);
                         bgDownload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaItem.getPreviewSource());
                     } else {
-                        org.wordpress.mediapicker.MediaUtils.fadeInImage(imageView, imageBitmap);
+                        imageView.setImageBitmap(imageBitmap);
                     }
                 } else {
                     imageView.setTag(null);
