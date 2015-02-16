@@ -156,23 +156,24 @@ public class ReaderSubsActivity extends ActionBarActivity
     }
 
     @SuppressWarnings("unused")
-    public void onEvent(ReaderUpdateService.ServiceEvent serviceEvent) {
-        switch (serviceEvent.getEvent()) {
-            case FOLLOWED_TAGS_CHANGED:
-                mTagsChanged = true;
-                getPageAdapter().refreshTagFragments();
-                break;
-            case RECOMMENDED_TAGS_CHANGED:
-                getPageAdapter().refreshTagFragments();
-                break;
-            case FOLLOWED_BLOGS_CHANGED:
-                getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
-                break;
-            case RECOMMENDED_BLOGS_CHANGED:
-                getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
-                break;
+    public void onEvent(ReaderEvents.FollowedTagsChanged event) {
+        mTagsChanged = true;
+        getPageAdapter().refreshTagFragments();
+    }
 
-        }
+    @SuppressWarnings("unused")
+    public void onEvent(ReaderEvents.RecommendedTagsChanged event) {
+        getPageAdapter().refreshTagFragments();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(ReaderEvents.FollowedBlogsChanged event) {
+        getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(ReaderEvents.RecommendedBlogsChanged event) {
+        getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
     }
 
     private void performUpdate() {

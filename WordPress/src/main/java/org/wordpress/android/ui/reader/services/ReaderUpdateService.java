@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -22,6 +21,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
 
@@ -36,22 +36,6 @@ public class ReaderUpdateService extends Service {
      * service which updates followed/recommended tags and blogs for the Reader, relies
      * on EventBus to notify of changes
      */
-
-    public static enum ServiceEventEnum {
-        FOLLOWED_TAGS_CHANGED,
-        RECOMMENDED_TAGS_CHANGED,
-        FOLLOWED_BLOGS_CHANGED,
-        RECOMMENDED_BLOGS_CHANGED
-    }
-    public class ServiceEvent {
-        private final ServiceEventEnum mEventEnum;
-        public ServiceEvent(@NonNull ServiceEventEnum eventEnum) {
-            mEventEnum = eventEnum;
-        }
-        public ServiceEventEnum getEvent() {
-            return mEventEnum;
-        }
-    }
 
     public static enum UpdateTask {
         TAGS,
@@ -127,14 +111,6 @@ public class ReaderUpdateService extends Service {
         stopSelf();
     }
 
-    /*
-     * posts a service-related event to the event bus
-     */
-    private void postEvent(@NonNull ServiceEventEnum eventEnum) {
-        ServiceEvent event = new ServiceEvent(eventEnum);
-        EventBus.getDefault().post(event);
-    }
-
     /***
      * update the tags the user is followed - also handles recommended (popular) tags since
      * they're included in the response
@@ -180,7 +156,7 @@ public class ReaderUpdateService extends Service {
                     // now replace local topics with the server topics
                     ReaderTagTable.replaceTags(serverTopics);
                     // broadcast the fact that there are changes
-                    postEvent(ServiceEventEnum.FOLLOWED_TAGS_CHANGED);
+                    EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged());
                 }
 
                 // save changes to recommended topics
@@ -189,7 +165,7 @@ public class ReaderUpdateService extends Service {
                 if (!serverRecommended.isSameList(localRecommended)) {
                     AppLog.d(AppLog.T.READER, "reader service > recommended topics changed");
                     ReaderTagTable.setRecommendedTags(serverRecommended);
-                    postEvent(ServiceEventEnum.RECOMMENDED_TAGS_CHANGED);
+                    EventBus.getDefault().post(new ReaderEvents.RecommendedTagsChanged());
                 }
 
                 taskCompleted(UpdateTask.TAGS);
@@ -277,7 +253,7 @@ public class ReaderUpdateService extends Service {
                 if (!localBlogs.isSameList(serverBlogs)) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
                     AppLog.d(AppLog.T.READER, "reader blogs service > followed blogs changed");
-                    postEvent(ServiceEventEnum.FOLLOWED_BLOGS_CHANGED);
+                    EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
                 }
 
                 taskCompleted(UpdateTask.FOLLOWED_BLOGS);
@@ -318,7 +294,7 @@ public class ReaderUpdateService extends Service {
 
                 if (!localBlogs.isSameList(serverBlogs)) {
                     ReaderBlogTable.setRecommendedBlogs(serverBlogs);
-                    postEvent(ServiceEventEnum.RECOMMENDED_BLOGS_CHANGED);
+                    EventBus.getDefault().post(new ReaderEvents.RecommendedBlogsChanged());
                 }
 
                 taskCompleted(UpdateTask.RECOMMENDED_BLOGS);
