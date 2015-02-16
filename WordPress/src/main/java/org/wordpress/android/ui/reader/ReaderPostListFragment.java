@@ -241,8 +241,14 @@ public class ReaderPostListFragment extends Fragment {
             refreshPosts();
             // likewise for tags
             refreshTags();
+
             // auto-update the current tag if it's time
-            updateCurrentTagIfTime();
+            if (!isUpdating()
+                    && getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                    && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
+                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
+            }
         }
     }
 
@@ -422,8 +428,8 @@ public class ReaderPostListFragment extends Fragment {
         if (!adapterAlreadyExists && getPostListType().isTagType()) {
             boolean isRecreated = (savedInstanceState != null);
             getPostAdapter().setCurrentTag(mCurrentTag);
-            if (!isRecreated) {
-                updateCurrentTagIfTime();
+            if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
             }
         }
 
@@ -648,7 +654,7 @@ public class ReaderPostListFragment extends Fragment {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
                     }
                 }
-                setCurrentTag(tag, true);
+                setCurrentTag(tag);
                 AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
             }
 
@@ -843,6 +849,18 @@ public class ReaderPostListFragment extends Fragment {
         return mCurrentTag != null;
     }
 
+    void setCurrentTagName(String tagName) {
+        setCurrentTagName(tagName, true);
+    }
+    void setCurrentTagName(String tagName, boolean allowAutoUpdate) {
+        if (TextUtils.isEmpty(tagName)) {
+            return;
+        }
+        setCurrentTag(new ReaderTag(tagName, ReaderTagType.FOLLOWED), allowAutoUpdate);
+    }
+    void setCurrentTag(final ReaderTag tag) {
+        setCurrentTag(tag, true);
+    }
     void setCurrentTag(final ReaderTag tag, boolean allowAutoUpdate) {
         if (tag == null) {
             return;
@@ -879,8 +897,9 @@ public class ReaderPostListFragment extends Fragment {
             updateFollowButton();
         }
 
-        if (allowAutoUpdate) {
-            updateCurrentTagIfTime();
+        // update posts in this tag if it's time to do so
+        if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
+            updatePostsWithTag(tag, RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
         }
     }
 
@@ -894,15 +913,15 @@ public class ReaderPostListFragment extends Fragment {
             return false;
         }
 
-        String tagName = mTagPreviewHistory.pop();
-        if (isCurrentTagName(tagName)) {
+        String tag = mTagPreviewHistory.pop();
+        if (isCurrentTagName(tag)) {
             if (mTagPreviewHistory.empty()) {
                 return false;
             }
-            tagName = mTagPreviewHistory.pop();
+            tag = mTagPreviewHistory.pop();
         }
 
-        setCurrentTag(new ReaderTag(tagName, ReaderTagType.FOLLOWED), false);
+        setCurrentTagName(tag, false);
         updateFollowButton();
 
         return true;
@@ -972,14 +991,6 @@ public class ReaderPostListFragment extends Fragment {
             ReaderPostActions.requestPostsForFeed(mCurrentFeedId, updateAction, resultListener);
         } else {
             ReaderPostActions.requestPostsForBlog(mCurrentBlogId, updateAction, resultListener);
-        }
-    }
-
-    private void updateCurrentTagIfTime() {
-        if (!isUpdating()
-                && getPostListType().isTagType()
-                && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag())) {
-            updateCurrentTag();
         }
     }
 
@@ -1172,7 +1183,7 @@ public class ReaderPostListFragment extends Fragment {
         checkCurrentTag();
         getSpinnerAdapter().reloadTags();
         if (!TextUtils.isEmpty(newCurrentTag)) {
-            setCurrentTag(new ReaderTag(newCurrentTag, ReaderTagType.FOLLOWED), true);
+            setCurrentTagName(newCurrentTag);
         }
     }
 

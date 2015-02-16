@@ -422,7 +422,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
         if (hasListFragment() && getListFragment().getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
             // user is already previewing a tag, so change current tag in existing preview
-            getListFragment().setCurrentTag(tag, true);
+            getListFragment().setCurrentTag(tag);
         } else {
             // user isn't previewing a tag, so open in tag preview
             ReaderActivityLauncher.showReaderTagPreview(this, tag);
