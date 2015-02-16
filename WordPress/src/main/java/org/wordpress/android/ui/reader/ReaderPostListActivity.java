@@ -153,21 +153,31 @@ public class ReaderPostListActivity extends WPDrawerActivity
 
     @SuppressWarnings("unused")
     public void onEvent(ReaderUpdateService.ServiceEvent serviceEvent) {
-        if (serviceEvent.getEvent() == ReaderUpdateService.ServiceEventEnum.FOLLOWED_BLOGS_CHANGED) {
-            ReaderPostListFragment listFragment = getListFragment();
-            if (listFragment == null) {
-                // list fragment doesn't exist yet (can happen if user signed out) - create
-                // it now showing the default tag
-                showListFragmentForTag(ReaderTag.getDefaultTag(), ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
-            } else if (listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
-                // list fragment is viewing followed tags, tell it to refresh the list of tags
-                listFragment.refreshTags();
-                // update the current tag if the list fragment is empty - this will happen if
-                // the tag table was previously empty (ie: first run)
-                if (listFragment.isPostAdapterEmpty()) {
-                    listFragment.updateCurrentTag();
+        ReaderPostListFragment listFragment = getListFragment();
+        switch (serviceEvent.getEvent()) {
+            case FOLLOWED_TAGS_CHANGED:
+                if (listFragment == null) {
+                    // list fragment doesn't exist yet (can happen if user signed out) - create
+                    // it now showing the default tag
+                    showListFragmentForTag(ReaderTag.getDefaultTag(), ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
+                } else if (listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
+                    // list fragment is viewing followed tags, tell it to refresh the list of tags
+                    listFragment.refreshTags();
+                    // update the current tag if the list fragment is empty - this will happen if
+                    // the tag table was previously empty (ie: first run)
+                    if (listFragment.isPostAdapterEmpty()) {
+                        listFragment.updateCurrentTag();
+                    }
                 }
-            }
+                break;
+            case FOLLOWED_BLOGS_CHANGED:
+                // refresh posts if user is viewing "Blogs I Follow"
+                if (listFragment != null
+                        && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+                        && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
+                    listFragment.refreshPosts();
+                }
+                break;
         }
     }
 
