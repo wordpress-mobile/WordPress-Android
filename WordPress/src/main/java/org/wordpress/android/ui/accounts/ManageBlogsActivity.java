@@ -10,34 +10,36 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
+import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 import java.util.Map;
 
-public class ManageBlogsActivity extends ActionBarActivity implements OnItemClickListener {
+public class ManageBlogsActivity extends ActionBarActivity {
     private List<Map<String, Object>> mAccounts;
     private ListScrollPositionManager mListScrollPositionManager;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ListView mListView;
 
-    protected ListView getListView() {
+    ListView getListView() {
         if (mListView == null) {
             mListView = (ListView) findViewById(android.R.id.list);
         }
@@ -76,14 +78,6 @@ public class ManageBlogsActivity extends ActionBarActivity implements OnItemClic
         if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
             refreshBlogs();
         }
-        getListView().setOnItemClickListener(this);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        CheckedTextView checkedView = (CheckedTextView) view;
-        checkedView.setChecked(!checkedView.isChecked());
-        setItemChecked(position, checkedView.isChecked());
     }
 
     @Override
@@ -116,7 +110,7 @@ public class ManageBlogsActivity extends ActionBarActivity implements OnItemClic
             item.put("isHidden", false);
         }
         WordPress.wpDB.setAllDotComAccountsVisibility(true);
-        ((BlogsAdapter)getListView().getAdapter()).notifyDataSetChanged();
+        ((BlogsAdapter) getListView().getAdapter()).notifyDataSetChanged();
     }
 
     private void deselectAll() {
@@ -124,7 +118,7 @@ public class ManageBlogsActivity extends ActionBarActivity implements OnItemClic
             item.put("isHidden", true);
         }
         WordPress.wpDB.setAllDotComAccountsVisibility(false);
-        ((BlogsAdapter)getListView().getAdapter()).notifyDataSetChanged();
+        ((BlogsAdapter) getListView().getAdapter()).notifyDataSetChanged();
     }
 
     private void refreshBlogs() {
@@ -134,7 +128,7 @@ public class ManageBlogsActivity extends ActionBarActivity implements OnItemClic
 
     private void loadAccounts() {
         ListView listView = getListView();
-        mAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[] {"isHidden"});
+        mAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"isHidden"});
         listView.setAdapter(new BlogsAdapter(this, R.layout.manageblogs_listitem, mAccounts));
     }
 
@@ -146,21 +140,61 @@ public class ManageBlogsActivity extends ActionBarActivity implements OnItemClic
     }
 
     private class BlogsAdapter extends ArrayAdapter<Map<String, Object>> {
-        private int mResource;
+        private final int mResource;
+        private final int mBlavatarSz;
+        private final LayoutInflater mInflater;
 
-        public BlogsAdapter(Context context, int resource, List objects) {
+        public BlogsAdapter(Context context, int resource, List<Map<String, Object>> objects) {
             super(context, resource, objects);
             mResource = resource;
+            mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
+            mInflater = LayoutInflater.from(context);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(mResource, parent, false);
-            CheckedTextView nameView = (CheckedTextView) rowView.findViewById(R.id.blog_name);
-            nameView.setText(BlogUtils.getBlogNameFromAccountMap(getItem(position)));
-            nameView.setChecked(!MapUtils.getMapBool(getItem(position), "isHidden"));
-            return rowView;
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            final BlogItemViewHolder holder;
+            if (convertView == null) {
+                convertView = mInflater.inflate(mResource, parent, false);
+                holder = new BlogItemViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (BlogItemViewHolder) convertView.getTag();
+            }
+
+            holder.nameView.setText(BlogUtils.getBlogNameFromAccountMap(getItem(position)));
+            holder.urlView.setText(BlogUtils.getHostNameFromAccountMap(getItem(position)));
+            holder.checkBox.setChecked(!MapUtils.getMapBool(getItem(position), "isHidden"));
+
+            String url = MapUtils.getMapStr(getItem(position), "url");
+            holder.imgBlavatar.setImageUrl(
+                    GravatarUtils.blavatarFromUrl(url, mBlavatarSz),
+                    WPNetworkImageView.ImageType.BLAVATAR);
+
+            convertView.setOnClickListener(new OnClickListener() {
+                @Override public void onClick(View v) {
+                    holder.checkBox.setChecked(!holder.checkBox.isChecked());
+                    setItemChecked(position, holder.checkBox.isChecked());
+                }
+            });
+
+            return convertView;
+        }
+
+        private class BlogItemViewHolder {
+            private final TextView nameView;
+            private final CheckBox checkBox;
+            private final TextView urlView;
+            private final WPNetworkImageView imgBlavatar;
+
+            BlogItemViewHolder(final View rowView) {
+                nameView = (TextView) rowView.findViewById(R.id.blog_name);
+                urlView = (TextView) rowView.findViewById(R.id.blog_url);
+                imgBlavatar = (WPNetworkImageView) rowView.findViewById(R.id.image_blavatar);
+                imgBlavatar.setErrorImageResId(R.drawable.app_icon);
+                checkBox = (CheckBox) rowView.findViewById(R.id.checkbox);
+                checkBox.setClickable(false);
+            }
         }
     }
 

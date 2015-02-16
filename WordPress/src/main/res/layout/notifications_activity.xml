@@ -1,19 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!--
-    layout for notifications
--->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_fragment_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:baselineAligned="false"
-    android:orientation="horizontal"
-    android:showDividers="middle"
-    android:divider="?android:attr/dividerVertical">
-        <fragment
-            android:name="org.wordpress.android.ui.notifications.NotificationsListFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:tag="notificationsList" />
-</FrameLayout>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/notifications_container"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    tools:context="org.wordpress.android.ui.notifications.NewNotificationsActivity"
+    tools:ignore="MergeRootFrame" />

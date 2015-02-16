@@ -12,7 +12,7 @@ import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[]getSectionToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.REFERRERS
         };
@@ -125,7 +125,9 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             String name = children.getTitle();
             int total = children.getTotals();
-            String icon = children.getIcon();
+
+            // The link icon
+            holder.showLinkIcon();
 
             // name, url
             holder.setEntryTextOrLink(children.getUrl(), name);
@@ -170,12 +172,16 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
 
+            final StatsViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
-                convertView.setTag(new StatsViewHolder(convertView));
+                holder = new StatsViewHolder(convertView);
+                holder.networkImageView.setErrorImageResId(R.drawable.stats_icon_default_site_avatar);
+                holder.networkImageView.setDefaultImageResId(R.drawable.stats_icon_default_site_avatar);
+                convertView.setTag(holder);
+            } else {
+                holder = (StatsViewHolder) convertView.getTag();
             }
-
-            final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
             ReferrerGroupModel group = (ReferrerGroupModel) getGroup(groupPosition);
 
@@ -194,11 +200,18 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
-            holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(icon, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.STATS_SITE_AVATAR);
+            holder.networkImageView.setImageUrl(
+                    GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
+                    WPNetworkImageView.ImageType.BLAVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
-            // expand/collapse chevron
-            holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
+            holder.chevronImageView.setVisibility(View.VISIBLE);
+            if (children == 0) {
+                holder.showLinkIcon();
+            } else {
+                holder.showChevronIcon();
+            }
+
             return convertView;
         }
 

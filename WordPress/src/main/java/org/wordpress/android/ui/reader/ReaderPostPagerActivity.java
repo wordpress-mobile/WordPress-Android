@@ -47,7 +47,8 @@ import javax.annotation.Nonnull;
  * post detail
  */
 public class ReaderPostPagerActivity extends ActionBarActivity
-        implements ReaderInterfaces.OnPostPopupListener {
+        implements ReaderInterfaces.OnPostPopupListener,
+                   ReaderInterfaces.AutoHideToolbarListener {
 
     private Toolbar mToolbar;
     private ReaderViewPager mViewPager;
@@ -65,7 +66,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO: investigate setHideOnContentScrollEnabled
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
 
@@ -121,6 +121,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
+                onShowHideToolbar(true);
             }
 
             @Override
@@ -388,6 +389,16 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         }
     }
 
+    /*
+     * called by detail fragment to show/hide the toolbar when user scrolls
+     */
+    @Override
+    public void onShowHideToolbar(boolean show) {
+        if (!isFinishing()) {
+            ReaderAnim.animateTopBar(mToolbar, show);
+        }
+    }
+
     /**
      * pager adapter containing post detail fragments
      **/
@@ -400,7 +411,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         // built-in way to do this - note that destroyItem() removes fragments
         // from this map when they're removed from the adapter, so this doesn't
         // retain *every* fragment
-        private final SparseArray<Fragment> mFragmentMap = new SparseArray<Fragment>();
+        private final SparseArray<Fragment> mFragmentMap = new SparseArray<>();
 
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm);
@@ -551,7 +562,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
 
                     ReaderPostActions.requestPostsForBlog(
                             mBlogId,
-                            null,
                             ReaderActions.RequestDataAction.LOAD_OLDER,
                             resultListener);
                     break;

@@ -29,6 +29,7 @@ import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.passcodelock.AppLockManager;
@@ -248,6 +249,10 @@ public class PostsActivity extends WPDrawerActivity
         ViewPostFragment viewPostFragment = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
 
         if (post != null) {
+            if (post.isUploading()){
+                ToastUtils.showToast(this, R.string.toast_err_post_uploading, ToastUtils.Duration.SHORT);
+                return;
+            }
             WordPress.currentPost = post;
             if (viewPostFragment == null || !viewPostFragment.isInLayout()) {
                 FragmentTransaction ft = fm.beginTransaction();
@@ -426,15 +431,20 @@ public class PostsActivity extends WPDrawerActivity
                     dialogBuilder.create().show();
                 }
             } else {
+                String deletePostMessage = getResources().getText(
+                        (post.isPage()) ? R.string.delete_sure_page
+                                : R.string.delete_sure_post).toString();
+                if (!post.getTitle().isEmpty()) {
+                    String postTitleEnclosedByQuotes = "'" + post.getTitle() + "'";
+                    deletePostMessage += " " + postTitleEnclosedByQuotes;
+                }
+
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                         PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(
                         (post.isPage()) ? R.string.delete_page
                                 : R.string.delete_post));
-                dialogBuilder.setMessage(getResources().getText(
-                        (post.isPage()) ? R.string.delete_sure_page
-                                : R.string.delete_sure_post)
-                        + " '" + post.getTitle() + "'?");
+                dialogBuilder.setMessage(deletePostMessage + "?");
                 dialogBuilder.setPositiveButton(
                         getResources().getText(R.string.yes),
                         new DialogInterface.OnClickListener() {

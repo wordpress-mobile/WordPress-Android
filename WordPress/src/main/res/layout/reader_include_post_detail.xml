@@ -13,6 +13,13 @@
     android:paddingRight="@dimen/reader_card_content_padding"
     android:paddingTop="@dimen/margin_large">
 
+    <View
+        android:id="@+id/spacer_autohide_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <LinearLayout
         android:id="@+id/layout_detail_header"
         android:layout_width="match_parent"
@@ -48,9 +55,10 @@
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_blog_name" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_follow"
-                style="@style/ReaderTextView.Follow" />
+            <org.wordpress.android.ui.reader.views.ReaderFollowButton
+                android:id="@+id/follow_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <ImageView

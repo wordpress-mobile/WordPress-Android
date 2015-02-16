@@ -26,7 +26,7 @@ import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -64,11 +64,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         private final TextView txtText;
         private final TextView txtBlogName;
         private final TextView txtDate;
-        private final TextView txtFollow;
         private final TextView txtTag;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
+        private final ReaderFollowButton followButton;
 
         private final ImageView imgBtnReblog;
         private final ImageView imgMore;
@@ -85,11 +85,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
             txtBlogName = (TextView) itemView.findViewById(R.id.text_blog_name);
             txtDate = (TextView) itemView.findViewById(R.id.text_date);
-            txtFollow = (TextView) itemView.findViewById(R.id.text_follow);
             txtTag = (TextView) itemView.findViewById(R.id.text_tag);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
+            followButton = (ReaderFollowButton) itemView.findViewById(R.id.follow_button);
 
             imgFeatured = (WPNetworkImageView) itemView.findViewById(R.id.image_featured);
             imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
@@ -134,25 +134,21 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             }
 
             // follow/following
-            ReaderUtils.showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
-            holder.txtFollow.setOnClickListener(new View.OnClickListener() {
+            holder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
+            holder.followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleFollow((TextView) v, position);
+                    toggleFollow((ReaderFollowButton) v, position);
                 }
             });
 
-            // tapping avatar shows blog preview unless this post is from an external feed
-            if (!post.isExternal) {
-                holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post.blogId, post.getBlogUrl());
-                    }
-                });
-            } else {
-                holder.imgAvatar.setOnClickListener(null);
-            }
+            // show blog/feed preview when avatar is tapped
+            holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+                }
+            });
         }
 
         if (post.hasExcerpt()) {
@@ -528,27 +524,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     /*
      * triggered when user taps the follow button
      */
-    private void toggleFollow(final TextView txtFollow, int position) {
+    private void toggleFollow(final ReaderFollowButton followButton, int position) {
         ReaderPost post = getItem(position);
         if (post == null) {
             return;
         }
 
         final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
-        ReaderAnim.animateFollowButton(txtFollow, isAskingToFollow);
+        followButton.setIsFollowedAnimated(isAskingToFollow);
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded) {
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
-                    ToastUtils.showToast(txtFollow.getContext(), resId);
-                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
+                    ToastUtils.showToast(followButton.getContext(), resId);
+                    followButton.setIsFollowed(!isAskingToFollow);
                 }
             }
         };
 
-        if (ReaderBlogActions.performFollowAction(post, isAskingToFollow, actionListener)) {
+        if (ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
             ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
             if (updatedPost != null) {
                 mPosts.set(position, updatedPost);
@@ -616,23 +612,38 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         protected void onPostExecute(Boolean result) {
             if (result) {
                 if (mPosts.size() == 0) {
+                    // full refresh if existing list was empty
                     mPosts.addAll(allPosts);
                     notifyDataSetChanged();
                 } else {
-                    // determine new & changed posts
-                    int index;
-                    int addIndex = 0;
-                    for (ReaderPost post : allPosts) {
-                        index = mPosts.indexOfPost(post);
-                        if (index == -1) {
-                            mPosts.add(addIndex, post);
-                            notifyItemInserted(addIndex);
-                            addIndex++;
-                        } else {
-                            addIndex = index + 1;
-                            if (!post.isSamePost(mPosts.get(index))) {
-                                mPosts.set(index, post);
-                                notifyItemChanged(index);
+                    // full refresh if any posts were removed (can happen after user unfollows a blog)
+                    boolean anyRemoved = false;
+                    for (ReaderPost post: mPosts) {
+                        if (allPosts.indexOfPost(post) == -1) {
+                            anyRemoved = true;
+                            mPosts.clear();
+                            mPosts.addAll(allPosts);
+                            notifyDataSetChanged();
+                            break;
+                        }
+                    }
+
+                    // do more optimal check for new/changed posts if none were removed
+                    if (!anyRemoved) {
+                        int addIndex = 0;
+                        int index;
+                        for (ReaderPost post : allPosts) {
+                            index = mPosts.indexOfPost(post);
+                            if (index == -1) {
+                                mPosts.add(addIndex, post);
+                                notifyItemInserted(addIndex);
+                                addIndex++;
+                            } else {
+                                addIndex = index + 1;
+                                if (!post.isSamePost(mPosts.get(index))) {
+                                    mPosts.set(index, post);
+                                    notifyItemChanged(index);
+                                }
                             }
                         }
                     }

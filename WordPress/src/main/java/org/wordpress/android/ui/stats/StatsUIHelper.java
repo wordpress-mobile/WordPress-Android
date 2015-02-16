@@ -153,7 +153,14 @@ public class StatsUIHelper {
             } else {
                 groupView = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
                 groupView.setBackgroundColor(bgColor);
-                setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_background);                mLinearLayout.addView(groupView);
+                setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_background);
+                mLinearLayout.addView(groupView);
+            }
+
+            // Remove any other prev animations set on the chevron
+            final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
+            if (chevron != null) {
+                chevron.clearAnimation();
             }
 
             // add children if this group is expanded

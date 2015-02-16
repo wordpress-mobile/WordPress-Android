@@ -292,6 +292,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 FragmentManager fm = getFragmentManager();
                 if (fm.getBackStackEntryCount() > 0) {
                     fm.popBackStack();
+                } else if (isStaticMenuDrawer()) {
+                    finish();
                 } else {
                     toggleDrawer();
                 }
@@ -326,7 +328,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
     }
 
-    private void closeDrawer() {
+    void closeDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
@@ -335,6 +337,13 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private void openDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.openDrawer(GravityCompat.START);
+        }
+    }
+
+    protected void hideDrawer() {
+        View drawer = findViewById(R.id.left_drawer);
+        if (drawer != null) {
+            drawer.setVisibility(View.GONE);
         }
     }
 
@@ -587,7 +596,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         for (int i = 0; i < blogCount; i++) {
             Map<String, Object> account = accounts.get(i);
-            blogNames[i] = BlogUtils.getBlogNameFromAccountMap(account);
+            blogNames[i] = BlogUtils.getBlogNameOrHostNameFromAccountMap(account);
             mBlogIDs[i] = Integer.valueOf(account.get("id").toString());
         }
 

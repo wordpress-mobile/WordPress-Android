@@ -7,6 +7,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
+import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.UrlUtils;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
@@ -181,6 +184,12 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             if (isHTTPAuthErrorMessage(e)) {
                 return null;
             }
+        } catch (IllegalArgumentException e) {
+            // TODO: Hopefully a temporary log - remove it if we find a pattern of failing URLs
+            CrashlyticsUtils.setString(ExtraKey.ENTERED_URL, baseUrl);
+            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.NUX);
+            mErrorMsgId = org.wordpress.android.R.string.invalid_url_message;
+            return null;
         }
 
         // Guess the xmlrpc path
