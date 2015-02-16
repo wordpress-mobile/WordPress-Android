@@ -1710,7 +1710,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      *  local path of the media file to upload
      */
     private void queueFileForUpload(String path) {
-        if (path == null || path.equals("")) {
+        if (TextUtils.isEmpty(path)) {
             Toast.makeText(getActivity(), "Error opening file", Toast.LENGTH_SHORT).show();
             return;
         }
