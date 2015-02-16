@@ -183,7 +183,7 @@ public class MediaSourceWPImages implements MediaSource {
                         connection.connect();
                         int responseCode = connection.getResponseCode();
 
-                        if (responseCode != 404) {
+                        if (responseCode == 200) {
                             mVerifiedItems.add(mediaItem);
                         }
                     } catch (MalformedURLException e) {
