@@ -80,7 +80,7 @@
     <string name="add_to_post">Add to Post</string>
     <string name="media_picker_title">Select media</string>
     <string name="take_photo">Take a photo</string>
-    <string name="capture_video">Capture a video</string>
+    <string name="take_video">Take a video</string>
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
