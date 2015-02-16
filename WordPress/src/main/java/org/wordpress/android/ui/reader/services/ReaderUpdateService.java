@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
+import android.support.annotation.NonNull;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -28,19 +28,30 @@ import org.wordpress.android.util.JSONUtil;
 import java.util.EnumSet;
 import java.util.Iterator;
 
+import de.greenrobot.event.EventBus;
+
 public class ReaderUpdateService extends Service {
 
-    /*
-     * service which updates followed/recommended tags and blogs for the Reader, only
-     * sends broadcast when changes are found (ie: no broadcast for update start/stop
-     * or for unchanged/failed)
+    /***
+     * service which updates followed/recommended tags and blogs for the Reader, relies
+     * on EventBus to notify of changes
      */
 
-    public static final String ACTION_UPDATE_COMPLETED          = "reader_update_completed";
-    public static final String ACTION_FOLLOWED_TAGS_CHANGED     = "reader_followed_tags_changed";
-    public static final String ACTION_RECOMMENDED_TAGS_CHANGED  = "reader_recommended_tags_changed";
-    public static final String ACTION_FOLLOWED_BLOGS_CHANGED    = "reader_followed_blogs_changed";
-    public static final String ACTION_RECOMMENDED_BLOGS_CHANGED = "reader_recommended_blogs_changed";
+    public static enum ServiceEventEnum {
+        FOLLOWED_TAGS_CHANGED,
+        RECOMMENDED_TAGS_CHANGED,
+        FOLLOWED_BLOGS_CHANGED,
+        RECOMMENDED_BLOGS_CHANGED
+    }
+    public class ServiceEvent {
+        private final ServiceEventEnum mEventEnum;
+        public ServiceEvent(@NonNull ServiceEventEnum eventEnum) {
+            mEventEnum = eventEnum;
+        }
+        public ServiceEventEnum getEvent() {
+            return mEventEnum;
+        }
+    }
 
     public static enum UpdateTask {
         TAGS,
@@ -78,12 +89,6 @@ public class ReaderUpdateService extends Service {
         super.onDestroy();
     }
 
-    private void sendLocalBroadcast(Intent intent) {
-        if (intent != null) {
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        }
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && intent.hasExtra(ARG_UPDATE_TASKS)) {
@@ -110,7 +115,7 @@ public class ReaderUpdateService extends Service {
         }
     }
 
-    private void taskCompleted(UpdateTask task, boolean didFail) {
+    private void taskCompleted(UpdateTask task) {
         mCurrentTasks.remove(task);
         if (mCurrentTasks.isEmpty()) {
             allTasksCompleted();
@@ -119,8 +124,15 @@ public class ReaderUpdateService extends Service {
 
     private void allTasksCompleted() {
         AppLog.i(AppLog.T.READER, "reader service > all tasks completed");
-        sendLocalBroadcast(new Intent().setAction(ACTION_UPDATE_COMPLETED));
         stopSelf();
+    }
+
+    /*
+     * posts a service-related event to the event bus
+     */
+    private void postEvent(@NonNull ServiceEventEnum eventEnum) {
+        ServiceEvent event = new ServiceEvent(eventEnum);
+        EventBus.getDefault().post(event);
     }
 
     /***
@@ -139,7 +151,7 @@ public class ReaderUpdateService extends Service {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.READER, volleyError);
-                taskCompleted(UpdateTask.TAGS, true);
+                taskCompleted(UpdateTask.TAGS);
             }
         };
         AppLog.d(AppLog.T.READER, "reader service > updating tags");
@@ -168,7 +180,7 @@ public class ReaderUpdateService extends Service {
                     // now replace local topics with the server topics
                     ReaderTagTable.replaceTags(serverTopics);
                     // broadcast the fact that there are changes
-                    sendLocalBroadcast(new Intent().setAction(ACTION_FOLLOWED_TAGS_CHANGED));
+                    postEvent(ServiceEventEnum.FOLLOWED_TAGS_CHANGED);
                 }
 
                 // save changes to recommended topics
@@ -177,10 +189,10 @@ public class ReaderUpdateService extends Service {
                 if (!serverRecommended.isSameList(localRecommended)) {
                     AppLog.d(AppLog.T.READER, "reader service > recommended topics changed");
                     ReaderTagTable.setRecommendedTags(serverRecommended);
-                    sendLocalBroadcast(new Intent().setAction(ACTION_RECOMMENDED_TAGS_CHANGED));
+                    postEvent(ServiceEventEnum.RECOMMENDED_TAGS_CHANGED);
                 }
 
-                taskCompleted(UpdateTask.TAGS, false);
+                taskCompleted(UpdateTask.TAGS);
             }
         }.start();
     }
@@ -247,7 +259,7 @@ public class ReaderUpdateService extends Service {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.READER, volleyError);
-                taskCompleted(UpdateTask.FOLLOWED_BLOGS, true);
+                taskCompleted(UpdateTask.FOLLOWED_BLOGS);
             }
         };
 
@@ -265,10 +277,10 @@ public class ReaderUpdateService extends Service {
                 if (!localBlogs.isSameList(serverBlogs)) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
                     AppLog.d(AppLog.T.READER, "reader blogs service > followed blogs changed");
-                    sendLocalBroadcast(new Intent().setAction(ACTION_FOLLOWED_BLOGS_CHANGED));
+                    postEvent(ServiceEventEnum.FOLLOWED_BLOGS_CHANGED);
                 }
 
-                taskCompleted(UpdateTask.FOLLOWED_BLOGS, false);
+                taskCompleted(UpdateTask.FOLLOWED_BLOGS);
             }
         }.start();
     }
@@ -287,7 +299,7 @@ public class ReaderUpdateService extends Service {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.READER, volleyError);
-                taskCompleted(UpdateTask.RECOMMENDED_BLOGS, true);
+                taskCompleted(UpdateTask.RECOMMENDED_BLOGS);
             }
         };
 
@@ -306,10 +318,10 @@ public class ReaderUpdateService extends Service {
 
                 if (!localBlogs.isSameList(serverBlogs)) {
                     ReaderBlogTable.setRecommendedBlogs(serverBlogs);
-                    sendLocalBroadcast(new Intent().setAction(ACTION_RECOMMENDED_BLOGS_CHANGED));
+                    postEvent(ServiceEventEnum.RECOMMENDED_BLOGS_CHANGED);
                 }
 
-                taskCompleted(UpdateTask.RECOMMENDED_BLOGS, false);
+                taskCompleted(UpdateTask.RECOMMENDED_BLOGS);
             }
         }.start();
     }
