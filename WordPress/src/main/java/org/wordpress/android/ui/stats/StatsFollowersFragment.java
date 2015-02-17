@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 public class StatsFollowersFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsFollowersFragment.class.getSimpleName();
 
-    private Map<String, String> userBlogs = new HashMap<>();
+    private Map<String, Integer> userBlogs = new HashMap<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,7 +85,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 for (Map<String, Object> blog : dotComUserBlogs) {
                     if (blog != null && blog.get("homeURL") != null && blog.get("blogId") != null) {
                         String normURL = normalizeAndRemoveScheme(blog.get("homeURL").toString());
-                        String blogID = blog.get("blogId").toString();
+                        Integer blogID = (Integer)blog.get("blogId");
                         userBlogs.put(normURL, blogID);
                     }
                 }
@@ -296,7 +296,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     // We need to check if the user is a member of this blog.
                     // If so, we can launch open the reader, otherwise open the blog in the in-app browser.
                     String normURL = normalizeAndRemoveScheme(currentRowData.getURL());
-                    blogID = userBlogs.containsKey(normURL) ? Integer.parseInt(userBlogs.get(normURL)) : Integer.MIN_VALUE;
+                    blogID = userBlogs.containsKey(normURL) ? userBlogs.get(normURL) : Integer.MIN_VALUE;
                 } else {
                     blogID = followData.getSiteID();
                 }
