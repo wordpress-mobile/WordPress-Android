@@ -474,6 +474,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     endProgress();
                 }
             });
+
+            AnalyticsTracker.track(Stat.LOGIN_FAILED);
         }
     };
 
@@ -791,7 +793,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void signInError(int messageId, String clientResponse) {
-        AnalyticsTracker.track(Stat.LOGIN_FAILED);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert;
         if (messageId == org.wordpress.android.R.string.username_or_password_incorrect) {
