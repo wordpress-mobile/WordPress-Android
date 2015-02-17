@@ -16,7 +16,6 @@ import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
 import org.wordpress.android.ui.reader.views.ReaderViewPager;
-import org.wordpress.android.util.AppLog;
 
 import javax.annotation.Nonnull;
 
@@ -25,12 +24,13 @@ import javax.annotation.Nonnull;
  * post, but also supports viewing a single image
  */
 public class ReaderPhotoViewerActivity extends ActionBarActivity
-                                       implements PhotoViewListener {
+        implements PhotoViewListener {
 
     private String mInitialImageUrl;
     private boolean mIsPrivate;
     private String mContent;
     private ReaderViewPager mViewPager;
+    private PhotoPagerAdapter mAdapter;
     private TextView mTxtTitle;
     private boolean mIsTitleVisible;
 
@@ -63,70 +63,43 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
             }
         });
 
+        mViewPager.setAdapter(getAdapter());
         loadImageList();
     }
 
     private void loadImageList() {
-        // content will be empty unless this was called by ReaderPostDetailFragment to show
-        // a list of images in a post (in which case, it's the content of the post)
+        final ReaderImageList imageList;
         if (TextUtils.isEmpty(mContent)) {
-            final ReaderImageList imageList = new ReaderImageList(mIsPrivate);
-            if (!TextUtils.isEmpty(mInitialImageUrl)) {
-                imageList.add(mInitialImageUrl);
-            }
-            setImageList(imageList, mInitialImageUrl);
+            // content will be empty when we're viewing a single image
+            imageList = new ReaderImageList(mIsPrivate);
         } else {
-            // parse images from content and make sure the list includes the passed url
-            new Thread() {
-                @Override
-                public void run() {
-                    final ReaderImageList imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList();
-                    if (!TextUtils.isEmpty(mInitialImageUrl) && !imageList.hasImageUrl(mInitialImageUrl)) {
-                        AppLog.w(AppLog.T.READER, "reader photo viewer > initial image not in list");
-                        imageList.addImageUrl(0, mInitialImageUrl);
-                    }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!isFinishing()) {
-                                setImageList(imageList, mInitialImageUrl);
-                            }
-                        }
-                    });
-                }
-            }.start();
+            // otherwise content is HTML so parse images from it
+            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList();
         }
+
+        // make sure initial image is in the list
+        if (!TextUtils.isEmpty(mInitialImageUrl) && !imageList.hasImageUrl(mInitialImageUrl)) {
+            imageList.addImageUrl(0, mInitialImageUrl);
+        }
+
+        getAdapter().setImageList(imageList, mInitialImageUrl);
     }
 
-    private void setImageList(ReaderImageList imageList, String initialImageUrl) {
-        PhotoPagerAdapter adapter = new PhotoPagerAdapter(getFragmentManager(), imageList);
-        mViewPager.setAdapter(adapter);
-
-        int position = adapter.indexOfImageUrl(initialImageUrl);
-        if (adapter.isValidPosition(position)) {
-            mViewPager.setCurrentItem(position);
-            if (canShowTitle()) {
-                mTxtTitle.setVisibility(View.VISIBLE);
-                mIsTitleVisible = true;
-                updateTitle(position);
-            } else {
-                mIsTitleVisible = false;
-            }
+    private PhotoPagerAdapter getAdapter() {
+        if (mAdapter == null) {
+            mAdapter = new PhotoPagerAdapter(getFragmentManager());
         }
+        return mAdapter;
     }
 
-    private PhotoPagerAdapter getPageAdapter() {
-        if (mViewPager == null || mViewPager.getAdapter() == null) {
-            return null;
-        }
-        return (PhotoPagerAdapter) mViewPager.getAdapter();
+    private boolean hasAdapter() {
+        return (mAdapter != null);
     }
 
     @Override
     public void onSaveInstanceState(@Nonnull Bundle outState) {
-        PhotoPagerAdapter adapter = getPageAdapter();
-        if (adapter != null) {
-            String imageUrl = adapter.getImageUrl(mViewPager.getCurrentItem());
+        if (hasAdapter()) {
+            String imageUrl = getAdapter().getImageUrl(mViewPager.getCurrentItem());
             outState.putString(ReaderConstants.ARG_IMAGE_URL, imageUrl);
         }
 
@@ -137,9 +110,8 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
     }
 
     private int getImageCount() {
-        PhotoPagerAdapter adapter = getPageAdapter();
-        if (adapter != null) {
-            return adapter.getCount();
+        if (hasAdapter()) {
+            return getAdapter().getCount();
         } else {
             return 0;
         }
@@ -185,14 +157,26 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
     }
 
     private class PhotoPagerAdapter extends FragmentStatePagerAdapter {
-        private final ReaderImageList mImageList;
+        private ReaderImageList mImageList;
 
-        PhotoPagerAdapter(FragmentManager fm, ReaderImageList imageList) {
+        PhotoPagerAdapter(FragmentManager fm) {
             super(fm);
-            if (imageList != null) {
-                mImageList = (ReaderImageList) imageList.clone();
-            } else {
-                mImageList = new ReaderImageList(mIsPrivate);
+        }
+
+        void setImageList(ReaderImageList imageList, String initialImageUrl) {
+            mImageList = (ReaderImageList) imageList.clone();
+            notifyDataSetChanged();
+
+            int position = indexOfImageUrl(initialImageUrl);
+            if (isValidPosition(position)) {
+                mViewPager.setCurrentItem(position);
+                if (canShowTitle()) {
+                    mTxtTitle.setVisibility(View.VISIBLE);
+                    mIsTitleVisible = true;
+                    updateTitle(position);
+                } else {
+                    mIsTitleVisible = false;
+                }
             }
         }
 
@@ -205,15 +189,20 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
 
         @Override
         public int getCount() {
-            return mImageList.size();
+            return (mImageList != null ? mImageList.size(): 0);
         }
 
         private int indexOfImageUrl(String imageUrl) {
+            if (mImageList == null) {
+                return -1;
+            }
             return mImageList.indexOfImageUrl(imageUrl);
         }
 
         private boolean isValidPosition(int position) {
-            return (position >= 0 && position < getCount());
+            return (mImageList != null
+                    && position >= 0
+                    && position < getCount());
         }
 
         private String getImageUrl(int position) {
