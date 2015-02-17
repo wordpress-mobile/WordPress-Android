@@ -26,12 +26,11 @@ public class BlogUtils {
      *
      * @return true if a change has been made (new blog added, old blog updated, blog deleted).
      */
-    public static boolean syncBlogs(Context context, List<Map<String, Object>> newBlogList, String username,
-                                    String password, String httpUsername, String httpPassword) {
+    public static boolean syncBlogs(Context context, List<Map<String, Object>> newBlogList, String username) {
         boolean retValue;
 
         // Add all blogs from blogList
-        retValue = addBlogs(newBlogList, username, password, httpUsername, httpPassword);
+        retValue = addBlogs(newBlogList, username, null, null, null);
 
         // Delete blogs if not in bloegList
         List<Map<String, Object>> allBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
@@ -136,5 +135,9 @@ public class BlogUtils {
             }
             return false;
         }
+    }
+
+    public static void addBlogs(List<Map<String, Object>> userBlogList, String username) {
+        addBlogs(userBlogList, username, null, null, null);
     }
 }

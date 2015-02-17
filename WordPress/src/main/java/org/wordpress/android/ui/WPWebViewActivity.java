@@ -73,21 +73,6 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
     public static final String LOCAL_BLOG_ID = "local_blog_id";
 
-    public static void openUrlByUsingMainWPCOMCredentials(Context context, String url) {
-        if (context == null) {
-            AppLog.e(AppLog.T.UTILS, "Context is null in openUrlByUsingMainWPCOMCredentials!");
-            return;
-        }
-
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String authenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-        String authenticatedPassword = WordPressDB.decryptPassword(
-                settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
-        );
-
-        openWPCOMURL(context, url, authenticatedUser, authenticatedPassword);
-    }
-
     public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user, String password) {
         openWPCOMURL(context, url, user, password);
     }

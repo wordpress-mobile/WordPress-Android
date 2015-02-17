@@ -45,8 +45,6 @@ import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdat
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.stats.StatsUtils;
-import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
@@ -210,7 +208,6 @@ public class WordPress extends Application {
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
             currentBlog = null;
             editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
-            editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
             editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
             editor.commit();
             if (wpDB != null) {
@@ -327,7 +324,7 @@ public class WordPress extends Application {
         String regId = gcmRegisterIfNot(context);
 
         // Register to WordPress.com notifications
-        if (WordPress.hasValidWPComCredentials(context)) {
+        if (WordPress.hasDotComToken(context)) {
             if (!TextUtils.isEmpty(regId)) {
                 // Send the token to WP.com in case it was invalidated
                 NotificationsUtils.registerDeviceForPushNotifications(context, regId);
@@ -410,8 +407,7 @@ public class WordPress extends Application {
      */
     public static Blog getBlog(int id) {
         try {
-            Blog blog = wpDB.instantiateBlogByLocalId(id);
-            return blog;
+            return wpDB.instantiateBlogByLocalId(id);
         } catch (Exception e) {
             return null;
         }
@@ -467,22 +463,20 @@ public class WordPress extends Application {
      *
      * @return true if we have credentials or false if not
      */
-    public static boolean hasValidWPComCredentials(Context context) {
+    public static boolean hasDotComToken(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
-        String password = settings.getString(WPCOM_PASSWORD_PREFERENCE, null);
-        return username != null && password != null;
+        return !TextUtils.isEmpty(settings.getString(ACCESS_TOKEN_PREFERENCE, null));
     }
 
     public static boolean isSignedIn(Context context) {
-        if (WordPress.hasValidWPComCredentials(context)) {
+        if (WordPress.hasDotComToken(context)) {
             return true;
         }
         return WordPress.wpDB.getNumVisibleAccounts() != 0;
     }
 
     public static String getLoggedInUsername(Context context, Blog blog) {
-        if (hasValidWPComCredentials(context)) {
+        if (hasDotComToken(context)) {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
             return settings.getString(WPCOM_USERNAME_PREFERENCE, null);
         } else if (blog != null) {
@@ -747,7 +741,7 @@ public class WordPress extends Application {
          */
         private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
-            if (isPushNotificationPingNeeded() && WordPress.hasValidWPComCredentials(mContext)) {
+            if (isPushNotificationPingNeeded() && WordPress.hasDotComToken(mContext)) {
                 String token = null;
                 try {
                     // Register for Google Cloud Messaging

@@ -87,7 +87,6 @@ public class LoginWPCom extends LoginAbstract {
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
-                    editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
                     editor.putString(WordPress.ACCESS_TOKEN_PREFERENCE, token.toString());
                     editor.commit();
                 }

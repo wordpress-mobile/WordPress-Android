@@ -412,7 +412,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         @Override
         public void onSuccess(final List<Map<String, Object>> userBlogList) {
             if (userBlogList != null) {
-                BlogUtils.addBlogs(userBlogList, mUsername, mPassword, mHttpUsername, mHttpPassword);
+                if (isWPComLogin()) {
+                    BlogUtils.addBlogs(userBlogList, mUsername);
+                } else {
+                    BlogUtils.addBlogs(userBlogList, mUsername, mPassword, mHttpUsername, mHttpPassword);
+                }
+
                 // refresh first blog
                 refreshFirstBlogContent();
             }
@@ -661,6 +666,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
+    // TODO: ?
     public void signInDotComUser() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
                 getActivity().getApplicationContext());

@@ -655,7 +655,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             // for self-hosted sites; launch the user into an activity where they can provide their credentials
             if (!currentBlog.isDotcomFlag()
                     && !currentBlog.hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
-                if (WordPress.hasValidWPComCredentials(this)) {
+                if (WordPress.hasDotComToken(this)) {
                     // Let's try the global wpcom credentials them first
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
                     String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
@@ -688,7 +688,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         // check again that we've valid credentials for a Jetpack site
         if (!currentBlog.isDotcomFlag()
                 && !currentBlog.hasValidJetpackCredentials()
-                && !WordPress.hasValidWPComCredentials(this)) {
+                && !WordPress.hasDotComToken(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
             return;
