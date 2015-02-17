@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
 import org.wordpress.android.ui.reader.views.ReaderViewPager;
+import org.wordpress.android.util.AppLog;
 
 import javax.annotation.Nonnull;
 
@@ -177,6 +179,18 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
                 } else {
                     mIsTitleVisible = false;
                 }
+            }
+        }
+
+        @Override
+        public void restoreState(Parcelable state, ClassLoader loader) {
+            // work around "Fragement no longer exists for key" Android bug
+            // by catching the IllegalStateException
+            // https://code.google.com/p/android/issues/detail?id=42601
+            try {
+                super.restoreState(state, loader);
+            } catch (IllegalStateException e) {
+                AppLog.e(AppLog.T.READER, e);
             }
         }
 
