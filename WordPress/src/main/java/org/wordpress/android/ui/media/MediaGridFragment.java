@@ -37,7 +37,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
-import org.wordpress.android.ui.MessageType;
+import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostContentFragment;
@@ -94,7 +94,7 @@ public class MediaGridFragment extends Fragment
 
     private LinearLayout mEmptyView;
     private TextView mEmptyViewTitle;
-    private MessageType mEmptyViewMessageType = MessageType.NO_CONTENT;
+    private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
 
     private int mOldMediaSyncOffset = 0;
 
@@ -187,7 +187,7 @@ public class MediaGridFragment extends Fragment
                             return;
                         }
                         if (!NetworkUtils.checkConnection(getActivity())) {
-                            updateEmptyView(MessageType.NETWORK_ERROR);
+                            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
@@ -218,7 +218,8 @@ public class MediaGridFragment extends Fragment
         mGridView.setSelection(savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0));
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETREIEVED_ALL_MEDIA, false);
         mFilter = Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));
-        mEmptyViewMessageType = MessageType.getEnumFromString(savedInstanceState.getString(BUNDLE_EMPTY_VIEW_MESSAGE));
+        mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
+                getString(BUNDLE_EMPTY_VIEW_MESSAGE));
 
         mIsDateFilterSet = savedInstanceState.getBoolean(BUNDLE_DATE_FILTER_SET, false);
         mStartDay = savedInstanceState.getInt(BUNDLE_DATE_FILTER_START_DAY);
@@ -334,14 +335,14 @@ public class MediaGridFragment extends Fragment
                     refreshMediaFromServer(0, true);
                 }
             } else {
-                updateEmptyView(MessageType.NETWORK_ERROR);
+                updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             }
         }
     }
 
     public void refreshMediaFromServer(int offset, final boolean auto) {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            updateEmptyView(MessageType.NETWORK_ERROR);
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             setRefreshing(false);
             return;
         }
@@ -366,7 +367,7 @@ public class MediaGridFragment extends Fragment
             mOldMediaSyncOffset = offset;
 
             mIsRefreshing = true;
-            updateEmptyView(MessageType.LOADING);
+            updateEmptyView(EmptyViewMessageType.LOADING);
             mListener.onMediaItemListDownloadStart();
             mGridAdapter.setRefreshing(true);
 
@@ -391,7 +392,7 @@ public class MediaGridFragment extends Fragment
                             @Override
                             public void run() {
                                 refreshSpinnerAdapter();
-                                updateEmptyView(MessageType.NO_CONTENT);
+                                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
                                 if (!auto) {
                                     mGridView.setSelection(0);
                                 }
@@ -432,9 +433,9 @@ public class MediaGridFragment extends Fragment
                                 mGridAdapter.setRefreshing(false);
                                 mSwipeToRefreshHelper.setRefreshing(false);
                                 if (errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP) {
-                                    updateEmptyView(MessageType.PERMISSION_ERROR);
+                                    updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
                                 } else {
-                                    updateEmptyView(MessageType.GENERIC_ERROR);
+                                    updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
                                 }
                             }
                         });
@@ -470,12 +471,12 @@ public class MediaGridFragment extends Fragment
         }
     }
 
-    private void updateEmptyView(MessageType messageType) {
+    private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         if (mEmptyView != null) {
             if (mGridAdapter.getDataCount() == 0) {
                 int stringId = 0;
 
-                switch (messageType) {
+                switch (emptyViewMessageType) {
                     case LOADING:
                         stringId = R.string.loading_media;
                         break;
@@ -484,7 +485,7 @@ public class MediaGridFragment extends Fragment
                         break;
                     case NETWORK_ERROR:
                         // Don't overwrite NO_CONTENT_CUSTOM_DATE message, since refresh is disabled with that filter on
-                        if (mEmptyViewMessageType == MessageType.NO_CONTENT_CUSTOM_DATE) {
+                        if (mEmptyViewMessageType == EmptyViewMessageType.NO_CONTENT_CUSTOM_DATE) {
                             mEmptyView.setVisibility(View.VISIBLE);
                             return;
                         }
@@ -502,7 +503,7 @@ public class MediaGridFragment extends Fragment
                 }
 
                 mEmptyViewTitle.setText(getText(stringId));
-                mEmptyViewMessageType = messageType;
+                mEmptyViewMessageType = emptyViewMessageType;
                 mEmptyView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.GONE);
@@ -531,13 +532,14 @@ public class MediaGridFragment extends Fragment
         }
         if (filter != Filter.CUSTOM_DATE) {
             // Overwrite the LOADING and NO_CONTENT_CUSTOM_DATE messages
-            if (mEmptyViewMessageType == MessageType.LOADING || mEmptyViewMessageType == MessageType.NO_CONTENT_CUSTOM_DATE) {
-                updateEmptyView(MessageType.NO_CONTENT);
+            if (mEmptyViewMessageType == EmptyViewMessageType.LOADING ||
+                    mEmptyViewMessageType == EmptyViewMessageType.NO_CONTENT_CUSTOM_DATE) {
+                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
             } else {
                 updateEmptyView(mEmptyViewMessageType);
             }
         } else {
-            updateEmptyView(MessageType.NO_CONTENT_CUSTOM_DATE);
+            updateEmptyView(EmptyViewMessageType.NO_CONTENT_CUSTOM_DATE);
         }
     }
 
@@ -566,7 +568,7 @@ public class MediaGridFragment extends Fragment
                     formattedEnd));
             return cursor;
         } else {
-            updateEmptyView(MessageType.NO_CONTENT_CUSTOM_DATE);
+            updateEmptyView(EmptyViewMessageType.NO_CONTENT_CUSTOM_DATE);
         }
         return null;
     }

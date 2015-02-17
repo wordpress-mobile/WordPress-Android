@@ -1,10 +1,10 @@
 package org.wordpress.android.ui;
 
-public enum MessageType {
+public enum EmptyViewMessageType {
     LOADING, NO_CONTENT, NETWORK_ERROR, PERMISSION_ERROR, GENERIC_ERROR, NO_CONTENT_CUSTOM_DATE;
 
-    public static MessageType getEnumFromString(String value) {
-        for (MessageType id : values()) {
+    public static EmptyViewMessageType getEnumFromString(String value) {
+        for (EmptyViewMessageType id : values()) {
             if (id.name().equals(value)) {
                 return id;
             }

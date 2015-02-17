@@ -26,7 +26,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
-import org.wordpress.android.ui.MessageType;
+import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -58,7 +58,7 @@ public class PostsListFragment extends ListFragment
     private View mEmptyView;
     private View mEmptyViewImage;
     private TextView mEmptyViewTitle;
-    private MessageType mEmptyViewMessage = MessageType.NO_CONTENT;
+    private EmptyViewMessageType mEmptyViewMessage = EmptyViewMessageType.NO_CONTENT;
 
     private EmptyViewAnimationHandler mEmptyViewAnimationHandler;
     private boolean mSwipedToRefresh;
@@ -99,7 +99,7 @@ public class PostsListFragment extends ListFragment
                         }
                         if (!NetworkUtils.checkConnection(getActivity())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
-                            updateEmptyView(MessageType.NETWORK_ERROR);
+                            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             return;
                         }
                         mSwipedToRefresh = true;
@@ -168,7 +168,7 @@ public class PostsListFragment extends ListFragment
 
                     if (!isRefreshing() || mKeepSwipeRefreshLayoutVisible) {
                         // No posts and not currently refreshing. Display the "no posts/pages" message
-                        updateEmptyView(MessageType.NO_CONTENT);
+                        updateEmptyView(EmptyViewMessageType.NO_CONTENT);
                     }
 
                     if (postCount == 0 && mCanLoadMorePosts) {
@@ -177,7 +177,7 @@ public class PostsListFragment extends ListFragment
                             setRefreshing(true);
                             requestPosts(false);
                         } else {
-                            updateEmptyView(MessageType.NETWORK_ERROR);
+                            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                         }
                     } else if (mShouldSelectFirstPost) {
                         // Select the first row on a tablet, if requested
@@ -251,7 +251,7 @@ public class PostsListFragment extends ListFragment
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             ((PostsActivity) getActivity()).requestPosts();
         } else {
-            updateEmptyView(MessageType.NETWORK_ERROR);
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
         }
     }
 
@@ -330,11 +330,11 @@ public class PostsListFragment extends ListFragment
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            updateEmptyView(MessageType.NETWORK_ERROR);
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
 
-        updateEmptyView(MessageType.LOADING);
+        updateEmptyView(EmptyViewMessageType.LOADING);
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {
@@ -397,13 +397,13 @@ public class PostsListFragment extends ListFragment
                                         mIsPage ? R.string.error_refresh_unauthorized_pages :
                                                 R.string.error_refresh_unauthorized_posts, Duration.LONG);
                             }
-                            updateEmptyView(MessageType.PERMISSION_ERROR);
+                            updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
                             return;
                         default:
                             ToastUtils.showToast(getActivity(),
                                     mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
                                     Duration.LONG);
-                            updateEmptyView(MessageType.GENERIC_ERROR);
+                            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
                             return;
                     }
                 }
@@ -443,7 +443,7 @@ public class PostsListFragment extends ListFragment
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            updateEmptyView(MessageType.NETWORK_ERROR);
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
 
@@ -505,7 +505,7 @@ public class PostsListFragment extends ListFragment
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            updateEmptyView(MessageType.NETWORK_ERROR);
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
 
@@ -525,17 +525,19 @@ public class PostsListFragment extends ListFragment
         mSwipeToRefreshHelper.setRefreshing(false);
     }
 
-    private void updateEmptyView(final MessageType messageType) {
+    private void updateEmptyView(final EmptyViewMessageType emptyViewMessageType) {
         if (mPostsListAdapter != null && mPostsListAdapter.getCount() == 0) {
             // Handle animation display
-            if (mEmptyViewMessage == MessageType.NO_CONTENT && messageType == MessageType.LOADING) {
+            if (mEmptyViewMessage == EmptyViewMessageType.NO_CONTENT &&
+                    emptyViewMessageType == EmptyViewMessageType.LOADING) {
                 // Show the NO_CONTENT > LOADING sequence, but only if the user swiped to refresh
                 if (mSwipedToRefresh) {
                     mSwipedToRefresh = false;
                     mEmptyViewAnimationHandler.showLoadingSequence();
                     return;
                 }
-            } else if (mEmptyViewMessage == MessageType.LOADING && messageType == MessageType.NO_CONTENT) {
+            } else if (mEmptyViewMessage == EmptyViewMessageType.LOADING &&
+                    emptyViewMessageType == EmptyViewMessageType.NO_CONTENT) {
                 // Show the LOADING > NO_CONTENT sequence
                 mEmptyViewAnimationHandler.showNoContentSequence();
                 return;
@@ -554,14 +556,14 @@ public class PostsListFragment extends ListFragment
             // Don't modify the empty view image if the NO_CONTENT > LOADING sequence has already run -
             // let the EmptyViewAnimationHandler take care of it
             if (!mEmptyViewAnimationHandler.isBetweenSequences()) {
-                if (messageType == MessageType.NO_CONTENT) {
+                if (emptyViewMessageType == EmptyViewMessageType.NO_CONTENT) {
                     mEmptyViewImage.setVisibility(View.VISIBLE);
                 } else {
                     mEmptyViewImage.setVisibility(View.GONE);
                 }
             }
 
-            switch (messageType) {
+            switch (emptyViewMessageType) {
                 case LOADING:
                     stringId = mIsPage ? R.string.loading_pages : R.string.loading_posts;
                     break;
@@ -581,7 +583,7 @@ public class PostsListFragment extends ListFragment
             }
 
             mEmptyViewTitle.setText(getText(stringId));
-            mEmptyViewMessage = messageType;
+            mEmptyViewMessage = emptyViewMessageType;
         }
     }
 
@@ -661,7 +663,7 @@ public class PostsListFragment extends ListFragment
 
         public void showLoadingSequence() {
             mAnimationStage = AnimationStage.FADE_OUT_IMAGE;
-            mEmptyViewMessage = MessageType.LOADING;
+            mEmptyViewMessage = EmptyViewMessageType.LOADING;
             startAnimation(mEmptyViewImage, "alpha", 1f, 0f);
         }
 
@@ -720,7 +722,7 @@ public class PostsListFragment extends ListFragment
                     mKeepSwipeRefreshLayoutVisible = false;
 
                     mEmptyViewTitle.setText(mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list);
-                    mEmptyViewMessage = MessageType.NO_CONTENT;
+                    mEmptyViewMessage = EmptyViewMessageType.NO_CONTENT;
 
                     startAnimation(mEmptyViewTitle, "alpha", 0.1f, 1f);
                     break;
