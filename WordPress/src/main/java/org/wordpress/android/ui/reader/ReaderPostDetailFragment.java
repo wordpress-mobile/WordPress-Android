@@ -383,7 +383,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         final ImageView imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
         ReaderAnim.animateReblogButton(imgBtnReblog);
-        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), mPost, imgBtnReblog);
+        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), mPost);
     }
 
     /*

@@ -17,8 +17,6 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostSelectedListener;
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -40,9 +38,7 @@ import de.greenrobot.event.EventBus;
  * this activity serves as the host for ReaderPostListFragment
  */
 
-public class ReaderPostListActivity extends WPDrawerActivity
-                                    implements OnPostSelectedListener,
-                                               OnTagSelectedListener {
+public class ReaderPostListActivity extends WPDrawerActivity {
 
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
@@ -178,6 +174,68 @@ public class ReaderPostListActivity extends WPDrawerActivity
                 && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
             listFragment.refreshPosts();
         }
+    }
+
+    /*
+     * user tapped a post in the list fragment
+     */
+    @SuppressWarnings("unused")
+    public void onEvent(ReaderEvents.PostSelected event) {
+        EventBus.getDefault().cancelEventDelivery(event);
+
+        // skip if this activity no longer has the focus - this prevents the post detail from
+        // being shown multiple times if the user quickly taps a post more than once
+        if (!this.hasWindowFocus()) {
+            AppLog.w(T.READER, "reader post list > post selected when activity not focused");
+            return;
+        }
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
+        long blogId = event.getPost().blogId;
+        long postId = event.getPost().postId;
+
+        ReaderPostListFragment listFragment = getListFragment();
+        if (listFragment != null) {
+            switch (getPostListType()) {
+                case TAG_FOLLOWED:
+                case TAG_PREVIEW:
+                    ReaderActivityLauncher.showReaderPostPagerForTag(
+                            this,
+                            listFragment.getCurrentTag(),
+                            getPostListType(),
+                            blogId,
+                            postId);
+                    break;
+                case BLOG_PREVIEW:
+                    ReaderActivityLauncher.showReaderPostPagerForBlog(
+                            this,
+                            blogId,
+                            postId);
+                    break;
+            }
+        }
+    }
+
+    /*
+     * user tapped a tag in the list fragment
+     */
+    @SuppressWarnings("unused")
+    public void onEvent(ReaderEvents.TagSelected event) {
+        EventBus.getDefault().cancelEventDelivery(event);
+        ReaderTag tag = new ReaderTag(event.getTagName(), ReaderTagType.FOLLOWED);
+        if (hasListFragment() && getListFragment().getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
+            // user is already previewing a tag, so change current tag in existing preview
+            getListFragment().setCurrentTag(tag);
+        } else {
+            // user isn't previewing a tag, so open in tag preview
+            ReaderActivityLauncher.showReaderTagPreview(this, tag);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(ReaderEvents.ReblogRequested event) {
+        EventBus.getDefault().cancelEventDelivery(event);
+        ReaderActivityLauncher.showReaderReblogForResult(this, event.getPost());
     }
 
     @Override
@@ -375,57 +433,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
         AppLog.d(T.READER, "reader post list > updating tags and blogs");
         ReaderUpdateService.startService(this,
                 EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
-    }
-
-    /*
-     * user tapped a post in the list fragment
-     */
-    @Override
-    public void onPostSelected(long blogId, long postId) {
-        // skip if this activity no longer has the focus - this prevents the post detail from
-        // being shown multiple times if the user quickly taps a post more than once
-        if (!this.hasWindowFocus()) {
-            AppLog.w(T.READER, "reader post list > post selected when activity not focused");
-            return;
-        }
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
-
-        ReaderPostListFragment listFragment = getListFragment();
-        if (listFragment != null) {
-            switch (getPostListType()) {
-                case TAG_FOLLOWED:
-                case TAG_PREVIEW:
-                    ReaderActivityLauncher.showReaderPostPagerForTag(
-                            this,
-                            listFragment.getCurrentTag(),
-                            getPostListType(),
-                            blogId,
-                            postId);
-                    break;
-                case BLOG_PREVIEW:
-                    ReaderActivityLauncher.showReaderPostPagerForBlog(
-                            this,
-                            blogId,
-                            postId);
-                    break;
-            }
-        }
-    }
-
-    /*
-     * user tapped a tag in the list fragment
-     */
-    @Override
-    public void onTagSelected(String tagName) {
-        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
-        if (hasListFragment() && getListFragment().getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
-            // user is already previewing a tag, so change current tag in existing preview
-            getListFragment().setCurrentTag(tag);
-        } else {
-            // user isn't previewing a tag, so open in tag preview
-            ReaderActivityLauncher.showReaderTagPreview(this, tag);
-        }
     }
 
 }
