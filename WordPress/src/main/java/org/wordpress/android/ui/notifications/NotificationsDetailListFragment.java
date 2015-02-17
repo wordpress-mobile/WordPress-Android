@@ -201,8 +201,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             }
 
             NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
-            if (siteId > 0) {
-                detailActivity.showBlogPreviewActivity(siteId, siteUrl);
+            if (siteId != 0) {
+                detailActivity.showBlogPreviewActivity(siteId);
             } else if (!TextUtils.isEmpty(siteUrl)) {
                 detailActivity.showWebViewActivityForUrl(siteUrl);
             }
@@ -217,8 +217,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
             if (siteId == 0 && !TextUtils.isEmpty(siteUrl)) {
                 detailActivity.showWebViewActivityForUrl(siteUrl);
-            } else {
-                detailActivity.showBlogPreviewActivity(siteId, siteUrl);
+            } else if (siteId != 0) {
+                detailActivity.showBlogPreviewActivity(siteId);
             }
         }
     };

@@ -17,7 +17,9 @@ import com.simperium.client.Query;
 import org.wordpress.android.R;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
@@ -58,6 +60,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
                         Note.Schema.ICON_URL_INDEX,
                         Note.Schema.NOTICON_INDEX,
                         Note.Schema.IS_UNAPPROVED_INDEX,
+                        Note.Schema.COMMENT_SUBJECT_NOTICON,
                         Note.Schema.LOCAL_STATUS)
                 .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
 
@@ -215,15 +218,24 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         CharSequence noteSubjectSpanned = Html.fromHtml(noteSubjectHtml);
         // Trim the '\n\n' added by Html.fromHtml()
         noteSubjectSpanned = noteSubjectSpanned.subSequence(0, TextUtils.getTrimmedLength(noteSubjectSpanned));
-        noteViewHolder.txtLabel.setText(noteSubjectSpanned);
+        noteViewHolder.txtSubject.setText(noteSubjectSpanned);
+
+        String noteSubjectNoticon = getStringForColumnName(objectCursor, Note.Schema.COMMENT_SUBJECT_NOTICON);
+        if (!TextUtils.isEmpty(noteSubjectNoticon)) {
+            CommentUtils.indentTextViewFirstLine(noteViewHolder.txtSubject, DisplayUtils.dpToPx(mContext, 22));
+            noteViewHolder.txtSubjectNoticon.setText(noteSubjectNoticon);
+            noteViewHolder.txtSubjectNoticon.setVisibility(View.VISIBLE);
+        } else {
+            noteViewHolder.txtSubjectNoticon.setVisibility(View.GONE);
+        }
 
         String noteSnippet = getStringForColumnName(objectCursor, Note.Schema.SNIPPET_INDEX);
         if (!TextUtils.isEmpty(noteSnippet)) {
-            noteViewHolder.txtLabel.setMaxLines(2);
+            noteViewHolder.txtSubject.setMaxLines(2);
             noteViewHolder.txtDetail.setText(noteSnippet);
             noteViewHolder.txtDetail.setVisibility(View.VISIBLE);
         } else {
-            noteViewHolder.txtLabel.setMaxLines(3);
+            noteViewHolder.txtSubject.setMaxLines(3);
             noteViewHolder.txtDetail.setVisibility(View.GONE);
         }
 
@@ -278,7 +290,8 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         private final View contentView;
         private final TextView headerText;
 
-        private final TextView txtLabel;
+        private final TextView txtSubject;
+        private final TextView txtSubjectNoticon;
         private final TextView txtDetail;
         private final WPNetworkImageView imgAvatar;
         private final NoticonTextView noteIcon;
@@ -291,7 +304,8 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
             headerView = view.findViewById(R.id.time_header);
             contentView = view.findViewById(R.id.note_content_container);
             headerText = (TextView)view.findViewById(R.id.header_date_text);
-            txtLabel = (TextView) view.findViewById(R.id.note_subject);
+            txtSubject = (TextView) view.findViewById(R.id.note_subject);
+            txtSubjectNoticon = (TextView) view.findViewById(R.id.note_subject_noticon);
             txtDetail = (TextView) view.findViewById(R.id.note_detail);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             noteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);

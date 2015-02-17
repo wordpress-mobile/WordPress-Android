@@ -356,8 +356,7 @@ public class StatsUtils {
             if (itemID == 0) {
                 ReaderActivityLauncher.showReaderBlogPreview(
                         ctx,
-                        blogID,
-                        url
+                        blogID
                 );
             } else {
                 ReaderActivityLauncher.showReaderPostDetail(
@@ -369,8 +368,7 @@ public class StatsUtils {
         } else if (postType.equals("homepage")) {
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
-                    blogID,
-                    url
+                    blogID
             );
         } else {
             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);

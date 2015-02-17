@@ -118,15 +118,29 @@
                 android:layout_gravity="center_vertical"
                 android:orientation="vertical">
 
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/note_subject"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:textColor="@color/calypso_blue_dark"
-                    android:textSize="@dimen/text_sz_large"
-                    tools:text="Bob Ross commented on your post Happy Trees" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <org.wordpress.android.widgets.NoticonTextView
+                        android:id="@+id/note_subject_noticon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:layout_marginTop="@dimen/margin_extra_small"
+                        android:textColor="@color/calypso_grey"/>
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/note_subject"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@color/calypso_blue_dark"
+                        android:textSize="@dimen/text_sz_large"
+                        tools:text="Bob Ross commented on your post Happy Trees" />
+
+                </FrameLayout>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/note_detail"

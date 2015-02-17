@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.Layout;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
 import android.text.util.Linkify;
@@ -71,13 +72,12 @@ public class CommentUtils {
     }
 
     // Assumes all lines after first line will not be indented
-    public static void indentTextViewFirstLine(TextView textView, Spannable text, int textOffsetX) {
-        if (text != null && textOffsetX > 0) {
-            text.setSpan(new TextWrappingLeadingMarginSpan(1, textOffsetX), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            textView.setText(text);
-        } else {
-            textView.setText(text);
-        }
+    public static void indentTextViewFirstLine(TextView textView, int textOffsetX) {
+        if (textView == null || textOffsetX < 0) return;
+
+        SpannableString text = new SpannableString(textView.getText());
+        text.setSpan(new TextWrappingLeadingMarginSpan(1, textOffsetX), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(text);
     }
 
     private static class TextWrappingLeadingMarginSpan implements LeadingMarginSpan.LeadingMarginSpan2 {

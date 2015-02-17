@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_copy_to_clipboard">Произошла ошибка при копировании текста в буфер обмена.</string>
+	<string name="reader_page_recommended_blogs">Блоги, подобранные для вас</string>
+	<string name="stats_months_and_years">Месяцы и года</string>
+	<string name="stats_recent_weeks">Последние недели</string>
+	<string name="reader_empty_posts_in_blog">Этот блог пуст.</string>
+	<string name="stats_average_per_day">В среднем за день</string>
+	<string name="reader_label_new_posts">Новые записи</string>
+	<string name="logs_copied_to_clipboard">Журналы приложения скопированы в буфер обмена.</string>
+	<string name="stats_period">Период</string>
+	<string name="stats_total">Итого</string>
+	<string name="stats_overall">Все время</string>
+	<string name="post_uploading">Идет отправка на сервер.</string>
 	<string name="stats_follow">Подписаться</string>
 	<string name="stats_unfollow">Отменить подписку</string>
 	<string name="stats_visitors">Посетителей</string>
@@ -154,13 +166,10 @@
 	<string name="reader_page_followed_tags">Отслеживаемые теги</string>
 	<string name="reader_page_popular_tags">Популярные теги</string>
 	<string name="reader_page_followed_blogs">Отслеживаемые блоги</string>
-	<string name="reader_page_recommended_blogs">Рекомендованные блоги</string>
 	<string name="reader_hint_add_tag_or_url">Введите тег или URL для отслеживания</string>
-	<string name="reader_label_new_posts">Показать новые записи</string>
 	<string name="reader_label_followers">%s подписчиков</string>
 	<string name="reader_label_followed_blog">Блог отслеживается</string>
 	<string name="reader_label_unfollowed_blog">Блог не остлеживается</string>
-	<string name="reader_label_more_recommendations">Больше рекомендованных</string>
 	<string name="reader_label_tag_preview">Сообщения с тегом %s</string>
 	<string name="reader_title_tag_preview">Предпросмотр тега</string>
 	<string name="reader_empty_recommended_blogs">Нет рекомендованных блогов</string>

@@ -386,7 +386,7 @@ public class NotificationsUtils {
     public static void handleNoteBlockSpanClick(NotificationsDetailActivity activity, NoteBlockClickableSpan clickedSpan) {
         if (clickedSpan.shouldShowBlogPreview()) {
             // Show blog preview
-            activity.showBlogPreviewActivity(clickedSpan.getSiteId(), clickedSpan.getUrl());
+            activity.showBlogPreviewActivity(clickedSpan.getSiteId());
         } else if (clickedSpan.getRangeType() == NoteBlockRangeType.POST) {
             // Show post detail
             activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());

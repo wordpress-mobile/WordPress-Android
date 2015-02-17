@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_months_and_years">Mois et années</string>
+	<string name="reader_page_recommended_blogs">Blogs que vous aimerez</string>
+	<string name="error_copy_to_clipboard">Une erreur s\'est produite lors de la copie dans le presse papier</string>
+	<string name="stats_recent_weeks">Semaines récentes</string>
+	<string name="stats_average_per_day">Moyenne par jour</string>
+	<string name="reader_empty_posts_in_blog">Ce blog est vide</string>
+	<string name="reader_label_new_posts">Nouveaux articles</string>
+	<string name="logs_copied_to_clipboard">Les logs de l\'application ont été copiés dans le presse papier</string>
+	<string name="stats_period">Période</string>
+	<string name="stats_overall">Global</string>
+	<string name="stats_total">Total</string>
+	<string name="post_uploading">En cours d\'upload</string>
 	<string name="stats_unfollow">Se désabonner</string>
 	<string name="stats_follow">Suivre</string>
 	<string name="stats_visitors">Visiteurs</string>
@@ -156,13 +168,10 @@
 	<string name="reader_page_followed_tags">Tags suivis</string>
 	<string name="reader_page_popular_tags">Tags populaires</string>
 	<string name="reader_page_followed_blogs">Blogs suivis</string>
-	<string name="reader_page_recommended_blogs">Blogs recommandés</string>
 	<string name="reader_hint_add_tag_or_url">Entrer un tag ou une URL à suivre</string>
-	<string name="reader_label_new_posts">Montrer de nouveaux articles</string>
 	<string name="reader_label_followers">%s followers</string>
 	<string name="reader_label_followed_blog">Abonné au blog</string>
 	<string name="reader_label_unfollowed_blog">Désabonné du blog</string>
-	<string name="reader_label_more_recommendations">Plus de recommandations</string>
 	<string name="reader_label_tag_preview">Posts tagués %s</string>
 	<string name="reader_toast_err_get_blog_info">Impossible d\'afficher ce blog</string>
 	<string name="reader_toast_err_already_follow_blog">Vous êtes déjà abonné à ce blog</string>

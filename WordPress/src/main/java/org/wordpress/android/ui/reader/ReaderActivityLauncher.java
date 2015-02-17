@@ -13,12 +13,19 @@ import android.text.TextUtils;
 import android.view.View;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderBlogTable;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.ToastUtils;
+
+import java.lang.ref.WeakReference;
 
 public class ReaderActivityLauncher {
 
@@ -104,10 +111,70 @@ public class ReaderActivityLauncher {
     /*
      * show a list of posts in a specific blog
      */
-    public static void showReaderBlogPreview(Context context, long blogId, String blogUrl) {
+    public static void showReaderBlogPreview(Context context, long blogId) {
+        if (blogId == 0) {
+            return;
+        }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
-        intent.putExtra(ReaderConstants.ARG_BLOG_URL, blogUrl);
+        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
+        context.startActivity(intent);
+    }
+
+    /*
+     * this method works but is marked deprecated since it should be avoided in favor of
+     * the version that accepts a blogId rather than a blogUrl (since passing a blogUrl
+     * requires a potentially expensive lookup of the blogId)
+     */
+    @Deprecated
+    public static void showReaderBlogPreview(Context context, String blogUrl) {
+        if (TextUtils.isEmpty(blogUrl)) {
+            return;
+        }
+
+        // first try to lookup the blogId in local db...
+        long blogId = ReaderBlogTable.getBlogIdFromUrl(blogUrl);
+        if (blogId != 0) {
+            showReaderBlogPreview(context, blogId);
+            return;
+        }
+
+        // ...then request it from endpoint
+        final WeakReference<Context> weakContext = new WeakReference<>(context);
+        ReaderBlogActions.updateBlogInfo(0, blogUrl, new ReaderActions.UpdateBlogInfoListener() {
+            @Override
+            public void onResult(ReaderBlog blogInfo) {
+                if (weakContext.get() == null) {
+                    return;
+                }
+                if (blogInfo != null && blogInfo.blogId != 0) {
+                    showReaderBlogPreview(weakContext.get(), blogInfo.blogId);
+                } else {
+                    ToastUtils.showToast(weakContext.get(), R.string.reader_toast_err_get_blog_info);
+                }
+            }
+        });
+    }
+
+    public static void showReaderBlogPreview(Context context, ReaderPost post) {
+        if (post == null) {
+            return;
+        }
+        if (post.isExternal) {
+            showReaderFeedPreview(context, post.feedId);
+        } else {
+            showReaderBlogPreview(context, post.blogId);
+        }
+    }
+
+    public static void showReaderFeedPreview(Context context, long feedId) {
+        if (feedId == 0) {
+            return;
+        }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
+        Intent intent = new Intent(context, ReaderPostListActivity.class);
+        intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
     }
@@ -119,6 +186,7 @@ public class ReaderActivityLauncher {
         if (tag == null) {
             return;
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEW);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);

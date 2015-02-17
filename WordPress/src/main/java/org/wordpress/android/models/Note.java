@@ -165,6 +165,24 @@ public class Note extends Syncable {
         return "";
     }
 
+    private String getCommentSubjectNoticon() {
+        JSONArray subjectRanges = queryJSON("subject[0].ranges", new JSONArray());
+        if (subjectRanges != null) {
+            for (int i=0; i < subjectRanges.length(); i++) {
+                try {
+                    JSONObject rangeItem = subjectRanges.getJSONObject(i);
+                    if (rangeItem.has("type") && rangeItem.optString("type").equals("noticon")) {
+                        return rangeItem.optString("value", "");
+                    }
+                } catch (JSONException e) {
+                    return "";
+                }
+            }
+        }
+
+        return "";
+    }
+
     /**
      * Compare note timestamp to now and return a time grouping
      */
@@ -222,7 +240,7 @@ public class Note extends Syncable {
                 return mNoteJSON.getJSONArray("body");
             }
         } catch (JSONException e) {
-            return null;
+            return new JSONArray();
         }
     }
 
@@ -231,9 +249,27 @@ public class Note extends Syncable {
         return queryJSON("noticon", "");
     }
 
-    JSONObject getCommentActions() {
+    private JSONObject getCommentActions() {
         if (mActions == null) {
-            mActions = queryJSON("body[last].actions", new JSONObject());
+            // Find comment block that matches the root note comment id
+            long commentId = getCommentId();
+            JSONArray bodyArray = getBody();
+            for (int i = 0; i < bodyArray.length(); i++) {
+                try {
+                    JSONObject bodyItem = bodyArray.getJSONObject(i);
+                    if (bodyItem.has("type") && bodyItem.optString("type").equals("comment")
+                            && commentId == JSONUtil.queryJSON(bodyItem, "meta.ids.comment", 0)) {
+                        mActions = JSONUtil.queryJSON(bodyItem, "actions", new JSONObject());
+                        break;
+                    }
+                } catch (JSONException e) {
+                    break;
+                }
+            }
+
+            if (mActions == null) {
+                mActions = new JSONObject();
+            }
         }
 
         return mActions;
@@ -426,6 +462,7 @@ public class Note extends Syncable {
         static public final String NOTICON_INDEX = "noticon";
         static public final String ICON_URL_INDEX = "icon";
         static public final String IS_UNAPPROVED_INDEX = "unapproved";
+        static public final String COMMENT_SUBJECT_NOTICON = "comment_subject_noticon";
         static public final String LOCAL_STATUS = "local_status";
 
         private static final Indexer<Note> sNoteIndexer = new Indexer<Note>() {
@@ -447,6 +484,7 @@ public class Note extends Syncable {
                 indexes.add(new Index(NOTICON_INDEX, note.getNoticonCharacter()));
                 indexes.add(new Index(ICON_URL_INDEX, note.getIconURL()));
                 indexes.add(new Index(IS_UNAPPROVED_INDEX, note.getCommentStatus() == CommentStatus.UNAPPROVED));
+                indexes.add(new Index(COMMENT_SUBJECT_NOTICON, note.getCommentSubjectNoticon()));
                 indexes.add(new Index(LOCAL_STATUS, note.getLocalStatus()));
 
                 return indexes;
