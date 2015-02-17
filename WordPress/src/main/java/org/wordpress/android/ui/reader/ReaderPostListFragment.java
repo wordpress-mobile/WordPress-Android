@@ -357,6 +357,7 @@ public class ReaderPostListFragment extends Fragment {
     /*
      * animate in the blog/tag info header after a brief delay
      */
+    @SuppressLint("NewApi")
     private void animateHeaderDelayed() {
         if (!isAdded()) {
             return;
@@ -381,7 +382,6 @@ public class ReaderPostListFragment extends Fragment {
                         }
                         header.setVisibility(View.VISIBLE);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            @SuppressLint({"NewApi", "LocalSuppress"})
                             Animator animator = ViewAnimationUtils.createCircularReveal(
                                     header,
                                     header.getWidth() / 2,
