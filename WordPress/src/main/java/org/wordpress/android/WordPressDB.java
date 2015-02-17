@@ -406,7 +406,7 @@ public class WordPressDB {
         jetPackValues.put("dotcom_password", "");
         db.update(SETTINGS_TABLE, jetPackValues, null, null);
 
-        // Lastly we'll remove the preference that previously stored global wp.com credentials
+        // Lastly we'll remove the preference that previously stored the WP.com password
         if (this.context != null) {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
             SharedPreferences.Editor editor = settings.edit();
