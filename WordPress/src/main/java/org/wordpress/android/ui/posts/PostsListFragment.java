@@ -1,14 +1,11 @@
 package org.wordpress.android.ui.posts;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -16,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,9 +22,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
+import org.wordpress.android.ui.EmptyViewAnimationHandler;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -43,7 +39,7 @@ import java.util.List;
 import java.util.Vector;
 
 public class PostsListFragment extends ListFragment
-        implements WordPress.OnPostUploadedListener {
+        implements WordPress.OnPostUploadedListener, EmptyViewAnimationHandler.OnAnimationProgressListener {
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -246,7 +242,7 @@ public class PostsListFragment extends ListFragment
             }
         });
 
-        mEmptyViewAnimationHandler = new EmptyViewAnimationHandler();
+        mEmptyViewAnimationHandler = new EmptyViewAnimationHandler(mEmptyViewTitle, mEmptyViewImage, this);
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             ((PostsActivity) getActivity()).requestPosts();
@@ -599,170 +595,26 @@ public class PostsListFragment extends ListFragment
         public void onSinglePostLoaded();
     }
 
-    public enum AnimationStage {
-        PRE_ANIMATION,
-        FADE_OUT_IMAGE, SLIDE_TEXT_UP, FADE_OUT_NO_CONTENT_TEXT, FADE_IN_LOADING_TEXT,
-        IN_BETWEEN,
-        FADE_OUT_LOADING_TEXT, FADE_IN_NO_CONTENT_TEXT, SLIDE_TEXT_DOWN, FADE_IN_IMAGE,
-        FINISHED;
-
-        public AnimationStage next() {
-            return AnimationStage.values()[ordinal()+1];
-        }
-
-        public boolean isLowerThan(AnimationStage animationStage) {
-            return (ordinal() < animationStage.ordinal());
-        }
-
-        public int stagesRemaining() {
-            return (IN_BETWEEN.ordinal() - ordinal());
-        }
+    @Override
+    public void onSequenceStarted(EmptyViewMessageType emptyViewMessageType) {
+        mEmptyViewMessage = emptyViewMessageType;
     }
 
-    private class EmptyViewAnimationHandler implements ObjectAnimator.AnimatorListener {
-        private static final int ANIMATION_DURATION = 150;
-        private static final int MINIMUM_LOADING_DURATION = 500;
-
-        private AnimationStage mAnimationStage = AnimationStage.PRE_ANIMATION;
-        private boolean mHasDisplayedLoadingSequence;
-
-        private ObjectAnimator mObjectAnimator;
-
-        private final int mSlideDistance;
-
-        public EmptyViewAnimationHandler() {
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mEmptyViewImage.getLayoutParams();
-            mSlideDistance = -((layoutParams.height + layoutParams.bottomMargin + layoutParams.topMargin) / 2);
-        }
-
-        public boolean isShowingLoadingAnimation() {
-            return (mAnimationStage != AnimationStage.PRE_ANIMATION &&
-                    mAnimationStage.isLowerThan(AnimationStage.IN_BETWEEN));
-        }
-
-        public boolean isBetweenSequences() {
-            return (mAnimationStage == AnimationStage.IN_BETWEEN);
-        }
-
-        public void clear() {
-            mAnimationStage = AnimationStage.PRE_ANIMATION;
-            mHasDisplayedLoadingSequence = false;
-        }
-
-        public void startAnimation(Object target, String propertyName, float fromValue, float toValue) {
-            if (mObjectAnimator != null) {
-                mObjectAnimator.removeAllListeners();
-            }
-
-            mObjectAnimator = ObjectAnimator.ofFloat(target, propertyName, fromValue, toValue);
-            mObjectAnimator.setDuration(ANIMATION_DURATION);
-            mObjectAnimator.addListener(this);
-
-            mObjectAnimator.start();
-        }
-
-        public void showLoadingSequence() {
-            mAnimationStage = AnimationStage.FADE_OUT_IMAGE;
-            mEmptyViewMessage = EmptyViewMessageType.LOADING;
-            startAnimation(mEmptyViewImage, "alpha", 1f, 0f);
-        }
-
-        public void showNoContentSequence() {
-            // If the data was auto-refreshed, the NO_CONTENT > LOADING sequence was not shown before this one, and
-            // some special handling will be needed
-            if (isShowingLoadingAnimation() || isBetweenSequences()) {
-                mHasDisplayedLoadingSequence = true;
-            } else {
-                mHasDisplayedLoadingSequence = false;
-            }
-
-            if (isShowingLoadingAnimation()) {
-                // Delay by enough time to complete the remaining stages of the currently on-going animation,
-                // additionally allowing the loading message to display for MINIMUM_LOADING_DURATION
-                int delayTime = (mAnimationStage.stagesRemaining() * ANIMATION_DURATION) + MINIMUM_LOADING_DURATION;
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAnimationStage = AnimationStage.FADE_OUT_LOADING_TEXT;
-                        startAnimation(mEmptyViewTitle, "alpha", 1f, 0.1f);
-                    }
-                }, delayTime);
-            } else {
-                mAnimationStage = AnimationStage.FADE_OUT_LOADING_TEXT;
-                startAnimation(mEmptyViewTitle, "alpha", 1f, 0.1f);
-            }
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            if (!isAdded()) {
-                return;
-            }
-
-            mAnimationStage = mAnimationStage.next();
-
-            // A step in the animation has completed. Set up the next animation in the chain
-            switch (mAnimationStage) {
-                // NO_CONTENT > LOADING section
-                case SLIDE_TEXT_UP:
-                    startAnimation(mEmptyViewTitle, "translationY", 0, mSlideDistance);
-                    break;
-                case FADE_OUT_NO_CONTENT_TEXT:
-                    startAnimation(mEmptyViewTitle, "alpha", 1f, 0.1f);
-                    break;
-                case FADE_IN_LOADING_TEXT:
-                    mEmptyViewTitle.setText(mIsPage ? R.string.loading_pages : R.string.loading_posts);
-
-                    startAnimation(mEmptyViewTitle, "alpha", 0.1f, 1f);
-                    break;
-
-                // LOADING > NO_CONTENT section
-                case FADE_IN_NO_CONTENT_TEXT:
-                    mSwipeToRefreshHelper.setRefreshing(false);
-                    mKeepSwipeRefreshLayoutVisible = false;
-
-                    mEmptyViewTitle.setText(mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list);
-                    mEmptyViewMessage = EmptyViewMessageType.NO_CONTENT;
-
-                    startAnimation(mEmptyViewTitle, "alpha", 0.1f, 1f);
-                    break;
-                case SLIDE_TEXT_DOWN:
-                    startAnimation(mEmptyViewTitle, "translationY", mSlideDistance, 0);
-
-                    if (!mHasDisplayedLoadingSequence) {
-                        // Force mEmptyViewImage to take up space in the layout, so that mEmptyViewTitle lands
-                        // where it should at the end of its slide animation
-                        mEmptyViewImage.setVisibility(View.INVISIBLE);
-                    }
-                    break;
-                case FADE_IN_IMAGE:
-                    if (!mHasDisplayedLoadingSequence) {
-                        // Uses AlphaAnimation instead of an ObjectAnimator to address a display glitch
-                        // in the auto-refresh case
-                        AniUtils.startAnimation(mEmptyViewImage, android.R.anim.fade_in, ANIMATION_DURATION);
-                        mEmptyViewImage.setVisibility(View.VISIBLE);
-                    } else {
-                        startAnimation(mEmptyViewImage, "alpha", 0f, 1f);
-                    }
-                    break;
-                default:
-                    return;
-            }
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-            mAnimationStage = AnimationStage.PRE_ANIMATION;
-        }
-
-        @Override
-        public void onAnimationStart(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-
+    @Override
+    public void onNewTextFadingIn() {
+        switch (mEmptyViewMessage) {
+            case LOADING:
+                mEmptyViewTitle.setText(mIsPage ? org.wordpress.android.R.string.loading_pages :
+                        org.wordpress.android.R.string.loading_posts);
+                break;
+            case NO_CONTENT:
+                mEmptyViewTitle.setText(mIsPage ? org.wordpress.android.R.string.pages_empty_list :
+                        org.wordpress.android.R.string.posts_empty_list);
+                mSwipeToRefreshHelper.setRefreshing(false);
+                mKeepSwipeRefreshLayoutVisible = false;
+                break;
+            default:
+                break;
         }
     }
 }
