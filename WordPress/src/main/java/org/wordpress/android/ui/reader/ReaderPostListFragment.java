@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Build;
@@ -80,6 +81,9 @@ public class ReaderPostListFragment extends Fragment {
 
     private ReaderPostAdapter mPostAdapter;
     private ReaderRecyclerView mRecyclerView;
+
+    private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
+    private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private View mNewPostsBar;
@@ -353,6 +357,18 @@ public class ReaderPostListFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (activity instanceof ReaderInterfaces.OnPostSelectedListener) {
+            mPostSelectedListener = (ReaderInterfaces.OnPostSelectedListener) activity;
+        }
+        if (activity instanceof ReaderInterfaces.OnTagSelectedListener) {
+            mOnTagSelectedListener = (ReaderInterfaces.OnTagSelectedListener) activity;
+        }
+    }
+
     /*
      * animate in the blog/tag info header after a brief delay
      */
@@ -432,6 +448,7 @@ public class ReaderPostListFragment extends Fragment {
                 break;
         }
 
+        getPostAdapter().setOnTagSelectedListener(mOnTagSelectedListener);
         getPostAdapter().setOnPostPopupListener(mOnPostPopupListener);
     }
 
@@ -780,13 +797,27 @@ public class ReaderPostListFragment extends Fragment {
         }
     };
 
+    /*
+     * called by post adapter when user requests to reblog a post
+     */
+    private final ReaderInterfaces.RequestReblogListener mRequestReblogListener = new ReaderInterfaces.RequestReblogListener() {
+        @Override
+        public void onRequestReblog(ReaderPost post, View view) {
+            if (isAdded()) {
+                ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post, view);
+            }
+        }
+    };
+
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
+            mPostAdapter.setOnPostSelectedListener(mPostSelectedListener);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
+            mPostAdapter.setOnReblogRequestedListener(mRequestReblogListener);
         }
         return mPostAdapter;
     }

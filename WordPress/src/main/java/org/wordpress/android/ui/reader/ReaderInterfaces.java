@@ -6,6 +6,14 @@ import org.wordpress.android.models.ReaderPost;
 
 public class ReaderInterfaces {
 
+    public static interface OnPostSelectedListener {
+        public void onPostSelected(long blogId, long postId);
+    }
+
+    public static interface OnTagSelectedListener {
+        public void onTagSelected(String tagName);
+    }
+
     /*
      * called from post detail fragment so toolbar can animate in/out when scrolling
      */
@@ -25,6 +33,13 @@ public class ReaderInterfaces {
      */
     public interface DataLoadedListener {
         public void onDataLoaded(boolean isEmpty);
+    }
+
+    /*
+     * used by post list & post list adapter when user asks to reblog a post
+     */
+    public interface RequestReblogListener {
+        public void onRequestReblog(ReaderPost post, View sourceView);
     }
 
 }
