@@ -188,8 +188,8 @@
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
     <string name="share_url">Share URL</string>
-    <string name="fetching_posts">Fetching posts…</string>
-    <string name="fetching_pages">Fetching pages…</string>
+    <string name="posts_fetching">Fetching posts…</string>
+    <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
 
     <!-- reload drop down -->
