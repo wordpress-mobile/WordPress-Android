@@ -19,6 +19,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
+import android.text.style.SuggestionSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
@@ -747,20 +749,24 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             return;
         }
         String title = StringUtils.notNullStr((String) mEditorFragment.getTitle());
-        Editable postContentEditable;
-        postContentEditable = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
+        SpannableStringBuilder postContent;
+        if (mEditorFragment.getSpannedContent() != null) {
+            // needed by the legacy editor to save local drafts
+            postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
+        } else {
+            postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
+        }
 
         String content;
         if (post.isLocalDraft()) {
             // remove suggestion spans, they cause craziness in WPHtml.toHTML().
-            CharacterStyle[] characterStyles = postContentEditable.getSpans(0, postContentEditable.length(),
-                    CharacterStyle.class);
+            CharacterStyle[] characterStyles = postContent.getSpans(0, postContent.length(), CharacterStyle.class);
             for (CharacterStyle characterStyle : characterStyles) {
-                if (characterStyle.getClass().getName().equals("android.text.style.SuggestionSpan")) {
-                    postContentEditable.removeSpan(characterStyle);
+                if (characterStyle instanceof SuggestionSpan) {
+                    postContent.removeSpan(characterStyle);
                 }
             }
-            content = WPHtml.toHtml(postContentEditable);
+            content = WPHtml.toHtml(postContent);
             // replace duplicate <p> tags so there's not duplicates, trac #86
             content = content.replace("<p><p>", "<p>");
             content = content.replace("</p></p>", "</p>");
@@ -771,16 +777,16 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         } else {
             if (!isAutoSave) {
                 // Add gallery shortcode
-                MediaGalleryImageSpan[] gallerySpans = postContentEditable.getSpans(0, postContentEditable.length(),
+                MediaGalleryImageSpan[] gallerySpans = postContent.getSpans(0, postContent.length(),
                         MediaGalleryImageSpan.class);
                 for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
-                    int start = postContentEditable.getSpanStart(gallerySpan);
-                    postContentEditable.removeSpan(gallerySpan);
-                    postContentEditable.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
+                    int start = postContent.getSpanStart(gallerySpan);
+                    postContent.removeSpan(gallerySpan);
+                    postContent.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
                 }
             }
 
-            WPImageSpan[] imageSpans = postContentEditable.getSpans(0, postContentEditable.length(), WPImageSpan.class);
+            WPImageSpan[] imageSpans = postContent.getSpans(0, postContent.length(), WPImageSpan.class);
             if (imageSpans.length != 0) {
                 for (WPImageSpan wpIS : imageSpans) {
                     MediaFile mediaFile = wpIS.getMediaFile();
@@ -794,22 +800,22 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         WordPress.wpDB.saveMediaFile(mediaFile);
                     }
 
-                    int tagStart = postContentEditable.getSpanStart(wpIS);
+                    int tagStart = postContent.getSpanStart(wpIS);
                     if (!isAutoSave) {
-                        postContentEditable.removeSpan(wpIS);
+                        postContent.removeSpan(wpIS);
 
                         // network image has a mediaId
                         if (mediaFile.getMediaId() != null && mediaFile.getMediaId().length() > 0) {
-                            postContentEditable.insert(tagStart, WPHtml.getContent(wpIS));
+                            postContent.insert(tagStart, WPHtml.getContent(wpIS));
                         } else {
                             // local image for upload
-                            postContentEditable.insert(tagStart,
+                            postContent.insert(tagStart,
                                     "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
                         }
                     }
                 }
             }
-            content = postContentEditable.toString();
+            content = postContent.toString();
         }
 
         String moreTag = "<!--more-->";
@@ -824,8 +830,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             post.setMoreText("");
         }
 
-        if (!post.isLocalDraft())
+        if (!post.isLocalDraft()) {
             post.setLocalChange(true);
+        }
     }
 
     /**

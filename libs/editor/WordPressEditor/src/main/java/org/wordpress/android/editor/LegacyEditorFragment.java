@@ -16,10 +16,12 @@ import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
+import android.text.style.CharacterStyle;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -139,6 +141,11 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         } else {
             // TODO
         }
+    }
+
+    @Override
+    public Spanned getSpannedContent() {
+        return mContentEditText.getText();
     }
 
     public void setLocalDraft(boolean isLocalDraft) {
