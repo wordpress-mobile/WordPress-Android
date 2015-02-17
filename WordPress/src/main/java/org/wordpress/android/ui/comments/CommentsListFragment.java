@@ -558,7 +558,7 @@ public class CommentsListFragment extends Fragment {
 
                 switch (emptyViewMessageType) {
                     case LOADING:
-                        stringId = R.string.loading_comments;
+                        stringId = R.string.comments_fetching;
                         break;
                     case NO_CONTENT:
                         stringId = R.string.comments_empty_list;

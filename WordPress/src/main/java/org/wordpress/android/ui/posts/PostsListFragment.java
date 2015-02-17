@@ -225,7 +225,7 @@ public class PostsListFragment extends ListFragment
                 if (!mIsFetchingPosts || isLoadingMorePosts()) {
                     showPost(postsListPost.getPostId());
                 } else if (isAdded()) {
-                    Toast.makeText(getActivity(), mIsPage ? R.string.loading_pages : R.string.loading_posts,
+                    Toast.makeText(getActivity(), mIsPage ? R.string.fetching_pages : R.string.fetching_posts,
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -561,7 +561,7 @@ public class PostsListFragment extends ListFragment
 
             switch (emptyViewMessageType) {
                 case LOADING:
-                    stringId = mIsPage ? R.string.loading_pages : R.string.loading_posts;
+                    stringId = mIsPage ? R.string.fetching_pages : R.string.fetching_posts;
                     break;
                 case NO_CONTENT:
                     stringId = mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list;
@@ -604,8 +604,8 @@ public class PostsListFragment extends ListFragment
     public void onNewTextFadingIn() {
         switch (mEmptyViewMessage) {
             case LOADING:
-                mEmptyViewTitle.setText(mIsPage ? org.wordpress.android.R.string.loading_pages :
-                        org.wordpress.android.R.string.loading_posts);
+                mEmptyViewTitle.setText(mIsPage ? org.wordpress.android.R.string.fetching_pages :
+                        org.wordpress.android.R.string.fetching_posts);
                 break;
             case NO_CONTENT:
                 mEmptyViewTitle.setText(mIsPage ? org.wordpress.android.R.string.pages_empty_list :

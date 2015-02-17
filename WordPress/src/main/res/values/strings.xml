@@ -106,7 +106,7 @@
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
-    <string name="loading_media">Loading media…</string>
+    <string name="media_fetching">Fetching media…</string>
 
     <!-- Upload Media -->
     <string name="media_no_video_title">VideoPress unavailable</string>
@@ -188,8 +188,8 @@
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
     <string name="share_url">Share URL</string>
-    <string name="loading_posts">Loading posts…</string>
-    <string name="loading_pages">Loading pages…</string>
+    <string name="fetching_posts">Fetching posts…</string>
+    <string name="fetching_pages">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
 
     <!-- reload drop down -->
@@ -209,7 +209,7 @@
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
     <string name="comment">Comment</string>
-    <string name="loading_comments">Loading comments…</string>
+    <string name="comments_fetching">Fetching comments…</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>

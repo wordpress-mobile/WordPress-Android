@@ -478,7 +478,7 @@ public class MediaGridFragment extends Fragment
 
                 switch (emptyViewMessageType) {
                     case LOADING:
-                        stringId = R.string.loading_media;
+                        stringId = R.string.media_fetching;
                         break;
                     case NO_CONTENT:
                         stringId = R.string.media_empty_list;
