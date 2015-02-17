@@ -23,8 +23,9 @@ public class AniUtils {
     public static void flyIn(View target) {
         Context context = target.getContext();
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.reader_flyin);
-        if (animation==null)
+        if (animation == null) {
             return;
+        }
 
         // add small overshoot for bounce effect
         animation.setInterpolator(new OvershootInterpolator(0.9f));
@@ -52,15 +53,44 @@ public class AniUtils {
     public static void startAnimation(View target, int aniResId) {
         startAnimation(target, aniResId, null);
     }
-    public static void startAnimation(View target, int aniResId, AnimationListener listener) {
-        if (target==null)
-            return;
-        Animation animation = AnimationUtils.loadAnimation(target.getContext(), aniResId);
-        if (animation==null)
-            return;
-        if (listener!=null)
-            animation.setAnimationListener(listener);
 
+    public static void startAnimation(View target, int aniResId, int duration) {
+        startAnimation(target, aniResId, duration, null);
+    }
+
+    public static void startAnimation(View target, int aniResId, AnimationListener listener) {
+        if (target == null) {
+            return;
+        }
+
+        Animation animation = AnimationUtils.loadAnimation(target.getContext(), aniResId);
+        if (animation == null) {
+            return;
+        }
+
+        if (listener != null) {
+            animation.setAnimationListener(listener);
+        }
+
+        target.startAnimation(animation);
+    }
+
+    public static void startAnimation(View target, int aniResId, int duration, AnimationListener listener) {
+        if (target == null) {
+            return;
+        }
+
+        Animation animation = AnimationUtils.loadAnimation(target.getContext(), aniResId);
+
+        if (animation == null) {
+            return;
+        }
+
+        if (listener != null) {
+            animation.setAnimationListener(listener);
+        }
+
+        animation.setDuration(duration);
         target.startAnimation(animation);
     }
 }
