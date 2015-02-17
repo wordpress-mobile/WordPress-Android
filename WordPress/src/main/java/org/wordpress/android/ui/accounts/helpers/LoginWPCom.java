@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.helpers;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -82,9 +83,11 @@ public class LoginWPCom extends LoginAbstract {
                     mJetpackBlog.setDotcom_password(mPassword);
                     mJetpackBlog.setApi_key(token.toString());
                     WordPress.wpDB.saveBlog(mJetpackBlog);
-                } else {
-                    // Store credentials in token in global account
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+                }
+
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+                if (mJetpackBlog == null || TextUtils.isEmpty(settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null))) {
+                    // Store token in global account
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
                     editor.putString(WordPress.ACCESS_TOKEN_PREFERENCE, token.toString());
