@@ -17,8 +17,10 @@ import com.simperium.client.Query;
 import org.wordpress.android.R;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
-import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.NoticonTextView;
@@ -39,7 +41,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
 
     private Context mContext;
 
-    NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
+    static NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
 
     public NotesAdapter(Context context, Bucket<Note> bucket) {
         super(context, null);
@@ -58,10 +60,11 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
                         Note.Schema.ICON_URL_INDEX,
                         Note.Schema.NOTICON_INDEX,
                         Note.Schema.IS_UNAPPROVED_INDEX,
+                        Note.Schema.COMMENT_SUBJECT_NOTICON,
                         Note.Schema.LOCAL_STATUS)
                 .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
 
-        mAvatarSz = (int) context.getResources().getDimension(R.dimen.avatar_sz_large);
+        mAvatarSz = (int) context.getResources().getDimension(R.dimen.avatar_sz_medium);
         mReadBackgroundResId = R.drawable.list_bg_selector;
         mUnreadBackgroundResId = R.drawable.list_unread_bg_selector;
     }
@@ -158,9 +161,9 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
     @Override
     public void onBindViewHolder(NoteViewHolder noteViewHolder, Cursor cursor) {
         final Bucket.ObjectCursor<Note> objectCursor = (Bucket.ObjectCursor<Note>) cursor;
-        final String noteId = objectCursor.getSimperiumKey();
+        noteViewHolder.noteId = objectCursor.getSimperiumKey();
 
-                // Display group header
+        // Display group header
         Note.NoteTimeGroup timeGroup = Note.getTimeGroupForTimestamp(getLongForColumnName(objectCursor, Note.Schema.TIMESTAMP_INDEX));
 
         Note.NoteTimeGroup previousTimeGroup = null;
@@ -215,19 +218,28 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         CharSequence noteSubjectSpanned = Html.fromHtml(noteSubjectHtml);
         // Trim the '\n\n' added by Html.fromHtml()
         noteSubjectSpanned = noteSubjectSpanned.subSequence(0, TextUtils.getTrimmedLength(noteSubjectSpanned));
-        noteViewHolder.txtLabel.setText(noteSubjectSpanned);
+        noteViewHolder.txtSubject.setText(noteSubjectSpanned);
+
+        String noteSubjectNoticon = getStringForColumnName(objectCursor, Note.Schema.COMMENT_SUBJECT_NOTICON);
+        if (!TextUtils.isEmpty(noteSubjectNoticon)) {
+            CommentUtils.indentTextViewFirstLine(noteViewHolder.txtSubject, DisplayUtils.dpToPx(mContext, 22));
+            noteViewHolder.txtSubjectNoticon.setText(noteSubjectNoticon);
+            noteViewHolder.txtSubjectNoticon.setVisibility(View.VISIBLE);
+        } else {
+            noteViewHolder.txtSubjectNoticon.setVisibility(View.GONE);
+        }
 
         String noteSnippet = getStringForColumnName(objectCursor, Note.Schema.SNIPPET_INDEX);
         if (!TextUtils.isEmpty(noteSnippet)) {
-            noteViewHolder.txtLabel.setMaxLines(2);
+            noteViewHolder.txtSubject.setMaxLines(2);
             noteViewHolder.txtDetail.setText(noteSnippet);
             noteViewHolder.txtDetail.setVisibility(View.VISIBLE);
         } else {
-            noteViewHolder.txtLabel.setMaxLines(3);
+            noteViewHolder.txtSubject.setMaxLines(3);
             noteViewHolder.txtDetail.setVisibility(View.GONE);
         }
 
-        String avatarUrl = PhotonUtils.fixAvatar(getStringForColumnName(objectCursor, Note.Schema.ICON_URL_INDEX), mAvatarSz);
+        String avatarUrl = GravatarUtils.fixGravatarUrl(getStringForColumnName(objectCursor, Note.Schema.ICON_URL_INDEX), mAvatarSz);
         noteViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
         boolean isUnread = SqlUtils.sqlToBool(getIntForColumnName(objectCursor, Note.Schema.UNREAD_INDEX));
@@ -252,15 +264,6 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         } else {
             noteViewHolder.itemView.setBackgroundResource(mReadBackgroundResId);
         }
-
-        noteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnNoteClickListener != null) {
-                    mOnNoteClickListener.onClickNote(noteId);
-                }
-            }
-        });
     }
 
     public int getPositionForNote(String noteId) {
@@ -287,22 +290,35 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         private final View contentView;
         private final TextView headerText;
 
-        private final TextView txtLabel;
+        private final TextView txtSubject;
+        private final TextView txtSubjectNoticon;
         private final TextView txtDetail;
         private final WPNetworkImageView imgAvatar;
         private final NoticonTextView noteIcon;
         private final View progressBar;
+
+        private String noteId;
 
         public NoteViewHolder(View view) {
             super(view);
             headerView = view.findViewById(R.id.time_header);
             contentView = view.findViewById(R.id.note_content_container);
             headerText = (TextView)view.findViewById(R.id.header_date_text);
-            txtLabel = (TextView) view.findViewById(R.id.note_subject);
+            txtSubject = (TextView) view.findViewById(R.id.note_subject);
+            txtSubjectNoticon = (TextView) view.findViewById(R.id.note_subject_noticon);
             txtDetail = (TextView) view.findViewById(R.id.note_detail);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             noteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);
             progressBar = view.findViewById(R.id.moderate_progress);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnNoteClickListener != null && noteId != null) {
+                        mOnNoteClickListener.onClickNote(noteId);
+                    }
+                }
+            });
         }
     }
 }

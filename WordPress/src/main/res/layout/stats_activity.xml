@@ -82,6 +82,15 @@
                 android:layout_marginRight="@dimen/margin_medium"/>
 
             <FrameLayout
+                android:id="@+id/stats_search_terms_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                />
+
+            <FrameLayout
                 android:id="@+id/stats_geoviews_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -113,7 +122,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                android:textColor="#587295"
+                android:textColor="@color/stats_blue_labels"
                 android:gravity="center"
                 android:text="@string/stats_other_recent_stats_label"/>
 

@@ -41,6 +41,11 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment, Bucket.Listener<Note> {
+    private static final String KEY_NOTE_ID = "noteId";
+    private static final String KEY_LIST_POSITION = "listPosition";
+
+    private int mRestoredListPosition;
+
     public interface OnNoteChangeListener {
         public void onNoteChanged(Note note);
     }
@@ -58,10 +63,20 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     public NotificationsDetailListFragment() {
     }
 
-    public static NotificationsDetailListFragment newInstance(final Note note) {
+    public static NotificationsDetailListFragment newInstance(final String noteId) {
         NotificationsDetailListFragment fragment = new NotificationsDetailListFragment();
-        fragment.setNote(note);
+        fragment.setNoteWithNoteId(noteId);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_NOTE_ID)) {
+            setNoteWithNoteId(savedInstanceState.getString(KEY_NOTE_ID));
+            mRestoredListPosition = savedInstanceState.getInt(KEY_LIST_POSITION, 0);
+        }
     }
 
     @Override
@@ -120,6 +135,29 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         mNote = note;
     }
 
+    private void setNoteWithNoteId(String noteId) {
+        if (noteId == null) return;
+
+        if (SimperiumUtils.getNotesBucket() != null) {
+            try {
+                Note note = SimperiumUtils.getNotesBucket().get(noteId);
+                setNote(note);
+            } catch (BucketObjectMissingException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mNote != null) {
+            outState.putString(KEY_NOTE_ID, mNote.getId());
+            outState.putInt(KEY_LIST_POSITION, getListView().getFirstVisiblePosition());
+        }
+
+        super.onSaveInstanceState(outState);
+    }
+
     public void setOnNoteChangeListener(OnNoteChangeListener listener) {
         mOnNoteChangeListener = listener;
     }
@@ -135,38 +173,38 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private final NoteBlock.OnNoteBlockTextClickListener mOnNoteBlockTextClickListener = new NoteBlock.OnNoteBlockTextClickListener() {
         @Override
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
-            if (!isAdded()) return;
+            if (!isAdded() || !(getActivity() instanceof NotificationsDetailActivity)) return;
 
-            NotificationsUtils.handleNoteBlockSpanClick((NotificationsActivity) getActivity(), clickedSpan);
+            NotificationsUtils.handleNoteBlockSpanClick((NotificationsDetailActivity) getActivity(), clickedSpan);
         }
 
         @Override
         public void showDetailForNoteIds() {
-            if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsActivity)) {
+            if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsDetailActivity)) {
                 return;
             }
 
-            NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
+            NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
             if (mNote.getParentCommentId() > 0 || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
                 // show comment detail
-                notificationsActivity.showCommentDetailForNote(mNote);
+                detailActivity.showCommentDetailForNote(mNote);
             } else {
                 // otherwise, load the post in the Reader
-                notificationsActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
+                detailActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
             }
         }
 
         @Override
         public void showSitePreview(long siteId, String siteUrl) {
-            if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsActivity)) {
+            if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsDetailActivity)) {
                 return;
             }
 
-            NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
-            if (siteId > 0) {
-                notificationsActivity.showBlogPreviewActivity(siteId, siteUrl);
+            NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
+            if (siteId != 0) {
+                detailActivity.showBlogPreviewActivity(siteId);
             } else if (!TextUtils.isEmpty(siteUrl)) {
-                notificationsActivity.showWebViewActivityForUrl(siteUrl);
+                detailActivity.showWebViewActivityForUrl(siteUrl);
             }
         }
     };
@@ -174,13 +212,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private final UserNoteBlock.OnGravatarClickedListener mOnGravatarClickedListener = new UserNoteBlock.OnGravatarClickedListener() {
         @Override
         public void onGravatarClicked(long siteId, long userId, String siteUrl) {
-            if (!isAdded()) return;
+            if (!isAdded() || !(getActivity() instanceof NotificationsDetailActivity)) return;
 
-            NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
+            NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
             if (siteId == 0 && !TextUtils.isEmpty(siteUrl)) {
-                notificationsActivity.showWebViewActivityForUrl(siteUrl);
-            } else {
-                notificationsActivity.showBlogPreviewActivity(siteId, siteUrl);
+                detailActivity.showWebViewActivityForUrl(siteUrl);
+            } else if (siteId != 0) {
+                detailActivity.showBlogPreviewActivity(siteId);
             }
         }
     };
@@ -296,6 +334,11 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 setListAdapter(mNoteBlockAdapter);
             } else {
                 mNoteBlockAdapter.setNoteList(noteList);
+            }
+
+            if (mRestoredListPosition > 0) {
+                getListView().setSelectionFromTop(mRestoredListPosition, 0);
+                mRestoredListPosition = 0;
             }
         }
     }

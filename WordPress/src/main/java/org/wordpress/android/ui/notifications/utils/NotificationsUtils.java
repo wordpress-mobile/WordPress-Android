@@ -29,7 +29,7 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
@@ -383,10 +383,10 @@ public class NotificationsUtils {
         return spannableStringBuilder;
     }
 
-    public static void handleNoteBlockSpanClick(NotificationsActivity activity, NoteBlockClickableSpan clickedSpan) {
+    public static void handleNoteBlockSpanClick(NotificationsDetailActivity activity, NoteBlockClickableSpan clickedSpan) {
         if (clickedSpan.shouldShowBlogPreview()) {
             // Show blog preview
-            activity.showBlogPreviewActivity(clickedSpan.getSiteId(), clickedSpan.getUrl());
+            activity.showBlogPreviewActivity(clickedSpan.getSiteId());
         } else if (clickedSpan.getRangeType() == NoteBlockRangeType.POST) {
             // Show post detail
             activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());

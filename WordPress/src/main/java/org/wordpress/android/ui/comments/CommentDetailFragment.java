@@ -26,6 +26,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.simperium.client.BucketObjectMissingException;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
@@ -49,6 +50,7 @@ import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -65,7 +67,6 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
@@ -129,6 +130,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
     private static final String KEY_COMMENT_ID = "comment_id";
+    private static final String KEY_NOTE_ID = "note_id";
 
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
@@ -149,18 +151,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from notification list for a comment notification
      */
-    public static CommentDetailFragment newInstance(final Note note) {
+    public static CommentDetailFragment newInstance(final String noteId) {
         CommentDetailFragment fragment = new CommentDetailFragment();
-        fragment.setRemoteBlogId(note.getSiteId());
-        fragment.setNote(note);
+        fragment.setNoteWithNoteId(noteId);
         return fragment;
     }
 
     /*
      * used when called from notifications to load a comment that doesn't already exist in the note
      */
-    public static CommentDetailFragment newInstanceForRemoteNoteComment(final Note note) {
-        CommentDetailFragment fragment = newInstance(note);
+    public static CommentDetailFragment newInstanceForRemoteNoteComment(final String noteId) {
+        CommentDetailFragment fragment = newInstance(noteId);
         fragment.setShouldRequestCommentFromNote(true);
         return fragment;
     }
@@ -169,9 +170,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            int localBlogId = savedInstanceState.getInt(KEY_LOCAL_BLOG_ID);
-            long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
-            setComment(localBlogId, commentId);
+            if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
+                setNoteWithNoteId(savedInstanceState.getString(KEY_NOTE_ID));
+            } else {
+                int localBlogId = savedInstanceState.getInt(KEY_LOCAL_BLOG_ID);
+                long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
+                setComment(localBlogId, commentId);
+            }
         }
 
         setHasOptionsMenu(true);
@@ -183,6 +188,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (hasComment()) {
             outState.putInt(KEY_LOCAL_BLOG_ID, getLocalBlogId());
             outState.putLong(KEY_COMMENT_ID, getCommentId());
+        }
+
+        if (mNote != null) {
+            outState.putString(KEY_NOTE_ID, mNote.getId());
         }
     }
 
@@ -309,7 +318,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             showComment();
     }
 
-    public void setShouldFocusReplyField(boolean shouldFocusReplyField) {
+    private void setShouldFocusReplyField(boolean shouldFocusReplyField) {
         mShouldFocusReplyField = shouldFocusReplyField;
     }
 
@@ -327,6 +336,20 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mNote = note;
         if (isAdded() && mNote != null) {
             showComment();
+        }
+    }
+
+    private void setNoteWithNoteId(String noteId) {
+        if (noteId == null) return;
+
+        if (SimperiumUtils.getNotesBucket() != null) {
+            try {
+                Note note = SimperiumUtils.getNotesBucket().get(noteId);
+                setNote(note);
+                setRemoteBlogId(note.getSiteId());
+            } catch (BucketObjectMissingException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -527,9 +550,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         if (mComment.hasProfileImageUrl()) {
-            imgAvatar.setImageUrl(PhotonUtils.fixAvatar(mComment.getProfileImageUrl(), avatarSz), WPNetworkImageView.ImageType.AVATAR);
+            imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(mComment.getProfileImageUrl(), avatarSz), WPNetworkImageView.ImageType.AVATAR);
         } else if (mComment.hasAuthorEmail()) {
-            String avatarUrl = GravatarUtils.gravatarUrlFromEmail(mComment.getAuthorEmail(), avatarSz);
+            String avatarUrl = GravatarUtils.gravatarFromEmail(mComment.getAuthorEmail(), avatarSz);
             imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
         } else {
             imgAvatar.setImageUrl(null, WPNetworkImageView.ImageType.AVATAR);
@@ -950,9 +973,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // Now we'll add a detail fragment list
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note);
+        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note.getId());
         mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
-        // Listen for note changes from the defail list fragment, so we can update the status buttons
+        // Listen for note changes from the detail list fragment, so we can update the status buttons
         mNotificationsDetailListFragment.setOnNoteChangeListener(new NotificationsDetailListFragment.OnNoteChangeListener() {
             @Override
             public void onNoteChanged(Note note) {
@@ -961,7 +984,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 updateStatusViews();
             }
         });
-        fragmentTransaction.add(R.id.comment_content_container, mNotificationsDetailListFragment);
+        fragmentTransaction.replace(R.id.comment_content_container, mNotificationsDetailListFragment);
         fragmentTransaction.commitAllowingStateLoss();
 
         /*

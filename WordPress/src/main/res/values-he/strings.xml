@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_copy_to_clipboard">אירעה שגיאה בעת העתקת הטקסט אל ה-clipboard</string>
+	<string name="stats_recent_weeks">שבועות אחרונים</string>
+	<string name="logs_copied_to_clipboard">הלוגים של האפליקציה הועתקו אל ה-clipboard</string>
+	<string name="stats_overall">מבט כללי</string>
+	<string name="stats_period">תקופה</string>
+	<string name="reader_empty_posts_in_blog">אתר ריק</string>
+	<string name="stats_average_per_day">ממוצע יומי</string>
+	<string name="reader_page_recommended_blogs">אתרים שאתה עשוי לאהוב</string>
+	<string name="stats_months_and_years">חודשים ושנים</string>
+	<string name="reader_label_new_posts">פוסטים חדשים</string>
+	<string name="stats_total">סה"כ</string>
+	<string name="post_uploading">מעלה</string>
 	<string name="stats_unfollow">ביטול מעקב</string>
 	<string name="stats_follow">הרשמה</string>
 	<string name="stats_visitors">מבקרים</string>
@@ -156,13 +168,10 @@
 	<string name="reader_page_followed_tags">תגיות נעקבות</string>
 	<string name="reader_page_popular_tags">תגיות פופולריות</string>
 	<string name="reader_page_followed_blogs">בלוגים נעקבים</string>
-	<string name="reader_page_recommended_blogs">בלוגים מומלצים</string>
 	<string name="reader_hint_add_tag_or_url">הזן תגית או כתובת אתר למעקב</string>
-	<string name="reader_label_new_posts">הצג פוסטים חדשים</string>
 	<string name="reader_label_followers">%s עוקבים</string>
 	<string name="reader_label_followed_blog">בלוג נעקב</string>
 	<string name="reader_label_unfollowed_blog">ביטול מעקב אחר בלוג</string>
-	<string name="reader_label_more_recommendations">המלצות נוספות</string>
 	<string name="reader_label_tag_preview">פוסטים שתויגו %s</string>
 	<string name="reader_toast_err_get_blog_info">לא ניתן להציג בלוג זה</string>
 	<string name="reader_toast_err_already_follow_blog">אתה כבר עוקב אחר בלוג זה</string>

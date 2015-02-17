@@ -63,12 +63,13 @@
     <color name="stats_text_color">#404040</color>
     <color name="stats_link_text_color">@color/wordpress_blue</color>
     <color name="stats_module_content_list_header">#93A6C0</color>
+    <color name="stats_blue_labels">#587295</color>
     <color name="stats_bar_graph_views">#0085BF</color>
     <color name="stats_bar_graph_grid">#D9D9D9</color>
     <color name="stats_bar_graph_vertical_label">#93a6c0</color>
     <color name="stats_div_color">#B7B7B7</color>
-    <color name="stats_views_hover_color">#f0821e</color>
     <color name="stats_lists_background_color">#f4f8fA</color>
+    <color name="stats_empty_placeholder_color">#80e8f0f5</color> <!-- 50% alpha on calypso_blue_light -->
 
     <color name="blue_extra_light">#c8eefc</color>
     <color name="blue_light">#78dcfa</color>
@@ -111,7 +112,8 @@
     <color name="post_detail_icon_tint">#646464</color>
 
     <!-- calypso colors -->
-    <!-- If you are changing these colors, please update them in NotificationsConstants as well -->
+    <!-- If you are changing these colors, please update them in NotificationsConstants as well
+         and in the Stats section above -->
     <color name="calypso_blue_unread">#00aadc</color>
     <color name="calypso_blue_dark">#324155</color>
     <color name="calypso_grey">#aac0cf</color>

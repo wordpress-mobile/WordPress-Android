@@ -51,6 +51,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GenericCallback;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
@@ -408,10 +409,30 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         fetchBlogListWPOrg.execute(mFecthBlogListCallback);
     }
 
+    private boolean checkNetworkConnectivity() {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            SignInDialogFragment nuxAlert;
+            nuxAlert = SignInDialogFragment.newInstance(getString(R.string.no_network_title),
+                    getString(R.string.no_network_message),
+                    R.drawable.noticon_alert_big,
+                    getString(R.string.cancel));
+            ft.add(nuxAlert, "alert");
+            ft.commitAllowingStateLoss();
+            return false;
+        }
+        return true;
+    }
+
     private void signIn() {
         if (!isUserDataValid()) {
             return;
         }
+
+        if (!checkNetworkConnectivity()) {
+            return;
+        }
+
         mUsername = EditTextUtils.getText(mUsernameEditText).trim();
         mPassword = EditTextUtils.getText(mPasswordEditText).trim();
         if (isWPComLogin()) {
@@ -641,26 +662,20 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM,
                     "https://wordpress.com/settings/security/?ssl=forced");
             nuxAlert.setArguments(bundle);
+        } else if (messageId == org.wordpress.android.R.string.username_or_password_incorrect) {
+            handleInvalidUsernameOrPassword(messageId);
+            return;
+        } else if (messageId == org.wordpress.android.R.string.invalid_url_message) {
+            showUrlError(messageId);
+            endProgress();
+            return;
         } else {
-            if (messageId == org.wordpress.android.R.string.username_or_password_incorrect) {
-                handleInvalidUsernameOrPassword(messageId);
-                return;
-            } else if (messageId == org.wordpress.android.R.string.invalid_url_message) {
-                showUrlError(messageId);
-                endProgress();
-                return;
-            } else {
-                AppLog.e(T.NUX, clientResponse);
-                // create a 3 buttons dialog ("Contact us", "Read Application Logs" and "Cancel")
-                nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                        getString(messageId),
-                        R.drawable.noticon_alert_big, 3,
-                        getString(R.string.cancel),
-                        getString(R.string.contact_us),
-                        getString(R.string.reader_title_applog),
-                        SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
-                        SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
-            }
+            AppLog.e(T.NUX, "Server response: " + clientResponse);
+            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+                    getString(messageId), R.drawable.noticon_alert_big, 3,
+                    getString(R.string.cancel), getString(R.string.contact_us), getString(R.string.reader_title_applog),
+                    SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
+                    SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
         }
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();

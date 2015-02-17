@@ -190,6 +190,7 @@
     <string name="share_url">Share URL</string>
     <string name="loading_posts">Loading posts…</string>
     <string name="loading_pages">Loading pages…</string>
+    <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -383,11 +384,11 @@
     <string name="stats_view_totals_followers_and_shares">Totals, followers, &amp; shares</string>
     <string name="stats_view_clicks">Clicks</string>
     <string name="stats_view_tags_and_categories">Tags &amp; categories</string>
-    <string name="stats_view_top_authors">Top authors</string>
+    <string name="stats_view_authors">Authors</string>
     <string name="stats_view_referrers">Referrers</string>
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_comments">Comments</string>
-    <string name="stats_view_search_engine_terms">Search engine terms</string>
+    <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
 
@@ -402,6 +403,7 @@
     <string name="stats_entry_top_commenter">Author</string>
     <string name="stats_entry_publicize">Service</string>
     <string name="stats_entry_followers">Follower</string>
+    <string name="stats_entry_search_terms">Search Term</string>
 
     <!-- stats: label for the totals -->
     <string name="stats_totals_views">Views</string>
@@ -436,6 +438,8 @@
     <string name="stats_empty_publicize_desc">Keep track of your followers from various social networking services using publicize.</string>
     <string name="stats_empty_followers">No followers</string>
     <string name="stats_empty_followers_desc">Keep track of your overall number of followers, and how long each one has been following your site.</string>
+    <string name="stats_empty_search_terms">No search terms recorded</string>
+    <string name="stats_empty_search_terms_desc">Learn more about your search traffic by looking at the terms your visitors searched for to find your site.</string>
 
     <!-- stats: views and visitors -->
     <string name="stats_visitors_and_views_header_today">Today</string>
@@ -452,6 +456,8 @@
     <string name="stats_followers_email_selector">Email</string>
     <string name="stats_followers_total_wpcom">Total WordPress.com Followers: %1$s</string>
     <string name="stats_followers_total_email">Total Email Followers: %1$s</string>
+    <string name="stats_followers_total_wpcom_paged">Showing %1$d - %2$d of %3$s WordPress.com Followers</string>
+    <string name="stats_followers_total_email_paged">Showing %1$d - %2$d of %3$s Email Followers</string>
     <string name="stats_followers_seconds_ago">seconds ago</string>
     <string name="stats_followers_a_minute_ago">a minute ago</string>
     <string name="stats_followers_minutes">%1$d minutes</string>
@@ -463,6 +469,9 @@
     <string name="stats_followers_months">%1$d months</string>
     <string name="stats_followers_a_year">A year</string>
     <string name="stats_followers_years">%1$d years</string>
+
+    <!-- stats: search terms -->
+    <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
 
     <!-- Stats: Single post details view -->
     <string name="stats_period">Period</string>
@@ -523,6 +532,7 @@
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
     <string name="more">More</string>
+    <string name="error_notification_open">Could not open notification</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>

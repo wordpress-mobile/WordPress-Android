@@ -361,6 +361,18 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_blocked_a_blog");
                 instructions.setCurrentDateForPeopleProperty("last_time_blocked_a_blog");
                 break;
+            case READER_BLOG_PREVIEW:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Blog Preview");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_viewed_blog_preview");
+                instructions.setCurrentDateForPeopleProperty("last_time_viewed_blog_preview");
+                break;
+            case READER_TAG_PREVIEW:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Tag Preview");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_viewed_tag_preview");
+                instructions.setCurrentDateForPeopleProperty("last_time_viewed_tag_preview");
+                break;
             case EDITOR_CREATED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Created Post");
@@ -626,10 +638,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case STATS_SELECTED_INSTALL_JETPACK:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Selected Install Jetpack");
-                break;
-            case MEMORY_TRIMMED_COMPLETE:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Memory Trimmed Complete");
                 break;
             case PUSH_NOTIFICATION_RECEIVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

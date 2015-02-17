@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
+import org.wordpress.android.ui.stats.models.SearchTermsModel;
 import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
@@ -337,6 +338,9 @@ public class StatsUtils {
             case PUBLICIZE:
                 model = new PublicizeModel(blogID, response);
                 break;
+            case SEARCH_TERMS:
+                model = new SearchTermsModel(blogID, response);
+                break;
         }
         return model;
     }
@@ -352,8 +356,7 @@ public class StatsUtils {
             if (itemID == 0) {
                 ReaderActivityLauncher.showReaderBlogPreview(
                         ctx,
-                        blogID,
-                        url
+                        blogID
                 );
             } else {
                 ReaderActivityLauncher.showReaderPostDetail(
@@ -365,8 +368,7 @@ public class StatsUtils {
         } else if (postType.equals("homepage")) {
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
-                    blogID,
-                    url
+                    blogID
             );
         } else {
             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
