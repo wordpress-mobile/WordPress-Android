@@ -373,7 +373,7 @@ public class ReaderPostListFragment extends Fragment {
      * animate in the blog/tag info header after a brief delay
      */
     @SuppressLint("NewApi")
-    private void animateHeader() {
+    private void animateHeaderDelayed() {
         if (!isAdded()) {
             return;
         }
@@ -388,11 +388,13 @@ public class ReaderPostListFragment extends Fragment {
         header.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                header.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                header.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (!isAdded()) return;
+                        if (!isAdded()) {
+                            return;
+                        }
                         header.setVisibility(View.VISIBLE);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             Animator animator = ViewAnimationUtils.createCircularReveal(
@@ -444,7 +446,7 @@ public class ReaderPostListFragment extends Fragment {
                 break;
             case TAG_PREVIEW:
                 updateTagPreviewHeader();
-                animateHeader();
+                animateHeaderDelayed();
                 break;
         }
 
