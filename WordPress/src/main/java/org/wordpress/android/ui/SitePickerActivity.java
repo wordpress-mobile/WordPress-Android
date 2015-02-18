@@ -30,10 +30,12 @@ import java.util.Map;
 public class SitePickerActivity extends ActionBarActivity {
 
     public static final String KEY_LOCAL_ID = "local_id";
-    private static final String KEY_BLOG_ID  = "blog_id";
+    private static final String KEY_BLOG_ID = "blog_id";
+    public static final String ARG_VISIBLE_ONLY = "visible_blogs_only";
 
     private RecyclerView mRecycler;
     private int mBlavatarSz;
+    private boolean mVisibleBlogsOnly;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,12 @@ public class SitePickerActivity extends ActionBarActivity {
 
         setContentView(R.layout.site_picker_activity);
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
+
+        if (savedInstanceState != null) {
+            mVisibleBlogsOnly = savedInstanceState.getBoolean(ARG_VISIBLE_ONLY);
+        } else {
+            mVisibleBlogsOnly = getIntent().getBooleanExtra(ARG_VISIBLE_ONLY, false);
+        }
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -53,6 +61,12 @@ public class SitePickerActivity extends ActionBarActivity {
         mRecycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(ARG_VISIBLE_ONLY, mVisibleBlogsOnly);
     }
 
     @Override
@@ -79,7 +93,12 @@ public class SitePickerActivity extends ActionBarActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            List<Map<String, Object>> accounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"isHidden"});
+            List<Map<String, Object>> accounts;
+            if (mVisibleBlogsOnly) {
+                accounts = WordPress.wpDB.getVisibleDotComAccounts();
+            } else {
+                accounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"isHidden"});
+            }
             mSites = new SiteList(accounts);
             return true;
         }
