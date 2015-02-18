@@ -82,6 +82,7 @@ public class AuthenticationDialogUtils {
         if (WordPress.getCurrentBlog() == null || (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag())) {
             Intent signInIntent = new Intent(activity, SignInActivity.class);
             signInIntent.putExtra(SignInActivity.ARG_IS_AUTH_ERROR, true);
+            signInIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             activity.startActivityForResult(signInIntent, WPComLoginActivity.REQUEST_CODE);
             return;
         }
