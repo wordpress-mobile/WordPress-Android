@@ -27,6 +27,7 @@ import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
+import com.wordpress.rest.RestRequest;
 
 import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -92,6 +93,7 @@ public class WordPress extends Application {
     public static final String BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE = "INVALID_SSL_CERTIFICATE";
     public static final String BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH = "TWO_FA_AUTH";
     public static final String BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT = "LOGIN_LIMIT";
+    public static final String BROADCAST_ACTION_REST_API_UNAUTHORIZED = "REST_API_UNAUTHORIZED";
     public static final String BROADCAST_ACTION_BLOG_LIST_CHANGED = "BLOG_LIST_CHANGED";
 
     private static final int SECONDS_BETWEEN_STATS_UPDATE = 30 * 60;
@@ -246,15 +248,24 @@ public class WordPress extends Application {
     public static RestClientUtils getRestClientUtils() {
         if (mRestClientUtils == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtils = new RestClientUtils(requestQueue, authenticator);
+            mRestClientUtils = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener);
         }
         return mRestClientUtils;
     }
 
+    private static RestRequest.OnAuthFailedListener mOnAuthFailedListener = new RestRequest.OnAuthFailedListener() {
+        @Override
+        public void onAuthFailed() {
+            if (getContext() == null) return;
+            // If this is called, it means the WP.com token is no longer valid.
+            sendLocalBroadcast(getContext(), BROADCAST_ACTION_REST_API_UNAUTHORIZED);
+        }
+    };
+
     public static RestClientUtils getRestClientUtilsV1_1() {
         if (mRestClientUtilsVersion1_1 == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtilsVersion1_1 = new RestClientUtils(requestQueue, authenticator, RestClient.REST_CLIENT_VERSIONS.V1_1);
+            mRestClientUtilsVersion1_1 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_1);
         }
         return mRestClientUtilsVersion1_1;
     }
