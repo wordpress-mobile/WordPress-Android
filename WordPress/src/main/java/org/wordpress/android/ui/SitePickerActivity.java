@@ -158,22 +158,23 @@ public class SitePickerActivity extends ActionBarActivity {
      * with the above site adapter
      */
     class SiteRecord {
-        final long localId;
-        final long blogId;
+        final int localId;
+        final String blogId;
         final String blogName;
         final String hostName;
         final String url;
         final String blavatarUrl;
 
         SiteRecord(Map<String, Object> account) {
-            localId = MapUtils.getMapLong(account, "id");
-            blogId = MapUtils.getMapLong(account, "blogId");
+            localId = MapUtils.getMapInt(account, "id");
+            blogId = MapUtils.getMapStr(account, "blogId");
             blogName = BlogUtils.getBlogNameFromAccountMap(account);
             hostName = BlogUtils.getHostNameFromAccountMap(account);
             url = MapUtils.getMapStr(account, "url");
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
         }
     }
+
     class SiteList extends ArrayList<SiteRecord> {
         SiteList(List<Map<String, Object>> accounts) {
             for (Map<String, Object> account: accounts) {
