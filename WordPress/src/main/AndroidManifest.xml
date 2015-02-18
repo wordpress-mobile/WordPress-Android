@@ -247,8 +247,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.DashboardActivity" />
-        <activity
             android:name=".ui.ViewSiteActivity"
             android:theme="@style/WordPress.DrawerActivity" />
 
