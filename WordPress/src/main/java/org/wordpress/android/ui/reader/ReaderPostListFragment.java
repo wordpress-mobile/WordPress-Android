@@ -373,7 +373,7 @@ public class ReaderPostListFragment extends Fragment {
      * animate in the blog/tag info header after a brief delay
      */
     @SuppressLint("NewApi")
-    private void animateHeader() {
+    private void animateHeaderDelayed() {
         if (!isAdded()) {
             return;
         }
@@ -388,11 +388,13 @@ public class ReaderPostListFragment extends Fragment {
         header.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                header.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                header.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (!isAdded()) return;
+                        if (!isAdded()) {
+                            return;
+                        }
                         header.setVisibility(View.VISIBLE);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             Animator animator = ViewAnimationUtils.createCircularReveal(
@@ -440,11 +442,11 @@ public class ReaderPostListFragment extends Fragment {
         switch (getPostListType()) {
             case BLOG_PREVIEW:
                 loadBlogOrFeedInfo();
-                animateHeader();
+                animateHeaderDelayed();
                 break;
             case TAG_PREVIEW:
                 updateTagPreviewHeader();
-                animateHeader();
+                animateHeaderDelayed();
                 break;
         }
 
@@ -685,7 +687,7 @@ public class ReaderPostListFragment extends Fragment {
         page3.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.box_with_pages_slide_up_page3));
     }
 
-    private void setEmptyTitleAndDescription() {
+    private void setEmptyTitleAndDescription(boolean requestFailed) {
         if (!isAdded()) {
             return;
         }
@@ -693,7 +695,11 @@ public class ReaderPostListFragment extends Fragment {
         int titleResId;
         int descriptionResId = 0;
 
-        if (isUpdating()) {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            titleResId = R.string.reader_empty_posts_no_connection;
+        } else if (requestFailed) {
+            titleResId = R.string.reader_empty_posts_request_failed;
+        } else if (isUpdating()) {
             titleResId = R.string.reader_empty_posts_in_tag_updating;
         } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             titleResId = R.string.reader_empty_posts_in_blog;
@@ -744,7 +750,7 @@ public class ReaderPostListFragment extends Fragment {
                 return;
             }
             if (isEmpty) {
-                setEmptyTitleAndDescription();
+                setEmptyTitleAndDescription(false);
                 mEmptyView.setVisibility(View.VISIBLE);
                 if (shouldShowBoxAndPagesAnimation()) {
                     startBoxAndPagesAnimation();
@@ -983,7 +989,8 @@ public class ReaderPostListFragment extends Fragment {
                 if (result.isNewOrChanged()) {
                     refreshPosts();
                 } else if (isPostAdapterEmpty()) {
-                    setEmptyTitleAndDescription();
+                    boolean requestFailed = (result == ReaderActions.UpdateResult.FAILED);
+                    setEmptyTitleAndDescription(requestFailed);
                 }
             }
         };
@@ -1014,7 +1021,7 @@ public class ReaderPostListFragment extends Fragment {
         }
 
         setIsUpdating(true, updateAction);
-        setEmptyTitleAndDescription();
+        setEmptyTitleAndDescription(false);
 
         // go no further if we're viewing a followed tag and the tag table is empty - this will
         // occur when the Reader is accessed for the first time (ie: fresh install) - note that
@@ -1057,7 +1064,8 @@ public class ReaderPostListFragment extends Fragment {
                 } else if (result.isNewOrChanged()) {
                     refreshPosts();
                 } else {
-                    setEmptyTitleAndDescription();
+                    boolean requestFailed = (result == ReaderActions.UpdateResult.FAILED);
+                    setEmptyTitleAndDescription(requestFailed);
                 }
             }
         };
