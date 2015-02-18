@@ -442,7 +442,7 @@ public class ReaderPostListFragment extends Fragment {
         switch (getPostListType()) {
             case BLOG_PREVIEW:
                 loadBlogOrFeedInfo();
-                animateHeader();
+                animateHeaderDelayed();
                 break;
             case TAG_PREVIEW:
                 updateTagPreviewHeader();
