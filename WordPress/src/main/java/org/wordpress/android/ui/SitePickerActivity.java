@@ -4,27 +4,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,12 +33,14 @@ public class SitePickerActivity extends ActionBarActivity {
     private static final String KEY_BLOG_ID  = "blog_id";
 
     private RecyclerView mRecycler;
+    private int mBlavatarSz;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.site_picker_activity);
+        mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -51,7 +52,7 @@ public class SitePickerActivity extends ActionBarActivity {
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
         mRecycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
-        new LoadAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -65,83 +66,57 @@ public class SitePickerActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void showProgress(boolean show) {
-        if (isFinishing()) {
-            return;
-        }
-        ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
-        progress.setVisibility(show ? View.VISIBLE : View. GONE);
-    }
-
-    void onItemSelected(Map<String, Object> item) {
-        int id = MapUtils.getMapInt(item, "id");
-        String blogId = MapUtils.getMapStr(item, "blogId");
-        if (TextUtils.isEmpty(blogId)) {
-            AppLog.w(AppLog.T.UTILS, "site picker > empty blogId selected");
-            return;
-        }
+    void onItemSelected(@NonNull SiteRecord site) {
         Intent data = new Intent();
-        data.putExtra(KEY_LOCAL_ID, id);
-        data.putExtra(KEY_BLOG_ID, blogId);
+        data.putExtra(KEY_LOCAL_ID, site.localId);
+        data.putExtra(KEY_BLOG_ID, site.blogId);
         setResult(RESULT_OK, data);
         finish();
     }
 
-    private class LoadAccountsTask extends AsyncTask<Void, Void, Boolean> {
-        private List<Map<String, Object>> accounts;
-
-        @Override
-        protected void onPreExecute() {
-            showProgress(true);
-        }
-
-        @Override
-        protected void onCancelled() {
-            showProgress(false);
-        }
+    private class LoadSitesTask extends AsyncTask<Void, Void, Boolean> {
+        private SiteList mSites;
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            accounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"isHidden"});
+            List<Map<String, Object>> accounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"isHidden"});
+            mSites = new SiteList(accounts);
             return true;
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                SiteAdapter adapter = new SiteAdapter(SitePickerActivity.this, accounts);
+                SiteAdapter adapter = new SiteAdapter(SitePickerActivity.this, mSites);
                 mRecycler.setAdapter(adapter);
             }
-            showProgress(false);
         }
     }
 
     class SiteAdapter extends RecyclerView.Adapter<SiteViewHolder> {
 
-        private final List<Map<String, Object>> mAccounts;
-        private final int mBlavatarSz;
+        private final SiteList mSites;
         private final LayoutInflater mInflater;
 
-        public SiteAdapter(Context context, List<Map<String, Object>> accounts) {
+        public SiteAdapter(Context context, @NonNull SiteList sites) {
             super();
             setHasStableIds(true);
-            mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
             mInflater = LayoutInflater.from(context);
-            mAccounts = accounts;
+            mSites = sites;
         }
 
         @Override
         public int getItemCount() {
-            return mAccounts.size();
+            return mSites.size();
         }
 
         @Override
         public long getItemId(int position) {
-            return MapUtils.getMapInt(getItem(position), "id");
+            return getItem(position).localId;
         }
 
-        Map<String, Object> getItem(int position) {
-            return mAccounts.get(position);
+        SiteRecord getItem(int position) {
+            return mSites.get(position);
         }
 
         @Override
@@ -152,13 +127,10 @@ public class SitePickerActivity extends ActionBarActivity {
 
         @Override
         public void onBindViewHolder(SiteViewHolder holder, final int position) {
-            Map<String, Object> item = getItem(position);
-            holder.txtTitle.setText(BlogUtils.getBlogNameFromAccountMap(item));
-            holder.txtDomain.setText(BlogUtils.getHostNameFromAccountMap(item));
-            String url = MapUtils.getMapStr(item, "url");
-            holder.imgBlavatar.setImageUrl(
-                    GravatarUtils.blavatarFromUrl(url, mBlavatarSz),
-                    WPNetworkImageView.ImageType.BLAVATAR);
+            SiteRecord site = getItem(position);
+            holder.txtTitle.setText(site.blogName);
+            holder.txtDomain.setText(site.hostName);
+            holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -178,6 +150,35 @@ public class SitePickerActivity extends ActionBarActivity {
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtDomain = (TextView) view.findViewById(R.id.text_domain);
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
+        }
+    }
+
+    /**
+     * SiteRecord is a simplified version of the full account record optimized for use
+     * with the above site adapter
+     */
+    class SiteRecord {
+        final long localId;
+        final long blogId;
+        final String blogName;
+        final String hostName;
+        final String url;
+        final String blavatarUrl;
+
+        SiteRecord(Map<String, Object> account) {
+            localId = MapUtils.getMapLong(account, "id");
+            blogId = MapUtils.getMapLong(account, "blogId");
+            blogName = BlogUtils.getBlogNameFromAccountMap(account);
+            hostName = BlogUtils.getHostNameFromAccountMap(account);
+            url = MapUtils.getMapStr(account, "url");
+            blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
+        }
+    }
+    class SiteList extends ArrayList<SiteRecord> {
+        SiteList(List<Map<String, Object>> accounts) {
+            for (Map<String, Object> account: accounts) {
+                add(new SiteRecord(account));
+            }
         }
     }
 }
