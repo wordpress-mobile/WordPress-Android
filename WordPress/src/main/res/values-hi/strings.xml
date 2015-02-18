@@ -35,17 +35,14 @@
 	<string name="reader_toast_err_already_follow_blog">आप पहले से ही इस ब्लॉग का अनुसरण कर रहे है</string>
 	<string name="reader_title_blog_preview">ब्लॉग पूर्वावलोकन</string>
 	<string name="reader_title_tag_preview">टैग पूर्वावलोकन</string>
-	<string name="reader_page_recommended_blogs">अनुशंसित ब्लॉग</string>
 	<string name="reader_title_subs">टैग और ब्लॉग</string>
 	<string name="reader_toast_err_follow_blog">इस ब्लॉग का अनुसरण करने में असमर्थ</string>
 	<string name="reader_toast_err_get_blog_info">इस ब्लॉग को दिखाने में असमर्थ</string>
 	<string name="reader_toast_err_unfollow_blog">इस ब्लॉग अनुसरण रद्द करने में असमर्थ</string>
-	<string name="reader_label_new_posts">नया पोस्ट दिखाएं</string>
 	<string name="reader_empty_recommended_blogs">कोई अनुशंसित ब्लॉग नहीं</string>
 	<string name="reader_hint_add_tag_or_url">अनुसरण के लिए एक टैग या यूआरएल दर्ज करें</string>
 	<string name="reader_page_followed_blogs">अनुसरण किये गए ब्लॉग </string>
 	<string name="reader_page_followed_tags">अनुसरण किये गए टैग्स </string>
-	<string name="reader_label_more_recommendations">अधिक सिफारिशें</string>
 	<string name="reader_label_tag_preview">%s पोस्ट को टैग किया गया</string>
 	<string name="blogs_visibility">ब्लॉग</string>
 	<string name="stats_empty_search_engine_terms_desc">खोज शब्द वे शब्द या वाक्यांश हैं जिसके द्वारा उपयोगकर्ताओं आप को पाते\n हैं जब वे खोज करते है.</string>

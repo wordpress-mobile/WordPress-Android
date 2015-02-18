@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_copy_to_clipboard">复制文本到剪贴板时出错</string>
+	<string name="reader_page_recommended_blogs">您可能喜欢的博客</string>
+	<string name="stats_months_and_years">月和年</string>
+	<string name="stats_average_per_day">每日平均</string>
+	<string name="stats_recent_weeks">最近几个星期</string>
+	<string name="reader_empty_posts_in_blog">此博客没有任何内容</string>
+	<string name="reader_label_new_posts">新文章</string>
+	<string name="stats_total">总计</string>
+	<string name="stats_overall">总体</string>
+	<string name="stats_period">时段</string>
+	<string name="logs_copied_to_clipboard">已将应用程序日志复制到剪贴板</string>
+	<string name="post_uploading">正在上传</string>
 	<string name="stats_follow">关注</string>
 	<string name="stats_unfollow">取消关注</string>
 	<string name="stats_pagination_label">第 %1$s 页，共 %2$s 页</string>
@@ -156,13 +168,10 @@
 	<string name="reader_page_followed_tags">关注的标签</string>
 	<string name="reader_page_popular_tags">热门标签</string>
 	<string name="reader_page_followed_blogs">关注的博客</string>
-	<string name="reader_page_recommended_blogs">推荐的博客</string>
 	<string name="reader_hint_add_tag_or_url">输入要关注的标签或网址</string>
-	<string name="reader_label_new_posts">显示新博文</string>
 	<string name="reader_label_followers">%s 个关注者</string>
 	<string name="reader_label_followed_blog">关注的博客</string>
 	<string name="reader_label_unfollowed_blog">未关注的博客</string>
-	<string name="reader_label_more_recommendations">更多推荐</string>
 	<string name="reader_label_tag_preview">标记为“%s”的博文</string>
 	<string name="reader_toast_err_get_blog_info">无法显示此博客</string>
 	<string name="reader_toast_err_already_follow_blog">您已经关注此博客</string>

@@ -93,13 +93,10 @@
 	<string name="reader_page_followed_tags">Följda taggar</string>
 	<string name="reader_page_popular_tags">Populära taggar</string>
 	<string name="reader_page_followed_blogs">Följda bloggar</string>
-	<string name="reader_page_recommended_blogs">Rekommenderade bloggar</string>
 	<string name="reader_hint_add_tag_or_url">Ange en tagg eller URL att följa</string>
-	<string name="reader_label_new_posts">Visa nya inlägg</string>
 	<string name="reader_label_followers">%s följare</string>
 	<string name="reader_label_followed_blog">Bloggen följs</string>
 	<string name="reader_label_unfollowed_blog">Bloggen följs inte</string>
-	<string name="reader_label_more_recommendations">Fler rekommendationer</string>
 	<string name="reader_label_tag_preview">Inlägg taggade %s</string>
 	<string name="reader_toast_err_get_blog_info">Kunde inte visa denna blogg</string>
 	<string name="reader_toast_err_already_follow_blog">Du följer redan denna blogg</string>

@@ -144,7 +144,6 @@
             android:theme="@style/WordPress.DrawerActivity" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity" />
-        <activity android:name=".ui.posts.ViewPostActivity" />
 
         <!-- Stats Activities -->
         <activity android:name=".ui.stats.StatsActivity"

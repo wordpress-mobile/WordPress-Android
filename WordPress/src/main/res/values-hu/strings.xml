@@ -53,16 +53,13 @@
 	<string name="simperium_connection_error">Nem sikerült bejelentkezni az értesítésekhez.</string>
 	<string name="reader_title_subs">Címkék és blogok</string>
 	<string name="reader_page_followed_blogs">Követett blogok</string>
-	<string name="reader_page_recommended_blogs">Javasolt blogok</string>
 	<string name="reader_page_popular_tags">Népszerű címkék</string>
 	<string name="reader_title_blog_preview">Blog előnézete</string>
 	<string name="reader_label_followed_blog">Követett blogok</string>
-	<string name="reader_label_new_posts">Új bejegyzések megtekintése</string>
 	<string name="reader_label_followers">%s követő</string>
 	<string name="reader_page_followed_tags">Követett címkék</string>
 	<string name="reader_title_tag_preview">Címke előnézete</string>
 	<string name="reader_hint_add_tag_or_url">Adjunk meg egy címkét vagy webcímet a követéshez</string>
-	<string name="reader_label_more_recommendations">További ajánlások</string>
 	<string name="reader_toast_err_follow_blog">Nem lehetséges ezt a blogot követni</string>
 	<string name="reader_empty_recommended_blogs">Nincsenek ajánlott blogok</string>
 	<string name="reader_toast_err_already_follow_blog">Ezt a blogot már követjük</string>
