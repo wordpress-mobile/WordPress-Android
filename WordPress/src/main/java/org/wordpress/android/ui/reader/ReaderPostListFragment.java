@@ -27,7 +27,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -70,9 +69,19 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
+
+/**
+ * Displays a list of reader posts, relies on the post list type to determine which posts are shown:
+ *
+ *  TAG_FOLLOWED - posts in a followed tag, displayed as a ViewPager tab inside the main activity
+ *  with a fragment toolbar containing a spinner that enables switching tags
+ *
+ *  TAG_PREVIEW - posts with a specific tag, displayed in ReaderPostListActivity when user taps
+ *  a tag in a post, adds a "Follow" button to the activity toolbar to enable easily following
+ *
+ *  BLOG_PREVIEW - similar to TAG_PREVIEW except it shows posts in a specific blog
+ */
 
 public class ReaderPostListFragment extends Fragment {
 
@@ -128,6 +137,14 @@ public class ReaderPostListFragment extends Fragment {
                 bundle.putStringArrayList(keyName, history);
             }
         }
+    }
+
+    public static ReaderPostListFragment newInstance() {
+        ReaderTag tag = AppPrefs.getReaderTag();
+        if (tag == null) {
+            tag = ReaderTag.getDefaultTag();
+        }
+        return newInstanceForTag(tag, ReaderPostListType.TAG_FOLLOWED);
     }
 
     /*
@@ -522,7 +539,7 @@ public class ReaderPostListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         // only followed tag list has a menu
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            inflater.inflate(R.menu.reader_native, menu);
+            inflater.inflate(R.menu.reader_menu, menu);
             setupActionBar();
         }
     }
@@ -630,15 +647,16 @@ public class ReaderPostListFragment extends Fragment {
         }
     }
 
+    // TODO
     private void setupSpinner() {
-        if (!isAdded()) return;
+        /*if (!isAdded()) return;
 
         final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         if (toolbar == null) {
             return;
         }
 
-        View view = View.inflate(getActivity(), R.layout.reader_spinner, toolbar);
+        View view = View.inflate(getActivity(), R.layout.re, toolbar);
         mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
         mSpinner.setAdapter(getSpinnerAdapter());
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -664,7 +682,7 @@ public class ReaderPostListFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
                 // nop
             }
-        });
+        });*/
     }
 
     /*

@@ -16,7 +16,6 @@ import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
-import org.wordpress.android.ui.reader.views.ReaderViewPager;
 import org.wordpress.android.util.AppLog;
 
 import javax.annotation.Nonnull;
@@ -31,7 +30,7 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
     private String mInitialImageUrl;
     private boolean mIsPrivate;
     private String mContent;
-    private ReaderViewPager mViewPager;
+    private ViewPager mViewPager;
     private PhotoPagerAdapter mAdapter;
     private TextView mTxtTitle;
     private boolean mIsTitleVisible;
@@ -41,7 +40,7 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_photo_viewer);
 
-        mViewPager = (ReaderViewPager) findViewById(R.id.viewpager);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mTxtTitle = (TextView) findViewById(R.id.text_title);
 
         // title is hidden until we know we can show it
