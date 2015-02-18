@@ -9,7 +9,6 @@ import android.util.Log;
 import org.wordpress.android.TestUtils;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.CategoryNode;
 
 public class WordPressDB_Test extends InstrumentationTestCase {
     protected Context testContext;

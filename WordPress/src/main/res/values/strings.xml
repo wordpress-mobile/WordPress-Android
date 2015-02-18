@@ -513,6 +513,11 @@
     <string name="select_date">Select date</string>
     <string name="select_time">Select time</string>
 
+    <!-- page parent management -->
+    <string name="parent">Page Parent</string>
+    <string name="no_parent">(no parent)</string>
+    <string name="select_parent">Select page parent</string>
+
     <!-- notifications -->
     <string name="notifications">Notifications</string>
     <string name="manage_notifications">Manage notifications</string>
@@ -581,6 +586,7 @@
     <!-- Remote Post Changes -->
     <string name="local_changes">Local changes</string>
     <string name="overwrite_local_changes">You\'ve made changes to a post that haven\'t been uploaded yet. Proceed with the refresh and overwrite local changes?</string>
+    <string name="unable_to_refresh_local_changes">One or more of your pages has been changed locally. Please upload the changes before refreshing this list.</string>
 
     <string name="ok">OK</string>
     <string name="image_settings">Image settings</string>

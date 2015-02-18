@@ -23,7 +23,7 @@ public class CategoryNodeInstrumentationTest extends InstrumentationTestCase {
                 "malformed_category_parent_id.sql");
 
         // This line failed before #36 was solved
-        CategoryNode node = CategoryNode.createCategoryTreeFromDB(1);
+        HierarchyNode node = HierarchyNode.createTreeFromDB(1, HierarchyNode.HierarchyType.CATEGORY);
     }
 
     public void tearDown() throws Exception {

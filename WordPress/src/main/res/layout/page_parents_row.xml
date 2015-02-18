@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.wordpress.android.widgets.CheckedLinearLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="@dimen/hierarchy_row_height"
         android:orientation="horizontal"
+        android:background="@drawable/page_parents_selector"
         android:id="@+id/hierarchyRow" android:clickable="false">
     <ImageView android:layout_width="@dimen/hierarchy_row_height"
                android:layout_height="@dimen/hierarchy_row_height"
                android:src="@drawable/ic_level_indicator"
                android:id="@+id/hierarchyRowLevelIndicator" android:scaleType="fitEnd"/>
-    <CheckedTextView
+    <TextView
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -21,4 +22,4 @@
             android:paddingRight="6dip"
             android:checkMark="?android:attr/listChoiceIndicatorMultiple"
             android:id="@+id/hierarchyRowText"/>
-</org.wordpress.android.widgets.CheckedLinearLayout>
+</LinearLayout>

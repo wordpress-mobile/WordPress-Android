@@ -579,6 +579,125 @@ public class ApiHelper {
         }
     }
 
+
+    /**
+     * Fetch a complete list of pages with minimal information (post ID, title, parent ID) from the XML-RPC API and
+     * store it in the DB (page_list table). Will recursively fetch pages in batches of mNumber.
+     *
+     * Note about porting to the REST API: the analogous REST call would be GET /sites/$site/posts/, with the fields
+     * query parameter set to ID,title,parent. mNumber must be limited to 100.
+     */
+    public static class FetchPageListTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
+        public interface Callback extends GenericErrorCallback {
+            public void onSuccess(int postCount);
+        }
+
+        private Callback mCallback;
+        private String mErrorMessage;
+        private int mPageCount;
+
+        private Blog mBlog;
+        private int mNumber;
+        private int mOffset;
+
+        public FetchPageListTask(Callback callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            List<?> arguments = params[0];
+
+            mBlog = (Blog) arguments.get(0);
+            mNumber = (Integer) arguments.get(1);
+            mOffset = (Integer) arguments.get(2);
+            if (mBlog == null)
+                return false;
+
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
+                    mBlog.getHttppassword());
+
+            Map<String, Object> filterStruct = new HashMap<>();
+            filterStruct.put("post_type", "page");
+            filterStruct.put("number", mNumber);
+            filterStruct.put("offset", mOffset);
+
+            Object[] fields = {"post_id", "post_title", "post_parent"};
+
+            Object[] result;
+            Object[] xmlrpcParams = { mBlog.getRemoteBlogId(),
+                    mBlog.getUsername(),
+                    mBlog.getPassword(),
+                    filterStruct,
+                    fields
+            };
+            try {
+                result = (Object[]) client.call("wp.getPosts", xmlrpcParams);
+                if (result != null && result.length > 0) {
+                    mPageCount = result.length;
+                    List<Map<?, ?>> pageList = new ArrayList<>();
+
+                    for (Object pageData : result) {
+                        Map<?, ?> pageMap = (Map<?, ?>) pageData;
+                        pageList.add(pageMap);
+                    }
+
+                    if (mOffset == 0) {
+                        // Retrieving the full list of pages. Clear the page_list table before populating it
+                        WordPress.wpDB.clearPageList(mBlog.getLocalTableBlogId());
+                    }
+                    WordPress.wpDB.savePageList(pageList, mBlog.getLocalTableBlogId(), true, false);
+                }
+                return true;
+            } catch (XMLRPCFault e) {
+                mErrorType = ErrorType.NETWORK_XMLRPC;
+                if (e.getFaultCode() == 401) {
+                    mErrorType = ErrorType.UNAUTHORIZED;
+                }
+                mErrorMessage = e.getMessage();
+            } catch (XMLRPCException e) {
+                mErrorType = ErrorType.NETWORK_XMLRPC;
+                mErrorMessage = e.getMessage();
+            } catch (IOException e) {
+                mErrorType = ErrorType.INVALID_RESULT;
+                mErrorMessage = e.getMessage();
+            } catch (XmlPullParserException e) {
+                mErrorType = ErrorType.INVALID_RESULT;
+                mErrorMessage = e.getMessage();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mCallback.onFailure(ErrorType.TASK_CANCELLED, mErrorMessage, mThrowable);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (mCallback != null) {
+                if (success) {
+                    if (mPageCount == mNumber) {
+                        // Retrieved pages up to the mNumber limit, so there are probably more pages left to fetch
+                        List<Object> apiArgs = new Vector<>();
+                        apiArgs.add(mBlog);
+                        apiArgs.add(mNumber);
+                        apiArgs.add(mOffset + mNumber);
+                        FetchPageListTask fetchPageListTask = new FetchPageListTask(mCallback);
+                        fetchPageListTask.execute(apiArgs);
+                    } else {
+                        // Out of pages. Report the total number of pages retrieved
+                        mCallback.onSuccess(mOffset + mPageCount);
+                    }
+                } else {
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
+                }
+            }
+        }
+    }
+
     public static class SyncMediaLibraryTask extends HelperAsyncTask<java.util.List<?>, Void, Integer> {
         public interface Callback extends GenericErrorCallback {
             public void onSuccess(int results);

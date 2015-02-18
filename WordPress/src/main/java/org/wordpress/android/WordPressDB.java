@@ -17,6 +17,7 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.PageHierarchyPage;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
@@ -51,7 +52,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 28;
+    private static final int DATABASE_VERSION = 29;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -142,6 +143,11 @@ public class WordPressDB {
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
+
+    // add new table for full list of pages with minimal information
+    private static final String CREATE_TABLE_PAGE_LIST = "create table if not exists page_list (id integer primary key autoincrement, blogID text, "
+            + "postid text, title text default '', wp_page_parent_id text, isLocalChange boolean default 0);";
+    private static final String PAGE_LIST_TABLE = "page_list";
 
     private SQLiteDatabase db;
 
@@ -252,6 +258,10 @@ public class WordPressDB {
             case 27:
                 // Add isUploading column to POSTS
                 db.execSQL(ADD_IS_UPLOADING);
+                currentVersion++;
+            case 28:
+                // Add PAGE_LIST table
+                db.execSQL(CREATE_TABLE_PAGE_LIST);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -738,6 +748,12 @@ public class WordPressDB {
                 "blogID=? AND id=?",
                 new String[]{String.valueOf(post.getLocalTableBlogId()), String.valueOf(post.getLocalTablePostId())});
 
+        if (post.isPage()) {
+            db.delete(PAGE_LIST_TABLE,
+                    "blogID=? AND postid=?",
+                    new String[]{String.valueOf(post.getLocalTableBlogId()), String.valueOf(post.getRemotePostId())});
+        }
+
         return (result == 1);
     }
 
@@ -857,6 +873,11 @@ public class WordPressDB {
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
+
+                if (isPage) {
+                    // Apply the same changes to the page_list table
+                    savePageList(postsList, localBlogId, shouldOverwrite, true);
+                }
             }
         }
     }
@@ -916,6 +937,10 @@ public class WordPressDB {
             values.put("isUploading", post.isUploading());
             values.put("uploaded", post.isUploaded());
             values.put("isPage", post.isPage());
+            if (post.isPage()) {
+                values.put("wp_page_parent_id", post.getPageParentId());
+                values.put("wp_page_parent_title", post.getPageParentTitle());
+            }
             values.put("wp_post_format", post.getPostFormat());
             putPostLocation(post, values);
             values.put("isLocalChange", post.isLocalChange());
@@ -956,6 +981,10 @@ public class WordPressDB {
             values.put("wp_post_format", post.getPostFormat());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
+            if (post.isPage()) {
+                values.put("wp_page_parent_id", post.getPageParentId());
+                values.put("wp_page_parent_title", post.getPageParentTitle());
+            }
             putPostLocation(post, values);
 
             result = db.update(POSTS_TABLE, values, "blogID=? AND id=? AND isPage=?",
@@ -1081,6 +1110,119 @@ public class WordPressDB {
 
         c.close();
         return post;
+    }
+
+    // Page parent hierarchy
+    /**
+     * Saves a list of pages with minimal information to the db (post ID, title, parent ID).
+     * @param pageList: list of page objects
+     * @param localBlogId: the table blog ID the pages belong to
+     */
+    public void savePageList(List<?> pageList, int localBlogId, boolean shouldOverwrite, boolean fromWpGetPages) {
+        if (pageList != null && pageList.size() != 0) {
+            db.beginTransaction();
+            try {
+                for (Object page : pageList) {
+                    ContentValues values = new ContentValues();
+
+                    // Sanity checks
+                    if (!(page instanceof Map)) {
+                        continue;
+                    }
+                    Map<?, ?> postMap = (Map<?, ?>) page;
+                    String postId;
+                    if (fromWpGetPages) {
+                        postId = MapUtils.getMapStr(postMap, "page_id");
+                    } else {
+                        postId = MapUtils.getMapStr(postMap, "post_id");
+                    }
+                    if (TextUtils.isEmpty(postId)) {
+                        // If we don't have an ID, move on
+                        continue;
+                    }
+
+                    values.put("blogID", localBlogId);
+                    values.put("postid", postId);
+                    if (fromWpGetPages) {
+                        values.put("title", MapUtils.getMapStr(postMap, "title"));
+                        values.put("wp_page_parent_id", MapUtils.getMapStr(postMap, "wp_page_parent_id"));
+                    } else {
+                        values.put("title", MapUtils.getMapStr(postMap, "post_title"));
+                        values.put("wp_page_parent_id", MapUtils.getMapStr(postMap, "post_parent"));
+                    }
+
+                    values.put("isLocalChange", "0");
+
+                    String whereClause = "blogID=? AND postID=?";
+                    if (!shouldOverwrite) {
+                        whereClause += " AND NOT isLocalChange=1";
+                    }
+
+                    int result = db.update(PAGE_LIST_TABLE, values, whereClause,
+                            new String[]{String.valueOf(localBlogId), postId});
+                    if (result == 0) {
+                        db.insert(PAGE_LIST_TABLE, null, values);
+                    }
+                }
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        }
+    }
+
+    public void clearPageList(int id) {
+        db.delete(PAGE_LIST_TABLE, "blogID=" + id, null);
+    }
+
+    /**
+     * Returns a list of pages with minimal information (local ID, post ID, title, parent ID). Ignores local drafts.
+     * @param blogId the table blog ID the pages belong to
+     * @return A list of pages with minimal information
+     */
+    public List<PageHierarchyPage> getPageList(int blogId) {
+        List<PageHierarchyPage> pages = new ArrayList<>();
+        Cursor c = db.query(PAGE_LIST_TABLE,
+                new String[]{"id", "blogID", "postid", "title", "wp_page_parent_id", "isLocalChange"},
+                "blogID=?",
+                new String[]{String.valueOf(blogId)}, null, null, null);
+        int numRows = c.getCount();
+        c.moveToFirst();
+
+        for (int i = 0; i < numRows; ++i) {
+            // Create and populate the PageHierarchyPage and add it to the list
+            PageHierarchyPage page = new PageHierarchyPage(c.getInt(c.getColumnIndex("blogID")));
+            page.setLocalTablePostId(c.getInt(c.getColumnIndex("id")));
+            page.setRemotePostId(Integer.toString(c.getInt(c.getColumnIndex("postid"))));
+            String postTitle = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title")));
+            page.setTitle(postTitle);
+            page.setPageParentId(Integer.toString(c.getInt(c.getColumnIndex("wp_page_parent_id"))));
+            page.setLocalChange(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))));
+
+            pages.add(i, page);
+            c.moveToNext();
+        }
+        c.close();
+
+        return pages;
+    }
+
+    public int updatePageListPage(Post post) {
+        int result = 0;
+        if (post != null && !post.isLocalDraft()) {
+            ContentValues values = new ContentValues();
+            values.put("title", post.getTitle());
+            values.put("wp_page_parent_id", post.getPageParentId());
+            values.put("isLocalChange", post.isLocalChange());
+
+            result = db.update(PAGE_LIST_TABLE, values, "blogID=? AND postid=?",
+                    new String[]{
+                            String.valueOf(post.getLocalTableBlogId()),
+                            String.valueOf(post.getRemotePostId())
+                    });
+        }
+
+        return result;
     }
 
     // Categories

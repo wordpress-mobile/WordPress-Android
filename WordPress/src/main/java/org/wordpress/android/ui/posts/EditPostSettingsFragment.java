@@ -67,6 +67,7 @@ import java.util.Vector;
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
+    private static final int ACTIVITY_REQUEST_CODE_SELECT_PARENT = 6;
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
@@ -76,6 +77,9 @@ public class EditPostSettingsFragment extends Fragment
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
+    private int mPageParentId;
+    private String mPageParentTitle = "";
+    private TextView mPageParentText;
 
     private ArrayList<String> mCategories;
 
@@ -128,20 +132,28 @@ public class EditPostSettingsFragment extends Fragment
         });
         mTagsEditText = (EditText) rootView.findViewById(R.id.tags);
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
+        mPageParentText = (TextView) rootView.findViewById(R.id.pageParent);
+        mPageParentText.setOnClickListener(this);
 
         // Set header labels to upper case
         ((TextView) rootView.findViewById(R.id.categoryLabel)).setText(getResources().getString(R.string.categories).toUpperCase());
         ((TextView) rootView.findViewById(R.id.statusLabel)).setText(getResources().getString(R.string.status).toUpperCase());
         ((TextView) rootView.findViewById(R.id.postFormatLabel)).setText(getResources().getString(R.string.post_format).toUpperCase());
         ((TextView) rootView.findViewById(R.id.pubDateLabel)).setText(getResources().getString(R.string.publish_date).toUpperCase());
+        ((TextView) rootView.findViewById(R.id.pageParentLabel)).setText(getResources().getString(R.string.parent).toUpperCase());
 
-        if (mActivity.getPost().isPage()) { // remove post specific views
+        if (mActivity.getPost().isPage()) {
+            // Remove post-specific views
             mExcerptEditText.setVisibility(View.GONE);
             (rootView.findViewById(R.id.sectionTags)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.postFormatLabel)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.postFormat)).setVisibility(View.GONE);
         } else {
+            // Remove page-specific views
+            (rootView.findViewById(R.id.pageParentLabel)).setVisibility(View.GONE);
+            mPageParentText.setVisibility(View.GONE);
+
             mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
             mPostFormats =
                     new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status",
@@ -243,6 +255,12 @@ public class EditPostSettingsFragment extends Fragment
                 }
             }
 
+            if (!TextUtils.isEmpty(post.getPageParentId())) {
+                mPageParentId = Integer.parseInt(post.getPageParentId());
+                mPageParentTitle = post.getPageParentTitle();
+                updatePageParentText();
+            }
+
             if (!TextUtils.isEmpty(post.getPassword()))
                 mPasswordEditText.setText(post.getPassword());
 
@@ -313,6 +331,14 @@ public class EditPostSettingsFragment extends Fragment
                         populateSelectedCategories();
                     }
                     break;
+                case ACTIVITY_REQUEST_CODE_SELECT_PARENT:
+                    extras = data.getExtras();
+                    if (extras != null && extras.containsKey("parentId")) {
+                        mPageParentId = extras.getInt("parentId");
+                        mPageParentTitle = extras.getString("parentTitle");
+                        updatePageParentText();
+                    }
+                    break;
             }
         }
     }
@@ -331,6 +357,15 @@ public class EditPostSettingsFragment extends Fragment
             Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
             categoriesIntent.putExtras(bundle);
             startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
+        } else if (id == R.id.pageParent) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("blogId", WordPress.getCurrentBlog().getLocalTableBlogId());
+            bundle.putString("pageId", mActivity.getPost().getRemotePostId());
+            bundle.putInt("parentId", mPageParentId);
+
+            Intent pagesIntent = new Intent(getActivity(), SelectPageParentActivity.class);
+            pagesIntent.putExtras(bundle);
+            startActivityForResult(pagesIntent, ACTIVITY_REQUEST_CODE_SELECT_PARENT);
         } else if (id == R.id.categoryButton) {
             onCategoryButtonClick(v);
         } else if (id == R.id.locationText) {
@@ -472,6 +507,9 @@ public class EditPostSettingsFragment extends Fragment
             if (mPostFormats != null && mPostFormatSpinner.getSelectedItemPosition() < mPostFormats.length) {
                 postFormat = mPostFormats[mPostFormatSpinner.getSelectedItemPosition()];
             }
+        } else {
+            post.setPageParentId(Integer.toString(mPageParentId));
+            post.setPageParentTitle(mPageParentTitle);
         }
 
         String status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition());
@@ -871,6 +909,18 @@ public class EditPostSettingsFragment extends Fragment
         if (selectCategory != null) {
             selectCategory.setOnClickListener(this);
             mSectionCategories.addView(selectCategory);
+        }
+    }
+
+    private void updatePageParentText() {
+        if (mPageParentId != 0) {
+            if (!TextUtils.isEmpty(mPageParentTitle)) {
+                mPageParentText.setText(mPageParentTitle);
+            } else {
+                mPageParentText.setText("#" + mPageParentId + " (" + getText(R.string.untitled) + ")");
+            }
+        } else {
+            mPageParentText.setText(R.string.no_parent);
         }
     }
 }

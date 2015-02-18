@@ -603,8 +603,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             post.setMoreText("");
         }
 
-        if (!post.isLocalDraft())
+        if (!post.isLocalDraft() && post.hasChanges(mActivity.getOriginalPost())) {
             post.setLocalChange(true);
+        }
     }
 
     public boolean hasEmptyContentFields() {

@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -13,7 +12,8 @@ import android.widget.Spinner;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.models.HierarchyNode;
+import org.wordpress.android.models.HierarchyNode.HierarchyType;
 
 import java.util.ArrayList;
 
@@ -47,7 +47,7 @@ public class AddCategoryActivity extends ActionBarActivity {
                 Spinner sCategories = (Spinner) findViewById(R.id.parent_category);
                 String parent_category = "";
                 if (sCategories.getSelectedItem() != null)
-                    parent_category = ((CategoryNode) sCategories.getSelectedItem()).getName().trim();
+                    parent_category = ((HierarchyNode) sCategories.getSelectedItem()).getName().trim();
                 int parent_id = 0;
                 if (sCategories.getSelectedItemPosition() != 0) {
                     parent_id = WordPress.wpDB.getCategoryId(id, parent_category);
@@ -99,9 +99,9 @@ public class AddCategoryActivity extends ActionBarActivity {
     }
 
     private void loadCategories() {
-        CategoryNode rootCategory = CategoryNode.createCategoryTreeFromDB(id);
-        ArrayList<CategoryNode> categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory);
-        categoryLevels.add(0, new CategoryNode(0, 0, getString(R.string.none)));
+        HierarchyNode rootCategory = HierarchyNode.createTreeFromDB(id, HierarchyType.CATEGORY);
+        ArrayList<HierarchyNode> categoryLevels = HierarchyNode.getSortedListFromRoot(rootCategory);
+        categoryLevels.add(0, new HierarchyNode(0, 0, getString(R.string.none)));
         if (categoryLevels.size() > 0) {
             ParentCategorySpinnerAdapter categoryAdapter = new ParentCategorySpinnerAdapter(this,
                     R.layout.categories_row_parent, categoryLevels);

@@ -248,11 +248,15 @@ public class PostUploadService extends Service {
                 }
             }
 
-            // Post format
             if (!mPost.isPage()) {
+                // Post format
                 if (!TextUtils.isEmpty(mPost.getPostFormat())) {
                     contentStruct.put("wp_post_format", mPost.getPostFormat());
                 }
+            } else {
+                // Page parent
+                contentStruct.put("wp_page_parent_id", mPost.getPageParentId());
+                contentStruct.put("wp_page_parent_title", mPost.getPageParentTitle());
             }
 
             contentStruct.put("post_type", (mPost.isPage()) ? "page" : "post");

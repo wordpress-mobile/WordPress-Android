@@ -336,6 +336,10 @@ public class EditPostActivity extends ActionBarActivity {
         return mPost;
     }
 
+    public Post getOriginalPost() {
+        return mOriginalPost;
+    }
+
     private void trackEditorCreatedPost(String action, Intent intent) {
         Map<String, Object> properties = new HashMap<String, Object>();
         // Post created from the post list (new post button).
@@ -386,6 +390,10 @@ public class EditPostActivity extends ActionBarActivity {
         }
 
         WordPress.wpDB.updatePost(mPost);
+        if (mPost.isPage()) {
+            // Also update the page's entry in the page_list table
+            WordPress.wpDB.updatePageListPage(mPost);
+        }
     }
 
     @Override
