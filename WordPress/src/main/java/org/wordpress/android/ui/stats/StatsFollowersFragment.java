@@ -27,7 +27,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 public class StatsFollowersFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsFollowersFragment.class.getSimpleName();
 
-    private HashSet<String> dotComUserBlogsURL = new HashSet<>();
+    private Map<String, Integer> userBlogs = new HashMap<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,9 +83,10 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 // This will be used later to check if the user is a member of followers blog marked as private.
                 List <Map<String, Object>> dotComUserBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"homeURL"});
                 for (Map<String, Object> blog : dotComUserBlogs) {
-                    if (blog != null && blog.get("homeURL") != null) {
+                    if (blog != null && blog.get("homeURL") != null && blog.get("blogId") != null) {
                         String normURL = normalizeAndRemoveScheme(blog.get("homeURL").toString());
-                        dotComUserBlogsURL.add(normURL);
+                        Integer blogID = (Integer)blog.get("blogId");
+                        userBlogs.put(normURL, blogID);
                     }
                 }
             }
@@ -286,19 +287,22 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             final FollowDataModel followData = currentRowData.getFollowData();
 
             // entries
-            if (mTopPagerSelectedButtonIndex == 0 && !TextUtils.isEmpty(currentRowData.getURL())) {
-                // WPCOM followers with no empty URL
+            if (mTopPagerSelectedButtonIndex == 0 && !(TextUtils.isEmpty(currentRowData.getURL()) && followData == null)) {
+                // WPCOM followers with no empty URL or empty follow data
 
-                boolean openInReader = true;
+                final int blogID;
                 if (followData == null) {
                     // If follow data is empty, we cannot follow the blog, or access it in the reader.
                     // We need to check if the user is a member of this blog.
                     // If so, we can launch open the reader, otherwise open the blog in the in-app browser.
                     String normURL = normalizeAndRemoveScheme(currentRowData.getURL());
-                    openInReader = dotComUserBlogsURL.contains(normURL);
+                    blogID = userBlogs.containsKey(normURL) ? userBlogs.get(normURL) : Integer.MIN_VALUE;
+                } else {
+                    blogID = followData.getSiteID();
                 }
 
-                if (openInReader) {
+                if (blogID > Integer.MIN_VALUE) {
+                    // Open the Reader
                     holder.entryTextView.setText(currentRowData.getLabel());
                     holder.rowContent.setOnClickListener(
                             new View.OnClickListener() {
@@ -306,16 +310,17 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                 public void onClick(View view) {
                                     ReaderActivityLauncher.showReaderBlogPreview(
                                             context,
-                                            currentRowData.getURL()
+                                            blogID
                                     );
                                 }
                             });
                 } else {
+                    // Open the in-app web browser
                     holder.setEntryTextOrLink(currentRowData.getURL(), currentRowData.getLabel());
                 }
                 holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_link_text_color));
             } else {
-                // Email followers, or wpcom followers with empty URL
+                // Email followers, or wpcom followers with empty URL and no blogID
                 holder.setEntryText(currentRowData.getLabel());
             }
 
