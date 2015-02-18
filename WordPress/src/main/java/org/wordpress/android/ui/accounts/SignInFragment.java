@@ -479,6 +479,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     };
 
+    public void showAuthErrorMessage() {
+        if (mJetpackAuthLabel != null) {
+            mJetpackAuthLabel.setVisibility(View.VISIBLE);
+            mJetpackAuthLabel.setText(getResources().getString(R.string.auth_required));
+        }
+    }
+
     private void setTwoStepAuthVisibility(boolean isVisible) {
         mTwoStepLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         mTwoStepFooter.setVisibility(isVisible ? View.VISIBLE : View.GONE);

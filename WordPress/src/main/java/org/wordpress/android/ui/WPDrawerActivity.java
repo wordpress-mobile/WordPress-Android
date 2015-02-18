@@ -803,16 +803,15 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                 onSignout();
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS)) {
-                AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this);
+                AuthenticationDialogUtils.showAuthErrorView(WPDrawerActivity.this);
             }
             if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)
                     && WPDrawerActivity.this instanceof NotificationsActivity) {
-                AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this, R.string.sign_in_again,
+                AuthenticationDialogUtils.showAuthErrorView(WPDrawerActivity.this, R.string.sign_in_again,
                         R.string.simperium_connection_error);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
-                // TODO: add a specific message like "you must use a specific app password"
-                AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this);
+                AuthenticationDialogUtils.showAuthErrorView(WPDrawerActivity.this);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE)) {
                 SelfSignedSSLCertsManager.askForSslTrust(WPDrawerActivity.this, null);

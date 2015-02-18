@@ -19,6 +19,7 @@ public class SignInActivity extends Activity {
     public static final int SHOW_CERT_DETAILS = 4;
     public static String START_FRAGMENT_KEY = "start-fragment";
     public static final String ARG_JETPACK_SITE_AUTH = "ARG_JETPACK_SITE_AUTH";
+    public static final String ARG_IS_AUTH_ERROR = "ARG_IS_AUTH_ERROR";
 
     private SignInFragment mSignInFragment;
 
@@ -44,6 +45,8 @@ public class SignInActivity extends Activity {
                 if (jetpackBlog != null) {
                     mSignInFragment.setBlog(jetpackBlog);
                 }
+            } else if (extras.containsKey(ARG_IS_AUTH_ERROR)) {
+                mSignInFragment.showAuthErrorMessage();
             }
         }
         switch (actionMode) {

@@ -464,8 +464,17 @@ public class WordPress extends Application {
      * @return true if we have credentials or false if not
      */
     public static boolean hasDotComToken(Context context) {
+        if (context == null) return false;
+
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         return !TextUtils.isEmpty(settings.getString(ACCESS_TOKEN_PREFERENCE, null));
+    }
+
+    public static String getDotComToken(Context context) {
+        if (context == null) return null;
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        return settings.getString(ACCESS_TOKEN_PREFERENCE, null);
     }
 
     public static boolean isSignedIn(Context context) {

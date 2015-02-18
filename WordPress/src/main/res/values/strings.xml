@@ -820,6 +820,8 @@
     <string name="verify">Verify</string>
     <string name="two_step_footer_message">Enter the code from your authenticator app or %1$sget the code via text message%2$s.</string>
     <string name="two_step_sms_sent">Check your text messages for the verification code.</string>
+    <string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
+    <string name="auth_required">Sign in again to continue.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -844,5 +846,4 @@
     <string name="hs__conversation_header">Support chat</string>
     <string name="hs__username_blank_error">Enter a valid name</string>
     <string name="hs__invalid_email_error">Enter a valid email address</string>
-    <string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
 </resources>
