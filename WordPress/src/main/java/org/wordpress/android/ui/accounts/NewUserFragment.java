@@ -175,11 +175,12 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         return siteUrl;
     }
 
-    private void finishThisStuff(String username) {
+    private void finishThisStuff(String username, String password) {
         final Activity activity = getActivity();
         if (activity != null) {
             Intent intent = new Intent();
             intent.putExtra("username", username);
+            intent.putExtra("password", password);
             activity.setResult(NewAccountActivity.RESULT_OK, intent);
             activity.finish();
             PersistentEditTextHelper persistentEditTextHelper = new PersistentEditTextHelper(getActivity());
@@ -283,7 +284,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                         endProgress();
                         if (isAdded()) {
-                            finishThisStuff(username);
+                            finishThisStuff(username, password);
                         }
                     }
 

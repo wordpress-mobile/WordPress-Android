@@ -675,12 +675,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    // TODO: ?
-    public void signInDotComUser() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
-                getActivity().getApplicationContext());
-        String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-        String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
+    public void signInDotComUser(String username, String password) {
         if (username != null && password != null) {
             mUsernameEditText.setText(username);
             mPasswordEditText.setText(password);

@@ -68,8 +68,9 @@ public class SignInActivity extends Activity {
             mSignInFragment.askForSslTrust();
         } else if (resultCode == RESULT_OK && data != null) {
             String username = data.getStringExtra("username");
+            String password = data.getStringExtra("password");
             if (username != null) {
-                mSignInFragment.signInDotComUser();
+                mSignInFragment.signInDotComUser(username, password);
             }
         }
     }
