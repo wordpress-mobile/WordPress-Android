@@ -16,6 +16,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
@@ -186,12 +187,14 @@ public class WPMainActivity extends ActionBarActivity
                 }
                 break;
             case RequestCodes.SITE_PICKER:
-                // TODO: remove this - it's just here to test the site picker called from dummy fragment
                 if (resultCode == RESULT_OK && data != null) {
                     int localId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, 0);
                     //String blogId = data.getStringExtra(SitePickerActivity.KEY_BLOG_ID);
                     Blog blog = WordPress.getBlog(localId);
-                    ToastUtils.showToast(this, "You selected " + blog.getBlogName());
+                    MySiteFragment mySiteFragment = getMySiteFragment();
+                    if (mySiteFragment != null) {
+                        mySiteFragment.setBlog(blog);
+                    }
                 }
                 break;
         }
@@ -222,6 +225,17 @@ public class WPMainActivity extends ActionBarActivity
         Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_READER);
         if (fragment != null && fragment instanceof ReaderPostListFragment) {
             return (ReaderPostListFragment) fragment;
+        }
+        return null;
+    }
+
+    /*
+     * returns the my site fragment from the sites tab
+     */
+    private MySiteFragment getMySiteFragment() {
+        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_SITES);
+        if (fragment != null && fragment instanceof MySiteFragment) {
+            return (MySiteFragment) fragment;
         }
         return null;
     }

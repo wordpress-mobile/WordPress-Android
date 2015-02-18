@@ -84,6 +84,7 @@
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">48dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
+    <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
 
     <dimen name="reader_button_icon">48dp</dimen>
@@ -126,5 +127,10 @@
     <!-- stats -->
     <dimen name="stats_button_corner_radius">4dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
+
+    <!-- my site -->
+    <dimen name="my_site_blog_details_side_margin">12dp</dimen>
+    <dimen name="my_site_blog_details_top_margin">12dp</dimen>
+    <dimen name="my_site_switch_site_button_left_margin">56dp</dimen>
 
 </resources>

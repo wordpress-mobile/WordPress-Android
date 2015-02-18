@@ -124,4 +124,7 @@
     <color name="calypso_orange_light">#fff8e5</color>
     <color name="calypso_orange">#ffba00</color>
     <color name="calypso_orange_dark">#f0821e</color>
+
+    <!--my site-->
+    <color name="my_site_switch_site_button_bg">#f4f8f9</color>
 </resources>
