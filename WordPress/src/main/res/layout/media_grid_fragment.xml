@@ -48,9 +48,7 @@
             android:paddingRight="@dimen/margin_small"
             android:scrollbarStyle="outsideOverlay"
             android:stretchMode="columnWidth"
-            android:verticalSpacing="@dimen/margin_small"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            android:verticalSpacing="@dimen/margin_small" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout

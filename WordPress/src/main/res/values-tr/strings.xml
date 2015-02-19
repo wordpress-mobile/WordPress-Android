@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="post_uploading">Yükleniyor</string>
+	<string name="reader_label_new_posts">Yeni gönderiler</string>
+	<string name="stats_recent_weeks">Son Haftalar</string>
+	<string name="stats_months_and_years">Aylar ve Yıllar</string>
+	<string name="stats_overall">Genel</string>
+	<string name="stats_average_per_day">Gün Başına Ortalama</string>
+	<string name="reader_empty_posts_in_blog">Bu blog boş</string>
+	<string name="error_copy_to_clipboard">Metin panoya kopyalanırken bir hata oluştu</string>
+	<string name="reader_page_recommended_blogs">Hoşunuza gidebilecek bloglar</string>
+	<string name="stats_period">Dönem</string>
+	<string name="logs_copied_to_clipboard">Uygulama günlükleri panoya kopyalandı</string>
+	<string name="stats_total">Toplam</string>
 	<string name="stats_unfollow">Takip Etmeyi Bırak</string>
 	<string name="stats_follow">Takip Et</string>
 	<string name="stats_timeframe_years">Yıl</string>
@@ -156,13 +168,10 @@
 	<string name="reader_page_followed_tags">Takip edilen etiketler</string>
 	<string name="reader_page_popular_tags">Popüler etiketler</string>
 	<string name="reader_page_followed_blogs">Takip edilen bloglar</string>
-	<string name="reader_page_recommended_blogs">Önerilen bloglar</string>
 	<string name="reader_hint_add_tag_or_url">Takip etmek için etiket veya URL girin</string>
-	<string name="reader_label_new_posts">Yeni gönderileri göster</string>
 	<string name="reader_label_followers">%s takipçi</string>
 	<string name="reader_label_followed_blog">Blog takip edildi</string>
 	<string name="reader_label_unfollowed_blog">Blogun takibi bırakıldı</string>
-	<string name="reader_label_more_recommendations">Diğer öneriler</string>
 	<string name="reader_label_tag_preview">%s etiketli gönderiler</string>
 	<string name="reader_toast_err_get_blog_info">Bu blog gösterilemiyor</string>
 	<string name="reader_toast_err_already_follow_blog">Bu blogu zaten takip ediyorsunuz</string>

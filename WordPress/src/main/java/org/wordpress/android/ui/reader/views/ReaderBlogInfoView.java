@@ -109,7 +109,7 @@ public class ReaderBlogInfoView extends FrameLayout {
             txtDescription.setVisibility(View.GONE);
         }
 
-        int imageResId = (blogInfo.isExternal() ? R.drawable.gravatar_placeholder : R.drawable.app_icon);
+        int imageResId = (blogInfo.isExternal() ? R.drawable.gravatar_placeholder : R.drawable.blavatar_placeholder);
         int imageSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         String imageUrl;
         if (blogInfo.hasImageUrl()) {
