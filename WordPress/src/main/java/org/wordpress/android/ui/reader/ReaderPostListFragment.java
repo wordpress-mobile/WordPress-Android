@@ -74,6 +74,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import de.greenrobot.event.EventBus;
+
 public class ReaderPostListFragment extends Fragment {
 
     private Spinner mSpinner;
@@ -249,6 +251,40 @@ public class ReaderPostListFragment extends Fragment {
                 AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
                 updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
             }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(ReaderEvents.FollowedTagsChanged event) {
+        if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
+            // list fragment is viewing followed tags, tell it to refresh the list of tags
+            refreshTags();
+            // update the current tag if the list fragment is empty - this will happen if
+            // the tag table was previously empty (ie: first run)
+            if (isPostAdapterEmpty()) {
+                updateCurrentTag();
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(ReaderEvents.FollowedBlogsChanged event) {
+        // refresh posts if user is viewing "Blogs I Follow"
+        if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+                && ReaderTag.TAG_NAME_FOLLOWING.equals(getCurrentTagName())) {
+            refreshPosts();
         }
     }
 

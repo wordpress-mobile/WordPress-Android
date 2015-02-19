@@ -34,8 +34,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
-import de.greenrobot.event.EventBus;
-
 /*
  * this activity serves as the host for ReaderPostListFragment
  */
@@ -136,47 +134,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
         // hide the static drawer for blog/tag preview
         if (isStaticMenuDrawer() && mPostListType.isPreviewType()) {
             hideDrawer();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        EventBus.getDefault().unregister(this);
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEvent(ReaderEvents.FollowedTagsChanged event) {
-        ReaderPostListFragment listFragment = getListFragment();
-        if (listFragment == null) {
-            // list fragment doesn't exist yet (can happen if user signed out) - create
-            // it now showing the default tag
-            showListFragmentForTag(ReaderTag.getDefaultTag(), ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
-        } else if (listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
-            // list fragment is viewing followed tags, tell it to refresh the list of tags
-            listFragment.refreshTags();
-            // update the current tag if the list fragment is empty - this will happen if
-            // the tag table was previously empty (ie: first run)
-            if (listFragment.isPostAdapterEmpty()) {
-                listFragment.updateCurrentTag();
-            }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEvent(ReaderEvents.FollowedBlogsChanged event) {
-        ReaderPostListFragment listFragment = getListFragment();
-        // refresh posts if user is viewing "Blogs I Follow"
-        if (listFragment != null
-                && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-                && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
-            listFragment.refreshPosts();
         }
     }
 
