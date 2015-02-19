@@ -190,18 +190,20 @@ public class ReaderPostListActivity extends WPDrawerActivity
         switch (requestCode) {
             // user just returned from the tags/subs activity
             case ReaderConstants.INTENT_READER_SUBS :
-                // reload tags if they were changed, and set the last tag added as the current one
-                if (listFragment != null
-                        && data != null
-                        && data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
-                    String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
-                    listFragment.doTagsChanged(lastAddedTag);
-                }
-                // refresh posts if user is viewing "Blogs I Follow" to make sure changes are reflected
-                if (listFragment != null
-                        && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-                        && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
-                    listFragment.refreshPosts();
+                if (data != null && listFragment != null) {
+                    boolean tagsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false);
+                    boolean blogsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false);
+                    // reload tags if they were changed, and set the last tag added as the current one
+                    if (tagsChanged) {
+                        String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
+                        listFragment.doTagsChanged(lastAddedTag);
+                    }
+                    // refresh posts if blogs changed and user is viewing "Blogs I Follow"
+                    if (blogsChanged
+                            && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+                            && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
+                        listFragment.refreshPosts();
+                    }
                 }
                 break;
 

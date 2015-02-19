@@ -67,10 +67,12 @@ public class ReaderSubsActivity extends ActionBarActivity
     private SubsPageAdapter mPageAdapter;
 
     private boolean mTagsChanged;
+    private boolean mBlogsChanged;
     private String mLastAddedTagName;
     private boolean mHasPerformedUpdate;
 
-    static final String KEY_TAGS_CHANGED   = "tags_changed";
+    static final String KEY_TAGS_CHANGED        = "tags_changed";
+    static final String KEY_BLOGS_CHANGED       = "blogs_changed";
     static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
@@ -168,6 +170,7 @@ public class ReaderSubsActivity extends ActionBarActivity
 
     @SuppressWarnings("unused")
     public void onEvent(ReaderEvents.FollowedBlogsChanged event) {
+        mBlogsChanged = true;
         getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
     }
 
@@ -192,6 +195,7 @@ public class ReaderSubsActivity extends ActionBarActivity
     private void restoreState(Bundle state) {
         if (state != null) {
             mTagsChanged = state.getBoolean(KEY_TAGS_CHANGED);
+            mBlogsChanged = state.getBoolean(KEY_BLOGS_CHANGED);
             mLastAddedTagName = state.getString(KEY_LAST_ADDED_TAG_NAME);
             mHasPerformedUpdate = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
         }
@@ -222,6 +226,7 @@ public class ReaderSubsActivity extends ActionBarActivity
     @Override
     public void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
+        outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
         if (mLastAddedTagName != null) {
             outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
@@ -231,12 +236,16 @@ public class ReaderSubsActivity extends ActionBarActivity
 
     @Override
     public void onBackPressed() {
-        // let calling activity know if tags were added/removed
-        if (mTagsChanged) {
+        if (mTagsChanged || mBlogsChanged) {
             Bundle bundle = new Bundle();
-            bundle.putBoolean(KEY_TAGS_CHANGED, true);
-            if (mLastAddedTagName != null && ReaderTagTable.isFollowedTagName(mLastAddedTagName)) {
-                bundle.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
+            if (mTagsChanged) {
+                bundle.putBoolean(KEY_TAGS_CHANGED, true);
+                if (mLastAddedTagName != null && ReaderTagTable.isFollowedTagName(mLastAddedTagName)) {
+                    bundle.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
+                }
+            }
+            if (mBlogsChanged) {
+                bundle.putBoolean(KEY_BLOGS_CHANGED, true);
             }
             Intent intent = new Intent();
             intent.putExtras(bundle);
