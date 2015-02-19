@@ -6,9 +6,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/my_site_blog_details_side_margin"
-        android:layout_marginRight="@dimen/my_site_blog_details_side_margin"
-        android:layout_marginTop="@dimen/my_site_blog_details_top_margin"
+        android:layout_marginLeft="@dimen/margin_large"
+        android:layout_marginRight="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_large"
         android:background="@color/white">
 
         <org.wordpress.android.widgets.WPNetworkImageView

@@ -129,8 +129,6 @@
     <dimen name="stats_barchart_height">128dp</dimen>
 
     <!-- my site -->
-    <dimen name="my_site_blog_details_side_margin">12dp</dimen>
-    <dimen name="my_site_blog_details_top_margin">12dp</dimen>
     <dimen name="my_site_switch_site_button_left_margin">56dp</dimen>
 
 </resources>
