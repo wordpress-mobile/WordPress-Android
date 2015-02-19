@@ -3,22 +3,16 @@ package org.wordpress.android.ui.mysite;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.SitePickerActivity;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
