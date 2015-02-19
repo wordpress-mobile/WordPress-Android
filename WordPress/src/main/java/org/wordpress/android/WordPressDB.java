@@ -363,10 +363,10 @@ public class WordPressDB {
                 thisHash.put("username", username);
                 thisHash.put("blogId", blogId);
                 thisHash.put("url", url);
-                int extraFieldsEntryIndex = thisHash.size();
+                int extraFieldsIndex = baseFields.length;
                 if (extraFields != null) {
                     for (int j = 0; j < extraFields.length; ++j) {
-                        thisHash.put(extraFields[j], c.getString(extraFieldsEntryIndex + j));
+                        thisHash.put(extraFields[j], c.getString(extraFieldsIndex + j));
                     }
                 }
                 accounts.add(thisHash);
