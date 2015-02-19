@@ -74,6 +74,10 @@ public class MySiteFragment extends Fragment {
     }
 
     private void refreshBlogDetails() {
+        if (!isAdded() || mBlog == null) {
+            return;
+        }
+
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
         mBlogTitleTextView.setText(mBlog.getBlogName());
         mBlogSubtitleTextView.setText(StringUtils.getHost(mBlog.getUrl()));
