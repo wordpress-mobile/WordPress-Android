@@ -32,6 +32,7 @@ public class GraphViewSeries {
 	 */
 	static public class GraphViewSeriesStyle {
 		public int color = 0xff0077cc;
+        public int highlightColor = 0xff0077cc;
 		public int thickness = 3;
 		public float padding = 0;
 		private ValueDependentColor valueDependentColor;

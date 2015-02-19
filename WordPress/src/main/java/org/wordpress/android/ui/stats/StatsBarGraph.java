@@ -204,7 +204,7 @@ class StatsBarGraph extends GraphView {
                 // draw a real bar
                 paint.setAlpha(255);
                 if (mBarPositionToHighlight == i) {
-                    paint.setColor(getResources().getColor(R.color.calypso_orange_dark));
+                    paint.setColor(style.highlightColor);
                 } else {
                     paint.setColor(style.color);
                 }

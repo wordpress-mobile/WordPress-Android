@@ -64,6 +64,22 @@
             android:minHeight="@dimen/stats_barchart_height"
             android:orientation="vertical" />
 
+        <!-- Tab to enable visitors and views -->
+        <LinearLayout
+            android:id="@+id/stats_visitors_and_views_checkboxes_container"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <CheckBox android:id="@+id/stats_checkbox_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_views"/>
+            <CheckBox android:id="@+id/stats_checkbox_visitors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_visitors"/>
+        </LinearLayout>
+
     </LinearLayout>
 
     <org.wordpress.android.widgets.WPTextView
