@@ -76,18 +76,35 @@ public class RestRequest extends Request<JSONObject> {
     }
 
     @Override
-    public void deliverError(VolleyError error) {
-        super.deliverError(error);
-
-        // Check for a 4xx error code from the REST API, which means this user is no longer authorized
-        if (error.networkResponse != null && error.networkResponse.statusCode >= 400 && mOnAuthFailedListener != null) {
-            mOnAuthFailedListener.onAuthFailed();
-        }
+    protected Map<String, String> getParams() {
+        return mParams;
     }
 
     @Override
-    protected Map<String, String> getParams() {
-        return mParams;
+    public void deliverError(VolleyError error) {
+        super.deliverError(error);
+
+        // Fire OnAuthFailedListener if we receive an invalid token error
+        if (error.networkResponse != null && error.networkResponse.statusCode >= 400 && mOnAuthFailedListener != null) {
+            String jsonString;
+            try {
+                jsonString = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers));
+            } catch (UnsupportedEncodingException e) {
+                jsonString = "";
+            }
+
+            JSONObject responseObject;
+            try {
+                responseObject = new JSONObject(jsonString);
+            } catch (JSONException e) {
+                responseObject = new JSONObject();
+            }
+
+            String restError = responseObject.optString("error", "");
+            if (restError.equals("authorization_required") || restError.equals("invalid_token")) {
+                mOnAuthFailedListener.onAuthFailed();
+            }
+        }
     }
 
     @Override
