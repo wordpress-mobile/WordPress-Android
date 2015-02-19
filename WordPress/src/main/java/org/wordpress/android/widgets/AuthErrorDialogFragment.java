@@ -9,8 +9,6 @@ import android.os.Bundle;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 
 /**

@@ -14,6 +14,7 @@ import org.wordpress.android.ui.ActivityId;
 
 public class SignInActivity extends Activity {
     public static final int SIGN_IN_REQUEST = 1;
+    public static final int REQUEST_CODE = 5000;
     public static final int ADD_SELF_HOSTED_BLOG = 2;
     public static final int CREATE_ACCOUNT_REQUEST = 3;
     public static final int SHOW_CERT_DETAILS = 4;

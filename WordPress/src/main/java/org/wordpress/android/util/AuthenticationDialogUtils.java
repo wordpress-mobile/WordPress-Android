@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.AuthErrorDialogFragment;
@@ -83,7 +82,7 @@ public class AuthenticationDialogUtils {
             Intent signInIntent = new Intent(activity, SignInActivity.class);
             signInIntent.putExtra(SignInActivity.ARG_IS_AUTH_ERROR, true);
             signInIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            activity.startActivityForResult(signInIntent, WPComLoginActivity.REQUEST_CODE);
+            activity.startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
             return;
         }
 
