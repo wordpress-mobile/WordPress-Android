@@ -34,7 +34,6 @@ import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPDrawerActivity;
@@ -571,18 +570,15 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                 return true;
             }
 
-            StatsUtils.StatsCredentials credentials = StatsUtils.getBlogStatsCredentials(mLocalBlogID);
-            if (credentials == null) {
+            String statsAuthenticatedUser = StatsUtils.getBlogStatsUsername(mLocalBlogID);
+            if (statsAuthenticatedUser == null) {
                 Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
                 return true;
             }
 
-            String statsAuthenticatedUser = credentials.getUsername();
-            String statsAuthenticatedPassword =  credentials.getPassword();
             String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
 
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser,
-                    statsAuthenticatedPassword);
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser, null);
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
             return true;
         }
@@ -658,11 +654,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                     // Let's try the global wpcom credentials them first
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
                     String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-                    String password = WordPressDB.decryptPassword(
-                            settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
-                            );
                     currentBlog.setDotcom_username(username);
-                    currentBlog.setDotcom_password(password);
                     WordPress.wpDB.saveBlog(currentBlog);
                     mSwipeToRefreshHelper.setRefreshing(true);
                 } else {

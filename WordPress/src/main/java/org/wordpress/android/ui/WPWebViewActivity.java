@@ -140,8 +140,8 @@ public class WPWebViewActivity extends WebViewActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(user) || TextUtils.isEmpty(password)) {
-            AppLog.e(AppLog.T.UTILS, "Username and/or password empty/null!!!");
+        if (TextUtils.isEmpty(user)) {
+            AppLog.e(AppLog.T.UTILS, "Username empty/null!!!");
             return;
         }
 
