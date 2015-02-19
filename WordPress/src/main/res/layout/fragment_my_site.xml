@@ -59,12 +59,12 @@
             android:layout_below="@id/my_site_blog_detail_divider"
             android:background="@color/my_site_switch_site_button_bg">
 
-            <org.wordpress.android.widgets.OpenSansButton
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/switch_site"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/my_site_switch_site_button_left_margin"
-                android:background="@null"
+                android:background="?android:attr/selectableItemBackground"
                 android:drawableLeft="@drawable/switch_site_button_icon"
                 android:drawablePadding="@dimen/margin_small"
                 android:minHeight="0dp"

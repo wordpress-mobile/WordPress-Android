@@ -59,8 +59,8 @@ public class MySiteFragment extends Fragment {
         mBlogTitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_title_label);
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
 
-        Button switchSiteButton = (Button) rootView.findViewById(R.id.switch_site);
-        switchSiteButton.setOnClickListener(new View.OnClickListener() {
+        WPTextView switchSiteTextView = (WPTextView) rootView.findViewById(R.id.switch_site);
+        switchSiteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SitePickerActivity.class);
