@@ -77,8 +77,8 @@ public class WPWebViewActivity extends WebViewActivity {
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
-    public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user, String password) {
-        openWPCOMURL(context, url, user, password);
+    public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
+        openWPCOMURL(context, url, user);
     }
 
     public static void openUrlByUsingBlogCredentials(Context context, Blog blog, String url) {
@@ -127,7 +127,7 @@ public class WPWebViewActivity extends WebViewActivity {
         context.startActivity(intent);
     }
 
-    private static void openWPCOMURL(Context context, String url, String user, String password) {
+    private static void openWPCOMURL(Context context, String url, String user) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null!!!");
             return;
@@ -147,7 +147,6 @@ public class WPWebViewActivity extends WebViewActivity {
 
         Intent intent = new Intent(context, WPWebViewActivity.class);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, user);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, password);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
         context.startActivity(intent);
