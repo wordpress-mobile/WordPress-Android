@@ -345,8 +345,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mViewsCheckbox.setChecked(false);
                 mVisitorsCheckbox.setEnabled(true);
                 mVisitorsCheckbox.setChecked(mIsCheckboxChecked);
-                mLegendViews.setBackgroundResource(R.color.stats_bar_graph_views);
-                mLegendVisitors.setBackgroundResource(R.color.stats_bar_graph_views_inner);
+                mLegendViews.setBackgroundResource(R.drawable.stats_visitors_and_views_legend_background_primary);
+                mLegendVisitors.setBackgroundResource(R.drawable.stats_visitors_and_views_legend_background_secondary);
                 break;
             case VISITORS:
                 mVisitorsAndViewsCheckBoxesContainer.setVisibility(View.VISIBLE);
@@ -355,8 +355,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mViewsCheckbox.setChecked(mIsCheckboxChecked);
                 mVisitorsCheckbox.setEnabled(false);
                 mVisitorsCheckbox.setChecked(false);
-                mLegendViews.setBackgroundResource(R.color.stats_bar_graph_views_inner);
-                mLegendVisitors.setBackgroundResource(R.color.stats_bar_graph_views);
+                mLegendViews.setBackgroundResource(R.drawable.stats_visitors_and_views_legend_background_secondary);
+                mLegendVisitors.setBackgroundResource(R.drawable.stats_visitors_and_views_legend_background_primary);
                 break;
             default:
                 // Likes or Comments

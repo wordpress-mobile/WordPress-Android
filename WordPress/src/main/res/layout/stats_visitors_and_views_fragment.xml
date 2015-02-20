@@ -83,8 +83,8 @@
                     android:text="@string/stats_views"
                     android:textColor="@color/stats_visitors_and_views_legend_text"/>
                 <ImageView android:id="@+id/stats_label_views"
-                    android:layout_width="@dimen/avatar_sz_small"
-                    android:layout_height="@dimen/avatar_sz_small"
+                    android:layout_width="@dimen/stats_barchart_legend_item"
+                    android:layout_height="@dimen/stats_barchart_legend_item"
                     android:layout_marginLeft="@dimen/margin_medium"
                     android:layout_marginStart="@dimen/margin_medium"/>
             </LinearLayout>
@@ -100,8 +100,8 @@
                     android:text="@string/stats_visitors"
                     android:textColor="@color/stats_visitors_and_views_legend_text"/>
                 <ImageView android:id="@+id/stats_label_visitors"
-                    android:layout_width="@dimen/avatar_sz_small"
-                    android:layout_height="@dimen/avatar_sz_small"
+                    android:layout_width="@dimen/stats_barchart_legend_item"
+                    android:layout_height="@dimen/stats_barchart_legend_item"
                     android:layout_marginLeft="@dimen/margin_medium"
                     android:layout_marginStart="@dimen/margin_medium"/>
             </LinearLayout>
