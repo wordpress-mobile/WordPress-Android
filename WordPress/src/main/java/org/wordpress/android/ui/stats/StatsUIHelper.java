@@ -157,7 +157,7 @@ public class StatsUIHelper {
                 mLinearLayout.addView(groupView);
             }
 
-            // groupView is recycled, and we need to reset its state.
+            // groupView is recycled, we need to reset it to the original state.
             ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
             if (childContainer != null) {
                 childContainer.setVisibility(View.GONE);
@@ -166,7 +166,7 @@ public class StatsUIHelper {
             final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
             if (chevron != null) {
                 chevron.clearAnimation();
-                chevron.setImageResource( R.drawable.stats_chevron_right);
+                chevron.setImageResource(R.drawable.stats_chevron_right);
             }
 
             // add children if this group is expanded
