@@ -78,9 +78,7 @@ public class LoginWPCom extends LoginAbstract {
                 SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
 
                 if (mJetpackBlog != null) {
-                    // Store credentials in blog object for Jetpack sites
-                    mJetpackBlog.setDotcom_username(mUsername);
-                    mJetpackBlog.setDotcom_password(mPassword);
+                    // Store token in blog object for Jetpack sites
                     mJetpackBlog.setApi_key(token.toString());
                     WordPress.wpDB.saveBlog(mJetpackBlog);
                 }
