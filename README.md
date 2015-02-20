@@ -1,5 +1,7 @@
 # WordPress for Android #
 
+[![Build Status](https://travis-ci.org/wordpress-mobile/WordPress-Android.svg?branch=develop)](https://travis-ci.org/wordpress-mobile/WordPress-Android)
+
 If you're just looking to install WordPress for Android, you can find
 it on [Google Play][1]. If you're a developer wanting to contribute,
 read on.
