@@ -52,9 +52,11 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderTypes.RefreshType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
+import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
+import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
@@ -259,15 +261,42 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
+
         EventBus.getDefault().register(this);
 
-        // purge reader db if it hasn't been done yet, but only if there's an active connection
-        // since we don't want to purge posts that the user would expect to see when offline
-        if (EventBus.getDefault().getStickyEvent(ReaderEvents.HasPurgedDatabase.class) == null) {
-            if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                ReaderDatabase.purgeAsync();
-                EventBus.getDefault().postSticky(new ReaderEvents.HasPurgedDatabase());
-            }
+        purgeDatabaseIfNeeded();
+        performInitialUpdateIfNeeded();
+    }
+
+    /*
+     * purge reader db if it hasn't been done yet, but only if there's an active connection
+     * since we don't want to purge posts that the user would expect to see when offline
+     */
+    private void purgeDatabaseIfNeeded() {
+        if (EventBus.getDefault().getStickyEvent(ReaderEvents.HasPurgedDatabase.class) == null
+                && NetworkUtils.isNetworkAvailable(getActivity())) {
+            AppLog.d(T.READER, "reader post list > purging database");
+            ReaderDatabase.purgeAsync();
+            EventBus.getDefault().postSticky(new ReaderEvents.HasPurgedDatabase());
+        }
+    }
+
+    /*
+     * initial update performed the first time the user opens the reader
+     */
+    private void performInitialUpdateIfNeeded() {
+        if (EventBus.getDefault().getStickyEvent(ReaderEvents.HasPerformedInitialUpdate.class) == null
+                && NetworkUtils.isNetworkAvailable(getActivity())) {
+            // update current user to ensure we have their user_id as well as their latest info
+            // in case they changed their avatar, name, etc. since last time
+            AppLog.d(T.READER, "reader post list > updating current user");
+            ReaderUserActions.updateCurrentUser(null);
+
+            // update cookies so that we can show authenticated images in WebViews
+            AppLog.d(T.READER, "reader post list > updating cookies");
+            ReaderAuthActions.updateCookies(getActivity());
+
+            EventBus.getDefault().postSticky(new ReaderEvents.HasPerformedInitialUpdate());
         }
     }
 
@@ -850,7 +879,7 @@ public class ReaderPostListFragment extends Fragment
         return (mCurrentTag != null ? mCurrentTag.getTagName() : "");
     }
 
-    public boolean hasCurrentTag() {
+    boolean hasCurrentTag() {
         return mCurrentTag != null;
     }
 

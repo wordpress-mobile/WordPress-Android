@@ -11,4 +11,5 @@ public class ReaderEvents {
     public static class RecommendedBlogsChanged {}
 
     public static class HasPurgedDatabase {}
+    public static class HasPerformedInitialUpdate {}
 }

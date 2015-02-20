@@ -14,13 +14,10 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
-import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.NetworkUtils;
 
 import java.util.EnumSet;
 import java.util.concurrent.Executors;
@@ -29,13 +26,13 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
+import de.greenrobot.event.EventBus;
+
 /*
  * this activity serves as the host for ReaderPostListFragment
  */
 
 public class ReaderPostListActivity extends WPDrawerActivity {
-
-    private static boolean mHasPerformedInitialUpdate;
 
     private final ScheduledExecutorService mUpdateScheduler = Executors.newScheduledThreadPool(1);
 
@@ -129,15 +126,6 @@ public class ReaderPostListActivity extends WPDrawerActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (!mHasPerformedInitialUpdate) {
-            performInitialUpdate();
-        }
-    }
-
-    @Override
     public void onSaveInstanceState(@Nonnull Bundle outState) {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
@@ -181,8 +169,7 @@ public class ReaderPostListActivity extends WPDrawerActivity {
             case WPComLoginActivity.REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     removeListFragment();
-                    mHasPerformedInitialUpdate = false;
-                    performInitialUpdate();
+                    EventBus.getDefault().removeStickyEvent(ReaderEvents.HasPerformedInitialUpdate.class);
                 }
                 break;
         }
@@ -193,7 +180,7 @@ public class ReaderPostListActivity extends WPDrawerActivity {
         super.onSignout();
 
         AppLog.i(T.READER, "reader post list > user signed out");
-        mHasPerformedInitialUpdate = false;
+        EventBus.getDefault().removeStickyEvent(ReaderEvents.HasPerformedInitialUpdate.class);
 
         // reader database will have been cleared by the time this is called, but the fragment must
         // be removed or else it will continue to show the same articles - onResume() will take
@@ -256,26 +243,6 @@ public class ReaderPostListActivity extends WPDrawerActivity {
             return null;
         }
         return ((ReaderPostListFragment) fragment);
-    }
-
-    /*
-     * initial update performed the first time the user opens the reader
-     */
-    private void performInitialUpdate() {
-        if (!NetworkUtils.isNetworkAvailable(this)) {
-            return;
-        }
-
-        mHasPerformedInitialUpdate = true;
-
-        // update current user to ensure we have their user_id as well as their latest info
-        // in case they changed their avatar, name, etc. since last time
-        AppLog.d(T.READER, "reader post list > updating current user");
-        ReaderUserActions.updateCurrentUser(null);
-
-        // update cookies so that we can show authenticated images in WebViews
-        AppLog.d(T.READER, "reader post list > updating cookies");
-        ReaderAuthActions.updateCookies(ReaderPostListActivity.this);
     }
 
     /*
