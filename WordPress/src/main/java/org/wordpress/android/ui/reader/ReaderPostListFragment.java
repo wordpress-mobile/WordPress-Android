@@ -700,26 +700,14 @@ public class ReaderPostListFragment extends Fragment
             titleResId = R.string.reader_empty_posts_in_tag_updating;
         } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             titleResId = R.string.reader_empty_posts_in_blog;
-        } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && getSpinnerAdapter() != null) {
-            int tagIndex = getSpinnerAdapter().getIndexOfTag(mCurrentTag);
-            String tagId;
-            if (tagIndex > -1) {
-                ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(tagIndex);
-                tagId = tag.getStringIdFromEndpoint();
+        } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && hasCurrentTag()) {
+            if (getCurrentTag().isBlogsIFollow()) {
+                titleResId = R.string.reader_empty_followed_blogs_title;
+                descriptionResId = R.string.reader_empty_followed_blogs_description;
+            } else if (getCurrentTag().isPostsILike()) {
+                titleResId = R.string.reader_empty_posts_liked;
             } else {
-                tagId = "";
-            }
-            switch (tagId) {
-                case ReaderTag.TAG_ID_FOLLOWING:
-                    titleResId = R.string.reader_empty_followed_blogs_title;
-                    descriptionResId = R.string.reader_empty_followed_blogs_description;
-                    break;
-                case ReaderTag.TAG_ID_LIKED:
-                    titleResId = R.string.reader_empty_posts_liked;
-                    break;
-                default:
-                    titleResId = R.string.reader_empty_posts_in_tag;
-                    break;
+                titleResId = R.string.reader_empty_posts_in_tag;
             }
         } else {
             titleResId = R.string.reader_empty_posts_in_tag;

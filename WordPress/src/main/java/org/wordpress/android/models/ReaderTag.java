@@ -13,9 +13,6 @@ public class ReaderTag implements Serializable {
     private String endpoint;
     public final ReaderTagType tagType;
 
-    public static final String TAG_ID_FOLLOWING = "following";
-    public static final String TAG_ID_LIKED = "liked";
-
     // these are the default tag names, which aren't localized in the /read/menu/ response
     public static final String TAG_NAME_FOLLOWING = "Blogs I Follow";
     private static final String TAG_NAME_LIKED = "Posts I Like";
@@ -46,22 +43,6 @@ public class ReaderTag implements Serializable {
     }
     void setEndpoint(String endpoint) {
         this.endpoint = StringUtils.notNullStr(endpoint);
-    }
-
-    /**
-     * Extract tag Id from endpoint, only works for ReaderTagType.DEFAULT
-     *
-     * @return a string Id if tagType is ReaderTagType.DEFAULT, empty string else
-     */
-    public String getStringIdFromEndpoint() {
-        if (tagType != ReaderTagType.DEFAULT) {
-            return "";
-        }
-        String[] splitted = endpoint.split("/");
-        if (splitted.length > 0) {
-            return splitted[splitted.length - 1];
-        }
-        return "";
     }
 
     public String getTagName() {
