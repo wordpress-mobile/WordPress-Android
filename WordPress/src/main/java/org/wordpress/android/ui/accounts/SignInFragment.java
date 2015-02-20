@@ -5,12 +5,10 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -26,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.wordpress.rest.RestRequest;
@@ -35,7 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
@@ -73,9 +69,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
+    private static final String FROM_LOGIN_SCREEN_KEY = "FROM_LOGIN_SCREEN_KEY";
+
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
-    public static final String FROM_LOGIN_SCREEN_KEY = "FROM_LOGIN_SCREEN_KEY";
 
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
@@ -100,7 +97,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private ImageView mInfoButton;
     private ImageView mInfoButtonSecondary;
 
-    private EmailChecker mEmailChecker;
+    private final EmailChecker mEmailChecker;
 
     private boolean mSelfHosted;
     private boolean mEmailAutoCorrected;
@@ -257,7 +254,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private OnClickListener mOnLoginFormClickListener = new OnClickListener() {
+    private final OnClickListener mOnLoginFormClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             if (mTwoStepLayout.getVisibility() == View.VISIBLE) {
@@ -307,7 +304,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
+    private final View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent newAccountIntent = new Intent(getActivity(), NewAccountActivity.class);
@@ -330,7 +327,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         return baseUrl + FORGOT_PASSWORD_RELATIVE_URL;
     }
 
-    private View.OnClickListener mForgotPasswordListener = new View.OnClickListener() {
+    private final View.OnClickListener mForgotPasswordListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getForgotPasswordURL()));
@@ -342,7 +339,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         signIn();
     }
 
-    private TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
+    private final TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (mPasswordEditText == v) {
@@ -408,7 +405,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         });
     }
 
-    private Callback mFetchBlogListCallback = new Callback() {
+    private final Callback mFetchBlogListCallback = new Callback() {
         @Override
         public void onSuccess(final List<Map<String, Object>> userBlogList) {
             if (userBlogList != null) {
@@ -587,7 +584,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         signIn();
     }
 
-    private OnClickListener mSignInClickListener = new OnClickListener() {
+    private final OnClickListener mSignInClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             signIn();
@@ -637,10 +634,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             retValue = false;
         }
         return retValue;
-    }
-
-    private boolean selfHostedFieldsFilled() {
-        return fieldsFilled() && EditTextUtils.getText(mUrlEditText).trim().length() > 0;
     }
 
     private void showPasswordError(int messageId) {
