@@ -282,7 +282,8 @@ public class ReaderPostListFragment extends Fragment
     public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
         // refresh posts if user is viewing "Blogs I Follow"
         if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-                && ReaderTag.TAG_NAME_FOLLOWING.equals(getCurrentTagName())) {
+                && hasCurrentTag()
+                && getCurrentTag().isBlogsIFollow()) {
             refreshPosts();
         }
     }
@@ -648,7 +649,7 @@ public class ReaderPostListFragment extends Fragment
                     Map<String, String> properties = new HashMap<>();
                     properties.put("tag", tag.getTagName());
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
-                    if (tag.getTagName().equals(ReaderTag.TAG_NAME_FRESHLY_PRESSED)) {
+                    if (tag.isFreshlyPressed()) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
                     }
                 }
@@ -849,7 +850,7 @@ public class ReaderPostListFragment extends Fragment
         return (mCurrentTag != null ? mCurrentTag.getTagName() : "");
     }
 
-    private boolean hasCurrentTag() {
+    public boolean hasCurrentTag() {
         return mCurrentTag != null;
     }
 
@@ -1022,7 +1023,7 @@ public class ReaderPostListFragment extends Fragment
         // if this is "Posts I Like" or "Blogs I Follow" and it's a manual refresh (user tapped refresh icon),
         // refresh the posts so posts that were unliked/unfollowed no longer appear
         if (refreshType == RefreshType.MANUAL && isCurrentTag(tag)) {
-            if (tag.getTagName().equals(ReaderTag.TAG_NAME_LIKED) || tag.getTagName().equals(ReaderTag.TAG_NAME_FOLLOWING))
+            if (tag.isPostsILike() || tag.isBlogsIFollow())
                 refreshPosts();
         }
 

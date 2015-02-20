@@ -6,21 +6,20 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
-import java.lang.Character;
 import java.util.regex.Pattern;
 
 public class ReaderTag implements Serializable {
     private String tagName;
     private String endpoint;
-    public ReaderTagType tagType;
+    public final ReaderTagType tagType;
 
     public static final String TAG_ID_FOLLOWING = "following";
     public static final String TAG_ID_LIKED = "liked";
 
     // these are the default tag names, which aren't localized in the /read/menu/ response
-    public static final String TAG_NAME_LIKED = "Posts I Like";
     public static final String TAG_NAME_FOLLOWING = "Blogs I Follow";
-    public static final String TAG_NAME_FRESHLY_PRESSED = "Freshly Pressed";
+    private static final String TAG_NAME_LIKED = "Posts I Like";
+    private static final String TAG_NAME_FRESHLY_PRESSED = "Freshly Pressed";
     private static final String TAG_NAME_DEFAULT = TAG_NAME_FRESHLY_PRESSED;
 
     public ReaderTag(String tagName, String endpoint, ReaderTagType tagType) {
@@ -45,7 +44,7 @@ public class ReaderTag implements Serializable {
     public String getEndpoint() {
         return StringUtils.notNullStr(endpoint);
     }
-    public void setEndpoint(String endpoint) {
+    void setEndpoint(String endpoint) {
         this.endpoint = StringUtils.notNullStr(endpoint);
     }
 
@@ -59,7 +58,7 @@ public class ReaderTag implements Serializable {
             return "";
         }
         String[] splitted = endpoint.split("/");
-        if (splitted != null && splitted.length > 0) {
+        if (splitted.length > 0) {
             return splitted[splitted.length - 1];
         }
         return "";
@@ -68,7 +67,7 @@ public class ReaderTag implements Serializable {
     public String getTagName() {
         return StringUtils.notNullStr(tagName);
     }
-    public void setTagName(String name) {
+    void setTagName(String name) {
         this.tagName = StringUtils.notNullStr(name);
     }
     public String getCapitalizedTagName() {
@@ -114,11 +113,8 @@ public class ReaderTag implements Serializable {
      */
     private static final Pattern INVALID_CHARS = Pattern.compile("^.*[~#@*+%{}<>\\[\\]|\"\\_].*$");
     public static boolean isValidTagName(String tagName) {
-        if (TextUtils.isEmpty(tagName))
-            return false;
-        if (INVALID_CHARS.matcher(tagName).matches())
-            return false;
-        return true;
+        return !TextUtils.isEmpty(tagName)
+            && !INVALID_CHARS.matcher(tagName).matches();
     }
 
     /*
@@ -164,9 +160,17 @@ public class ReaderTag implements Serializable {
         if (tag1 == null || tag2 == null) {
             return false;
         }
-        if (tag1.tagType != tag2.tagType) {
-            return false;
-        }
-        return (tag1.getSanitizedTagName().equalsIgnoreCase(tag2.getSanitizedTagName()));
+        return tag1.tagType == tag2.tagType
+            && tag1.getSanitizedTagName().equalsIgnoreCase(tag2.getSanitizedTagName());
+    }
+
+    public boolean isPostsILike() {
+        return getTagName().equals(TAG_NAME_LIKED);
+    }
+    public boolean isBlogsIFollow() {
+        return getTagName().equals(TAG_NAME_FOLLOWING);
+    }
+    public boolean isFreshlyPressed() {
+        return getTagName().equals(TAG_NAME_FRESHLY_PRESSED);
     }
 }

@@ -195,7 +195,8 @@ public class ReaderPostListActivity extends WPDrawerActivity {
                     // refresh posts if blogs changed and user is viewing "Blogs I Follow"
                     if (blogsChanged
                             && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-                            && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
+                            && listFragment.hasCurrentTag()
+                            && listFragment.getCurrentTag().isBlogsIFollow()) {
                         listFragment.refreshPosts();
                     }
                 }
