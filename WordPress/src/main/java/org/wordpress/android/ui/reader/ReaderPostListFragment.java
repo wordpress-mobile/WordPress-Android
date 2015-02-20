@@ -2,8 +2,10 @@ package org.wordpress.android.ui.reader;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -1366,4 +1368,44 @@ public class ReaderPostListFragment extends Fragment
         popup.show();
     }
 
+    /*
+     * called from activity to handle onActivityResult, returns true if handled
+     */
+    boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+
+            // user just returned from the tags/subs activity
+            case ReaderConstants.INTENT_READER_SUBS:
+                if (data != null) {
+                    boolean tagsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false);
+                    boolean blogsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false);
+                    // reload tags if they were changed, and set the last tag added as the current one
+                    if (tagsChanged) {
+                        String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
+                        doTagsChanged(lastAddedTag);
+                    }
+                    // refresh posts if blogs changed and user is viewing "Blogs I Follow"
+                    if (blogsChanged
+                            && getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+                            && hasCurrentTag()
+                            && getCurrentTag().isBlogsIFollow()) {
+                        refreshPosts();
+                    }
+                }
+                return true;
+
+            // user just returned from reblogging activity, reload the displayed post if reblogging
+            // succeeded
+            case ReaderConstants.INTENT_READER_REBLOG:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+                    long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+                    reloadPost(ReaderPostTable.getPost(blogId, postId, true));
+                }
+                return true;
+
+            default:
+                return false;
+        }
+    }
 }

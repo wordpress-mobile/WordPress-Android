@@ -10,7 +10,6 @@ import android.view.View;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderDatabase;
-import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPDrawerActivity;
@@ -178,44 +177,17 @@ public class ReaderPostListActivity extends WPDrawerActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        boolean isResultOK = (resultCode == Activity.RESULT_OK);
-        final ReaderPostListFragment listFragment = getListFragment();
+        // first see if list fragment can handle result
+        ReaderPostListFragment listFragment = getListFragment();
+        if (listFragment != null && listFragment.handleActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
 
         switch (requestCode) {
-            // user just returned from the tags/subs activity
-            case ReaderConstants.INTENT_READER_SUBS :
-                if (data != null && listFragment != null) {
-                    boolean tagsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false);
-                    boolean blogsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false);
-                    // reload tags if they were changed, and set the last tag added as the current one
-                    if (tagsChanged) {
-                        String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
-                        listFragment.doTagsChanged(lastAddedTag);
-                    }
-                    // refresh posts if blogs changed and user is viewing "Blogs I Follow"
-                    if (blogsChanged
-                            && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-                            && listFragment.hasCurrentTag()
-                            && listFragment.getCurrentTag().isBlogsIFollow()) {
-                        listFragment.refreshPosts();
-                    }
-                }
-                break;
-
-            // user just returned from reblogging activity, reload the displayed post if reblogging
-            // succeeded
-            case ReaderConstants.INTENT_READER_REBLOG:
-                if (isResultOK && data != null && listFragment != null) {
-                    long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                    long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-                    listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId, true));
-                }
-                break;
-
             // user just returned from the login dialog, need to perform initial update again
             // since creds have changed
             case WPComLoginActivity.REQUEST_CODE:
-                if (isResultOK) {
+                if (resultCode == Activity.RESULT_OK) {
                     removeListFragment();
                     mHasPerformedInitialUpdate = false;
                     performInitialUpdate();
