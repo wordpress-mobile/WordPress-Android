@@ -27,6 +27,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -69,19 +70,11 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
-/**
- * Displays a list of reader posts, relies on the post list type to determine which posts are shown:
- *
- *  TAG_FOLLOWED - posts in a followed tag, displayed as a ViewPager tab inside the main activity
- *  with a fragment toolbar containing a spinner that enables switching tags
- *
- *  TAG_PREVIEW - posts with a specific tag, displayed in ReaderPostListActivity when user taps
- *  a tag in a post, adds a "Follow" button to the activity toolbar to enable easily following
- *
- *  BLOG_PREVIEW - similar to TAG_PREVIEW except it shows posts in a specific blog
- */
+import de.greenrobot.event.EventBus;
 
 public class ReaderPostListFragment extends Fragment {
 
@@ -137,14 +130,6 @@ public class ReaderPostListFragment extends Fragment {
                 bundle.putStringArrayList(keyName, history);
             }
         }
-    }
-
-    public static ReaderPostListFragment newInstance() {
-        ReaderTag tag = AppPrefs.getReaderTag();
-        if (tag == null) {
-            tag = ReaderTag.getDefaultTag();
-        }
-        return newInstanceForTag(tag, ReaderPostListType.TAG_FOLLOWED);
     }
 
     /*
@@ -266,6 +251,40 @@ public class ReaderPostListFragment extends Fragment {
                 AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
                 updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
             }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
+        if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
+            // list fragment is viewing followed tags, tell it to refresh the list of tags
+            refreshTags();
+            // update the current tag if the list fragment is empty - this will happen if
+            // the tag table was previously empty (ie: first run)
+            if (isPostAdapterEmpty()) {
+                updateCurrentTag();
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
+        // refresh posts if user is viewing "Blogs I Follow"
+        if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+                && ReaderTag.TAG_NAME_FOLLOWING.equals(getCurrentTagName())) {
+            refreshPosts();
         }
     }
 
@@ -539,7 +558,7 @@ public class ReaderPostListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         // only followed tag list has a menu
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            inflater.inflate(R.menu.reader_menu, menu);
+            inflater.inflate(R.menu.reader_native, menu);
             setupActionBar();
         }
     }
@@ -647,16 +666,15 @@ public class ReaderPostListFragment extends Fragment {
         }
     }
 
-    // TODO
     private void setupSpinner() {
-        /*if (!isAdded()) return;
+        if (!isAdded()) return;
 
         final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         if (toolbar == null) {
             return;
         }
 
-        View view = View.inflate(getActivity(), R.layout.re, toolbar);
+        View view = View.inflate(getActivity(), R.layout.reader_spinner, toolbar);
         mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
         mSpinner.setAdapter(getSpinnerAdapter());
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -682,7 +700,7 @@ public class ReaderPostListFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
                 // nop
             }
-        });*/
+        });
     }
 
     /*

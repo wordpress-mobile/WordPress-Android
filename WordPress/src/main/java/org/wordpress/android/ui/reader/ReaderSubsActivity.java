@@ -4,13 +4,9 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
@@ -43,11 +39,9 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -56,6 +50,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * activity which shows the user's subscriptions and recommended subscriptions - includes
@@ -71,10 +67,12 @@ public class ReaderSubsActivity extends ActionBarActivity
     private SubsPageAdapter mPageAdapter;
 
     private boolean mTagsChanged;
+    private boolean mBlogsChanged;
     private String mLastAddedTagName;
     private boolean mHasPerformedUpdate;
 
-    static final String KEY_TAGS_CHANGED   = "tags_changed";
+    static final String KEY_TAGS_CHANGED        = "tags_changed";
+    static final String KEY_BLOGS_CHANGED       = "blogs_changed";
     static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
@@ -144,25 +142,41 @@ public class ReaderSubsActivity extends ActionBarActivity
 
     @Override
     protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+        EventBus.getDefault().unregister(this);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED);
-        filter.addAction(ReaderUpdateService.ACTION_RECOMMENDED_TAGS_CHANGED);
-        filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED);
-        filter.addAction(ReaderUpdateService.ACTION_RECOMMENDED_BLOGS_CHANGED);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+        EventBus.getDefault().register(this);
 
         // update list of tags and blogs from the server
         if (!mHasPerformedUpdate) {
             performUpdate();
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
+        mTagsChanged = true;
+        getPageAdapter().refreshTagFragments();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.RecommendedTagsChanged event) {
+        getPageAdapter().refreshTagFragments();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
+        mBlogsChanged = true;
+        getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.RecommendedBlogsChanged event) {
+        getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
     }
 
     private void performUpdate() {
@@ -181,6 +195,7 @@ public class ReaderSubsActivity extends ActionBarActivity
     private void restoreState(Bundle state) {
         if (state != null) {
             mTagsChanged = state.getBoolean(KEY_TAGS_CHANGED);
+            mBlogsChanged = state.getBoolean(KEY_BLOGS_CHANGED);
             mLastAddedTagName = state.getString(KEY_LAST_ADDED_TAG_NAME);
             mHasPerformedUpdate = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
         }
@@ -211,6 +226,7 @@ public class ReaderSubsActivity extends ActionBarActivity
     @Override
     public void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
+        outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
         if (mLastAddedTagName != null) {
             outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
@@ -220,12 +236,16 @@ public class ReaderSubsActivity extends ActionBarActivity
 
     @Override
     public void onBackPressed() {
-        // let calling activity know if tags were added/removed
-        if (mTagsChanged) {
+        if (mTagsChanged || mBlogsChanged) {
             Bundle bundle = new Bundle();
-            bundle.putBoolean(KEY_TAGS_CHANGED, true);
-            if (mLastAddedTagName != null && ReaderTagTable.isFollowedTagName(mLastAddedTagName)) {
-                bundle.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
+            if (mTagsChanged) {
+                bundle.putBoolean(KEY_TAGS_CHANGED, true);
+                if (mLastAddedTagName != null && ReaderTagTable.isFollowedTagName(mLastAddedTagName)) {
+                    bundle.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
+                }
+            }
+            if (mBlogsChanged) {
+                bundle.putBoolean(KEY_BLOGS_CHANGED, true);
             }
             Intent intent = new Intent();
             intent.putExtras(bundle);
@@ -558,35 +578,4 @@ public class ReaderSubsActivity extends ActionBarActivity
             }
         }
     }
-
-    /*
-    * receiver which is notified when followed tags have changed
-    */
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (isFinishing()) {
-                return;
-            }
-
-            String action = StringUtils.notNullStr(intent.getAction());
-            AppLog.d(AppLog.T.READER, "reader subs > received broadcast " + action);
-
-            switch (action) {
-                case ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED:
-                    mTagsChanged = true;
-                    getPageAdapter().refreshTagFragments();
-                    break;
-                case ReaderUpdateService.ACTION_RECOMMENDED_TAGS_CHANGED:
-                    getPageAdapter().refreshTagFragments();
-                    break;
-                case ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED:
-                    getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
-                    break;
-                case ReaderUpdateService.ACTION_RECOMMENDED_BLOGS_CHANGED:
-                    getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
-                    break;
-            }
-        }
-    };
 }
