@@ -555,6 +555,7 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+
         // only followed tag list has a menu
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             inflater.inflate(R.menu.reader_list, menu);
@@ -562,10 +563,21 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_tags:
+                ReaderActivityLauncher.showReaderSubsForResult(getActivity());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     /*
-     * blocks the blog associated with the passed post and removes all posts in that blog
-     * from the adapter
-     */
+         * blocks the blog associated with the passed post and removes all posts in that blog
+         * from the adapter
+         */
     private void blockBlogForPost(final ReaderPost post) {
         if (post == null || !hasPostAdapter()) {
             return;

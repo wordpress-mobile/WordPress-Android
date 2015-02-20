@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
 import org.wordpress.android.R;
@@ -116,17 +115,6 @@ public class ReaderPostListActivity extends WPDrawerActivity {
         if (fragment == null || !fragment.goBackInTagHistory()) {
             setToolbarClickListener();
             super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_tags:
-                ReaderActivityLauncher.showReaderSubsForResult(this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 
