@@ -80,7 +80,8 @@
                 <CheckBox android:id="@+id/stats_checkbox_views"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/stats_views"/>
+                    android:text="@string/stats_views"
+                    android:textColor="@color/stats_visitors_and_views_legend_text"/>
                 <ImageView android:id="@+id/stats_label_views"
                     android:layout_width="@dimen/avatar_sz_small"
                     android:layout_height="@dimen/avatar_sz_small"
@@ -96,7 +97,8 @@
                 <CheckBox android:id="@+id/stats_checkbox_visitors"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/stats_visitors"/>
+                    android:text="@string/stats_visitors"
+                    android:textColor="@color/stats_visitors_and_views_legend_text"/>
                 <ImageView android:id="@+id/stats_label_visitors"
                     android:layout_width="@dimen/avatar_sz_small"
                     android:layout_height="@dimen/avatar_sz_small"

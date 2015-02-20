@@ -65,6 +65,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private CheckBox mViewsCheckbox;
     private CheckBox mVisitorsCheckbox;
     private boolean mIsCheckboxChecked;
+    private ImageView mLegendViews;
+    private ImageView mLegendVisitors;
 
     private OnDateChangeListener mListener;
 
@@ -103,6 +105,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mViewsCheckbox.setOnClickListener(onCheckboxClicked);
         mVisitorsCheckbox = (CheckBox) view.findViewById(R.id.stats_checkbox_visitors);
         mVisitorsCheckbox.setOnClickListener(onCheckboxClicked);
+        mLegendViews = (ImageView) mVisitorsAndViewsCheckBoxesContainer.findViewById(R.id.stats_label_views);
+        mLegendVisitors = (ImageView) mVisitorsAndViewsCheckBoxesContainer.findViewById(R.id.stats_label_visitors);
 
         // Make sure we've all the info to build the tab correctly. This is ALWAYS true
         if (mModuleButtonsContainer.getChildCount() == overviewItems.length) {
@@ -341,10 +345,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mViewsCheckbox.setChecked(false);
                 mVisitorsCheckbox.setEnabled(true);
                 mVisitorsCheckbox.setChecked(mIsCheckboxChecked);
-                ImageView legendViews = (ImageView) mVisitorsAndViewsCheckBoxesContainer.findViewById(R.id.stats_label_views);
-                legendViews.setBackgroundResource(R.color.stats_bar_graph_views);
-                ImageView legendVisitors = (ImageView) mVisitorsAndViewsCheckBoxesContainer.findViewById(R.id.stats_label_visitors);
-                legendVisitors.setBackgroundResource(R.color.stats_bar_graph_views_inner);
+                mLegendViews.setBackgroundResource(R.color.stats_bar_graph_views);
+                mLegendVisitors.setBackgroundResource(R.color.stats_bar_graph_views_inner);
                 break;
             case VISITORS:
                 mVisitorsAndViewsCheckBoxesContainer.setVisibility(View.VISIBLE);
@@ -353,10 +355,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mViewsCheckbox.setChecked(mIsCheckboxChecked);
                 mVisitorsCheckbox.setEnabled(false);
                 mVisitorsCheckbox.setChecked(false);
-                ImageView legendViews2 = (ImageView) mVisitorsAndViewsCheckBoxesContainer.findViewById(R.id.stats_label_views);
-                legendViews2.setBackgroundResource(R.color.stats_bar_graph_views_inner);
-                ImageView legendVisitors2 = (ImageView) mVisitorsAndViewsCheckBoxesContainer.findViewById(R.id.stats_label_visitors);
-                legendVisitors2.setBackgroundResource(R.color.stats_bar_graph_views);
+                mLegendViews.setBackgroundResource(R.color.stats_bar_graph_views_inner);
+                mLegendVisitors.setBackgroundResource(R.color.stats_bar_graph_views);
                 break;
             default:
                 // Likes or Comments
