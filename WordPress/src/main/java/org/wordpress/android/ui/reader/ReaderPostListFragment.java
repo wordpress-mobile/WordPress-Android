@@ -652,7 +652,7 @@ public class ReaderPostListFragment extends Fragment
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
                     }
                 }
-                setCurrentTag(tag);
+                setCurrentTag(tag, true);
                 AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
             }
 
@@ -853,18 +853,6 @@ public class ReaderPostListFragment extends Fragment
         return mCurrentTag != null;
     }
 
-    void setCurrentTagName(String tagName) {
-        setCurrentTagName(tagName, true);
-    }
-    void setCurrentTagName(String tagName, boolean allowAutoUpdate) {
-        if (TextUtils.isEmpty(tagName)) {
-            return;
-        }
-        setCurrentTag(new ReaderTag(tagName, ReaderTagType.FOLLOWED), allowAutoUpdate);
-    }
-    void setCurrentTag(final ReaderTag tag) {
-        setCurrentTag(tag, true);
-    }
     void setCurrentTag(final ReaderTag tag, boolean allowAutoUpdate) {
         if (tag == null) {
             return;
@@ -917,15 +905,15 @@ public class ReaderPostListFragment extends Fragment
             return false;
         }
 
-        String tag = mTagPreviewHistory.pop();
-        if (isCurrentTagName(tag)) {
+        String tagName = mTagPreviewHistory.pop();
+        if (isCurrentTagName(tagName)) {
             if (mTagPreviewHistory.empty()) {
                 return false;
             }
-            tag = mTagPreviewHistory.pop();
+            tagName = mTagPreviewHistory.pop();
         }
 
-        setCurrentTagName(tag, false);
+        setCurrentTag(new ReaderTag(tagName, ReaderTagType.FOLLOWED), false);
         updateFollowButton();
 
         return true;
@@ -1189,7 +1177,7 @@ public class ReaderPostListFragment extends Fragment
         checkCurrentTag();
         getSpinnerAdapter().reloadTags();
         if (!TextUtils.isEmpty(newCurrentTag)) {
-            setCurrentTagName(newCurrentTag);
+            setCurrentTag(new ReaderTag(newCurrentTag, ReaderTagType.FOLLOWED), true);
         }
     }
 
@@ -1360,7 +1348,7 @@ public class ReaderPostListFragment extends Fragment
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
         if (getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
             // user is already previewing a tag, so change current tag in existing preview
-            setCurrentTag(tag);
+            setCurrentTag(tag, true);
         } else {
             // user isn't previewing a tag, so open in tag preview
             ReaderActivityLauncher.showReaderTagPreview(getActivity(), tag);
