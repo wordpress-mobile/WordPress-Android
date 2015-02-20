@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Handler;
 import android.os.IBinder;
 
 import com.android.volley.VolleyError;
@@ -45,8 +44,6 @@ public class ReaderUpdateService extends Service {
     }
 
     private EnumSet<UpdateTask> mCurrentTasks;
-    private final Handler mEventHandler = new Handler();
-
     private static final String ARG_UPDATE_TASKS = "update_tasks";
 
     public static void startService(Context context, EnumSet<UpdateTask> tasks) {
@@ -158,7 +155,7 @@ public class ReaderUpdateService extends Service {
                     // now replace local topics with the server topics
                     ReaderTagTable.replaceTags(serverTopics);
                     // broadcast the fact that there are changes
-                    postEvent(new ReaderEvents.FollowedTagsChanged());
+                    EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged());
                 }
 
                 // save changes to recommended topics
@@ -167,7 +164,7 @@ public class ReaderUpdateService extends Service {
                 if (!serverRecommended.isSameList(localRecommended)) {
                     AppLog.d(AppLog.T.READER, "reader service > recommended topics changed");
                     ReaderTagTable.setRecommendedTags(serverRecommended);
-                    postEvent(new ReaderEvents.RecommendedTagsChanged());
+                    EventBus.getDefault().post(new ReaderEvents.RecommendedTagsChanged());
                 }
 
                 taskCompleted(UpdateTask.TAGS);
@@ -255,7 +252,7 @@ public class ReaderUpdateService extends Service {
                 if (!localBlogs.isSameList(serverBlogs)) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
                     AppLog.d(AppLog.T.READER, "reader blogs service > followed blogs changed");
-                    postEvent(new ReaderEvents.FollowedBlogsChanged());
+                    EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
                 }
 
                 taskCompleted(UpdateTask.FOLLOWED_BLOGS);
@@ -296,23 +293,11 @@ public class ReaderUpdateService extends Service {
 
                 if (!localBlogs.isSameList(serverBlogs)) {
                     ReaderBlogTable.setRecommendedBlogs(serverBlogs);
-                    postEvent(new ReaderEvents.RecommendedBlogsChanged());
+                    EventBus.getDefault().post(new ReaderEvents.RecommendedBlogsChanged());
                 }
 
                 taskCompleted(UpdateTask.RECOMMENDED_BLOGS);
             }
         }.start();
-    }
-
-    /*
-     * post an EventBus event on the main thread
-     */
-    private void postEvent(final Object event) {
-        mEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                EventBus.getDefault().post(event);
-            }
-        });
     }
 }

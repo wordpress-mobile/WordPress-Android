@@ -267,7 +267,7 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEvent(ReaderEvents.FollowedTagsChanged event) {
+    public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
         if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
             // list fragment is viewing followed tags, tell it to refresh the list of tags
             refreshTags();
@@ -280,7 +280,7 @@ public class ReaderPostListFragment extends Fragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEvent(ReaderEvents.FollowedBlogsChanged event) {
+    public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
         // refresh posts if user is viewing "Blogs I Follow"
         if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
                 && ReaderTag.TAG_NAME_FOLLOWING.equals(getCurrentTagName())) {
