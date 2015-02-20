@@ -69,15 +69,40 @@
             android:id="@+id/stats_visitors_and_views_checkboxes_container"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <CheckBox android:id="@+id/stats_checkbox_views"
-                android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_medium">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/stats_views"/>
-            <CheckBox android:id="@+id/stats_checkbox_visitors"
-                android:layout_width="wrap_content"
+                android:gravity="center">
+                <CheckBox android:id="@+id/stats_checkbox_views"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stats_views"/>
+                <ImageView android:id="@+id/stats_label_views"
+                    android:layout_width="@dimen/avatar_sz_small"
+                    android:layout_height="@dimen/avatar_sz_small"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:layout_marginStart="@dimen/margin_medium"/>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/stats_visitors"/>
+                android:gravity="center">
+                <CheckBox android:id="@+id/stats_checkbox_visitors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stats_visitors"/>
+                <ImageView android:id="@+id/stats_label_visitors"
+                    android:layout_width="@dimen/avatar_sz_small"
+                    android:layout_height="@dimen/avatar_sz_small"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:layout_marginStart="@dimen/margin_medium"/>
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

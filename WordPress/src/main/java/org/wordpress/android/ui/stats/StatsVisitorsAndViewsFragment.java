@@ -332,7 +332,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // Read the selected Tab in the UI
         OverviewLabel selectedStatsType = overviewItems[mSelectedOverviewItemIndex];
 
-        // Enable disable the views/visitors checkboxes
+        // Enable disable the views/visitors checkboxes and update the legend
         switch(selectedStatsType) {
             case VIEWS:
                 mVisitorsAndViewsCheckBoxesContainer.setVisibility(View.VISIBLE);
@@ -341,6 +341,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mViewsCheckbox.setChecked(false);
                 mVisitorsCheckbox.setEnabled(true);
                 mVisitorsCheckbox.setChecked(mIsCheckboxChecked);
+                ImageView legendViews = (ImageView) mVisitorsAndViewsCheckBoxesContainer.findViewById(R.id.stats_label_views);
+                legendViews.setBackgroundResource(R.color.stats_bar_graph_views);
+                ImageView legendVisitors = (ImageView) mVisitorsAndViewsCheckBoxesContainer.findViewById(R.id.stats_label_visitors);
+                legendVisitors.setBackgroundResource(R.color.stats_bar_graph_views_inner);
                 break;
             case VISITORS:
                 mVisitorsAndViewsCheckBoxesContainer.setVisibility(View.VISIBLE);
@@ -349,6 +353,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mViewsCheckbox.setChecked(mIsCheckboxChecked);
                 mVisitorsCheckbox.setEnabled(false);
                 mVisitorsCheckbox.setChecked(false);
+                ImageView legendViews2 = (ImageView) mVisitorsAndViewsCheckBoxesContainer.findViewById(R.id.stats_label_views);
+                legendViews2.setBackgroundResource(R.color.stats_bar_graph_views_inner);
+                ImageView legendVisitors2 = (ImageView) mVisitorsAndViewsCheckBoxesContainer.findViewById(R.id.stats_label_visitors);
+                legendVisitors2.setBackgroundResource(R.color.stats_bar_graph_views);
                 break;
             default:
                 // Likes or Comments
@@ -358,11 +366,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         final String[] horLabels = new String[dataToShowOnGraph.length];
         mStatsDate = new String[dataToShowOnGraph.length];
-        GraphView.GraphViewData[] firstItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
+        GraphView.GraphViewData[] mainSeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
 
-        GraphView.GraphViewData[] secondsItems = null;
+        GraphView.GraphViewData[] secondarySeriesItems = null;
         if (mIsCheckboxChecked) {
-            secondsItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
+            secondarySeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
         }
 
         for (int i = 0; i < dataToShowOnGraph.length; i++) {
@@ -381,15 +389,15 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     currentItemValue = dataToShowOnGraph[i].getComments();
                     break;
             }
-            firstItems[i] = new GraphView.GraphViewData(i, currentItemValue);
+            mainSeriesItems[i] = new GraphView.GraphViewData(i, currentItemValue);
 
-            if (mIsCheckboxChecked && secondsItems != null) {
+            if (mIsCheckboxChecked && secondarySeriesItems != null) {
                 switch(selectedStatsType) {
                     case VIEWS:
-                        secondsItems[i] = new GraphView.GraphViewData(i, dataToShowOnGraph[i].getVisitors());
+                        secondarySeriesItems[i] = new GraphView.GraphViewData(i, dataToShowOnGraph[i].getVisitors());
                         break;
                     case VISITORS:
-                        secondsItems[i] = new GraphView.GraphViewData(i,dataToShowOnGraph[i].getViews());
+                        secondarySeriesItems[i] = new GraphView.GraphViewData(i,dataToShowOnGraph[i].getViews());
                         break;
                 }
             }
@@ -409,11 +417,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         mGraphView.removeAllSeries();
 
-        GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(firstItems);
+        GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(mainSeriesItems);
 
-        if (secondsItems!= null) {
+        if (secondarySeriesItems!= null) {
             // We have 2 series on the screen now. Need to check which one should be drawn first.
-            GraphViewSeries secondarySeries = new GraphViewSeries(secondsItems);
+            GraphViewSeries secondarySeries = new GraphViewSeries(secondarySeriesItems);
 
             // Need to check the order now. Views always > Visitors.
             if (selectedStatsType == OverviewLabel.VIEWS) {
@@ -421,17 +429,17 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.calypso_orange_dark);
                 mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
                 secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 8);
-                secondarySeries.getStyle().color = getResources().getColor(R.color.reader_divider_grey);
-                secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.reader_divider_grey);
+                secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views_inner);
+                secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.stats_bar_graph_views_inner_highlight);
                 mGraphView.addSeries(mainSeriesOnScreen);
                 mGraphView.addSeries(secondarySeries);
             } else {
                 secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
-                secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.calypso_orange_dark);
-                secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
+                secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.stats_bar_graph_views_inner_highlight);
+                secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views_inner);
                 mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 8);
-                mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.reader_divider_grey);
-                mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.reader_divider_grey);
+                mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.calypso_orange_dark);
+                mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
                 mGraphView.addSeries(secondarySeries);
                 mGraphView.addSeries(mainSeriesOnScreen);
             }
