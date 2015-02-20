@@ -13,12 +13,9 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostSelectedListener;
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -38,16 +35,12 @@ import javax.annotation.Nonnull;
  * this activity serves as the host for ReaderPostListFragment
  */
 
-public class ReaderPostListActivity extends WPDrawerActivity
-                                    implements OnPostSelectedListener,
-                                               OnTagSelectedListener {
+public class ReaderPostListActivity extends WPDrawerActivity {
 
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
 
     private final ScheduledExecutorService mUpdateScheduler = Executors.newScheduledThreadPool(1);
-
-    private ReaderTypes.ReaderPostListType mPostListType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,14 +68,15 @@ public class ReaderPostListActivity extends WPDrawerActivity
             return;
         }
 
+        ReaderTypes.ReaderPostListType postListType;
         if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
-            mPostListType = (ReaderTypes.ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
+            postListType = (ReaderTypes.ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
         } else {
-            mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
+            postListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
         }
 
         // hide drawer toggle and enable back arrow click if this is blog preview or tag preview
-        if (mPostListType.isPreviewType() && getDrawerToggle() != null) {
+        if (postListType.isPreviewType() && getDrawerToggle() != null) {
             getDrawerToggle().setDrawerIndicatorEnabled(false);
             getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -95,7 +89,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
 
-            if (mPostListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
+            if (postListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
                 long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                 long feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
                 if (feedId != 0) {
@@ -112,15 +106,15 @@ public class ReaderPostListActivity extends WPDrawerActivity
                     tag = AppPrefs.getReaderTag();
                 }
                 // if this is a followed tag and it doesn't exist, revert to default tag
-                if (mPostListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
+                if (postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
                     tag = ReaderTag.getDefaultTag();
                 }
 
-                showListFragmentForTag(tag, mPostListType);
+                showListFragmentForTag(tag, postListType);
             }
         }
 
-        switch (mPostListType) {
+        switch (postListType) {
             case TAG_PREVIEW:
                 setTitle(R.string.reader_title_tag_preview);
                 break;
@@ -132,7 +126,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
         }
 
         // hide the static drawer for blog/tag preview
-        if (isStaticMenuDrawer() && mPostListType.isPreviewType()) {
+        if (isStaticMenuDrawer() && postListType.isPreviewType()) {
             hideDrawer();
         }
     }
@@ -242,10 +236,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
         removeListFragment();
     }
 
-    ReaderTypes.ReaderPostListType getPostListType() {
-        return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
-    }
-
     private void removeListFragment() {
         Fragment listFragment = getListFragment();
         if (listFragment != null) {
@@ -303,10 +293,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
         return ((ReaderPostListFragment) fragment);
     }
 
-    private boolean hasListFragment() {
-        return (getListFragment() != null);
-    }
-
     /*
      * initial update performed the first time the user opens the reader
      */
@@ -334,57 +320,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
         AppLog.d(T.READER, "reader post list > updating tags and blogs");
         ReaderUpdateService.startService(this,
                 EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
-    }
-
-    /*
-     * user tapped a post in the list fragment
-     */
-    @Override
-    public void onPostSelected(long blogId, long postId) {
-        // skip if this activity no longer has the focus - this prevents the post detail from
-        // being shown multiple times if the user quickly taps a post more than once
-        if (!this.hasWindowFocus()) {
-            AppLog.w(T.READER, "reader post list > post selected when activity not focused");
-            return;
-        }
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
-
-        ReaderPostListFragment listFragment = getListFragment();
-        if (listFragment != null) {
-            switch (getPostListType()) {
-                case TAG_FOLLOWED:
-                case TAG_PREVIEW:
-                    ReaderActivityLauncher.showReaderPostPagerForTag(
-                            this,
-                            listFragment.getCurrentTag(),
-                            getPostListType(),
-                            blogId,
-                            postId);
-                    break;
-                case BLOG_PREVIEW:
-                    ReaderActivityLauncher.showReaderPostPagerForBlog(
-                            this,
-                            blogId,
-                            postId);
-                    break;
-            }
-        }
-    }
-
-    /*
-     * user tapped a tag in the list fragment
-     */
-    @Override
-    public void onTagSelected(String tagName) {
-        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
-        if (hasListFragment() && getListFragment().getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
-            // user is already previewing a tag, so change current tag in existing preview
-            getListFragment().setCurrentTag(tag);
-        } else {
-            // user isn't previewing a tag, so open in tag preview
-            ReaderActivityLauncher.showReaderTagPreview(this, tag);
-        }
     }
 
 }
