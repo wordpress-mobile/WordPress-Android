@@ -543,7 +543,7 @@ public class ReaderPostListFragment extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
         // only followed tag list has a menu
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            inflater.inflate(R.menu.reader_native, menu);
+            inflater.inflate(R.menu.reader_list, menu);
             setupActionBar();
         }
     }
