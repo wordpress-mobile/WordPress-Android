@@ -2,12 +2,8 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -29,7 +25,6 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 
 import java.util.EnumSet;
 import java.util.concurrent.Executors;
@@ -142,20 +137,6 @@ public class ReaderPostListActivity extends WPDrawerActivity
     }
 
     @Override
-    protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
 
@@ -208,18 +189,20 @@ public class ReaderPostListActivity extends WPDrawerActivity
         switch (requestCode) {
             // user just returned from the tags/subs activity
             case ReaderConstants.INTENT_READER_SUBS :
-                // reload tags if they were changed, and set the last tag added as the current one
-                if (listFragment != null
-                        && data != null
-                        && data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
-                    String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
-                    listFragment.doTagsChanged(lastAddedTag);
-                }
-                // refresh posts if user is viewing "Blogs I Follow" to make sure changes are reflected
-                if (listFragment != null
-                        && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-                        && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
-                    listFragment.refreshPosts();
+                if (data != null && listFragment != null) {
+                    boolean tagsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false);
+                    boolean blogsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false);
+                    // reload tags if they were changed, and set the last tag added as the current one
+                    if (tagsChanged) {
+                        String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
+                        listFragment.doTagsChanged(lastAddedTag);
+                    }
+                    // refresh posts if blogs changed and user is viewing "Blogs I Follow"
+                    if (blogsChanged
+                            && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+                            && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
+                        listFragment.refreshPosts();
+                    }
                 }
                 break;
 
@@ -398,37 +381,5 @@ public class ReaderPostListActivity extends WPDrawerActivity
             ReaderActivityLauncher.showReaderTagPreview(this, tag);
         }
     }
-
-    /*
-     * receiver which is notified when followed tags and/or blogs have changed
-     */
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (isFinishing()) {
-                return;
-            }
-
-            String action = StringUtils.notNullStr(intent.getAction());
-            AppLog.d(T.READER, "reader post list > received broadcast " + action);
-
-            if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED)) {
-                ReaderPostListFragment listFragment = getListFragment();
-                if (listFragment == null) {
-                    // list fragment doesn't exist yet (can happen if user signed out) - create
-                    // it now showing the default tag
-                    showListFragmentForTag(ReaderTag.getDefaultTag(), ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
-                } else if (listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
-                    // list fragment is viewing followed tags, tell it to refresh the list of tags
-                    listFragment.refreshTags();
-                    // update the current tag if the list fragment is empty - this will happen if
-                    // the tag table was previously empty (ie: first run)
-                    if (listFragment.isPostAdapterEmpty()) {
-                        listFragment.updateCurrentTag();
-                    }
-                }
-            }
-        }
-    };
 
 }
