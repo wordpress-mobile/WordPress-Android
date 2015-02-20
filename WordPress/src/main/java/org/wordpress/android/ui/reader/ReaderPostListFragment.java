@@ -59,6 +59,7 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
@@ -74,6 +75,7 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -266,37 +268,8 @@ public class ReaderPostListFragment extends Fragment
 
         purgeDatabaseIfNeeded();
         performInitialUpdateIfNeeded();
-    }
-
-    /*
-     * purge reader db if it hasn't been done yet, but only if there's an active connection
-     * since we don't want to purge posts that the user would expect to see when offline
-     */
-    private void purgeDatabaseIfNeeded() {
-        if (EventBus.getDefault().getStickyEvent(ReaderEvents.HasPurgedDatabase.class) == null
-                && NetworkUtils.isNetworkAvailable(getActivity())) {
-            AppLog.d(T.READER, "reader post list > purging database");
-            ReaderDatabase.purgeAsync();
-            EventBus.getDefault().postSticky(new ReaderEvents.HasPurgedDatabase());
-        }
-    }
-
-    /*
-     * initial update performed the first time the user opens the reader
-     */
-    private void performInitialUpdateIfNeeded() {
-        if (EventBus.getDefault().getStickyEvent(ReaderEvents.HasPerformedInitialUpdate.class) == null
-                && NetworkUtils.isNetworkAvailable(getActivity())) {
-            // update current user to ensure we have their user_id as well as their latest info
-            // in case they changed their avatar, name, etc. since last time
-            AppLog.d(T.READER, "reader post list > updating current user");
-            ReaderUserActions.updateCurrentUser(null);
-
-            // update cookies so that we can show authenticated images in WebViews
-            AppLog.d(T.READER, "reader post list > updating cookies");
-            ReaderAuthActions.updateCookies(getActivity());
-
-            EventBus.getDefault().postSticky(new ReaderEvents.HasPerformedInitialUpdate());
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            updateFollowedTagsAndBlogsIfNeeded();
         }
     }
 
@@ -1446,5 +1419,55 @@ public class ReaderPostListFragment extends Fragment
             default:
                 return false;
         }
+    }
+
+    /*
+     * purge reader db if it hasn't been done yet, but only if there's an active connection
+     * since we don't want to purge posts that the user would expect to see when offline
+     */
+    private void purgeDatabaseIfNeeded() {
+        if (EventBus.getDefault().getStickyEvent(ReaderEvents.HasPurgedDatabase.class) == null
+                && NetworkUtils.isNetworkAvailable(getActivity())) {
+            AppLog.d(T.READER, "reader post list > purging database");
+            ReaderDatabase.purgeAsync();
+            EventBus.getDefault().postSticky(new ReaderEvents.HasPurgedDatabase());
+        }
+    }
+
+    /*
+     * initial update performed the first time the user opens the reader
+     */
+    private void performInitialUpdateIfNeeded() {
+        if (EventBus.getDefault().getStickyEvent(ReaderEvents.HasPerformedInitialUpdate.class) == null
+                && NetworkUtils.isNetworkAvailable(getActivity())) {
+            // update current user to ensure we have their user_id as well as their latest info
+            // in case they changed their avatar, name, etc. since last time
+            AppLog.d(T.READER, "reader post list > updating current user");
+            ReaderUserActions.updateCurrentUser(null);
+
+            // update cookies so that we can show authenticated images in WebViews
+            AppLog.d(T.READER, "reader post list > updating cookies");
+            ReaderAuthActions.updateCookies(getActivity());
+
+            EventBus.getDefault().postSticky(new ReaderEvents.HasPerformedInitialUpdate());
+        }
+    }
+
+    /*
+     * start background service to get the latest followed tags and blogs if it's time to do so
+     */
+    void updateFollowedTagsAndBlogsIfNeeded() {
+        ReaderEvents.UpdatedFollowedTagsAndBlogs lastUpdateEvent =
+                EventBus.getDefault().getStickyEvent(ReaderEvents.UpdatedFollowedTagsAndBlogs.class);
+        if (lastUpdateEvent != null && lastUpdateEvent.minutesSinceLastUpdate() < 120) {
+            return;
+        }
+
+        AppLog.d(T.READER, "reader post list > updating tags and blogs");
+        EventBus.getDefault().postSticky(new ReaderEvents.UpdatedFollowedTagsAndBlogs());
+
+        ReaderUpdateService.startService(getActivity(),
+                EnumSet.of(ReaderUpdateService.UpdateTask.TAGS,
+                           ReaderUpdateService.UpdateTask.FOLLOWED_BLOGS));
     }
 }

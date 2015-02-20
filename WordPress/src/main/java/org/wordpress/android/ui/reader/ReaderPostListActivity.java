@@ -14,15 +14,8 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.services.ReaderUpdateService;
-import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-
-import java.util.EnumSet;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
@@ -34,27 +27,11 @@ import de.greenrobot.event.EventBus;
 
 public class ReaderPostListActivity extends WPDrawerActivity {
 
-    private final ScheduledExecutorService mUpdateScheduler = Executors.newScheduledThreadPool(1);
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createMenuDrawer(R.layout.reader_activity_post_list);
         readIntent(getIntent(), savedInstanceState);
-
-        // start updating tags & blogs after 500ms, then update them hourly
-        mUpdateScheduler.scheduleWithFixedDelay(
-                new Runnable() {
-                    public void run() {
-                        updateFollowedTagsAndBlogs();
-                    }
-                }, 500, (1000 * 60) * 60, TimeUnit.MILLISECONDS);
-    }
-
-    @Override
-    protected void onDestroy() {
-        mUpdateScheduler.shutdownNow();
-        super.onDestroy();
     }
 
     private void readIntent(Intent intent, Bundle savedInstanceState) {
@@ -243,15 +220,6 @@ public class ReaderPostListActivity extends WPDrawerActivity {
             return null;
         }
         return ((ReaderPostListFragment) fragment);
-    }
-
-    /*
-     * start background service to get the latest followed tags and blogs
-     */
-    void updateFollowedTagsAndBlogs() {
-        AppLog.d(T.READER, "reader post list > updating tags and blogs");
-        ReaderUpdateService.startService(this,
-                EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 
 }
