@@ -157,7 +157,7 @@ public class WordPress extends Application {
         initWpDb();
 
         // EventBus setup
-        EventBus.TAG = "WordPressEvent";
+        EventBus.TAG = "WordPress-EVENT";
         EventBus.builder()
                 .logNoSubscriberMessages(false)
                 .sendNoSubscriberEvent(false)
