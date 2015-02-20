@@ -233,10 +233,6 @@
         </activity>
 
         <activity
-            android:name=".ui.accounts.WPComLoginActivity"
-            android:theme="@style/WordPress.Dialog">
-        </activity>
-        <activity
             android:name=".ui.AddQuickPressShortcutActivity"
             android:label="QuickPress" >
             <intent-filter>
