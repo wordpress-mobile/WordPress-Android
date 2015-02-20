@@ -9,7 +9,6 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPDrawerActivity;
@@ -37,7 +36,6 @@ import javax.annotation.Nonnull;
 public class ReaderPostListActivity extends WPDrawerActivity {
 
     private static boolean mHasPerformedInitialUpdate;
-    private static boolean mHasPerformedPurge;
 
     private final ScheduledExecutorService mUpdateScheduler = Executors.newScheduledThreadPool(1);
 
@@ -134,12 +132,6 @@ public class ReaderPostListActivity extends WPDrawerActivity {
     protected void onStart() {
         super.onStart();
 
-        // purge the database of older data at startup, but only if there's an active connection
-        // since we don't want to purge posts that the user would expect to see when offline
-        if (!mHasPerformedPurge && NetworkUtils.isNetworkAvailable(this)) {
-            mHasPerformedPurge = true;
-            ReaderDatabase.purgeAsync();
-        }
         if (!mHasPerformedInitialUpdate) {
             performInitialUpdate();
         }

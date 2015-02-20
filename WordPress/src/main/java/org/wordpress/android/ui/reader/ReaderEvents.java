@@ -9,4 +9,6 @@ public class ReaderEvents {
 
     public static class FollowedBlogsChanged {}
     public static class RecommendedBlogsChanged {}
+
+    public static class HasPurgedDatabase {}
 }

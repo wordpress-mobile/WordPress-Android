@@ -40,6 +40,7 @@ import com.cocosw.undobar.UndoBarController;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
+import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderBlog;
@@ -259,6 +260,15 @@ public class ReaderPostListFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+
+        // purge reader db if it hasn't been done yet, but only if there's an active connection
+        // since we don't want to purge posts that the user would expect to see when offline
+        if (EventBus.getDefault().getStickyEvent(ReaderEvents.HasPurgedDatabase.class) == null) {
+            if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                ReaderDatabase.purgeAsync();
+                EventBus.getDefault().postSticky(new ReaderEvents.HasPurgedDatabase());
+            }
+        }
     }
 
     @Override
