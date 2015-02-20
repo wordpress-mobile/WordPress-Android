@@ -82,7 +82,7 @@ public class ReaderBlogActions {
                 }
             }
         };
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
 
         return true;
     }
@@ -200,7 +200,7 @@ public class ReaderBlogActions {
                 }
             }
         };
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
 
         return true;
     }
@@ -432,7 +432,7 @@ public class ReaderBlogActions {
 
         AppLog.i(T.READER, "blocking blog " + blogId);
         String path = "/me/block/sites/" + Long.toString(blogId) + "/new";
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
 
         return blockResult;
     }
@@ -467,6 +467,6 @@ public class ReaderBlogActions {
 
         AppLog.i(T.READER, "unblocking blog " + blockResult.blogId);
         String path = "/me/block/sites/" + Long.toString(blockResult.blogId) + "/delete";
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 }

@@ -130,7 +130,7 @@ public class ReaderUpdateService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "reader service > updating tags");
-        WordPress.getRestClientUtils().get("read/menu", null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get("read/menu", null, null, listener, errorListener);
     }
 
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
@@ -240,7 +240,7 @@ public class ReaderUpdateService extends Service {
 
         AppLog.d(AppLog.T.READER, "reader service > updating followed blogs");
         // request using ?meta=site,feed to get extra info
-        WordPress.getRestClientUtils().get("/read/following/mine?meta=site%2Cfeed", listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get("/read/following/mine?meta=site%2Cfeed", listener, errorListener);
     }
     private void handleFollowedBlogsResponse(final JSONObject jsonObject) {
         new Thread() {
@@ -282,7 +282,7 @@ public class ReaderUpdateService extends Service {
         String path = "/read/recommendations/mine/"
                 + "?source=mobile"
                 + "&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);
-        WordPress.getRestClientUtils().get(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
     private void handleRecommendedBlogsResponse(final JSONObject jsonObject) {
         new Thread() {
