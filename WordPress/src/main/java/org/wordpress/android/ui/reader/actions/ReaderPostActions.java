@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
@@ -452,13 +453,13 @@ public class ReaderPostActions {
 
         // if passed tag has an assigned endpoint, return it and be done
         if (!TextUtils.isEmpty(tag.getEndpoint())) {
-            return tag.getEndpoint();
+            return getRelativeEndpoint(tag.getEndpoint());
         }
 
         // check the db for the endpoint
         String endpoint = ReaderTagTable.getEndpointForTag(tag);
         if (!TextUtils.isEmpty(endpoint)) {
-            return endpoint;
+            return getRelativeEndpoint(endpoint);
         }
 
         // never hand craft the endpoint for default tags, since these MUST be updated
@@ -468,6 +469,29 @@ public class ReaderPostActions {
         }
 
         return String.format("/read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagName()));
+    }
+
+    /*
+     * returns the passed endpoint without the unnecessary path - this is
+     * needed because as of 20-Feb-2015 the /read/menu/ call returns the
+     * full path but we don't want to use the full path since it may change
+     * between API versions (as it did when we moved from v1 to v1.1)
+     *
+     * ex: https://public-api.wordpress.com/rest/v1/read/tags/fitness/posts
+     *     becomes just                            /read/tags/fitness/posts
+     */
+    private static String getRelativeEndpoint(final String endpoint) {
+        if (endpoint != null && endpoint.startsWith("http")) {
+            int pos = endpoint.indexOf("/read/");
+            if (pos > -1) {
+                return endpoint.substring(pos, endpoint.length());
+            }
+            pos = endpoint.indexOf("/v1/");
+            if (pos > -1) {
+                return endpoint.substring(pos + 3, endpoint.length());
+            }
+        }
+        return StringUtils.notNullStr(endpoint);
     }
 
 }
