@@ -161,6 +161,7 @@ public class WordPress extends Application {
         EventBus.builder()
                 .logNoSubscriberMessages(false)
                 .sendNoSubscriberEvent(false)
+                .throwSubscriberException(true)
                 .installDefaultEventBus();
 
         RestClientUtils.setUserAgent(getUserAgent());
