@@ -35,7 +35,7 @@ public class ReaderCommentActions {
     public static void updateCommentsForPost(final ReaderPost post,
                                              final int pageNumber,
                                              final ReaderActions.UpdateResultListener resultListener) {
-        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/replies/"
+        String path = "/sites/" + post.blogId + "/posts/" + post.postId + "/replies/"
                     + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
                     + "&meta=likes"
                     + "&hierarchical=true"
@@ -178,9 +178,9 @@ public class ReaderCommentActions {
         // different endpoint depending on whether the new comment is a reply to another comment
         final String path;
         if (replyToCommentId == 0) {
-            path = "sites/" + post.blogId + "/posts/" + post.postId + "/replies/new";
+            path = "/sites/" + post.blogId + "/posts/" + post.postId + "/replies/new";
         } else {
-            path = "sites/" + post.blogId + "/comments/" + Long.toString(replyToCommentId) + "/replies/new";
+            path = "/sites/" + post.blogId + "/comments/" + Long.toString(replyToCommentId) + "/replies/new";
         }
 
         Map<String, String> params = new HashMap<String, String>();
@@ -239,7 +239,7 @@ public class ReaderCommentActions {
 
         // sites/$site/comments/$comment_ID/likes/new
         final String actionName = isAskingToLike ? "like" : "unlike";
-        String path = "sites/" + comment.blogId + "/comments/" + comment.commentId + "/likes/";
+        String path = "/sites/" + comment.blogId + "/comments/" + comment.commentId + "/likes/";
         if (isAskingToLike) {
             path += "new";
         } else {

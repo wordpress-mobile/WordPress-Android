@@ -130,7 +130,7 @@ public class ReaderUpdateService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "reader service > updating tags");
-        WordPress.getRestClientUtilsV1_1().get("read/menu", null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get("/read/menu", null, null, listener, errorListener);
     }
 
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
@@ -280,8 +280,8 @@ public class ReaderUpdateService extends Service {
 
         AppLog.d(AppLog.T.READER, "reader service > updating recommended blogs");
         String path = "/read/recommendations/mine/"
-                + "?source=mobile"
-                + "&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);
+                    + "?source=mobile"
+                    + "&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);
         WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
     private void handleRecommendedBlogsResponse(final JSONObject jsonObject) {

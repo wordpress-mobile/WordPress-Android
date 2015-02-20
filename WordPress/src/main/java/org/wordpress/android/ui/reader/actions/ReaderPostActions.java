@@ -57,7 +57,7 @@ public class ReaderPostActions {
         ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike);
 
         final String actionName = isAskingToLike ? "like" : "unlike";
-        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
+        String path = "/sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
         if (isAskingToLike) {
             path += "new";
         } else {
@@ -146,7 +146,7 @@ public class ReaderPostActions {
      */
     public static void updatePost(final ReaderPost originalPost,
                                   final UpdateResultListener resultListener) {
-        String path = "sites/" + originalPost.blogId + "/posts/" + originalPost.postId + "/?meta=site,likes";
+        String path = "/sites/" + originalPost.blogId + "/posts/" + originalPost.postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -258,7 +258,7 @@ public class ReaderPostActions {
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
     public static void requestPost(final long blogId, final long postId, final ActionListener actionListener) {
-        String path = "sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
+        String path = "/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -347,7 +347,7 @@ public class ReaderPostActions {
     public static void requestPostsForBlog(final long blogId,
                                            final RequestDataAction updateAction,
                                            final UpdateResultListener resultListener) {
-        String path = "sites/" + blogId + "/posts/?meta=site,likes";
+        String path = "/sites/" + blogId + "/posts/?meta=site,likes";
 
         // append the date of the oldest cached post in this blog when requesting older posts
         if (updateAction == RequestDataAction.LOAD_OLDER) {
