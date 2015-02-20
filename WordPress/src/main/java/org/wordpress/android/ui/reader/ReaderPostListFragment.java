@@ -132,6 +132,14 @@ public class ReaderPostListFragment extends Fragment {
         }
     }
 
+    public static ReaderPostListFragment newInstance() {
+        ReaderTag tag = AppPrefs.getReaderTag();
+        if (tag == null) {
+            tag = ReaderTag.getDefaultTag();
+        }
+        return newInstanceForTag(tag, ReaderPostListType.TAG_FOLLOWED);
+    }
+
     /*
      * show posts with a specific tag (either TAG_FOLLOWED or TAG_PREVIEW)
      */
@@ -558,7 +566,7 @@ public class ReaderPostListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         // only followed tag list has a menu
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            inflater.inflate(R.menu.reader_native, menu);
+            inflater.inflate(R.menu.reader_menu, menu);
             setupActionBar();
         }
     }
@@ -674,7 +682,8 @@ public class ReaderPostListFragment extends Fragment {
             return;
         }
 
-        View view = View.inflate(getActivity(), R.layout.reader_spinner, toolbar);
+        // TODO: move to fragment toolbar
+        /*View view = View.inflate(getActivity(), R.layout.reader_spinner, toolbar);
         mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
         mSpinner.setAdapter(getSpinnerAdapter());
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -700,7 +709,7 @@ public class ReaderPostListFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
                 // nop
             }
-        });
+        });*/
     }
 
     /*

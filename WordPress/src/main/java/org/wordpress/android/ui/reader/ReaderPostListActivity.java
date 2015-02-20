@@ -320,7 +320,7 @@ public class ReaderPostListActivity extends WPDrawerActivity
         // update current user to ensure we have their user_id as well as their latest info
         // in case they changed their avatar, name, etc. since last time
         AppLog.d(T.READER, "reader post list > updating current user");
-        ReaderUserActions.updateCurrentUser(null);
+        ReaderUserActions.updateCurrentUser();
 
         // update cookies so that we can show authenticated images in WebViews
         AppLog.d(T.READER, "reader post list > updating cookies");
