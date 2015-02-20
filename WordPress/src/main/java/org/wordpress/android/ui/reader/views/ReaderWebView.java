@@ -178,7 +178,6 @@ public class ReaderWebView extends WebView {
 
     private static class ReaderWebViewClient extends WebViewClient {
         private final ReaderWebView mReaderWebView;
-        private final DefaultHttpClient mClient = new DefaultHttpClient();
 
         ReaderWebViewClient(ReaderWebView readerWebView) {
             if (readerWebView == null) {
@@ -213,10 +212,11 @@ public class ReaderWebView extends WebView {
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
             // Intercept requests and add the WP.com authorization header
             if (!TextUtils.isEmpty(mToken) && isImageUrl(url)) {
+                DefaultHttpClient client = new DefaultHttpClient();
                 HttpGet httpGet = new HttpGet(url);
                 httpGet.setHeader("Authorization", "Bearer " + mToken);
                 try {
-                    HttpResponse httpResponse = mClient.execute(httpGet);
+                    HttpResponse httpResponse = client.execute(httpGet);
                     InputStream responseInputStream = httpResponse.getEntity().getContent();
                     return new WebResourceResponse(httpResponse.getEntity().getContentType().toString(), "UTF-8", responseInputStream);
                 } catch (IOException e) {
