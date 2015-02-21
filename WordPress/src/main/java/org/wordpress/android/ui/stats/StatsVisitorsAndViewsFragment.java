@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries;
 
 import org.wordpress.android.R;
@@ -364,6 +365,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 break;
         }
 
+        // Setting Up labels and prepare variables that hold series
         final String[] horLabels = new String[dataToShowOnGraph.length];
         mStatsDate = new String[dataToShowOnGraph.length];
         GraphView.GraphViewData[] mainSeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
@@ -373,6 +375,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             secondarySeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
         }
 
+
+        // Fill series variables with data
         for (int i = 0; i < dataToShowOnGraph.length; i++) {
             int currentItemValue = 0;
             switch(selectedStatsType) {
@@ -451,6 +455,19 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             mGraphView.addSeries(mainSeriesOnScreen);
         }
 
+        // Setup the Y-axis on Visitors.
+        // Views and Visitors tabs have the exact same Y-axis as shifting from one Y-axis to another defeats
+        // the purpose of making these bars visually easily to compare.
+        switch(selectedStatsType) {
+            case VISITORS:
+                double maxYValue = getMaxYValueForVisitorsAndView(dataToShowOnGraph);
+                mGraphView.setManualYAxisBounds(maxYValue, 0d);
+                break;
+            default:
+                mGraphView.setManualYAxis(false);
+                break;
+        }
+
        //mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
         mGraphView.setHorizontalLabels(horLabels);
@@ -473,6 +490,22 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         updateUIBelowTheGraph(barSelectedOnGraph);
         mGraphView.highlightBar(barSelectedOnGraph);
+    }
+
+    // Find the max value for Visitors and Views. Only checks Views, since Visitors is for sure less-equals than Views.
+    private double getMaxYValueForVisitorsAndView(final VisitModel[] dataToShowOnGraph) {
+        if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
+            return 0d;
+        }
+        double largest = Integer.MIN_VALUE;
+
+        for (int i = 0; i < dataToShowOnGraph.length; i++) {
+            int currentItemValue = dataToShowOnGraph[i].getViews();
+            if (currentItemValue > largest) {
+                largest = currentItemValue;
+            }
+        }
+        return largest;
     }
 
     //update the area right below the graph
