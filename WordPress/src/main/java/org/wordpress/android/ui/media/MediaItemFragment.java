@@ -53,6 +53,7 @@ public class MediaItemFragment extends Fragment {
     private TextView mDateView;
     private TextView mFileNameView;
     private TextView mFileTypeView;
+    private TextView mFileUrlView;
     private TextView mDimensionsView;
     private MediaItemFragmentCallback mCallback;
     private ImageLoader mImageLoader;
@@ -121,6 +122,7 @@ public class MediaItemFragment extends Fragment {
         mDateView = (TextView) mView.findViewById(R.id.media_listitem_details_date);
         mFileNameView = (TextView) mView.findViewById(R.id.media_listitem_details_file_name);
         mFileTypeView = (TextView) mView.findViewById(R.id.media_listitem_details_file_type);
+        mFileUrlView = (TextView) mView.findViewById(R.id.media_listitem_details_file_url);
         mDimensionsView = (TextView) mView.findViewById(R.id.media_listitem_details_dimensions);
 
         loadMedia(getMediaId());
@@ -203,8 +205,13 @@ public class MediaItemFragment extends Fragment {
             String fileType = fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
             mFileTypeView.setText("File type: " + fileType);
             mFileTypeView.setVisibility(View.VISIBLE);
+
+            // set the file URL
+            mFileUrlView.setText("File URL: " + fileURL);
+            mFileUrlView.setVisibility(View.VISIBLE);
         } else {
             mFileTypeView.setVisibility(View.GONE);
+            mFileUrlView.setVisibility(View.GONE);
         }
 
         String imageUri = cursor.getString(cursor.getColumnIndex("fileURL"));
@@ -332,7 +339,7 @@ public class MediaItemFragment extends Fragment {
             }
 
             Builder builder = new AlertDialog.Builder(getActivity()).setMessage(R.string.confirm_delete_media)
-                                                                    .setCancelable(true).setPositiveButton(
+                    .setCancelable(true).setPositiveButton(
                             R.string.delete, new OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
