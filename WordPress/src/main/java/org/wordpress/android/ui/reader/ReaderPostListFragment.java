@@ -49,7 +49,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.ReaderTypes.RefreshType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
@@ -255,7 +254,7 @@ public class ReaderPostListFragment extends Fragment
                     && getPostListType() == ReaderPostListType.TAG_FOLLOWED
                     && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
                 AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
-                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
+                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER);
             }
         }
     }
@@ -392,7 +391,7 @@ public class ReaderPostListFragment extends Fragment
                         switch (getPostListType()) {
                             case TAG_FOLLOWED:
                             case TAG_PREVIEW:
-                                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
+                                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER);
                                 break;
                             case BLOG_PREVIEW:
                                 updatePostsInCurrentBlogOrFeed(RequestDataAction.LOAD_NEWER);
@@ -469,7 +468,7 @@ public class ReaderPostListFragment extends Fragment
             boolean isRecreated = (savedInstanceState != null);
             getPostAdapter().setCurrentTag(mCurrentTag);
             if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
+                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER);
             }
         }
 
@@ -793,7 +792,7 @@ public class ReaderPostListFragment extends Fragment
                 case TAG_PREVIEW:
                     if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         // request older posts
-                        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_OLDER, RefreshType.MANUAL);
+                        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_OLDER);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                     }
                     break;
@@ -906,7 +905,7 @@ public class ReaderPostListFragment extends Fragment
 
         // update posts in this tag if it's time to do so
         if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
-            updatePostsWithTag(tag, RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
+            updatePostsWithTag(tag, RequestDataAction.LOAD_NEWER);
         }
     }
 
@@ -1003,15 +1002,14 @@ public class ReaderPostListFragment extends Fragment
     }
 
     void updateCurrentTag() {
-        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
+        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER);
     }
 
     /*
      * get latest posts for this tag from the server
      */
     void updatePostsWithTag(final ReaderTag tag,
-                            final RequestDataAction updateAction,
-                            final RefreshType refreshType) {
+                            final RequestDataAction updateAction) {
         if (tag == null) {
             return;
         }
@@ -1032,13 +1030,6 @@ public class ReaderPostListFragment extends Fragment
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && ReaderTagTable.isEmpty()) {
             AppLog.d(T.READER, "reader post list > empty followed tags, canceled update");
             return;
-        }
-
-        // if this is "Posts I Like" or "Blogs I Follow" and it's a manual refresh (user tapped refresh icon),
-        // refresh the posts so posts that were unliked/unfollowed no longer appear
-        if (refreshType == RefreshType.MANUAL && isCurrentTag(tag)) {
-            if (tag.isPostsILike() || tag.isBlogsIFollow())
-                refreshPosts();
         }
 
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
@@ -1067,6 +1058,12 @@ public class ReaderPostListFragment extends Fragment
                 } else {
                     boolean requestFailed = (result == ReaderActions.UpdateResult.FAILED);
                     setEmptyTitleAndDescription(requestFailed);
+                    // refresh if this is "Posts I Like" or "Blogs I Follow" so posts that
+                    // were unliked/unfollowed no longer appear
+                    if (updateAction == RequestDataAction.LOAD_NEWER
+                            && (tag.isPostsILike() || tag.isBlogsIFollow())) {
+                        refreshPosts();
+                    }
                 }
             }
         };
