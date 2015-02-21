@@ -122,12 +122,6 @@ public class ReaderPostListActivity extends WPDrawerActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // first see if list fragment can handle result
-        ReaderPostListFragment listFragment = getListFragment();
-        if (listFragment != null && listFragment.handleActivityResult(requestCode, resultCode, data)) {
-            return;
-        }
-
         switch (requestCode) {
             // user just returned from the login dialog, need to perform initial update again
             // since creds have changed
@@ -135,6 +129,15 @@ public class ReaderPostListActivity extends WPDrawerActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     removeListFragment();
                     EventBus.getDefault().removeStickyEvent(ReaderEvents.HasPerformedInitialUpdate.class);
+                }
+                break;
+
+            // pass reader-related results to the fragment
+            case ReaderConstants.INTENT_READER_SUBS:
+            case ReaderConstants.INTENT_READER_REBLOG:
+                ReaderPostListFragment listFragment = getListFragment();
+                if (listFragment != null) {
+                    listFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
         }

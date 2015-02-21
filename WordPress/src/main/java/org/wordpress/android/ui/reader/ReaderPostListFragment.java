@@ -1393,11 +1393,11 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * called from activity to handle onActivityResult, returns true if handled
+     * called from activity to handle reader-related onActivityResult
      */
-    boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-
             // user just returned from the tags/subs activity
             case ReaderConstants.INTENT_READER_SUBS:
                 if (data != null) {
@@ -1416,7 +1416,7 @@ public class ReaderPostListFragment extends Fragment
                         refreshPosts();
                     }
                 }
-                return true;
+                break;
 
             // user just returned from reblogging activity, reload the displayed post if reblogging
             // succeeded
@@ -1426,10 +1426,7 @@ public class ReaderPostListFragment extends Fragment
                     long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
                     reloadPost(ReaderPostTable.getPost(blogId, postId, true));
                 }
-                return true;
-
-            default:
-                return false;
+                break;
         }
     }
 
