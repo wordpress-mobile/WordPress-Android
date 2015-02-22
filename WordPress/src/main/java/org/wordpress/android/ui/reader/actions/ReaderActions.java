@@ -59,7 +59,6 @@ public class ReaderActions {
     /*
      * used by adapters to notify when more data should be loaded
      */
-    public static enum RequestDataAction {LOAD_NEWER, LOAD_OLDER}
     public interface DataRequestedListener {
         public void onRequestData();
     }
