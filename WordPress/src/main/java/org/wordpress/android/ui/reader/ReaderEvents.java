@@ -67,4 +67,15 @@ public class ReaderEvents {
             return mAction;
         }
     }
+
+    public static class UpdateCommentsStarted {}
+    public static class UpdateCommentsEnded {
+        private final ReaderActions.UpdateResult mResult;
+        public UpdateCommentsEnded(ReaderActions.UpdateResult result) {
+            mResult = result;
+        }
+        public ReaderActions.UpdateResult getResult() {
+            return mResult;
+        }
+    }
 }
