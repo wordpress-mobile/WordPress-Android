@@ -101,6 +101,8 @@ public class ReaderPostService extends Service {
             action = UpdateAction.REQUEST_NEWER;
         }
 
+        EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action));
+
         if (intent.hasExtra(ARG_TAG)) {
             ReaderTag tag = (ReaderTag) intent.getSerializableExtra(ARG_TAG);
             updatePostsWithTag(tag, action);
@@ -126,7 +128,6 @@ public class ReaderPostService extends Service {
                         stopSelf();
                     }
                 });
-        EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action));
     }
 
     void updatePostsInBlog(long blogId, final UpdateAction action) {
