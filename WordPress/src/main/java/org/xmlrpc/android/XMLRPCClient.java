@@ -605,10 +605,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      */
     private boolean checkXMLRPCErrorMessage(Exception exception) {
         String errorMessage = exception.getMessage().toLowerCase();
-        if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503"))//TODO Not sure 503 is the correct error code returned by wpcom
-                &&
-            (errorMessage.contains("limit reached") || errorMessage.contains("login limit")))
-        {
+        if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503")) &&
+            (errorMessage.contains("limit reached") || errorMessage.contains("login limit"))) {
             broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
             return true;
         }

@@ -94,7 +94,7 @@ public class PostUploadService extends Service {
         super.onDestroy();
         // Cancel current task, it will reset post from "uploading" to "local draft"
         if (mCurrentTask != null) {
-            AppLog.d(T.API, "cancelling current upload task");
+            AppLog.d(T.POSTS, "cancelling current upload task");
             mCurrentTask.cancel(true);
         }
     }
@@ -496,6 +496,8 @@ public class PostUploadService extends Service {
         }
 
         private String uploadImage(MediaFile mediaFile) {
+            AppLog.d(T.POSTS, "uploadImage: " + mediaFile);
+
             if (mediaFile.getFilePath() == null) {
                 return null;
             }
@@ -749,14 +751,15 @@ public class PostUploadService extends Service {
 
 
         private void setUploadPostErrorMessage(Exception e) {
-            mErrorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(), mPost.isPage() ? mContext
-                    .getResources().getText(R.string.page).toString() : mContext.getResources().getText(R.string.post).toString())
-                    + " " + e.getMessage();
+            mErrorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(),
+                    mPost.isPage() ? mContext.getResources().getText(R.string.page).toString() :
+                            mContext.getResources().getText(R.string.post).toString()) + " " + e.getMessage();
             mIsMediaError = false;
             AppLog.e(T.EDITOR, mErrorMessage, e);
         }
 
         private String uploadImageFile(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
+            AppLog.d(T.POSTS, "uploadImageFile: " + pictureParams);
 
             // create temporary upload file
             File tempFile;
@@ -795,14 +798,17 @@ public class PostUploadService extends Service {
         }
 
         private Object uploadFileHelper(Object[] params, final File tempFile) {
+            AppLog.w(T.POSTS, "uploadFileHelper: " + params);
+
             // Create listener for tracking upload progress in the notification
             if (mClient instanceof XMLRPCClient) {
                 XMLRPCClient xmlrpcClient = (XMLRPCClient) mClient;
                 xmlrpcClient.setOnBytesUploadedListener(new XMLRPCClient.OnBytesUploadedListener() {
                     @Override
                     public void onBytesUploaded(long uploadedBytes) {
-                        if (tempFile.length() == 0) return;
-
+                        if (tempFile.length() == 0) {
+                            return;
+                        }
                         float percentage = (uploadedBytes * 100) / tempFile.length();
                         mPostUploadNotifier.updateNotificationProgress(percentage);
                     }
@@ -810,6 +816,7 @@ public class PostUploadService extends Service {
             }
 
             try {
+                AppLog.i(T.API, "wp.uploadFile: " + params);
                 return mClient.call("wp.uploadFile", params, tempFile);
             } catch (XMLRPCException e) {
                 AppLog.e(T.API, e);
@@ -825,8 +832,9 @@ public class PostUploadService extends Service {
                 return null;
             } finally {
                 // remove the temporary upload file now that we're done with it
-                if (tempFile != null && tempFile.exists())
+                if (tempFile != null && tempFile.exists()) {
                     tempFile.delete();
+                }
             }
         }
     }
@@ -914,20 +922,25 @@ public class PostUploadService extends Service {
 
             String errorText = mContext.getResources().getText(R.string.upload_failed).toString();
             if (isMediaError) {
-                errorText = mContext.getResources().getText(R.string.media) + " " + mContext.getResources().getText(R.string.error);
+                errorText = mContext.getResources().getText(R.string.media) + " "
+                        + mContext.getResources().getText(R.string.error);
             }
 
-            mNotificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
-            mNotificationBuilder.setContentTitle((isMediaError) ? errorText : mContext.getResources().getText(R.string.upload_failed));
-            mNotificationBuilder.setContentText((isMediaError) ? mErrorMessage : postOrPage + " " + errorText + ": " + mErrorMessage);
-            mNotificationBuilder.setContentIntent(pendingIntent);
-            mNotificationBuilder.setAutoCancel(true);
-
-            mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+            notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
+            notificationBuilder.setContentTitle((isMediaError) ? errorText :
+                    mContext.getResources().getText(R.string.upload_failed));
+            notificationBuilder.setContentText((isMediaError) ? mErrorMessage : postOrPage + " " + errorText
+                    + ": " + mErrorMessage);
+            notificationBuilder.setContentIntent(pendingIntent);
+            notificationBuilder.setAutoCancel(true);
+            mNotificationId += (new Random()).nextInt();
+            mNotificationManager.notify(mNotificationId, notificationBuilder.build());
         }
 
         public void updateNotificationProgress(float progress) {
-            if (mTotalMediaItems == 0) return;
+            if (mTotalMediaItems == 0) {
+                return;
+            }
 
             // Simple way to show progress of entire post upload
             // Would be better if we could get total bytes for all media items.
@@ -953,7 +966,8 @@ public class PostUploadService extends Service {
         public void setCurrentMediaItem(int currentItem) {
             mCurrentMediaItem = currentItem;
 
-            mNotificationBuilder.setContentText(String.format(getString(R.string.uploading_total), mCurrentMediaItem, mTotalMediaItems));
+            mNotificationBuilder.setContentText(String.format(getString(R.string.uploading_total), mCurrentMediaItem,
+                    mTotalMediaItems));
         }
     }
 }
