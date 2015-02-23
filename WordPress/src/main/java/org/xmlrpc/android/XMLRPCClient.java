@@ -14,7 +14,6 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
@@ -150,7 +149,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             }
         }
 
-        // This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
         HttpConnectionParams.setConnectionTimeout(client.getParams(), DEFAULT_CONNECTION_TIMEOUT);
         HttpConnectionParams.setSoTimeout(client.getParams(), DEFAULT_SOCKET_TIMEOUT);
 
@@ -399,12 +397,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             HttpEntity entity = new StringEntity(bodyWriter.toString());
             mPostMethod.setEntity(entity);
         }
-
-        //set timeout to 30 seconds, does it need to be set for both mClient and method?
-        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
-        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
     }
 
     /**

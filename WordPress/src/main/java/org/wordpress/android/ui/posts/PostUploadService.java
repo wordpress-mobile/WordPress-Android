@@ -939,8 +939,7 @@ public class PostUploadService extends Service {
                     + ": " + mErrorMessage);
             notificationBuilder.setContentIntent(pendingIntent);
             notificationBuilder.setAutoCancel(true);
-            mNotificationId += (new Random()).nextInt();
-            mNotificationManager.notify(mNotificationId, notificationBuilder.build());
+            mNotificationManager.notify(mNotificationId + (new Random()).nextInt(), notificationBuilder.build());
         }
 
         public void updateNotificationProgress(float progress) {
