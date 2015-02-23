@@ -77,7 +77,6 @@ import de.greenrobot.event.EventBus;
 public class WordPress extends Application {
     public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
     public static final String WPCOM_USERNAME_PREFERENCE="wp_pref_wpcom_username";
-    public static final String WPCOM_PASSWORD_PREFERENCE="wp_pref_wpcom_password";
 
     public static String versionName;
     public static Blog currentBlog;

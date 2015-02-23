@@ -271,17 +271,15 @@ public class WordPressDB {
     }
 
     private void migrateWPComAccount() {
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "username", "password" }, "dotcomFlag=1", null, null,
+        Cursor c = db.query(SETTINGS_TABLE, new String[] { "username" }, "dotcomFlag=1", null, null,
                 null, null);
 
         if (c.getCount() > 0) {
             c.moveToFirst();
             String username = c.getString(0);
-            String password = c.getString(1);
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
             SharedPreferences.Editor editor = settings.edit();
             editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, username);
-            editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, password);
             editor.commit();
         }
 
@@ -411,7 +409,7 @@ public class WordPressDB {
         if (this.context != null) {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
             SharedPreferences.Editor editor = settings.edit();
-            editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
+            editor.remove("wp_pref_wpcom_password");
             editor.apply();
         }
     }
