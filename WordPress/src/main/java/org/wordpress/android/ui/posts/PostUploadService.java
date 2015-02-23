@@ -855,25 +855,27 @@ public class PostUploadService extends Service {
 
         public PostUploadNotifier(Post post) {
             // add the uploader to the notification bar
-            mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext, Context.NOTIFICATION_SERVICE);
+            mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
+                    Context.NOTIFICATION_SERVICE);
 
-            mNotificationBuilder =
-                    new NotificationCompat.Builder(getApplicationContext())
-                            .setSmallIcon(android.R.drawable.stat_sys_upload);
+            mNotificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+            mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
 
             Intent notificationIntent = new Intent(mContext, post.isPage() ? PagesActivity.class : PostsActivity.class);
-            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_NEW_TASK
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                     | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
             notificationIntent.setAction(Intent.ACTION_MAIN);
             notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getLocalTableBlogId())));
+            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"
+                    + post.getLocalTableBlogId())));
             notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
 
             mNotificationBuilder.setContentIntent(pendingIntent);
 
             mNotificationId = (new Random()).nextInt() + post.getLocalTableBlogId();
+            startForeground(mNotificationId, mNotificationBuilder.build());
         }
 
 
@@ -901,9 +903,13 @@ public class PostUploadService extends Service {
             mNotificationManager.cancel(mNotificationId);
         }
 
-        public void updateNotificationWithError(String mErrorMessage, boolean isMediaError, boolean isPage, boolean isVideoPressError) {
-            String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id) : mContext.getResources()
-                    .getText(R.string.post_id));
+        public void updateNotificationWithError(String mErrorMessage, boolean isMediaError, boolean isPage,
+                                                boolean isVideoPressError) {
+            AppLog.d(T.POSTS, "updateNotificationWithError: " + mErrorMessage);
+
+            Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+            String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id)
+                    : mContext.getResources().getText(R.string.post_id));
             Intent notificationIntent = new Intent(mContext, isPage ? PagesActivity.class : PostsActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                     | Intent.FLAG_ACTIVITY_NEW_TASK
