@@ -233,13 +233,23 @@
                 </RelativeLayout>
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/two_step_footer"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_medium"
-                android:animateLayoutChanges="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:visibility="gone">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/two_step_footer_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_extra_large"
+                    android:layout_marginRight="@dimen/margin_extra_large"
+                    android:text="@string/two_step_footer_label"
+                    android:textColor="@color/white" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/two_step_footer_button"
@@ -247,10 +257,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_extra_large"
                     android:layout_marginRight="@dimen/margin_extra_large"
-                    android:gravity="center_horizontal"
-                    android:text="@string/two_step_footer_message"
+                    android:background="@drawable/selectable_background_wordpress"
+                    android:text="@string/two_step_footer_button"
                     android:textColor="@color/white" />
-            </RelativeLayout>
+            </LinearLayout>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/forgot_password"

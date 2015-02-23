@@ -92,7 +92,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private RelativeLayout mProgressBarSignIn;
     private RelativeLayout mUrlButtonLayout;
     private RelativeLayout mTwoStepLayout;
-    private RelativeLayout mTwoStepFooter;
+    private LinearLayout mTwoStepFooter;
 
     private ImageView mInfoButton;
     private ImageView mInfoButtonSecondary;
@@ -119,7 +119,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.signin_fragment, container, false);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
         mTwoStepLayout = (RelativeLayout) rootView.findViewById(R.id.two_factor_layout);
-        mTwoStepFooter = (RelativeLayout) rootView.findViewById(R.id.two_step_footer);
+        mTwoStepFooter = (LinearLayout) rootView.findViewById(R.id.two_step_footer);
         mUsernameLayout = (RelativeLayout) rootView.findViewById(R.id.nux_username_layout);
         mUsernameLayout.setOnClickListener(mOnLoginFormClickListener);
         mPasswordLayout = (RelativeLayout) rootView.findViewById(R.id.nux_password_layout);
@@ -184,7 +184,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         });
 
         WPTextView twoStepFooterButton = (WPTextView) rootView.findViewById(R.id.two_step_footer_button);
-        twoStepFooterButton.setText(Html.fromHtml(String.format(getString(R.string.two_step_footer_message), "<u>", "</u>")));
+        twoStepFooterButton.setText(Html.fromHtml("<u>" + getString(R.string.two_step_footer_button) + "</u>"));
         twoStepFooterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

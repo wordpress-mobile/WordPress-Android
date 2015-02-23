@@ -822,7 +822,8 @@
     <string name="verification_code">Verification code</string>
     <string name="invalid_verification_code">Invalid verification code</string>
     <string name="verify">Verify</string>
-    <string name="two_step_footer_message">Enter the code from your authenticator app or %1$sget the code via text message%2$s.</string>
+    <string name="two_step_footer_label">Enter the code from your authenticator app.</string>
+    <string name="two_step_footer_button">Send code via text message</string>
     <string name="two_step_sms_sent">Check your text messages for the verification code.</string>
     <string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
     <string name="auth_required">Sign in again to continue.</string>
