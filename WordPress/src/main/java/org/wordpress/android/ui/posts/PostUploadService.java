@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -17,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
@@ -172,10 +174,19 @@ public class PostUploadService extends Service {
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
             } else {
                 WordPress.postUploadFailed(mPost.getLocalTableBlogId());
-                mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(), mErrorUnavailableVideoPress);
+                mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
+                        mErrorUnavailableVideoPress);
             }
 
             postUploaded();
+        }
+
+        @Override
+        protected void onCancelled(Boolean aBoolean) {
+            super.onCancelled(aBoolean);
+            mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
+                    mErrorUnavailableVideoPress);
+            WordPress.postUploadFailed(mPost.getLocalTableBlogId());
         }
 
         @Override
@@ -601,7 +612,8 @@ public class PostUploadService extends Service {
             }
 
             String fullSizeUrl = null;
-            // Upload the full size picture if "Original Size" is selected in settings, or if 'link to full size' is checked.
+            // Upload the full size picture if "Original Size" is selected in settings,
+            // or if 'link to full size' is checked.
             if (!shouldUploadResizedVersion || mBlog.isFullSizeImage()) {
                 Map<String, Object> parameters = new HashMap<String, Object>();
                 parameters.put("name", fileName);
@@ -639,7 +651,8 @@ public class PostUploadService extends Service {
             String mimeType = "", xRes = "", yRes = "";
 
             if (videoUri.toString().contains("content:")) {
-                String[] projection = new String[]{Video.Media._ID, Video.Media.DATA, Video.Media.MIME_TYPE, Video.Media.RESOLUTION};
+                String[] projection = new String[]{Video.Media._ID, Video.Media.DATA, Video.Media.MIME_TYPE,
+                        Video.Media.RESOLUTION};
                 Cursor cur = mContext.getContentResolver().query(videoUri, projection, null, null, null);
 
                 if (cur != null && cur.moveToFirst()) {
