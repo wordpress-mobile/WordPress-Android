@@ -101,12 +101,14 @@ public class PostUploadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         synchronized (mPostsList) {
             if (mPostsList.size() == 0 || mContext == null) {
-                this.stopSelf();
-                return;
+                stopSelf();
+                return START_NOT_STICKY;
             }
         }
 
         uploadNextPost();
+        // We want this service to continue running until it is explicitly stopped, so return sticky.
+        return START_STICKY;
     }
 
     private FeatureSet synchronousGetFeatureSet() {
@@ -130,7 +132,7 @@ public class PostUploadService extends Service {
                     mCurrentTask = new UploadPostTask();
                     mCurrentTask.execute(mCurrentUploadingPost);
                 } else {
-                    this.stopSelf();
+                    stopSelf();
                 }
             }
         }
@@ -142,11 +144,6 @@ public class PostUploadService extends Service {
             mCurrentUploadingPost = null;
         }
         uploadNextPost();
-    }
-
-    public static boolean isUploading(Post post) {
-        return mCurrentUploadingPost != null && mCurrentUploadingPost.equals(post) ||
-                mPostsList.size() > 0 && mPostsList.contains(post);
     }
 
     private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
