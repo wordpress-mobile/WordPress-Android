@@ -88,7 +88,17 @@ public class PostUploadService extends Service {
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
+    public void onDestroy() {
+        super.onDestroy();
+        // Cancel current task, it will reset post from "uploading" to "local draft"
+        if (mCurrentTask != null) {
+            AppLog.d(T.API, "cancelling current upload task");
+            mCurrentTask.cancel(true);
+        }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         synchronized (mPostsList) {
             if (mPostsList.size() == 0 || mContext == null) {
                 this.stopSelf();
