@@ -684,6 +684,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mProgressTextSignIn.setText(message);
         mUsernameEditText.setEnabled(false);
         mPasswordEditText.setEnabled(false);
+        mTwoStepEditText.setEnabled(false);
         mUrlEditText.setEnabled(false);
         mAddSelfHostedButton.setEnabled(false);
         mCreateAccountButton.setEnabled(false);
@@ -696,6 +697,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mSignInButton.setVisibility(View.VISIBLE);
         mUsernameEditText.setEnabled(true);
         mPasswordEditText.setEnabled(true);
+        mTwoStepEditText.setEnabled(true);
         mUrlEditText.setEnabled(true);
         mAddSelfHostedButton.setEnabled(true);
         mCreateAccountButton.setEnabled(true);
