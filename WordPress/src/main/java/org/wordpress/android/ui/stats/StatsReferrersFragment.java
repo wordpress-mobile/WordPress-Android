@@ -205,7 +205,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
                     WPNetworkImageView.ImageType.BLAVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
-            holder.chevronImageView.setVisibility(View.VISIBLE);
             if (children == 0) {
                 holder.showLinkIcon();
             } else {
