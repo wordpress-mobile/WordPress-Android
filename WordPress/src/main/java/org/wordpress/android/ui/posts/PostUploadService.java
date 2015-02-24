@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -54,6 +53,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -496,7 +496,7 @@ public class PostUploadService extends Service {
         }
 
         private String uploadImage(MediaFile mediaFile) {
-            AppLog.d(T.POSTS, "uploadImage: " + mediaFile);
+            AppLog.d(T.POSTS, "uploadImage: " + mediaFile.getFilePath());
 
             if (mediaFile.getFilePath() == null) {
                 return null;
@@ -759,8 +759,6 @@ public class PostUploadService extends Service {
         }
 
         private String uploadImageFile(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
-            AppLog.d(T.POSTS, "uploadImageFile: " + pictureParams);
-
             // create temporary upload file
             File tempFile;
             try {
@@ -798,7 +796,7 @@ public class PostUploadService extends Service {
         }
 
         private Object uploadFileHelper(Object[] params, final File tempFile) {
-            AppLog.w(T.POSTS, "uploadFileHelper: " + params);
+            AppLog.d(T.POSTS, "uploadFileHelper: " + Arrays.toString(params));
 
             // Create listener for tracking upload progress in the notification
             if (mClient instanceof XMLRPCClient) {
@@ -816,7 +814,6 @@ public class PostUploadService extends Service {
             }
 
             try {
-                AppLog.i(T.API, "wp.uploadFile: " + params);
                 return mClient.call("wp.uploadFile", params, tempFile);
             } catch (XMLRPCException e) {
                 AppLog.e(T.API, e);
