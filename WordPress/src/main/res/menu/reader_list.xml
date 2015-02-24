@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_tags"
+        android:icon="@drawable/ic_genericon_tag_white_24dp"
+        app:showAsAction="always"
+        android:title="@string/reader_menu_tags" />
+
+</menu>

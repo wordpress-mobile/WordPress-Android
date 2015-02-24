@@ -44,12 +44,11 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.ScrollDirectionListener;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 
 public class ReaderPostDetailFragment extends Fragment
-        implements ScrollDirectionListener,
+        implements WPScrollView.OnScrollDirectionListener,
         ReaderCustomViewListener,
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener {
@@ -131,7 +130,7 @@ public class ReaderPostDetailFragment extends Fragment
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
-        mScrollView.setScrollDirectionListener(this);
+        mScrollView.setOnScrollDirectionListener(this);
 
         mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
@@ -162,6 +161,7 @@ public class ReaderPostDetailFragment extends Fragment
             mReaderWebView.destroy();
         }
     }
+
 
     @Override
     public void onScrollUp() {
@@ -207,7 +207,7 @@ public class ReaderPostDetailFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.reader_menu_detail, menu);
+        inflater.inflate(R.menu.reader_detail, menu);
     }
 
     @Override
