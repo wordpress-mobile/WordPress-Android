@@ -31,8 +31,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.7-rc-3"
-        versionCode 164
+        versionName "3.8-rc-1"
+        versionCode 167
         minSdkVersion 14
         targetSdkVersion 21
 
@@ -76,6 +76,7 @@ dependencies {
     compile 'com.helpshift:android-aar:3.5.0'
     compile 'commons-lang:commons-lang:2.6'
     compile 'com.cocosw:undobar:1.6@aar'
+    compile 'de.greenrobot:eventbus:2.4.0'
 
     compile 'com.mcxiaoke.volley:library:1.0.+'
 

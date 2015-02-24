@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -25,6 +26,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -49,6 +51,8 @@ public class CommentsListFragment extends Fragment {
     private ListView mListView;
     private CommentAdapter mCommentAdapter;
     private ActionMode mActionMode;
+    private TextView mEmptyView;
+    private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
 
     private UpdateCommentsTask mUpdateCommentsTask;
 
@@ -70,7 +74,14 @@ public class CommentsListFragment extends Fragment {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isAdded())
                         return;
-                    showEmptyView(isEmpty);
+
+                    if (!isEmpty) {
+                        // Hide the empty view if there are already some displayed comments
+                        hideEmptyView();
+                    } else if (!mIsUpdatingComments && mEmptyViewMessageType.equals(EmptyViewMessageType.LOADING)) {
+                        // Change LOADING to NO_CONTENT message
+                        updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                    }
                 }
             };
 
@@ -131,13 +142,22 @@ public class CommentsListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         setUpListView();
         getCommentAdapter().loadComments();
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            return;
-        }
+
         Bundle extras = getActivity().getIntent().getExtras();
         mHasAutoRefreshedComments = extras.getBoolean(CommentsActivity.KEY_AUTO_REFRESHED);
+        mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(extras.getString(
+                CommentsActivity.KEY_EMPTY_VIEW_MESSAGE));
+
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+            return;
+        }
+
+        // Restore the empty view's message
+        updateEmptyView(mEmptyViewMessageType);
 
         if (!mHasAutoRefreshedComments) {
             updateComments(false);
@@ -170,6 +190,7 @@ public class CommentsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
 
         mListView = (ListView) view.findViewById(android.R.id.list);
+        mEmptyView = (TextView) view.findViewById(R.id.empty_view);
 
         // progress bar that appears when loading more comments
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress_loading);
@@ -186,6 +207,7 @@ public class CommentsListFragment extends Fragment {
                         }
                         if (!NetworkUtils.checkConnection(getActivity())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
+                            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             return;
                         }
                         updateComments(false);
@@ -359,7 +381,13 @@ public class CommentsListFragment extends Fragment {
         if (mIsUpdatingComments) {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
             return;
+        } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+            setRefreshing(false);
+            return;
         }
+
+        updateEmptyView(EmptyViewMessageType.LOADING);
 
         mUpdateCommentsTask = new UpdateCommentsTask(loadMore);
         mUpdateCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -478,16 +506,26 @@ public class CommentsListFragment extends Fragment {
             if (comments == null && !getActivity().isFinishing() && mErrorType != ErrorType.NO_ERROR) {
                 switch (mErrorType) {
                     case UNAUTHORIZED:
-                        ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_unauthorized_comments));
+                        if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
+                            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_unauthorized_comments));
+                        }
+                        updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
                         return;
                     default:
                         ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
+                        updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
                         return;
                 }
             }
-            if (!getActivity().isFinishing() && comments != null && comments.size() > 0) {
-                getCommentAdapter().loadComments();
+
+            if (!getActivity().isFinishing()) {
+                if (comments != null && comments.size() > 0) {
+                    getCommentAdapter().loadComments();
+                } else {
+                    updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                }
             }
+
         }
     }
 
@@ -503,14 +541,50 @@ public class CommentsListFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void showEmptyView(boolean show) {
+    private void hideEmptyView() {
+        if (mEmptyView != null) {
+            mEmptyView.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         if (!isAdded()) {
             return;
         }
-        View emptyView = getView().findViewById(R.id.empty_view);
-        if (emptyView != null) {
-            emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+
+        if (mEmptyView != null) {
+            if (getCommentAdapter().getCount() == 0) {
+                int stringId = 0;
+
+                switch (emptyViewMessageType) {
+                    case LOADING:
+                        stringId = R.string.comments_fetching;
+                        break;
+                    case NO_CONTENT:
+                        stringId = R.string.comments_empty_list;
+                        break;
+                    case NETWORK_ERROR:
+                        stringId = R.string.no_network_message;
+                        break;
+                    case PERMISSION_ERROR:
+                        stringId = R.string.error_refresh_unauthorized_comments;
+                        break;
+                    case GENERIC_ERROR:
+                        stringId = R.string.error_refresh_comments;
+                        break;
+                }
+
+                mEmptyView.setText(getText(stringId));
+                mEmptyViewMessageType = emptyViewMessageType;
+                mEmptyView.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyView.setVisibility(View.GONE);
+            }
         }
+    }
+
+    public String getEmptyViewMessage() {
+        return mEmptyViewMessageType.name();
     }
 
     /**

@@ -72,6 +72,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
+
 public class WordPress extends Application {
     public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
     public static final String WPCOM_USERNAME_PREFERENCE="wp_pref_wpcom_username";
@@ -154,6 +156,14 @@ public class WordPress extends Application {
         versionName = PackageUtils.getVersionName(this);
         HelpshiftHelper.init(this);
         initWpDb();
+
+        // EventBus setup
+        EventBus.TAG = "WordPress-EVENT";
+        EventBus.builder()
+                .logNoSubscriberMessages(false)
+                .sendNoSubscriberEvent(false)
+                .throwSubscriberException(true)
+                .installDefaultEventBus();
 
         RestClientUtils.setUserAgent(getUserAgent());
 

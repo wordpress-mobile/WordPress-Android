@@ -22,6 +22,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
+import org.wordpress.android.ui.EmptyViewAnimationHandler;
+import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -37,7 +39,7 @@ import java.util.List;
 import java.util.Vector;
 
 public class PostsListFragment extends ListFragment
-        implements WordPress.OnPostUploadedListener {
+        implements WordPress.OnPostUploadedListener, EmptyViewAnimationHandler.OnAnimationProgressListener {
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -48,6 +50,16 @@ public class PostsListFragment extends ListFragment
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
     private View mProgressFooterView;
+
+    private View mEmptyView;
+    private View mEmptyViewImage;
+    private TextView mEmptyViewTitle;
+    private EmptyViewMessageType mEmptyViewMessage = EmptyViewMessageType.NO_CONTENT;
+
+    private EmptyViewAnimationHandler mEmptyViewAnimationHandler;
+    private boolean mSwipedToRefresh;
+    private boolean mKeepSwipeRefreshLayoutVisible;
+
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
@@ -64,7 +76,11 @@ public class PostsListFragment extends ListFragment
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.post_listview, container, false);
+        View view = inflater.inflate(R.layout.post_listview, container, false);
+        mEmptyView = view.findViewById(R.id.empty_view);
+        mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
+        mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
+        return view;
     }
 
     private void initSwipeToRefreshHelper() {
@@ -79,8 +95,10 @@ public class PostsListFragment extends ListFragment
                         }
                         if (!NetworkUtils.checkConnection(getActivity())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
+                            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             return;
                         }
+                        mSwipedToRefresh = true;
                         refreshPosts((PostsActivity) getActivity());
                     }
                 });
@@ -135,16 +153,27 @@ public class PostsListFragment extends ListFragment
                     if (!isAdded()) {
                         return;
                     }
-                    // set the empty view now that posts have been loaded - this avoids the problem
-                    // of the empty view immediately appearing when set at design time
-                    if (getListView().getEmptyView() == null) {
-                        getListView().setEmptyView(getView().findViewById(R.id.empty_view));
+
+                    // Now that posts have been loaded, show the empty view if there are no results to display
+                    // This avoids the problem of the empty view immediately appearing when set at design time
+                    if (postCount == 0) {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                    } else {
+                        mEmptyView.setVisibility(View.GONE);
                     }
+
+                    if (!isRefreshing() || mKeepSwipeRefreshLayoutVisible) {
+                        // No posts and not currently refreshing. Display the "no posts/pages" message
+                        updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                    }
+
                     if (postCount == 0 && mCanLoadMorePosts) {
                         // No posts, let's request some if network available
                         if (isAdded() && NetworkUtils.isNetworkAvailable(getActivity())) {
                             setRefreshing(true);
                             requestPosts(false);
+                        } else {
+                            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                         }
                     } else if (mShouldSelectFirstPost) {
                         // Select the first row on a tablet, if requested
@@ -196,20 +225,12 @@ public class PostsListFragment extends ListFragment
                 if (!mIsFetchingPosts || isLoadingMorePosts()) {
                     showPost(postsListPost.getPostId());
                 } else if (isAdded()) {
-                    Toast.makeText(getActivity(), mIsPage ? R.string.loading_pages : R.string.loading_posts,
+                    Toast.makeText(getActivity(), mIsPage ? R.string.pages_fetching : R.string.posts_fetching,
                             Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        TextView textView = (TextView) getView().findViewById(R.id.title_empty);
-        if (textView != null) {
-            if (mIsPage) {
-                textView.setText(getText(R.string.pages_empty_list));
-            } else {
-                textView.setText(getText(R.string.posts_empty_list));
-            }
-        }
         initSwipeToRefreshHelper();
         WordPress.setOnPostUploadedListener(this);
 
@@ -221,8 +242,12 @@ public class PostsListFragment extends ListFragment
             }
         });
 
+        mEmptyViewAnimationHandler = new EmptyViewAnimationHandler(mEmptyViewTitle, mEmptyViewImage, this);
+
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             ((PostsActivity) getActivity()).requestPosts();
+        } else {
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
         }
     }
 
@@ -301,8 +326,11 @@ public class PostsListFragment extends ListFragment
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
+
+        updateEmptyView(EmptyViewMessageType.LOADING);
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {
@@ -325,7 +353,14 @@ public class PostsListFragment extends ListFragment
                 mIsFetchingPosts = false;
                 if (!isAdded())
                     return;
-                mSwipeToRefreshHelper.setRefreshing(false);
+
+                if (mEmptyViewAnimationHandler.isShowingLoadingAnimation() || mEmptyViewAnimationHandler.isBetweenSequences()) {
+                    // Keep the SwipeRefreshLayout animation visible until the EmptyViewAnimationHandler dismisses it
+                    mKeepSwipeRefreshLayoutVisible = true;
+                } else {
+                    mSwipeToRefreshHelper.setRefreshing(false);
+                }
+
                 if (mProgressFooterView != null) {
                     mProgressFooterView.setVisibility(View.GONE);
                 }
@@ -353,14 +388,18 @@ public class PostsListFragment extends ListFragment
                 if (errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
                     switch (errorType) {
                         case UNAUTHORIZED:
-                            ToastUtils.showToast(getActivity(),
-                                    mIsPage ? R.string.error_refresh_unauthorized_pages : R.string.error_refresh_unauthorized_posts,
-                                    Duration.LONG);
+                            if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
+                                ToastUtils.showToast(getActivity(),
+                                        mIsPage ? R.string.error_refresh_unauthorized_pages :
+                                                R.string.error_refresh_unauthorized_posts, Duration.LONG);
+                            }
+                            updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
                             return;
                         default:
                             ToastUtils.showToast(getActivity(),
                                     mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
                                     Duration.LONG);
+                            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
                             return;
                     }
                 }
@@ -379,6 +418,7 @@ public class PostsListFragment extends ListFragment
         if (mProgressFooterView != null && mProgressFooterView.getVisibility() == View.VISIBLE) {
             mProgressFooterView.setVisibility(View.GONE);
         }
+        mEmptyViewAnimationHandler.clear();
     }
 
     public void setShouldSelectFirstPost(boolean shouldSelect) {
@@ -399,6 +439,7 @@ public class PostsListFragment extends ListFragment
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
 
@@ -460,6 +501,7 @@ public class PostsListFragment extends ListFragment
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mSwipeToRefreshHelper.setRefreshing(false);
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
 
@@ -479,6 +521,68 @@ public class PostsListFragment extends ListFragment
         mSwipeToRefreshHelper.setRefreshing(false);
     }
 
+    private void updateEmptyView(final EmptyViewMessageType emptyViewMessageType) {
+        if (mPostsListAdapter != null && mPostsListAdapter.getCount() == 0) {
+            // Handle animation display
+            if (mEmptyViewMessage == EmptyViewMessageType.NO_CONTENT &&
+                    emptyViewMessageType == EmptyViewMessageType.LOADING) {
+                // Show the NO_CONTENT > LOADING sequence, but only if the user swiped to refresh
+                if (mSwipedToRefresh) {
+                    mSwipedToRefresh = false;
+                    mEmptyViewAnimationHandler.showLoadingSequence();
+                    return;
+                }
+            } else if (mEmptyViewMessage == EmptyViewMessageType.LOADING &&
+                    emptyViewMessageType == EmptyViewMessageType.NO_CONTENT) {
+                // Show the LOADING > NO_CONTENT sequence
+                mEmptyViewAnimationHandler.showNoContentSequence();
+                return;
+            }
+        } else {
+            // Dismiss the SwipeRefreshLayout animation if it was set to persist
+            if (mKeepSwipeRefreshLayoutVisible) {
+                mSwipeToRefreshHelper.setRefreshing(false);
+                mKeepSwipeRefreshLayoutVisible = false;
+            }
+        }
+
+        if (mEmptyView != null) {
+            int stringId = 0;
+
+            // Don't modify the empty view image if the NO_CONTENT > LOADING sequence has already run -
+            // let the EmptyViewAnimationHandler take care of it
+            if (!mEmptyViewAnimationHandler.isBetweenSequences()) {
+                if (emptyViewMessageType == EmptyViewMessageType.NO_CONTENT) {
+                    mEmptyViewImage.setVisibility(View.VISIBLE);
+                } else {
+                    mEmptyViewImage.setVisibility(View.GONE);
+                }
+            }
+
+            switch (emptyViewMessageType) {
+                case LOADING:
+                    stringId = mIsPage ? R.string.pages_fetching : R.string.posts_fetching;
+                    break;
+                case NO_CONTENT:
+                    stringId = mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list;
+                    break;
+                case NETWORK_ERROR:
+                    stringId = R.string.no_network_message;
+                    break;
+                case PERMISSION_ERROR:
+                    stringId = mIsPage ? R.string.error_refresh_unauthorized_pages :
+                            R.string.error_refresh_unauthorized_posts;
+                    break;
+                case GENERIC_ERROR:
+                    stringId = mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts;
+                    break;
+            }
+
+            mEmptyViewTitle.setText(getText(stringId));
+            mEmptyViewMessage = emptyViewMessageType;
+        }
+    }
+
     public interface OnPostSelectedListener {
         public void onPostSelected(Post post);
     }
@@ -489,5 +593,28 @@ public class PostsListFragment extends ListFragment
 
     public interface OnSinglePostLoadedListener {
         public void onSinglePostLoaded();
+    }
+
+    @Override
+    public void onSequenceStarted(EmptyViewMessageType emptyViewMessageType) {
+        mEmptyViewMessage = emptyViewMessageType;
+    }
+
+    @Override
+    public void onNewTextFadingIn() {
+        switch (mEmptyViewMessage) {
+            case LOADING:
+                mEmptyViewTitle.setText(mIsPage ? org.wordpress.android.R.string.pages_fetching :
+                        org.wordpress.android.R.string.posts_fetching);
+                break;
+            case NO_CONTENT:
+                mEmptyViewTitle.setText(mIsPage ? org.wordpress.android.R.string.pages_empty_list :
+                        org.wordpress.android.R.string.posts_empty_list);
+                mSwipeToRefreshHelper.setRefreshing(false);
+                mKeepSwipeRefreshLayoutVisible = false;
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -272,8 +272,8 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
             mMediaGridFragment.refreshSpinnerAdapter();
 
             if (!mMediaGridFragment.hasRetrievedAllMediaFromServer()) {
-                mMediaGridFragment.refreshMediaFromServer(0, false);
                 mMediaGridFragment.setRefreshing(true);
+                mMediaGridFragment.refreshMediaFromServer(0, false);
             }
         }
 
