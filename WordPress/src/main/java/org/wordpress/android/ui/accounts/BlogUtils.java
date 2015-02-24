@@ -30,9 +30,9 @@ public class BlogUtils {
         boolean retValue;
 
         // Add all blogs from blogList
-        retValue = addBlogs(newBlogList, username, null, null, null);
+        retValue = addBlogs(newBlogList, username);
 
-        // Delete blogs if not in bloegList
+        // Delete blogs if not in blogList
         List<Map<String, Object>> allBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
         Set<String> newBlogURLs = new HashSet<String>();
         for (Map<String, Object> blog : newBlogList) {
@@ -75,7 +75,6 @@ public class BlogUtils {
      * Check xmlrpc urls validity
      *
      * @param blogList blog list
-     * @param xmlrpcUrl forced xmlrpc url
      * @return true if there is at least one invalid xmlrpc url
      */
     public static boolean isAnyInvalidXmlrpcUrl(List<Map<String, Object>> blogList) {
@@ -137,7 +136,7 @@ public class BlogUtils {
         }
     }
 
-    public static void addBlogs(List<Map<String, Object>> userBlogList, String username) {
-        addBlogs(userBlogList, username, null, null, null);
+    public static boolean addBlogs(List<Map<String, Object>> userBlogList, String username) {
+        return addBlogs(userBlogList, username, null, null, null);
     }
 }
