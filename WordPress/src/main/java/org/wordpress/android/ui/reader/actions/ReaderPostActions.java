@@ -78,7 +78,7 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
         return true;
     }
 
@@ -126,10 +126,10 @@ public class ReaderPostActions {
             }
         };
 
-        String path = "/sites/" + post.blogId
+        String path = "sites/" + post.blogId
                     + "/posts/" + post.postId
                     + "/reblogs/new";
-        WordPress.getRestClientUtils().post(path, params, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
     /*
@@ -156,7 +156,7 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "updating post");
-        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
     }
 
     private static void handleUpdatePostResponse(final ReaderPost originalPost,
@@ -276,6 +276,6 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "requesting post");
-        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
     }
 }

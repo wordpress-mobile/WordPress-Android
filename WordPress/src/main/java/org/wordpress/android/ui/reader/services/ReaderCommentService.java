@@ -95,7 +95,7 @@ public class ReaderCommentService extends Service {
                                               final long postId,
                                               final int pageNumber,
                                               final ReaderActions.UpdateResultListener resultListener) {
-        String path = "/sites/" + blogId + "/posts/" + postId + "/replies/"
+        String path = "sites/" + blogId + "/posts/" + postId + "/replies/"
                     + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
                     + "&meta=likes"
                     + "&hierarchical=true"

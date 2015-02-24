@@ -83,7 +83,7 @@ public class ReaderCommentActions {
             path = "sites/" + post.blogId + "/comments/" + Long.toString(replyToCommentId) + "/replies/new";
         }
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("content", commentText);
 
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -112,7 +112,7 @@ public class ReaderCommentActions {
         };
 
         AppLog.i(T.READER, "submitting comment");
-        WordPress.getRestClientUtils().post(path, params, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
 
         return newComment;
     }
@@ -175,7 +175,7 @@ public class ReaderCommentActions {
             }
         };
 
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
         return true;
     }
 }

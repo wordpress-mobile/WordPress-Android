@@ -202,7 +202,7 @@ public class ReaderPostService extends Service {
     private static void requestPostsForBlog(final long blogId,
                                             final UpdateAction updateAction,
                                             final UpdateResultListener resultListener) {
-        String path = "/sites/" + blogId + "/posts/?meta=site,likes";
+        String path = "sites/" + blogId + "/posts/?meta=site,likes";
 
         // append the date of the oldest cached post in this blog when requesting older posts
         if (updateAction == UpdateAction.REQUEST_OLDER) {
@@ -232,7 +232,7 @@ public class ReaderPostService extends Service {
     private static void requestPostsForFeed(final long feedId,
                                             final UpdateAction updateAction,
                                             final UpdateResultListener resultListener) {
-        String path = "/read/feed/" + feedId + "/posts/?meta=site,likes";
+        String path = "read/feed/" + feedId + "/posts/?meta=site,likes";
         if (updateAction == UpdateAction.REQUEST_OLDER) {
             String dateOldest = ReaderPostTable.getOldestPubDateInFeed(feedId);
             if (!TextUtils.isEmpty(dateOldest)) {
@@ -308,7 +308,7 @@ public class ReaderPostService extends Service {
             return null;
         }
 
-        return String.format("/read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagName()));
+        return String.format("read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagName()));
     }
 
     /*
@@ -318,17 +318,17 @@ public class ReaderPostService extends Service {
      * between API versions (as it did when we moved from v1 to v1.1)
      *
      * ex: https://public-api.wordpress.com/rest/v1/read/tags/fitness/posts
-     *     becomes just                            /read/tags/fitness/posts
+     *     becomes just                             read/tags/fitness/posts
      */
     private static String getRelativeEndpoint(final String endpoint) {
         if (endpoint != null && endpoint.startsWith("http")) {
             int pos = endpoint.indexOf("/read/");
             if (pos > -1) {
-                return endpoint.substring(pos, endpoint.length());
+                return endpoint.substring(pos + 1, endpoint.length());
             }
             pos = endpoint.indexOf("/v1/");
             if (pos > -1) {
-                return endpoint.substring(pos + 3, endpoint.length());
+                return endpoint.substring(pos + 4, endpoint.length());
             }
         }
         return StringUtils.notNullStr(endpoint);
