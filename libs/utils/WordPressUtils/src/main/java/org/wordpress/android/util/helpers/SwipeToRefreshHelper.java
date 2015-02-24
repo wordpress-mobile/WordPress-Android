@@ -12,6 +12,7 @@ import org.wordpress.android.util.R;
 public class SwipeToRefreshHelper implements OnRefreshListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RefreshListener mRefreshListener;
+    private boolean mRefreshing;
 
     public interface RefreshListener {
         public void onRefreshStarted();
@@ -33,7 +34,20 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
     }
 
     public void setRefreshing(boolean refreshing) {
-        mSwipeRefreshLayout.setRefreshing(refreshing);
+        mRefreshing = refreshing;
+        // Delayed refresh, it fixes https://code.google.com/p/android/issues/detail?id=77712
+        // 50ms seems a good compromise (always worked during tests) and fast enough so user can't notice the delay
+        if (refreshing) {
+            mSwipeRefreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // use mRefreshing so if the refresh takes less than 50ms, loading indicator won't show up.
+                    mSwipeRefreshLayout.setRefreshing(mRefreshing);
+                }
+            }, 50);
+        } else {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     public boolean isRefreshing() {

@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
@@ -52,6 +53,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -88,15 +90,27 @@ public class PostUploadService extends Service {
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
+    public void onDestroy() {
+        super.onDestroy();
+        // Cancel current task, it will reset post from "uploading" to "local draft"
+        if (mCurrentTask != null) {
+            AppLog.d(T.POSTS, "cancelling current upload task");
+            mCurrentTask.cancel(true);
+        }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         synchronized (mPostsList) {
             if (mPostsList.size() == 0 || mContext == null) {
-                this.stopSelf();
-                return;
+                stopSelf();
+                return START_NOT_STICKY;
             }
         }
 
         uploadNextPost();
+        // We want this service to continue running until it is explicitly stopped, so return sticky.
+        return START_STICKY;
     }
 
     private FeatureSet synchronousGetFeatureSet() {
@@ -120,7 +134,7 @@ public class PostUploadService extends Service {
                     mCurrentTask = new UploadPostTask();
                     mCurrentTask.execute(mCurrentUploadingPost);
                 } else {
-                    this.stopSelf();
+                    stopSelf();
                 }
             }
         }
@@ -132,11 +146,6 @@ public class PostUploadService extends Service {
             mCurrentUploadingPost = null;
         }
         uploadNextPost();
-    }
-
-    public static boolean isUploading(Post post) {
-        return mCurrentUploadingPost != null && mCurrentUploadingPost.equals(post) ||
-                mPostsList.size() > 0 && mPostsList.contains(post);
     }
 
     private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
@@ -165,10 +174,19 @@ public class PostUploadService extends Service {
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
             } else {
                 WordPress.postUploadFailed(mPost.getLocalTableBlogId());
-                mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(), mErrorUnavailableVideoPress);
+                mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
+                        mErrorUnavailableVideoPress);
             }
 
             postUploaded();
+        }
+
+        @Override
+        protected void onCancelled(Boolean aBoolean) {
+            super.onCancelled(aBoolean);
+            mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
+                    mErrorUnavailableVideoPress);
+            WordPress.postUploadFailed(mPost.getLocalTableBlogId());
         }
 
         @Override
@@ -478,6 +496,8 @@ public class PostUploadService extends Service {
         }
 
         private String uploadImage(MediaFile mediaFile) {
+            AppLog.d(T.POSTS, "uploadImage: " + mediaFile.getFilePath());
+
             if (mediaFile.getFilePath() == null) {
                 return null;
             }
@@ -594,7 +614,8 @@ public class PostUploadService extends Service {
             }
 
             String fullSizeUrl = null;
-            // Upload the full size picture if "Original Size" is selected in settings, or if 'link to full size' is checked.
+            // Upload the full size picture if "Original Size" is selected in settings,
+            // or if 'link to full size' is checked.
             if (!shouldUploadResizedVersion || mBlog.isFullSizeImage()) {
                 Map<String, Object> parameters = new HashMap<String, Object>();
                 parameters.put("name", fileName);
@@ -632,7 +653,8 @@ public class PostUploadService extends Service {
             String mimeType = "", xRes = "", yRes = "";
 
             if (videoUri.toString().contains("content:")) {
-                String[] projection = new String[]{Video.Media._ID, Video.Media.DATA, Video.Media.MIME_TYPE, Video.Media.RESOLUTION};
+                String[] projection = new String[]{Video.Media._ID, Video.Media.DATA, Video.Media.MIME_TYPE,
+                        Video.Media.RESOLUTION};
                 Cursor cur = mContext.getContentResolver().query(videoUri, projection, null, null, null);
 
                 if (cur != null && cur.moveToFirst()) {
@@ -729,15 +751,14 @@ public class PostUploadService extends Service {
 
 
         private void setUploadPostErrorMessage(Exception e) {
-            mErrorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(), mPost.isPage() ? mContext
-                    .getResources().getText(R.string.page).toString() : mContext.getResources().getText(R.string.post).toString())
-                    + " " + e.getMessage();
+            mErrorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(),
+                    mPost.isPage() ? mContext.getResources().getText(R.string.page).toString() :
+                            mContext.getResources().getText(R.string.post).toString()) + " " + e.getMessage();
             mIsMediaError = false;
             AppLog.e(T.EDITOR, mErrorMessage, e);
         }
 
         private String uploadImageFile(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
-
             // create temporary upload file
             File tempFile;
             try {
@@ -775,14 +796,17 @@ public class PostUploadService extends Service {
         }
 
         private Object uploadFileHelper(Object[] params, final File tempFile) {
+            AppLog.d(T.POSTS, "uploadFileHelper: " + Arrays.toString(params));
+
             // Create listener for tracking upload progress in the notification
             if (mClient instanceof XMLRPCClient) {
                 XMLRPCClient xmlrpcClient = (XMLRPCClient) mClient;
                 xmlrpcClient.setOnBytesUploadedListener(new XMLRPCClient.OnBytesUploadedListener() {
                     @Override
                     public void onBytesUploaded(long uploadedBytes) {
-                        if (tempFile.length() == 0) return;
-
+                        if (tempFile.length() == 0) {
+                            return;
+                        }
                         float percentage = (uploadedBytes * 100) / tempFile.length();
                         mPostUploadNotifier.updateNotificationProgress(percentage);
                     }
@@ -805,8 +829,9 @@ public class PostUploadService extends Service {
                 return null;
             } finally {
                 // remove the temporary upload file now that we're done with it
-                if (tempFile != null && tempFile.exists())
+                if (tempFile != null && tempFile.exists()) {
                     tempFile.delete();
+                }
             }
         }
     }
@@ -821,31 +846,34 @@ public class PostUploadService extends Service {
         private final NotificationCompat.Builder mNotificationBuilder;
 
         private final int mNotificationId;
+        private int mNotificationErrorId = 0;
         private int mTotalMediaItems;
         private int mCurrentMediaItem;
         private float mItemProgressSize;
 
         public PostUploadNotifier(Post post) {
             // add the uploader to the notification bar
-            mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext, Context.NOTIFICATION_SERVICE);
+            mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
+                    Context.NOTIFICATION_SERVICE);
 
-            mNotificationBuilder =
-                    new NotificationCompat.Builder(getApplicationContext())
-                            .setSmallIcon(android.R.drawable.stat_sys_upload);
+            mNotificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+            mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
 
             Intent notificationIntent = new Intent(mContext, post.isPage() ? PagesActivity.class : PostsActivity.class);
-            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_NEW_TASK
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                     | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
             notificationIntent.setAction(Intent.ACTION_MAIN);
             notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getLocalTableBlogId())));
+            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"
+                    + post.getLocalTableBlogId())));
             notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
 
             mNotificationBuilder.setContentIntent(pendingIntent);
 
             mNotificationId = (new Random()).nextInt() + post.getLocalTableBlogId();
+            startForeground(mNotificationId, mNotificationBuilder.build());
         }
 
 
@@ -873,9 +901,13 @@ public class PostUploadService extends Service {
             mNotificationManager.cancel(mNotificationId);
         }
 
-        public void updateNotificationWithError(String mErrorMessage, boolean isMediaError, boolean isPage, boolean isVideoPressError) {
-            String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id) : mContext.getResources()
-                    .getText(R.string.post_id));
+        public void updateNotificationWithError(String mErrorMessage, boolean isMediaError, boolean isPage,
+                                                boolean isVideoPressError) {
+            AppLog.d(T.POSTS, "updateNotificationWithError: " + mErrorMessage);
+
+            Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+            String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id)
+                    : mContext.getResources().getText(R.string.post_id));
             Intent notificationIntent = new Intent(mContext, isPage ? PagesActivity.class : PostsActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                     | Intent.FLAG_ACTIVITY_NEW_TASK
@@ -894,20 +926,27 @@ public class PostUploadService extends Service {
 
             String errorText = mContext.getResources().getText(R.string.upload_failed).toString();
             if (isMediaError) {
-                errorText = mContext.getResources().getText(R.string.media) + " " + mContext.getResources().getText(R.string.error);
+                errorText = mContext.getResources().getText(R.string.media) + " "
+                        + mContext.getResources().getText(R.string.error);
             }
 
-            mNotificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
-            mNotificationBuilder.setContentTitle((isMediaError) ? errorText : mContext.getResources().getText(R.string.upload_failed));
-            mNotificationBuilder.setContentText((isMediaError) ? mErrorMessage : postOrPage + " " + errorText + ": " + mErrorMessage);
-            mNotificationBuilder.setContentIntent(pendingIntent);
-            mNotificationBuilder.setAutoCancel(true);
-
-            mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+            notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
+            notificationBuilder.setContentTitle((isMediaError) ? errorText :
+                    mContext.getResources().getText(R.string.upload_failed));
+            notificationBuilder.setContentText((isMediaError) ? mErrorMessage : postOrPage + " " + errorText
+                    + ": " + mErrorMessage);
+            notificationBuilder.setContentIntent(pendingIntent);
+            notificationBuilder.setAutoCancel(true);
+            if (mNotificationErrorId == 0) {
+                mNotificationErrorId = mNotificationId + (new Random()).nextInt();
+            }
+            mNotificationManager.notify(mNotificationErrorId, notificationBuilder.build());
         }
 
         public void updateNotificationProgress(float progress) {
-            if (mTotalMediaItems == 0) return;
+            if (mTotalMediaItems == 0) {
+                return;
+            }
 
             // Simple way to show progress of entire post upload
             // Would be better if we could get total bytes for all media items.
@@ -933,7 +972,8 @@ public class PostUploadService extends Service {
         public void setCurrentMediaItem(int currentItem) {
             mCurrentMediaItem = currentItem;
 
-            mNotificationBuilder.setContentText(String.format(getString(R.string.uploading_total), mCurrentMediaItem, mTotalMediaItems));
+            mNotificationBuilder.setContentText(String.format(getString(R.string.uploading_total), mCurrentMediaItem,
+                    mTotalMediaItems));
         }
     }
 }
