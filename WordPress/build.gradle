@@ -27,7 +27,7 @@ android {
     }
 
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "org.wordpress.android"

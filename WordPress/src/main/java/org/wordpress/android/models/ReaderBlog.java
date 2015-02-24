@@ -3,7 +3,6 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
-import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -73,11 +72,11 @@ public class ReaderBlog {
             blog.blogId = blog.feedId;
         }
 
-        JSONObject jsonIcon = JSONUtil.getJSONChild(json, "icon");
+        JSONObject jsonIcon = JSONUtils.getJSONChild(json, "icon");
         if (jsonIcon != null) {
-            blog.setImageUrl(JSONUtil.getString(jsonIcon, "img"));
+            blog.setImageUrl(JSONUtils.getString(jsonIcon, "img"));
             if (!blog.hasImageUrl()) {
-                blog.setImageUrl(JSONUtil.getString(jsonIcon, "ico"));
+                blog.setImageUrl(JSONUtils.getString(jsonIcon, "ico"));
             }
         }
 

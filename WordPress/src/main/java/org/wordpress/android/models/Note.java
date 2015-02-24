@@ -258,8 +258,8 @@ public class Note extends Syncable {
                 try {
                     JSONObject bodyItem = bodyArray.getJSONObject(i);
                     if (bodyItem.has("type") && bodyItem.optString("type").equals("comment")
-                            && commentId == JSONUtil.queryJSON(bodyItem, "meta.ids.comment", 0)) {
-                        mActions = JSONUtil.queryJSON(bodyItem, "actions", new JSONObject());
+                            && commentId == JSONUtils.queryJSON(bodyItem, "meta.ids.comment", 0)) {
+                        mActions = JSONUtils.queryJSON(bodyItem, "actions", new JSONObject());
                         break;
                     }
                 } catch (JSONException e) {
