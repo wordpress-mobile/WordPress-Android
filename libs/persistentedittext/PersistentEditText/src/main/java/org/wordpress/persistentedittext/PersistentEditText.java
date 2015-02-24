@@ -7,7 +7,7 @@ import android.widget.EditText;
 
 public class PersistentEditText extends EditText {
     private PersistentEditTextHelper mPersistentEditTextHelper;
-    private Boolean mEnabled;
+    private Boolean mPersistenceEnabled;
 
     public PersistentEditText(Context context) {
         super(context, null);
@@ -30,8 +30,8 @@ public class PersistentEditText extends EditText {
         return mPersistentEditTextHelper;
     }
 
-    public void setEnabled(boolean enabled) {
-        mEnabled = enabled;
+    public void setPersistenceEnabled(boolean enabled) {
+        mPersistenceEnabled = enabled;
     }
 
     @Override
@@ -56,14 +56,14 @@ public class PersistentEditText extends EditText {
     }
 
     private void load() {
-        if (!mEnabled) {
+        if (!mPersistenceEnabled) {
             return;
         }
         getAutoSaveTextHelper().loadString(this);
     }
 
     private void save() {
-        if (!mEnabled) {
+        if (!mPersistenceEnabled) {
             return;
         }
         getAutoSaveTextHelper().saveString(this);
@@ -72,7 +72,7 @@ public class PersistentEditText extends EditText {
     private void readCustomAttrs(Context context, AttributeSet attrs) {
         TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PersistentEditText, 0, 0);
         if (array != null) {
-            mEnabled = array.getBoolean(R.styleable.PersistentEditText_persistenceEnabled, false);
+            mPersistenceEnabled = array.getBoolean(R.styleable.PersistentEditText_persistenceEnabled, false);
         }
     }
 }
