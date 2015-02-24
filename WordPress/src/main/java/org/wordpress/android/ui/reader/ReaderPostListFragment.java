@@ -28,7 +28,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -75,8 +74,6 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 
 import de.greenrobot.event.EventBus;
@@ -135,6 +132,14 @@ public class ReaderPostListFragment extends Fragment
                 bundle.putStringArrayList(keyName, history);
             }
         }
+    }
+
+    public static ReaderPostListFragment newInstance() {
+        ReaderTag tag = AppPrefs.getReaderTag();
+        if (tag == null) {
+            tag = ReaderTag.getDefaultTag();
+        }
+        return newInstanceForTag(tag, ReaderPostListType.TAG_FOLLOWED);
     }
 
     /*
@@ -660,7 +665,8 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        View view = View.inflate(getActivity(), R.layout.reader_spinner, toolbar);
+        // TODO:
+        /*View view = View.inflate(getActivity(), R.layout.reader_spinner, toolbar);
         mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
         mSpinner.setAdapter(getSpinnerAdapter());
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -686,7 +692,7 @@ public class ReaderPostListFragment extends Fragment
             public void onNothingSelected(AdapterView<?> parent) {
                 // nop
             }
-        });
+        });*/
     }
 
     /*
