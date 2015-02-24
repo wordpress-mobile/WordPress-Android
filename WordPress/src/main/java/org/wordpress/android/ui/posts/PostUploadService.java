@@ -849,6 +849,7 @@ public class PostUploadService extends Service {
         private final NotificationCompat.Builder mNotificationBuilder;
 
         private final int mNotificationId;
+        private int mNotificationErrorId = 0;
         private int mTotalMediaItems;
         private int mCurrentMediaItem;
         private float mItemProgressSize;
@@ -939,7 +940,10 @@ public class PostUploadService extends Service {
                     + ": " + mErrorMessage);
             notificationBuilder.setContentIntent(pendingIntent);
             notificationBuilder.setAutoCancel(true);
-            mNotificationManager.notify(mNotificationId + (new Random()).nextInt(), notificationBuilder.build());
+            if (mNotificationErrorId == 0) {
+                mNotificationErrorId = mNotificationId + (new Random()).nextInt();
+            }
+            mNotificationManager.notify(mNotificationErrorId, notificationBuilder.build());
         }
 
         public void updateNotificationProgress(float progress) {
