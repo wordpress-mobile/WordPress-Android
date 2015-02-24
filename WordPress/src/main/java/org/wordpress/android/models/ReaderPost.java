@@ -85,17 +85,24 @@ public class ReaderPost {
         post.shortUrl = JSONUtil.getString(json, "short_URL");
         post.setBlogUrl(JSONUtil.getString(json, "site_URL"));
 
-        post.numReplies = json.optInt("comment_count");
         post.numLikes = json.optInt("like_count");
         post.isLikedByCurrentUser = JSONUtil.getBool(json, "i_like");
         post.isFollowedByCurrentUser = JSONUtil.getBool(json, "is_following");
         post.isRebloggedByCurrentUser = JSONUtil.getBool(json, "is_reblogged");
-        post.isCommentsOpen = JSONUtil.getBool(json, "comments_open");
         post.isExternal = JSONUtil.getBool(json, "is_external");
         post.isPrivate = JSONUtil.getBool(json, "site_is_private");
 
         post.isLikesEnabled = JSONUtil.getBool(json, "likes_enabled");
         post.isSharingEnabled = JSONUtil.getBool(json, "sharing_enabled");
+
+        JSONObject jsonDiscussion = json.optJSONObject("discussion");
+        if (jsonDiscussion != null) {
+            post.isCommentsOpen = JSONUtil.getBool(jsonDiscussion, "comments_open");
+            post.numReplies = jsonDiscussion.optInt("comment_count");
+        } else {
+            post.isCommentsOpen = JSONUtil.getBool(json, "comments_open");
+            post.numReplies = json.optInt("comment_count");
+        }
 
         // parse the author section
         assignAuthorFromJson(post, json.optJSONObject("author"));
