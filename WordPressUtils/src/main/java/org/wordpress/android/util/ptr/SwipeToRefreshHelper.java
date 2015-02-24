@@ -35,7 +35,7 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
 
     public void setRefreshing(boolean refreshing) {
         mRefreshing = refreshing;
-        // Delayed refresh, if fixes  https://code.google.com/p/android/issues/detail?id=77712
+        // Delayed refresh, it fixes https://code.google.com/p/android/issues/detail?id=77712
         // 50ms seems a good compromise (always worked during tests) and fast enough so user can't notice the delay
         if (refreshing) {
             mSwipeRefreshLayout.postDelayed(new Runnable() {
