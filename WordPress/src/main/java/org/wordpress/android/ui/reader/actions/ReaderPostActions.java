@@ -58,7 +58,7 @@ public class ReaderPostActions {
         ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike);
 
         final String actionName = isAskingToLike ? "like" : "unlike";
-        String path = "/sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
+        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
         if (isAskingToLike) {
             path += "new";
         } else {
@@ -135,7 +135,7 @@ public class ReaderPostActions {
             }
         };
 
-        String path = "/sites/" + post.blogId
+        String path = "sites/" + post.blogId
                     + "/posts/" + post.postId
                     + "/reblogs/new";
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
@@ -147,7 +147,7 @@ public class ReaderPostActions {
      */
     public static void updatePost(final ReaderPost originalPost,
                                   final UpdateResultListener resultListener) {
-        String path = "/sites/" + originalPost.blogId + "/posts/" + originalPost.postId + "/?meta=site,likes";
+        String path = "sites/" + originalPost.blogId + "/posts/" + originalPost.postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -259,7 +259,7 @@ public class ReaderPostActions {
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
     public static void requestPost(final long blogId, final long postId, final ActionListener actionListener) {
-        String path = "/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
+        String path = "sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -348,7 +348,7 @@ public class ReaderPostActions {
     public static void requestPostsForBlog(final long blogId,
                                            final RequestDataAction updateAction,
                                            final UpdateResultListener resultListener) {
-        String path = "/sites/" + blogId + "/posts/?meta=site,likes";
+        String path = "sites/" + blogId + "/posts/?meta=site,likes";
 
         // append the date of the oldest cached post in this blog when requesting older posts
         if (updateAction == RequestDataAction.LOAD_OLDER) {
@@ -379,7 +379,7 @@ public class ReaderPostActions {
     public static void requestPostsForFeed(final long feedId,
                                            final RequestDataAction updateAction,
                                            final UpdateResultListener resultListener) {
-        String path = "/read/feed/" + feedId + "/posts/?meta=site,likes";
+        String path = "read/feed/" + feedId + "/posts/?meta=site,likes";
         if (updateAction == RequestDataAction.LOAD_OLDER) {
             String dateOldest = ReaderPostTable.getOldestPubDateInFeed(feedId);
             if (!TextUtils.isEmpty(dateOldest)) {
@@ -468,7 +468,7 @@ public class ReaderPostActions {
             return null;
         }
 
-        return String.format("/read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagName()));
+        return String.format("read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagName()));
     }
 
     /*
@@ -478,17 +478,17 @@ public class ReaderPostActions {
      * between API versions (as it did when we moved from v1 to v1.1)
      *
      * ex: https://public-api.wordpress.com/rest/v1/read/tags/fitness/posts
-     *     becomes just                            /read/tags/fitness/posts
+     *     becomes just                             read/tags/fitness/posts
      */
     private static String getRelativeEndpoint(final String endpoint) {
         if (endpoint != null && endpoint.startsWith("http")) {
             int pos = endpoint.indexOf("/read/");
             if (pos > -1) {
-                return endpoint.substring(pos, endpoint.length());
+                return endpoint.substring(pos + 1, endpoint.length());
             }
             pos = endpoint.indexOf("/v1/");
             if (pos > -1) {
-                return endpoint.substring(pos + 3, endpoint.length());
+                return endpoint.substring(pos + 4, endpoint.length());
             }
         }
         return StringUtils.notNullStr(endpoint);
