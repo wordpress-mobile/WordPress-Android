@@ -257,6 +257,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private final OnClickListener mOnLoginFormClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
+            // Don't change layout if we are performing a network operation
+            if (mProgressBarSignIn.getVisibility() == View.VISIBLE) return;
+
             if (mTwoStepLayout.getVisibility() == View.VISIBLE) {
                 setTwoStepAuthVisibility(false);
             }
