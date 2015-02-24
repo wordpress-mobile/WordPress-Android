@@ -15,7 +15,6 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
@@ -152,7 +151,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             }
         }
 
-        // This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
         HttpConnectionParams.setConnectionTimeout(client.getParams(), DEFAULT_CONNECTION_TIMEOUT);
         HttpConnectionParams.setSoTimeout(client.getParams(), DEFAULT_SOCKET_TIMEOUT);
 
@@ -401,12 +399,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             HttpEntity entity = new StringEntity(bodyWriter.toString());
             mPostMethod.setEntity(entity);
         }
-
-        //set timeout to 30 seconds, does it need to be set for both mClient and method?
-        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
-        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
     }
 
     /**
@@ -607,10 +599,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      */
     private boolean checkXMLRPCErrorMessage(Exception exception) {
         String errorMessage = exception.getMessage().toLowerCase();
-        if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503"))//TODO Not sure 503 is the correct error code returned by wpcom
-                &&
-            (errorMessage.contains("limit reached") || errorMessage.contains("login limit")))
-        {
+        if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503")) &&
+            (errorMessage.contains("limit reached") || errorMessage.contains("login limit"))) {
             broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
             return true;
         }

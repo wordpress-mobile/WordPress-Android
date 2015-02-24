@@ -49,7 +49,7 @@ public class ReaderUserActions {
             }
         };
 
-        WordPress.getRestClientUtils().get("me", listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get("me", listener, errorListener);
     }
 
     /*

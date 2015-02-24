@@ -54,7 +54,7 @@ public class ReaderBlogActions {
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
-        final String path = "/sites/" + blogId + "/follows/" + (isAskingToFollow ? "new" : "mine/delete");
+        final String path = "sites/" + blogId + "/follows/" + (isAskingToFollow ? "new" : "mine/delete");
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -82,7 +82,7 @@ public class ReaderBlogActions {
                 }
             }
         };
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
 
         return true;
     }
@@ -170,7 +170,7 @@ public class ReaderBlogActions {
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
-        final String path = "/read/following/mine/"
+        final String path = "read/following/mine/"
                 + (isAskingToFollow ? "new" : "delete")
                 + "?url=" + UrlUtils.urlEncode(feedUrl);
 
@@ -200,7 +200,7 @@ public class ReaderBlogActions {
                 }
             }
         };
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
 
         return true;
     }
@@ -307,9 +307,9 @@ public class ReaderBlogActions {
         };
 
         if (hasBlogId) {
-            WordPress.getRestClientUtilsV1_1().get("/sites/" + blogId, listener, errorListener);
+            WordPress.getRestClientUtilsV1_1().get("sites/" + blogId, listener, errorListener);
         } else {
-            WordPress.getRestClientUtilsV1_1().get("/sites/" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl)), listener, errorListener);
+            WordPress.getRestClientUtilsV1_1().get("sites/" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl)), listener, errorListener);
         }
     }
     public static void updateFeedInfo(long feedId, String feedUrl, final UpdateBlogInfoListener infoListener) {
@@ -330,9 +330,9 @@ public class ReaderBlogActions {
         };
         String path;
         if (feedId != 0) {
-            path = "/read/feed/" + feedId;
+            path = "read/feed/" + feedId;
         } else {
-            path = "/read/feed/" + UrlUtils.urlEncode(feedUrl);
+            path = "read/feed/" + UrlUtils.urlEncode(feedUrl);
         }
         WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
@@ -431,8 +431,8 @@ public class ReaderBlogActions {
         };
 
         AppLog.i(T.READER, "blocking blog " + blogId);
-        String path = "/me/block/sites/" + Long.toString(blogId) + "/new";
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        String path = "me/block/sites/" + Long.toString(blogId) + "/new";
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
 
         return blockResult;
     }
@@ -466,7 +466,7 @@ public class ReaderBlogActions {
         };
 
         AppLog.i(T.READER, "unblocking blog " + blockResult.blogId);
-        String path = "/me/block/sites/" + Long.toString(blockResult.blogId) + "/delete";
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        String path = "me/block/sites/" + Long.toString(blockResult.blogId) + "/delete";
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 }

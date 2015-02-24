@@ -112,7 +112,7 @@ public class ReaderTagActions {
                 }
             }
         };
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
 
         return true;
     }
