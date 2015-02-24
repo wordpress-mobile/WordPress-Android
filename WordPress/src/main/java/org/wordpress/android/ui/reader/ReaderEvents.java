@@ -21,7 +21,7 @@ public class ReaderEvents {
     public static class HasPerformedInitialUpdate {}
 
     public static class UpdatedFollowedTagsAndBlogs {
-        private Date mUpdateDate;
+        private final Date mUpdateDate;
         public UpdatedFollowedTagsAndBlogs() {
             mUpdateDate = new Date();
         }
