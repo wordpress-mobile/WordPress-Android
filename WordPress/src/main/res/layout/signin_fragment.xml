@@ -244,12 +244,14 @@
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/two_step_footer_label"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_extra_large"
                     android:layout_marginRight="@dimen/margin_extra_large"
+                    android:gravity="center_horizontal"
                     android:text="@string/two_step_footer_label"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    app:fixWidowWords="true" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/two_step_footer_button"
