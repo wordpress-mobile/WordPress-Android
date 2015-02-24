@@ -26,7 +26,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.WPMainActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -38,8 +37,7 @@ import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import javax.annotation.Nonnull;
 
 public class NotificationsListFragment extends Fragment
-        implements Bucket.Listener<Note>,
-                   WPMainActivity.FragmentVisibilityListener {
+        implements Bucket.Listener<Note> {
 
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
@@ -97,20 +95,6 @@ public class NotificationsListFragment extends Fragment
 
         if (savedInstanceState != null) {
             setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
-        }
-    }
-
-    /*
-     * called by the main activity when the page containing this fragment is shown/hidden
-     */
-    @Override
-    public void onVisibilityChanged(boolean isVisible) {
-        AppLog.d(AppLog.T.NOTIFS, "notification list > onVisibilityChanged " + isVisible);
-
-        if (isVisible) {
-
-        } else {
-
         }
     }
 

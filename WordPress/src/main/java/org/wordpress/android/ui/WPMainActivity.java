@@ -45,10 +45,6 @@ public class WPMainActivity extends ActionBarActivity
     private boolean mHasPerformedInitialUpdate;
     private int mPreviousPosition = -1;
 
-    public interface FragmentVisibilityListener {
-        public void onVisibilityChanged(boolean isVisible);
-    }
-
     private static final String KEY_INITIAL_UPDATE = "initial_update_performed";
 
     @Override
@@ -127,18 +123,6 @@ public class WPMainActivity extends ActionBarActivity
 
         mTabs.setBadge(mPreviousPosition, false);
         mTabs.setBadge(position, true);
-
-        // tell the previous fragment that it's being hidden
-        Fragment previousFragment = mTabAdapter.getFragment(mPreviousPosition);
-        if (previousFragment instanceof FragmentVisibilityListener) {
-            ((FragmentVisibilityListener) previousFragment).onVisibilityChanged(false);
-        }
-
-        // tell this fragment that it's being shown
-        Fragment thisFragment = mTabAdapter.getFragment(position);
-        if (thisFragment instanceof FragmentVisibilityListener) {
-            ((FragmentVisibilityListener) thisFragment).onVisibilityChanged(true);
-        }
 
         mPreviousPosition = position;
     }
