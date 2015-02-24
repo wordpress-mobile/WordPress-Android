@@ -200,6 +200,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Ensure two-step form is shown if needed
+        if (!TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.GONE) {
+            setTwoStepAuthVisibility(true);
+        }
+    }
+
     /**
      * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
      * edit box
