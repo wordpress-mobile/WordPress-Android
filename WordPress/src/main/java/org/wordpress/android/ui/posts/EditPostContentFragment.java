@@ -16,6 +16,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
@@ -141,6 +142,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     private List<String> mUploadingMedia;
     private ArrayList<String> mGalleryIds;
     private Map<String, String> mMediaIdToPath;
+    private int mGalleryContentCount;
 
     private int mStyleStart, mSelectionStart, mSelectionEnd, mFullViewBottom, mMaximumThumbnailWidth;
     private int mLastPosition = -1, mQuickMediaType = -1;
@@ -372,6 +374,26 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
                     fetchMedia(videoUri);
+                    break;
+                case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                    if (resultCode == Activity.RESULT_OK) {
+                        try {
+                            File f = new File(mMediaCapturePath);
+                            Uri capturedImageUri = Uri.fromFile(f);
+                            if (!addMedia(capturedImageUri, null, getActivity()))
+                                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+                            getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+                            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+                        } catch (RuntimeException e) {
+                            AppLog.e(T.POSTS, e);
+                        } catch (OutOfMemoryError e) {
+                            AppLog.e(T.POSTS, e);
+                        }
+                    } else if (mActivity != null && mQuickMediaType > -1 && TextUtils.isEmpty(mContentEditText.getText())) {
+                        // Quick Photo was cancelled, delete post and finish activity
+                        WordPress.wpDB.deletePost(mActivity.getPost());
+                        mActivity.finish();
+                    }
                     break;
                 case ACTIVITY_REQUEST_CODE_CREATE_LINK:
                     try {
@@ -1547,7 +1569,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 if (mediaId != null && newId != null && mUploadingMedia.contains(mediaId)) {
                     mGalleryIds.add(newId);
 
-                    if (mGalleryIds.size() == mMediaIdToPath.size()) {
+                    if (mGalleryIds.size() == mGalleryContentCount) {
                         for (String id : mUploadingMedia) {
                             String newText = mContentEditText.getText().toString().replace("<img android-uri=\"" + mMediaIdToPath.get(id) + "\" />", "");
                             mContentEditText.setText(newText);
@@ -1555,6 +1577,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
                         createGallery();
                         stopMediaUploadService();
+                        mGalleryContentCount = 0;
                     }
                 }
             }
@@ -1654,12 +1677,16 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      * media to users blog then adds a gallery to the Post with all the selected media.
      *
      * @param data
+     *  contains the selected media content with key
+     *  {@link org.wordpress.android.ui.media.MediaPickerActivity#SELECTED_CONTENT_RESULTS_KEY}
      */
     private void handleGalleryResult(Intent data) {
         if (data != null) {
             List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
 
             if (selectedContent != null && selectedContent.size() > 0) {
+                mGalleryContentCount = selectedContent.size();
+
                 for (MediaItem content : selectedContent) {
                     Uri source = content.getSource();
                     final String id = content.getTag();
