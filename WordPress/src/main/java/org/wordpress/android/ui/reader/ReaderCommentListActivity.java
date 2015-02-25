@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -31,6 +30,7 @@ import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
+import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionService;
@@ -49,6 +49,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+
+import de.greenrobot.event.EventBus;
 
 public class ReaderCommentListActivity extends ActionBarActivity {
 
@@ -139,6 +141,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
+        EventBus.getDefault().register(this);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(mReceiver, new IntentFilter(SuggestionService.ACTION_SUGGESTIONS_LIST_UPDATED));
     }
@@ -158,7 +161,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     @Override
     public void onPause() {
         super.onPause();
-
+        EventBus.getDefault().unregister(this);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
@@ -313,6 +316,27 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         progress.setVisibility(View.GONE);
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.UpdateCommentsStarted event) {
+        mIsUpdatingComments = true;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.UpdateCommentsEnded event) {
+        if (isFinishing()) return;
+
+        mIsUpdatingComments = false;
+        mHasUpdatedComments = true;
+        hideProgress();
+
+        if (event.getResult().isNewOrChanged()) {
+            mRestorePosition = getCurrentPosition();
+            refreshComments();
+        } else {
+            checkEmptyView();
+        }
+    }
+
     /*
      * request comments for this post
      */
@@ -321,44 +345,15 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             AppLog.w(T.READER, "reader comments > already updating comments");
             return;
         }
-
         if (!NetworkUtils.isNetworkAvailable(this)) {
             AppLog.w(T.READER, "reader comments > no connection, update canceled");
             return;
         }
 
-        mIsUpdatingComments = true;
-
-        int pageNumber;
-        if (requestNextPage) {
-            int prevPage = ReaderCommentTable.getLastPageNumberForPost(mPost.blogId, mPost.postId);
-            pageNumber = prevPage + 1;
-        } else {
-            pageNumber = 1;
-        }
-
         if (showProgress) {
             showProgress();
         }
-
-        ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                mIsUpdatingComments = false;
-                mHasUpdatedComments = true;
-                if (!isFinishing()) {
-                    hideProgress();
-                    if (result.isNewOrChanged()) {
-                        mRestorePosition = getCurrentPosition();
-                        refreshComments();
-                    } else {
-                        checkEmptyView();
-                    }
-                }
-            }
-        };
-        AppLog.d(T.READER, "reader comments > updateComments, page " + pageNumber);
-        ReaderCommentActions.updateCommentsForPost(getPost(), pageNumber, resultListener);
+        ReaderCommentService.startService(this, mPost, requestNextPage);
     }
 
     private void checkEmptyView() {
