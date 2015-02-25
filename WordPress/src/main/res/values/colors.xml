@@ -58,7 +58,7 @@
     <color name="tab_background">@color/color_primary</color>
     <color name="tab_text_normal">@color/blue_light</color>
     <color name="tab_text_selected">@color/white</color>
-    <color name="tab_indicator">@color/blue_light</color>
+    <color name="tab_indicator">@color/white</color>
 
     <!-- Stats -->
     <color name="stats_text_color">#404040</color>
