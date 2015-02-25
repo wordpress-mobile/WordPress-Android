@@ -34,10 +34,10 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
-import org.wordpress.android.ui.reader.views.ReaderViewPager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPMainViewPager;
 
 import javax.annotation.Nonnull;
 
@@ -53,7 +53,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
                    ReaderInterfaces.AutoHideToolbarListener {
 
     private Toolbar mToolbar;
-    private ReaderViewPager mViewPager;
+    private WPMainViewPager mViewPager;
     private ProgressBar mProgress;
 
     private ReaderTag mCurrentTag;
@@ -82,7 +82,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mViewPager = (ReaderViewPager) findViewById(R.id.viewpager);
+        mViewPager = (WPMainViewPager) findViewById(R.id.viewpager);
         mProgress = (ProgressBar) findViewById(R.id.progress_loading);
 
         final String title;
