@@ -111,7 +111,9 @@ public class MediaPickerActivity extends ActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.capture_image) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        } else if (item.getItemId() == R.id.capture_image) {
             MediaUtils.launchCamera(this, new MediaUtils.LaunchCameraCallback() {
                 @Override
                 public void onMediaCapturePathReady(String mediaCapturePath) {
@@ -303,10 +305,12 @@ public class MediaPickerActivity extends ActionBarActivity
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.show();
             actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setElevation(0);
+            actionBar.show();
         }
 
         mMediaPickerAdapter = new MediaPickerAdapter(getFragmentManager());
