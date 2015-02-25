@@ -18,9 +18,4 @@ public class ReaderTypes {
             return this.equals(TAG_PREVIEW) || this.equals(BLOG_PREVIEW);
         }
     }
-
-    protected static enum RefreshType {
-        AUTOMATIC, // refresh was performed by the app without user requesting it
-        MANUAL     // refresh was requested by the user
-    }
 }
