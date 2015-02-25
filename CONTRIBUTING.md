@@ -49,8 +49,8 @@ We use the [git flow branching model][git-flow].
 * Hotfix branches. When one or several critical issues are found on current released version, we'll branch from `tags/x.y` to `hotfix/x.y.1` (or from `tags/x.y.z` to `hotfix/x.y.z+1` if a hotfix release has already been published)
 
 * Fix or feature branches. Proposed new features and bug fixes should live in their own branch. Use the following naming convention: if a github issue exists for this feature/bugfix, the branch will be named `issue/ISSUEID-comment` where ISSUEID is the corresponding github issue id. If a github issue doesn't exist, branch will be named `feature/comment`. These branches will be merged in:
-    * `hotfix/x.y.z` if the change if a fix for a released version,
-    * `release/x.y` if the change if a fix for a beta or release candidate,
+    * `hotfix/x.y.z` if the change is a fix for a released version,
+    * `release/x.y` if the change is a fix for a beta or release candidate,
     * `develop` for all other cases.
 
 Note: `release/x.y` or `hotfix/x.y.z` will be merged back in `master` after a new version is released. A new tag will be created and pushed at the same time.

@@ -8,9 +8,9 @@ import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.text.BreakIterator;
@@ -20,6 +20,7 @@ public class ReaderPost {
     private String pseudoId;
     public long postId;
     public long blogId;
+    public long feedId;
     public long authorId;
 
     private String title;
@@ -67,6 +68,7 @@ public class ReaderPost {
 
         post.postId = json.optLong("ID");
         post.blogId = json.optLong("site_ID");
+        post.feedId = json.optLong("feed_ID");
 
         if (json.has("pseudo_ID")) {
             post.pseudoId = JSONUtil.getString(json, "pseudo_ID");  // read/ endpoint
@@ -83,17 +85,24 @@ public class ReaderPost {
         post.shortUrl = JSONUtil.getString(json, "short_URL");
         post.setBlogUrl(JSONUtil.getString(json, "site_URL"));
 
-        post.numReplies = json.optInt("comment_count");
         post.numLikes = json.optInt("like_count");
         post.isLikedByCurrentUser = JSONUtil.getBool(json, "i_like");
         post.isFollowedByCurrentUser = JSONUtil.getBool(json, "is_following");
         post.isRebloggedByCurrentUser = JSONUtil.getBool(json, "is_reblogged");
-        post.isCommentsOpen = JSONUtil.getBool(json, "comments_open");
         post.isExternal = JSONUtil.getBool(json, "is_external");
         post.isPrivate = JSONUtil.getBool(json, "site_is_private");
 
         post.isLikesEnabled = JSONUtil.getBool(json, "likes_enabled");
         post.isSharingEnabled = JSONUtil.getBool(json, "sharing_enabled");
+
+        JSONObject jsonDiscussion = json.optJSONObject("discussion");
+        if (jsonDiscussion != null) {
+            post.isCommentsOpen = JSONUtil.getBool(jsonDiscussion, "comments_open");
+            post.numReplies = jsonDiscussion.optInt("comment_count");
+        } else {
+            post.isCommentsOpen = JSONUtil.getBool(json, "comments_open");
+            post.numReplies = json.optInt("comment_count");
+        }
 
         // parse the author section
         assignAuthorFromJson(post, json.optJSONObject("author"));
@@ -413,6 +422,10 @@ public class ReaderPost {
         return !TextUtils.isEmpty(text);
     }
 
+    public boolean hasUrl() {
+        return !TextUtils.isEmpty(url);
+    }
+
     public boolean hasExcerpt() {
         return !TextUtils.isEmpty(excerpt);
     }
@@ -503,7 +516,7 @@ public class ReaderPost {
             if (!hasPostAvatar()) {
                 return "";
             }
-            avatarForDisplay = PhotonUtils.fixAvatar(postAvatar, avatarSize);
+            avatarForDisplay = GravatarUtils.fixGravatarUrl(postAvatar, avatarSize);
         }
         return avatarForDisplay;
     }

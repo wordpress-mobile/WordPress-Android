@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
@@ -86,7 +87,7 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
         return true;
     }
 
@@ -134,10 +135,10 @@ public class ReaderPostActions {
             }
         };
 
-        String path = "/sites/" + post.blogId
+        String path = "sites/" + post.blogId
                     + "/posts/" + post.postId
                     + "/reblogs/new";
-        WordPress.getRestClientUtils().post(path, params, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
     /*
@@ -164,7 +165,7 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "updating post");
-        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
     }
 
     private static void handleUpdatePostResponse(final ReaderPost originalPost,
@@ -284,7 +285,7 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "requesting post");
-        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
     }
 
     /*
@@ -338,23 +339,16 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.getRestClientUtils().get(sb.toString(), null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get(sb.toString(), null, null, listener, errorListener);
     }
 
     /*
      * get the latest posts in the passed blog
      */
     public static void requestPostsForBlog(final long blogId,
-                                           final String blogUrl,
                                            final RequestDataAction updateAction,
                                            final UpdateResultListener resultListener) {
-        String path;
-        if (blogId == 0) {
-            path = "sites/" + UrlUtils.getDomainFromUrl(blogUrl);
-        } else {
-            path = "sites/" + blogId;
-        }
-        path += "/posts/?meta=site,likes";
+        String path = "sites/" + blogId + "/posts/?meta=site,likes";
 
         // append the date of the oldest cached post in this blog when requesting older posts
         if (updateAction == RequestDataAction.LOAD_OLDER) {
@@ -379,7 +373,38 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "updating posts in blog " + blogId);
-        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+    }
+
+    public static void requestPostsForFeed(final long feedId,
+                                           final RequestDataAction updateAction,
+                                           final UpdateResultListener resultListener) {
+        String path = "read/feed/" + feedId + "/posts/?meta=site,likes";
+        if (updateAction == RequestDataAction.LOAD_OLDER) {
+            String dateOldest = ReaderPostTable.getOldestPubDateInFeed(feedId);
+            if (!TextUtils.isEmpty(dateOldest)) {
+                path += "&before=" + UrlUtils.urlEncode(dateOldest);
+            }
+        }
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleUpdatePostsResponse(null, jsonObject, resultListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                if (resultListener != null) {
+                    resultListener.onUpdateResult(UpdateResult.FAILED);
+                }
+            }
+        };
+
+        AppLog.d(T.READER, "updating posts in feed " + feedId);
+        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
     }
 
     /*
@@ -428,13 +453,13 @@ public class ReaderPostActions {
 
         // if passed tag has an assigned endpoint, return it and be done
         if (!TextUtils.isEmpty(tag.getEndpoint())) {
-            return tag.getEndpoint();
+            return getRelativeEndpoint(tag.getEndpoint());
         }
 
         // check the db for the endpoint
         String endpoint = ReaderTagTable.getEndpointForTag(tag);
         if (!TextUtils.isEmpty(endpoint)) {
-            return endpoint;
+            return getRelativeEndpoint(endpoint);
         }
 
         // never hand craft the endpoint for default tags, since these MUST be updated
@@ -443,7 +468,30 @@ public class ReaderPostActions {
             return null;
         }
 
-        return String.format("/read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagName()));
+        return String.format("read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagName()));
+    }
+
+    /*
+     * returns the passed endpoint without the unnecessary path - this is
+     * needed because as of 20-Feb-2015 the /read/menu/ call returns the
+     * full path but we don't want to use the full path since it may change
+     * between API versions (as it did when we moved from v1 to v1.1)
+     *
+     * ex: https://public-api.wordpress.com/rest/v1/read/tags/fitness/posts
+     *     becomes just                             read/tags/fitness/posts
+     */
+    private static String getRelativeEndpoint(final String endpoint) {
+        if (endpoint != null && endpoint.startsWith("http")) {
+            int pos = endpoint.indexOf("/read/");
+            if (pos > -1) {
+                return endpoint.substring(pos + 1, endpoint.length());
+            }
+            pos = endpoint.indexOf("/v1/");
+            if (pos > -1) {
+                return endpoint.substring(pos + 4, endpoint.length());
+            }
+        }
+        return StringUtils.notNullStr(endpoint);
     }
 
 }

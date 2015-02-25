@@ -13,23 +13,6 @@ public class PhotonUtils {
     }
 
     /*
-     * gravatars often contain the ?s= parameter which determines their size - detect this and
-     * replace it with a new ?s= parameter which requests the avatar at the exact size needed
-     */
-    public static String fixAvatar(final String imageUrl, int avatarSz) {
-        if (TextUtils.isEmpty(imageUrl))
-            return "";
-
-        // if this isn't a gravatar image, return as resized photon image url
-        if (!imageUrl.contains("gravatar.com")) {
-            return getPhotonImageUrl(imageUrl, avatarSz, avatarSz);
-        }
-
-        // remove all other params, then add query string for size and "mystery man" default
-        return UrlUtils.removeQuery(imageUrl) + "?s=" + avatarSz + "&d=mm";
-    }
-
-    /*
     * returns true if the passed url is an obvious "mshots" url
     */
     public static boolean isMshotsUrl(final String imageUrl) {

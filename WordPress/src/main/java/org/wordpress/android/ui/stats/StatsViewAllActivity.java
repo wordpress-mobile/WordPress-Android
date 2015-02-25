@@ -63,7 +63,7 @@ public class StatsViewAllActivity extends ActionBarActivity
     private int mOuterPagerSelectedButtonIndex = 0;
 
     // The number of results to return per page for Paged REST endpoints. Numbers larger than 20 will default to 20 on the server.
-    private static final int MAX_RESULTS_PER_PAGE = 20;
+    public static final int MAX_RESULTS_PER_PAGE = 20;
 
     // The number of results to return for NON Paged REST endpoints.
     private static final int MAX_RESULTS_REQUESTED = 100;

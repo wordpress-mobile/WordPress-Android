@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_page_recommended_blogs">Blog yang mungkin Anda sukai</string>
+	<string name="post_uploading">Mengunggah</string>
+	<string name="stats_overall">Keseluruhan</string>
+	<string name="reader_empty_posts_in_blog">Blog ini kosong</string>
+	<string name="stats_recent_weeks">Beberapa Minggu Terakhir</string>
+	<string name="stats_total">Total</string>
+	<string name="reader_label_new_posts">Pos baru</string>
+	<string name="error_copy_to_clipboard">Terjadi kesalahan saat menyalin teks ke clipboard</string>
+	<string name="stats_period">Periode</string>
+	<string name="logs_copied_to_clipboard">Log aplikasi sudah disalin ke clipboard</string>
+	<string name="stats_average_per_day">Rata-Rata per Hari</string>
+	<string name="stats_months_and_years">Bulan dan Tahun</string>
 	<string name="stats_unfollow">Batal Mengikuti</string>
 	<string name="stats_follow">Ikuti</string>
 	<string name="stats_view_publicize">Publikasikan</string>
@@ -156,13 +168,10 @@
 	<string name="reader_page_followed_tags">Tag yang diikuti</string>
 	<string name="reader_page_popular_tags">Tag populer</string>
 	<string name="reader_page_followed_blogs">Blog yang diikuti</string>
-	<string name="reader_page_recommended_blogs">Blog yang direkomendasikan</string>
 	<string name="reader_hint_add_tag_or_url">Masukkan sebuah tag atau URL untuk mengikuti</string>
-	<string name="reader_label_new_posts">Tampilkan pos-pos baru</string>
 	<string name="reader_label_followers">%s pengikut</string>
 	<string name="reader_label_followed_blog">Blog diikuti</string>
 	<string name="reader_label_unfollowed_blog">Blog tak diikuti</string>
-	<string name="reader_label_more_recommendations">Rekomendasi lebih lagi</string>
 	<string name="reader_label_tag_preview">Pos dengan tag %s</string>
 	<string name="reader_toast_err_get_blog_info">Tak bisa menampilkan blog ini</string>
 	<string name="reader_toast_err_already_follow_blog">Anda sudah mengikuti blog ini</string>

@@ -20,14 +20,14 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 public class StatsFollowersFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsFollowersFragment.class.getSimpleName();
 
-    private HashSet<String> dotComUserBlogsURL = new HashSet<>();
+    private Map<String, Integer> userBlogs = new HashMap<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,9 +83,10 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 // This will be used later to check if the user is a member of followers blog marked as private.
                 List <Map<String, Object>> dotComUserBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"homeURL"});
                 for (Map<String, Object> blog : dotComUserBlogs) {
-                    if (blog != null && blog.get("homeURL") != null) {
+                    if (blog != null && blog.get("homeURL") != null && blog.get("blogId") != null) {
                         String normURL = normalizeAndRemoveScheme(blog.get("homeURL").toString());
-                        dotComUserBlogsURL.add(normURL);
+                        Integer blogID = (Integer)blog.get("blogId");
+                        userBlogs.put(normURL, blogID);
                     }
                 }
             }
@@ -125,67 +126,104 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             ArrayAdapter adapter = new DotComFollowerAdapter(getActivity(), followersModel.getFollowers());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
-            if (isSingleView()) {
-                if (followersModel.getPages() > 1) {
-                    mPaginationContainer.setVisibility(View.VISIBLE);
-                    mPaginationText.setText(
-                            String.format(
-                                    getString(R.string.stats_pagination_label),
-                                    followersModel.getPage(),
-                                    followersModel.getPages()
-                            )
-                    );
-                    mPaginationGoBackButton.setEnabled(true);
-                    mPaginationGoForwardButton.setEnabled(true);
-
-                    if (followersModel.getPage() == 1) {
-                        mPaginationGoBackButton.setVisibility(View.INVISIBLE);
-                    } else {
-                        mPaginationGoBackButton.setVisibility(View.VISIBLE);
-                        mPaginationGoBackButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mPaginationGoBackButton.setEnabled(false);
-                                mPaginationGoForwardButton.setEnabled(false);
-                                mMoreDataListener.onMoreDataRequested(
-                                        getSectionsToUpdate()[mTopPagerSelectedButtonIndex],
-                                        followersModel.getPage() - 1
-                                );
-                            }
-                        });
-                    }
-
-                    if (followersModel.getPage() == followersModel.getPages()) {
-                        mPaginationGoForwardButton.setVisibility(View.INVISIBLE);
-                    } else {
-                        mPaginationGoForwardButton.setVisibility(View.VISIBLE);
-                        mPaginationGoForwardButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mPaginationGoBackButton.setEnabled(false);
-                                mPaginationGoForwardButton.setEnabled(false);
-                                mMoreDataListener.onMoreDataRequested(
-                                        getSectionsToUpdate()[mTopPagerSelectedButtonIndex],
-                                        followersModel.getPage() + 1
-                                );
-                            }
-                        });
-                    }
-                } else {
-                    mPaginationContainer.setVisibility(View.INVISIBLE);
-                }
-            }
 
             if (mTopPagerSelectedButtonIndex == 0) {
                 mTotalsLabel.setText(getTotalFollowersLabel(followersModel.getTotalWPCom()));
             } else {
                 mTotalsLabel.setText(getTotalFollowersLabel(followersModel.getTotalEmail()));
             }
+
+            if (isSingleView()) {
+                if (followersModel.getPages() > 1) {
+                    mBottomPaginationContainer.setVisibility(View.VISIBLE);
+                    mTopPaginationContainer.setVisibility(View.VISIBLE);
+                    String paginationLabel = String.format(
+                            getString(R.string.stats_pagination_label),
+                            FormatUtils.formatDecimal(followersModel.getPage()),
+                            FormatUtils.formatDecimal(followersModel.getPages())
+                    );
+                    mBottomPaginationText.setText(paginationLabel);
+                    mTopPaginationText.setText(paginationLabel);
+                    setNavigationButtonsEnabled(true);
+
+                    // Setting up back buttons
+                    if (followersModel.getPage() == 1) {
+                        // first page. No go back buttons
+                        setNavigationBackButtonsVisibility(false);
+                    } else {
+                        setNavigationBackButtonsVisibility(true);
+                        View.OnClickListener clickListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setNavigationButtonsEnabled(false);
+                                mMoreDataListener.onMoreDataRequested(
+                                        getSectionsToUpdate()[mTopPagerSelectedButtonIndex],
+                                        followersModel.getPage() - 1
+                                );
+                            }
+                        };
+                        mBottomPaginationGoBackButton.setOnClickListener(clickListener);
+                        mTopPaginationGoBackButton.setOnClickListener(clickListener);
+                    }
+
+                    // Setting up forward buttons
+                    if (followersModel.getPage() == followersModel.getPages()) {
+                        // last page. No go forward buttons
+                        setNavigationForwardButtonsVisibility(false);
+                    } else {
+                        setNavigationForwardButtonsVisibility(true);
+                        View.OnClickListener clickListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setNavigationButtonsEnabled(false);
+                                mMoreDataListener.onMoreDataRequested(
+                                        getSectionsToUpdate()[mTopPagerSelectedButtonIndex],
+                                        followersModel.getPage() + 1
+                                );
+                            }
+                        };
+                        mBottomPaginationGoForwardButton.setOnClickListener(clickListener);
+                        mTopPaginationGoForwardButton.setOnClickListener(clickListener);
+                    }
+
+                    // Change the total number of followers label by adding the current paging info
+                    int startIndex = followersModel.getPage() * StatsViewAllActivity.MAX_RESULTS_PER_PAGE - StatsViewAllActivity.MAX_RESULTS_PER_PAGE + 1;
+                    int endIndex = startIndex + followersModel.getFollowers().size() - 1;
+                    String pagedLabel  = getString(
+                            mTopPagerSelectedButtonIndex == 0 ? R.string.stats_followers_total_wpcom_paged : R.string.stats_followers_total_email_paged,
+                            startIndex,
+                            endIndex,
+                            FormatUtils.formatDecimal(mTopPagerSelectedButtonIndex == 0 ? followersModel.getTotalWPCom() : followersModel.getTotalEmail())
+                    );
+                    mTotalsLabel.setText(pagedLabel);
+                } else {
+                    // No paging required. Hide the controls.
+                    mBottomPaginationContainer.setVisibility(View.GONE);
+                    mTopPaginationContainer.setVisibility(View.GONE);
+                }
+            }
         } else {
             showHideNoResultsUI(true);
-            mPaginationContainer.setVisibility(View.GONE);
+            mBottomPaginationContainer.setVisibility(View.GONE);
             mTotalsLabel.setText(getTotalFollowersLabel(0));
         }
+    }
+
+    private void setNavigationBackButtonsVisibility(boolean visible) {
+        mBottomPaginationGoBackButton.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        mTopPaginationGoBackButton.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private void setNavigationForwardButtonsVisibility(boolean visible) {
+        mBottomPaginationGoForwardButton.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        mTopPaginationGoForwardButton.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private void setNavigationButtonsEnabled(boolean enable) {
+        mBottomPaginationGoBackButton.setEnabled(enable);
+        mBottomPaginationGoForwardButton.setEnabled(enable);
+        mTopPaginationGoBackButton.setEnabled(enable);
+        mTopPaginationGoForwardButton.setEnabled(enable);
     }
 
     @Override
@@ -206,7 +244,6 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
 
         return  getString(R.string.stats_followers_total_email, FormatUtils.formatDecimal(total));
     }
-
 
     @Override
     protected boolean isExpandableList() {
@@ -250,19 +287,22 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             final FollowDataModel followData = currentRowData.getFollowData();
 
             // entries
-            if (mTopPagerSelectedButtonIndex == 0 && !TextUtils.isEmpty(currentRowData.getURL())) {
-                // WPCOM followers with no empty URL
+            if (mTopPagerSelectedButtonIndex == 0 && !(TextUtils.isEmpty(currentRowData.getURL()) && followData == null)) {
+                // WPCOM followers with no empty URL or empty follow data
 
-                boolean openInReader = true;
+                final int blogID;
                 if (followData == null) {
                     // If follow data is empty, we cannot follow the blog, or access it in the reader.
                     // We need to check if the user is a member of this blog.
                     // If so, we can launch open the reader, otherwise open the blog in the in-app browser.
                     String normURL = normalizeAndRemoveScheme(currentRowData.getURL());
-                    openInReader = dotComUserBlogsURL.contains(normURL);
+                    blogID = userBlogs.containsKey(normURL) ? userBlogs.get(normURL) : Integer.MIN_VALUE;
+                } else {
+                    blogID = followData.getSiteID();
                 }
 
-                if (openInReader) {
+                if (blogID > Integer.MIN_VALUE) {
+                    // Open the Reader
                     holder.entryTextView.setText(currentRowData.getLabel());
                     holder.rowContent.setOnClickListener(
                             new View.OnClickListener() {
@@ -270,17 +310,17 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                 public void onClick(View view) {
                                     ReaderActivityLauncher.showReaderBlogPreview(
                                             context,
-                                            0L,
-                                            currentRowData.getURL()
+                                            blogID
                                     );
                                 }
                             });
                 } else {
+                    // Open the in-app web browser
                     holder.setEntryTextOrLink(currentRowData.getURL(), currentRowData.getLabel());
                 }
                 holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_link_text_color));
             } else {
-                // Email followers, or wpcom followers with empty URL
+                // Email followers, or wpcom followers with empty URL and no blogID
                 holder.setEntryText(currentRowData.getLabel());
             }
 
@@ -288,7 +328,9 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(getSinceLabel(currentRowData.getDateSubscribed()));
 
             // Avatar
-            holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
+            holder.networkImageView.setImageUrl(
+                    GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx),
+                    WPNetworkImageView.ImageType.AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             if (followData == null) {

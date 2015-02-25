@@ -207,7 +207,23 @@ public class ReaderPostDetailFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.reader_native_detail, menu);
+        inflater.inflate(R.menu.reader_detail, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        // browse & share require the post to have a URL (some feed-based posts don't have one)
+        boolean postHasUrl = hasPost() && mPost.hasUrl();
+        MenuItem mnuBrowse = menu.findItem(R.id.menu_browse);
+        if (mnuBrowse != null) {
+            mnuBrowse.setVisible(postHasUrl);
+        }
+        MenuItem mnuShare = menu.findItem(R.id.menu_share);
+        if (mnuShare != null) {
+            mnuShare.setVisible(postHasUrl);
+        }
     }
 
     @Override
@@ -347,7 +363,7 @@ public class ReaderPostDetailFragment extends Fragment
 
 
         // action returns before api call completes, but local post will have been changed
-        if (ReaderBlogActions.performFollowAction(mPost, isAskingToFollow, actionListener)) {
+        if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, actionListener)) {
             mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
         }
     }
@@ -746,11 +762,11 @@ public class ReaderPostDetailFragment extends Fragment
             // avatar in header shows blog preview unless this post is from an external feed
             if (isBlogPreview()) {
                 layoutDetailHeader.setVisibility(View.GONE);
-            } else if (!mPost.isExternal) {
+            } else {
                 imgAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId, mPost.getBlogUrl());
+                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
                     }
                 });
             }

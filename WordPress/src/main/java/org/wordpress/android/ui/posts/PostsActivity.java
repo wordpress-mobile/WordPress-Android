@@ -29,6 +29,7 @@ import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.passcodelock.AppLockManager;
@@ -248,6 +249,10 @@ public class PostsActivity extends WPDrawerActivity
         ViewPostFragment viewPostFragment = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
 
         if (post != null) {
+            if (post.isUploading()){
+                ToastUtils.showToast(this, R.string.toast_err_post_uploading, ToastUtils.Duration.SHORT);
+                return;
+            }
             WordPress.currentPost = post;
             if (viewPostFragment == null || !viewPostFragment.isInLayout()) {
                 FragmentTransaction ft = fm.beginTransaction();

@@ -112,6 +112,7 @@
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
+    <string name="media_fetching">Fetching media…</string>
 
     <!-- Upload Media -->
     <string name="media_no_video_title">VideoPress unavailable</string>
@@ -193,8 +194,9 @@
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
     <string name="share_url">Share URL</string>
-    <string name="loading_posts">Loading posts…</string>
-    <string name="loading_pages">Loading pages…</string>
+    <string name="posts_fetching">Fetching posts…</string>
+    <string name="pages_fetching">Fetching pages…</string>
+    <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -213,6 +215,7 @@
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
     <string name="comment">Comment</string>
+    <string name="comments_fetching">Fetching comments…</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
@@ -459,6 +462,8 @@
     <string name="stats_followers_email_selector">Email</string>
     <string name="stats_followers_total_wpcom">Total WordPress.com Followers: %1$s</string>
     <string name="stats_followers_total_email">Total Email Followers: %1$s</string>
+    <string name="stats_followers_total_wpcom_paged">Showing %1$d - %2$d of %3$s WordPress.com Followers</string>
+    <string name="stats_followers_total_email_paged">Showing %1$d - %2$d of %3$s Email Followers</string>
     <string name="stats_followers_seconds_ago">seconds ago</string>
     <string name="stats_followers_a_minute_ago">a minute ago</string>
     <string name="stats_followers_minutes">%1$d minutes</string>
@@ -742,6 +747,8 @@
     <string name="editor_toast_gallery_created_formatted">Gallery created with %d items</string>
 
     <!-- empty list/grid text -->
+    <string name="reader_empty_posts_no_connection">@string/no_network_title</string>
+    <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
