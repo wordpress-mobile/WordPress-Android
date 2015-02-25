@@ -51,7 +51,7 @@ class ReaderPostRenderer {
         }
 
         mPost = post;
-        mWeakWebView = new WeakReference<ReaderWebView>(webView);
+        mWeakWebView = new WeakReference<>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
 
         mMinFullSizeWidthDp = pxToDp(mResourceVars.fullSizeImageWidthPx / 3);
