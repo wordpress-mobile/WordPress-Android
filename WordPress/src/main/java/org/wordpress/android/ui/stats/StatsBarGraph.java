@@ -158,6 +158,10 @@ class StatsBarGraph extends GraphView {
                            double minY, double diffX, double diffY, float horstart,
                            GraphViewSeriesStyle style) {
         float colwidth = graphwidth / values.length;
+        int maxColumnSize = getGraphViewStyle().getMaxColumnWidth();
+        if (maxColumnSize > 0 && colwidth > maxColumnSize) {
+          colwidth = maxColumnSize;
+        }
 
         paint.setStrokeWidth(style.thickness);
         paint.setColor(style.color);

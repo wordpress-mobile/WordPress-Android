@@ -122,23 +122,31 @@ abstract public class GraphView extends LinearLayout {
 				canvas.drawLine(horstart, y, width, y, paint);
 			}
 
-			float colWidth = graphwidth / horlabels.length;
+            float colWidth = graphwidth / horlabels.length;
+            int maxColumnSize = getGraphViewStyle().getMaxColumnWidth();
+            if (maxColumnSize > 0 && colWidth > maxColumnSize) {
+                // we need to calculate horstart here
+                colWidth = maxColumnSize;
+                float diffSingleColumn = graphwidth / horlabels.length - colWidth;
+                diffSingleColumn *= horlabels.length;
+                horstart = diffSingleColumn / 2;
+            }
 
 			// horizontal labels + lines
 			int hors = horlabels.length;
 			int horLabelsToShow = getGraphViewStyle().getNumHorizontalLabels();
 			for (int i = 0; i < horlabels.length; i++) {
 				paint.setColor(graphViewStyle.getGridXColor());
-				float x = ((graphwidth / hors) * i) + horstart + (colWidth/2);
+				float x = (colWidth * i) + horstart + (colWidth/2);
 				canvas.drawLine(x, height - border, x, border, paint);
 
                 // Draw the background of labels
                 paint.setColor(graphViewStyle.getHorizontalLabelsBackgroundColor(i));
                 paint.setAlpha(50);
                 canvas.drawRect(
-                        ((graphwidth / hors) * i) + horstart,
+                        (colWidth * i) + horstart,
                         height - border,
-                        ((graphwidth / hors) * i) + horstart + colWidth,
+                        (colWidth * i) + horstart + colWidth,
                         height,
                         paint
                 );

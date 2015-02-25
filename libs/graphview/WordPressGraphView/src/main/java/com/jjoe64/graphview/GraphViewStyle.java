@@ -38,6 +38,7 @@ public class GraphViewStyle {
 	private int verticalLabelsWidth;
 	private int numVerticalLabels;
 	private int numHorizontalLabels;
+    private int maxColumnWidth; // Max width in PX a column can get on the screen
 
 	public GraphViewStyle() {
 		verticalLabelsColor = Color.WHITE;
@@ -118,6 +119,15 @@ public class GraphViewStyle {
 	public void setHorizontalLabelsColor(int c) {
 		horizontalLabelsColor = c;
 	}
+
+
+    public int getMaxColumnWidth() {
+        return maxColumnWidth;
+    }
+
+    public void setMaxColumnWidth(int maxColumnWidth) {
+        this.maxColumnWidth = maxColumnWidth;
+    }
 
 	/**
 	 * @param numHorizontalLabels 0 = auto

@@ -478,8 +478,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 break;
         }
 
-       //mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
+        // Set the maximum size a column can get on the screen in PX
+        mGraphView.getGraphViewStyle().setMaxColumnWidth(
+                DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP)
+        );
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setGestureListener(this);
 
