@@ -69,6 +69,7 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
+import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.MediaPickerActivity;
 import org.wordpress.android.ui.media.MediaSourceWPImages;
 import org.wordpress.android.ui.media.MediaSourceWPVideos;
@@ -1698,18 +1699,11 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             ToastUtils.showToast(getActivity(), galleryToast, ToastUtils.Duration.SHORT);
 
             MediaGallery newGallery = new MediaGallery();
-            newGallery.setIds(mGalleryIds);
+            newGallery.setIds((ArrayList) mGalleryIds.clone());
+            Intent intent = new Intent(getActivity(), MediaGalleryPickerActivity.class);
+            intent.putExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY, newGallery);
+            handleMediaGalleryResult(intent);
 
-            String text = mContentEditText.getText().toString();
-            text = text + "[gallery columns=\"3\" ids=\"";
-
-            for (String id : mGalleryIds) {
-                text += id + ",";
-            }
-
-            text = text.substring(0, text.length() - 1) + "\"]";
-
-            mContentEditText.setText(text);
             mGalleryIds.clear();
             mGalleryIds = null;
             mUploadingMedia = null;
