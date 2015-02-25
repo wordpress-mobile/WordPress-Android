@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +15,10 @@ import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries;
 
 import org.wordpress.android.R;
@@ -37,7 +34,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -66,8 +62,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private CheckBox mViewsCheckbox;
     private CheckBox mVisitorsCheckbox;
     private boolean mIsCheckboxChecked;
-    private ImageView mLegendViews;
-    private ImageView mLegendVisitors;
 
     private OnDateChangeListener mListener;
 
@@ -104,10 +98,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mVisitorsAndViewsCheckBoxesContainer = (LinearLayout) view.findViewById(R.id.stats_visitors_and_views_checkboxes_container);
         mViewsCheckbox = (CheckBox) view.findViewById(R.id.stats_checkbox_views);
         mViewsCheckbox.setOnClickListener(onCheckboxClicked);
+        mViewsCheckbox.setCompoundDrawablePadding(DisplayUtils.dpToPx(mViewsCheckbox.getContext(), 8));
         mVisitorsCheckbox = (CheckBox) view.findViewById(R.id.stats_checkbox_visitors);
         mVisitorsCheckbox.setOnClickListener(onCheckboxClicked);
-        mLegendViews = (ImageView) mVisitorsAndViewsCheckBoxesContainer.findViewById(R.id.stats_label_views);
-        mLegendVisitors = (ImageView) mVisitorsAndViewsCheckBoxesContainer.findViewById(R.id.stats_label_visitors);
+        mVisitorsCheckbox.setCompoundDrawablePadding(DisplayUtils.dpToPx(mVisitorsCheckbox.getContext(), 8));
 
         // Make sure we've all the info to build the tab correctly. This is ALWAYS true
         if (mModuleButtonsContainer.getChildCount() == overviewItems.length) {
@@ -344,20 +338,36 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 // Views tab enabled
                 mViewsCheckbox.setEnabled(false);
                 mViewsCheckbox.setChecked(false);
+                mViewsCheckbox.setCompoundDrawablesWithIntrinsicBounds(null,
+                        null,
+                        getResources().getDrawable(R.drawable.stats_visitors_and_views_legend_background_primary),
+                        null
+                );
                 mVisitorsCheckbox.setEnabled(true);
                 mVisitorsCheckbox.setChecked(mIsCheckboxChecked);
-                mLegendViews.setBackgroundResource(R.drawable.stats_visitors_and_views_legend_background_primary);
-                mLegendVisitors.setBackgroundResource(R.drawable.stats_visitors_and_views_legend_background_secondary);
+                mVisitorsCheckbox.setCompoundDrawablesWithIntrinsicBounds(null,
+                        null,
+                        getResources().getDrawable(R.drawable.stats_visitors_and_views_legend_background_secondary),
+                        null
+                );
                 break;
             case VISITORS:
                 mVisitorsAndViewsCheckBoxesContainer.setVisibility(View.VISIBLE);
                 // Visitors tab enabled
                 mViewsCheckbox.setEnabled(true);
                 mViewsCheckbox.setChecked(mIsCheckboxChecked);
+                mViewsCheckbox.setCompoundDrawablesWithIntrinsicBounds(null,
+                        null,
+                        getResources().getDrawable(R.drawable.stats_visitors_and_views_legend_background_secondary),
+                        null
+                );
                 mVisitorsCheckbox.setEnabled(false);
                 mVisitorsCheckbox.setChecked(false);
-                mLegendViews.setBackgroundResource(R.drawable.stats_visitors_and_views_legend_background_secondary);
-                mLegendVisitors.setBackgroundResource(R.drawable.stats_visitors_and_views_legend_background_primary);
+                mVisitorsCheckbox.setCompoundDrawablesWithIntrinsicBounds(null,
+                        null,
+                        getResources().getDrawable(R.drawable.stats_visitors_and_views_legend_background_primary),
+                        null
+                );
                 break;
             default:
                 // Likes or Comments
@@ -432,16 +442,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
                 mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.calypso_orange_dark);
                 mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
-                secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 8);
+                secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 10);
                 secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views_inner);
-                secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.stats_bar_graph_views_inner_highlight);
+                secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.orange_dark);
                 mGraphView.addSeries(mainSeriesOnScreen);
                 mGraphView.addSeries(secondarySeries);
             } else {
                 secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
-                secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.stats_bar_graph_views_inner_highlight);
+                secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.orange_dark);
                 secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views_inner);
-                mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 8);
+                mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 10);
                 mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.calypso_orange_dark);
                 mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
                 mGraphView.addSeries(secondarySeries);

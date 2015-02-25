@@ -66,7 +66,6 @@
     <color name="stats_blue_labels">#587295</color>
     <color name="stats_bar_graph_views">#0085BE</color>
     <color name="stats_bar_graph_views_inner">#004e70</color>
-    <color name="stats_bar_graph_views_inner_highlight">#a65a15</color>
     <color name="stats_bar_graph_grid">#D9D9D9</color>
     <color name="stats_bar_graph_vertical_label">#93a6c0</color>
     <color name="stats_div_color">#B7B7B7</color>
