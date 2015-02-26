@@ -31,15 +31,17 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
-import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
+import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.views.ReaderViewPager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
+
+import de.greenrobot.event.EventBus;
 
 /*
  * shows reader post detail fragments in a ViewPager - primarily used for easy swiping between
@@ -145,9 +147,16 @@ public class ReaderPostPagerActivity extends ActionBarActivity
     @Override
     protected void onResume() {
         super.onResume();
+        EventBus.getDefault().register(this);
         if (!hasPagerAdapter()) {
             loadPosts(mBlogId, mPostId);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     private boolean hasPagerAdapter() {
@@ -232,7 +241,8 @@ public class ReaderPostPagerActivity extends ActionBarActivity
                     @Override
                     public void run() {
                         AppLog.d(AppLog.T.READER, "reader pager > creating adapter");
-                        PostPagerAdapter adapter = new PostPagerAdapter(getFragmentManager(), idList);
+                        PostPagerAdapter adapter =
+                                new PostPagerAdapter(getFragmentManager(), idList);
                         mViewPager.setAdapter(adapter);
                         if (adapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
@@ -399,6 +409,62 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         }
     }
 
+    /*
+     * called when user scrolls towards the last posts - requests older posts with the
+     * current tag or in the current blog
+     */
+    private void requestMorePosts() {
+        if (mIsRequestingMorePosts) return;
+
+        AppLog.d(AppLog.T.READER, "reader pager > requesting older posts");
+        switch (getPostListType()) {
+            case TAG_PREVIEW:
+            case TAG_FOLLOWED:
+                ReaderPostService.startServiceForTag(
+                        this,
+                        getCurrentTag(),
+                        ReaderPostService.UpdateAction.REQUEST_OLDER);
+                break;
+
+            case BLOG_PREVIEW:
+                ReaderPostService.startServiceForBlog(
+                        this,
+                        mBlogId,
+                        ReaderPostService.UpdateAction.REQUEST_OLDER);
+                break;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.UpdatePostsStarted event) {
+        if (isFinishing()) return;
+
+        mIsRequestingMorePosts = true;
+        mProgress.setVisibility(View.VISIBLE);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.UpdatePostsEnded event) {
+        if (isFinishing() || !hasPagerAdapter()) {
+            return;
+        }
+
+        mIsRequestingMorePosts = false;
+        mProgress.setVisibility(View.GONE);
+
+        if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW) {
+            AppLog.d(AppLog.T.READER, "reader pager > older posts received");
+            // remember which post to keep active
+            ReaderBlogIdPostId id = getPagerAdapter().getCurrentBlogIdPostId();
+            long blogId = (id != null ? id.getBlogId() : 0);
+            long postId = (id != null ? id.getPostId() : 0);
+            loadPosts(blogId, postId);
+        } else {
+            AppLog.d(AppLog.T.READER, "reader pager > all posts loaded");
+            getPagerAdapter().mAllPostsLoaded = true;
+        }
+    }
+
     /**
      * pager adapter containing post detail fragments
      **/
@@ -531,65 +597,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             }
 
             return null;
-        }
-
-        private void requestMorePosts() {
-            if (mIsRequestingMorePosts) {
-                return;
-            }
-
-            mIsRequestingMorePosts = true;
-            mProgress.setVisibility(View.VISIBLE);
-            AppLog.d(AppLog.T.READER, "reader pager > requesting older posts");
-
-            ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
-                @Override
-                public void onUpdateResult(ReaderActions.UpdateResult result) {
-                    doAfterUpdate(result);
-                }
-            };
-
-            switch (getPostListType()) {
-                case TAG_PREVIEW:
-                case TAG_FOLLOWED:
-                    ReaderPostActions.updatePostsInTag(
-                            getCurrentTag(),
-                            ReaderActions.RequestDataAction.LOAD_OLDER,
-                            resultListener);
-                    break;
-
-                case BLOG_PREVIEW:
-
-                    ReaderPostActions.requestPostsForBlog(
-                            mBlogId,
-                            ReaderActions.RequestDataAction.LOAD_OLDER,
-                            resultListener);
-                    break;
-            }
-        }
-
-        private void doAfterUpdate(ReaderActions.UpdateResult result) {
-            mIsRequestingMorePosts = false;
-
-            if (isFinishing()) {
-                return;
-            }
-
-            mProgress.setVisibility(View.GONE);
-
-            if (result == ReaderActions.UpdateResult.HAS_NEW) {
-                AppLog.d(AppLog.T.READER, "reader pager > older posts received");
-                // remember which post to keep active
-                ReaderBlogIdPostId id = getCurrentBlogIdPostId();
-                // if this is an end fragment, get the previous post and tell loadPosts() to
-                // move to the post after it (ie: show the first new post)
-                long blogId = (id != null ? id.getBlogId() : 0);
-                long postId = (id != null ? id.getPostId() : 0);
-                loadPosts(blogId, postId);
-            } else {
-                AppLog.d(AppLog.T.READER, "reader pager > all posts loaded");
-                mAllPostsLoaded = true;
-            }
         }
     }
 }

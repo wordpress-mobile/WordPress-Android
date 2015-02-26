@@ -10,25 +10,16 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
-import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
-import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.HashMap;
@@ -106,7 +97,7 @@ public class ReaderPostActions {
             return;
         }
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("destination_site_id", Long.toString(destinationBlogId));
         if (!TextUtils.isEmpty(optionalComment)) {
             params.put("note", optionalComment);
@@ -287,211 +278,4 @@ public class ReaderPostActions {
         AppLog.d(T.READER, "requesting post");
         WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
     }
-
-    /*
-     * get the latest posts in the passed topic - note that this uses an UpdateResultAndCountListener
-     * so the caller can be told how many new posts were added
-     */
-    public static void updatePostsInTag(final ReaderTag tag,
-                                        final RequestDataAction updateAction,
-                                        final UpdateResultListener resultListener) {
-        String endpoint = getEndpointForTag(tag);
-        if (TextUtils.isEmpty(endpoint)) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(UpdateResult.FAILED);
-            }
-            return;
-        }
-
-        StringBuilder sb = new StringBuilder(endpoint);
-
-        // append #posts to retrieve
-        sb.append("?number=").append(ReaderConstants.READER_MAX_POSTS_TO_REQUEST);
-
-        // return newest posts first (this is the default, but make it explicit since it's important)
-        sb.append("&order=DESC");
-
-        // if older posts are being requested, add the &before param based on the oldest existing post
-        if (updateAction == RequestDataAction.LOAD_OLDER) {
-            String dateOldest = ReaderPostTable.getOldestPubDateWithTag(tag);
-            if (!TextUtils.isEmpty(dateOldest)) {
-                sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
-            }
-        }
-
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                // remember when this tag was updated if newer posts were requested
-                if (updateAction == RequestDataAction.LOAD_NEWER) {
-                    ReaderTagTable.setTagLastUpdated(tag);
-                }
-                handleUpdatePostsResponse(tag, jsonObject, resultListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (resultListener != null) {
-                    resultListener.onUpdateResult(UpdateResult.FAILED);
-                }
-            }
-        };
-
-        WordPress.getRestClientUtilsV1_1().get(sb.toString(), null, null, listener, errorListener);
-    }
-
-    /*
-     * get the latest posts in the passed blog
-     */
-    public static void requestPostsForBlog(final long blogId,
-                                           final RequestDataAction updateAction,
-                                           final UpdateResultListener resultListener) {
-        String path = "sites/" + blogId + "/posts/?meta=site,likes";
-
-        // append the date of the oldest cached post in this blog when requesting older posts
-        if (updateAction == RequestDataAction.LOAD_OLDER) {
-            String dateOldest = ReaderPostTable.getOldestPubDateInBlog(blogId);
-            if (!TextUtils.isEmpty(dateOldest)) {
-                path += "&before=" + UrlUtils.urlEncode(dateOldest);
-            }
-        }
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostsResponse(null, jsonObject, resultListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (resultListener != null) {
-                    resultListener.onUpdateResult(UpdateResult.FAILED);
-                }
-            }
-        };
-        AppLog.d(T.READER, "updating posts in blog " + blogId);
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
-    }
-
-    public static void requestPostsForFeed(final long feedId,
-                                           final RequestDataAction updateAction,
-                                           final UpdateResultListener resultListener) {
-        String path = "read/feed/" + feedId + "/posts/?meta=site,likes";
-        if (updateAction == RequestDataAction.LOAD_OLDER) {
-            String dateOldest = ReaderPostTable.getOldestPubDateInFeed(feedId);
-            if (!TextUtils.isEmpty(dateOldest)) {
-                path += "&before=" + UrlUtils.urlEncode(dateOldest);
-            }
-        }
-
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostsResponse(null, jsonObject, resultListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (resultListener != null) {
-                    resultListener.onUpdateResult(UpdateResult.FAILED);
-                }
-            }
-        };
-
-        AppLog.d(T.READER, "updating posts in feed " + feedId);
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
-    }
-
-    /*
-     * called after requesting posts with a specific tag or in a specific blog
-     */
-    private static void handleUpdatePostsResponse(final ReaderTag tag,
-                                                  final JSONObject jsonObject,
-                                                  final UpdateResultListener resultListener) {
-        if (jsonObject == null) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(UpdateResult.FAILED);
-            }
-            return;
-        }
-
-        final Handler handler = new Handler();
-        new Thread() {
-            @Override
-            public void run() {
-                ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
-                final UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
-                if (updateResult.isNewOrChanged()) {
-                    ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
-                }
-                AppLog.d(T.READER, "requested posts response = " + updateResult.toString());
-
-                if (resultListener != null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            resultListener.onUpdateResult(updateResult);
-                        }
-                    });
-                }
-            }
-        }.start();
-    }
-
-    /*
-     * returns the endpoint to use for the passed tag - first gets it from local db, if not
-     * there it generates it "by hand"
-     */
-    private static String getEndpointForTag(ReaderTag tag) {
-        if (tag == null) {
-            return null;
-        }
-
-        // if passed tag has an assigned endpoint, return it and be done
-        if (!TextUtils.isEmpty(tag.getEndpoint())) {
-            return getRelativeEndpoint(tag.getEndpoint());
-        }
-
-        // check the db for the endpoint
-        String endpoint = ReaderTagTable.getEndpointForTag(tag);
-        if (!TextUtils.isEmpty(endpoint)) {
-            return getRelativeEndpoint(endpoint);
-        }
-
-        // never hand craft the endpoint for default tags, since these MUST be updated
-        // using their stored endpoints
-        if (tag.tagType == ReaderTagType.DEFAULT) {
-            return null;
-        }
-
-        return String.format("read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagName()));
-    }
-
-    /*
-     * returns the passed endpoint without the unnecessary path - this is
-     * needed because as of 20-Feb-2015 the /read/menu/ call returns the
-     * full path but we don't want to use the full path since it may change
-     * between API versions (as it did when we moved from v1 to v1.1)
-     *
-     * ex: https://public-api.wordpress.com/rest/v1/read/tags/fitness/posts
-     *     becomes just                             read/tags/fitness/posts
-     */
-    private static String getRelativeEndpoint(final String endpoint) {
-        if (endpoint != null && endpoint.startsWith("http")) {
-            int pos = endpoint.indexOf("/read/");
-            if (pos > -1) {
-                return endpoint.substring(pos + 1, endpoint.length());
-            }
-            pos = endpoint.indexOf("/v1/");
-            if (pos > -1) {
-                return endpoint.substring(pos + 4, endpoint.length());
-            }
-        }
-        return StringUtils.notNullStr(endpoint);
-    }
-
 }
