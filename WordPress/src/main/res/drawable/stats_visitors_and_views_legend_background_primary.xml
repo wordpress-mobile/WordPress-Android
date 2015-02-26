@@ -6,8 +6,8 @@
             <solid android:color="@color/stats_bar_graph_views"/>
             <corners android:radius="@dimen/stats_button_corner_radius"/>
             <size
-                android:width="12dp"
-                android:height="12dp"/>
+                android:width="@dimen/stats_barchart_legend_item"
+                android:height="@dimen/stats_barchart_legend_item"/>
         </shape>
     </item>
 

@@ -126,6 +126,6 @@
     <!-- stats -->
     <dimen name="stats_button_corner_radius">2dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
-    <dimen name="stats_barchart_legend_item">18dp</dimen>
+    <dimen name="stats_barchart_legend_item">12dp</dimen>
 
 </resources>
