@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 
 import org.json.JSONException;
@@ -294,6 +295,19 @@ public class StatsUtils {
         }
     }
 
+    public static synchronized void logVolleyErrorDetails(final VolleyError volleyError) {
+        if (volleyError == null) {
+            AppLog.e(T.STATS, "Tried to log a VolleyError, but the error obj was null");
+            return;
+        }
+        if(volleyError.networkResponse != null) {
+            NetworkResponse networkResponse = volleyError.networkResponse;
+            if (networkResponse.data != null) {
+                AppLog.e(T.STATS, "Network data: " + new String(networkResponse.data));
+            }
+        }
+        AppLog.e(T.STATS, "Volley Error details: " + volleyError.getMessage(), volleyError);
+    }
 
     public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
             throws JSONException {

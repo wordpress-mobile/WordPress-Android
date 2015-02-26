@@ -431,10 +431,9 @@ public class StatsViewAllActivity extends ActionBarActivity
 
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
-            if (volleyError != null) {
-                AppLog.e(AppLog.T.STATS, "Error while reading Stats details "
-                        + volleyError.getMessage(), volleyError);
-            }
+            AppLog.e(AppLog.T.STATS, "Error while reading Stats details!");
+            StatsUtils.logVolleyErrorDetails(volleyError);
+
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
             }
