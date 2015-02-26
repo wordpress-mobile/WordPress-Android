@@ -393,6 +393,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(mainSeriesItems);
         mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
         mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.calypso_orange_dark);
+        mainSeriesOnScreen.getStyle().outerhighlightColor = getResources().getColor(R.color.stats_bar_graph_outer_highlight);
         mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
         mGraphView.addSeries(mainSeriesOnScreen);
 
@@ -402,7 +403,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 10);
             secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views_inner);
             secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.orange_dark);
-            mGraphView.addSeries(mainSeriesOnScreen);
             mGraphView.addSeries(secondarySeries);
         }
 

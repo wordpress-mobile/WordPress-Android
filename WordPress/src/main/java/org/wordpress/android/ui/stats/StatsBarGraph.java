@@ -113,7 +113,7 @@ class StatsBarGraph extends GraphView {
     private class HorizontalLabelsBackgroundColor implements IndexDependentColor {
         public int get(int index) {
             if (mBarPositionToHighlight == index) {
-                return getResources().getColor(R.color.calypso_orange_dark);
+                return getResources().getColor(R.color.stats_bar_graph_outer_highlight);
             } else {
                 return Color.WHITE;
             }
@@ -188,9 +188,8 @@ class StatsBarGraph extends GraphView {
             float bottom = graphheight + border - 1;
 
             // Draw the orange selection behind the selected bar
-            if (mBarPositionToHighlight == i) {
-                paint.setColor(getResources().getColor(R.color.calypso_orange_dark));
-                paint.setAlpha(50);
+            if (mBarPositionToHighlight == i && style.outerhighlightColor != 0x00ffffff) {
+                paint.setColor(style.outerhighlightColor);
                 canvas.drawRect(left, 10f, right, bottom, paint);
             }
 
