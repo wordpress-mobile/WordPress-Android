@@ -137,6 +137,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     private boolean mIsBackspace;
     private boolean mScrollDetected;
 
+    // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
+    private Map<Long, List<String>> mPendingGalleryUploads = new HashMap<>();
+
     private boolean mMediaUploadServiceStarted;
     private String mMediaCapturePath = "";
     private List<String> mUploadingMedia;
@@ -265,6 +268,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.unregisterReceiver(mMediaUploadReceiver);
+        stopMediaUploadService();
     }
 
     @Override
@@ -1566,18 +1570,39 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 String mediaId = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA);
                 String newId = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR);
 
-                if (mediaId != null && newId != null && mUploadingMedia.contains(mediaId)) {
-                    mGalleryIds.add(newId);
+                if (mediaId != null && newId != null) {
+                    for (Long galleryId : mPendingGalleryUploads.keySet()) {
+                        if (mPendingGalleryUploads.get(galleryId).contains(mediaId)) {
+                            int selectionStart = 0;
+                            int selectionEnd = mContentEditText.length();
+                            Editable editableText = mContentEditText.getText();
 
-                    if (mGalleryIds.size() == mGalleryContentCount) {
-                        for (String id : mUploadingMedia) {
-                            String newText = mContentEditText.getText().toString().replace("<img android-uri=\"" + mMediaIdToPath.get(id) + "\" />", "");
-                            mContentEditText.setText(newText);
+                            MediaGalleryImageSpan[] gallerySpans = editableText.getSpans(selectionStart, selectionEnd, MediaGalleryImageSpan.class);
+                            if (gallerySpans.length != 0) {
+                                for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
+                                    MediaGallery gallery = gallerySpan.getMediaGallery();
+                                    if (gallery.getUniqueId() == galleryId) {
+                                        ArrayList<String> galleryIds = gallery.getIds();
+                                        galleryIds.add(newId);
+                                        gallery.setIds(galleryIds);
+                                        gallerySpan.setMediaGallery(gallery);
+                                        int spanStart = editableText.getSpanStart(gallerySpan);
+                                        int spanEnd = editableText.getSpanEnd(gallerySpan);
+                                        editableText.setSpan(gallerySpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    }
+                                }
+                                return;
+                            }
+
+                            mPendingGalleryUploads.get(galleryId).remove(mediaId);
+                            if (mPendingGalleryUploads.get(galleryId).size() == 0) {
+                                mPendingGalleryUploads.remove(galleryId);
+                            }
                         }
+                    }
 
-                        createGallery();
+                    if (mPendingGalleryUploads.size() == 0) {
                         stopMediaUploadService();
-                        mGalleryContentCount = 0;
                     }
                 }
             }
@@ -1699,16 +1724,51 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                             AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
                         } else if (MediaUtils.isValidImage(sourceString)) {
                             queueFileForUpload(sourceString);
-                            addMedia(source, null, getActivity());
                             AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                         }
                     }
                 }
 
-                // Notify of media upload
                 if (mUploadingMedia.size() > 0) {
-                    String galleryToast = getString(R.string.editor_toast_gallery_pending_formatted, mUploadingMedia.size());
-                    ToastUtils.showToast(getActivity(), galleryToast, ToastUtils.Duration.SHORT);
+                    MediaGallery gallery = new MediaGallery();
+
+                    mPendingGalleryUploads.put(gallery.getUniqueId(), new ArrayList<>(mUploadingMedia));
+
+                    Editable editatbleText = mContentEditText.getText();
+                    if (editatbleText == null) {
+                        return;
+                    }
+
+                    int selectionStart = mContentEditText.getSelectionStart();
+                    int selectionEnd = mContentEditText.getSelectionEnd();
+
+                    if (selectionStart > selectionEnd) {
+                        int temp = selectionEnd;
+                        selectionEnd = selectionStart;
+                        selectionStart = temp;
+                    }
+
+                    int line, column = 0;
+                    if (mContentEditText.getLayout() != null) {
+                        line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+                        column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+                    }
+
+                    // TODO: do we want to add a newline break?
+                    if (column != 0) {
+                        // insert one line break if the cursor is not at the first column
+                        editatbleText.insert(selectionEnd, "\n");
+                        selectionStart = selectionStart + 1;
+                        selectionEnd = selectionEnd + 1;
+                    }
+
+                    editatbleText.insert(selectionStart, " ");
+                    MediaGalleryImageSpan is = new MediaGalleryImageSpan(getActivity(), gallery);
+                    editatbleText.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+                    editatbleText.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    // TODO: do we want to add newline after gallery?
+                    editatbleText.insert(selectionEnd + 1, "\n\n");
                 } else {
                     createGallery();
                 }
@@ -1729,7 +1789,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             newGallery.setIds((ArrayList) mGalleryIds.clone());
             Intent intent = new Intent(getActivity(), MediaGalleryPickerActivity.class);
             intent.putExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY, newGallery);
-            handleMediaGalleryResult(intent);
+//            handleMediaGalleryResult(intent);
 
             mGalleryIds.clear();
             mGalleryIds = null;
