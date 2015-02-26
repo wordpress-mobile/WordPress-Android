@@ -64,12 +64,12 @@
             android:minHeight="@dimen/stats_barchart_height"
             android:orientation="vertical" />
 
-        <!-- Tab to enable visitors and views -->
+        <!-- Bottom Legend -->
         <LinearLayout
-            android:id="@+id/stats_visitors_and_views_checkboxes_container"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:layout_marginBottom="@dimen/margin_medium">
             <LinearLayout
                 android:orientation="horizontal"
@@ -77,23 +77,43 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:gravity="center">
-                <CheckBox android:id="@+id/stats_checkbox_views"
+                <!-- Have to use a CheckedTextView instead of a plain TextView otherwise
+                there was a "jumpy UI" when the CheckBox below 'stats_checkbox_visitors' is not on the screen. This is due to the
+                CheckedTextView/CheckBox touching area that is bigger than the touching area of a TextView .
+                -->
+                <CheckedTextView
+                    android:id="@+id/stats_legend_label"
+                    android:gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:checkMark="?android:attr/listChoiceIndicatorSingle"
+                    android:drawableLeft="@drawable/stats_visitors_and_views_legend_background_primary"
+                    android:drawableStart="@drawable/stats_visitors_and_views_legend_background_primary"
+                    android:drawablePadding="@dimen/margin_medium"
+                    android:textSize="@dimen/text_sz_small"
                     android:text="@string/stats_views"
-                    android:textColor="@color/stats_visitors_and_views_legend_text"/>
+                    android:textColor="@color/calypso_blue_dark"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/stats_checkbox_visitors_container"
                 android:orientation="horizontal"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:gravity="center">
-                <CheckBox android:id="@+id/stats_checkbox_visitors"
+                android:gravity="center"
+                android:visibility="gone">
+                <CheckBox
+                    android:id="@+id/stats_checkbox_visitors"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/margin_small"
+                    android:drawableLeft="@drawable/stats_visitors_and_views_legend_background_secondary"
+                    android:drawableStart="@drawable/stats_visitors_and_views_legend_background_secondary"
+                    android:drawablePadding="@dimen/margin_medium"
+                    android:textSize="@dimen/text_sz_small"
                     android:text="@string/stats_visitors"
-                    android:textColor="@color/stats_visitors_and_views_legend_text"/>
+                    android:textColor="@color/calypso_blue_dark"/>
             </LinearLayout>
         </LinearLayout>
 

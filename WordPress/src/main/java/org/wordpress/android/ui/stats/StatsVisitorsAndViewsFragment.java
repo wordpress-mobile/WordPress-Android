@@ -58,8 +58,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private TextView mDateTextView;
     private String[] mStatsDate;
 
-    private LinearLayout mVisitorsAndViewsCheckBoxesContainer;
-    private CheckBox mViewsCheckbox;
+    private CheckedTextView mLegendLabel;
+    private LinearLayout mVisitorsCheckboxContainer;
     private CheckBox mVisitorsCheckbox;
     private boolean mIsCheckboxChecked;
 
@@ -95,13 +95,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mDateTextView = (TextView) view.findViewById(R.id.stats_summary_date);
         mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
         mModuleButtonsContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
-        mVisitorsAndViewsCheckBoxesContainer = (LinearLayout) view.findViewById(R.id.stats_visitors_and_views_checkboxes_container);
-        mViewsCheckbox = (CheckBox) view.findViewById(R.id.stats_checkbox_views);
-        mViewsCheckbox.setOnClickListener(onCheckboxClicked);
-        mViewsCheckbox.setCompoundDrawablePadding(DisplayUtils.dpToPx(mViewsCheckbox.getContext(), 8));
+
+        mLegendLabel = (CheckedTextView) view.findViewById(R.id.stats_legend_label);
+        mLegendLabel.setCheckMarkDrawable(null); // Make sure to set a null drawable here. Otherwise the touching area is the same of a TextView
+        mVisitorsCheckboxContainer = (LinearLayout) view.findViewById(R.id.stats_checkbox_visitors_container);
         mVisitorsCheckbox = (CheckBox) view.findViewById(R.id.stats_checkbox_visitors);
         mVisitorsCheckbox.setOnClickListener(onCheckboxClicked);
-        mVisitorsCheckbox.setCompoundDrawablePadding(DisplayUtils.dpToPx(mVisitorsCheckbox.getContext(), 8));
 
         // Make sure we've all the info to build the tab correctly. This is ALWAYS true
         if (mModuleButtonsContainer.getChildCount() == overviewItems.length) {
@@ -231,7 +230,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         public void onClick(View view) {
             // Is the view now checked?
             mIsCheckboxChecked = ((CheckBox) view).isChecked();
-            // do not need to uncheck the other checkbox here.
             updateUI();
         }
     };
@@ -267,7 +265,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
         outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
-        outState.putBoolean(ARG_CHECKBOX_SELECTED, mViewsCheckbox.isChecked() || mVisitorsCheckbox.isChecked());
+        outState.putBoolean(ARG_CHECKBOX_SELECTED, mVisitorsCheckbox.isChecked());
 
         super.onSaveInstanceState(outState);
     }
@@ -331,47 +329,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // Read the selected Tab in the UI
         OverviewLabel selectedStatsType = overviewItems[mSelectedOverviewItemIndex];
 
-        // Enable disable the views/visitors checkboxes and update the legend
+        // Update the Legend and enable/disable the visitors checkboxes
+        mLegendLabel.setText(StringUtils.capitalize(selectedStatsType.getLabel().toLowerCase()));
         switch(selectedStatsType) {
             case VIEWS:
-                mVisitorsAndViewsCheckBoxesContainer.setVisibility(View.VISIBLE);
-                // Views tab enabled
-                mViewsCheckbox.setEnabled(false);
-                mViewsCheckbox.setChecked(false);
-                mViewsCheckbox.setCompoundDrawablesWithIntrinsicBounds(null,
-                        null,
-                        getResources().getDrawable(R.drawable.stats_visitors_and_views_legend_background_primary),
-                        null
-                );
+                mVisitorsCheckboxContainer.setVisibility(View.VISIBLE);
                 mVisitorsCheckbox.setEnabled(true);
                 mVisitorsCheckbox.setChecked(mIsCheckboxChecked);
-                mVisitorsCheckbox.setCompoundDrawablesWithIntrinsicBounds(null,
-                        null,
-                        getResources().getDrawable(R.drawable.stats_visitors_and_views_legend_background_secondary),
-                        null
-                );
-                break;
-            case VISITORS:
-                mVisitorsAndViewsCheckBoxesContainer.setVisibility(View.VISIBLE);
-                // Visitors tab enabled
-                mViewsCheckbox.setEnabled(true);
-                mViewsCheckbox.setChecked(mIsCheckboxChecked);
-                mViewsCheckbox.setCompoundDrawablesWithIntrinsicBounds(null,
-                        null,
-                        getResources().getDrawable(R.drawable.stats_visitors_and_views_legend_background_secondary),
-                        null
-                );
-                mVisitorsCheckbox.setEnabled(false);
-                mVisitorsCheckbox.setChecked(false);
-                mVisitorsCheckbox.setCompoundDrawablesWithIntrinsicBounds(null,
-                        null,
-                        getResources().getDrawable(R.drawable.stats_visitors_and_views_legend_background_primary),
-                        null
-                );
                 break;
             default:
-                // Likes or Comments
-                mVisitorsAndViewsCheckBoxesContainer.setVisibility(View.GONE);
+                mVisitorsCheckboxContainer.setVisibility(View.GONE);
                 break;
         }
 
@@ -381,10 +348,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         GraphView.GraphViewData[] mainSeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
 
         GraphView.GraphViewData[] secondarySeriesItems = null;
-        if (mIsCheckboxChecked) {
+        if (mIsCheckboxChecked && selectedStatsType == OverviewLabel.VIEWS) {
             secondarySeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
         }
-
 
         // Fill series variables with data
         for (int i = 0; i < dataToShowOnGraph.length; i++) {
@@ -406,14 +372,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             mainSeriesItems[i] = new GraphView.GraphViewData(i, currentItemValue);
 
             if (mIsCheckboxChecked && secondarySeriesItems != null) {
-                switch(selectedStatsType) {
-                    case VIEWS:
-                        secondarySeriesItems[i] = new GraphView.GraphViewData(i, dataToShowOnGraph[i].getVisitors());
-                        break;
-                    case VISITORS:
-                        secondarySeriesItems[i] = new GraphView.GraphViewData(i,dataToShowOnGraph[i].getViews());
-                        break;
-                }
+                secondarySeriesItems[i] = new GraphView.GraphViewData(i, dataToShowOnGraph[i].getVisitors());
             }
 
             String currentItemStatsDate = dataToShowOnGraph[i].getPeriod();
@@ -432,40 +391,22 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.removeAllSeries();
 
         GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(mainSeriesItems);
+        mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
+        mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.calypso_orange_dark);
+        mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
+        mGraphView.addSeries(mainSeriesOnScreen);
 
-        if (secondarySeriesItems!= null) {
-            // We have 2 series on the screen now. Need to check which one should be drawn first.
+        // Add the Visitors series if it's checked in the legend
+        if (mIsCheckboxChecked && secondarySeriesItems != null && selectedStatsType == OverviewLabel.VIEWS) {
             GraphViewSeries secondarySeries = new GraphViewSeries(secondarySeriesItems);
-
-            // Need to check the order now. Views always > Visitors.
-            if (selectedStatsType == OverviewLabel.VIEWS) {
-                mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
-                mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.calypso_orange_dark);
-                mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
-                secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 10);
-                secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views_inner);
-                secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.orange_dark);
-                mGraphView.addSeries(mainSeriesOnScreen);
-                mGraphView.addSeries(secondarySeries);
-            } else {
-                secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
-                secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.orange_dark);
-                secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views_inner);
-                mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 10);
-                mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.calypso_orange_dark);
-                mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
-                mGraphView.addSeries(secondarySeries);
-                mGraphView.addSeries(mainSeriesOnScreen);
-            }
-        } else {
-            // add only the main series to the graph
-            mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
-            mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.calypso_orange_dark);
-            mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
+            secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 10);
+            secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views_inner);
+            secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.orange_dark);
             mGraphView.addSeries(mainSeriesOnScreen);
+            mGraphView.addSeries(secondarySeries);
         }
 
-        // Setup the Y-axis on Visitors.
+        // Setup the Y-axis on Visitors and Views Tabs.
         // Views and Visitors tabs have the exact same Y-axis as shifting from one Y-axis to another defeats
         // the purpose of making these bars visually easily to compare.
         switch(selectedStatsType) {
@@ -478,12 +419,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 break;
         }
 
+        // Set the Graph Style
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
         // Set the maximum size a column can get on the screen in PX
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
                 DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP)
         );
         mGraphView.setHorizontalLabels(horLabels);
+
         mGraphView.setGestureListener(this);
 
         int barSelectedOnGraph;
@@ -505,7 +448,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.highlightBar(barSelectedOnGraph);
     }
 
-    // Find the max value for Visitors and Views. Only checks Views, since Visitors is for sure less-equals than Views.
+    // Find the max value in Visitors and Views data.
+    // Only checks the Views data, since Visitors is for sure less-equals than Views.
     private double getMaxYValueForVisitorsAndView(final VisitModel[] dataToShowOnGraph) {
         if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
             return 0d;
@@ -653,7 +597,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (!isAdded()) {
             return;
         }
-        mVisitorsAndViewsCheckBoxesContainer.setVisibility(View.GONE);
+        mVisitorsCheckboxContainer.setVisibility(View.GONE);
         mIsCheckboxChecked = false;
         mSelectedBarGraphBarIndex = -1;
         Context context = mGraphContainer.getContext();

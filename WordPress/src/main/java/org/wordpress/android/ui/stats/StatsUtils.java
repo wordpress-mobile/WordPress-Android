@@ -297,11 +297,12 @@ public class StatsUtils {
 
     public static synchronized void logVolleyErrorDetails(final VolleyError volleyError) {
         if (volleyError == null) {
-            AppLog.e(T.STATS, "Tried to log a VolleyError, but the error obj was null");
+            AppLog.e(T.STATS, "Tried to log a VolleyError, but the error obj was null!");
             return;
         }
-        if(volleyError.networkResponse != null) {
+        if (volleyError.networkResponse != null) {
             NetworkResponse networkResponse = volleyError.networkResponse;
+            AppLog.e(T.STATS, "Network status code: " + networkResponse.statusCode);
             if (networkResponse.data != null) {
                 AppLog.e(T.STATS, "Network data: " + new String(networkResponse.data));
             }
