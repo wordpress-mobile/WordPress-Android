@@ -43,7 +43,7 @@ public class GraphViewStyle {
 	public GraphViewStyle() {
 		verticalLabelsColor = Color.WHITE;
 		horizontalLabelsColor = Color.WHITE;
-        horizontalBackgroundLabelsColor = Color.WHITE;
+        horizontalBackgroundLabelsColor = Color.TRANSPARENT;
 		gridXColor = Color.DKGRAY;
 		gridYColor = Color.DKGRAY;
 	}

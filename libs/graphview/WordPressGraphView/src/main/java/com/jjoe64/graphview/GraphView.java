@@ -141,14 +141,16 @@ abstract public class GraphView extends LinearLayout {
 				canvas.drawLine(x, height - border, x, border, paint);
 
                 // Draw the background of labels
-                paint.setColor(graphViewStyle.getHorizontalLabelsBackgroundColor(i));
-                canvas.drawRect(
-                        (colWidth * i) + horstart,
-                        height - border,
-                        (colWidth * i) + horstart + colWidth,
-                        height,
-                        paint
-                );
+                if (graphViewStyle.getHorizontalLabelsBackgroundColor(i) != Color.TRANSPARENT) {
+                    paint.setColor(graphViewStyle.getHorizontalLabelsBackgroundColor(i));
+                    canvas.drawRect(
+                            (colWidth * i) + horstart,
+                            height - border,
+                            (colWidth * i) + horstart + colWidth,
+                            height,
+                            paint
+                    );
+                }
 
                 // Draw the label
 				paint.setTextAlign(Align.CENTER);

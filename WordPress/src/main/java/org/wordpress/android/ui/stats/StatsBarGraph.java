@@ -110,20 +110,9 @@ class StatsBarGraph extends GraphView {
         }
     }
 
-    private class HorizontalLabelsBackgroundColor implements IndexDependentColor {
-        public int get(int index) {
-            if (mBarPositionToHighlight == index) {
-                return getResources().getColor(R.color.stats_bar_graph_outer_highlight);
-            } else {
-                return Color.WHITE;
-            }
-        }
-    }
-
     private void setProperties() {
         GraphViewStyle gStyle =  getGraphViewStyle();
         gStyle.setHorizontalLabelsIndexDependentColor(new HorizontalLabelsColor());
-        gStyle.setHorizontalLabelsBackgroundIndexDependentColor(new HorizontalLabelsBackgroundColor());
         gStyle.setHorizontalLabelsColor(getResources().getColor(R.color.blue_dark));
         gStyle.setVerticalLabelsColor(getResources().getColor(R.color.stats_bar_graph_vertical_label));
         gStyle.setTextSize(getResources().getDimensionPixelSize(R.dimen.text_sz_extra_small));
