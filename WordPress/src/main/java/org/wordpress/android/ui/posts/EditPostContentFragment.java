@@ -90,6 +90,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.MediaGalleryImageSpan;
+import org.wordpress.android.widgets.WPCollectionSpan;
 import org.wordpress.android.widgets.WPEditText;
 import org.wordpress.android.widgets.WPImageSpan;
 import org.wordpress.android.widgets.WPUnderlineSpan;
@@ -545,6 +546,19 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     int start = postContentEditable.getSpanStart(gallerySpan);
                     postContentEditable.removeSpan(gallerySpan);
                     postContentEditable.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
+                }
+            }
+
+            // Save all collections
+            WPCollectionSpan[] replacementSpans = postContentEditable.getSpans(0, postContentEditable.length(), WPCollectionSpan.class);
+            if (replacementSpans.length != 0) {
+                for (WPCollectionSpan replacementSpan : replacementSpans) {
+                    List<String> replacementContent = replacementSpan.getContent();
+
+                    for (String contentString : replacementContent) {
+                        int tagStart = postContentEditable.getSpanStart(replacementSpan);
+                        postContentEditable.insert(tagStart, "<img android-uri=\"" + contentString + "\" />");
+                    }
                 }
             }
 
@@ -1706,16 +1720,40 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
 
             if (selectedContent != null && selectedContent.size() > 0) {
-                for (MediaItem selectedItem : selectedContent) {
-                    if (!selectedItem.getSource().toString().contains("wordpress.com")) {
-                        // Local media
-                        if (!addMedia(selectedItem.getSource(), null, getActivity())) {
-                            Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        // WordPress.com media
-                        addExistingMediaToEditor(selectedItem.getTag());
+                if (selectedContent.size() == 1) {
+                    addMedia(selectedContent.get(0).getSource(), null, getActivity());
+                } else {
+                    Editable editableText = mContentEditText.getText();
+                    WPCollectionSpan collectionSpan = new WPCollectionSpan(getActivity(), ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), selectedContent.get(0).getSource().toString(), getMaximumThumbnailWidth()));
+                    int selectionStart = mContentEditText.getSelectionStart();
+                    int selectionEnd = mContentEditText.getSelectionEnd();
+
+                    for (final MediaItem selectedItem : selectedContent) {
+                        collectionSpan.addContent(selectedItem.getSource().toString());
                     }
+
+                    if (selectionStart > selectionEnd) {
+                        int temp = selectionEnd;
+                        selectionEnd = selectionStart;
+                        selectionStart = temp;
+                    }
+
+                    int line, column = 0;
+                    if (mContentEditText.getLayout() != null) {
+                        line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+                        column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+                    }
+
+                    if (column != 0) {
+                        // insert one line break if the cursor is not at the first column
+                        editableText.insert(selectionEnd, "\n");
+                        selectionStart = selectionStart + 1;
+                        selectionEnd = selectionEnd + 1;
+                    }
+
+                    editableText.insert(selectionStart, " ");
+                    editableText.setSpan(collectionSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editableText.insert(selectionStart, "\n");
                 }
             }
         }
