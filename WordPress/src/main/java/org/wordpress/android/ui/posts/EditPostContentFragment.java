@@ -45,12 +45,14 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -1247,6 +1249,150 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         }
     }
 
+    private boolean imageSpanTapped(final WPImageSpan span) {
+        MediaFile mediaFile = span.getMediaFile();
+        if (mediaFile == null)
+            return false;
+        if (!mediaFile.isVideo()) {
+            LayoutInflater factory = LayoutInflater.from(getActivity());
+            final View alertView = factory.inflate(R.layout.alert_image_options, null);
+            if (alertView == null)
+                return false;
+            final EditText imageWidthText = (EditText) alertView.findViewById(R.id.imageWidthText);
+            final EditText titleText = (EditText) alertView.findViewById(R.id.title);
+            final EditText caption = (EditText) alertView.findViewById(R.id.caption);
+            final CheckBox featuredCheckBox = (CheckBox) alertView.findViewById(R.id.featuredImage);
+            final CheckBox featuredInPostCheckBox = (CheckBox) alertView.findViewById(R.id.featuredInPost);
+
+            // show featured image checkboxes if theme support it
+            if (WordPress.getCurrentBlog().isFeaturedImageCapable()) {
+                featuredCheckBox.setVisibility(View.VISIBLE);
+                featuredInPostCheckBox.setVisibility(View.VISIBLE);
+            }
+
+            featuredCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        featuredInPostCheckBox.setVisibility(View.VISIBLE);
+                    } else {
+                        featuredInPostCheckBox.setVisibility(View.GONE);
+                    }
+
+                }
+            });
+
+            final SeekBar seekBar = (SeekBar) alertView.findViewById(R.id.imageWidth);
+            final Spinner alignmentSpinner = (Spinner) alertView.findViewById(R.id.alignment_spinner);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.alignment_array,
+                    android.R.layout.simple_spinner_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            alignmentSpinner.setAdapter(adapter);
+
+            imageWidthText.setText(String.valueOf(mediaFile.getWidth()) + "px");
+            seekBar.setProgress(mediaFile.getWidth());
+            titleText.setText(mediaFile.getTitle());
+            caption.setText(mediaFile.getCaption());
+            featuredCheckBox.setChecked(mediaFile.isFeatured());
+
+            if (mediaFile.isFeatured())
+                featuredInPostCheckBox.setVisibility(View.VISIBLE);
+            else
+                featuredInPostCheckBox.setVisibility(View.GONE);
+
+            featuredInPostCheckBox.setChecked(mediaFile.isFeaturedInPost());
+
+            alignmentSpinner.setSelection(mediaFile.getHorizontalAlignment(), true);
+
+            final int maxWidth = MediaUtils.getMinimumImageWidth(getActivity(), span.getImageSource());
+            seekBar.setMax(maxWidth / 10);
+            if (mediaFile.getWidth() != 0)
+                seekBar.setProgress(mediaFile.getWidth() / 10);
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (progress == 0)
+                        progress = 1;
+                    imageWidthText.setText(progress * 10 + "px");
+                }
+            });
+
+            imageWidthText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        imageWidthText.setText("");
+                    }
+                }
+            });
+
+            imageWidthText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    int width = getEditTextIntegerClamped(imageWidthText, 10, maxWidth);
+                    seekBar.setProgress(width / 10);
+                    imageWidthText.setSelection((String.valueOf(width).length()));
+
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(imageWidthText.getWindowToken(),
+                            InputMethodManager.RESULT_UNCHANGED_SHOWN);
+
+                    return true;
+                }
+            });
+
+            AlertDialog ad = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.image_settings))
+                    .setView(alertView).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            String title = (titleText.getText() != null) ? titleText.getText().toString() : "";
+                            MediaFile mediaFile = span.getMediaFile();
+                            if (mediaFile == null)
+                                return;
+                            mediaFile.setTitle(title);
+                            mediaFile.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
+                            mediaFile.setWidth(getEditTextIntegerClamped(imageWidthText, 10, maxWidth));
+                            String captionText = (caption.getText() != null) ? caption.getText().toString() : "";
+                            mediaFile.setCaption(captionText);
+                            mediaFile.setFeatured(featuredCheckBox.isChecked());
+                            if (featuredCheckBox.isChecked()) {
+                                // remove featured flag from all other images
+                                Spannable contentSpannable = mContentEditText.getText();
+                                WPImageSpan[] postImageSpans = contentSpannable.getSpans(0, contentSpannable.length(), WPImageSpan.class);
+                                if (postImageSpans.length > 1) {
+                                    for (WPImageSpan postImageSpan : postImageSpans) {
+                                        if (postImageSpan != span) {
+                                            MediaFile postMediaFile = postImageSpan.getMediaFile();
+                                            postMediaFile.setFeatured(false);
+                                            postMediaFile.setFeaturedInPost(false);
+                                            postMediaFile.save();
+                                        }
+                                    }
+                                }
+                            }
+                            mediaFile.setFeaturedInPost(featuredInPostCheckBox.isChecked());
+                            mediaFile.save();
+                        }
+                    }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.dismiss();
+                        }
+                    }).create();
+            ad.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            ad.show();
+            mScrollDetected = false;
+        }
+
+        return true;
+    }
+
     /**
      * Rich Text Editor
      */
@@ -1291,148 +1437,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 WPImageSpan[] image_spans = s.getSpans(charPosition, charPosition, WPImageSpan.class);
 
                 if (image_spans.length != 0) {
-                    final WPImageSpan span = image_spans[0];
-                    MediaFile mediaFile = span.getMediaFile();
-                    if (mediaFile == null)
-                        return false;
-                    if (!mediaFile.isVideo()) {
-                        LayoutInflater factory = LayoutInflater.from(getActivity());
-                        final View alertView = factory.inflate(R.layout.alert_image_options, null);
-                        if (alertView == null)
-                            return false;
-                        final EditText imageWidthText = (EditText) alertView.findViewById(R.id.imageWidthText);
-                        final EditText titleText = (EditText) alertView.findViewById(R.id.title);
-                        final EditText caption = (EditText) alertView.findViewById(R.id.caption);
-                        final CheckBox featuredCheckBox = (CheckBox) alertView.findViewById(R.id.featuredImage);
-                        final CheckBox featuredInPostCheckBox = (CheckBox) alertView.findViewById(R.id.featuredInPost);
-
-                        // show featured image checkboxes if theme support it
-                        if (WordPress.getCurrentBlog().isFeaturedImageCapable()) {
-                            featuredCheckBox.setVisibility(View.VISIBLE);
-                            featuredInPostCheckBox.setVisibility(View.VISIBLE);
-                        }
-
-                        featuredCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                if (isChecked) {
-                                    featuredInPostCheckBox.setVisibility(View.VISIBLE);
-                                } else {
-                                    featuredInPostCheckBox.setVisibility(View.GONE);
-                                }
-
-                            }
-                        });
-
-                        final SeekBar seekBar = (SeekBar) alertView.findViewById(R.id.imageWidth);
-                        final Spinner alignmentSpinner = (Spinner) alertView.findViewById(R.id.alignment_spinner);
-                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.alignment_array,
-                                android.R.layout.simple_spinner_item);
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        alignmentSpinner.setAdapter(adapter);
-
-                        imageWidthText.setText(String.valueOf(mediaFile.getWidth()) + "px");
-                        seekBar.setProgress(mediaFile.getWidth());
-                        titleText.setText(mediaFile.getTitle());
-                        caption.setText(mediaFile.getCaption());
-                        featuredCheckBox.setChecked(mediaFile.isFeatured());
-
-                        if (mediaFile.isFeatured())
-                            featuredInPostCheckBox.setVisibility(View.VISIBLE);
-                        else
-                            featuredInPostCheckBox.setVisibility(View.GONE);
-
-                        featuredInPostCheckBox.setChecked(mediaFile.isFeaturedInPost());
-
-                        alignmentSpinner.setSelection(mediaFile.getHorizontalAlignment(), true);
-
-                        final int maxWidth = MediaUtils.getMinimumImageWidth(getActivity(), span.getImageSource());
-                        seekBar.setMax(maxWidth / 10);
-                        if (mediaFile.getWidth() != 0)
-                            seekBar.setProgress(mediaFile.getWidth() / 10);
-                        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                            @Override
-                            public void onStopTrackingTouch(SeekBar seekBar) {
-                            }
-
-                            @Override
-                            public void onStartTrackingTouch(SeekBar seekBar) {
-                            }
-
-                            @Override
-                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                if (progress == 0)
-                                    progress = 1;
-                                imageWidthText.setText(progress * 10 + "px");
-                            }
-                        });
-
-                        imageWidthText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                            @Override
-                            public void onFocusChange(View v, boolean hasFocus) {
-                                if (hasFocus) {
-                                    imageWidthText.setText("");
-                                }
-                            }
-                        });
-
-                        imageWidthText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                            @Override
-                            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                                int width = getEditTextIntegerClamped(imageWidthText, 10, maxWidth);
-                                seekBar.setProgress(width / 10);
-                                imageWidthText.setSelection((String.valueOf(width).length()));
-
-                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(imageWidthText.getWindowToken(),
-                                        InputMethodManager.RESULT_UNCHANGED_SHOWN);
-
-                                return true;
-                            }
-                        });
-
-                        AlertDialog ad = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.image_settings))
-                                .setView(alertView).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        String title = (titleText.getText() != null) ? titleText.getText().toString() : "";
-                                        MediaFile mediaFile = span.getMediaFile();
-                                        if (mediaFile == null)
-                                            return;
-                                        mediaFile.setTitle(title);
-                                        mediaFile.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
-                                        mediaFile.setWidth(getEditTextIntegerClamped(imageWidthText, 10, maxWidth));
-                                        String captionText = (caption.getText() != null) ? caption.getText().toString() : "";
-                                        mediaFile.setCaption(captionText);
-                                        mediaFile.setFeatured(featuredCheckBox.isChecked());
-                                        if (featuredCheckBox.isChecked()) {
-                                            // remove featured flag from all other images
-                                            Spannable contentSpannable = mContentEditText.getText();
-                                            WPImageSpan[] postImageSpans = contentSpannable.getSpans(0, contentSpannable.length(), WPImageSpan.class);
-                                            if (postImageSpans.length > 1) {
-                                                for (WPImageSpan postImageSpan : postImageSpans) {
-                                                    if (postImageSpan != span) {
-                                                        MediaFile postMediaFile = postImageSpan.getMediaFile();
-                                                        postMediaFile.setFeatured(false);
-                                                        postMediaFile.setFeaturedInPost(false);
-                                                        postMediaFile.save();
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        mediaFile.setFeaturedInPost(featuredInPostCheckBox.isChecked());
-                                        mediaFile.save();
-                                    }
-                                }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        dialog.dismiss();
-                                    }
-                                }).create();
-                        ad.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                        ad.show();
-                        mScrollDetected = false;
-                        return true;
-                    }
-
+                    return imageSpanTapped(image_spans[0]);
                 } else {
                     mContentEditText.setMovementMethod(ArrowKeyMovementMethod.getInstance());
                     int selectionStart = mContentEditText.getSelectionStart();
@@ -1745,7 +1750,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     }
 
                     if (column != 0) {
-                        // insert one line break if the cursor is not at the first column
                         editableText.insert(selectionEnd, "\n");
                         selectionStart = selectionStart + 1;
                         selectionEnd = selectionEnd + 1;
