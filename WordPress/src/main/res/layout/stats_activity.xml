@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
+<org.wordpress.android.util.ptr.CustomSwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ptr_layout"
     android:layout_width="match_parent"
@@ -163,4 +163,4 @@
 
         </LinearLayout>
     </org.wordpress.android.ui.stats.ScrollViewExt>
-</android.support.v4.widget.SwipeRefreshLayout>
+</org.wordpress.android.util.ptr.CustomSwipeRefreshLayout>

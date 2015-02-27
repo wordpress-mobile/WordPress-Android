@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_grey">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <org.wordpress.android.util.ptr.CustomSwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
@@ -28,5 +28,5 @@
             android:layout_marginLeft="@dimen/empty_list_title_side_margin"
             android:layout_marginRight="@dimen/empty_list_title_side_margin"
             android:text="@string/empty_list_default" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </org.wordpress.android.util.ptr.CustomSwipeRefreshLayout>
 </LinearLayout>

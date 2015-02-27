@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +36,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
 
 import javax.annotation.Nonnull;
 
@@ -174,7 +174,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     private void initSwipeToRefreshHelper() {
         mFauxSwipeToRefreshHelper = new SwipeToRefreshHelper(
                 getActivity(),
-                (SwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
+                (CustomSwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
                 new SwipeToRefreshHelper.RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
