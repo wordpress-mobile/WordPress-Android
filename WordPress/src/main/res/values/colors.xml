@@ -78,9 +78,9 @@
     <!-- Media Gallery Colors -->
     <color name="media_gallery_grid_label_bg">@color/semi_transparent_grey_dark</color>
     <color name="media_gallery_grid_label">@color/white</color>
-	<color name="media_gallery_bg">@color/grey_darken_30</color>
-	<color name="media_gallery_option_selected">@color/grey_dark</color>
-	<color name="media_gallery_option_default">@color/grey_lighten_30</color>
+    <color name="media_gallery_bg">@color/grey_darken_30</color>
+    <color name="media_gallery_option_selected">@color/grey_dark</color>
+    <color name="media_gallery_option_default">@color/grey_lighten_30</color>
 
     <!-- Theme Details Colors -->
     <color name="theme_details_name">@color/black</color>
@@ -112,6 +112,12 @@
     <!-- Comment Status Colors -->
     <color name="comment_status_unapproved">@color/orange_jazzy</color>
     <color name="comment_status_spam">@color/alert_red</color>
+    
+    <!-- Notification Status Colors -->
+    <color name="notification_status_unapproved">@color/alert_yellow</color>
+    <color name="notification_status_unapproved_dark">#eeac31</color>
+    <color name="notification_status_unapproved_darker">#6d1818</color>
+    <color name="notification_status_unapproved_background">#fef8ee</color>
 
     <!-- NUX Colors -->
     <color name="nux_grey_button">@color/grey_lighten_20</color>
