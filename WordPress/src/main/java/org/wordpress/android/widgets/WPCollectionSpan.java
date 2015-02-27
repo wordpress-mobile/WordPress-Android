@@ -23,30 +23,34 @@ public class WPCollectionSpan extends ImageSpan {
         mContent = new ArrayList<>();
     }
 
-    public void addContent(String content) {
-        mContent.add(content);
-    }
-
-    public List<String> getContent() {
-        return mContent;
-    }
-
     @Override
-    public void draw(Canvas canvas, CharSequence text,
-                     int start, int end, float x,
-                     int top, int y, int bottom, Paint paint) {
+    public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
         super.draw(canvas, text, start, end, x, top, y, bottom, paint);
 
-        // Add 'edit' icon at bottom right of image
+        // + icon to indicate multiple images
         int width = getSize(paint, text, start, end, paint.getFontMetricsInt());
         Bitmap editIconBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_add_white_24dp);
         float editIconXPosition = (x + width) - editIconBitmap.getWidth();
         float editIconYPosition = bottom - editIconBitmap.getHeight();
+
         // Add a black background with a bit of alpha
         Paint bgPaint = new Paint();
         bgPaint.setColor(Color.argb(200, 0, 0, 0));
         canvas.drawRect(editIconXPosition, editIconYPosition, editIconXPosition + editIconBitmap.getWidth(), editIconYPosition + editIconBitmap.getHeight(), bgPaint);
+
         // Add the icon to the canvas
         canvas.drawBitmap(editIconBitmap, editIconXPosition, editIconYPosition, paint);
+    }
+
+    public void addContent(String content) {
+        mContent.add(content);
+    }
+
+    public void removeContent(String content) {
+        mContent.remove(content);
+    }
+
+    public List<String> getContent() {
+        return mContent;
     }
 }

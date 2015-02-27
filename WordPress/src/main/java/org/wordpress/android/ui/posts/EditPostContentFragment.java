@@ -1393,6 +1393,57 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         return true;
     }
 
+    private boolean collectionSpanTapped(final WPCollectionSpan collectionSpan) {
+        final List<String> collectionIds = collectionSpan.getContent();
+
+        if (collectionIds == null || collectionIds.isEmpty()) {
+            return false;
+        }
+
+        LayoutInflater factory = LayoutInflater.from(getActivity());
+        final View alertView = factory.inflate(R.layout.alert_collection_viewer, null);
+        if (alertView == null) {
+            return false;
+        }
+
+        final ListView collectionList = (ListView) alertView.findViewById(R.id.collection_list);
+        if (collectionList == null) {
+            return false;
+        }
+
+        final List<String> removedContent = new ArrayList<>();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, collectionIds);
+        collectionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                removedContent.add(collectionIds.get(position));
+                view.setVisibility(View.GONE);
+            }
+        });
+        collectionList.setAdapter(adapter);
+
+        AlertDialog collectionDialog = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.image_settings))
+                .setView(alertView).setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        for (String content : removedContent) {
+                            collectionSpan.removeContent(content);
+                        }
+
+                        dialog.dismiss();
+                    }
+                }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        collectionDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        collectionDialog.show();
+        mScrollDetected = false;
+
+        return true;
+    }
+
     /**
      * Rich Text Editor
      */
@@ -1433,6 +1484,12 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 Spannable s = mContentEditText.getText();
                 if (s == null)
                     return false;
+
+                WPCollectionSpan[] collectionSpans = s.getSpans(charPosition, charPosition, WPCollectionSpan.class);
+                if (collectionSpans.length > 0) {
+                    return collectionSpanTapped(collectionSpans[0]);
+                }
+
                 // check if image span was tapped
                 WPImageSpan[] image_spans = s.getSpans(charPosition, charPosition, WPImageSpan.class);
 
