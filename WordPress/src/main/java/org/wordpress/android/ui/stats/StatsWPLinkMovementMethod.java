@@ -64,16 +64,12 @@ public class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
                     // Let's try the global wpcom credentials
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(widget.getContext());
                     String statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-                    String statsAuthenticatedPassword = WordPressDB.decryptPassword(
-                            settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
-                    );
-                    if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
-                            || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
+                    if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
                         // Still empty. Do not eat the event, but let's open the default Web Browser.
                         return super.onTouchEvent(widget, buffer, event);
                     }
                     WPWebViewActivity.openUrlByUsingWPCOMCredentials(widget.getContext(),
-                            url, statsAuthenticatedUser, statsAuthenticatedPassword);
+                            url, statsAuthenticatedUser);
                     return true;
                 } else if (url.startsWith("https") || url.startsWith("http")) {
                     AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);

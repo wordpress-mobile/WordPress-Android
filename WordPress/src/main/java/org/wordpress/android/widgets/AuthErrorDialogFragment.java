@@ -9,7 +9,6 @@ import android.os.Bundle;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 
 /**
@@ -18,17 +17,12 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 public class AuthErrorDialogFragment extends DialogFragment {
     public static int DEFAULT_RESOURCE_ID = -1;
 
-    private boolean mIsWPCom;
     private int mMessageId = R.string.incorrect_credentials;
     private int mTitleId = R.string.connection_error;
 
-    public void setWPComTitleMessage(boolean isWPCom, int titleResourceId, int messageResourceId) {
-        mIsWPCom = isWPCom;
-
+    public void setWPComTitleMessage(int titleResourceId, int messageResourceId) {
         if (titleResourceId != DEFAULT_RESOURCE_ID) {
             mTitleId = titleResourceId;
-        } else if (mIsWPCom) {
-            mTitleId = R.string.wpcom_signin_dialog_title;
         } else {
             mTitleId = R.string.connection_error;
         }
@@ -53,32 +47,20 @@ public class AuthErrorDialogFragment extends DialogFragment {
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
         b.setTitle(mTitleId);
         b.setMessage(mMessageId);
-        if (mIsWPCom) {
-            b.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent authIntent = new Intent(getActivity(), WPComLoginActivity.class);
-                    authIntent.putExtra("wpcom", true);
-                    authIntent.putExtra("auth-only", true);
-                    getActivity().startActivityForResult(authIntent, WPComLoginActivity.REQUEST_CODE);
-                }
-            });
-        } else {
-            b.setCancelable(true);
-            b.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent settingsIntent = new Intent(getActivity(), BlogPreferencesActivity.class);
-                    settingsIntent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
-                    getActivity().startActivity(settingsIntent);
-                }
-            });
-            b.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                }
-            });
-        }
+        b.setCancelable(true);
+        b.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent settingsIntent = new Intent(getActivity(), BlogPreferencesActivity.class);
+                settingsIntent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
+                getActivity().startActivity(settingsIntent);
+            }
+        });
+        b.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
         return b.create();
     }
 }

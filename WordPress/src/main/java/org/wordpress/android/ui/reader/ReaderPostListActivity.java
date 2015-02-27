@@ -11,7 +11,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPDrawerActivity;
-import org.wordpress.android.ui.accounts.WPComLoginActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -125,7 +125,7 @@ public class ReaderPostListActivity extends WPDrawerActivity {
         switch (requestCode) {
             // user just returned from the login dialog, need to perform initial update again
             // since creds have changed
-            case WPComLoginActivity.REQUEST_CODE:
+            case SignInActivity.REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     removeListFragment();
                     EventBus.getDefault().removeStickyEvent(ReaderEvents.HasPerformedInitialUpdate.class);
@@ -212,5 +212,4 @@ public class ReaderPostListActivity extends WPDrawerActivity {
         }
         return ((ReaderPostListFragment) fragment);
     }
-
 }

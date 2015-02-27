@@ -7,7 +7,7 @@ public abstract class LoginAbstract {
 
     public interface Callback {
         void onSuccess();
-        void onError(int errorMessageId, boolean httpAuthRequired, boolean erroneousSslCertificate);
+        void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate);
     }
 
     public LoginAbstract(String username, String password) {

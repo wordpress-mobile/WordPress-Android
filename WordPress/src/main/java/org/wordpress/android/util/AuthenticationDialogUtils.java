@@ -3,6 +3,7 @@ package org.wordpress.android.util;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
@@ -11,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.AuthErrorDialogFragment;
@@ -52,7 +54,7 @@ public class AuthenticationDialogUtils {
         }
 
         if (isInvalidTokenError && (context instanceof Activity)) {
-            showAuthErrorDialog((Activity) context);
+            showAuthErrorView((Activity) context);
         } else {
             String fallbackErrorMessage = TextUtils.isEmpty(friendlyMessage) ? context.getString(
                     R.string.error_generic) : friendlyMessage;
@@ -65,29 +67,33 @@ public class AuthenticationDialogUtils {
     }
 
 
-    public static void showAuthErrorDialog(Activity activity) {
-        showAuthErrorDialog(activity, AuthErrorDialogFragment.DEFAULT_RESOURCE_ID, AuthErrorDialogFragment.DEFAULT_RESOURCE_ID);
+    public static void showAuthErrorView(Activity activity) {
+        showAuthErrorView(activity, AuthErrorDialogFragment.DEFAULT_RESOURCE_ID, AuthErrorDialogFragment.DEFAULT_RESOURCE_ID);
     }
 
-    public static void showAuthErrorDialog(Activity activity, int titleResId, int messageResId) {
+    public static void showAuthErrorView(Activity activity, int titleResId, int messageResId) {
         final String ALERT_TAG = "alert_ask_credentials";
         if (activity.isFinishing()) {
             return;
         }
+
+        // WP.com errors will show the sign in activity
+        if (WordPress.getCurrentBlog() == null || (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag())) {
+            Intent signInIntent = new Intent(activity, SignInActivity.class);
+            signInIntent.putExtra(SignInActivity.ARG_IS_AUTH_ERROR, true);
+            signInIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            activity.startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
+            return;
+        }
+
         // abort if the dialog is already visible
         if (activity.getFragmentManager().findFragmentByTag(ALERT_TAG) != null) {
             return;
         }
+
         FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
-        AuthErrorDialogFragment authAlert;
-        // Default to isDotCom (If WordPress.getCurrentBlog() == null: no blogs found,
-        // so the user is logged in wpcom and doesn't own any blog
-        boolean isDotCom = true;
-        if (WordPress.getCurrentBlog() != null) {
-            isDotCom = WordPress.getCurrentBlog().isDotcomFlag();
-        }
-        authAlert = new AuthErrorDialogFragment();
-        authAlert.setWPComTitleMessage(isDotCom, titleResId, messageResId);
+        AuthErrorDialogFragment authAlert = new AuthErrorDialogFragment();
+        authAlert.setWPComTitleMessage(titleResId, messageResId);
         ft.add(authAlert, ALERT_TAG);
         ft.commitAllowingStateLoss();
     }

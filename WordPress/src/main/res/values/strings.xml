@@ -815,6 +815,14 @@
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ptr_tip_message">Tip: Pull down to refresh</string>
+    <string name="verification_code">Verification code</string>
+    <string name="invalid_verification_code">Invalid verification code</string>
+    <string name="verify">Verify</string>
+    <string name="two_step_footer_label">Enter the code from your authenticator app.</string>
+    <string name="two_step_footer_button">Send code via text message</string>
+    <string name="two_step_sms_sent">Check your text messages for the verification code.</string>
+    <string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
+    <string name="auth_required">Sign in again to continue.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>

@@ -132,7 +132,7 @@ public class Blog {
     }
 
     public String getUsername() {
-        return username;
+        return StringUtils.notNullStr(username);
     }
 
     public void setUsername(String username) {
@@ -140,7 +140,7 @@ public class Blog {
     }
 
     public String getPassword() {
-        return password;
+        return StringUtils.notNullStr(password);
     }
 
     public void setPassword(String password) {

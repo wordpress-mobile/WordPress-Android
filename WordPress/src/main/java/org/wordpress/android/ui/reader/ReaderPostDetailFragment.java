@@ -682,6 +682,8 @@ public class ReaderPostDetailFragment extends Fragment
                 return false;
             }
 
+            mReaderWebView.setIsPrivatePost(mPost.isPrivate);
+
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
             txtDateAndAuthor = (TextView) container.findViewById(R.id.text_date_and_author);
