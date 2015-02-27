@@ -1400,8 +1400,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             return false;
         }
 
-        LayoutInflater factory = LayoutInflater.from(getActivity());
-        final View alertView = factory.inflate(R.layout.alert_collection_viewer, null);
+        final LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        final View alertView = layoutInflater.inflate(R.layout.alert_collection_viewer, null);
         if (alertView == null) {
             return false;
         }
@@ -1413,17 +1413,38 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
         final List<String> removedContent = new ArrayList<>();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, collectionIds);
-        collectionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        collectionList.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.collection_item_view, collectionIds) {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                removedContent.add(collectionIds.get(position));
-                view.setVisibility(View.GONE);
+            public View getView(final int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    convertView = layoutInflater.inflate(R.layout.collection_item_view, parent, false);
+                }
+
+                final TextView text = (TextView) convertView.findViewById(R.id.collection_item_text);
+                final CheckBox checkbox = (CheckBox) convertView.findViewById(R.id.collection_item_checkbox);
+
+                if (checkbox != null && text != null) {
+                    text.setText(collectionIds.get(position));
+
+                    checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                text.setTextColor(getResources().getColor(R.color.calypso_blue));
+                                removedContent.add(collectionIds.get(position));
+                            } else {
+                                text.setTextColor(getResources().getColor(R.color.calypso_blue_dark));
+                                removedContent.remove(collectionIds.get(position));
+                            }
+                        }
+                    });
+                }
+
+                return convertView;
             }
         });
-        collectionList.setAdapter(adapter);
 
-        AlertDialog collectionDialog = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.image_settings))
+        AlertDialog collectionDialog = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.delete_from_collection))
                 .setView(alertView).setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         for (String content : removedContent) {
