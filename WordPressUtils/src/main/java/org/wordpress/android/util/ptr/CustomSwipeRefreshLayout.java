@@ -22,6 +22,10 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout {
         try{
             return super.onTouchEvent(event);
         } catch(IllegalArgumentException e) {
+            // Fix for https://github.com/wordpress-mobile/WordPress-Android/issues/2373
+            // Catch IllegalArgumentException which can be fired by the underlying SwipeRefreshLayout.onTouchEvent()
+            // method.
+            // When android support-v4 fixes it, we'll have to remove that custom layout completely.
             AppLog.e(T.UTILS, e);
             return true;
         }
