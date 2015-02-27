@@ -45,7 +45,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -104,8 +103,11 @@ import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1393,6 +1395,17 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         return true;
     }
 
+    /**
+     * Called when a WPCollectionSpan is tapped. Displays a list of items in the collection and
+     * allows users to select any number of them to remove. If there is only one item left after
+     * confirming deletion the span will be converted to a WPImageSpan. If no items remain the span
+     * will be deleted.
+     *
+     * @param collectionSpan
+     *  the tapped span
+     * @return
+     *  true if the tap was handled, false otherwise
+     */
     private boolean collectionSpanTapped(final WPCollectionSpan collectionSpan) {
         final List<String> collectionIds = collectionSpan.getContent();
 
@@ -1800,42 +1813,62 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      */
     private void handleMediaSelectionResult(Intent data) {
         if (data != null) {
-            List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
+            final List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
 
             if (selectedContent != null && selectedContent.size() > 0) {
                 if (selectedContent.size() == 1) {
                     addMedia(selectedContent.get(0).getSource(), null, getActivity());
                 } else {
-                    Editable editableText = mContentEditText.getText();
-                    WPCollectionSpan collectionSpan = new WPCollectionSpan(getActivity(), ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), selectedContent.get(0).getSource().toString(), getMaximumThumbnailWidth()));
-                    int selectionStart = mContentEditText.getSelectionStart();
-                    int selectionEnd = mContentEditText.getSelectionEnd();
+                    final Editable editableText = mContentEditText.getText();
+                    final int selectionStart = mContentEditText.getSelectionStart();
+                    final int selectionEnd = mContentEditText.getSelectionEnd();
+                    final String previewSource = selectedContent.get(0).getSource().toString();
 
-                    for (final MediaItem selectedItem : selectedContent) {
-                        collectionSpan.addContent(selectedItem.getSource().toString());
-                    }
+                    AsyncTask<String, String, WPCollectionSpan> background = new AsyncTask<String, String, WPCollectionSpan>() {
+                        Bitmap bitmap = null;
+                        int start, end;
 
-                    if (selectionStart > selectionEnd) {
-                        int temp = selectionEnd;
-                        selectionEnd = selectionStart;
-                        selectionStart = temp;
-                    }
+                        @Override
+                        protected WPCollectionSpan doInBackground(String... params) {
+                            if (previewSource.contains("wordpress.com")) {
+                                try {
+                                    URL url = new URL(previewSource);
+                                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                } catch (MalformedURLException exception) {
+                                } catch (IOException ioException) {
+                                }
+                            } else {
+                                bitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), previewSource, getMaximumThumbnailWidth());
+                            }
+                            WPCollectionSpan collectionSpan = new WPCollectionSpan(getActivity(), bitmap);
 
-                    int line, column = 0;
-                    if (mContentEditText.getLayout() != null) {
-                        line = mContentEditText.getLayout().getLineForOffset(selectionStart);
-                        column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-                    }
+                            for (final MediaItem selectedItem : selectedContent) {
+                                collectionSpan.addContent(selectedItem.getSource().toString());
+                            }
 
-                    if (column != 0) {
-                        editableText.insert(selectionEnd, "\n");
-                        selectionStart = selectionStart + 1;
-                        selectionEnd = selectionEnd + 1;
-                    }
+                            start = selectionStart;
+                            end = selectionEnd;
 
-                    editableText.insert(selectionStart, " ");
-                    editableText.setSpan(collectionSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    editableText.insert(selectionStart, "\n");
+                            if (start > end) {
+                                int temp = end;
+                                end = start;
+                                start = temp;
+                            }
+
+                            return collectionSpan;
+                        }
+
+                        @Override
+                        protected void onPostExecute(WPCollectionSpan result) {
+                            if (editableText != null && result != null) {
+                                editableText.insert(start, " ");
+                                editableText.setSpan(result, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                editableText.insert(end + 1, "\n");
+                            }
+                        }
+                    };
+
+                    background.execute();
                 }
             }
         }
