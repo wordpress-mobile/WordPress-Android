@@ -19,8 +19,6 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
-import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
-import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
@@ -42,7 +40,6 @@ public class WPMainActivity extends ActionBarActivity
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
 
-    private boolean mHasPerformedInitialUpdate;
     private int mPreviousPosition = -1;
 
     private static final String KEY_INITIAL_UPDATE = "initial_update_performed";
@@ -81,27 +78,12 @@ public class WPMainActivity extends ActionBarActivity
                     mViewPager.setCurrentItem(position);
                 }
             }
-        } else {
-            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
-        }
-
-        if (!mHasPerformedInitialUpdate) {
-            performInitialUpdate();
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
         super.onSaveInstanceState(outState);
-    }
-
-    void performInitialUpdate() {
-        if (WordPress.hasValidWPComCredentials(this)) {
-            ReaderAuthActions.updateCookies(this);
-            ReaderUserActions.updateCurrentUser();
-            mHasPerformedInitialUpdate = true;
-        }
     }
 
     @Override
@@ -152,7 +134,6 @@ public class WPMainActivity extends ActionBarActivity
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
                     WordPress.registerForCloudMessaging(this);
-                    performInitialUpdate();
                 } else {
                     finish();
                 }
@@ -196,7 +177,6 @@ public class WPMainActivity extends ActionBarActivity
 
     private void showSignIn() {
         mPreviousPosition = -1;
-        mHasPerformedInitialUpdate = false;
         startActivityForResult(new Intent(this, SignInActivity.class), RequestCodes.ADD_ACCOUNT);
     }
 
@@ -247,18 +227,16 @@ public class WPMainActivity extends ActionBarActivity
                     showSignIn();
                     break;
                 case WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS:
-                    AuthenticationDialogUtils.showAuthErrorDialog(WPMainActivity.this);
+                case WordPress.BROADCAST_ACTION_REST_API_UNAUTHORIZED:
+                case WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH:
+                    AuthenticationDialogUtils.showAuthErrorView(WPMainActivity.this);
                     break;
                 case SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED:
                     // TODO: this applies to the notifications tab, should show message there
-                    AuthenticationDialogUtils.showAuthErrorDialog(
+                    AuthenticationDialogUtils.showAuthErrorView(
                             WPMainActivity.this,
                             R.string.sign_in_again,
                             R.string.simperium_connection_error);
-                    break;
-                case WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH:
-                    // TODO: add a specific message like "you must use a specific app password"
-                    AuthenticationDialogUtils.showAuthErrorDialog(WPMainActivity.this);
                     break;
                 case WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE:
                     SelfSignedSSLCertsManager.askForSslTrust(WPMainActivity.this, null);
@@ -272,5 +250,4 @@ public class WPMainActivity extends ActionBarActivity
             }
         }
     };
-
 }
