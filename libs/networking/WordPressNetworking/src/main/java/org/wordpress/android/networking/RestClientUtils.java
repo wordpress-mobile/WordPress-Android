@@ -53,14 +53,17 @@ public class RestClientUtils {
         sUserAgent = userAgent;
     }
 
-    public RestClientUtils(RequestQueue queue, Authenticator authenticator) {
-        this(queue, authenticator, RestClient.REST_CLIENT_VERSIONS.V1);
+    public RestClientUtils(RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener) {
+        this(queue, authenticator, onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1);
     }
 
-    public RestClientUtils(RequestQueue queue, Authenticator authenticator, RestClient.REST_CLIENT_VERSIONS version) {
+    public RestClientUtils(RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS version) {
         // load an existing access token from prefs if we have one
         mAuthenticator = authenticator;
         mRestClient = RestClientFactory.instantiate(queue, version);
+        if (onAuthFailedListener != null) {
+            mRestClient.setOnAuthFailedListener(onAuthFailedListener);
+        }
         mRestClient.setUserAgent(sUserAgent);
     }
 

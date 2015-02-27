@@ -38,6 +38,11 @@
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
 
+    <style name="SignInTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorControlActivated">@color/color_control_activated</item>
+        <item name="colorControlHighlight">@color/color_control_highlight</item>
+    </style>
+
     <style name="TabBarStyle.WordPress" parent="@android:style/Widget.Holo.ActionBar.TabBar">
         <item name="android:showDividers">middle</item>
         <item name="android:divider">@drawable/tab_divider_wordpress</item>
@@ -206,7 +211,7 @@
     </style>
 
     <style name="WordPress.NUXEditText">
-        <item name="android:background">#FFFFFF</item>
+        <item name="android:background">@color/white</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColor">#444444</item>
         <item name="android:textColorHint">#AAAAAA</item>

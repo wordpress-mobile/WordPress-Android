@@ -50,7 +50,6 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
@@ -1424,10 +1423,6 @@ public class ReaderPostListFragment extends Fragment
             // in case they changed their avatar, name, etc. since last time
             AppLog.d(T.READER, "reader post list > updating current user");
             ReaderUserActions.updateCurrentUser();
-
-            // update cookies so that we can show authenticated images in WebViews
-            AppLog.d(T.READER, "reader post list > updating cookies");
-            ReaderAuthActions.updateCookies(getActivity());
 
             EventBus.getDefault().postSticky(new ReaderEvents.HasPerformedInitialUpdate());
         }
