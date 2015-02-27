@@ -84,6 +84,7 @@ import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -1628,10 +1629,13 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      * @return
      *  list containing all sources to gather image media from
      */
-    private ArrayList<MediaSource> imageMediaSelectionSources() {
+    private ArrayList<MediaSource> imageMediaSelectionSources(boolean includeBlogMedia) {
         ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
         imageMediaSources.add(new MediaSourceDeviceImages(getActivity().getContentResolver()));
-        imageMediaSources.add(new MediaSourceWPImages());
+
+        if (includeBlogMedia) {
+            imageMediaSources.add(new MediaSourceWPImages());
+        }
 
         return imageMediaSources;
     }
@@ -1642,10 +1646,13 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      * @return
      *  list containing all sources to gather video media from
      */
-    private ArrayList<MediaSource> videoMediaSelectionSources() {
+    private ArrayList<MediaSource> videoMediaSelectionSources(boolean includeBlogMedia) {
         ArrayList<MediaSource> videoMediaSources = new ArrayList<>();
         videoMediaSources.add(new MediaSourceDeviceVideos(getActivity().getContentResolver()));
-        videoMediaSources.add(new MediaSourceWPVideos());
+
+        if (includeBlogMedia) {
+            videoMediaSources.add(new MediaSourceWPVideos());
+        }
 
         return videoMediaSources;
     }
@@ -1654,13 +1661,37 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      * Starts {@link org.wordpress.android.ui.media.MediaPickerActivity} for a result.
      */
     private void startMediaSelection() {
-        Intent intent = new Intent(mActivity, MediaPickerActivity.class);
-        intent.putExtra(MediaPickerActivity.ACTIVITY_TITLE_KEY, getString(R.string.add_to_post));
-        intent.putParcelableArrayListExtra(MediaPickerActivity.IMAGE_MEDIA_SOURCES_KEY, imageMediaSelectionSources());
-        intent.putParcelableArrayListExtra(MediaPickerActivity.VIDEO_MEDIA_SOURCES_KEY, videoMediaSelectionSources());
+        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            List<Object> apiArgs = new ArrayList<Object>();
+            apiArgs.add(WordPress.getCurrentBlog());
+            ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
+                @Override
+                public void onSuccess(int count) {
+                    Intent intent = new Intent(mActivity, MediaPickerActivity.class);
+                    intent.putExtra(MediaPickerActivity.ACTIVITY_TITLE_KEY, getString(R.string.add_to_post));
+                    intent.putParcelableArrayListExtra(MediaPickerActivity.IMAGE_MEDIA_SOURCES_KEY, imageMediaSelectionSources(true));
+                    intent.putParcelableArrayListExtra(MediaPickerActivity.VIDEO_MEDIA_SOURCES_KEY, videoMediaSelectionSources(true));
 
-        startActivityForResult(intent, MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
-        mActivity.overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
+                    startActivityForResult(intent, MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
+                    mActivity.overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
+                }
+
+                @Override
+                public void onFailure(final ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                    ToastUtils.showToast(getActivity(), "Could not load blog media", ToastUtils.Duration.SHORT);
+
+                    Intent intent = new Intent(mActivity, MediaPickerActivity.class);
+                    intent.putExtra(MediaPickerActivity.ACTIVITY_TITLE_KEY, getString(R.string.add_to_post));
+                    intent.putParcelableArrayListExtra(MediaPickerActivity.IMAGE_MEDIA_SOURCES_KEY, imageMediaSelectionSources(false));
+                    intent.putParcelableArrayListExtra(MediaPickerActivity.VIDEO_MEDIA_SOURCES_KEY, videoMediaSelectionSources(false));
+
+                    startActivityForResult(intent, MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
+                    mActivity.overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
+                }
+            };
+            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(0, MediaGridFragment.Filter.ALL, callback);
+            getMediaTask.execute(apiArgs);
+        }
     }
 
     /**
