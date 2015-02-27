@@ -50,7 +50,6 @@
             android:singleLine="true"
             android:textColor="@color/blue_new_kid"
             android:textSize="@dimen/text_sz_large"
-            android:textStyle="italic"
             tools:text="www.bobross.com" />
 
     </RelativeLayout>
