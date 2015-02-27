@@ -191,24 +191,25 @@ public class MediaItemFragment extends Fragment {
         // added / upload date
         String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
         if (mIsLocal) {
-            mDateView.setText(getResources().getString(R.string.media_details_added_on) + date);
+            mDateView.setText(getResources().getString(R.string.media_details_added_on) + " " + date);
         } else {
-            mDateView.setText(getResources().getString(R.string.media_details_uploaded_on) + date);
+            mDateView.setText(getResources().getString(R.string.media_details_uploaded_on) + " " + date);
         }
 
         // file name
         String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
-        mFileNameView.setText(getResources().getString(R.string.media_details_file_name) + fileName);
+        mFileNameView.setText(getResources().getString(R.string.media_details_file_name) + " " + fileName);
 
         // get the file extension from the fileURL
         String fileURL = cursor.getString(cursor.getColumnIndex("fileURL"));
         if (fileURL != null) {
             String fileType = fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
-            mFileTypeView.setText(getResources().getString(R.string.media_details_file_type) + fileType);
+            mFileTypeView.setText(getResources().getString(R.string.media_details_file_type) +
+                    " " +  fileType);
             mFileTypeView.setVisibility(View.VISIBLE);
 
             // set the file URL
-            mFileUrlView.setText(getResources().getString(R.string.media_details_file_url) + fileURL);
+            mFileUrlView.setText(getResources().getString(R.string.media_details_file_url) + " " + fileURL);
             mFileUrlView.setVisibility(View.VISIBLE);
         } else {
             mFileTypeView.setVisibility(View.GONE);
@@ -240,7 +241,8 @@ public class MediaItemFragment extends Fragment {
 
             if (width > 0 && height > 0) {
                 String dimensions = width + "x" + height;
-                mDimensionsView.setText(getResources().getString(R.string.media_details_dimensions) + dimensions);
+                mDimensionsView.setText(getResources().getString(R.string.media_details_dimensions) +
+                        " " + dimensions);
                 mDimensionsView.setVisibility(View.VISIBLE);
             } else {
                 mDimensionsView.setVisibility(View.GONE);
