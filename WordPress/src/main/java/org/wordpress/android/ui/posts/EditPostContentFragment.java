@@ -70,7 +70,7 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
-import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaPickerActivity;
 import org.wordpress.android.ui.media.MediaSourceWPImages;
 import org.wordpress.android.ui.media.MediaSourceWPVideos;
@@ -142,10 +142,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
     private boolean mMediaUploadServiceStarted;
     private String mMediaCapturePath = "";
-    private List<String> mUploadingMedia;
-    private ArrayList<String> mGalleryIds;
-    private Map<String, String> mMediaIdToPath;
-    private int mGalleryContentCount;
 
     private int mStyleStart, mSelectionStart, mSelectionEnd, mFullViewBottom, mMaximumThumbnailWidth;
     private int mLastPosition = -1, mQuickMediaType = -1;
@@ -359,9 +355,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_MEDIA_SELECTED) {
                         handleMediaSelectionResult(data);
                     } else if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_GALLERY_CREATED) {
-                        mGalleryIds = new ArrayList<>();
-                        mUploadingMedia = new ArrayList<>();
-                        mMediaIdToPath = new HashMap<>();
                         handleGalleryResult(data);
                     }
                     break;
@@ -1710,7 +1703,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
 
             if (selectedContent != null && selectedContent.size() > 0) {
-                mGalleryContentCount = selectedContent.size();
+                ArrayList<String> blogMediaIds = new ArrayList<>();
+                ArrayList<String> localMediaIds = new ArrayList<>();
 
                 for (MediaItem content : selectedContent) {
                     Uri source = content.getSource();
@@ -1720,81 +1714,59 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                         final String sourceString = source.toString();
 
                         if (sourceString.contains("wordpress.com")) {
-                            mGalleryIds.add(id);
+                            blogMediaIds.add(id);
                             AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
                         } else if (MediaUtils.isValidImage(sourceString)) {
-                            queueFileForUpload(sourceString);
+                            queueFileForUpload(sourceString, localMediaIds);
                             AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                         }
                     }
                 }
 
-                if (mUploadingMedia.size() > 0) {
-                    MediaGallery gallery = new MediaGallery();
+                MediaGallery gallery = new MediaGallery();
+                gallery.setIds(blogMediaIds);
 
-                    mPendingGalleryUploads.put(gallery.getUniqueId(), new ArrayList<>(mUploadingMedia));
-
-                    Editable editatbleText = mContentEditText.getText();
-                    if (editatbleText == null) {
-                        return;
-                    }
-
-                    int selectionStart = mContentEditText.getSelectionStart();
-                    int selectionEnd = mContentEditText.getSelectionEnd();
-
-                    if (selectionStart > selectionEnd) {
-                        int temp = selectionEnd;
-                        selectionEnd = selectionStart;
-                        selectionStart = temp;
-                    }
-
-                    int line, column = 0;
-                    if (mContentEditText.getLayout() != null) {
-                        line = mContentEditText.getLayout().getLineForOffset(selectionStart);
-                        column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-                    }
-
-                    // TODO: do we want to add a newline break?
-                    if (column != 0) {
-                        // insert one line break if the cursor is not at the first column
-                        editatbleText.insert(selectionEnd, "\n");
-                        selectionStart = selectionStart + 1;
-                        selectionEnd = selectionEnd + 1;
-                    }
-
-                    editatbleText.insert(selectionStart, " ");
-                    MediaGalleryImageSpan is = new MediaGalleryImageSpan(getActivity(), gallery);
-                    editatbleText.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-                    editatbleText.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    // TODO: do we want to add newline after gallery?
-                    editatbleText.insert(selectionEnd + 1, "\n\n");
-                } else {
-                    createGallery();
+                if (localMediaIds.size() > 0) {
+                    ToastUtils.showToast(getActivity(), "Gallery media upload in progress...", ToastUtils.Duration.SHORT);
+                    mPendingGalleryUploads.put(gallery.getUniqueId(), new ArrayList<>(localMediaIds));
                 }
+
+                Editable editableText = mContentEditText.getText();
+                if (editableText == null) {
+                    return;
+                }
+
+                int selectionStart = mContentEditText.getSelectionStart();
+                int selectionEnd = mContentEditText.getSelectionEnd();
+
+                if (selectionStart > selectionEnd) {
+                    int temp = selectionEnd;
+                    selectionEnd = selectionStart;
+                    selectionStart = temp;
+                }
+
+                int line, column = 0;
+                if (mContentEditText.getLayout() != null) {
+                    line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+                    column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+                }
+
+                // TODO: do we want to add a newline break?
+                if (column != 0) {
+                    // insert one line break if the cursor is not at the first column
+                    editableText.insert(selectionEnd, "\n");
+                    selectionStart = selectionStart + 1;
+                    selectionEnd = selectionEnd + 1;
+                }
+
+                editableText.insert(selectionStart, " ");
+                MediaGalleryImageSpan is = new MediaGalleryImageSpan(getActivity(), gallery);
+                editableText.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+                editableText.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                // TODO: do we want to add newline after gallery?
+                editableText.insert(selectionEnd + 1, "\n\n");
             }
-        }
-    }
-
-    /**
-     * Adds a new gallery to the Post. Media ID's are stored in mGalleryIds and represents the media
-     * selected from {@link org.wordpress.android.ui.media.MediaPickerActivity}.
-     */
-    private void createGallery() {
-        if (mGalleryIds.size() > 0) {
-            String galleryToast = getString(R.string.editor_toast_gallery_created_formatted, mGalleryIds.size());
-            ToastUtils.showToast(getActivity(), galleryToast, ToastUtils.Duration.SHORT);
-
-            MediaGallery newGallery = new MediaGallery();
-            newGallery.setIds((ArrayList) mGalleryIds.clone());
-            Intent intent = new Intent(getActivity(), MediaGalleryPickerActivity.class);
-            intent.putExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY, newGallery);
-//            handleMediaGalleryResult(intent);
-
-            mGalleryIds.clear();
-            mGalleryIds = null;
-            mUploadingMedia = null;
-            mMediaIdToPath = null;
         }
     }
 
@@ -1805,7 +1777,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      * @param path
      *  local path of the media file to upload
      */
-    private void queueFileForUpload(String path) {
+    private void queueFileForUpload(String path, ArrayList<String> mediaIdOut) {
         if (TextUtils.isEmpty(path)) {
             Toast.makeText(getActivity(), "Error opening file", Toast.LENGTH_SHORT).show();
             return;
@@ -1840,8 +1812,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             mediaFile.setMimeType(mimeType);
         mediaFile.save();
 
-        mUploadingMedia.add(mediaFile.getMediaId());
-        mMediaIdToPath.put(mediaFile.getMediaId(), path);
+        mediaIdOut.add(mediaFile.getMediaId());
 
         startMediaUploadService();
     }
