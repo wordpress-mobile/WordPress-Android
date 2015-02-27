@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +18,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
@@ -1695,7 +1697,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                                         editableText.setSpan(gallerySpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     }
                                 }
-                                return;
                             }
 
                             mPendingGalleryUploads.get(galleryId).remove(mediaId);
@@ -1707,6 +1708,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
                     if (mPendingGalleryUploads.size() == 0) {
                         stopMediaUploadService();
+                        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                        notificationManager.cancel(10);
                     }
                 }
             }
@@ -1911,7 +1914,13 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 gallery.setIds(blogMediaIds);
 
                 if (localMediaIds.size() > 0) {
-                    ToastUtils.showToast(getActivity(), "Gallery media upload in progress...", ToastUtils.Duration.SHORT);
+                    NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity().getApplicationContext());
+                    builder.setSmallIcon(android.R.drawable.stat_sys_upload);
+                    builder.setContentTitle("Uploading gallery");
+                    notificationManager.notify(10, builder.build());
+
                     mPendingGalleryUploads.put(gallery.getUniqueId(), new ArrayList<>(localMediaIds));
                 }
 
@@ -1935,7 +1944,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
                 }
 
-                // TODO: do we want to add a newline break?
                 if (column != 0) {
                     // insert one line break if the cursor is not at the first column
                     editableText.insert(selectionEnd, "\n");
@@ -1948,7 +1956,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 editableText.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
                 editableText.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                // TODO: do we want to add newline after gallery?
                 editableText.insert(selectionEnd + 1, "\n\n");
             }
         }
