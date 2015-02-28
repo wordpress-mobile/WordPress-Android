@@ -99,7 +99,11 @@ public class MediaUtils {
             if (imageView != null) {
                 if (imageView.getTag() == this) {
                     imageView.setTag(null);
-                    fadeInImage(imageView, result);
+                    if (result == null) {
+                        imageView.setImageResource(R.drawable.ic_now_wallpaper_white);
+                    } else {
+                        fadeInImage(imageView, result);
+                    }
                 }
             }
         }
