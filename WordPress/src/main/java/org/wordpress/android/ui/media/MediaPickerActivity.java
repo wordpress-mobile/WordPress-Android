@@ -79,6 +79,8 @@ public class MediaPickerActivity extends ActionBarActivity
      */
     public static final String SELECTED_CONTENT_RESULTS_KEY = "selected-content";
 
+    private static final String CAPTURE_PATH_KEY = "capture-path";
+
     private static final long   TAB_ANIMATION_DURATION_MS = 250l;
     private static final String TAB_TITLE_IMAGES          = "Images";
     private static final String TAB_TITLE_VIDEOS          = "Videos";
@@ -107,6 +109,22 @@ public class MediaPickerActivity extends ActionBarActivity
         inflater.inflate(R.menu.media_picker, menu);
 
         return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(CAPTURE_PATH_KEY, mCapturePath);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState.containsKey(CAPTURE_PATH_KEY)) {
+            mCapturePath = savedInstanceState.getString(CAPTURE_PATH_KEY);
+        }
     }
 
     @Override
