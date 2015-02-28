@@ -1873,8 +1873,10 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             final List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
 
             if (selectedContent != null && selectedContent.size() > 0) {
-                if (selectedContent.size() == 1) {
-                    addMedia(selectedContent.get(0).getSource(), null, getActivity());
+                if (selectedContent.size() == 1 || MediaUtils.isVideo(selectedContent.get(0).getSource().toString())) {
+                    for (MediaItem content : selectedContent) {
+                        addMedia(content.getSource(), null, getActivity());
+                    }
                 } else {
                     final Editable editableText = mContentEditText.getText();
                     final int selectionStart = mContentEditText.getSelectionStart();
@@ -1954,7 +1956,10 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     if (source != null && id != null) {
                         final String sourceString = source.toString();
 
-                        if (sourceString.contains("wordpress.com")) {
+                        if (MediaUtils.isVideo(sourceString)) {
+                            // Videos cannot be added to a gallery, insert inline instead
+                            addMedia(source, null, getActivity());
+                        } else if (sourceString.contains("wordpress.com")) {
                             blogMediaIds.add(id);
                             AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
                         } else if (MediaUtils.isValidImage(sourceString)) {
@@ -1978,39 +1983,42 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     mPendingGalleryUploads.put(gallery.getUniqueId(), new ArrayList<>(localMediaIds));
                 }
 
-                Editable editableText = mContentEditText.getText();
-                if (editableText == null) {
-                    return;
+                // Only insert gallery span if images were added
+                if (localMediaIds.size() > 0 && blogMediaIds.size() > 8) {
+                    Editable editableText = mContentEditText.getText();
+                    if (editableText == null) {
+                        return;
+                    }
+
+                    int selectionStart = mContentEditText.getSelectionStart();
+                    int selectionEnd = mContentEditText.getSelectionEnd();
+
+                    if (selectionStart > selectionEnd) {
+                        int temp = selectionEnd;
+                        selectionEnd = selectionStart;
+                        selectionStart = temp;
+                    }
+
+                    int line, column = 0;
+                    if (mContentEditText.getLayout() != null) {
+                        line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+                        column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+                    }
+
+                    if (column != 0) {
+                        // insert one line break if the cursor is not at the first column
+                        editableText.insert(selectionEnd, "\n");
+                        selectionStart = selectionStart + 1;
+                        selectionEnd = selectionEnd + 1;
+                    }
+
+                    editableText.insert(selectionStart, " ");
+                    MediaGalleryImageSpan is = new MediaGalleryImageSpan(getActivity(), gallery);
+                    editableText.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+                    editableText.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editableText.insert(selectionEnd + 1, "\n\n");
                 }
-
-                int selectionStart = mContentEditText.getSelectionStart();
-                int selectionEnd = mContentEditText.getSelectionEnd();
-
-                if (selectionStart > selectionEnd) {
-                    int temp = selectionEnd;
-                    selectionEnd = selectionStart;
-                    selectionStart = temp;
-                }
-
-                int line, column = 0;
-                if (mContentEditText.getLayout() != null) {
-                    line = mContentEditText.getLayout().getLineForOffset(selectionStart);
-                    column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-                }
-
-                if (column != 0) {
-                    // insert one line break if the cursor is not at the first column
-                    editableText.insert(selectionEnd, "\n");
-                    selectionStart = selectionStart + 1;
-                    selectionEnd = selectionEnd + 1;
-                }
-
-                editableText.insert(selectionStart, " ");
-                MediaGalleryImageSpan is = new MediaGalleryImageSpan(getActivity(), gallery);
-                editableText.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-                editableText.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                editableText.insert(selectionEnd + 1, "\n\n");
             }
         }
     }
