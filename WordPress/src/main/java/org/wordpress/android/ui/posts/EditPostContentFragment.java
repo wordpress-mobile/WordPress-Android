@@ -32,6 +32,7 @@ import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
 import android.text.style.CharacterStyle;
+import android.text.style.ImageSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -1464,6 +1465,59 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     public void onClick(DialogInterface dialog, int whichButton) {
                         for (String content : removedContent) {
                             collectionSpan.removeContent(content);
+                        }
+
+                        if (collectionSpan.getContent().size() <= 1) {
+                            final Editable editableText = mContentEditText.getText();
+                            final int spanStart = editableText.getSpanStart(collectionSpan);
+                            final int spanEnd = editableText.getSpanEnd(collectionSpan);
+
+                            editableText.removeSpan(collectionSpan);
+
+                            if (collectionSpan.getContent().size() == 1) {
+                                final String previewSource = collectionSpan.getContent().get(0);
+                                AsyncTask<String, String, ImageSpan> background = new AsyncTask<String, String, ImageSpan>() {
+                                    Bitmap bitmap = null;
+                                    int start, end;
+
+                                    @Override
+                                    protected ImageSpan doInBackground(String... params) {
+                                        if (previewSource.contains("wordpress.com")) {
+                                            try {
+                                                URL url = new URL(previewSource);
+                                                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                            } catch (MalformedURLException exception) {
+                                            } catch (IOException ioException) {
+                                            }
+                                        } else {
+                                            bitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), previewSource, getMaximumThumbnailWidth());
+                                        }
+                                        WPImageSpan collectionSpan = new WPImageSpan(getActivity(), bitmap, Uri.parse(previewSource));
+
+                                        start = spanStart;
+                                        end = spanEnd;
+
+                                        if (start > end) {
+                                            int temp = end;
+                                            end = start;
+                                            start = temp;
+                                        }
+
+                                        return collectionSpan;
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(ImageSpan result) {
+                                        if (editableText != null && result != null) {
+                                            editableText.insert(start, " ");
+                                            editableText.setSpan(result, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            editableText.insert(end + 1, "\n");
+                                        }
+                                    }
+                                };
+
+                                background.execute();
+                            }
                         }
 
                         dialog.dismiss();
