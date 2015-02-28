@@ -139,6 +139,9 @@ public class MediaPickerActivity extends ActionBarActivity
                 Uri imageUri = Uri.fromFile(file);
 
                 if (file.exists() && MediaUtils.isValidImage(imageUri.toString())) {
+                    // Notify MediaStore of new content
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, imageUri));
+
                     MediaItem newImage = new MediaItem();
                     newImage.setSource(imageUri);
                     newImage.setPreviewSource(imageUri);
@@ -151,6 +154,9 @@ public class MediaPickerActivity extends ActionBarActivity
                 Uri videoUri = data != null ? data.getData() : null;
 
                 if (videoUri != null) {
+                    // Notify MediaStore of new content
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, videoUri));
+
                     MediaItem newVideo = new MediaItem();
                     newVideo.setSource(videoUri);
                     newVideo.setPreviewSource(videoUri);
