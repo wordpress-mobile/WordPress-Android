@@ -76,7 +76,8 @@ public class MediaSourceDeviceImages implements MediaSource {
 
         if (convertView != null) {
             final MediaItem mediaItem = mMediaItems.get(position);
-            final Uri imageSource = mediaItem.getPreviewSource();
+            final Uri imageSource = (mediaItem.getPreviewSource() != null && !mediaItem.getPreviewSource().toString().isEmpty())
+                    ? mediaItem.getPreviewSource() : mediaItem.getSource();
             final ImageView imageView = (ImageView) convertView.findViewById(R.id.image_view_background);
             if (imageView != null) {
                 int width = imageView.getWidth();
