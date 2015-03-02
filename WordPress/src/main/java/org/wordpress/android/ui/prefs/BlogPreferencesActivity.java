@@ -22,8 +22,8 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.DashboardActivity;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.Locale;
@@ -305,10 +305,16 @@ public class BlogPreferencesActivity extends ActionBarActivity {
      * View the blog admin area in the web browser
      */
     public void viewAdmin(View view) {
+        if (blog == null) return;
+
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN);
         mIsViewingAdmin = true;
-        Intent i = new Intent(this, DashboardActivity.class);
-        i.putExtra("blogID", blog.getLocalTableBlogId());
-        startActivity(i);
+        Intent intent = new Intent(this, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, blog.getUsername());
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, blog.getPassword());
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, blog.getAdminUrl());
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPWebViewActivity.getBlogLoginUrl(blog));
+        intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
+        startActivity(intent);
     }
 }

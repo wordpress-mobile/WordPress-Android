@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
 
 /**
  * A fragment display the themes on a grid view.
@@ -103,7 +103,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
 
         // swipe to refresh setup but not for the search view
         if (!(this instanceof ThemeSearchFragment)) {
-            mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), (SwipeRefreshLayout) view.findViewById(
+            mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), (CustomSwipeRefreshLayout) view.findViewById(
                     R.id.ptr_layout), new RefreshListener() {
                 @Override
                 public void onRefreshStarted() {

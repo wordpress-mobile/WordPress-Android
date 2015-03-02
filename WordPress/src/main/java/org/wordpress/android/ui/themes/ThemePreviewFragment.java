@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPWebChromeClient;
@@ -162,18 +163,16 @@ public class ThemePreviewFragment extends Fragment {
      * @param url URL to be loaded in the webview.
      */
     protected void loadAuthenticatedUrl(String url) {
-        try {
-            if (mBlog == null || url == null) {
-                return;
-            }
-            String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
-                    URLEncoder.encode(mBlog.getUsername(), "UTF-8"),
-                    URLEncoder.encode(mBlog.getPassword(), "UTF-8"),
-                    URLEncoder.encode(url, "UTF-8"));
-            mWebView.postUrl(WordPress.getLoginUrl(mBlog), postData.getBytes());
-        } catch (UnsupportedEncodingException e) {
-            AppLog.e(T.THEMES, e);
+        if (!isAdded() || mBlog == null || url == null) {
+            return;
         }
+
+        String authenticationUrl = WordPress.getLoginUrl(mBlog);
+        String postData = WPWebViewActivity.getAuthenticationPostData(authenticationUrl, url,
+                mBlog.getUsername(), mBlog.getPassword(), WordPress.getDotComToken(getActivity())
+        );
+
+        mWebView.postUrl(authenticationUrl, postData.getBytes());
     }
 
     @Override

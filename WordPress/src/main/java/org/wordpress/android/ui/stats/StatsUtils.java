@@ -214,7 +214,7 @@ public class StatsUtils {
      */
     public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
         long diffInMillies = date2.getTime() - date1.getTime();
-        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 
     public static int getSmallestWidthDP() {
@@ -229,49 +229,25 @@ public class StatsUtils {
      * 3. Check that credentials are not empty before launching the activity
      *
      */
-    public static StatsCredentials getBlogStatsCredentials(int localTableBlogID) {
+    public static String getBlogStatsUsername(int localTableBlogID) {
         Blog currentBlog = WordPress.getBlog(localTableBlogID);
         if (currentBlog == null) {
             return null;
         }
         String statsAuthenticatedUser = currentBlog.getDotcom_username();
-        String statsAuthenticatedPassword = currentBlog.getDotcom_password();
 
-        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
-                || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
+        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
             // Let's try the global wpcom credentials
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
             statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-            statsAuthenticatedPassword = WordPressDB.decryptPassword(
-                    settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
-            );
         }
 
-        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
-                || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
+        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
             AppLog.e(AppLog.T.STATS, "WPCOM Credentials for the current blog are null!");
             return null;
         }
 
-        return new StatsCredentials(statsAuthenticatedUser, statsAuthenticatedPassword);
-    }
-
-    public static class StatsCredentials {
-        private final String mUsername;
-        private final String mPassword;
-
-        public StatsCredentials(String username, String password) {
-            this.mUsername = username;
-            this.mPassword = password;
-        }
-
-        public String getUsername() {
-            return mUsername;
-        }
-
-        public String getPassword() {
-            return mPassword;
-        }
+        return statsAuthenticatedUser;
     }
 
     /**
