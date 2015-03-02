@@ -155,18 +155,20 @@ public class MediaSourceDeviceVideos implements MediaSource {
         final Map<String, String> data = new HashMap<>();
         Cursor thumbnailCursor = MediaUtils.getDeviceMediaStoreVideos(mContentResolver, THUMBNAIL_QUERY_COLUMNS);
 
-        if (thumbnailCursor.moveToFirst()) {
-            do {
-                int videoIdColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Video.Media._ID);
-                int thumbnailColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Video.Media.DATA);
+        if (thumbnailCursor != null) {
+            if (thumbnailCursor.moveToFirst()) {
+                do {
+                    int videoIdColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Video.Media._ID);
+                    int thumbnailColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Video.Media.DATA);
 
-                if (thumbnailColumnIndex != -1 && videoIdColumnIndex != -1) {
-                    data.put(thumbnailCursor.getString(videoIdColumnIndex), thumbnailCursor.getString(thumbnailColumnIndex));
-                }
-            } while (thumbnailCursor.moveToNext());
+                    if (thumbnailColumnIndex != -1 && videoIdColumnIndex != -1) {
+                        data.put(thumbnailCursor.getString(videoIdColumnIndex), thumbnailCursor.getString(thumbnailColumnIndex));
+                    }
+                } while (thumbnailCursor.moveToNext());
+            }
+
+            thumbnailCursor.close();
         }
-
-        thumbnailCursor.close();
 
         return data;
     }
