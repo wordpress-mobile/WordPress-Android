@@ -55,7 +55,7 @@
                     android:src="@drawable/dashicon_edit"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:tint="@color/grey_medium"/>
+                    android:tint="@color/grey_darken_10"/>
             </RelativeLayout>
 
 
@@ -94,7 +94,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="4dp"
-                    android:textColor="@color/grey_medium"
+                    android:textColor="@color/grey_darken_10"
                     android:textIsSelectable="true"
                     android:textSize="@dimen/nux_edit_field_font_size"/>
 
@@ -108,7 +108,7 @@
                     android:src="@drawable/dashicon_admin_site"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:tint="@color/grey_medium"/>
+                    android:tint="@color/grey_darken_10"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -147,7 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:textColor="@color/blue_extra_light"
+                android:textColor="@color/blue_light"
                 android:gravity="center|top"/>
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>

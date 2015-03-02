@@ -46,7 +46,7 @@
                 android:textSize="18sp"
                 android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
                 android:imeOptions="flagNoExtractUi"
-                android:textColorLink="@color/wordpress_blue" />
+                android:textColorLink="@color/blue_wordpress" />
         </LinearLayout>
     </ScrollView>
 
@@ -81,7 +81,7 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/format_bar_height"
         android:layout_gravity="bottom"
-        android:background="@color/grey_extra_light"
+        android:background="@color/grey_lighten_30"
         android:orientation="horizontal"
         android:visibility="gone">
 

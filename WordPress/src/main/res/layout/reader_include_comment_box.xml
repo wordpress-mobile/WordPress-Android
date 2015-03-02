@@ -16,7 +16,7 @@
         android:id="@+id/divider_comment"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/calypso_blue_border" />
+        android:background="@color/grey_lighten_20" />
 
     <org.wordpress.android.widgets.SuggestionAutoCompleteText
         android:id="@+id/edit_comment"
@@ -30,7 +30,7 @@
         android:inputType="text|textCapSentences|textMultiLine"
         android:maxLines="4"
         android:minLines="2"
-        android:textColorHint="@color/grey_medium"
+        android:textColorHint="@color/grey_darken_10"
         android:textSize="@dimen/text_sz_large"
         android:paddingTop="@dimen/margin_extra_small"
         android:paddingBottom="@dimen/margin_extra_small"

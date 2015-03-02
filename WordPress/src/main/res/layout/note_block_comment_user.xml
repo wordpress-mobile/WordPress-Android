@@ -30,7 +30,7 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:textColor="@color/calypso_blue_dark"
+            android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
             tools:text="Bob Ross" />
 
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
                 android:singleLine="true"
-                android:textColor="@color/calypso_blue"
+                android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_large"
                 android:visibility="gone"
                 tools:text="5h"
@@ -56,7 +56,7 @@
                 android:id="@+id/user_comment_bullet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/calypso_blue"
+                android:textColor="@color/grey"
                 android:includeFontPadding="false"
                 android:textSize="@dimen/text_sz_large"
                 android:text="\u2022"
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:textColor="@color/calypso_blue"
+                android:textColor="@color/grey"
                 android:includeFontPadding="false"
                 android:textSize="@dimen/text_sz_large"
                 android:clickable="true"
@@ -87,7 +87,7 @@
         android:layout_below="@id/user_avatar"
         android:layout_marginTop="@dimen/margin_medium"
         android:paddingBottom="@dimen/margin_medium"
-        android:textColor="@color/calypso_blue_dark"
+        android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
         tools:text="Thanks for stopping by my blog! I hope to see you again. " />
 

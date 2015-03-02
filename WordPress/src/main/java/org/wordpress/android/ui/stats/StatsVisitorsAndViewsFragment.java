@@ -150,9 +150,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         public void updateBackGroundAndIcon() {
             if (isChecked) {
-                value.setTextColor(getResources().getColor(R.color.calypso_orange_dark));
+                value.setTextColor(getResources().getColor(R.color.notification_status_unapproved_dark));
             } else {
-                value.setTextColor(getResources().getColor(R.color.calypso_blue_unread));
+                value.setTextColor(getResources().getColor(R.color.blue_medium));
             }
 
             icon.setImageDrawable(getTabIcon());

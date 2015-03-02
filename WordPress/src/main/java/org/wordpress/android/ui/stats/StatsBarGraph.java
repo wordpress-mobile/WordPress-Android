@@ -103,7 +103,7 @@ class StatsBarGraph extends GraphView {
     private class HorizontalLabelsColor implements IndexDependentColor {
         public int get(int index) {
             if (mBarPositionToHighlight == index) {
-                return getResources().getColor(R.color.calypso_orange_dark);
+                return getResources().getColor(R.color.notification_status_unapproved_dark);
             } else {
                 return getResources().getColor(R.color.blue_dark);
             }
@@ -113,7 +113,7 @@ class StatsBarGraph extends GraphView {
     private class HorizontalLabelsBackgroundColor implements IndexDependentColor {
         public int get(int index) {
             if (mBarPositionToHighlight == index) {
-                return getResources().getColor(R.color.calypso_orange_dark);
+                return getResources().getColor(R.color.notification_status_unapproved_dark);
             } else {
                 return Color.WHITE;
             }
@@ -185,7 +185,7 @@ class StatsBarGraph extends GraphView {
 
             // Draw the orange selection behind the selected bar
             if (mBarPositionToHighlight == i) {
-                paint.setColor(getResources().getColor(R.color.calypso_orange_dark));
+                paint.setColor(getResources().getColor(R.color.notification_status_unapproved_dark));
                 paint.setAlpha(50);
                 canvas.drawRect(left, 10f, right, bottom, paint);
             }
@@ -204,7 +204,7 @@ class StatsBarGraph extends GraphView {
                 // draw a real bar
                 paint.setAlpha(255);
                 if (mBarPositionToHighlight == i) {
-                    paint.setColor(getResources().getColor(R.color.calypso_orange_dark));
+                    paint.setColor(getResources().getColor(R.color.notification_status_unapproved_dark));
                 } else {
                     paint.setColor(style.color);
                 }

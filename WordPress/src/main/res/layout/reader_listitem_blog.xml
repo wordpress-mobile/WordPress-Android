@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/grey_medium"
+            android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_small"
             tools:text="text_description" />
 

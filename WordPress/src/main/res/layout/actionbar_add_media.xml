@@ -18,13 +18,13 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/wordpress_blue" />
+        android:background="@color/blue_wordpress" />
 
     <ListView
         android:id="@+id/actionbar_add_media_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/wordpress_blue"
+        android:divider="@color/blue_wordpress"
         android:dividerHeight="1dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp" >
