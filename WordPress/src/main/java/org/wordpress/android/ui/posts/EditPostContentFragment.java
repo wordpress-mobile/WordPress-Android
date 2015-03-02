@@ -149,6 +149,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
     private Map<Long, List<String>> mPendingGalleryUploads = new HashMap<>();
 
+    private boolean mBlogMediaAvailable;
     private boolean mMediaUploadServiceStarted;
     private String mMediaCapturePath = "";
 
@@ -559,9 +560,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             }
 
             // Save all collections
-            WPCollectionSpan[] replacementSpans = postContentEditable.getSpans(0, postContentEditable.length(), WPCollectionSpan.class);
-            if (replacementSpans.length != 0) {
-                for (WPCollectionSpan replacementSpan : replacementSpans) {
+            WPCollectionSpan[] collectionSpans = postContentEditable.getSpans(0, postContentEditable.length(), WPCollectionSpan.class);
+            if (collectionSpans.length != 0) {
+                for (WPCollectionSpan replacementSpan : collectionSpans) {
                     List<String> replacementContent = replacementSpan.getContent();
 
                     for (String contentString : replacementContent) {
@@ -1510,7 +1511,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
                                     @Override
                                     protected void onPostExecute(ImageSpan result) {
-                                        if (editableText != null && result != null) {
+                                        if (result != null) {
                                             editableText.insert(start, " ");
                                             editableText.setSpan(result, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                             editableText.insert(end + 1, "\n");
