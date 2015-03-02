@@ -92,7 +92,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private ListView mDrawerListView;
     private Spinner mBlogSpinner;
     private ListScrollPositionManager mScrollPositionManager;
-    private boolean mIsPaused;
 
     private static final int OPENED_FROM_DRAWER_DELAY = 250;
 
@@ -139,7 +138,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mIsPaused = true;
         unregisterReceiver();
 
         if (isAnimatingRefreshButton) {
@@ -157,7 +155,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mIsPaused = false;
         registerReceiver();
         refreshMenuDrawer();
         if (mDrawerToggle != null) {
@@ -290,9 +287,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isFinishing() || mIsPaused) {
-                    return;
-                }
+                if (isFinishing()) return;
 
                 FragmentManager fm = getFragmentManager();
                 if (fm.getBackStackEntryCount() > 0) {
