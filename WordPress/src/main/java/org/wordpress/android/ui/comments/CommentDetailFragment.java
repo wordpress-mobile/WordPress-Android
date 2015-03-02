@@ -632,7 +632,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // the post this comment is on can only be requested if this is a .com blog or a
         // jetpack-enabled self-hosted blog, and we have valid .com credentials
         boolean isDotComOrJetpack = WordPress.wpDB.isRemoteBlogIdDotComOrJetpack(mRemoteBlogId);
-        boolean canRequestPost = isDotComOrJetpack && WordPress.hasValidWPComCredentials(getActivity());
+        boolean canRequestPost = isDotComOrJetpack && WordPress.hasDotComToken(getActivity());
 
         final String title;
         final boolean hasTitle;
