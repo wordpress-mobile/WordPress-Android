@@ -76,12 +76,14 @@ public class MediaUtils {
                 Bitmap imageBitmap = BitmapFactory.decodeFile(uri);
                 bitmap = ThumbnailUtils.extractThumbnail(imageBitmap, mWidth, mHeight);
 
-                Matrix rotation = new Matrix();
-                rotation.setRotate(mRotation, bitmap.getWidth() / 2.0f, bitmap.getHeight() / 2.0f);
-                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotation, false);
+                if (bitmap != null) {
+                    Matrix rotation = new Matrix();
+                    rotation.setRotate(mRotation, bitmap.getWidth() / 2.0f, bitmap.getHeight() / 2.0f);
+                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotation, false);
+                }
             } else if (mType == TYPE_VIDEO) {
                 // MICRO_KIND = 96 x 96
-                // MINI_KIND = 512 x 384
+                // MINI_KIND  = 512 x 384
                 bitmap = ThumbnailUtils.createVideoThumbnail(uri, MediaStore.Video.Thumbnails.MINI_KIND);
             }
 
