@@ -2030,34 +2030,41 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     }
 
     /**
-     * Queues a media file for upload and stores file information in mMediaIdToPath and mUploadingMedia
-     * to handle gallery creation after all selected media is uploaded.
+     * Queues a media file for upload and starts the MediaUploadService. Toasts will alert the user
+     * if there are issues with the file.
      *
      * @param path
      *  local path of the media file to upload
+     * @param mediaIdOut
+     *  the new {@link org.wordpress.android.models.MediaFile} ID is added if non-null
      */
     private void queueFileForUpload(String path, ArrayList<String> mediaIdOut) {
+        // Invalid file path
         if (TextUtils.isEmpty(path)) {
-            Toast.makeText(getActivity(), "Error opening file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // File not found
+        File file = new File(path);
+        if (!file.exists()) {
+            Toast.makeText(getActivity(), R.string.file_not_found, Toast.LENGTH_SHORT).show();
             return;
         }
 
         Blog blog = WordPress.getCurrentBlog();
-
-        File file = new File(path);
-        if (!file.exists())
-            return;
-
+        long currentTime = System.currentTimeMillis();
         String mimeType = MediaUtils.getMediaFileMimeType(file);
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
-
         MediaFile mediaFile = new MediaFile();
+
         mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
         mediaFile.setFileName(fileName);
         mediaFile.setFilePath(path);
         mediaFile.setUploadState("queued");
-        mediaFile.setDateCreatedGMT(System.currentTimeMillis());
-        mediaFile.setMediaId(String.valueOf(System.currentTimeMillis()));
+        mediaFile.setDateCreatedGMT(currentTime);
+        mediaFile.setMediaId(String.valueOf(currentTime));
+
         if (mimeType != null && mimeType.startsWith("image")) {
             // get width and height
             BitmapFactory.Options bfo = new BitmapFactory.Options();
@@ -2067,12 +2074,15 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             mediaFile.setHeight(bfo.outHeight);
         }
 
-        if (!TextUtils.isEmpty(mimeType))
+        if (!TextUtils.isEmpty(mimeType)) {
             mediaFile.setMimeType(mimeType);
+        }
+
+        if (mediaIdOut != null) {
+            mediaIdOut.add(mediaFile.getMediaId());
+        }
+
         mediaFile.save();
-
-        mediaIdOut.add(mediaFile.getMediaId());
-
         startMediaUploadService();
     }
 
