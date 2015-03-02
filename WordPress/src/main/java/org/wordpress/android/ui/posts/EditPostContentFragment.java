@@ -1984,7 +1984,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 }
 
                 // Only insert gallery span if images were added
-                if (localMediaIds.size() > 0 && blogMediaIds.size() > 8) {
+                if (localMediaIds.size() > 0 || blogMediaIds.size() > 0) {
                     Editable editableText = mContentEditText.getText();
                     if (editableText == null) {
                         return;
