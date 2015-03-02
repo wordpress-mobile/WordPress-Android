@@ -173,18 +173,20 @@ public class MediaSourceDeviceImages implements MediaSource {
         final Map<String, String> data = new HashMap<>();
         Cursor thumbnailCursor = MediaUtils.getMediaStoreThumbnails(mContentResolver, THUMBNAIL_QUERY_COLUMNS);
 
-        if (thumbnailCursor.moveToFirst()) {
-            do {
-                int thumbnailColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
-                int imageIdColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.IMAGE_ID);
+        if (thumbnailCursor != null) {
+            if (thumbnailCursor.moveToFirst()) {
+                do {
+                    int thumbnailColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
+                    int imageIdColumnIndex = thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.IMAGE_ID);
 
-                if (thumbnailColumnIndex != -1 && imageIdColumnIndex != -1) {
-                    data.put(thumbnailCursor.getString(imageIdColumnIndex), thumbnailCursor.getString(thumbnailColumnIndex));
-                }
-            } while (thumbnailCursor.moveToNext());
+                    if (thumbnailColumnIndex != -1 && imageIdColumnIndex != -1) {
+                        data.put(thumbnailCursor.getString(imageIdColumnIndex), thumbnailCursor.getString(thumbnailColumnIndex));
+                    }
+                } while (thumbnailCursor.moveToNext());
+            }
+
+            thumbnailCursor.close();
         }
-
-        thumbnailCursor.close();
 
         return data;
     }
