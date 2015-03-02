@@ -7,6 +7,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
+import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.UrlUtils;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
@@ -69,7 +72,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             if (userBlogs == null) {
                 // Could happen if the returned server response is truncated
                 mErrorMsgId = org.wordpress.android.R.string.xmlrpc_error;
-                callback.onError(mErrorMsgId, false, false);
+                callback.onError(mErrorMsgId, false, false, false, client.getResponse());
                 return;
             }
             Arrays.sort(userBlogs, BlogUtils.BlogNameComparator);
@@ -100,7 +103,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
             mErrorMsgId = org.wordpress.android.R.string.no_site_error;
         }
-        callback.onError(mErrorMsgId, mHttpAuthRequired, mErroneousSslCertificate);
+        callback.onError(mErrorMsgId, false, mHttpAuthRequired, mErroneousSslCertificate, client.getResponse());
     }
 
     public void fetchBlogList(Callback callback) {
@@ -113,20 +116,15 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             if (!mHttpAuthRequired && mErrorMsgId == 0) {
                 mErrorMsgId = org.wordpress.android.R.string.no_site_error;
             }
-            callback.onError(mErrorMsgId, mHttpAuthRequired, mErroneousSslCertificate);
+            callback.onError(mErrorMsgId, false, mHttpAuthRequired, mErroneousSslCertificate, "");
             return;
         }
 
         // Validate the URL found before calling the client. Prevent a crash that can occur
         // during the setup of self-hosted sites.
         URI xmlrpcUri;
-        try {
-            xmlrpcUri = URI.create(xmlrpcUrl);
-            getBlogList(xmlrpcUri, callback);
-        } catch (Exception e) {
-            mErrorMsgId = org.wordpress.android.R.string.no_site_error;
-            callback.onError(mErrorMsgId, mHttpAuthRequired, mErroneousSslCertificate);
-        }
+        xmlrpcUri = URI.create(xmlrpcUrl);
+        getBlogList(xmlrpcUri, callback);
     }
 
     private String getRsdUrl(String baseUrl) throws SSLHandshakeException {
@@ -186,6 +184,12 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             if (isHTTPAuthErrorMessage(e)) {
                 return null;
             }
+        } catch (IllegalArgumentException e) {
+            // TODO: Hopefully a temporary log - remove it if we find a pattern of failing URLs
+            CrashlyticsUtils.setString(ExtraKey.ENTERED_URL, baseUrl);
+            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.NUX);
+            mErrorMsgId = org.wordpress.android.R.string.invalid_url_message;
+            return null;
         }
 
         // Guess the xmlrpc path
@@ -247,7 +251,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         // Attempt to get the XMLRPC URL via RSD
         String rsdUrl;
         try {
-            rsdUrl = getRsdUrl(url);
+            rsdUrl = UrlUtils.addUrlSchemeIfNeeded(getRsdUrl(url), false);
         } catch (SSLHandshakeException e) {
             if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
                 mErroneousSslCertificate = true;
@@ -258,12 +262,12 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
 
         try {
             if (rsdUrl != null) {
-                xmlrpcUrl = ApiHelper.getXMLRPCUrl(rsdUrl);
+                xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(ApiHelper.getXMLRPCUrl(rsdUrl), false);
                 if (xmlrpcUrl == null) {
-                    xmlrpcUrl = rsdUrl.replace("?rsd", "");
+                    xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(rsdUrl.replace("?rsd", ""), false);
                 }
             } else {
-                xmlrpcUrl = getXmlrpcByUserEnteredPath(url);
+                xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(getXmlrpcByUserEnteredPath(url), false);
             }
         } catch (SSLHandshakeException e) {
             if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {

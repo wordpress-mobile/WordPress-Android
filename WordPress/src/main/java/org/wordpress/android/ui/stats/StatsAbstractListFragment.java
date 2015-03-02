@@ -23,6 +23,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -53,10 +54,17 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected LinearLayout mTopPagerContainer;
     protected int mTopPagerSelectedButtonIndex = 0;
 
-    protected LinearLayout mPaginationContainer;
-    protected Button mPaginationGoBackButton;
-    protected Button mPaginationGoForwardButton;
-    protected TextView mPaginationText;
+    // Bottom and Top Pagination for modules that has pagination enabled.
+    protected LinearLayout mBottomPaginationContainer;
+    protected Button mBottomPaginationGoBackButton;
+    protected Button mBottomPaginationGoForwardButton;
+    protected TextView mBottomPaginationText;
+    protected LinearLayout mTopPaginationContainer;
+    protected Button mTopPaginationGoBackButton;
+    protected Button mTopPaginationGoForwardButton;
+    protected TextView mTopPaginationText;
+
+    protected LinearLayout mEmptyModulePlaceholder;
 
     protected Serializable[] mDatamodels;
 
@@ -66,7 +74,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract int getTotalsLabelResId();
     protected abstract int getEmptyLabelTitleResId();
     protected abstract int getEmptyLabelDescResId();
-    protected abstract StatsService.StatsEndpointsEnum[] getSectionToUpdate();
+    protected abstract StatsService.StatsEndpointsEnum[] getSectionsToUpdate();
     protected abstract void updateUI();
     protected abstract boolean isExpandableList();
     protected abstract boolean isViewAllOptionAvailable();
@@ -89,6 +97,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             view = inflater.inflate(R.layout.stats_list_fragment, container, false);
         }
 
+        mEmptyModulePlaceholder = (LinearLayout) view.findViewById(R.id.stats_empty_module_placeholder);
         mModuleTitleTextView = (TextView) view.findViewById(R.id.stats_module_title);
         mModuleTitleTextView.setText(getTitle());
 
@@ -103,10 +112,17 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mListContainer = (LinearLayout) view.findViewById(R.id.stats_list_container);
         mViewAll = (Button) view.findViewById(R.id.btnViewAll);
         mTopPagerContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
-        mPaginationContainer = (LinearLayout) view.findViewById(R.id.stats_pagination_container);
-        mPaginationGoBackButton = (Button) view.findViewById(R.id.stats_pagination_go_back);
-        mPaginationGoForwardButton = (Button) view.findViewById(R.id.stats_pagination_go_forward);
-        mPaginationText = (TextView) view.findViewById(R.id.stats_pagination_text);
+
+        // Load pagination items
+        mBottomPaginationContainer = (LinearLayout) view.findViewById(R.id.stats_bottom_pagination_container);
+        mBottomPaginationGoBackButton = (Button) mBottomPaginationContainer.findViewById(R.id.stats_pagination_go_back);
+        mBottomPaginationGoForwardButton = (Button) mBottomPaginationContainer.findViewById(R.id.stats_pagination_go_forward);
+        mBottomPaginationText = (TextView) mBottomPaginationContainer.findViewById(R.id.stats_pagination_text);
+        mTopPaginationContainer = (LinearLayout) view.findViewById(R.id.stats_top_pagination_container);
+        mTopPaginationContainer.setBackgroundResource(R.drawable.stats_pagination_item_background);
+        mTopPaginationGoBackButton = (Button) mTopPaginationContainer.findViewById(R.id.stats_pagination_go_back);
+        mTopPaginationGoForwardButton = (Button) mTopPaginationContainer.findViewById(R.id.stats_pagination_go_forward);
+        mTopPaginationText = (TextView) mTopPaginationContainer.findViewById(R.id.stats_pagination_text);
 
         return view;
     }
@@ -131,6 +147,19 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         //AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
+
+        // Do not serialize VolleyError, but rewrite in a simple stats Exception.
+        // VolleyErrors should be serializable, but for some reason they are not.
+        // FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
+        if (mDatamodels != null) {
+            for (int i=0; i < mDatamodels.length; i++) {
+                if (mDatamodels[i] != null && mDatamodels[i] instanceof VolleyError) {
+                    VolleyError currentVolleyError = (VolleyError) mDatamodels[i];
+                    mDatamodels[i] = StatsUtils.rewriteVolleyError(currentVolleyError, getString(R.string.error_refresh_stats));
+                }
+            }
+        }
+
         outState.putSerializable(ARG_REST_RESPONSE, mDatamodels);
         super.onSaveInstanceState(outState);
     }
@@ -156,7 +185,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         } else {
             //showHideNoResultsUI(true);
             showEmptyUI();
-            mMoreDataListener.onRefreshRequested(getSectionToUpdate());
+            mMoreDataListener.onRefreshRequested(getSectionsToUpdate());
         }
     }
 
@@ -166,11 +195,14 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mListContainer.setVisibility(View.GONE);
         mList.setVisibility(View.GONE);
         mViewAll.setVisibility(View.GONE);
-        mPaginationContainer.setVisibility(View.GONE);
+        mBottomPaginationContainer.setVisibility(View.GONE);
+        mTopPaginationContainer.setVisibility(View.GONE);
+        mEmptyModulePlaceholder.setVisibility(View.VISIBLE);
     }
 
     protected void showHideNoResultsUI(boolean showNoResultsUI) {
         mModuleTitleTextView.setVisibility(View.VISIBLE);
+        mEmptyModulePlaceholder.setVisibility(View.GONE);
 
         if (showNoResultsUI) {
             mGroupIdToExpandedMap.clear();
@@ -189,7 +221,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             mListContainer.setVisibility(View.GONE);
             mList.setVisibility(View.GONE);
             mViewAll.setVisibility(View.GONE);
-            mPaginationContainer.setVisibility(View.GONE);
+            mBottomPaginationContainer.setVisibility(View.GONE);
+            mTopPaginationContainer.setVisibility(View.GONE);
         } else {
             mEmptyLabel.setVisibility(View.GONE);
             mListContainer.setVisibility(View.VISIBLE);
@@ -218,6 +251,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
         mGroupIdToExpandedMap.clear();
         mModuleTitleTextView.setVisibility(View.VISIBLE);
+        mEmptyModulePlaceholder.setVisibility(View.GONE);
 
         String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
 
@@ -243,8 +277,18 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mList.setVisibility(View.GONE);
     }
 
+    /**
+     * Check if the current datamodel is populated and is NOT an error response.
+     *
+     */
     protected boolean isDataEmpty() {
-        return mDatamodels == null || mDatamodels[mTopPagerSelectedButtonIndex] == null;
+        return isDataEmpty(mTopPagerSelectedButtonIndex);
+    }
+
+    protected boolean isDataEmpty(int index) {
+        return mDatamodels == null
+                || mDatamodels[index] == null
+                || isErrorResponse(index);
     }
 
     /**
@@ -258,7 +302,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     protected boolean isErrorResponse(int index) {
         return mDatamodels != null && mDatamodels[index] != null
-                && mDatamodels[index] instanceof VolleyError;
+                && (mDatamodels[index] instanceof VolleyError || mDatamodels[index] instanceof StatsError);
     }
 
     protected boolean isSingleView() {
@@ -386,9 +430,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             }
 
             StatsService.StatsEndpointsEnum sectionToUpdate = (StatsService.StatsEndpointsEnum) intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_NAME);
-            StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionToUpdate();
+            StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionsToUpdate();
             int indexOfDatamodelMatch = -1;
-            for (int i = 0; i < getSectionToUpdate().length; i++) {
+            for (int i = 0; i < getSectionsToUpdate().length; i++) {
                 if (sectionToUpdate == sectionsToUpdate[i]) {
                     indexOfDatamodelMatch = i;
                     break;
@@ -404,7 +448,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_DATA);
 
                 if (mDatamodels == null) {
-                    mDatamodels = new Serializable[getSectionToUpdate().length];
+                    mDatamodels = new Serializable[getSectionsToUpdate().length];
                 }
 
                 //dataObj = (dataObj == null || dataObj instanceof VolleyError) ? null : dataObj;

@@ -106,6 +106,7 @@
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
+    <string name="media_fetching">Fetching media…</string>
 
     <!-- Upload Media -->
     <string name="media_no_video_title">VideoPress unavailable</string>
@@ -130,6 +131,14 @@
     <string name="media_empty_list">No media</string>
     <string name="media_empty_list_custom_date">No media in this time interval</string>
     <string name="delete">Delete</string>
+
+    <!-- Media details -->
+    <string name="media_details_added_on">Added on:</string>
+    <string name="media_details_uploaded_on">Uploaded on:</string>
+    <string name="media_details_file_name">File name:</string>
+    <string name="media_details_file_type">File type:</string>
+    <string name="media_details_file_url">File URL:</string>
+    <string name="media_details_dimensions">Dimensions:</string>
 
     <!-- tab titles -->
     <string name="tab_comments">Comments</string>
@@ -166,6 +175,7 @@
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
     <string name="local_draft">Local draft</string>
+    <string name="post_uploading">Uploading</string>
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="empty_list_default">This list is empty</string>
 
@@ -186,8 +196,9 @@
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
     <string name="share_url">Share URL</string>
-    <string name="loading_posts">Loading posts…</string>
-    <string name="loading_pages">Loading pages…</string>
+    <string name="posts_fetching">Fetching posts…</string>
+    <string name="pages_fetching">Fetching pages…</string>
+    <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -206,6 +217,7 @@
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
     <string name="comment">Comment</string>
+    <string name="comments_fetching">Fetching comments…</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
@@ -380,11 +392,11 @@
     <string name="stats_view_totals_followers_and_shares">Totals, followers, &amp; shares</string>
     <string name="stats_view_clicks">Clicks</string>
     <string name="stats_view_tags_and_categories">Tags &amp; categories</string>
-    <string name="stats_view_top_authors">Top authors</string>
+    <string name="stats_view_authors">Authors</string>
     <string name="stats_view_referrers">Referrers</string>
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_comments">Comments</string>
-    <string name="stats_view_search_engine_terms">Search engine terms</string>
+    <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
 
@@ -399,6 +411,7 @@
     <string name="stats_entry_top_commenter">Author</string>
     <string name="stats_entry_publicize">Service</string>
     <string name="stats_entry_followers">Follower</string>
+    <string name="stats_entry_search_terms">Search Term</string>
 
     <!-- stats: label for the totals -->
     <string name="stats_totals_views">Views</string>
@@ -433,6 +446,8 @@
     <string name="stats_empty_publicize_desc">Keep track of your followers from various social networking services using publicize.</string>
     <string name="stats_empty_followers">No followers</string>
     <string name="stats_empty_followers_desc">Keep track of your overall number of followers, and how long each one has been following your site.</string>
+    <string name="stats_empty_search_terms">No search terms recorded</string>
+    <string name="stats_empty_search_terms_desc">Learn more about your search traffic by looking at the terms your visitors searched for to find your site.</string>
 
     <!-- stats: views and visitors -->
     <string name="stats_visitors_and_views_header_today">Today</string>
@@ -449,6 +464,8 @@
     <string name="stats_followers_email_selector">Email</string>
     <string name="stats_followers_total_wpcom">Total WordPress.com Followers: %1$s</string>
     <string name="stats_followers_total_email">Total Email Followers: %1$s</string>
+    <string name="stats_followers_total_wpcom_paged">Showing %1$d - %2$d of %3$s WordPress.com Followers</string>
+    <string name="stats_followers_total_email_paged">Showing %1$d - %2$d of %3$s Email Followers</string>
     <string name="stats_followers_seconds_ago">seconds ago</string>
     <string name="stats_followers_a_minute_ago">a minute ago</string>
     <string name="stats_followers_minutes">%1$d minutes</string>
@@ -461,6 +478,16 @@
     <string name="stats_followers_a_year">A year</string>
     <string name="stats_followers_years">%1$d years</string>
 
+    <!-- stats: search terms -->
+    <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
+
+    <!-- Stats: Single post details view -->
+    <string name="stats_period">Period</string>
+    <string name="stats_total">Total</string>
+    <string name="stats_overall">Overall</string>
+    <string name="stats_months_and_years">Months and Years</string>
+    <string name="stats_average_per_day">Average per Day</string>
+    <string name="stats_recent_weeks">Recent Weeks</string>
 
     <!-- invalid_url -->
     <string name="invalid_url_message">Check that the blog URL entered is valid</string>
@@ -513,6 +540,7 @@
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
     <string name="more">More</string>
+    <string name="error_notification_open">Could not open notification</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
@@ -552,8 +580,8 @@
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
-    <string name="publisher">Publisher: Automattic, Inc</string>
-    <string name="copyright">©2014 Automattic, Inc</string>
+    <string name="publisher">Publisher:</string>
+    <string name="automattic_inc" translatable="false">Automattic, Inc</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -590,6 +618,7 @@
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
+    <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
@@ -718,6 +747,8 @@
     <string name="reader_toast_err_generic">Unable to perform this action</string>
 
     <!-- empty list/grid text -->
+    <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
+    <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
@@ -727,6 +758,7 @@
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
     <string name="reader_empty_comments">No comments yet</string>
+    <string name="reader_empty_posts_in_blog">This blog is empty</string>
 
     <!-- layout tags - do not translate -->
     <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
@@ -795,6 +827,14 @@
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ptr_tip_message">Tip: Pull down to refresh</string>
+    <string name="verification_code">Verification code</string>
+    <string name="invalid_verification_code">Invalid verification code</string>
+    <string name="verify">Verify</string>
+    <string name="two_step_footer_label">Enter the code from your authenticator app.</string>
+    <string name="two_step_footer_button">Send code via text message</string>
+    <string name="two_step_sms_sent">Check your text messages for the verification code.</string>
+    <string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
+    <string name="auth_required">Sign in again to continue.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -806,6 +846,9 @@
     <string name="help_center">Help center</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="faq_button">FAQ</string>
+
+    <!-- Application logs view -->
+    <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
 
     <!-- Simperium -->
     <string name="simperium_connection_error">Couldn\'t sign in to get notifications.</string>

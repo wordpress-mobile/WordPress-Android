@@ -200,6 +200,9 @@ class CommentAdapter extends BaseAdapter {
     void deleteComments(final CommentList comments) {
         mComments.deleteComments(comments);
         notifyDataSetChanged();
+        if (mDataLoadedListener != null) {
+            mDataLoadedListener.onDataLoaded(isEmpty());
+        }
     }
 
     public void removeComment(Comment comment) {
@@ -356,8 +359,9 @@ class CommentAdapter extends BaseAdapter {
                 notifyDataSetChanged();
             }
 
-            if (mDataLoadedListener != null)
+            if (mDataLoadedListener != null) {
                 mDataLoadedListener.onDataLoaded(isEmpty());
+            }
 
             mIsLoadTaskRunning = false;
         }

@@ -14,11 +14,11 @@ import org.wordpress.android.ui.stats.models.AuthorModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowDataModel;
-import org.wordpress.android.ui.stats.models.SingleItemModel;
+import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
@@ -77,12 +77,16 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (isErrorResponse()) {
+        // This module is a kind of exception to the normal way we build page interface.
+        // In this module only the first rest endpoint StatsService.StatsEndpointsEnum.COMMENTS
+        // is used to populate 99% of the UI even if there is a tab on the top.
+        // Switching to a different tab on the UI doesn't switch the underlying datamodel index as in all other modules.
+        if (isErrorResponse(0)) {
             showErrorUI();
             return;
         }
 
-        if (mDatamodels[1] != null) { // check if comment-followers is already here
+        if (mDatamodels[1] != null && !isErrorResponse(1)) { // check if comment-followers is already here
             mTotalsLabel.setVisibility(View.VISIBLE);
             int totalNumberOfFollowers = ((CommentFollowersModel) mDatamodels[1]).getTotal();
             mTotalsLabel.setText(
@@ -112,7 +116,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasAuthors() {
-        return mDatamodels != null && mDatamodels[0] != null
+        return !isDataEmpty(0)
                 && ((CommentsModel) mDatamodels[0]).getAuthors() != null
                 && ((CommentsModel) mDatamodels[0]).getAuthors().size() > 0;
     }
@@ -125,12 +129,12 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasPosts() {
-        return mDatamodels != null && mDatamodels[0] != null
+        return !isDataEmpty(0)
                 && ((CommentsModel) mDatamodels[0]).getPosts() != null
                 && ((CommentsModel) mDatamodels[0]).getPosts().size() > 0;
     }
 
-    private List<SingleItemModel> getPosts() {
+    private List<PostModel> getPosts() {
         if (!hasPosts()) {
             return null;
         }
@@ -139,6 +143,10 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
+        if (isDataEmpty(0)) {
+            return false;
+        }
+
         if (mTopPagerSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
         } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
@@ -186,7 +194,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
 
             // avatar
-            holder.networkImageView.setImageUrl(PhotonUtils.fixAvatar(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
+            holder.networkImageView.setImageUrl(GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             final FollowDataModel followData = currentRowData.getFollowData();
@@ -233,7 +241,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.COMMENTS, StatsService.StatsEndpointsEnum.COMMENT_FOLLOWERS
         };

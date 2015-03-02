@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -21,12 +20,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -62,7 +63,7 @@ public class StatsViewAllActivity extends ActionBarActivity
     private int mOuterPagerSelectedButtonIndex = 0;
 
     // The number of results to return per page for Paged REST endpoints. Numbers larger than 20 will default to 20 on the server.
-    private static final int MAX_RESULTS_PER_PAGE = 20;
+    public static final int MAX_RESULTS_PER_PAGE = 20;
 
     // The number of results to return for NON Paged REST endpoints.
     private static final int MAX_RESULTS_REQUESTED = 100;
@@ -75,8 +76,7 @@ public class StatsViewAllActivity extends ActionBarActivity
         setContentView(R.layout.stats_activity_view_all);
 
         if (savedInstanceState == null) {
-            // AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
-            // TODO: add analytics here
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_ALL_ACCESSED);
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -85,7 +85,7 @@ public class StatsViewAllActivity extends ActionBarActivity
         }
 
         // pull to refresh setup
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new SwipeToRefreshHelper.RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -119,7 +119,7 @@ public class StatsViewAllActivity extends ActionBarActivity
             mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
         }
 
-        // Setup the top date label. It's available on those fragment that are affected by the top date selector.
+        // Setup the top date label. It's available on those fragments that are affected by the top date selector.
         TextView dateTextView = (TextView) findViewById(R.id.stats_summary_date);
         switch (mStatsViewType) {
             case TOP_POSTS_AND_PAGES:
@@ -128,6 +128,7 @@ public class StatsViewAllActivity extends ActionBarActivity
             case GEOVIEWS:
             case AUTHORS:
             case VIDEO_PLAYS:
+            case SEARCH_TERMS:
                 dateTextView.setText(getDateForDisplayInLabels(mDate, mTimeframe));
                 dateTextView.setVisibility(View.VISIBLE);
                 break;
@@ -140,11 +141,11 @@ public class StatsViewAllActivity extends ActionBarActivity
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        mFragment = (StatsAbstractListFragment) fm.findFragmentByTag("ViewAll-"+getInnerFragmentTAG());
+        mFragment = (StatsAbstractListFragment) fm.findFragmentByTag("ViewAll-Fragment");
         if (mFragment == null) {
             mFragment = getInnerFragment();
-            ft.replace(R.id.stats_single_view_fragment, mFragment, "ViewAll-"+getInnerFragmentTAG());
-            ft.commit();
+            ft.replace(R.id.stats_single_view_fragment, mFragment, "ViewAll-Fragment");
+            ft.commitAllowingStateLoss();
         }
     }
 
@@ -152,26 +153,26 @@ public class StatsViewAllActivity extends ActionBarActivity
         String prefix = getString(R.string.stats_for);
         switch (timeframe) {
             case DAY:
-                return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM d"));
+                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT, "MMMM d"));
             case WEEK:
                 try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
                     final Date parsedDate = sdf.parse(date);
                     Calendar c = Calendar.getInstance();
                     c.setTime(parsedDate);
-                    String  endDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
+                    String  endDateLabel = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     // last day of this week
                     c.add(Calendar.DAY_OF_WEEK, - 6);
-                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
+                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     return String.format(prefix,  startDateLabel + " - " + endDateLabel);
                 } catch (ParseException e) {
                     AppLog.e(AppLog.T.UTILS, e);
                     return "";
                 }
             case MONTH:
-                return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM"));
+                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT, StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
             case YEAR:
-                return String.format(prefix, StatsUtils.parseDate(date, "yyyy-MM-dd", "yyyy"));
+                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT, StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT));
         }
         return "";
     }
@@ -209,6 +210,9 @@ public class StatsViewAllActivity extends ActionBarActivity
             case FOLLOWERS:
                 fragment = new StatsFollowersFragment();
                 break;
+            case SEARCH_TERMS:
+                fragment = new StatsSearchTermsFragment();
+                break;
         }
 
         Bundle args = new Bundle();
@@ -221,32 +225,6 @@ public class StatsViewAllActivity extends ActionBarActivity
         args.putSerializable(StatsAbstractFragment.ARG_REST_RESPONSE, mRestResponse);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    private String getInnerFragmentTAG() {
-        switch (mStatsViewType) {
-            case TOP_POSTS_AND_PAGES:
-                return StatsTopPostsAndPagesFragment.TAG;
-            case REFERRERS:
-                return StatsReferrersFragment.TAG;
-            case CLICKS:
-                return StatsClicksFragment.TAG;
-            case GEOVIEWS:
-                return StatsGeoviewsFragment.TAG;
-            case AUTHORS:
-                return StatsAuthorsFragment.TAG;
-            case VIDEO_PLAYS:
-                return StatsVideoplaysFragment.TAG;
-            case COMMENTS:
-                return StatsCommentsFragment.TAG;
-            case TAGS_AND_CATEGORIES:
-                return StatsTagsAndCategoriesFragment.TAG;
-            case PUBLICIZE:
-                return StatsPublicizeFragment.TAG;
-            case FOLLOWERS:
-                return StatsFollowersFragment.TAG;
-        }
-        return StatsAbstractFragment.TAG;
     }
 
     @Override
@@ -316,6 +294,9 @@ public class StatsViewAllActivity extends ActionBarActivity
             case PUBLICIZE:
                 endpointPath = "publicize";
                 break;
+            case SEARCH_TERMS:
+                endpointPath = "search-terms";
+                break;
             case FOLLOWERS_WPCOM:
                 endpointPath = "followers";
                 return String.format("/sites/%s/stats/%s?type=wpcom&period=%s&date=%s&max=%s&page=%s", blogId, endpointPath,
@@ -335,38 +316,6 @@ public class StatsViewAllActivity extends ActionBarActivity
                 mTimeframe.getLabelForRestCall(), mDate, MAX_RESULTS_REQUESTED);
     }
 
-    private StatsService.StatsEndpointsEnum[] getRestEndpointNames() {
-        switch (mStatsViewType) {
-            case TOP_POSTS_AND_PAGES:
-                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.TOP_POSTS};
-            case REFERRERS:
-                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.REFERRERS};
-            case CLICKS:
-                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.CLICKS};
-            case GEOVIEWS:
-                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.GEO_VIEWS};
-            case AUTHORS:
-                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.AUTHORS};
-            case VIDEO_PLAYS:
-                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.VIDEO_PLAYS};
-            case COMMENTS:
-                return new StatsService.StatsEndpointsEnum[]{
-                        StatsService.StatsEndpointsEnum.COMMENTS,
-                        StatsService.StatsEndpointsEnum.COMMENT_FOLLOWERS
-                };
-            case TAGS_AND_CATEGORIES:
-                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.TAGS_AND_CATEGORIES};
-            case PUBLICIZE:
-                return new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.PUBLICIZE};
-            case FOLLOWERS:
-                return new StatsService.StatsEndpointsEnum[]{
-                        StatsService.StatsEndpointsEnum.FOLLOWERS_WPCOM,
-                        StatsService.StatsEndpointsEnum.FOLLOWERS_EMAIL,
-                };
-        }
-        return null;
-    }
-
     private void refreshStats() {
         if (mIsUpdatingStats) {
             return;
@@ -374,7 +323,7 @@ public class StatsViewAllActivity extends ActionBarActivity
 
         if (!NetworkUtils.isNetworkAvailable(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            AppLog.w(AppLog.T.STATS, getInnerFragmentTAG() + " > no connection, update canceled");
+            AppLog.w(AppLog.T.STATS, "ViewAll on "+ mFragment.getTag() + " > no connection, update canceled");
             return;
         }
 
@@ -382,7 +331,7 @@ public class StatsViewAllActivity extends ActionBarActivity
         mIsUpdatingStats = true;
         final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
         final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-        StatsService.StatsEndpointsEnum[] sections = getRestEndpointNames();
+        StatsService.StatsEndpointsEnum[] sections = mFragment.getSectionsToUpdate();
         for (int i = 0; i < sections.length; i++) {
             StatsService.StatsEndpointsEnum currentSection = sections[i];
             String singlePostRestPath = getRestPath(currentSection, 1);
@@ -409,7 +358,7 @@ public class StatsViewAllActivity extends ActionBarActivity
 
         if (!NetworkUtils.isNetworkAvailable(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            AppLog.w(AppLog.T.STATS, getInnerFragmentTAG() + " > no connection, update canceled");
+            AppLog.w(AppLog.T.STATS, "ViewAll on "+ mFragment.getTag() + " > no connection, update canceled");
             return;
         }
 

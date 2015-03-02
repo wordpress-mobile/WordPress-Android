@@ -4,6 +4,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.json.JSONObject;
@@ -19,10 +20,16 @@ public class RestRequest extends Request<JSONObject> {
     public static final String REST_AUTHORIZATION_HEADER = "Authorization";
     public static final String REST_AUTHORIZATION_FORMAT = "Bearer %s";
 
+    private static OnAuthFailedListener mOnAuthFailedListener;
+
     public interface Listener extends Response.Listener<JSONObject> {
     } //This is just a shortcut for Response.Listener<JSONObject>
     public interface ErrorListener extends Response.ErrorListener {
     } //This is just a shortcut for Response.ErrorListener
+
+    public interface OnAuthFailedListener {
+        public void onAuthFailed();
+    }
 
     private final com.android.volley.Response.Listener<JSONObject> mListener;
     private final Map<String, String> mParams;
@@ -52,6 +59,10 @@ public class RestRequest extends Request<JSONObject> {
         mHeaders.put(USER_AGENT_HEADER, userAgent);
     }
 
+    public void setOnAuthFailedListener(OnAuthFailedListener onAuthFailedListener) {
+        mOnAuthFailedListener = onAuthFailedListener;
+    }
+
     @Override
     public Map<String, String> getHeaders() {
         return mHeaders;
@@ -67,6 +78,33 @@ public class RestRequest extends Request<JSONObject> {
     @Override
     protected Map<String, String> getParams() {
         return mParams;
+    }
+
+    @Override
+    public void deliverError(VolleyError error) {
+        super.deliverError(error);
+
+        // Fire OnAuthFailedListener if we receive an invalid token error
+        if (error.networkResponse != null && error.networkResponse.statusCode >= 400 && mOnAuthFailedListener != null) {
+            String jsonString;
+            try {
+                jsonString = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers));
+            } catch (UnsupportedEncodingException e) {
+                jsonString = "";
+            }
+
+            JSONObject responseObject;
+            try {
+                responseObject = new JSONObject(jsonString);
+            } catch (JSONException e) {
+                responseObject = new JSONObject();
+            }
+
+            String restError = responseObject.optString("error", "");
+            if (restError.equals("authorization_required") || restError.equals("invalid_token")) {
+                mOnAuthFailedListener.onAuthFailed();
+            }
+        }
     }
 
     @Override

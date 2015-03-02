@@ -8,7 +8,7 @@ public class ReaderTypes {
     public static enum ReaderPostListType {
         TAG_FOLLOWED,   // list posts in a followed tag
         TAG_PREVIEW,    // list posts in a specific tag
-        BLOG_PREVIEW;   // list posts in a specific blog
+        BLOG_PREVIEW;   // list posts in a specific blog/feed
 
         public boolean isTagType() {
             return this.equals(TAG_FOLLOWED) || this.equals(TAG_PREVIEW);
@@ -17,10 +17,5 @@ public class ReaderTypes {
         public boolean isPreviewType() {
             return this.equals(TAG_PREVIEW) || this.equals(BLOG_PREVIEW);
         }
-    }
-
-    protected static enum RefreshType {
-        AUTOMATIC, // refresh was performed by the app without user requesting it
-        MANUAL     // refresh was requested by the user
     }
 }

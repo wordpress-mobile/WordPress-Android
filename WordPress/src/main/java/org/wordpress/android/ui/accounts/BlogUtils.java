@@ -26,14 +26,13 @@ public class BlogUtils {
      *
      * @return true if a change has been made (new blog added, old blog updated, blog deleted).
      */
-    public static boolean syncBlogs(Context context, List<Map<String, Object>> newBlogList, String username,
-                                    String password, String httpUsername, String httpPassword) {
+    public static boolean syncBlogs(Context context, List<Map<String, Object>> newBlogList, String username) {
         boolean retValue;
 
         // Add all blogs from blogList
-        retValue = addBlogs(newBlogList, username, password, httpUsername, httpPassword);
+        retValue = addBlogs(newBlogList, username);
 
-        // Delete blogs if not in bloegList
+        // Delete blogs if not in blogList
         List<Map<String, Object>> allBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
         Set<String> newBlogURLs = new HashSet<String>();
         for (Map<String, Object> blog : newBlogList) {
@@ -76,7 +75,6 @@ public class BlogUtils {
      * Check xmlrpc urls validity
      *
      * @param blogList blog list
-     * @param xmlrpcUrl forced xmlrpc url
      * @return true if there is at least one invalid xmlrpc url
      */
     public static boolean isAnyInvalidXmlrpcUrl(List<Map<String, Object>> blogList) {
@@ -136,5 +134,9 @@ public class BlogUtils {
             }
             return false;
         }
+    }
+
+    public static boolean addBlogs(List<Map<String, Object>> userBlogList, String username) {
+        return addBlogs(userBlogList, username, null, null, null);
     }
 }

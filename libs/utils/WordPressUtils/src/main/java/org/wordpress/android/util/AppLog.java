@@ -15,7 +15,8 @@ import java.util.NoSuchElementException;
  */
 public class AppLog {
     // T for Tag
-    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS, PROFILING, SIMPERIUM, SUGGESTION}
+    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS, PROFILING,
+        SIMPERIUM, SUGGESTION}
     public static final String TAG = "WordPress";
     public static final int HEADER_LINE_COUNT = 2;
 
@@ -33,40 +34,46 @@ public class AppLog {
     }
 
     public static void v(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.v(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.v, message);
     }
 
     public static void d(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.d(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.d, message);
     }
 
     public static void i(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.i(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.i, message);
     }
 
     public static void w(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.w(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.w, message);
     }
 
     public static void e(T tag, String message) {
+        message = StringUtils.notNullStr(message);
         Log.e(TAG + "-" + tag.toString(), message);
         addEntry(tag, LogLevel.e, message);
     }
 
     public static void e(T tag, String message, Throwable tr) {
+        message = StringUtils.notNullStr(message);
         Log.e(TAG + "-" + tag.toString(), message, tr);
         addEntry(tag, LogLevel.e, message + " - exception: " + tr.getMessage());
-        addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(tr));
+        addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(tr));
     }
 
     public static void e(T tag, Throwable tr) {
         Log.e(TAG + "-" + tag.toString(), tr.getMessage(), tr);
         addEntry(tag, LogLevel.e, tr.getMessage());
-        addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(tr));
+        addEntry(tag, LogLevel.e, "StackTrace: " + getStringStackTrace(tr));
     }
 
     public static void e(T tag, String volleyErrorMsg, int statusCode) {
@@ -107,22 +114,31 @@ public class AppLog {
     }
 
     private static class LogEntry {
-        LogLevel logLevel;
-        String logText;
-        T logTag;
+        LogLevel mLogLevel;
+        String mLogText;
+        T mLogTag;
+
+        public LogEntry(LogLevel logLevel, String logText, T logTag) {
+            mLogLevel = logLevel;
+            mLogText = logText;
+            if (mLogText == null) {
+                mLogText = "null";
+            }
+            mLogTag = logTag;
+        }
 
         private String toHtml() {
-            StringBuilder sb = new StringBuilder()
-                    .append("<font color='")
-                    .append(logLevel.toHtmlColor())
-                    .append("'>")
-                    .append("[")
-                    .append(logTag.name())
-                    .append("] ")
-                    .append(logLevel.name())
-                    .append(": ")
-                    .append(logText)
-                    .append("</font>");
+            StringBuilder sb = new StringBuilder();
+            sb.append("<font color=\"");
+            sb.append(mLogLevel.toHtmlColor());
+            sb.append("\">");
+            sb.append("[");
+            sb.append(mLogTag.name());
+            sb.append("] ");
+            sb.append(mLogLevel.name());
+            sb.append(": ");
+            sb.append(TextUtils.htmlEncode(mLogText).replace("\n", "<br />"));
+            sb.append("</font>");
             return sb.toString();
         }
     }
@@ -149,12 +165,10 @@ public class AppLog {
 
     private static void addEntry(T tag, LogLevel level, String text) {
         // skip if recording is disabled (default)
-        if (!mEnableRecording)
+        if (!mEnableRecording) {
             return;
-        LogEntry entry = new LogEntry();
-        entry.logLevel = level;
-        entry.logText = text;
-        entry.logTag = tag;
+        }
+        LogEntry entry = new LogEntry(level, text, tag);
         mLogEntries.addEntry(entry);
     }
 
@@ -162,10 +176,6 @@ public class AppLog {
         StringWriter errors = new StringWriter();
         throwable.printStackTrace(new PrintWriter(errors));
         return errors.toString();
-    }
-
-    private static String getHTMLStringStackTrace(Throwable throwable) {
-        return getStringStackTrace(throwable).replace("\n", "<br/>");
     }
 
     /*
@@ -185,7 +195,6 @@ public class AppLog {
         return items;
     }
 
-
     /*
      * returns entire log as plain text
      */
@@ -200,7 +209,7 @@ public class AppLog {
         int lineNum = 1;
         while (it.hasNext()) {
               sb.append(String.format("%02d - ", lineNum))
-              .append(it.next().logText)
+              .append(it.next().mLogText)
               .append("\n");
             lineNum++;
         }

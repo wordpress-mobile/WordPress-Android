@@ -18,11 +18,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.w3c.dom.Text;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPWebChromeClient;
 import org.wordpress.android.util.WPWebViewClient;
@@ -73,23 +75,10 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
     public static final String LOCAL_BLOG_ID = "local_blog_id";
 
-    public static void openUrlByUsingMainWPCOMCredentials(Context context, String url) {
-        if (context == null) {
-            AppLog.e(AppLog.T.UTILS, "Context is null in openUrlByUsingMainWPCOMCredentials!");
-            return;
-        }
+    private static final String ENCODING_UTF8 = "UTF-8";
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String authenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-        String authenticatedPassword = WordPressDB.decryptPassword(
-                settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
-        );
-
-        openWPCOMURL(context, url, authenticatedUser, authenticatedPassword);
-    }
-
-    public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user, String password) {
-        openWPCOMURL(context, url, user, password);
+    public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
+        openWPCOMURL(context, url, user);
     }
 
     public static void openUrlByUsingBlogCredentials(Context context, Blog blog, String url) {
@@ -138,7 +127,7 @@ public class WPWebViewActivity extends WebViewActivity {
         context.startActivity(intent);
     }
 
-    private static void openWPCOMURL(Context context, String url, String user, String password) {
+    private static void openWPCOMURL(Context context, String url, String user) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null!!!");
             return;
@@ -151,14 +140,13 @@ public class WPWebViewActivity extends WebViewActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(user) || TextUtils.isEmpty(password)) {
-            AppLog.e(AppLog.T.UTILS, "Username and/or password empty/null!!!");
+        if (TextUtils.isEmpty(user)) {
+            AppLog.e(AppLog.T.UTILS, "Username empty/null!!!");
             return;
         }
 
         Intent intent = new Intent(context, WPWebViewActivity.class);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, user);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, password);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
         context.startActivity(intent);
@@ -213,12 +201,12 @@ public class WPWebViewActivity extends WebViewActivity {
                 finish();
             }
 
-            if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-                AppLog.e(AppLog.T.UTILS, "Username and/or password empty/null!!!");
-                Toast.makeText(this, getText(R.string.incorrect_credentials),
-                        Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(username)) {
+                AppLog.e(AppLog.T.UTILS, "Username empty/null!!!");
+                Toast.makeText(this, getText(R.string.incorrect_credentials), Toast.LENGTH_SHORT).show();
                 finish();
             }
+
             this.loadAuthenticatedUrl(authURL, addressToLoad, username, password);
         }
     }
@@ -227,15 +215,33 @@ public class WPWebViewActivity extends WebViewActivity {
      * Login to the WordPress.com and load the specified URL.
      *
      */
-    protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String passwd) {
+    protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password) {
+        String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password, WordPress.getDotComToken(this));
+
+        mWebView.postUrl(authenticationURL, postData.getBytes());
+    }
+
+    public static String getAuthenticationPostData(String authenticationUrl, String urlToLoad, String username, String password, String token) {
+        if (TextUtils.isEmpty(authenticationUrl)) return "";
+
         try {
             String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
-                    URLEncoder.encode(username, "UTF-8"), URLEncoder.encode(passwd, "UTF-8"),
-                    URLEncoder.encode(urlToLoad, "UTF-8"));
-            mWebView.postUrl(authenticationURL, postData.getBytes());
+                    URLEncoder.encode(StringUtils.notNullStr(username), ENCODING_UTF8),
+                    URLEncoder.encode(StringUtils.notNullStr(password), ENCODING_UTF8),
+                    URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8)
+            );
+
+            // Add token authorization when signing in to WP.com
+            if (authenticationUrl.contains("wordpress.com/wp-login.php") && !TextUtils.isEmpty(token)) {
+                postData += "&authorization=Bearer " + URLEncoder.encode(token, ENCODING_UTF8);
+            }
+
+            return postData;
         } catch (UnsupportedEncodingException e) {
             AppLog.e(AppLog.T.UTILS, e);
         }
+
+        return "";
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.wordpress.rest;
 
+import android.text.TextUtils;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
@@ -63,8 +65,8 @@ public class Oauth {
         return String.format(AUTHORIZED_ENDPOINT_FORMAT, AUTHORIZE_ENDPOINT, getAppID(), getAppRedirectURI());
     }
 
-    public Request makeRequest(String username, String password, Listener listener, ErrorListener errorListener) {
-        return new PasswordRequest(getAppID(), getAppSecret(), getAppRedirectURI(), username, password, listener,
+    public Request makeRequest(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS, Listener listener, ErrorListener errorListener) {
+        return new PasswordRequest(getAppID(), getAppSecret(), getAppRedirectURI(), username, password, twoStepCode, shouldSendTwoStepSMS, listener,
                 errorListener);
     }
 
@@ -110,12 +112,22 @@ public class Oauth {
 
     public static class PasswordRequest extends Request {
 
-        public PasswordRequest(String appId, String appSecret, String redirectUri, String username, String password,
-                               Listener listener, ErrorListener errorListener) {
+        public PasswordRequest(String appId, String appSecret, String redirectUri, String username, String password, String twoStepCode,
+                               boolean shouldSendTwoStepSMS, Listener listener, ErrorListener errorListener) {
             super(appId, appSecret, redirectUri, listener, errorListener);
             mParams.put(USERNAME_PARAM_NAME, username);
             mParams.put(PASSWORD_PARAM_NAME, password);
             mParams.put(GRANT_TYPE_PARAM_NAME, PASSWORD_GRANT_TYPE);
+
+            if (!TextUtils.isEmpty(twoStepCode)) {
+                mParams.put("wpcom_otp", twoStepCode);
+            } else {
+                mParams.put("wpcom_supports_2fa", "true");
+
+                if (shouldSendTwoStepSMS) {
+                    mParams.put("wpcom_resend_otp", "true");
+                }
+            }
         }
     }
 

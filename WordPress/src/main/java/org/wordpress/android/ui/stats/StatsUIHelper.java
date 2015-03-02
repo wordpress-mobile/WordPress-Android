@@ -39,10 +39,9 @@ public class StatsUIHelper {
         return (point.y < point.x);
     }
 
-    // Load more bars for 720DP tablets and 600DP tablets in landscape
-    public static boolean shouldLoadMoreBars(Activity act) {
-        return (StatsUtils.getSmallestWidthDP() >= TABLET_720DP
-                || (StatsUtils.getSmallestWidthDP() == TABLET_600DP && isInLandscape(act)));
+    // Load more bars for 720DP tablets
+    public static boolean shouldLoadMoreBars() {
+        return (StatsUtils.getSmallestWidthDP() >= TABLET_720DP);
     }
 
     public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout, int maxNumberOfItemsToshow) {
@@ -154,7 +153,20 @@ public class StatsUIHelper {
             } else {
                 groupView = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
                 groupView.setBackgroundColor(bgColor);
-                setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_background);                mLinearLayout.addView(groupView);
+                setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_background);
+                mLinearLayout.addView(groupView);
+            }
+
+            // groupView is recycled, we need to reset it to the original state.
+            ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
+            if (childContainer != null) {
+                childContainer.setVisibility(View.GONE);
+            }
+            // Remove any other prev animations set on the chevron
+            final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
+            if (chevron != null) {
+                chevron.clearAnimation();
+                chevron.setImageResource(R.drawable.stats_chevron_right);
             }
 
             // add children if this group is expanded
@@ -318,4 +330,11 @@ public class StatsUIHelper {
         }
     }
 
+    public static int getNumOfBarsToShow() {
+        if(shouldLoadMoreBars()) {
+            return 10;
+        } else {
+            return 7;
+        }
+    }
 }

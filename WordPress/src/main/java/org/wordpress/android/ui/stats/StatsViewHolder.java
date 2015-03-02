@@ -1,19 +1,22 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.stats.models.SingleItemModel;
+import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -26,6 +29,7 @@ public class StatsViewHolder {
     public final TextView totalsTextView;
     public final WPNetworkImageView networkImageView;
     public final ImageView chevronImageView;
+    public final ImageView linkImageView;
     public final ImageView imgMore;
     public final LinearLayout rowContent;
 
@@ -34,7 +38,7 @@ public class StatsViewHolder {
         entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
         totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
         chevronImageView = (ImageView) view.findViewById(R.id.stats_list_cell_chevron);
-
+        linkImageView = (ImageView) view.findViewById(R.id.stats_list_cell_link);
         networkImageView = (WPNetworkImageView) view.findViewById(R.id.stats_list_cell_image);
 
         imgMore = (ImageView) view.findViewById(R.id.image_more);
@@ -77,16 +81,12 @@ public class StatsViewHolder {
                             // Let's try the global wpcom credentials
                             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(view.getContext());
                             String statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-                            String statsAuthenticatedPassword = WordPressDB.decryptPassword(
-                                    settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
-                            );
-                            if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
-                                    || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
+                            if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
                                 // Still empty. Do not eat the event, but let's open the default Web Browser.
 
                             }
                             WPWebViewActivity.openUrlByUsingWPCOMCredentials(view.getContext(),
-                                    url, statsAuthenticatedUser, statsAuthenticatedPassword);
+                                    url, statsAuthenticatedUser);
 
                         } else if (url.startsWith("https") || url.startsWith("http")) {
                             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
@@ -110,40 +110,66 @@ public class StatsViewHolder {
         setEntryText(text);
     }
 
+
     /*
-     * used by stats fragments to set the entry text, opening it with reader if possible
+     * Used by stats fragments to set the entry text, opening the stats details page.
      */
-    public void setEntryTextOpenInReader(SingleItemModel currentItem) {
+    public void setEntryTextOpenDetailsPage(final PostModel currentItem) {
         if (entryTextView == null) {
             return;
         }
 
         String name = currentItem.getTitle();
-        final String url = currentItem.getUrl();
-        final long blogID = Long.parseLong(currentItem.getBlogID());
-        final long itemID = Long.parseLong(currentItem.getItemID());
         entryTextView.setText(name);
         rowContent.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // If the post/page has ID == 0 is the home page, and we need to load the blog preview,
-                        // otherwise 404 is returned if we try to show the post in the reader
-                        if (itemID == 0) {
-                            ReaderActivityLauncher.showReaderBlogPreview(
-                                    view.getContext(),
-                                    blogID,
-                                    url
-                            );
-                        } else {
-                            ReaderActivityLauncher.showReaderPostDetail(
-                                    view.getContext(),
-                                    blogID,
-                                    itemID
-                            );
-                        }
+                        Intent statsPostViewIntent = new Intent(view.getContext(), StatsSinglePostDetailsActivity.class);
+                        statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_OBJECT, currentItem);
+                        view.getContext().startActivity(statsPostViewIntent);
                     }
                 });
         entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_link_text_color));
+    }
+
+    /*
+     * Used by stats fragments to create the more btn context menu with the "View" option in it.
+     * Opening it with reader if possible.
+     *
+     */
+    public void setMoreButtonOpenInReader(final PostModel currentItem) {
+        if (imgMore == null) {
+            return;
+        }
+
+        imgMore.setVisibility(View.VISIBLE);
+        imgMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Context ctx = view.getContext();
+                PopupMenu popup = new PopupMenu(ctx, view);
+                MenuItem menuItem = popup.getMenu().add(ctx.getString(R.string.stats_view));
+                menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        StatsUtils.openPostInReaderOrInAppWebview(ctx, currentItem);
+                        return true;
+                    }
+                });
+                popup.show();
+            }
+        });
+    }
+
+
+    public void showChevronIcon() {
+        linkImageView.setVisibility(View.GONE);
+        chevronImageView.setVisibility(View.VISIBLE);
+    }
+
+    public void showLinkIcon() {
+        linkImageView.setVisibility(View.VISIBLE);
+        chevronImageView.setVisibility(View.GONE);
     }
 }

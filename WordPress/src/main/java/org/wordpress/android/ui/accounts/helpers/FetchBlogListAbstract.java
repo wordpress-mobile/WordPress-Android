@@ -10,7 +10,8 @@ public abstract class FetchBlogListAbstract {
 
     public interface Callback {
         void onSuccess(List<Map<String, Object>> userBlogList);
-        void onError(int errorMessageId, boolean httpAuthRequired, boolean erroneousSslCertificate);
+        void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate,
+                     String clientResponse);
     }
 
     public FetchBlogListAbstract(String username, String password) {

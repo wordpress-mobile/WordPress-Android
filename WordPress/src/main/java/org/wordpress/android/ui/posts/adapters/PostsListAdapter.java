@@ -102,7 +102,9 @@ public class PostsListAdapter extends BaseAdapter {
             wrapper.getStatus().setVisibility(View.GONE);
         } else {
             wrapper.getStatus().setVisibility(View.VISIBLE);
-            if (post.isLocalDraft()) {
+            if (post.isUploading()) {
+                formattedStatus = mContext.getResources().getString(R.string.post_uploading);
+            } else if (post.isLocalDraft()) {
                 formattedStatus = mContext.getResources().getString(R.string.local_draft);
             } else if (post.hasLocalChanges()) {
                 formattedStatus = mContext.getResources().getString(R.string.local_changes);
@@ -126,7 +128,8 @@ public class PostsListAdapter extends BaseAdapter {
             }
 
             // Set post status TextView color
-            if (post.isLocalDraft() || post.getStatusEnum() == PostStatus.DRAFT || post.hasLocalChanges()) {
+            if (post.isLocalDraft() || post.getStatusEnum() == PostStatus.DRAFT || post.hasLocalChanges() ||
+                    post.isUploading()) {
                 wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.orange_dark));
             } else {
                 wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.grey_medium));
@@ -235,6 +238,8 @@ public class PostsListAdapter extends BaseAdapter {
             if (newPost.getDateCreatedGmt() != currentPost.getDateCreatedGmt())
                 return false;
             if (!newPost.getOriginalStatus().equals(currentPost.getOriginalStatus()))
+                return false;
+            if (newPost.isUploading() != currentPost.isUploading())
                 return false;
             if (newPost.isLocalDraft() != currentPost.isLocalDraft())
                 return false;

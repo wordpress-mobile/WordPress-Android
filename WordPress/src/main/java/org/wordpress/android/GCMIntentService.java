@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -23,6 +22,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ABTestingUtils;
@@ -155,7 +155,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
             if (note_id != null) {
-                resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
+                resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, note_id);
             }
 
             // Add some actions if this is a comment notification
@@ -167,9 +167,9 @@ public class GCMIntentService extends GCMBaseIntentService {
                 commentReplyIntent.setAction("android.intent.action.MAIN");
                 commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
                 commentReplyIntent.addCategory("comment-reply");
-                commentReplyIntent.putExtra(NotificationsActivity.NOTE_INSTANT_REPLY_EXTRA, true);
+                commentReplyIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
                 if (note_id != null) {
-                    commentReplyIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
+                    commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, note_id);
                 }
                 PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0, commentReplyIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT);
@@ -273,7 +273,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        if (!WordPress.hasValidWPComCredentials(context)) {
+        if (!WordPress.hasDotComToken(context)) {
             return;
         }
 
@@ -282,7 +282,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     public void broadcastNewNotification(Context context) {
         Intent msgIntent = new Intent();
-        msgIntent.setAction(NotificationsActivity.NOTIFICATION_ACTION);
+        msgIntent.setAction(NotificationsListFragment.NOTIFICATION_ACTION);
         LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
     }
 

@@ -35,6 +35,7 @@ public class CommentsActivity extends WPDrawerActivity
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     private static final String KEY_SELECTED_POST_ID = "selected_post_id";
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
+    static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private long mSelectedCommentId;
 
     @Override
@@ -42,7 +43,6 @@ public class CommentsActivity extends WPDrawerActivity
         super.onCreate(null);
 
         createMenuDrawer(R.layout.comment_activity);
-        setSupportActionBar(getToolbar());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -58,6 +58,7 @@ public class CommentsActivity extends WPDrawerActivity
     private void restoreSavedInstance(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             getIntent().putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED));
+            getIntent().putExtra(KEY_EMPTY_VIEW_MESSAGE, savedInstanceState.getString(KEY_EMPTY_VIEW_MESSAGE));
 
             // restore the selected comment
             long commentId = savedInstanceState.getLong(KEY_SELECTED_COMMENT_ID);
@@ -99,20 +100,6 @@ public class CommentsActivity extends WPDrawerActivity
         if (hasDetailFragment()) {
             getDetailFragment().clear();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                    FragmentManager fm = getFragmentManager();
-                    if (fm.getBackStackEntryCount() > 0) {
-                        fm.popBackStack();
-                    return true;
-                }
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
@@ -230,8 +217,8 @@ public class CommentsActivity extends WPDrawerActivity
     void updateCommentList() {
         CommentsListFragment listFragment = getListFragment();
         if (listFragment != null) {
-            listFragment.updateComments(false);
             listFragment.setRefreshing(true);
+            listFragment.updateComments(false);
         }
     }
 
@@ -249,6 +236,7 @@ public class CommentsActivity extends WPDrawerActivity
 
         if (hasListFragment()) {
             outState.putBoolean(KEY_AUTO_REFRESHED, getListFragment().mHasAutoRefreshedComments);
+            outState.putString(KEY_EMPTY_VIEW_MESSAGE, getListFragment().getEmptyViewMessage());
         }
         super.onSaveInstanceState(outState);
     }

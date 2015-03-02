@@ -4,6 +4,7 @@ package org.wordpress.android.ui;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +20,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -43,6 +43,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
+import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
@@ -98,8 +99,11 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (isStaticMenuDrawer()) {
+        boolean menuDrawerDisabled = false;
+        if (getIntent() != null) {
+            menuDrawerDisabled = getIntent().getBooleanExtra(StatsActivity.ARG_NO_MENU_DRAWER, false);
+        }
+        if (isStaticMenuDrawer() && !menuDrawerDisabled) {
             setContentView(R.layout.activity_drawer_static);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(getResources().getColor(R.color.color_primary_dark));
@@ -143,7 +147,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             overridePendingTransition(0, 0);
             finish();
         }
-        mScrollPositionManager.saveToPreferences(this, SCROLL_POSITION_ID);
+        if (mScrollPositionManager != null) {
+            mScrollPositionManager.saveToPreferences(this, SCROLL_POSITION_ID);
+        }
     }
 
     @Override
@@ -155,7 +161,9 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             // Sync the toggle state after onRestoreInstanceState has occurred.
             mDrawerToggle.syncState();
         }
-        mScrollPositionManager.restoreFromPreferences(this, SCROLL_POSITION_ID);
+        if (mScrollPositionManager != null) {
+            mScrollPositionManager.restoreFromPreferences(this, SCROLL_POSITION_ID);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -227,7 +235,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
             mDrawerToggle = new ActionBarDrawerToggle(
                     this,
                     mDrawerLayout,
-                    mToolbar,
+                    getToolbar(),
                     R.string.open_drawer,
                     R.string.close_drawer
             ) {
@@ -270,6 +278,27 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         initBlogSpinner();
         updateMenuDrawer();
+
+        setToolbarClickListener();
+    }
+
+    protected void setToolbarClickListener() {
+        // Set navigation listener, which ensures menu button works on all devices (#2157)
+        getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isFinishing()) return;
+
+                FragmentManager fm = getFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStack();
+                } else if (isStaticMenuDrawer()) {
+                    finish();
+                } else {
+                    toggleDrawer();
+                }
+            }
+        });
     }
 
     /*
@@ -299,7 +328,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
     }
 
-    private void closeDrawer() {
+    void closeDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
@@ -308,6 +337,13 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     private void openDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.openDrawer(GravityCompat.START);
+        }
+    }
+
+    protected void hideDrawer() {
+        View drawer = findViewById(R.id.left_drawer);
+        if (drawer != null) {
+            drawer.setVisibility(View.GONE);
         }
     }
 
@@ -334,7 +370,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         // if the item has an activity id, remember it for launch
         ActivityId activityId = item.getDrawerItemId().toActivityId();
         if (activityId != ActivityId.UNKNOWN) {
-            ActivityId.trackLastActivity(WPDrawerActivity.this, activityId);
+            ActivityId.trackLastActivity(activityId);
         }
 
         final Intent intent;
@@ -560,7 +596,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
         for (int i = 0; i < blogCount; i++) {
             Map<String, Object> account = accounts.get(i);
-            blogNames[i] = BlogUtils.getBlogNameFromAccountMap(account);
+            blogNames[i] = BlogUtils.getBlogNameOrHostNameFromAccountMap(account);
             mBlogIDs[i] = Integer.valueOf(account.get("id").toString());
         }
 
@@ -676,13 +712,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
     };
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home && mDrawerLayout != null) {
-            toggleDrawer();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void refreshCurrentBlogContent() {
         if (WordPress.getCurrentBlog() != null) {
             ApiHelper.GenericCallback callback = new ApiHelper.GenericCallback() {
@@ -719,7 +748,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
 
         refreshCurrentBlogContent();
-        
+
         if (WordPress.getCurrentBlog() != null) {
             onBlogChanged();
         }
@@ -751,6 +780,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
+        filter.addAction(WordPress.BROADCAST_ACTION_REST_API_UNAUTHORIZED);
         filter.addAction(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED);
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(mReceiver, filter);
@@ -770,27 +800,36 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             if (intent == null || intent.getAction() == null)
                 return;
+
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIGNOUT)) {
                 onSignout();
+                return;
             }
-            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS)) {
-                AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this);
+
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS)
+                    || intent.getAction().equals(WordPress.BROADCAST_ACTION_REST_API_UNAUTHORIZED)
+                    || intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
+                AuthenticationDialogUtils.showAuthErrorView(WPDrawerActivity.this);
+                return;
             }
+
             if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)
                     && WPDrawerActivity.this instanceof NotificationsActivity) {
-                AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this, R.string.sign_in_again,
+                AuthenticationDialogUtils.showAuthErrorView(WPDrawerActivity.this, R.string.sign_in_again,
                         R.string.simperium_connection_error);
+                return;
             }
-            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
-                // TODO: add a specific message like "you must use a specific app password"
-                AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this);
-            }
+
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE)) {
                 SelfSignedSSLCertsManager.askForSslTrust(WPDrawerActivity.this, null);
+                return;
             }
+
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT)) {
                 ToastUtils.showToast(context, R.string.limit_reached, Duration.LONG);
+                return;
             }
+
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED)) {
                 initBlogSpinner();
             }

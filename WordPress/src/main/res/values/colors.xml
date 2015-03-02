@@ -95,15 +95,16 @@
     <color name="tab_indicator">@color/blue_light</color>
 
     <!-- Stats -->
-    <color name="stats_text_color">@color/grey_dark</color>
-    <color name="stats_link_text_color">@color/blue_wordpress</color>
-    <color name="stats_module_content_list_header">@color/grey</color>
-    <color name="stats_bar_graph_views">@color/blue_wordpress</color>
-    <color name="stats_bar_graph_grid">@color/grey_lighten_20</color>
-    <color name="stats_bar_graph_vertical_label">@color/grey</color>
-    <color name="stats_div_color">@color/grey</color>
-    <color name="stats_views_hover_color">@color/orange_jazzy</color>
-    <color name="stats_lists_background_color">@color/grey_light</color>
+    <color name="stats_text_color">#404040</color>
+    <color name="stats_link_text_color">@color/wordpress_blue</color>
+    <color name="stats_module_content_list_header">#93A6C0</color>
+    <color name="stats_blue_labels">#587295</color>
+    <color name="stats_bar_graph_views">#0085BF</color>
+    <color name="stats_bar_graph_grid">#D9D9D9</color>
+    <color name="stats_bar_graph_vertical_label">#93a6c0</color>
+    <color name="stats_div_color">#B7B7B7</color>
+    <color name="stats_lists_background_color">#f4f8fA</color>
+    <color name="stats_empty_placeholder_color">#80e8f0f5</color> <!-- 50% alpha on calypso_blue_light -->
 
     <!-- Reader Colors -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>
@@ -112,7 +113,7 @@
     <!-- Comment Status Colors -->
     <color name="comment_status_unapproved">@color/orange_jazzy</color>
     <color name="comment_status_spam">@color/alert_red</color>
-    
+
     <!-- Notification Status Colors -->
     <color name="notification_status_unapproved">@color/alert_yellow</color>
     <color name="notification_status_unapproved_dark">#eeac31</color>
@@ -149,8 +150,9 @@
 
     <color name="wordpress_blue">#21759B</color>
 
-    <!-- Calypso Colors -->
-    <!-- If you are changing these colors, please update them in NotificationsConstants as well -->
+    <!-- calypso colors -->
+    <!-- If you are changing these colors, please update them in NotificationsConstants as well
+         and in the Stats section above -->
     <color name="calypso_blue_unread">#00aadc</color>
     <color name="calypso_blue_dark">#324155</color>
     <color name="calypso_grey">#aac0cf</color>

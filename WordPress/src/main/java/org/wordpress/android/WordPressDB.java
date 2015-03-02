@@ -51,7 +51,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 27;
+    private static final int DATABASE_VERSION = 29;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -113,6 +113,9 @@ public class WordPressDB {
 
     //add boolean to posts to check uploaded posts that have local changes
     private static final String ADD_LOCAL_POST_CHANGES = "alter table posts add isLocalChange boolean default 0";
+
+    // Add boolean to POSTS to track posts currently being uploaded
+    private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
 
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
@@ -246,7 +249,16 @@ public class WordPressDB {
                 // Drop the notes table, no longer needed with Simperium.
                 db.execSQL("DROP TABLE IF EXISTS notes;");
                 currentVersion++;
+            case 27:
+                // Add isUploading column to POSTS
+                db.execSQL(ADD_IS_UPLOADING);
+                currentVersion++;
+            case 28:
+                // Remove WordPress.com credentials
+                removeDotComCredentials();
+                currentVersion++;
         }
+
         db.setVersion(DATABASE_VERSION);
     }
 
@@ -259,17 +271,15 @@ public class WordPressDB {
     }
 
     private void migrateWPComAccount() {
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "username", "password" }, "dotcomFlag=1", null, null,
+        Cursor c = db.query(SETTINGS_TABLE, new String[] { "username" }, "dotcomFlag=1", null, null,
                 null, null);
 
         if (c.getCount() > 0) {
             c.moveToFirst();
             String username = c.getString(0);
-            String password = c.getString(1);
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
             SharedPreferences.Editor editor = settings.edit();
             editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, username);
-            editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, password);
             editor.commit();
         }
 
@@ -329,7 +339,7 @@ public class WordPressDB {
         if (limit != 0) {
             limitStr = String.valueOf(limit);
         }
-        String[] baseFields = new String[]{"id", "blogName", "username", "blogId", "url", "password"};
+        String[] baseFields = new String[]{"id", "blogName", "username", "blogId", "url"};
         String[] allFields = baseFields;
         if (extraFields != null) {
             allFields = (String[]) ArrayUtils.addAll(baseFields, extraFields);
@@ -344,17 +354,17 @@ public class WordPressDB {
             String username = c.getString(2);
             int blogId = c.getInt(3);
             String url = c.getString(4);
-            String password = c.getString(5);
-            if (password != null && !password.equals("") && id > 0) {
+            if (id > 0) {
                 Map<String, Object> thisHash = new HashMap<String, Object>();
                 thisHash.put("id", id);
                 thisHash.put("blogName", blogName);
                 thisHash.put("username", username);
                 thisHash.put("blogId", blogId);
                 thisHash.put("url", url);
+                int extraFieldsIndex = baseFields.length;
                 if (extraFields != null) {
                     for (int j = 0; j < extraFields.length; ++j) {
-                        thisHash.put(extraFields[j], c.getString(6 + j));
+                        thisHash.put(extraFields[j], c.getString(extraFieldsIndex + j));
                     }
                 }
                 accounts.add(thisHash);
@@ -382,6 +392,28 @@ public class WordPressDB {
         return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + SETTINGS_TABLE + " WHERE dotcomFlag = 1", null);
     }
 
+    // Removes stored DotCom credentials. As of March 2015 only the OAuth token is used
+    private void removeDotComCredentials() {
+        // First clear out the password for all WP.com sites
+        ContentValues dotComValues = new ContentValues();
+        dotComValues.put("password", "");
+        db.update(SETTINGS_TABLE, dotComValues, "dotcomFlag=1", null);
+
+        // Next, we'll clear out the credentials stored for Jetpack sites
+        ContentValues jetPackValues = new ContentValues();
+        jetPackValues.put("dotcom_username", "");
+        jetPackValues.put("dotcom_password", "");
+        db.update(SETTINGS_TABLE, jetPackValues, null, null);
+
+        // Lastly we'll remove the preference that previously stored the WP.com password
+        if (this.context != null) {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.remove("wp_pref_wpcom_password");
+            editor.apply();
+        }
+    }
+
     public List<Map<String, Object>> getAllAccounts() {
         return getAccountsBy(null, null);
     }
@@ -389,7 +421,7 @@ public class WordPressDB {
     public int setAllDotComAccountsVisibility(boolean visible) {
         ContentValues values = new ContentValues();
         values.put("isHidden", !visible);
-        return db.update(SETTINGS_TABLE, values, "dotcomFlag = 1", null);
+        return db.update(SETTINGS_TABLE, values, "dotcomFlag=1", null);
     }
 
     public int setDotComAccountsVisibility(int id, boolean visible) {
@@ -859,7 +891,7 @@ public class WordPressDB {
         Cursor c;
         c = db.query(POSTS_TABLE,
                 new String[] { "id", "blogID", "title",
-                        "date_created_gmt", "post_status", "localDraft", "isLocalChange" },
+                        "date_created_gmt", "post_status", "isUploading", "localDraft", "isLocalChange" },
                 "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)",
                 new String[] {String.valueOf(blogId), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
         int numRows = c.getCount();
@@ -876,7 +908,8 @@ public class WordPressDB {
                     c.getLong(c.getColumnIndex("date_created_gmt")),
                     c.getString(c.getColumnIndex("post_status")),
                     SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))),
-                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange")))
+                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))),
+                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isUploading")))
             );
             posts.add(i, post);
             c.moveToNext();
@@ -905,6 +938,7 @@ public class WordPressDB {
             values.put("mt_keywords", post.getKeywords());
             values.put("wp_password", post.getPassword());
             values.put("post_status", post.getPostStatus());
+            values.put("isUploading", post.isUploading());
             values.put("uploaded", post.isUploaded());
             values.put("isPage", post.isPage());
             values.put("wp_post_format", post.getPostFormat());
@@ -930,6 +964,7 @@ public class WordPressDB {
             values.put("date_created_gmt", post.getDate_created_gmt());
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMoreText());
+            values.put("isUploading", post.isUploading());
             values.put("uploaded", post.isUploaded());
 
             JSONArray categoriesJsonArray = post.getJSONCategories();
@@ -1059,6 +1094,7 @@ public class WordPressDB {
                 }
 
                 post.setLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
+                post.setUploading(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isUploading"))));
                 post.setUploaded(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("uploaded"))));
                 post.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isPage"))));
                 post.setPageParentId(c.getString(c.getColumnIndex("wp_page_parent_id")));

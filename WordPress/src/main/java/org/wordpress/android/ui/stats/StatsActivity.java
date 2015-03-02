@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -34,12 +33,11 @@ import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.accounts.WPComLoginActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -51,6 +49,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -117,16 +116,19 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
         mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
         ActionBar actionBar = getSupportActionBar();
+        createMenuDrawer(R.layout.stats_activity);
         if (mNoMenuDrawer) {
-            setContentView(R.layout.stats_activity);
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
-        } else {
-            createMenuDrawer(R.layout.stats_activity);
+            getDrawerToggle().setDrawerIndicatorEnabled(false);
+            // Override the default NavigationOnClickListener
+            getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
         }
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -183,7 +185,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
 
         if (!mNoMenuDrawer && actionBar != null && mSpinner == null) {
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            final Toolbar toolbar = getToolbar();
             if (toolbar != null) {
                 View view = View.inflate(this, R.layout.reader_spinner, toolbar);
                 mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
@@ -197,7 +199,9 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                 mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                        if (isFinishing() || isActivityDestroyed()) {
+                            return;
+                        }
                         final StatsTimeframe selectedTimeframe =  (StatsTimeframe) mTimeframeSpinnerAdapter.getItem(position);
 
                         if (mCurrentTimeframe == selectedTimeframe) {
@@ -289,9 +293,11 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     }
 
     private void loadStatsFragments(boolean forceRecreationOfFragments, boolean loadGraphFragment, boolean loadAlltimeFragmets) {
+        if (isFinishing() || isActivityDestroyed()) {
+            return;
+        }
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        //ft.setCustomAnimations(R.anim.stats_fragment_in, R.anim.stats_fragment_out);
 
         StatsAbstractFragment fragment;
 
@@ -332,6 +338,11 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
         }
 
+        if (fm.findFragmentByTag(StatsSearchTermsFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.SEARCH_TERMS, mLocalBlogID);
+            ft.replace(R.id.stats_search_terms_container, fragment, StatsSearchTermsFragment.TAG);
+        }
+
         if (loadAlltimeFragmets) {
             if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
                 fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID);
@@ -354,7 +365,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             }
         }
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     // AuthorsFragment should be dismissed when 0 or 1 author.
@@ -409,15 +420,15 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
     private void startWPComLoginActivity() {
         mResultCode = RESULT_CANCELED;
-        Intent loginIntent = new Intent(this, WPComLoginActivity.class);
-        loginIntent.putExtra(WPComLoginActivity.JETPACK_AUTH_REQUEST, true);
-        startActivityForResult(loginIntent, WPComLoginActivity.REQUEST_CODE);
+        Intent signInIntent = new Intent(this, SignInActivity.class);
+        signInIntent.putExtra(SignInActivity.ARG_JETPACK_SITE_AUTH, mLocalBlogID);
+        startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == WPComLoginActivity.REQUEST_CODE) {
+        if (requestCode == SignInActivity.REQUEST_CODE) {
             mResultCode = resultCode;
             final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
             if (resultCode == RESULT_OK && currentBlog != null && !currentBlog.isDotcomFlag()) {
@@ -559,22 +570,16 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
                 return true;
             }
 
-            StatsUtils.StatsCredentials credentials = StatsUtils.getBlogStatsCredentials(mLocalBlogID);
-            if (credentials == null) {
+            String statsAuthenticatedUser = StatsUtils.getBlogStatsUsername(mLocalBlogID);
+            if (statsAuthenticatedUser == null) {
                 Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
                 return true;
             }
 
-            String statsAuthenticatedUser = credentials.getUsername();
-            String statsAuthenticatedPassword =  credentials.getPassword();
             String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
 
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser,
-                    statsAuthenticatedPassword);
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser);
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
-            return true;
-        } else if (mNoMenuDrawer && item.getItemId() == android.R.id.home) {
-            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -603,6 +608,9 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
     @Override
     public void onDateChanged(String blogID, StatsTimeframe timeframe, String date) {
+        if (isFinishing() || isActivityDestroyed()) {
+            return;
+        }
         mRequestedDate = date;
         refreshStats(timeframe, date, false, false);
         emptyDataModelInFragments(false, false);
@@ -629,7 +637,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             return;
         }
 
-        if (!NetworkUtils.isNetworkAvailable(this)) {
+        if (!NetworkUtils.checkConnection(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(AppLog.T.STATS, "StatsActivity > no connection, update canceled");
             return;
@@ -642,15 +650,11 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             // for self-hosted sites; launch the user into an activity where they can provide their credentials
             if (!currentBlog.isDotcomFlag()
                     && !currentBlog.hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
-                if (WordPress.hasValidWPComCredentials(this)) {
+                if (WordPress.hasDotComToken(this)) {
                     // Let's try the global wpcom credentials them first
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
                     String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-                    String password = WordPressDB.decryptPassword(
-                            settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
-                            );
                     currentBlog.setDotcom_username(username);
-                    currentBlog.setDotcom_password(password);
                     WordPress.wpDB.saveBlog(currentBlog);
                     mSwipeToRefreshHelper.setRefreshing(true);
                 } else {
@@ -675,7 +679,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         // check again that we've valid credentials for a Jetpack site
         if (!currentBlog.isDotcomFlag()
                 && !currentBlog.hasValidJetpackCredentials()
-                && !WordPress.hasValidWPComCredentials(this)) {
+                && !WordPress.hasDotComToken(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
             return;

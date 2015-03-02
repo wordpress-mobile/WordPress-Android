@@ -4,7 +4,7 @@ import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.adapters.PostsAndPagesAdapter;
-import org.wordpress.android.ui.stats.models.SingleItemModel;
+import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 
@@ -26,7 +26,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
         }
 
         if (hasTopPostsAndPages()) {
-            List<SingleItemModel> postViews = ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages();
+            List<PostModel> postViews = ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages();
             ArrayAdapter adapter = new PostsAndPagesAdapter(getActivity(), getLocalTableBlogID(), postViews);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
@@ -39,7 +39,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
         return !isDataEmpty() && ((TopPostsAndPagesModel) mDatamodels[0]).hasTopPostsAndPages();
     }
 
-    private List<SingleItemModel> getTopPostsAndPages() {
+    private List<PostModel> getTopPostsAndPages() {
         if (!hasTopPostsAndPages()) {
             return null;
         }
@@ -77,7 +77,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.TOP_POSTS
         };

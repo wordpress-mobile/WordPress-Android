@@ -224,9 +224,9 @@ public class DrawerItems {
         boolean isVisible() {
             switch (mItemId) {
                 case READER:
-                    return WordPress.hasValidWPComCredentials(WordPress.getContext());
+                    return WordPress.hasDotComToken(WordPress.getContext());
                 case NOTIFICATIONS:
-                    return WordPress.hasValidWPComCredentials(WordPress.getContext());
+                    return WordPress.hasDotComToken(WordPress.getContext());
                 case POSTS:
                     return WordPress.wpDB.getNumVisibleAccounts() != 0;
                 case MEDIA:

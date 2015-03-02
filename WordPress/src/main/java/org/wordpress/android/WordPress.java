@@ -27,6 +27,7 @@ import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
+import com.wordpress.rest.RestRequest;
 
 import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -45,8 +46,6 @@ import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdat
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.stats.StatsUtils;
-import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
@@ -73,10 +72,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
+
 public class WordPress extends Application {
     public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
     public static final String WPCOM_USERNAME_PREFERENCE="wp_pref_wpcom_username";
-    public static final String WPCOM_PASSWORD_PREFERENCE="wp_pref_wpcom_password";
 
     public static String versionName;
     public static Blog currentBlog;
@@ -94,6 +94,7 @@ public class WordPress extends Application {
     public static final String BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE = "INVALID_SSL_CERTIFICATE";
     public static final String BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH = "TWO_FA_AUTH";
     public static final String BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT = "LOGIN_LIMIT";
+    public static final String BROADCAST_ACTION_REST_API_UNAUTHORIZED = "REST_API_UNAUTHORIZED";
     public static final String BROADCAST_ACTION_BLOG_LIST_CHANGED = "BLOG_LIST_CHANGED";
 
     private static final int SECONDS_BETWEEN_STATS_UPDATE = 30 * 60;
@@ -125,7 +126,9 @@ public class WordPress extends Application {
      */
     public static RateLimitedTask sUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
-            new GenericUpdateBlogListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            if (getContext() != null && isSignedIn(getContext())) {
+                new GenericUpdateBlogListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
             return true;
         }
     };
@@ -155,6 +158,14 @@ public class WordPress extends Application {
         versionName = PackageUtils.getVersionName(this);
         HelpshiftHelper.init(this);
         initWpDb();
+
+        // EventBus setup
+        EventBus.TAG = "WordPress-EVENT";
+        EventBus.builder()
+                .logNoSubscriberMessages(false)
+                .sendNoSubscriberEvent(false)
+                .throwSubscriberException(true)
+                .installDefaultEventBus();
 
         RestClientUtils.setUserAgent(getUserAgent());
 
@@ -210,7 +221,6 @@ public class WordPress extends Application {
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
             currentBlog = null;
             editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
-            editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
             editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
             editor.commit();
             if (wpDB != null) {
@@ -249,15 +259,24 @@ public class WordPress extends Application {
     public static RestClientUtils getRestClientUtils() {
         if (mRestClientUtils == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtils = new RestClientUtils(requestQueue, authenticator);
+            mRestClientUtils = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener);
         }
         return mRestClientUtils;
     }
 
+    private static RestRequest.OnAuthFailedListener mOnAuthFailedListener = new RestRequest.OnAuthFailedListener() {
+        @Override
+        public void onAuthFailed() {
+            if (getContext() == null) return;
+            // If this is called, it means the WP.com token is no longer valid.
+            sendLocalBroadcast(getContext(), BROADCAST_ACTION_REST_API_UNAUTHORIZED);
+        }
+    };
+
     public static RestClientUtils getRestClientUtilsV1_1() {
         if (mRestClientUtilsVersion1_1 == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtilsVersion1_1 = new RestClientUtils(requestQueue, authenticator, RestClient.REST_CLIENT_VERSIONS.V1_1);
+            mRestClientUtilsVersion1_1 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_1);
         }
         return mRestClientUtilsVersion1_1;
     }
@@ -327,7 +346,7 @@ public class WordPress extends Application {
         String regId = gcmRegisterIfNot(context);
 
         // Register to WordPress.com notifications
-        if (WordPress.hasValidWPComCredentials(context)) {
+        if (WordPress.hasDotComToken(context)) {
             if (!TextUtils.isEmpty(regId)) {
                 // Send the token to WP.com in case it was invalidated
                 NotificationsUtils.registerDeviceForPushNotifications(context, regId);
@@ -344,6 +363,8 @@ public class WordPress extends Application {
 
     public interface OnPostUploadedListener {
         public abstract void OnPostUploaded(int localBlogId, String postId, boolean isPage);
+
+        public abstract void OnPostUploadFailed(int localBlogId);
     }
 
     public static void setOnPostUploadedListener(OnPostUploadedListener listener) {
@@ -354,6 +375,19 @@ public class WordPress extends Application {
         if (onPostUploadedListener != null) {
             try {
                 onPostUploadedListener.OnPostUploaded(localBlogId, postId, isPage);
+            } catch (Exception e) {
+                postsShouldRefresh = true;
+            }
+        } else {
+            postsShouldRefresh = true;
+        }
+
+    }
+
+    public static void postUploadFailed(int localBlogId) {
+        if (onPostUploadedListener != null) {
+            try {
+                onPostUploadedListener.OnPostUploadFailed(localBlogId);
             } catch (Exception e) {
                 postsShouldRefresh = true;
             }
@@ -395,8 +429,7 @@ public class WordPress extends Application {
      */
     public static Blog getBlog(int id) {
         try {
-            Blog blog = wpDB.instantiateBlogByLocalId(id);
-            return blog;
+            return wpDB.instantiateBlogByLocalId(id);
         } catch (Exception e) {
             return null;
         }
@@ -452,22 +485,29 @@ public class WordPress extends Application {
      *
      * @return true if we have credentials or false if not
      */
-    public static boolean hasValidWPComCredentials(Context context) {
+    public static boolean hasDotComToken(Context context) {
+        if (context == null) return false;
+
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
-        String password = settings.getString(WPCOM_PASSWORD_PREFERENCE, null);
-        return username != null && password != null;
+        return !TextUtils.isEmpty(settings.getString(ACCESS_TOKEN_PREFERENCE, null));
+    }
+
+    public static String getDotComToken(Context context) {
+        if (context == null) return null;
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        return settings.getString(ACCESS_TOKEN_PREFERENCE, null);
     }
 
     public static boolean isSignedIn(Context context) {
-        if (WordPress.hasValidWPComCredentials(context)) {
+        if (WordPress.hasDotComToken(context)) {
             return true;
         }
         return WordPress.wpDB.getNumVisibleAccounts() != 0;
     }
 
     public static String getLoggedInUsername(Context context, Blog blog) {
-        if (hasValidWPComCredentials(context)) {
+        if (hasDotComToken(context)) {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
             return settings.getString(WPCOM_USERNAME_PREFERENCE, null);
         } else if (blog != null) {
@@ -584,7 +624,6 @@ public class WordPress extends Application {
 
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
-        editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
         editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
         editor.commit();
 
@@ -697,7 +736,6 @@ public class WordPress extends Application {
             boolean evictBitmaps = false;
             switch (level) {
                 case TRIM_MEMORY_COMPLETE:
-                    AnalyticsTracker.track(Stat.MEMORY_TRIMMED_COMPLETE);
                 case TRIM_MEMORY_MODERATE:
                 case TRIM_MEMORY_RUNNING_MODERATE:
                 case TRIM_MEMORY_RUNNING_CRITICAL:
@@ -733,7 +771,7 @@ public class WordPress extends Application {
          */
         private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
-            if (isPushNotificationPingNeeded() && WordPress.hasValidWPComCredentials(mContext)) {
+            if (isPushNotificationPingNeeded() && WordPress.hasDotComToken(mContext)) {
                 String token = null;
                 try {
                     // Register for Google Cloud Messaging

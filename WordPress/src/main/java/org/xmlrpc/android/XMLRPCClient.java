@@ -1,5 +1,6 @@
 package org.xmlrpc.android;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Xml;
 
@@ -14,7 +15,6 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
@@ -79,6 +79,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     private HttpPost mPostMethod;
     private XmlSerializer mSerializer;
     private HttpParams mHttpParams;
+    private LoggedInputStream mLoggedInputStream;
+
     private boolean mIsWpcom;
 
     /**
@@ -90,6 +92,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         mPostMethod.addHeader("Content-Type", "text/xml");
         mPostMethod.addHeader("charset", "UTF-8");
         mPostMethod.addHeader("User-Agent", WordPress.getUserAgent());
+        addWPComAuthorizationHeaderIfNeeded();
 
         mHttpParams = mPostMethod.getParams();
         HttpProtocolParams.setUseExpectContinue(mHttpParams, false);
@@ -101,6 +104,13 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
         mClient = instantiateClientForUri(uri, credentials);
         mSerializer = Xml.newSerializer();
+    }
+
+    public String getResponse() {
+        if (mLoggedInputStream == null) {
+            return "";
+        }
+        return mLoggedInputStream.getResponseDocument();
     }
 
     private class ConnectionClient extends DefaultHttpClient {
@@ -141,7 +151,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             }
         }
 
-        // This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
         HttpConnectionParams.setConnectionTimeout(client.getParams(), DEFAULT_CONNECTION_TIMEOUT);
         HttpConnectionParams.setSoTimeout(client.getParams(), DEFAULT_SOCKET_TIMEOUT);
 
@@ -289,9 +298,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             // no parser.require() here since its called in XMLRPCSerializer.deserialize() below
             // deserialize result
             Object obj = XMLRPCSerializer.deserialize(pullParser);
-            if (entity != null) {
-                entity.consumeContent();
-            }
+            consumeHttpEntity(entity);
             return obj;
         } else if (tag.equals(TAG_FAULT)) {
             // fault response
@@ -301,15 +308,26 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             Map<String, Object> map = (Map<String, Object>) XMLRPCSerializer.deserialize(pullParser);
             String faultString = (String) map.get(TAG_FAULT_STRING);
             int faultCode = (Integer) map.get(TAG_FAULT_CODE);
-            if (entity != null) {
-                entity.consumeContent();
-            }
+            consumeHttpEntity(entity);
             throw new XMLRPCFault(faultString, faultCode);
         } else {
-            if (entity != null) {
-                entity.consumeContent();
-            }
+            consumeHttpEntity(entity);
             throw new XMLRPCException("Bad tag <" + tag + "> in XMLRPC response - neither <params> nor <fault>");
+        }
+    }
+
+    /**
+     * Deallocate Http Entity and close streams
+     */
+    private static void consumeHttpEntity(HttpEntity entity) {
+        // Ideally we should use EntityUtils.consume(), introduced in apache http utils 4.1 - not available in
+        // Android yet
+        if (entity != null) {
+            try {
+                entity.consumeContent();
+            } catch (IOException e) {
+                // ignore exception (could happen if Content-Length is wrong)
+            }
         }
     }
 
@@ -381,12 +399,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             HttpEntity entity = new StringEntity(bodyWriter.toString());
             mPostMethod.setEntity(entity);
         }
-
-        //set timeout to 30 seconds, does it need to be set for both mClient and method?
-        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
-        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
-        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
     }
 
     /**
@@ -458,7 +470,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
          */
         private Object callXMLRPC(String method, Object[] params, File tempFile)
                 throws XMLRPCException, IOException, XmlPullParserException {
-            LoggedInputStream loggedInputStream = null;
+            mLoggedInputStream = null;
             try {
                 preparePostMethod(method, params, tempFile);
 
@@ -477,8 +489,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 }
 
                 if (statusCode == HttpStatus.SC_OK) {
-                    loggedInputStream = new LoggedInputStream(entity.getContent());
-                    return XMLRPCClient.parseXMLRPCResponse(loggedInputStream, entity);
+                    mLoggedInputStream = new LoggedInputStream(entity.getContent());
+                    return XMLRPCClient.parseXMLRPCResponse(mLoggedInputStream, entity);
                 }
 
                 String statusLineReasonPhrase = StringUtils.notNullStr(response.getStatusLine().getReasonPhrase());
@@ -512,8 +524,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 }
                 throw new XMLRPCException( "HTTP status code: " + statusCode + " was returned. " + statusLineReasonPhrase);
             } catch (XMLRPCFault e) {
-                if (loggedInputStream!=null) {
-                    AppLog.w(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                if (mLoggedInputStream!=null) {
+                    AppLog.w(T.API, "Response document received from the server: " + mLoggedInputStream.getResponseDocument());
                 }
                 // Detect login issues and broadcast a message if the error is known
                 switch (e.getFaultCode()) {
@@ -530,8 +542,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 throw e;
             } catch (XmlPullParserException e) {
                 AppLog.e(T.API, "Error while parsing the XML-RPC response document received from the server.", e);
-                if (loggedInputStream!=null) {
-                    AppLog.e(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                if (mLoggedInputStream!=null) {
+                    AppLog.e(T.API, "Response document received from the server: " + mLoggedInputStream.getResponseDocument());
                 }
                 checkXMLRPCErrorMessage(e);
                 throw e;
@@ -539,13 +551,13 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 //we can catch NumberFormatException here and re-throw an XMLRPCException.
                 //The response document is not a valid XML-RPC document after all.
                 AppLog.e(T.API, "Error while parsing the XML-RPC response document received from the server.", e);
-                if (loggedInputStream!=null) {
-                    AppLog.e(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                if (mLoggedInputStream!=null) {
+                    AppLog.e(T.API, "Response document received from the server: " + mLoggedInputStream.getResponseDocument());
                 }
                 throw new XMLRPCException("The response received contains an invalid number. " + e.getMessage());
             } catch (XMLRPCException e) {
-                if (loggedInputStream!=null) {
-                    AppLog.e(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                if (mLoggedInputStream!=null) {
+                    AppLog.e(T.API, "Response document received from the server: " + mLoggedInputStream.getResponseDocument());
                 }
                 checkXMLRPCErrorMessage(e);
                 throw e;
@@ -565,11 +577,13 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                     broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
                 }
                 throw e;
+            } catch (IOException e) {
+                throw e;
             } finally {
                 deleteTempFile(method, tempFile);
                 try {
-                    if (loggedInputStream!=null) {
-                        loggedInputStream.close();
+                    if (mLoggedInputStream != null) {
+                        mLoggedInputStream.close();
                     }
                 } catch (Exception e) {
                 }
@@ -585,10 +599,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      */
     private boolean checkXMLRPCErrorMessage(Exception exception) {
         String errorMessage = exception.getMessage().toLowerCase();
-        if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503"))//TODO Not sure 503 is the correct error code returned by wpcom
-                &&
-            (errorMessage.contains("limit reached") || errorMessage.contains("login limit")))
-        {
+        if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503")) &&
+            (errorMessage.contains("limit reached") || errorMessage.contains("login limit"))) {
             broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
             return true;
         }
@@ -605,7 +617,32 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 tempFile.delete();
             }
         }
+    }
 
+    private void addWPComAuthorizationHeaderIfNeeded() {
+        Context ctx = WordPress.getContext();
+        if (ctx == null) return;
+
+        if (isDotComXMLRPCEndpoint(mPostMethod.getURI())) {
+            String token = WordPress.getWPComAuthToken(ctx);
+            if (!TextUtils.isEmpty(token)) {
+                setAuthorizationHeader(token);
+            }
+        }
+    }
+
+    // Return true if wpcom XML-RPC Endpoint is called on a secure connection (https).
+    public boolean isDotComXMLRPCEndpoint(URI clientUri) {
+        if (clientUri == null) return false;
+
+        String path = clientUri.getPath();
+        String host = clientUri.getHost();
+        String protocol = clientUri.getScheme();
+        if (path == null || host == null || protocol == null) {
+            return false;
+        }
+
+        return path.equals("/xmlrpc.php") && host.endsWith("wordpress.com") && protocol.equals("https");
     }
 
     private class CancelException extends RuntimeException {

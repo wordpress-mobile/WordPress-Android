@@ -207,7 +207,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         // Register super properties
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(SESSION_COUNT, 0);
-        boolean connected = WordPress.hasValidWPComCredentials(WordPress.getContext());
+        boolean connected = WordPress.hasDotComToken(WordPress.getContext());
         boolean jetpackUser = WordPress.wpDB.hasAnyJetpackBlogs();
         int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
         try {
@@ -360,6 +360,18 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         mixpanelInstructionsForEventName("Reader - Blocked Blog");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_blocked_a_blog");
                 instructions.setCurrentDateForPeopleProperty("last_time_blocked_a_blog");
+                break;
+            case READER_BLOG_PREVIEW:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Blog Preview");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_viewed_blog_preview");
+                instructions.setCurrentDateForPeopleProperty("last_time_viewed_blog_preview");
+                break;
+            case READER_TAG_PREVIEW:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Tag Preview");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_viewed_tag_preview");
+                instructions.setCurrentDateForPeopleProperty("last_time_viewed_tag_preview");
                 break;
             case EDITOR_CREATED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -593,6 +605,18 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_stats");
                 instructions.setCurrentDateForPeopleProperty("last_time_accessed_stats");
                 break;
+            case STATS_VIEW_ALL_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - View All Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_view_all_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_view_all_screen_stats");
+                break;
+            case STATS_SINGLE_POST_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Single Post Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_single_post_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_single_post_screen_stats");
+                break;
             case STATS_OPENED_WEB_VERSION:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Stats - Opened Web Version");
@@ -614,10 +638,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case STATS_SELECTED_INSTALL_JETPACK:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Selected Install Jetpack");
-                break;
-            case MEMORY_TRIMMED_COMPLETE:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Memory Trimmed Complete");
                 break;
             case PUSH_NOTIFICATION_RECEIVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

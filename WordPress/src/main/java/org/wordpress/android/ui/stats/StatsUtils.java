@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,14 +13,19 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.AuthorsModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
+import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
+import org.wordpress.android.ui.stats.models.SearchTermsModel;
 import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
@@ -34,13 +42,12 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class StatsUtils {
-
     @SuppressLint("SimpleDateFormat")
     public static long toMs(String date, String pattern) {
         if (date == null) {
             return -1;
         }
-        
+
         if (pattern == null) {
             AppLog.w(T.UTILS, "Trying to parse with a null pattern");
             return -1;
@@ -59,7 +66,7 @@ public class StatsUtils {
      * Converts date in the form of 2013-07-18 to ms *
      */
     public static long toMs(String date) {
-        return toMs(date, "yyyy-MM-dd");
+        return toMs(date, StatsConstants.STATS_INPUT_DATE_FORMAT);
     }
 
     public static String msToString(long ms, String format) {
@@ -71,14 +78,13 @@ public class StatsUtils {
      * Get the current date of the blog in the form of yyyy-MM-dd (EX: 2013-07-18) *
      */
     public static String getCurrentDateTZ(int localTableBlogID) {
-        String pattern = "yyyy-MM-dd";
         String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
         if (timezone == null) {
             AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
             return getCurrentDate();
         }
 
-        return getCurrentDateTimeTZ(timezone, pattern);
+        return getCurrentDateTimeTZ(timezone, StatsConstants.STATS_INPUT_DATE_FORMAT);
     }
 
     /**
@@ -111,8 +117,7 @@ public class StatsUtils {
      * Get the current date in the form of yyyy-MM-dd (EX: 2013-07-18) *
      */
     private static String getCurrentDate() {
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
         return sdf.format(new Date());
     }
 
@@ -209,7 +214,7 @@ public class StatsUtils {
      */
     public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
         long diffInMillies = date2.getTime() - date1.getTime();
-        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 
     public static int getSmallestWidthDP() {
@@ -224,49 +229,25 @@ public class StatsUtils {
      * 3. Check that credentials are not empty before launching the activity
      *
      */
-    public static StatsCredentials getBlogStatsCredentials(int localTableBlogID) {
+    public static String getBlogStatsUsername(int localTableBlogID) {
         Blog currentBlog = WordPress.getBlog(localTableBlogID);
         if (currentBlog == null) {
             return null;
         }
         String statsAuthenticatedUser = currentBlog.getDotcom_username();
-        String statsAuthenticatedPassword = currentBlog.getDotcom_password();
 
-        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
-                || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
+        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
             // Let's try the global wpcom credentials
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
             statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-            statsAuthenticatedPassword = WordPressDB.decryptPassword(
-                    settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
-            );
         }
 
-        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
-                || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
+        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
             AppLog.e(AppLog.T.STATS, "WPCOM Credentials for the current blog are null!");
             return null;
         }
 
-        return new StatsCredentials(statsAuthenticatedUser, statsAuthenticatedPassword);
-    }
-
-    public static class StatsCredentials {
-        private final String mUsername;
-        private final String mPassword;
-
-        public StatsCredentials(String username, String password) {
-            this.mUsername = username;
-            this.mPassword = password;
-        }
-
-        public String getUsername() {
-            return mUsername;
-        }
-
-        public String getPassword() {
-            return mPassword;
-        }
+        return statsAuthenticatedUser;
     }
 
     /**
@@ -333,8 +314,59 @@ public class StatsUtils {
             case PUBLICIZE:
                 model = new PublicizeModel(blogID, response);
                 break;
+            case SEARCH_TERMS:
+                model = new SearchTermsModel(blogID, response);
+                break;
         }
         return model;
     }
 
+    public static void openPostInReaderOrInAppWebview(Context ctx, final PostModel post) {
+        final String postType = post.getPostType();
+        final String url = post.getUrl();
+        final long blogID = Long.parseLong(post.getBlogID());
+        final long itemID = Long.parseLong(post.getItemID());
+        if (postType.equals("post") || postType.equals("page")) {
+            // If the post/page has ID == 0 is the home page, and we need to load the blog preview,
+            // otherwise 404 is returned if we try to show the post in the reader
+            if (itemID == 0) {
+                ReaderActivityLauncher.showReaderBlogPreview(
+                        ctx,
+                        blogID
+                );
+            } else {
+                ReaderActivityLauncher.showReaderPostDetail(
+                        ctx,
+                        blogID,
+                        itemID
+                );
+            }
+        } else if (postType.equals("homepage")) {
+            ReaderActivityLauncher.showReaderBlogPreview(
+                    ctx,
+                    blogID
+            );
+        } else {
+            AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
+            WPWebViewActivity.openURL(ctx, url);
+        }
+    }
+
+    /*
+     * This function rewrites a VolleyError into a simple Stats Error by getting the error message.
+     * This is a FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228 where
+     * VolleyErrors cannot be serializable.
+     */
+    public static StatsError rewriteVolleyError(VolleyError volleyError, String defaultErrorString) {
+        if (volleyError != null && volleyError.getMessage() != null) {
+            return new StatsError(volleyError.getMessage());
+        }
+
+        if (defaultErrorString != null) {
+            return new StatsError(defaultErrorString);
+        }
+
+        // Error string should be localized here, but don't want to pass a context
+        return new StatsError("Stats couldn't be refreshed at this time");
+    }
 }

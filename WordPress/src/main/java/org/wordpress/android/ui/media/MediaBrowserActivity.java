@@ -71,7 +71,6 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
         super.onCreate(savedInstanceState);
 
         createMenuDrawer(R.layout.media_browser_activity);
-        setSupportActionBar(getToolbar());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -273,8 +272,8 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
             mMediaGridFragment.refreshSpinnerAdapter();
 
             if (!mMediaGridFragment.hasRetrievedAllMediaFromServer()) {
-                mMediaGridFragment.refreshMediaFromServer(0, false);
                 mMediaGridFragment.setRefreshing(true);
+                mMediaGridFragment.refreshMediaFromServer(0, false);
             }
         }
 
@@ -319,14 +318,7 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        if (itemId == android.R.id.home) {
-            FragmentManager fm = getFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                fm.popBackStack();
-                setupBaseLayout();
-                return true;
-            }
-        } else if (itemId == R.id.menu_new_media) {
+        if (itemId == R.id.menu_new_media) {
             View view = findViewById(R.id.menu_new_media);
             if (view != null) {
                 int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);

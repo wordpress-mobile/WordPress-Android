@@ -60,7 +60,7 @@ public class ReaderBlogList extends ArrayList<ReaderBlog> {
 
         for (ReaderBlog blogInfo: blogs) {
             int index;
-            if (blogInfo.isExternal()) {
+            if (blogInfo.feedId != 0) {
                 index = indexOfFeedId(blogInfo.feedId);
             } else {
                 index = indexOfBlogId(blogInfo.blogId);
