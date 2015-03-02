@@ -9,9 +9,9 @@
         android:id="@+id/header_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@drawable/notifications_header_selector"
         android:clickable="true"
+        android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingLeft="@dimen/margin_extra_large"
         android:paddingRight="@dimen/margin_extra_large"
@@ -34,9 +34,8 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:textSize="@dimen/text_sz_large"
-            android:textStyle="bold"
             android:textColor="@color/calypso_blue_dark"
+            android:textSize="@dimen/text_sz_large"
             tools:text="Bob Ross" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -51,7 +50,6 @@
             android:singleLine="true"
             android:textColor="@color/blue_new_kid"
             android:textSize="@dimen/text_sz_large"
-            android:textStyle="italic"
             tools:text="www.bobross.com" />
 
     </RelativeLayout>
