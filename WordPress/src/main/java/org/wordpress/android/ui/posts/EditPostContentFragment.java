@@ -280,6 +280,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     public void onResume() {
         super.onResume();
 
+        refreshBlogMedia();
+
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.registerReceiver(mMediaUploadReceiver, new IntentFilter(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION));
     }
@@ -1824,41 +1826,44 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         return videoMediaSources;
     }
 
-    /**
-     * Starts {@link org.wordpress.android.ui.media.MediaPickerActivity} for a result.
-     */
-    private void startMediaSelection() {
+    private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             List<Object> apiArgs = new ArrayList<Object>();
             apiArgs.add(WordPress.getCurrentBlog());
             ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
                 @Override
                 public void onSuccess(int count) {
-                    Intent intent = new Intent(mActivity, MediaPickerActivity.class);
-                    intent.putExtra(MediaPickerActivity.ACTIVITY_TITLE_KEY, getString(R.string.add_to_post));
-                    intent.putParcelableArrayListExtra(MediaPickerActivity.IMAGE_MEDIA_SOURCES_KEY, imageMediaSelectionSources(true));
-                    intent.putParcelableArrayListExtra(MediaPickerActivity.VIDEO_MEDIA_SOURCES_KEY, videoMediaSelectionSources(true));
-
-                    startActivityForResult(intent, MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
-                    mActivity.overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
+                    mBlogMediaAvailable = true;
                 }
 
                 @Override
                 public void onFailure(final ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                    ToastUtils.showToast(getActivity(), "Could not load blog media", ToastUtils.Duration.SHORT);
-
-                    Intent intent = new Intent(mActivity, MediaPickerActivity.class);
-                    intent.putExtra(MediaPickerActivity.ACTIVITY_TITLE_KEY, getString(R.string.add_to_post));
-                    intent.putParcelableArrayListExtra(MediaPickerActivity.IMAGE_MEDIA_SOURCES_KEY, imageMediaSelectionSources(false));
-                    intent.putParcelableArrayListExtra(MediaPickerActivity.VIDEO_MEDIA_SOURCES_KEY, videoMediaSelectionSources(false));
-
-                    startActivityForResult(intent, MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
-                    mActivity.overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
+                    mBlogMediaAvailable = false;
                 }
             };
             ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(0, MediaGridFragment.Filter.ALL, callback);
             getMediaTask.execute(apiArgs);
+        } else {
+            mBlogMediaAvailable = false;
         }
+    }
+
+    /**
+     * Starts {@link org.wordpress.android.ui.media.MediaPickerActivity} after refreshing the blog media.
+     */
+    private void startMediaSelection() {
+        // Alert the user that blog media will not be available
+        if (!mBlogMediaAvailable) {
+            ToastUtils.showToast(getActivity(), R.string.error_refresh_media, ToastUtils.Duration.SHORT);
+        }
+
+        Intent intent = new Intent(mActivity, MediaPickerActivity.class);
+        intent.putExtra(MediaPickerActivity.ACTIVITY_TITLE_KEY, getString(R.string.add_to_post));
+        intent.putParcelableArrayListExtra(MediaPickerActivity.IMAGE_MEDIA_SOURCES_KEY, imageMediaSelectionSources(mBlogMediaAvailable));
+        intent.putParcelableArrayListExtra(MediaPickerActivity.VIDEO_MEDIA_SOURCES_KEY, videoMediaSelectionSources(mBlogMediaAvailable));
+
+        startActivityForResult(intent, MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
+        mActivity.overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
     }
 
     /**
