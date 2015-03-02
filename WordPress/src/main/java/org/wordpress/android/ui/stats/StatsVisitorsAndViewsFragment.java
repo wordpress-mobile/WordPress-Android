@@ -58,6 +58,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private TextView mDateTextView;
     private String[] mStatsDate;
 
+    private LinearLayout mLegendContainer;
     private CheckedTextView mLegendLabel;
     private LinearLayout mVisitorsCheckboxContainer;
     private CheckBox mVisitorsCheckbox;
@@ -96,6 +97,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
         mModuleButtonsContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
 
+        mLegendContainer = (LinearLayout) view.findViewById(R.id.stats_legend_container);
         mLegendLabel = (CheckedTextView) view.findViewById(R.id.stats_legend_label);
         mLegendLabel.setCheckMarkDrawable(null); // Make sure to set a null drawable here. Otherwise the touching area is the same of a TextView
         mVisitorsCheckboxContainer = (LinearLayout) view.findViewById(R.id.stats_checkbox_visitors_container);
@@ -330,6 +332,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         OverviewLabel selectedStatsType = overviewItems[mSelectedOverviewItemIndex];
 
         // Update the Legend and enable/disable the visitors checkboxes
+        mLegendContainer.setVisibility(View.VISIBLE);
         mLegendLabel.setText(StringUtils.capitalize(selectedStatsType.getLabel().toLowerCase()));
         switch(selectedStatsType) {
             case VIEWS:
@@ -597,8 +600,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (!isAdded()) {
             return;
         }
+
+        // Hide the legend
+        mLegendContainer.setVisibility(View.GONE);
         mVisitorsCheckboxContainer.setVisibility(View.GONE);
         mIsCheckboxChecked = false;
+
         mSelectedBarGraphBarIndex = -1;
         Context context = mGraphContainer.getContext();
         if (context != null) {

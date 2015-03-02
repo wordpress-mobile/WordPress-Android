@@ -66,11 +66,13 @@
 
         <!-- Bottom Legend -->
         <LinearLayout
+            android:id="@+id/stats_legend_container"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:layout_marginBottom="@dimen/margin_medium">
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:visibility="gone">
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="0dp"
