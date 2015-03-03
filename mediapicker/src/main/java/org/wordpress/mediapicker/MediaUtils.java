@@ -53,7 +53,7 @@ public class MediaUtils {
         public static final int TYPE_IMAGE = 0;
         public static final int TYPE_VIDEO = 1;
 
-        private static final int MAX_ACTIVE_FETCHES_DEFAULT = 20;
+        private static final int MAX_ACTIVE_FETCHES_DEFAULT = 24;
         private static final List<BackgroundFetchThumbnail> sActiveFetches = new ArrayList<>();
 
         private WeakReference<ImageView> mReference;
