@@ -75,6 +75,7 @@
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
+    <string name="language">Language</string>
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
@@ -880,5 +881,39 @@
     <string name="hs__conversation_header">Support chat</string>
     <string name="hs__username_blank_error">Enter a valid name</string>
     <string name="hs__invalid_email_error">Enter a valid email address</string>
-    <string name="language">Language</string>
+
+    <!-- Available languages -->
+    <string-array name="available_languages">
+        <item></item>
+        <item>az</item>
+        <item>de</item>
+        <item>el</item>
+        <item>en-rGB</item>
+        <item>es</item>
+        <item>eu</item>
+        <item>fr</item>
+        <item>gd</item>
+        <item>he</item>
+        <item>hi</item>
+        <item>hu</item>
+        <item>id</item>
+        <item>it</item>
+        <item>iw</item>
+        <item>ja</item>
+        <item>ko</item>
+        <item>nb</item>
+        <item>nl</item>
+        <item>pl</item>
+        <item>pt-rBR</item>
+        <item>ru</item>
+        <item>sv</item>
+        <item>th</item>
+        <item>tr</item>
+        <item>uz</item>
+        <item>zh</item>
+        <item>zh-rCN</item>
+        <item>zh-rHK</item>
+        <item>zh-rTW</item>
+    </string-array>
+
 </resources>
