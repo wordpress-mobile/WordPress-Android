@@ -63,6 +63,8 @@ public class SettingsFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Resources resources = getResources();
+
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_SETTINGS);
         }
@@ -79,19 +81,18 @@ public class SettingsFragment extends PreferenceFragment {
             }
         };
 
-        mTaglineTextPreference = (WPEditTextPreference) findPreference("wp_pref_post_signature");
+        mTaglineTextPreference = (WPEditTextPreference) findPreference(resources.getString(R.string.pref_key_post_sig));
         if (mTaglineTextPreference != null) {
             mTaglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
         }
-        findPreference("wp_pref_manage_notifications").setOnPreferenceClickListener(
-                notificationPreferenceClickListener);
-        findPreference("wp_pref_language").setOnPreferenceClickListener(languagePreferenceClickListener);
-        findPreference("wp_pref_app_about").setOnPreferenceClickListener(launchActivitiyClickListener);
-        findPreference("wp_pref_open_source_licenses").setOnPreferenceClickListener(launchActivitiyClickListener);
-        findPreference("wp_pref_help_and_support").setOnPreferenceClickListener(launchActivitiyClickListener);
-        findPreference("wp_pref_passlock_enabled").setOnPreferenceChangeListener(passcodeCheckboxChangeListener);
-        findPreference("wp_pref_sign_out").setOnPreferenceClickListener(signOutPreferenceClickListener);
-        findPreference("wp_reset_share_pref").setOnPreferenceClickListener(resetAUtoSharePreferenceClickListener);
+        findPreference(resources.getString(R.string.pref_key_notifications)).setOnPreferenceClickListener(notificationPreferenceClickListener);
+        findPreference(resources.getString(R.string.pref_key_language)).setOnPreferenceClickListener(languagePreferenceClickListener);
+        findPreference(resources.getString(R.string.pref_key_app_about)).setOnPreferenceClickListener(launchActivitiyClickListener);
+        findPreference(resources.getString(R.string.pref_key_oss_licenses)).setOnPreferenceClickListener(launchActivitiyClickListener);
+        findPreference(resources.getString(R.string.pref_key_help_and_support)).setOnPreferenceClickListener(launchActivitiyClickListener);
+        findPreference(resources.getString(R.string.pref_key_passlock)).setOnPreferenceChangeListener(passcodeCheckboxChangeListener);
+        findPreference(resources.getString(R.string.pref_key_signout)).setOnPreferenceClickListener(signOutPreferenceClickListener);
+        findPreference(resources.getString(R.string.pref_key_reset_shared_pref)).setOnPreferenceClickListener(resetAUtoSharePreferenceClickListener);
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -100,7 +101,7 @@ public class SettingsFragment extends PreferenceFragment {
         // Passcode Lock not supported
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
             final CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(
-                    "wp_pref_passlock_enabled");
+                    resources.getString(R.string.pref_key_passlock));
             // disable on-click changes on the property
             passcodeEnabledCheckBoxPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
@@ -111,8 +112,8 @@ public class SettingsFragment extends PreferenceFragment {
                 }
             });
         } else {
-            PreferenceScreen rootScreen = (PreferenceScreen) findPreference("wp_pref_root");
-            PreferenceGroup passcodeGroup = (PreferenceGroup) findPreference("wp_passcode_lock_category");
+            PreferenceScreen rootScreen = (PreferenceScreen) findPreference(resources.getString(R.string.pref_key_settings_root));
+            PreferenceGroup passcodeGroup = (PreferenceGroup) findPreference(resources.getString(R.string.pref_key_passlock_section));
             rootScreen.removePreference(passcodeGroup);
         }
         displayPreferences();
@@ -153,15 +154,15 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void hidePostSignatureCategory() {
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("wp_pref_root");
-        PreferenceCategory postSignature = (PreferenceCategory) findPreference("wp_post_signature");
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
+        PreferenceCategory postSignature = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_post_sig_section));
         if (preferenceScreen != null && postSignature != null) {
             preferenceScreen.removePreference(postSignature);
         }
     }
 
     private void hideNotificationBlogsCategory() {
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("wp_pref_notifications");
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
         PreferenceCategory blogs = (PreferenceCategory) findPreference("wp_pref_notification_blogs");
         if (preferenceScreen != null && blogs != null) {
             preferenceScreen.removePreference(blogs);
@@ -179,8 +180,7 @@ public class SettingsFragment extends PreferenceFragment {
 
         //update Passcode lock row if available
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
-            CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(
-                    "wp_pref_passlock_enabled");
+            CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(getResources().getString(R.string.pref_key_passlock));
             if (AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked()) {
                 passcodeEnabledCheckBoxPreference.setChecked(true);
             } else {
@@ -198,7 +198,7 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     public void refreshWPComAuthCategory() {
-        PreferenceCategory wpComCategory = (PreferenceCategory) findPreference("wp_pref_wpcom");
+        PreferenceCategory wpComCategory = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_wpcom));
         wpComCategory.removeAll();
         addWpComSignIn(wpComCategory, 0);
         addWpComShowHideButton(wpComCategory, 5);
@@ -211,7 +211,7 @@ public class SettingsFragment extends PreferenceFragment {
      * blog-specific settings.
      */
     void updateSelfHostedBlogsPreferenceCategory() {
-        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_self_hosted_blogs");
+        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_self_hosted));
         blogsCategory.removeAll();
         int order = 0;
 
@@ -266,8 +266,8 @@ public class SettingsFragment extends PreferenceFragment {
             signInPref.setOnPreferenceClickListener(signInPreferenceClickListener);
             wpComCategory.addPreference(signInPref);
 
-            PreferenceScreen rootScreen = (PreferenceScreen) findPreference("wp_pref_root");
-            PreferenceGroup notificationsGroup = (PreferenceGroup) findPreference("wp_pref_notifications_category");
+            PreferenceScreen rootScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
+            PreferenceGroup notificationsGroup = (PreferenceGroup) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
             if (notificationsGroup != null) {
                 rootScreen.removePreference(notificationsGroup);
             }
@@ -422,11 +422,11 @@ public class SettingsFragment extends PreferenceFragment {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             Class activityToStart = HelpActivity.class;
-            if ("wp_pref_app_about".equals(preference.getKey())) {
+            if (getActivity().getString(R.string.pref_key_app_about).equals(preference.getKey())) {
                 activityToStart = AboutActivity.class;
-            } else if ("wp_pref_open_source_licenses".equals(preference.getKey())) {
+            } else if (getActivity().getString(R.string.pref_key_oss_licenses).equals(preference.getKey())) {
                 activityToStart = LicensesActivity.class;
-            } else if ("wp_pref_help_and_support".equals(preference.getKey())) {
+            } else if (getActivity().getString(R.string.pref_key_help_and_support).equals(preference.getKey())) {
                 activityToStart = HelpActivity.class;
             }
             startActivity(new Intent(getActivity(), activityToStart));
