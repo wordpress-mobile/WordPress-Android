@@ -380,11 +380,13 @@ public class SettingsFragment extends PreferenceFragment {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
             dialogBuilder.setTitle(getString(R.string.language));
 
-            final Locale[] availableLocales = Locale.getAvailableLocales();
+            final String[] availableLocales = getResources().getStringArray(R.array.available_languages);
             final String[] values = new String[availableLocales.length];
 
-            for(int i = 0; i < availableLocales.length; ++i) {
-                values[i] = availableLocales[i].getDisplayName();
+            values[0] = "Device" + " (" + Locale.getDefault().getDisplayLanguage() + ")";
+            for (int i = 1; i < availableLocales.length; ++i) {
+                Locale locale = new Locale(availableLocales[i]);
+                values[i] = locale.getDisplayLanguage() + " (" + availableLocales[i] + ")";
             }
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, values);
@@ -396,7 +398,7 @@ public class SettingsFragment extends PreferenceFragment {
                     Resources res = getResources();
                     DisplayMetrics dm = res.getDisplayMetrics();
                     Configuration conf = res.getConfiguration();
-                    conf.locale = availableLocales[position];
+                    conf.locale = new Locale(availableLocales[position]);
                     res.updateConfiguration(conf, dm);
                     Intent refresh = new Intent(getActivity(), getActivity().getClass());
                     startActivity(refresh);
