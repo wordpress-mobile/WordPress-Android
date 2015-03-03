@@ -68,6 +68,8 @@
     <PreferenceCategory
         android:key="wp_pref_app_about_section"
         android:title="@string/about">
+        <Preference android:title="@string/language"
+                    android:key="wp_pref_language"/>
         <Preference android:title="@string/app_title"
                     android:key="wp_pref_app_about"/>
         <Preference android:title="@string/open_source_licenses"
