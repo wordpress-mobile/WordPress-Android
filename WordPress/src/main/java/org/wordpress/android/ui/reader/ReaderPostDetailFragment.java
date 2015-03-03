@@ -207,7 +207,7 @@ public class ReaderPostDetailFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.reader_native_detail, menu);
+        inflater.inflate(R.menu.reader_detail, menu);
     }
 
     @Override
@@ -680,6 +680,8 @@ public class ReaderPostDetailFragment extends Fragment
             if (mPost == null) {
                 return false;
             }
+
+            mReaderWebView.setIsPrivatePost(mPost.isPrivate);
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);

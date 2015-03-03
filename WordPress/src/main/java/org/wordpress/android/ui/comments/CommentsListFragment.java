@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +32,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
@@ -198,7 +198,7 @@ public class CommentsListFragment extends Fragment {
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
-                (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {

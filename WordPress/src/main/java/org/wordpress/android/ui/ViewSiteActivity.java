@@ -79,14 +79,14 @@ public class ViewSiteActivity extends WPDrawerActivity {
         }
 
         // Login to the blog and load the specified URL.
-        try {
-            String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
-                    URLEncoder.encode(mBlog.getUsername(), "UTF-8"), URLEncoder.encode(mBlog.getPassword(), "UTF-8"),
-                    URLEncoder.encode(siteURL, "UTF-8"));
-            mWebView.postUrl(WPWebViewActivity.getBlogLoginUrl(mBlog), postData.getBytes());
-        } catch (UnsupportedEncodingException e) {
-            AppLog.e(AppLog.T.UTILS, e);
-        }
+        String authenticationUrl = WPWebViewActivity.getBlogLoginUrl(mBlog);
+
+        String postData = WPWebViewActivity.getAuthenticationPostData(
+                authenticationUrl, siteURL, mBlog.getUsername(), mBlog.getPassword(),
+                WordPress.getDotComToken(this)
+        );
+
+        mWebView.postUrl(authenticationUrl, postData.getBytes());
     }
 
     @Override

@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,6 +45,7 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 
@@ -178,7 +178,7 @@ public class MediaGridFragment extends Fragment
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
-                (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {

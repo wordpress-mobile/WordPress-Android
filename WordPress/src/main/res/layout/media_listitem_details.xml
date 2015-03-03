@@ -62,6 +62,15 @@
             android:layout_marginTop="@dimen/margin_small" />
 
         <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/media_listitem_details_file_url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:autoLink="web"
+            android:textIsSelectable="true" />
+
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_dimensions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

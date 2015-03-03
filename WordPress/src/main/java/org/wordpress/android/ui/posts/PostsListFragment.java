@@ -7,7 +7,6 @@ import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +29,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.FloatingActionButton;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
@@ -86,7 +86,7 @@ public class PostsListFragment extends ListFragment
     private void initSwipeToRefreshHelper() {
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(
                 getActivity(),
-                (SwipeRefreshLayout) getView().findViewById(R.id.ptr_layout),
+                (CustomSwipeRefreshLayout) getView().findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {

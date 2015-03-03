@@ -3,46 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:id="@+id/sign_in_scroll_view"
+    android:animateLayoutChanges="true"
     android:fillViewport="true"
-    android:animateLayoutChanges="true">
+    android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
         android:animateLayoutChanges="true"
+        android:baselineAligned="false"
         android:gravity="center"
-        android:baselineAligned="false">
+        android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
-            app:maxWidth="@dimen/nux_width"
-            android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:layout_gravity="center_horizontal|bottom"
             android:baselineAligned="true"
-            android:layout_gravity="center_horizontal|bottom">
+            android:gravity="right"
+            android:orientation="horizontal"
+            app:maxWidth="@dimen/nux_width">
 
             <ImageView
+                android:id="@+id/info_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/info_button"
-                android:src="@drawable/dashicon_info"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:contentDescription="@string/help"
-                android:tint="@color/blue_dark"/>
+                android:src="@drawable/dashicon_info"
+                android:tint="@color/blue_dark" />
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
-            app:maxWidth="@dimen/nux_width"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical"
             android:layout_weight="1"
             android:animateLayoutChanges="true"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical"
+            app:maxWidth="@dimen/nux_width">
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -53,208 +54,272 @@
                     android:id="@+id/nux_fragment_icon"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/nux_icon_wp"
-                    android:layout_centerInParent="true"/>
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/nux_icon_wp" />
 
                 <ImageView
+                    android:id="@+id/info_button_secondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/info_button_secondary"
-                    android:src="@drawable/dashicon_info"
-                    android:layout_marginRight="16dp"
-                    android:contentDescription="@string/help"
-                    android:tint="@color/blue_dark"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="false"
-                    android:layout_alignTop="@+id/nux_fragment_icon"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white">
-
-                <org.wordpress.android.widgets.OpenSansEditText
-                    android:id="@+id/nux_username"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/WordPress.NUXEditText"
-                    android:hint="@string/username_email"
-                    android:inputType="textEmailAddress"
-                    app:persistenceEnabled="true"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/imageView"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_alignParentEnd="false"
-                    android:layout_alignParentStart="false"
-                    android:src="@drawable/dashicon_admin_users"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:tint="@color/grey_medium"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white">
-
-                <org.wordpress.android.widgets.OpenSansEditText
-                    android:id="@+id/nux_password"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    style="@style/WordPress.NUXEditText"
-                    android:hint="@string/password"
-                    android:layout_marginRight="38dp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/imageView4"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_alignParentEnd="false"
-                    android:layout_alignParentStart="false"
-                    android:src="@drawable/dashicon_lock"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:tint="@color/grey_medium"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/password_visibility"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_alignParentEnd="false"
-                    android:layout_alignParentStart="false"
-                    android:src="@drawable/dashicon_eye_closed"
-                    android:layout_centerVertical="true"
+                    android:layout_alignTop="@+id/nux_fragment_icon"
                     android:layout_marginRight="16dp"
-                    android:layout_alignParentRight="true"
-                    android:tint="@color/nux_eye_icon_color_closed"/>
+                    android:contentDescription="@string/help"
+                    android:src="@drawable/dashicon_info"
+                    android:tint="@color/blue_dark" />
             </RelativeLayout>
 
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/nux_jetpack_auth_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:paddingLeft="@dimen/margin_extra_large"
+                android:paddingRight="@dimen/margin_extra_large"
+                android:paddingBottom="@dimen/margin_extra_large"
+                android:gravity="center_horizontal"
+                android:text="@string/sign_in_jetpack"
+                android:visibility="gone" />
 
             <RelativeLayout
+                android:id="@+id/nux_username_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:clickable="true">
+
+                <org.wordpress.android.widgets.OpenSansEditText
+                    android:id="@+id/nux_username"
+                    style="@style/WordPress.NUXEditText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/username_email"
+                    android:inputType="textEmailAddress"
+                    app:persistenceEnabled="true" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/dashicon_admin_users"
+                    android:tint="@color/grey_medium" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/nux_password_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:clickable="true">
+
+                <org.wordpress.android.widgets.OpenSansEditText
+                    android:id="@+id/nux_password"
+                    style="@style/WordPress.NUXEditText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="38dp"
+                    android:hint="@string/password"
+                    android:inputType="textPassword" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/dashicon_lock"
+                    android:tint="@color/grey_medium" />
+
+                <ImageView
+                    android:id="@+id/password_visibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentStart="false"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/dashicon_eye_closed"
+                    android:tint="@color/nux_eye_icon_color_closed" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/two_factor_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:visibility="gone">
+
+                <org.wordpress.android.widgets.OpenSansEditText
+                    android:id="@+id/nux_two_step"
+                    style="@style/WordPress.NUXEditText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginStart="0dp"
+                    android:gravity="center_horizontal"
+                    android:hint="@string/verification_code"
+                    android:inputType="number"
+                    android:maxLength="7" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/url_button_layout"
-                android:visibility="gone"
-                android:animateLayoutChanges="true">
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:background="@color/white"
+                android:visibility="gone">
 
                 <org.wordpress.android.widgets.OpenSansEditText
                     android:id="@+id/nux_url"
+                    style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    style="@style/WordPress.NUXEditText"
-                    android:inputType="textUri"
                     android:hint="@string/site_address"
-                    app:persistenceEnabled="true"/>
+                    android:inputType="textUri"
+                    app:persistenceEnabled="true" />
 
                 <ImageView
+                    android:id="@+id/imageView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageView2"
-                    android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/dashicon_admin_site"
                     android:layout_centerVertical="true"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
-                    android:tint="@color/grey_medium"/>
+                    android:src="@drawable/dashicon_admin_site"
+                    android:tint="@color/grey_medium" />
             </RelativeLayout>
-
-
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/nux_button_height"
-                android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp">
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp">
 
                 <org.wordpress.android.widgets.WPTextView
-                    style="@style/WordPress.NUXPrimaryButton"
                     android:id="@+id/nux_sign_in_button"
+                    style="@style/WordPress.NUXPrimaryButton"
                     android:layout_width="match_parent"
-                    android:text="@string/sign_in"
                     android:clickable="true"
+                    android:enabled="false"
                     android:gravity="center"
-                    android:enabled="false"/>
+                    android:text="@string/sign_in" />
 
                 <RelativeLayout
                     android:id="@+id/nux_sign_in_progress_bar"
                     style="@style/WordPress.NUXPrimaryButton"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:enabled="false">
+                    android:enabled="false"
+                    android:visibility="gone">
 
                     <ProgressBar
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true" />
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true" />
                 </RelativeLayout>
             </RelativeLayout>
 
+            <LinearLayout
+                android:id="@+id/two_step_footer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/two_step_footer_label"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_extra_large"
+                    android:layout_marginRight="@dimen/margin_extra_large"
+                    android:gravity="center_horizontal"
+                    android:text="@string/two_step_footer_label"
+                    android:textColor="@color/white"
+                    app:fixWidowWords="true" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/two_step_footer_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_extra_large"
+                    android:layout_marginRight="@dimen/margin_extra_large"
+                    android:background="@drawable/selectable_background_wordpress"
+                    android:text="@string/two_step_footer_button"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/forgot_password"
+                style="@style/WordPress.NUXGreyButtonNoBg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/forgot_password"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                style="@style/WordPress.NUXGreyButtonNoBg"/>
+                android:text="@string/forgot_password" />
 
             <org.wordpress.android.widgets.WPTextView
-                style="@style/WordPress.NUXWhiteButtonNoBg"
                 android:id="@+id/nux_sign_in_progress_text"
+                style="@style/WordPress.NUXWhiteButtonNoBg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:gravity="center|top"
                 android:textColor="@color/blue_extra_light"
-                android:gravity="center|top"/>
+                android:visibility="gone" />
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
-            app:maxWidth="@dimen/nux_width"
             android:id="@+id/nux_bottom_buttons"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:layout_marginBottom="10dp"
-            android:orientation="vertical">
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            app:maxWidth="@dimen/nux_width">
 
             <org.wordpress.android.widgets.WPTextView
-                style="@style/WordPress.NUXWhiteButtonNoBg"
                 android:id="@+id/nux_add_selfhosted_button"
+                style="@style/WordPress.NUXWhiteButtonNoBg"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:text="@string/nux_add_selfhosted_blog"
-                android:gravity="center|top"
                 android:layout_gravity="center"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"/>
+                android:layout_marginRight="16dp"
+                android:gravity="center|top"
+                android:text="@string/nux_add_selfhosted_blog" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
             <org.wordpress.android.widgets.WPTextView
-                style="@style/WordPress.NUXWhiteButtonNoBg"
                 android:id="@+id/nux_create_account_button"
+                style="@style/WordPress.NUXWhiteButtonNoBg"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:text="@string/nux_welcome_create_account"
-                android:gravity="center|top"
                 android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginLeft="16dp"/>
+                android:gravity="center|top"
+                android:text="@string/nux_welcome_create_account" />
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
     </LinearLayout>
 </ScrollView>

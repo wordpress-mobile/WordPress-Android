@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -28,6 +27,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.ListScrollPositionManager;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class ManageBlogsActivity extends ActionBarActivity {
         }
 
         // swipe to refresh setup
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (SwipeRefreshLayout) findViewById(R.id.ptr_layout),
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {

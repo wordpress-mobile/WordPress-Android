@@ -22,6 +22,7 @@ public class RestClient {
     private String mAccessToken;
     private String mUserAgent;
     private String mRestApiEndpointURL;
+    private RestRequest.OnAuthFailedListener mOnAuthFailedListener;
 
     public RestClient(RequestQueue queue) {
         this(queue, REST_CLIENT_VERSIONS.V1);
@@ -55,6 +56,9 @@ public class RestClient {
     public RestRequest makeRequest(int method, String url, Map<String, String> params, Listener<JSONObject> listener,
                                    ErrorListener errorListener) {
         RestRequest request = new RestRequest(method, url, params, listener, errorListener);
+        if (mOnAuthFailedListener != null) {
+            request.setOnAuthFailedListener(mOnAuthFailedListener);
+        }
         request.setUserAgent(mUserAgent);
         request.setAccessToken(mAccessToken);
         return request;
@@ -64,6 +68,10 @@ public class RestClient {
         // Volley send the request
         mQueue.add(request);
         return request;
+    }
+
+    public void setOnAuthFailedListener(RestRequest.OnAuthFailedListener onAuthFailedListener) {
+        mOnAuthFailedListener = onAuthFailedListener;
     }
 
     public String getAbsoluteURL(String url) {

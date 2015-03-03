@@ -1,24 +1,18 @@
 package org.wordpress.android.ui.reader.actions;
 
-import android.os.Handler;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
-import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
-import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUser;
-import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -29,101 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ReaderCommentActions {
-    /**
-     * get the latest comments for this post
-     **/
-    public static void updateCommentsForPost(final ReaderPost post,
-                                             final int pageNumber,
-                                             final ReaderActions.UpdateResultListener resultListener) {
-        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/replies/"
-                    + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
-                    + "&meta=likes"
-                    + "&hierarchical=true"
-                    + "&order=ASC"
-                    + "&page=" + pageNumber;
-
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleUpdateCommentsResponse(jsonObject, post.blogId, pageNumber, resultListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (resultListener != null) {
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-                }
-            }
-        };
-        AppLog.d(T.READER, "updating comments");
-        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
-    }
-    private static void handleUpdateCommentsResponse(final JSONObject jsonObject,
-                                                     final long blogId,
-                                                     final int pageNumber,
-                                                     final ReaderActions.UpdateResultListener resultListener) {
-        if (jsonObject == null) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-            }
-            return;
-        }
-
-        final Handler handler = new Handler();
-
-        new Thread() {
-            @Override
-            public void run() {
-                final boolean hasNewComments;
-
-                ReaderDatabase.getWritableDb().beginTransaction();
-                try {
-                    ReaderCommentList serverComments = new ReaderCommentList();
-                    JSONArray jsonCommentList = jsonObject.optJSONArray("comments");
-                    if (jsonCommentList != null) {
-                        for (int i = 0; i < jsonCommentList.length(); i++) {
-                            JSONObject jsonComment = jsonCommentList.optJSONObject(i);
-
-                            // extract this comment and add it to the list
-                            ReaderComment comment = ReaderComment.fromJson(jsonComment, blogId);
-                            comment.pageNumber = pageNumber;
-                            serverComments.add(comment);
-
-                            // extract and save likes for this comment
-                            JSONObject jsonLikes = JSONUtils.getJSONChild(jsonComment, "meta/data/likes");
-                            if (jsonLikes != null) {
-                                ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonLikes);
-                                ReaderUserTable.addOrUpdateUsers(likingUsers);
-                                ReaderLikeTable.setLikesForComment(comment, likingUsers.getUserIds());
-                            }
-                        }
-                    }
-
-                    hasNewComments = (serverComments.size() > 0);
-
-                    // save to db regardless of whether any are new so changes to likes are stored
-                    ReaderCommentTable.addOrUpdateComments(serverComments);
-                    ReaderDatabase.getWritableDb().setTransactionSuccessful();
-                } finally {
-                    ReaderDatabase.getWritableDb().endTransaction();
-                }
-
-                if (resultListener != null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            ReaderActions.UpdateResult result =
-                                    (hasNewComments ? ReaderActions.UpdateResult.HAS_NEW
-                                                    : ReaderActions.UpdateResult.UNCHANGED);
-                            resultListener.onUpdateResult(result);
-                        }
-                    });
-                }
-            }
-        }.start();
-    }
-
     /*
      * used by post detail to generate a temporary "fake" comment id (see below)
      */
@@ -183,7 +82,7 @@ public class ReaderCommentActions {
             path = "sites/" + post.blogId + "/comments/" + Long.toString(replyToCommentId) + "/replies/new";
         }
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("content", commentText);
 
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -212,7 +111,7 @@ public class ReaderCommentActions {
         };
 
         AppLog.i(T.READER, "submitting comment");
-        WordPress.getRestClientUtils().post(path, params, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
 
         return newComment;
     }
@@ -275,7 +174,7 @@ public class ReaderCommentActions {
             }
         };
 
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
         return true;
     }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
@@ -54,6 +55,7 @@ public class MediaItemFragment extends Fragment {
     private TextView mDateView;
     private TextView mFileNameView;
     private TextView mFileTypeView;
+    private TextView mFileUrlView;
     private TextView mDimensionsView;
     private MediaItemFragmentCallback mCallback;
     private ImageLoader mImageLoader;
@@ -122,6 +124,7 @@ public class MediaItemFragment extends Fragment {
         mDateView = (TextView) mView.findViewById(R.id.media_listitem_details_date);
         mFileNameView = (TextView) mView.findViewById(R.id.media_listitem_details_file_name);
         mFileTypeView = (TextView) mView.findViewById(R.id.media_listitem_details_file_type);
+        mFileUrlView = (TextView) mView.findViewById(R.id.media_listitem_details_file_url);
         mDimensionsView = (TextView) mView.findViewById(R.id.media_listitem_details_dimensions);
 
         loadMedia(getMediaId());
@@ -189,23 +192,29 @@ public class MediaItemFragment extends Fragment {
         // added / upload date
         String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
         if (mIsLocal) {
-            mDateView.setText("Added on: " + date);
+            mDateView.setText(getResources().getString(R.string.media_details_added_on) + " " + date);
         } else {
-            mDateView.setText("Uploaded on: " + date);
+            mDateView.setText(getResources().getString(R.string.media_details_uploaded_on) + " " + date);
         }
 
         // file name
         String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
-        mFileNameView.setText("File name: " + fileName);
+        mFileNameView.setText(getResources().getString(R.string.media_details_file_name) + " " + fileName);
 
         // get the file extension from the fileURL
         String fileURL = cursor.getString(cursor.getColumnIndex("fileURL"));
         if (fileURL != null) {
             String fileType = fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
-            mFileTypeView.setText("File type: " + fileType);
+            mFileTypeView.setText(getResources().getString(R.string.media_details_file_type) +
+                    " " +  fileType);
             mFileTypeView.setVisibility(View.VISIBLE);
+
+            // set the file URL
+            mFileUrlView.setText(getResources().getString(R.string.media_details_file_url) + " " + fileURL);
+            mFileUrlView.setVisibility(View.VISIBLE);
         } else {
             mFileTypeView.setVisibility(View.GONE);
+            mFileUrlView.setVisibility(View.GONE);
         }
 
         String imageUri = cursor.getString(cursor.getColumnIndex("fileURL"));
@@ -233,7 +242,8 @@ public class MediaItemFragment extends Fragment {
 
             if (width > 0 && height > 0) {
                 String dimensions = width + "x" + height;
-                mDimensionsView.setText("Dimensions: " + dimensions);
+                mDimensionsView.setText(getResources().getString(R.string.media_details_dimensions) +
+                        " " + dimensions);
                 mDimensionsView.setVisibility(View.VISIBLE);
             } else {
                 mDimensionsView.setVisibility(View.GONE);
@@ -333,7 +343,7 @@ public class MediaItemFragment extends Fragment {
             }
 
             Builder builder = new AlertDialog.Builder(getActivity()).setMessage(R.string.confirm_delete_media)
-                                                                    .setCancelable(true).setPositiveButton(
+                    .setCancelable(true).setPositiveButton(
                             R.string.delete, new OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

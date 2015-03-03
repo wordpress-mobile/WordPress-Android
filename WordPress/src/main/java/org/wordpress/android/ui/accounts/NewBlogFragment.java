@@ -201,9 +201,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
                     String blogId = details.getString("blogid");
                     final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
-                    String password = WordPressDB.decryptPassword(settings.getString(
-                            WordPress.WPCOM_PASSWORD_PREFERENCE, null));
-                    BlogUtils.addOrUpdateBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, password, null, null,
+                    BlogUtils.addOrUpdateBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, null, null, null,
                             true, true);
                     ToastUtils.showToast(getActivity(), R.string.new_blog_wpcom_created);
                 } catch (JSONException e) {

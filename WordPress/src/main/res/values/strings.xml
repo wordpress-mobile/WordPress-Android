@@ -132,6 +132,14 @@
     <string name="media_empty_list_custom_date">No media in this time interval</string>
     <string name="delete">Delete</string>
 
+    <!-- Media details -->
+    <string name="media_details_added_on">Added on:</string>
+    <string name="media_details_uploaded_on">Uploaded on:</string>
+    <string name="media_details_file_name">File name:</string>
+    <string name="media_details_file_type">File type:</string>
+    <string name="media_details_file_url">File URL:</string>
+    <string name="media_details_dimensions">Dimensions:</string>
+
     <!-- tab titles -->
     <string name="tab_comments">Comments</string>
     <string name="tab_stats">Stats</string>
@@ -739,7 +747,7 @@
     <string name="reader_toast_err_generic">Unable to perform this action</string>
 
     <!-- empty list/grid text -->
-    <string name="reader_empty_posts_no_connection">@string/no_network_title</string>
+    <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
@@ -819,6 +827,14 @@
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ptr_tip_message">Tip: Pull down to refresh</string>
+    <string name="verification_code">Verification code</string>
+    <string name="invalid_verification_code">Invalid verification code</string>
+    <string name="verify">Verify</string>
+    <string name="two_step_footer_label">Enter the code from your authenticator app.</string>
+    <string name="two_step_footer_button">Send code via text message</string>
+    <string name="two_step_sms_sent">Check your text messages for the verification code.</string>
+    <string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
+    <string name="auth_required">Sign in again to continue.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>

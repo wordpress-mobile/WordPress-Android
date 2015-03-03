@@ -273,7 +273,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        if (!WordPress.hasValidWPComCredentials(context)) {
+        if (!WordPress.hasDotComToken(context)) {
             return;
         }
 
