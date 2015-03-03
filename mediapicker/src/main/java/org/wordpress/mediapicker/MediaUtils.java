@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import com.android.volley.toolbox.ImageLoader;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MediaUtils {
     private static final long FADE_TIME_MS = 250;
@@ -51,20 +53,36 @@ public class MediaUtils {
         public static final int TYPE_IMAGE = 0;
         public static final int TYPE_VIDEO = 1;
 
+        private static final int MAX_ACTIVE_FETCHES_DEFAULT = 20;
+        private static final List<BackgroundFetchThumbnail> sActiveFetches = new ArrayList<>();
+
         private WeakReference<ImageView> mReference;
         private ImageLoader.ImageCache mCache;
         private int mType;
         private int mWidth;
         private int mHeight;
         private int mRotation;
+        private int mMaxFetches;
 
         public BackgroundFetchThumbnail(ImageView resultStore, ImageLoader.ImageCache cache, int type, int width, int height, int rotation) {
             mReference = new WeakReference<>(resultStore);
+            mMaxFetches = MAX_ACTIVE_FETCHES_DEFAULT;
             mCache = cache;
             mType = type;
             mWidth = width;
             mHeight = height;
             mRotation = rotation;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            if (sActiveFetches.size() > mMaxFetches) {
+                sActiveFetches.remove(0).cancel(true);
+            }
+
+            sActiveFetches.add(this);
         }
 
         @Override
@@ -96,6 +114,8 @@ public class MediaUtils {
 
         @Override
         protected void onPostExecute(Bitmap result) {
+            sActiveFetches.remove(this);
+
             ImageView imageView = mReference.get();
 
             if (imageView != null) {
@@ -108,6 +128,10 @@ public class MediaUtils {
                     }
                 }
             }
+        }
+
+        public void setMaxFetches(int maxFetches) {
+            mMaxFetches = maxFetches;
         }
     }
 }
