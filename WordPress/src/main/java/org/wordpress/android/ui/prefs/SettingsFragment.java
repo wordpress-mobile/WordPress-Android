@@ -56,6 +56,8 @@ import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class SettingsFragment extends PreferenceFragment {
+    public static final String SETTINGS_PREFERENCES = "settings-pref";
+
     private SharedPreferences mSettings;
     private WPEditTextPreference mTaglineTextPreference;
 
@@ -400,6 +402,9 @@ public class SettingsFragment extends PreferenceFragment {
                     Configuration conf = res.getConfiguration();
                     conf.locale = new Locale(availableLocales[position]);
                     res.updateConfiguration(conf, dm);
+
+                    mSettings.edit().putString(SETTINGS_PREFERENCES, availableLocales[position]).apply();
+
                     Intent refresh = new Intent(getActivity(), getActivity().getClass());
                     startActivity(refresh);
                     getActivity().finish();
