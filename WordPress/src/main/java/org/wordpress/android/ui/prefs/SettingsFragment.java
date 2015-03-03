@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -15,7 +17,12 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -44,6 +51,7 @@ import org.wordpress.passcodelock.PasscodePreferencesActivity;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
@@ -77,6 +85,7 @@ public class SettingsFragment extends PreferenceFragment {
         }
         findPreference("wp_pref_manage_notifications").setOnPreferenceClickListener(
                 notificationPreferenceClickListener);
+        findPreference("wp_pref_language").setOnPreferenceClickListener(languagePreferenceClickListener);
         findPreference("wp_pref_app_about").setOnPreferenceClickListener(launchActivitiyClickListener);
         findPreference("wp_pref_open_source_licenses").setOnPreferenceClickListener(launchActivitiyClickListener);
         findPreference("wp_pref_help_and_support").setOnPreferenceClickListener(launchActivitiyClickListener);
@@ -361,6 +370,50 @@ public class SettingsFragment extends PreferenceFragment {
                     .replace(R.id.fragment_container, new NotificationSettingsFragment())
                     .addToBackStack(null)
                     .commit();
+            return true;
+        }
+    };
+
+    private final OnPreferenceClickListener languagePreferenceClickListener = new OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+            dialogBuilder.setTitle(getString(R.string.language));
+
+            final Locale[] availableLocales = Locale.getAvailableLocales();
+            final String[] values = new String[availableLocales.length];
+
+            for(int i = 0; i < availableLocales.length; ++i) {
+                values[i] = availableLocales[i].getDisplayName();
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, values);
+            ListView listView = new ListView(getActivity());
+            listView.setAdapter(adapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Resources res = getResources();
+                    DisplayMetrics dm = res.getDisplayMetrics();
+                    Configuration conf = res.getConfiguration();
+                    conf.locale = availableLocales[position];
+                    res.updateConfiguration(conf, dm);
+                    Intent refresh = new Intent(getActivity(), getActivity().getClass());
+                    startActivity(refresh);
+                    getActivity().finish();
+                }
+            });
+
+            dialogBuilder.setView(listView);
+            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialogBuilder.show();
+
             return true;
         }
     };
