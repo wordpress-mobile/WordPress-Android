@@ -126,5 +126,8 @@
     <color name="calypso_orange_dark">#f0821e</color>
 
     <!--my site-->
-    <color name="my_site_switch_site_button_bg">#f4f8f9</color>
+    <color name="my_site_dark_blue">#2e4453</color>
+    <color name="my_site_light_blue">#87a6bc</color>
+    <color name="my_site_button_bg">#f3f6f8</color>
+    <color name="my_site_section_divider">#c8d7e1</color>
 </resources>

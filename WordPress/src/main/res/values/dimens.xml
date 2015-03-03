@@ -129,6 +129,18 @@
     <dimen name="stats_barchart_height">128dp</dimen>
 
     <!-- my site -->
-    <dimen name="my_site_switch_site_button_left_margin">56dp</dimen>
+    <dimen name="my_site_add_button_padding_bottom">5dp</dimen>
+    <dimen name="my_site_add_button_radius">2dp</dimen>
+    <dimen name="my_site_blog_name_margin_top">11dp</dimen>
+    <dimen name="my_site_card_elevation">2dp</dimen>
+    <dimen name="my_site_list_row_height">48dp</dimen>
+    <dimen name="my_site_list_row_icon_margin_right">32dp</dimen>
+    <dimen name="my_site_list_row_icon_size">24dp</dimen>
+    <dimen name="my_site_list_row_padding_left">16dp</dimen>
+    <dimen name="my_site_list_margin_top">10dp</dimen>
+    <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
+    <dimen name="my_site_switch_site_button_padding_top">10dp</dimen>
+    <dimen name="my_site_header_padding_bottom">10dp</dimen>
+    <dimen name="my_site_header_padding_top">10dp</dimen>
 
 </resources>

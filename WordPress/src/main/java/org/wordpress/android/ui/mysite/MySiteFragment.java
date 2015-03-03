@@ -64,6 +64,22 @@ public class MySiteFragment extends Fragment {
             }
         });
 
+        WPTextView viewSiteTextView = (WPTextView) rootView.findViewById(R.id.my_site_view_site_text_view);
+        viewSiteTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentSite(getActivity());
+            }
+        });
+
+        WPTextView statsTextView = (WPTextView) rootView.findViewById(R.id.my_site_stats_text_view);
+        statsTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentSiteStats(getActivity(), mBlog);
+            }
+        });
+
         refreshBlogDetails();
 
         return rootView;
