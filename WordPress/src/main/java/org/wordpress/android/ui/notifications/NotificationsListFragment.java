@@ -59,8 +59,9 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
 
     private Bucket<Note> mBucket;
 
-    public NotificationsListFragment() {
-    }
+    public static NotificationsListFragment newInstance() {
+        return new NotificationsListFragment();
+   }
 
     /**
      * For responding to tapping of notes
