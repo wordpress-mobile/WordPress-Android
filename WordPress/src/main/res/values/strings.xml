@@ -345,27 +345,27 @@
     <string name="edit_location">Edit</string>
 
     <!-- preferences -->
-    <string name="pref_key_settings_root">wp_pref_root</string>
-    <string name="pref_key_wpcom">wp_pref_wpcom</string>
-    <string name="pref_key_self_hosted">wp_pref_self_hosted_blogs</string>
-    <string name="pref_key_notifications_section">wp_pref_notifications_category</string>
-    <string name="pref_key_notifications">wp_pref_manage_notifications</string>
-    <string name="pref_key_post_sig_section">wp_post_signature</string>
-    <string name="pref_key_post_sig_enabled">wp_pref_signature_enabled</string>
-    <string name="pref_key_post_sig">wp_pref_post_signature</string>
-    <string name="pref_key_passlock_section">wp_passcode_lock_category</string>
-    <string name="pref_key_passlock">wp_pref_passlock_enabled</string>
-    <string name="pref_key_shared_pref_section">wp_share_pref</string>
-    <string name="pref_key_reset_shared_pref">wp_reset_share_pref</string>
-    <string name="pref_key_privacy_section">wp_privacy</string>
-    <string name="pref_key_send_usage">wp_pref_send_usage_stats</string>
-    <string name="pref_key_about_section">wp_pref_app_about_section</string>
-    <string name="pref_key_language">wp_pref_language</string>
-    <string name="pref_key_app_about">wp_pref_app_about</string>
-    <string name="pref_key_oss_licenses">wp_pref_open_source_licenses</string>
-    <string name="pref_key_help_and_support">wp_pref_help_and_support</string>
-    <string name="pref_key_signout_section">wp_pref_app_signout_section</string>
-    <string name="pref_key_signout">wp_pref_sign_out</string>
+    <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
+    <string name="pref_key_wpcom" translatable="false">wp_pref_wpcom</string>
+    <string name="pref_key_self_hosted" translatable="false">wp_pref_self_hosted_blogs</string>
+    <string name="pref_key_notifications_section" translatable="false">wp_pref_notifications_category</string>
+    <string name="pref_key_notifications" translatable="false">wp_pref_manage_notifications</string>
+    <string name="pref_key_post_sig_section" translatable="false">wp_post_signature</string>
+    <string name="pref_key_post_sig_enabled" translatable="false">wp_pref_signature_enabled</string>
+    <string name="pref_key_post_sig" translatable="false">wp_pref_post_signature</string>
+    <string name="pref_key_passlock_section" translatable="false">wp_passcode_lock_category</string>
+    <string name="pref_key_passlock" translatable="false">wp_pref_passlock_enabled</string>
+    <string name="pref_key_shared_pref_section" translatable="false">wp_share_pref</string>
+    <string name="pref_key_reset_shared_pref" translatable="false">wp_reset_share_pref</string>
+    <string name="pref_key_privacy_section" translatable="false">wp_privacy</string>
+    <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
+    <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
+    <string name="pref_key_language" translatable="false">wp_pref_language</string>
+    <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
+    <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
+    <string name="pref_key_help_and_support" translatable="false">wp_pref_help_and_support</string>
+    <string name="pref_key_signout_section" translatable="false">wp_pref_app_signout_section</string>
+    <string name="pref_key_signout" translatable="false">wp_pref_sign_out</string>
     <string name="help_and_support">Help and support</string>
     <string name="open_source_licenses">Open source licenses</string>
     <string name="wpcom_blogs">WordPress.com blogs</string>
