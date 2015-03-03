@@ -89,7 +89,8 @@
         <activity
             android:name=".ui.prefs.LicensesActivity"/>
         <activity
-            android:name=".ui.prefs.SettingsActivity"/>
+            android:name=".ui.prefs.SettingsActivity"
+            android:configChanges="locale|orientation"/>
         <activity
             android:name=".ui.accounts.ManageBlogsActivity"/>
         <activity
