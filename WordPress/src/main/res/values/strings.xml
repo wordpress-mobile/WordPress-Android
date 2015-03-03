@@ -132,6 +132,14 @@
     <string name="media_empty_list_custom_date">No media in this time interval</string>
     <string name="delete">Delete</string>
 
+    <!-- Media details -->
+    <string name="media_details_added_on">Added on:</string>
+    <string name="media_details_uploaded_on">Uploaded on:</string>
+    <string name="media_details_file_name">File name:</string>
+    <string name="media_details_file_type">File type:</string>
+    <string name="media_details_file_url">File URL:</string>
+    <string name="media_details_dimensions">Dimensions:</string>
+
     <!-- tab titles -->
     <string name="tab_comments">Comments</string>
     <string name="tab_stats">Stats</string>
@@ -732,7 +740,7 @@
     <string name="reader_toast_err_generic">Unable to perform this action</string>
 
     <!-- empty list/grid text -->
-    <string name="reader_empty_posts_no_connection">@string/no_network_title</string>
+    <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>

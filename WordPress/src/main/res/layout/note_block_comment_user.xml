@@ -32,7 +32,6 @@
             android:singleLine="true"
             android:textColor="@color/calypso_blue_dark"
             android:textSize="@dimen/text_sz_large"
-            android:textStyle="bold"
             tools:text="Bob Ross" />
 
         <LinearLayout
