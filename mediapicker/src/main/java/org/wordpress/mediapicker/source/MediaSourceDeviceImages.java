@@ -135,7 +135,7 @@ public class MediaSourceDeviceImages implements MediaSource {
             }
         } else {
             imageView.setTag(null);
-            imageView.setImageResource(R.drawable.media_item_placeholder);
+            imageView.setImageResource(R.drawable.ic_now_wallpaper_white);
         }
     }
 
