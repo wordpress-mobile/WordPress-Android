@@ -57,6 +57,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Map;
 
@@ -291,7 +292,13 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
                 FragmentManager fm = getFragmentManager();
                 if (fm.getBackStackEntryCount() > 0) {
-                    fm.popBackStack();
+                    try {
+                        fm.popBackStack();
+                    } catch (IllegalStateException e) {
+                        // onClick event can be fired after the onSaveInstanceState call,
+                        // and make the app crash. Catching this exception avoid the crash. If this existed,
+                        // we would use popBackStackAllowingStateLoss.
+                    }
                 } else if (isStaticMenuDrawer()) {
                     finish();
                 } else {
