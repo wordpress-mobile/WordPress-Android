@@ -129,7 +129,7 @@ public class MediaSourceDeviceImages implements MediaSource {
                                 height,
                                 mediaItem.getRotation());
                 imageView.setTag(bgDownload);
-                bgDownload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imageSource);
+                bgDownload.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, imageSource);
             } else {
                 MediaUtils.fadeInImage(imageView, imageBitmap);
             }
