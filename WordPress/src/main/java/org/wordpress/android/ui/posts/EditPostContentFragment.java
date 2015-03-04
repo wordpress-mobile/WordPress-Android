@@ -1799,13 +1799,23 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      * @return
      *  list containing all sources to gather image media from
      */
-    private ArrayList<MediaSource> imageMediaSelectionSources(boolean includeBlogMedia) {
+    private ArrayList<MediaSource> imageMediaSelectionSources() {
         ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
         imageMediaSources.add(new MediaSourceDeviceImages(getActivity().getContentResolver()));
 
-        if (includeBlogMedia) {
-            imageMediaSources.add(new MediaSourceWPImages());
-        }
+        return imageMediaSources;
+    }
+
+    private ArrayList<MediaSource> blogImageMediaSelectionSources() {
+        ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
+        imageMediaSources.add(new MediaSourceWPImages());
+
+        return imageMediaSources;
+    }
+
+    private ArrayList<MediaSource> blogVideoMediaSelectionSources() {
+        ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
+        imageMediaSources.add(new MediaSourceWPVideos());
 
         return imageMediaSources;
     }
@@ -1816,13 +1826,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      * @return
      *  list containing all sources to gather video media from
      */
-    private ArrayList<MediaSource> videoMediaSelectionSources(boolean includeBlogMedia) {
+    private ArrayList<MediaSource> videoMediaSelectionSources() {
         ArrayList<MediaSource> videoMediaSources = new ArrayList<>();
         videoMediaSources.add(new MediaSourceDeviceVideos(getActivity().getContentResolver()));
-
-        if (includeBlogMedia) {
-            videoMediaSources.add(new MediaSourceWPVideos());
-        }
 
         return videoMediaSources;
     }
@@ -1860,8 +1866,12 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
         Intent intent = new Intent(mActivity, MediaPickerActivity.class);
         intent.putExtra(MediaPickerActivity.ACTIVITY_TITLE_KEY, getString(R.string.add_to_post));
-        intent.putParcelableArrayListExtra(MediaPickerActivity.IMAGE_MEDIA_SOURCES_KEY, imageMediaSelectionSources(mBlogMediaAvailable));
-        intent.putParcelableArrayListExtra(MediaPickerActivity.VIDEO_MEDIA_SOURCES_KEY, videoMediaSelectionSources(mBlogMediaAvailable));
+        intent.putParcelableArrayListExtra(MediaPickerActivity.DEVICE_IMAGE_MEDIA_SOURCES_KEY, imageMediaSelectionSources());
+        intent.putParcelableArrayListExtra(MediaPickerActivity.DEVICE_VIDEO_MEDIA_SOURCES_KEY, videoMediaSelectionSources());
+        if (mBlogMediaAvailable) {
+            intent.putParcelableArrayListExtra(MediaPickerActivity.BLOG_IMAGE_MEDIA_SOURCES_KEY, blogImageMediaSelectionSources());
+            intent.putParcelableArrayListExtra(MediaPickerActivity.BLOG_VIDEO_MEDIA_SOURCES_KEY, blogVideoMediaSelectionSources());
+        }
 
         startActivityForResult(intent, MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
         mActivity.overridePendingTransition(R.anim.slide_up, R.anim.fade_out);

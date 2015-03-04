@@ -40,8 +40,8 @@ import java.util.List;
  * a String extra in the {@link android.content.Intent} with the key ACTIVITY_TITLE_KEY.
  *
  * Accepts Image and Video sources as arguments and displays each in a tab.
- *  - Use IMAGE_MEDIA_SOURCES_KEY with a {@link java.util.List} of {@link org.wordpress.mediapicker.source.MediaSource}'s to pass image sources via the Intent
- *  - Use VIDEO_MEDIA_SOURCES_KEY with a {@link java.util.List} of {@link org.wordpress.mediapicker.source.MediaSource}'s to pass video sources via the Intent
+ *  - Use DEVICE_IMAGE_MEDIA_SOURCES_KEY with a {@link java.util.List} of {@link org.wordpress.mediapicker.source.MediaSource}'s to pass image sources via the Intent
+ *  - Use DEVICE_VIDEO_MEDIA_SOURCES_KEY with a {@link java.util.List} of {@link org.wordpress.mediapicker.source.MediaSource}'s to pass video sources via the Intent
  */
 
 public class MediaPickerActivity extends ActionBarActivity
@@ -67,12 +67,14 @@ public class MediaPickerActivity extends ActionBarActivity
      * Pass an {@link java.util.ArrayList} of {@link org.wordpress.mediapicker.source.MediaSource}'s
      * in the {@link android.content.Intent} to set image sources for selection.
      */
-    public static final String IMAGE_MEDIA_SOURCES_KEY      = "image-media-sources";
+    public static final String DEVICE_IMAGE_MEDIA_SOURCES_KEY = "device-image-media-sources";
     /**
      * Pass an {@link java.util.ArrayList} of {@link org.wordpress.mediapicker.source.MediaSource}'s
      * in the {@link android.content.Intent} to set video sources for selection.
      */
-    public static final String VIDEO_MEDIA_SOURCES_KEY      = "video=media-sources";
+    public static final String DEVICE_VIDEO_MEDIA_SOURCES_KEY = "device- video=media-sources";
+    public static final String BLOG_IMAGE_MEDIA_SOURCES_KEY = "blog-image-media-sources";
+    public static final String BLOG_VIDEO_MEDIA_SOURCES_KEY = "blog-video-media-sources";
     /**
      * Key to extract the {@link java.util.ArrayList} of {@link org.wordpress.mediapicker.MediaItem}'s
      * that were selected by the user.
@@ -88,8 +90,7 @@ public class MediaPickerActivity extends ActionBarActivity
     private static final String TAB_TITLE_BLOG_VIDEOS = "Blog Videos";
 
     private MediaPickerAdapter     mMediaPickerAdapter;
-    private ArrayList<MediaSource> mImageSources;
-    private ArrayList<MediaSource> mVideoSources;
+    private ArrayList<MediaSource>[] mMediaSources;
     private SlidingTabLayout       mTabLayout;
     private WPViewPager            mViewPager;
     private ActionMode             mActionMode;
@@ -289,16 +290,30 @@ public class MediaPickerActivity extends ActionBarActivity
         final Intent intent = getIntent();
 
         if (intent != null) {
-            List<MediaSource> mediaSources = intent.getParcelableArrayListExtra(IMAGE_MEDIA_SOURCES_KEY);
+            mMediaSources = new ArrayList[4];
+
+            List<MediaSource> mediaSources = intent.getParcelableArrayListExtra(DEVICE_IMAGE_MEDIA_SOURCES_KEY);
             if (mediaSources != null) {
-                mImageSources = new ArrayList<>();
-                mImageSources.addAll(mediaSources);
+                mMediaSources[0] = new ArrayList<>();
+                mMediaSources[0].addAll(mediaSources);
             }
 
-            mediaSources = intent.getParcelableArrayListExtra(VIDEO_MEDIA_SOURCES_KEY);
+            mediaSources = intent.getParcelableArrayListExtra(DEVICE_VIDEO_MEDIA_SOURCES_KEY);
             if (mediaSources != null) {
-                mVideoSources = new ArrayList<>();
-                mVideoSources.addAll(mediaSources);
+                mMediaSources[1] = new ArrayList<>();
+                mMediaSources[1].addAll(mediaSources);
+            }
+
+            mediaSources = intent.getParcelableArrayListExtra(BLOG_IMAGE_MEDIA_SOURCES_KEY);
+            if (mediaSources != null) {
+                mMediaSources[2] = new ArrayList<>();
+                mMediaSources[2].addAll(mediaSources);
+            }
+
+            mediaSources = intent.getParcelableArrayListExtra(BLOG_VIDEO_MEDIA_SOURCES_KEY);
+            if (mediaSources != null) {
+                mMediaSources[3] = new ArrayList<>();
+                mMediaSources[3].addAll(mediaSources);
             }
         }
     }
@@ -346,10 +361,18 @@ public class MediaPickerActivity extends ActionBarActivity
         if (mViewPager != null) {
             mViewPager.setPagingEnabled(true);
 
-            mMediaPickerAdapter.addTab(mImageSources, TAB_TITLE_DEVICE_IMAGES);
-            mMediaPickerAdapter.addTab(mVideoSources, TAB_TITLE_DEVICE_VIDEOS);
-            mMediaPickerAdapter.addTab(mImageSources, TAB_TITLE_BLOG_IMAGES);
-            mMediaPickerAdapter.addTab(mVideoSources, TAB_TITLE_BLOG_VIDEOS);
+            if (mMediaSources[0] != null && !mMediaSources[0].isEmpty()) {
+                mMediaPickerAdapter.addTab(mMediaSources[0], TAB_TITLE_DEVICE_IMAGES);
+            }
+            if (mMediaSources[1] != null && !mMediaSources[1].isEmpty()) {
+                mMediaPickerAdapter.addTab(mMediaSources[1], TAB_TITLE_DEVICE_VIDEOS);
+            }
+            if (mMediaSources[2] != null && !mMediaSources[2].isEmpty()) {
+                mMediaPickerAdapter.addTab(mMediaSources[2], TAB_TITLE_BLOG_IMAGES);
+            }
+            if (mMediaSources[3] != null && !mMediaSources[3].isEmpty()) {
+                mMediaPickerAdapter.addTab(mMediaSources[3], TAB_TITLE_BLOG_VIDEOS);
+            }
 
             mViewPager.setAdapter(mMediaPickerAdapter);
 
