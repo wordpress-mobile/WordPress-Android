@@ -156,7 +156,11 @@ public class WPMainActivity extends ActionBarActivity
                 if (resultCode == RESULT_OK && data != null) {
                     int localId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, 0);
                     //String blogId = data.getStringExtra(SitePickerActivity.KEY_BLOG_ID);
-                    Blog blog = WordPress.getBlog(localId);
+
+                    // when a new blog is picked, set it to the current blog
+                    Blog blog = WordPress.setCurrentBlog(localId);
+                    WordPress.wpDB.updateLastBlogId(localId);
+
                     MySiteFragment mySiteFragment = getMySiteFragment();
                     if (mySiteFragment != null) {
                         mySiteFragment.setBlog(blog);
