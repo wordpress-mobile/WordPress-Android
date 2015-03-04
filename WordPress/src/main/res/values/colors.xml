@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="translucent">#80000000</color>
-    <color name="transparent">#00000000</color>
-
     <!-- material colors -->
     <!--
         colorPrimary            app branding color for the app bar
@@ -21,17 +18,17 @@
     <color name="list_selected">@color/semi_transparent_blue_light</color>
 
     <!-- Default Colors -->
+    <color name="translucent">#80000000</color>
+    <color name="transparent">#00000000</color>
     <color name="light_gray">@color/grey_lighten_30</color>
     <color name="gray">@color/grey_lighten_20</color>
     <color name="white">#FFFFFF</color>
     <color name="black">@color/grey_dark</color>
     <color name="default_background">@color/grey_lighten_30</color>
 
-    <color name="image_options_label">@color/grey_lighten_20</color>
-    <color name="pressed_wordpress">@color/semi_transparent_blue_light</color>
-    <color name="background_grey">@color/grey_lighten_30</color>
-
-    <!-- WordPress.com Colors -->
+    <!-- ==================================== -->
+    <!-- WordPress.com Colors                 -->
+    <!-- wordpress.com/design-handbook/colors -->
     <!-- Blues -->
     <color name="blue_wordpress">#0087be</color>
     <color name="blue_light">#78dcfa</color>
@@ -60,73 +57,80 @@
     <color name="alert_red">#d94f4f</color>
     <color name="alert_green">#4ab866</color>
 
-    <!-- Translucent Colors -->
+    <!-- Translucent -->
     <color name="semi_transparent_grey_dark">#B32e4453</color>
     <color name="semi_transparent_blue_light">#cc78dcfa</color>
     <color name="translucent_grey_dark">#802e4453</color>
     <color name="translucent_grey_lighten_10">#80a8bece</color>
     <color name="translucent_grey_lighten_20">#80c8d7e1</color>
     <color name="translucent_grey_lighten_30">#80e9eff3</color>
+    <!-- END WordPress.com Colors -->
+    <!-- ======================== -->
 
-    <!-- Menu Drawer Colors -->
+    <!-- Menu Drawer -->
     <color name="drawer_background">@color/white</color>
     <color name="drawer_background_selected">@color/translucent_grey_lighten_20</color>
     <color name="drawer_icon_tint">@color/grey_darken_30</color>
     <color name="drawer_text">@color/grey_dark</color>
     <color name="drawer_divider">@color/grey_light</color>
 
-    <!-- Media Gallery Colors -->
+    <!-- Media Gallery -->
     <color name="media_gallery_grid_label_bg">@color/semi_transparent_grey_dark</color>
     <color name="media_gallery_grid_label">@color/white</color>
     <color name="media_gallery_bg">@color/grey_darken_30</color>
     <color name="media_gallery_option_selected">@color/grey_dark</color>
     <color name="media_gallery_option_default">@color/grey_lighten_30</color>
 
-    <!-- Theme Details Colors -->
+    <!-- Theme Details -->
     <color name="theme_details_name">@color/black</color>
     <color name="theme_details_button">@color/white</color>
     <color name="theme_details_premium">@color/orange_jazzy</color>
     <color name="theme_feature_text">@color/grey_dark</color>
 
-    <!-- Tab Strip Colors -->
+    <!-- Tab Strip -->
     <color name="tab_background">@color/color_primary</color>
     <color name="tab_text_normal">@color/blue_light</color>
     <color name="tab_text_selected">@color/white</color>
     <color name="tab_indicator">@color/blue_light</color>
 
     <!-- Stats -->
-    <color name="stats_text_color">#404040</color>
+    <color name="stats_text_color">@color/grey_dark</color>
     <color name="stats_link_text_color">@color/blue_wordpress</color>
-    <color name="stats_module_content_list_header">#93A6C0</color>
-    <color name="stats_blue_labels">#587295</color>
-    <color name="stats_bar_graph_views">#0085BF</color>
-    <color name="stats_bar_graph_grid">#D9D9D9</color>
-    <color name="stats_bar_graph_vertical_label">#93a6c0</color>
-    <color name="stats_div_color">#B7B7B7</color>
-    <color name="stats_lists_background_color">#f4f8fA</color>
+    <color name="stats_module_content_list_header">@color/grey</color>
+    <color name="stats_blue_labels">@color/grey_darken_20</color>
+    <color name="stats_bar_graph_views">@color/blue_wordpress</color>
+    <color name="stats_bar_graph_grid">@color/grey_lighten_20</color>
+    <color name="stats_bar_graph_vertical_label">@color/grey</color>
+    <color name="stats_div_color">@color/grey_lighten_10</color>
+    <color name="stats_lists_background_color">@color/grey_light</color>
     <color name="stats_empty_placeholder_color">@color/translucent_grey_lighten_30</color>
 
-    <!-- Reader Colors -->
+    <!-- Reader -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
 
-    <!-- Comment Status Colors -->
+    <!-- Comment Status -->
     <color name="comment_status_unapproved">@color/orange_jazzy</color>
     <color name="comment_status_spam">@color/alert_red</color>
 
-    <!-- Notification Status Colors -->
+    <!-- Notification Status -->
     <color name="notification_status_unapproved">@color/alert_yellow</color>
     <color name="notification_status_unapproved_dark">#eeac31</color>
     <color name="notification_status_unapproved_darker">#6d1818</color>
     <color name="notification_status_unapproved_background">#fef8ee</color>
 
-    <!-- NUX Colors -->
+    <!-- NUX -->
     <color name="nux_grey_button">@color/grey_lighten_20</color>
     <color name="nux_alert_bg">@color/semi_transparent_grey_dark</color>
     <color name="nux_background">@color/blue_wordpress</color>
     <color name="nux_eye_icon_color_closed">@color/grey_lighten_20</color>
     <color name="nux_eye_icon_color_open">@color/grey_lighten_10</color>
 
-    <!-- Tints -->
+    <!-- Editor -->
+    <color name="image_options_label">@color/grey_lighten_20</color>
     <color name="post_detail_icon_tint">@color/grey_darken_20</color>
+
+    <!-- Misc -->
+    <color name="pressed_wordpress">@color/semi_transparent_blue_light</color>
+    <color name="background_grey">@color/grey_lighten_30</color>
 </resources>
