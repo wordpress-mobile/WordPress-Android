@@ -26,8 +26,8 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -43,8 +43,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  *  Single item details activity.
  */
 public class StatsViewAllActivity extends ActionBarActivity
-        implements StatsAuthorsFragment.OnAuthorsSectionChangeListener,
-        StatsAbstractListFragment.OnRequestDataListener,
+        implements StatsAbstractListFragment.OnRequestDataListener,
         StatsAbstractFragment.TimeframeDateProvider {
 
     private boolean mIsInFront;
@@ -381,11 +380,6 @@ public class StatsViewAllActivity extends ActionBarActivity
                 refreshStats();
             }
         }, 75L);
-    }
-
-    @Override
-    public void onAuthorsVisibilityChange(boolean isEmpty) {
-        // Nothing to do here, since the section must not disappear here.
     }
 
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
