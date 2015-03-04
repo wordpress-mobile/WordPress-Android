@@ -883,7 +883,7 @@
     <string name="hs__invalid_email_error">Enter a valid email address</string>
 
     <!-- Available languages -->
-    <string-array name="available_languages">
+    <string-array name="available_languages" translatable="false">
         <item></item>
         <item>az</item>
         <item>de</item>
