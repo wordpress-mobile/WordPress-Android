@@ -220,7 +220,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             if (checkedId == -1)
                 return;
 
-            mIsCheckboxChecked = false;
             mSelectedOverviewItemIndex = checkedId;
             updateUI();
         }
@@ -251,7 +250,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mSelectedBarGraphBarIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
             }
 
-            mIsCheckboxChecked = savedInstanceState.getBoolean(ARG_CHECKBOX_SELECTED, false);
+            mIsCheckboxChecked = savedInstanceState.getBoolean(ARG_CHECKBOX_SELECTED, true);
+        } else {
+            mIsCheckboxChecked = true;
         }
     }
 
@@ -604,7 +605,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // Hide the legend
         mLegendContainer.setVisibility(View.GONE);
         mVisitorsCheckboxContainer.setVisibility(View.GONE);
-        mIsCheckboxChecked = false;
 
         mSelectedBarGraphBarIndex = -1;
         Context context = mGraphContainer.getContext();
