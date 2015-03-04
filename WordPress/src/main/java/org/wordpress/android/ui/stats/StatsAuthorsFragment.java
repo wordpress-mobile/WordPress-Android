@@ -20,22 +20,6 @@ import java.util.List;
 
 public class StatsAuthorsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsAuthorsFragment.class.getSimpleName();
-    private OnAuthorsSectionChangeListener mListener;
-
-    // Container Activity must implement this interface
-    public interface OnAuthorsSectionChangeListener {
-        public void onAuthorsVisibilityChange(boolean isEmpty);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnAuthorsSectionChangeListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnAuthorsSectionChangeListener");
-        }
-    }
 
     @Override
     protected void updateUI() {
@@ -50,22 +34,18 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
         if (isDataEmpty()) {
             showHideNoResultsUI(true);
-            mListener.onAuthorsVisibilityChange(true); // Hide the authors section if completely empty
             return;
         }
 
         List<AuthorModel> authors = ((AuthorsModel) mDatamodels[0]).getAuthors();
-        // Do not show the authors section if there is one author only
-        if (authors == null || authors.size() <= 1) {
+        if (authors == null || authors.size() == 0) {
             showHideNoResultsUI(true);
-            mListener.onAuthorsVisibilityChange(true);
             return;
         }
 
         BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), authors);
         StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
         showHideNoResultsUI(false);
-        mListener.onAuthorsVisibilityChange(false);
     }
 
     @Override
@@ -97,7 +77,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
     }
     @Override
     protected int getEmptyLabelTitleResId() {
-        return R.string.stats_empty_top_authors;
+        return R.string.stats_empty_top_posts_title;
     }
     @Override
     protected int getEmptyLabelDescResId() {

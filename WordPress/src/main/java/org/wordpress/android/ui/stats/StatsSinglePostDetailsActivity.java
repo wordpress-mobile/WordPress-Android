@@ -36,8 +36,8 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
