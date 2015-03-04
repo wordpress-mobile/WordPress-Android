@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -103,6 +104,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mVisitorsCheckboxContainer = (LinearLayout) view.findViewById(R.id.stats_checkbox_visitors_container);
         mVisitorsCheckbox = (CheckBox) view.findViewById(R.id.stats_checkbox_visitors);
         mVisitorsCheckbox.setOnClickListener(onCheckboxClicked);
+
+        // Fix an issue on devices with 4.1 or lower, where the Checkbox already uses padding by default internally and overriding it with paddingLeft
+        // causes the issue report here https://github.com/wordpress-mobile/WordPress-Android/pull/2377#issuecomment-77067993
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            mVisitorsCheckbox.setPadding(getResources().getDimensionPixelSize(R.dimen.margin_medium), 0, 0, 0);
+        }
 
         // Make sure we've all the info to build the tab correctly. This is ALWAYS true
         if (mModuleButtonsContainer.getChildCount() == overviewItems.length) {

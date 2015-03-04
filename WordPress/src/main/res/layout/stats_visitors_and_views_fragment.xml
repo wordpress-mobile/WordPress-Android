@@ -109,7 +109,6 @@
                     android:id="@+id/stats_checkbox_visitors"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/margin_small"
                     android:drawableLeft="@drawable/stats_visitors_and_views_legend_background_secondary"
                     android:drawableStart="@drawable/stats_visitors_and_views_legend_background_secondary"
                     android:drawablePadding="@dimen/margin_medium"
