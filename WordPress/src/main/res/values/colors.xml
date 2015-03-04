@@ -64,12 +64,14 @@
     <color name="stats_link_text_color">@color/wordpress_blue</color>
     <color name="stats_module_content_list_header">#93A6C0</color>
     <color name="stats_blue_labels">#587295</color>
-    <color name="stats_bar_graph_views">#0085BF</color>
+    <color name="stats_bar_graph_views">#0085BE</color>
+    <color name="stats_bar_graph_views_inner">#004e70</color>
     <color name="stats_bar_graph_grid">#D9D9D9</color>
     <color name="stats_bar_graph_vertical_label">#93a6c0</color>
+    <color name="stats_bar_graph_outer_highlight">#40f0821e</color> <!-- 25% Opacity on calypso_orange_dark -->
     <color name="stats_div_color">#B7B7B7</color>
     <color name="stats_lists_background_color">#f4f8fA</color>
-    <color name="stats_empty_placeholder_color">#80e8f0f5</color> <!-- 50% alpha on calypso_blue_light -->
+    <color name="stats_empty_placeholder_color">#80e8f0f5</color> <!-- 50% Opacity on calypso_blue_light -->
 
     <color name="blue_extra_light">#c8eefc</color>
     <color name="blue_light">#78dcfa</color>

@@ -6,16 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -35,7 +35,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -51,13 +50,20 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     public static final String TAG = StatsVisitorsAndViewsFragment.class.getSimpleName();
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
     private static final String ARG_SELECTED_OVERVIEW_ITEM = "ARG_SELECTED_OVERVIEW_ITEM";
+    private static final String ARG_CHECKBOX_SELECTED = "ARG_CHECKBOX_SELECTED";
+
 
     private LinearLayout mGraphContainer;
     private StatsBarGraph mGraphView;
-    private GraphViewSeries mCurrentSeriesOnScreen;
     private LinearLayout mModuleButtonsContainer;
     private TextView mDateTextView;
     private String[] mStatsDate;
+
+    private LinearLayout mLegendContainer;
+    private CheckedTextView mLegendLabel;
+    private LinearLayout mVisitorsCheckboxContainer;
+    private CheckBox mVisitorsCheckbox;
+    private boolean mIsCheckboxChecked;
 
     private OnDateChangeListener mListener;
 
@@ -91,6 +97,19 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mDateTextView = (TextView) view.findViewById(R.id.stats_summary_date);
         mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
         mModuleButtonsContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
+
+        mLegendContainer = (LinearLayout) view.findViewById(R.id.stats_legend_container);
+        mLegendLabel = (CheckedTextView) view.findViewById(R.id.stats_legend_label);
+        mLegendLabel.setCheckMarkDrawable(null); // Make sure to set a null drawable here. Otherwise the touching area is the same of a TextView
+        mVisitorsCheckboxContainer = (LinearLayout) view.findViewById(R.id.stats_checkbox_visitors_container);
+        mVisitorsCheckbox = (CheckBox) view.findViewById(R.id.stats_checkbox_visitors);
+        mVisitorsCheckbox.setOnClickListener(onCheckboxClicked);
+
+        // Fix an issue on devices with 4.1 or lower, where the Checkbox already uses padding by default internally and overriding it with paddingLeft
+        // causes the issue report here https://github.com/wordpress-mobile/WordPress-Android/pull/2377#issuecomment-77067993
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            mVisitorsCheckbox.setPadding(getResources().getDimensionPixelSize(R.dimen.margin_medium), 0, 0, 0);
+        }
 
         // Make sure we've all the info to build the tab correctly. This is ALWAYS true
         if (mModuleButtonsContainer.getChildCount() == overviewItems.length) {
@@ -213,6 +232,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
     };
 
+
+    View.OnClickListener onCheckboxClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            // Is the view now checked?
+            mIsCheckboxChecked = ((CheckBox) view).isChecked();
+            updateUI();
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -227,6 +256,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             if (savedInstanceState.containsKey(ARG_SELECTED_GRAPH_BAR)) {
                 mSelectedBarGraphBarIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
             }
+
+            mIsCheckboxChecked = savedInstanceState.getBoolean(ARG_CHECKBOX_SELECTED, true);
+        } else {
+            mIsCheckboxChecked = true;
         }
     }
 
@@ -242,6 +275,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
         outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
+        outState.putBoolean(ARG_CHECKBOX_SELECTED, mVisitorsCheckbox.isChecked());
 
         super.onSaveInstanceState(outState);
     }
@@ -302,13 +336,34 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
-
-        final String[] horLabels = new String[dataToShowOnGraph.length];
-        mStatsDate = new String[dataToShowOnGraph.length];
-        GraphView.GraphViewData[] views = new GraphView.GraphViewData[dataToShowOnGraph.length];
-
+        // Read the selected Tab in the UI
         OverviewLabel selectedStatsType = overviewItems[mSelectedOverviewItemIndex];
 
+        // Update the Legend and enable/disable the visitors checkboxes
+        mLegendContainer.setVisibility(View.VISIBLE);
+        mLegendLabel.setText(StringUtils.capitalize(selectedStatsType.getLabel().toLowerCase()));
+        switch(selectedStatsType) {
+            case VIEWS:
+                mVisitorsCheckboxContainer.setVisibility(View.VISIBLE);
+                mVisitorsCheckbox.setEnabled(true);
+                mVisitorsCheckbox.setChecked(mIsCheckboxChecked);
+                break;
+            default:
+                mVisitorsCheckboxContainer.setVisibility(View.GONE);
+                break;
+        }
+
+        // Setting Up labels and prepare variables that hold series
+        final String[] horLabels = new String[dataToShowOnGraph.length];
+        mStatsDate = new String[dataToShowOnGraph.length];
+        GraphView.GraphViewData[] mainSeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
+
+        GraphView.GraphViewData[] secondarySeriesItems = null;
+        if (mIsCheckboxChecked && selectedStatsType == OverviewLabel.VIEWS) {
+            secondarySeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
+        }
+
+        // Fill series variables with data
         for (int i = 0; i < dataToShowOnGraph.length; i++) {
             int currentItemValue = 0;
             switch(selectedStatsType) {
@@ -325,17 +380,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     currentItemValue = dataToShowOnGraph[i].getComments();
                     break;
             }
-            views[i] = new GraphView.GraphViewData(i, currentItemValue);
+            mainSeriesItems[i] = new GraphView.GraphViewData(i, currentItemValue);
+
+            if (mIsCheckboxChecked && secondarySeriesItems != null) {
+                secondarySeriesItems[i] = new GraphView.GraphViewData(i, dataToShowOnGraph[i].getVisitors());
+            }
 
             String currentItemStatsDate = dataToShowOnGraph[i].getPeriod();
             horLabels[i] = getDateLabelForBarInGraph(currentItemStatsDate);
             mStatsDate[i] = currentItemStatsDate;
         }
-
-        mCurrentSeriesOnScreen = new GraphViewSeries(views);
-        mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
-        mCurrentSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
-
 
         if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
             mGraphView = (StatsBarGraph) mGraphContainer.getChildAt(0);
@@ -346,10 +400,44 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         mGraphView.removeAllSeries();
-        mGraphView.addSeries(mCurrentSeriesOnScreen);
-       //mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
+
+        GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(mainSeriesItems);
+        mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
+        mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.calypso_orange_dark);
+        mainSeriesOnScreen.getStyle().outerhighlightColor = getResources().getColor(R.color.stats_bar_graph_outer_highlight);
+        mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
+        mGraphView.addSeries(mainSeriesOnScreen);
+
+        // Add the Visitors series if it's checked in the legend
+        if (mIsCheckboxChecked && secondarySeriesItems != null && selectedStatsType == OverviewLabel.VIEWS) {
+            GraphViewSeries secondarySeries = new GraphViewSeries(secondarySeriesItems);
+            secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 10);
+            secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views_inner);
+            secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.orange_dark);
+            mGraphView.addSeries(secondarySeries);
+        }
+
+        // Setup the Y-axis on Visitors and Views Tabs.
+        // Views and Visitors tabs have the exact same Y-axis as shifting from one Y-axis to another defeats
+        // the purpose of making these bars visually easily to compare.
+        switch(selectedStatsType) {
+            case VISITORS:
+                double maxYValue = getMaxYValueForVisitorsAndView(dataToShowOnGraph);
+                mGraphView.setManualYAxisBounds(maxYValue, 0d);
+                break;
+            default:
+                mGraphView.setManualYAxis(false);
+                break;
+        }
+
+        // Set the Graph Style
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
+        // Set the maximum size a column can get on the screen in PX
+        mGraphView.getGraphViewStyle().setMaxColumnWidth(
+                DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP)
+        );
         mGraphView.setHorizontalLabels(horLabels);
+
         mGraphView.setGestureListener(this);
 
         int barSelectedOnGraph;
@@ -369,6 +457,23 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         updateUIBelowTheGraph(barSelectedOnGraph);
         mGraphView.highlightBar(barSelectedOnGraph);
+    }
+
+    // Find the max value in Visitors and Views data.
+    // Only checks the Views data, since Visitors is for sure less-equals than Views.
+    private double getMaxYValueForVisitorsAndView(final VisitModel[] dataToShowOnGraph) {
+        if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
+            return 0d;
+        }
+        double largest = Integer.MIN_VALUE;
+
+        for (int i = 0; i < dataToShowOnGraph.length; i++) {
+            int currentItemValue = dataToShowOnGraph[i].getViews();
+            if (currentItemValue > largest) {
+                largest = currentItemValue;
+            }
+        }
+        return largest;
     }
 
     //update the area right below the graph
@@ -503,6 +608,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (!isAdded()) {
             return;
         }
+
+        // Hide the legend
+        mLegendContainer.setVisibility(View.GONE);
+        mVisitorsCheckboxContainer.setVisibility(View.GONE);
+
         mSelectedBarGraphBarIndex = -1;
         Context context = mGraphContainer.getContext();
         if (context != null) {
