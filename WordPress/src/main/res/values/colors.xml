@@ -8,8 +8,8 @@
         colorControlActivated   controls in their activated/checked state (search highlight, checked checkboxes)
         colorControlHighlight   control highlights (ripples, list selectors)
     -->
-    <color name="color_primary">@color/blue_medium</color>
-    <color name="color_primary_dark">@color/blue_dark</color>
+    <color name="color_primary">@color/blue_wordpress</color>
+    <color name="color_primary_dark">@color/status_bar_tint</color>
     <color name="color_accent">@color/orange_jazzy</color>
     <color name="color_control_activated">@color/blue_light</color>
     <color name="color_control_highlight">@color/blue_light</color>
@@ -66,6 +66,11 @@
     <color name="translucent_grey_lighten_30">#80e9eff3</color>
     <!-- END WordPress.com Colors -->
     <!-- ======================== -->
+
+    <!-- App specific colors -->
+    <!-- We could use blue_dark for the status bar color, but to adhere to the material design spec very closely,
+      we're using a shade of blue_wordpress -->
+    <color name="status_bar_tint">#006b98</color>
 
     <!-- Menu Drawer -->
     <color name="drawer_background">@color/white</color>
