@@ -82,8 +82,10 @@ public class MediaPickerActivity extends ActionBarActivity
     private static final String CAPTURE_PATH_KEY = "capture-path";
 
     private static final long   TAB_ANIMATION_DURATION_MS = 250l;
-    private static final String TAB_TITLE_IMAGES          = "Images";
-    private static final String TAB_TITLE_VIDEOS          = "Videos";
+    private static final String TAB_TITLE_DEVICE_IMAGES = "Device Images";
+    private static final String TAB_TITLE_DEVICE_VIDEOS = "Device Videos";
+    private static final String TAB_TITLE_BLOG_IMAGES = "Blog Images";
+    private static final String TAB_TITLE_BLOG_VIDEOS = "Blog Videos";
 
     private MediaPickerAdapter     mMediaPickerAdapter;
     private ArrayList<MediaSource> mImageSources;
@@ -344,8 +346,10 @@ public class MediaPickerActivity extends ActionBarActivity
         if (mViewPager != null) {
             mViewPager.setPagingEnabled(true);
 
-            mMediaPickerAdapter.addTab(mImageSources, TAB_TITLE_IMAGES);
-            mMediaPickerAdapter.addTab(mVideoSources, TAB_TITLE_VIDEOS);
+            mMediaPickerAdapter.addTab(mImageSources, TAB_TITLE_DEVICE_IMAGES);
+            mMediaPickerAdapter.addTab(mVideoSources, TAB_TITLE_DEVICE_VIDEOS);
+            mMediaPickerAdapter.addTab(mImageSources, TAB_TITLE_BLOG_IMAGES);
+            mMediaPickerAdapter.addTab(mVideoSources, TAB_TITLE_BLOG_VIDEOS);
 
             mViewPager.setAdapter(mMediaPickerAdapter);
 
