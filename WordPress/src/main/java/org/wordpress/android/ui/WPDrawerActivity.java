@@ -57,6 +57,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Map;
 
@@ -278,7 +279,13 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
 
                 FragmentManager fm = getFragmentManager();
                 if (fm.getBackStackEntryCount() > 0) {
-                    fm.popBackStack();
+                    try {
+                        fm.popBackStack();
+                    } catch (IllegalStateException e) {
+                        // onClick event can be fired after the onSaveInstanceState call,
+                        // and make the app crash. Catching this exception avoid the crash. If this existed,
+                        // we would use popBackStackAllowingStateLoss.
+                    }
                 } else if (isStaticMenuDrawer()) {
                     finish();
                 } else {
@@ -767,6 +774,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
+        filter.addAction(WordPress.BROADCAST_ACTION_REST_API_UNAUTHORIZED);
         filter.addAction(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED);
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(mReceiver, filter);
@@ -786,27 +794,36 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             if (intent == null || intent.getAction() == null)
                 return;
+
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIGNOUT)) {
                 onSignout();
+                return;
             }
-            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS)) {
-                AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this);
+
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS)
+                    || intent.getAction().equals(WordPress.BROADCAST_ACTION_REST_API_UNAUTHORIZED)
+                    || intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
+                AuthenticationDialogUtils.showAuthErrorView(WPDrawerActivity.this);
+                return;
             }
+
             if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)
                     && WPDrawerActivity.this instanceof NotificationsActivity) {
-                AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this, R.string.sign_in_again,
+                AuthenticationDialogUtils.showAuthErrorView(WPDrawerActivity.this, R.string.sign_in_again,
                         R.string.simperium_connection_error);
+                return;
             }
-            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
-                // TODO: add a specific message like "you must use a specific app password"
-                AuthenticationDialogUtils.showAuthErrorDialog(WPDrawerActivity.this);
-            }
+
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE)) {
                 SelfSignedSSLCertsManager.askForSslTrust(WPDrawerActivity.this, null);
+                return;
             }
+
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT)) {
                 ToastUtils.showToast(context, R.string.limit_reached, Duration.LONG);
+                return;
             }
+
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED)) {
                 initBlogSpinner();
             }

@@ -207,7 +207,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         // Register super properties
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(SESSION_COUNT, 0);
-        boolean connected = WordPress.hasValidWPComCredentials(WordPress.getContext());
+        boolean connected = WordPress.hasDotComToken(WordPress.getContext());
         boolean jetpackUser = WordPress.wpDB.hasAnyJetpackBlogs();
         int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
         try {

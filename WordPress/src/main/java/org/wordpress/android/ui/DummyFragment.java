@@ -21,7 +21,7 @@ import org.wordpress.android.widgets.FloatingActionButton;
  * placeholder for main activity tab fragments that don't exist yet
  */
 
-public class DummyFragment extends Fragment implements WPMainActivity.FragmentVisibilityListener {
+public class DummyFragment extends Fragment {
 
     @Nullable
     @Override
@@ -75,11 +75,4 @@ public class DummyFragment extends Fragment implements WPMainActivity.FragmentVi
         return view;
     }
 
-    /*
-     * called from main activity when user switches to/from the tab containing this fragment
-     */
-    @Override
-    public void onVisibilityChanged(boolean isVisible) {
-
-    }
 }

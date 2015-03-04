@@ -14,19 +14,13 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.ToastUtils;
-
-import java.lang.ref.WeakReference;
 
 public class ReaderActivityLauncher {
 

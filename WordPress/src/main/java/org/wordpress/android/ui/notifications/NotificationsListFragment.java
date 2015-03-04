@@ -2,11 +2,13 @@ package org.wordpress.android.ui.notifications;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,12 +23,11 @@ import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
 
+import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.WPMainActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -34,18 +35,17 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
 
 import javax.annotation.Nonnull;
 
-public class NotificationsListFragment extends Fragment
-        implements Bucket.Listener<Note>,
-                   WPMainActivity.FragmentVisibilityListener {
-
+public class NotificationsListFragment extends Fragment implements Bucket.Listener<Note> {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
+    private static final int NOTE_DETAIL_REQUEST_CODE = 0;
 
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
 
@@ -61,7 +61,7 @@ public class NotificationsListFragment extends Fragment
 
     public static NotificationsListFragment newInstance() {
         return new NotificationsListFragment();
-    }
+   }
 
     /**
      * For responding to tapping of notes
@@ -75,16 +75,36 @@ public class NotificationsListFragment extends Fragment
         View view = inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notes);
-        mLinearLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-
         RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
         animator.setSupportsChangeAnimations(true);
         mRecyclerView.setItemAnimator(animator);
+        mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+        // setup the initial notes adapter, starts listening to the bucket
+        mBucket = SimperiumUtils.getNotesBucket();
+        if (mBucket != null) {
+            if (mNotesAdapter == null) {
+                mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
+                mNotesAdapter.setOnNoteClickListener(new OnNoteClickListener() {
+                    @Override
+                    public void onClickNote(String noteId) {
+                        if (TextUtils.isEmpty(noteId)) return;
+
+                        // open the latest version of this note just in case it has changed - this can
+                        // happen if the note was tapped from the list fragment after it was updated
+                        // by another fragment (such as NotificationCommentLikeFragment)
+                        openNote(noteId, getActivity(), false);
+                    }
+                });
+            }
+
+            mRecyclerView.setAdapter(mNotesAdapter);
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
+        }
 
         mEmptyTextView = (TextView) view.findViewById(R.id.empty_view);
-
-        createBucketAndAdapter();
 
         return view;
     }
@@ -100,76 +120,19 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
-    /*
-     * called by the main activity when the page containing this fragment is shown/hidden
-     */
-    @Override
-    public void onVisibilityChanged(boolean isVisible) {
-        AppLog.d(AppLog.T.NOTIFS, "notification list > onVisibilityChanged " + isVisible);
-
-        if (isVisible) {
-
-        } else {
-
-        }
-    }
-
-    private void createBucketAndAdapter() {
-        if (mBucket == null) {
-            mBucket = SimperiumUtils.getNotesBucket();
-            if (mBucket == null) {
-                ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
-                return;
-            }
-        }
-
-        if (mNotesAdapter == null) {
-            mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
-            mNotesAdapter.setOnNoteClickListener(new OnNoteClickListener() {
-                @Override
-                public void onClickNote(String noteId) {
-                    if (TextUtils.isEmpty(noteId)) return;
-
-                    // open the latest version of this note just in case it has changed - this can
-                    // happen if the note was tapped from the list fragment after it was updated
-                    // by another fragment (such as NotificationCommentLikeFragment)
-                    openNote(noteId, getActivity(), false);
-                }
-            });
-        }
-
-        mRecyclerView.setAdapter(mNotesAdapter);
-    }
-
-    /*
-     * start listening to bucket change events
-     */
-    private void startBucketListener() {
-        if (mBucket != null) {
-            mBucket.addListener(this);
-        }
-    }
-
-    /*
-     * stop listening to bucket change events
-     */
-    private void stopBucketListener() {
-        if (mBucket != null) {
-            mBucket.addListener(this);
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-
         refreshNotes();
-        startBucketListener();
 
-        // TODO: determine where this should be handled (doesn't make sense here now it's a ViewPager fragment)
+        // start listening to bucket change events
+        if (mBucket != null) {
+            mBucket.addListener(this);
+        }
+
         // Remove notification if it is showing when we resume this activity.
-        // NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
-        // notificationManager.cancel(GCMIntentService.PUSH_NOTIFICATION_ID);
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
+        notificationManager.cancel(GCMIntentService.PUSH_NOTIFICATION_ID);
 
         if (SimperiumUtils.isUserAuthorized()) {
             SimperiumUtils.startBuckets();
@@ -179,7 +142,10 @@ public class NotificationsListFragment extends Fragment
 
     @Override
     public void onPause() {
-        stopBucketListener();
+        // unregister the listener
+        if (mBucket != null) {
+            mBucket.removeListener(this);
+        }
         super.onPause();
     }
 
@@ -196,7 +162,7 @@ public class NotificationsListFragment extends Fragment
     private void initSwipeToRefreshHelper() {
         mFauxSwipeToRefreshHelper = new SwipeToRefreshHelper(
                 getActivity(),
-                (SwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
+                (CustomSwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
                 new SwipeToRefreshHelper.RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -224,7 +190,12 @@ public class NotificationsListFragment extends Fragment
         Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
         detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
         detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard);
-        activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                activity,
+                R.anim.reader_activity_slide_in,
+                R.anim.reader_activity_scale_out);
+        ActivityCompat.startActivityForResult(activity, detailIntent, NOTE_DETAIL_REQUEST_CODE, options.toBundle());
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
@@ -325,7 +296,7 @@ public class NotificationsListFragment extends Fragment
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RequestCodes.NOTE_DETAIL && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == NOTE_DETAIL_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             if (SimperiumUtils.getNotesBucket() == null) return;
 
             try {

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.notifications.blocks;
 
 import android.content.Context;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -49,7 +51,11 @@ public class HeaderUserNoteBlock extends NoteBlock {
     public View configureView(View view) {
         final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder)view.getTag();
 
-        noteBlockHolder.nameTextView.setText(getUserName());
+        Spannable spannable = NotificationsUtils.getSpannableContentFromIndices(
+                mHeaderArray.optJSONObject(0),
+                null,
+                null);
+        noteBlockHolder.nameTextView.setText(spannable);
         noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
         if (!TextUtils.isEmpty(getUserUrl())) {
             noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);

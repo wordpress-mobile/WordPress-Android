@@ -36,7 +36,6 @@ public class UpdateBlogListTask extends AsyncTask<Void, Void, List<Map<String, O
     protected List<Map<String, Object>> doInBackground(Void... args) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
         final String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-        final String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         FetchBlogListWPCom fetchBlogList = new FetchBlogListWPCom();
         fetchBlogList.execute(new Callback() {
@@ -44,13 +43,13 @@ public class UpdateBlogListTask extends AsyncTask<Void, Void, List<Map<String, O
             public void onSuccess(List<Map<String, Object>> userBlogList) {
                 mUserBlogList = userBlogList;
                 if (mUserBlogList != null) {
-                    mBlogListChanged = BlogUtils.syncBlogs(mContext, mUserBlogList, username, password, null, null);
+                    mBlogListChanged = BlogUtils.syncBlogs(mContext, mUserBlogList, username);
                 }
                 countDownLatch.countDown();
             }
 
             @Override
-            public void onError(int messageId, boolean httpAuthRequired, boolean erroneousSslCertificate,
+            public void onError(int messageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate,
                                 String clientResponse) {
                 mErrorMsgId = messageId;
                 countDownLatch.countDown();

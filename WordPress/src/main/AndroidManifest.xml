@@ -68,20 +68,20 @@
         <activity
             android:name=".ui.accounts.SignInActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/SignInTheme" />
         <activity android:name=".ui.accounts.NewAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:theme="@style/SignInTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".ui.accounts.NewBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/SignInTheme"/>
         <activity
             android:name=".ui.accounts.HelpActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/SignInTheme"/>
 
         <!-- Preferences activities -->
         <activity
@@ -237,10 +237,6 @@
         </activity>
 
         <activity
-            android:name=".ui.accounts.WPComLoginActivity"
-            android:theme="@style/WordPress.Dialog">
-        </activity>
-        <activity
             android:name=".ui.AddQuickPressShortcutActivity"
             android:label="QuickPress" >
             <intent-filter>
@@ -249,8 +245,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.DashboardActivity" />
         <activity
             android:name=".ui.ViewSiteActivity"
             android:theme="@style/WordPress.DrawerActivity" />
@@ -308,6 +302,12 @@
 
         <service android:name=".ui.reader.services.ReaderUpdateService"
             android:label="Reader Update Service"
+            android:exported="false"/>
+        <service android:name=".ui.reader.services.ReaderPostService"
+            android:label="Reader Post Service"
+            android:exported="false"/>
+        <service android:name=".ui.reader.services.ReaderCommentService"
+            android:label="Reader Comment Service"
             android:exported="false"/>
 
         <service android:name="org.wordpress.android.GCMIntentService"/>

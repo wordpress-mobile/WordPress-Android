@@ -17,6 +17,7 @@
     <dimen name="card_elevation_pressed">4dp</dimen>
 
     <dimen name="message_bar_elevation">2dp</dimen>
+    <dimen name="tabstrip_elevation">4dp</dimen>
 
     <dimen name="drawer_width_static">300dp</dimen>
     <dimen name="drawer_row_height">40dp</dimen>

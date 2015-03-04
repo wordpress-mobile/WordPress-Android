@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.accounts.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.preference.PreferenceManager;
 
+import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
@@ -153,14 +155,24 @@ public class CreateUserAndBlog {
     }
 
     private void authenticateUser() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
-        editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
-        editor.commit();
+        LoginWPCom login = new LoginWPCom(mUsername, mPassword, null, false, null);
+        login.execute(new LoginAbstract.Callback() {
+            @Override
+            public void onSuccess() {
+                try {
+                    mResponseHandler.nextStep(new JSONObject("{\"success\":true}"));
+                } catch (JSONException e) {
+                    AppLog.e(T.API, "Could not parse JSON in new user setup");
+                }
+            }
+
+            @Override
+            public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate) {
+                mErrorListener.onErrorResponse(new VolleyError("Sign in failed."));
+            }
+        });
+
         mResponseHandler.setStep(Step.AUTHENTICATE_USER);
-        // fire off a request to get an access token
-        WordPress.getRestClientUtils().get("me", mResponseHandler, mErrorListener);
     }
 
     private void createBlog() {

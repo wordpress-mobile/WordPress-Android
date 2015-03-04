@@ -9,7 +9,8 @@
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/tab_background" />
+        android:background="@color/tab_background"
+        android:elevation="@dimen/tabstrip_elevation" />
 
     <org.wordpress.android.widgets.WPMainViewPager
         android:id="@+id/viewpager_main"

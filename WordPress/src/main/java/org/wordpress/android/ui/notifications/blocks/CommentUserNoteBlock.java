@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.notifications.blocks;
 
 import android.content.Context;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -54,7 +55,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     public View configureView(View view) {
         final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder)view.getTag();
 
-        noteBlockHolder.nameTextView.setText(getNoteText().toString());
+        noteBlockHolder.nameTextView.setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
         noteBlockHolder.agoTextView.setText(DateTimeUtils.timestampToTimeSpan(getTimestamp()));
         if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
             noteBlockHolder.bulletTextView.setVisibility(View.VISIBLE);
