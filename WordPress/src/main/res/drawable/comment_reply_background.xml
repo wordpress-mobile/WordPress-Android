@@ -10,7 +10,7 @@
         android:right="@dimen/margin_extra_large"
         android:top="@dimen/margin_large">
         <shape android:shape="rectangle">
-            <solid android:color="@color/calypso_blue_light" />
+            <solid android:color="@color/grey_light" />
             <padding
                 android:bottom="1dp"
                 android:left="20dp" />

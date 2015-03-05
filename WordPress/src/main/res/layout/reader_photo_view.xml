@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/reader_toast_err_view_image"
-        android:textColor="@color/grey_extra_light"
+        android:textColor="@color/grey_lighten_30"
         android:textSize="@dimen/text_sz_large"
         android:visibility="gone"
         tools:visibility="visible" />

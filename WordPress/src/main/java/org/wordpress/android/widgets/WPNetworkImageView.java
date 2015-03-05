@@ -355,7 +355,7 @@ public class WPNetworkImageView extends ImageView {
                 break;
             default :
                 // medium grey box for all others
-                setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_medium)));
+                setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_darken_10)));
                 break;
         }
     }

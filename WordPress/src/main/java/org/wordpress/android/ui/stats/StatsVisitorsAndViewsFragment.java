@@ -169,9 +169,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         public void updateBackGroundAndIcon() {
             if (isChecked) {
-                value.setTextColor(getResources().getColor(R.color.calypso_orange_dark));
+                value.setTextColor(getResources().getColor(R.color.notification_status_unapproved_dark));
             } else {
-                value.setTextColor(getResources().getColor(R.color.calypso_blue_unread));
+                value.setTextColor(getResources().getColor(R.color.blue_medium));
             }
 
             icon.setImageDrawable(getTabIcon());
@@ -403,7 +403,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(mainSeriesItems);
         mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
-        mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.calypso_orange_dark);
+        mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.orange_fire);
         mainSeriesOnScreen.getStyle().outerhighlightColor = getResources().getColor(R.color.stats_bar_graph_outer_highlight);
         mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
         mGraphView.addSeries(mainSeriesOnScreen);
@@ -413,7 +413,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             GraphViewSeries secondarySeries = new GraphViewSeries(secondarySeriesItems);
             secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 10);
             secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views_inner);
-            secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.orange_dark);
+            secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.orange_fire);
             mGraphView.addSeries(secondarySeries);
         }
 

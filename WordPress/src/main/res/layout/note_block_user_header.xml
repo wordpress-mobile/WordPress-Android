@@ -34,7 +34,7 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:textColor="@color/calypso_blue_dark"
+            android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
             tools:text="Bob Ross" />
 
@@ -48,7 +48,7 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:textColor="@color/blue_new_kid"
+            android:textColor="@color/blue_medium"
             android:textSize="@dimen/text_sz_large"
             tools:text="www.bobross.com" />
 
@@ -88,6 +88,6 @@
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/margin_extra_large"
             android:layout_marginRight="@dimen/margin_extra_large"
-            android:background="@color/calypso_blue_light" />
+            android:background="@color/grey_light" />
     </LinearLayout>
 </LinearLayout>
