@@ -59,11 +59,12 @@ public class WPLaunchActivity extends ActionBarActivity {
 
         if (sharedPreferences.contains(SettingsFragment.SETTINGS_PREFERENCES)) {
             String locale = sharedPreferences.getString(SettingsFragment.SETTINGS_PREFERENCES, "");
+            Locale storedLocale = new Locale(locale);
 
-            if (!locale.equals(Locale.getDefault().getDisplayLanguage())) {
+            if (!storedLocale.getDisplayLanguage().equals(getResources().getConfiguration().locale.getDisplayLanguage())) {
                 Resources resources = getResources();
                 Configuration conf = resources.getConfiguration();
-                conf.locale = new Locale(locale);
+                conf.locale = storedLocale;
                 resources.updateConfiguration(conf, resources.getDisplayMetrics());
 
                 Intent refresh = new Intent(this, WPLaunchActivity.class);
