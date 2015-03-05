@@ -14,7 +14,7 @@
     <dimen name="fab_margin_tablet">24dp</dimen>
     <dimen name="fab_elevation">8dp</dimen>
 
-    <dimen name="card_elevation">1dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">4dp</dimen>
 
     <dimen name="message_bar_elevation">2dp</dimen>
