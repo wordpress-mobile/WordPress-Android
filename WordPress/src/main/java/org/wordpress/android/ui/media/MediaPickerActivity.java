@@ -84,10 +84,6 @@ public class MediaPickerActivity extends ActionBarActivity
     private static final String CAPTURE_PATH_KEY = "capture-path";
 
     private static final long   TAB_ANIMATION_DURATION_MS = 250l;
-    private static final String TAB_TITLE_DEVICE_IMAGES = "Device Images";
-    private static final String TAB_TITLE_DEVICE_VIDEOS = "Device Videos";
-    private static final String TAB_TITLE_BLOG_IMAGES = "Blog Images";
-    private static final String TAB_TITLE_BLOG_VIDEOS = "Blog Videos";
 
     private MediaPickerAdapter     mMediaPickerAdapter;
     private ArrayList<MediaSource>[] mMediaSources;
@@ -361,18 +357,10 @@ public class MediaPickerActivity extends ActionBarActivity
         if (mViewPager != null) {
             mViewPager.setPagingEnabled(true);
 
-            if (mMediaSources[0] != null && !mMediaSources[0].isEmpty()) {
-                mMediaPickerAdapter.addTab(mMediaSources[0], TAB_TITLE_DEVICE_IMAGES);
-            }
-            if (mMediaSources[1] != null && !mMediaSources[1].isEmpty()) {
-                mMediaPickerAdapter.addTab(mMediaSources[1], TAB_TITLE_DEVICE_VIDEOS);
-            }
-            if (mMediaSources[2] != null && !mMediaSources[2].isEmpty()) {
-                mMediaPickerAdapter.addTab(mMediaSources[2], TAB_TITLE_BLOG_IMAGES);
-            }
-            if (mMediaSources[3] != null && !mMediaSources[3].isEmpty()) {
-                mMediaPickerAdapter.addTab(mMediaSources[3], TAB_TITLE_BLOG_VIDEOS);
-            }
+            mMediaPickerAdapter.addTab(mMediaSources[0] != null ? mMediaSources[0] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_images));
+            mMediaPickerAdapter.addTab(mMediaSources[1] != null ? mMediaSources[1] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_videos));
+            mMediaPickerAdapter.addTab(mMediaSources[2] != null ? mMediaSources[2] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_images));
+            mMediaPickerAdapter.addTab(mMediaSources[3] != null ? mMediaSources[3] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_videos));
 
             mViewPager.setAdapter(mMediaPickerAdapter);
 
