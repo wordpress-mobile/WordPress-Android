@@ -1449,10 +1449,10 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                             if (isChecked) {
-                                text.setTextColor(getResources().getColor(R.color.calypso_blue));
+                                text.setTextColor(getResources().getColor(R.color.grey));
                                 removedContent.add(collectionIds.get(position));
                             } else {
-                                text.setTextColor(getResources().getColor(R.color.calypso_blue_dark));
+                                text.setTextColor(getResources().getColor(R.color.grey_dark));
                                 removedContent.remove(collectionIds.get(position));
                             }
                         }

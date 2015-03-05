@@ -450,7 +450,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    ReaderPost getItem(int position) {
+    public ReaderPost getItem(int position) {
         if (isValidPosition(position)) {
             return mPosts.get(position);
         } else {

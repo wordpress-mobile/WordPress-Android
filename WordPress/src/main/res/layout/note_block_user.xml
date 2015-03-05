@@ -47,7 +47,7 @@
                 android:includeFontPadding="false"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/blue_new_kid"
+                android:textColor="@color/blue_medium"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="Paint with Me" />
 
@@ -58,7 +58,7 @@
                 android:includeFontPadding="false"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/calypso_blue"
+                android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="www.bobross.com" />
 

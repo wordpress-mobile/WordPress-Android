@@ -69,7 +69,7 @@ public class MediaSourceWPImages implements MediaSource {
                     }
 
                     if (imageBitmap == null) {
-                        imageView.setImageResource(R.color.grey_medium);
+                        imageView.setImageResource(R.color.grey_darken_10);
                         MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(imageView);
                         imageView.setTag(bgDownload);
                         bgDownload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaItem.getPreviewSource());
@@ -78,7 +78,7 @@ public class MediaSourceWPImages implements MediaSource {
                     }
                 } else {
                     imageView.setTag(null);
-                    imageView.setImageResource(R.color.grey_medium);
+                    imageView.setImageResource(R.color.grey_darken_10);
                 }
             }
         }

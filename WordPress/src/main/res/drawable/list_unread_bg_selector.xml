@@ -15,5 +15,5 @@
     android:drawable="@color/list_selected" />
 
 <item
-    android:drawable="@color/calypso_blue_light" />
+    android:drawable="@color/grey_light" />
 </selector>

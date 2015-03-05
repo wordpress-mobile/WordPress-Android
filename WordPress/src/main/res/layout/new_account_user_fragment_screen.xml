@@ -71,7 +71,7 @@
                     android:src="@drawable/dashicon_email"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:tint="@color/grey_medium"/>
+                    android:tint="@color/grey_darken_10"/>
 
             </RelativeLayout>
 
@@ -100,7 +100,7 @@
                     android:src="@drawable/dashicon_admin_users"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:tint="@color/grey_medium"/>
+                    android:tint="@color/grey_darken_10"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -128,7 +128,7 @@
                     android:src="@drawable/dashicon_lock"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:tint="@color/grey_medium"/>
+                    android:tint="@color/grey_darken_10"/>
 
                 <ImageView
                     android:layout_width="24dp"
@@ -180,7 +180,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="4dp"
-                    android:textColor="@color/grey_medium"
+                    android:textColor="@color/grey_darken_10"
                     android:textSize="@dimen/nux_edit_field_font_size"/>
 
                 <ImageView
@@ -193,7 +193,7 @@
                     android:src="@drawable/dashicon_admin_site"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:tint="@color/grey_medium"/>
+                    android:tint="@color/grey_darken_10"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -233,7 +233,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:textColor="@color/blue_extra_light"
+                android:textColor="@color/blue_light"
                 android:gravity="center|top"/>
 
             <org.wordpress.android.widgets.WPTextView

@@ -383,6 +383,20 @@ public class ReaderPostTable {
     }
 
     /*
+     * returns the id of the newest post with the passed tag
+     */
+    public static long getNewestPostIdWithTag(final ReaderTag tag) {
+        if (tag == null) {
+            return 0;
+        }
+        String sql = "SELECT tbl_posts.post_id FROM tbl_posts, tbl_post_tags"
+                  + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
+                  + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?"
+                  + " ORDER BY published DESC LIMIT 1";
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(), sql, args);
+    }
+    /*
      * returns the iso8601 published date of the oldest post with the passed tag
      */
     public static String getOldestPubDateWithTag(final ReaderTag tag) {

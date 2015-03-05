@@ -17,7 +17,7 @@
         <item name="android:textColorLink">@color/reader_hyperlink</item>
     </style>
     <style name="ReaderTextView.Label" parent="ReaderTextView">
-        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
     <style name="ReaderTextView.Label.Medium" parent="ReaderTextView.Label">
@@ -60,12 +60,12 @@
     </style>
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
         <item name="android:drawableLeft">@drawable/noticon_clock</item>
     </style>
     <style name="ReaderTextView.Date.Large" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
         <item name="android:drawableLeft">@drawable/noticon_clock</item>
     </style>
     <style name="ReaderTextView.Comment.Author" parent="ReaderTextView">
@@ -110,7 +110,7 @@
     <!-- EditTexts -->
     <style name="ReaderEditText" parent="android:Widget.EditText">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColorHint">@color/grey_medium</item>
+        <item name="android:textColorHint">@color/grey_darken_10</item>
     </style>
     <style name="ReaderEditText.Topic" parent="ReaderEditText">
         <item name="android:background">@color/transparent</item>

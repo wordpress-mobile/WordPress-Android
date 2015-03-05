@@ -440,7 +440,6 @@
     <string name="stats_empty_clicks_desc">When your content includes links to other sites, you’ll see which ones your visitors click on the most.</string>
     <string name="stats_empty_search_engine_terms_title">No search terms</string>
     <string name="stats_empty_search_engine_terms_desc">Search terms are words or phrases users find you with when they search.</string>
-    <string name="stats_empty_top_authors">No posts viewed</string>
     <string name="stats_empty_top_authors_desc">Track the views on each contributor\'s posts, and zoom in to discover the most popular content by each author.</string>
     <string name="stats_empty_tags_and_categories">No tagged posts or pages viewed</string>
     <string name="stats_empty_tags_and_categories_desc">Get an overview of the most popular topics on your site, as reflected in your top posts from the past week.</string>

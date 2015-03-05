@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:background="@color/grey_medium" />
+        android:background="@color/grey_darken_10" />
 
     <ImageView
         android:contentDescription="@string/cd_media_item_overlay"

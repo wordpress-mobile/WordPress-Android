@@ -64,7 +64,7 @@ public class MediaSourceWPVideos implements MediaSource {
 
                     imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     if (imageBitmap == null) {
-                        imageView.setImageResource(R.color.grey_medium);
+                        imageView.setImageResource(R.color.grey_darken_10);
                         MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(imageView);
                         imageView.setTag(bgDownload);
                         bgDownload.execute(mediaItem.getPreviewSource());
