@@ -40,7 +40,8 @@ public class FloatingActionButton extends ImageButton {
     void init(Context context) {
         mIsLollipop = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
         if (mIsLollipop) {
-            setElevation(DisplayUtils.dpToPx(context, 4));
+            int elevation = context.getResources().getDimensionPixelSize(R.dimen.fab_elevation);
+            setElevation(elevation);
         }
 
         int fabColor = context.getResources().getColor(R.color.fab_color);
