@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="white">#FFFFFF</color>
-    <color name="wordpress_blue">#21759B</color>
-    <color name="blue_new_kid">#2EA2CC</color>
-    <color name="grey_extra_light">#eeeeee</color>
+    <color name="format_bar_button_selected">#00aadc</color>
+    <color name="placeholder_content_text">#21759B</color>
+    <color name="format_bar_background">#eeeeee</color>
+    <color name="image_options_label">#cccccc</color>
     <color name="pressed_wordpress">#CC78C8E6</color>
-    <color name="image_options_label">#CCCCCC</color>
 </resources>
