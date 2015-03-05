@@ -999,10 +999,26 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
+        // show "new posts" bar if new posts were downloaded in a followed tag and the adapter
+        // isn't empty (if it's empty, we want to display the new posts immediately)
+        boolean showNewPostsBar;
         if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW
                 && !isPostAdapterEmpty()
                 && event.getAction() == UpdateAction.REQUEST_NEWER
                 && getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            // make sure that these new posts will actually appear at the top of the list - we
+            // don't want to show "new posts" if the new posts are older ones since the user
+            // expects to see the new posts at the top of the list. we do this by getting the
+            // id of the newest post in the database (which will contain the newly downloaded
+            // posts) and comparing it to the id of the first post in the adapter
+            long newestPostId = ReaderPostTable.getNewestPostIdWithTag(getCurrentTag());
+            ReaderPost post = getPostAdapter().getItem(0);
+            showNewPostsBar = (post != null && post.postId != newestPostId);
+        } else {
+            showNewPostsBar = false;
+        }
+
+        if (showNewPostsBar) {
             showNewPostsBar();
             refreshPosts();
         } else if (event.getResult().isNewOrChanged()) {

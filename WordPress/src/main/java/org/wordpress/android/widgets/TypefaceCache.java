@@ -11,33 +11,50 @@ import org.wordpress.android.R;
 import java.util.Hashtable;
 
 public class TypefaceCache {
-    protected static final int VARIATION_NORMAL = 0;
-    protected static final int VARIATION_LIGHT = 1;
+    private static final int VARIATION_NORMAL = 0;
+    private static final int VARIATION_LIGHT = 1;
 
-    private static final Hashtable<String, Typeface> mTypefaceCache = new Hashtable<String, Typeface>();
+    private static final Hashtable<String, Typeface> mTypefaceCache = new Hashtable<>();
 
     public static Typeface getTypeface(Context context) {
         return getTypeface(context, Typeface.NORMAL, VARIATION_NORMAL);
     }
-    public static Typeface getTypeface(Context context, int fontStyle, int variation) {
-        if (context == null)
+    private static Typeface getTypeface(Context context, int fontStyle, int variation) {
+        if (context == null) {
             return null;
+        }
 
-        // note that the "light" variation doesn't support bold or bold-italic
         final String typefaceName;
-        switch (fontStyle) {
-            case Typeface.BOLD:
-                typefaceName = "OpenSans-Bold.ttf";
-                break;
-            case Typeface.ITALIC:
-                typefaceName = (variation == VARIATION_LIGHT ? "OpenSans-LightItalic.ttf" : "OpenSans-Italic.ttf");
-                break;
-            case Typeface.BOLD_ITALIC:
-                typefaceName = "OpenSans-BoldItalic.ttf";
-                break;
-            default:
-                typefaceName = (variation == VARIATION_LIGHT ? "OpenSans-Light.ttf" : "OpenSans-Regular.ttf");
-                break;
+        if (variation == VARIATION_LIGHT) {
+            switch (fontStyle) {
+                case Typeface.BOLD:
+                    typefaceName = "OpenSans-LightBold.ttf";
+                    break;
+                case Typeface.ITALIC:
+                    typefaceName = "OpenSans-LightItalic.ttf";
+                    break;
+                case Typeface.BOLD_ITALIC:
+                    typefaceName = "OpenSans-LightBoldItalic.ttf";
+                    break;
+                default:
+                    typefaceName = "OpenSans-Light.ttf";
+                    break;
+            }
+        } else {
+            switch (fontStyle) {
+                case Typeface.BOLD:
+                    typefaceName = "OpenSans-Bold.ttf";
+                    break;
+                case Typeface.ITALIC:
+                    typefaceName = "OpenSans-Italic.ttf";
+                    break;
+                case Typeface.BOLD_ITALIC:
+                    typefaceName = "OpenSans-BoldItalic.ttf";
+                    break;
+                default:
+                    typefaceName = "OpenSans-Regular.ttf";
+                    break;
+            }
         }
 
         return getTypefaceForTypefaceName(context, typefaceName);

@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -270,6 +270,20 @@ public class StatsUtils {
         }
     }
 
+    public static synchronized void logVolleyErrorDetails(final VolleyError volleyError) {
+        if (volleyError == null) {
+            AppLog.e(T.STATS, "Tried to log a VolleyError, but the error obj was null!");
+            return;
+        }
+        if (volleyError.networkResponse != null) {
+            NetworkResponse networkResponse = volleyError.networkResponse;
+            AppLog.e(T.STATS, "Network status code: " + networkResponse.statusCode);
+            if (networkResponse.data != null) {
+                AppLog.e(T.STATS, "Network data: " + new String(networkResponse.data));
+            }
+        }
+        AppLog.e(T.STATS, "Volley Error details: " + volleyError.getMessage(), volleyError);
+    }
 
     public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
             throws JSONException {

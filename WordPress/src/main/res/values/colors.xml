@@ -110,7 +110,11 @@
     <color name="stats_lists_background_color">@color/grey_light</color>
     <color name="stats_empty_placeholder_color">@color/translucent_grey_lighten_30</color>
 
-    <!-- Reader -->
+    <!-- TODO: Stats "custom" colors - calypso_orange_dark doesn't exist anymore -->
+    <color name="stats_bar_graph_views_inner">#004e70</color>
+    <color name="stats_bar_graph_outer_highlight">#40f0821e</color> <!-- 25% Opacity on calypso_orange_dark -->
+
+    <!-- Reader  -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
 

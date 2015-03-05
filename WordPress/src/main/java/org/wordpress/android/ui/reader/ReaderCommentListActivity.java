@@ -71,6 +71,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
 
     private boolean mIsUpdatingComments;
     private boolean mHasUpdatedComments;
+    private boolean mIsSubmittingComment;
     private long mReplyToCommentId;
     private int mRestorePosition;
 
@@ -358,7 +359,9 @@ public class ReaderCommentListActivity extends ActionBarActivity {
 
     private void checkEmptyView() {
         TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
-        boolean isEmpty = hasCommentAdapter() && getCommentAdapter().isEmpty();
+        boolean isEmpty = hasCommentAdapter()
+                && getCommentAdapter().isEmpty()
+                && !mIsSubmittingComment;
         if (isEmpty && !NetworkUtils.isNetworkAvailable(this)) {
             txtEmpty.setText(R.string.no_network_message);
             txtEmpty.setVisibility(View.VISIBLE);
@@ -406,6 +409,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
 
         mImgSubmitComment.setEnabled(false);
         mEditComment.setEnabled(false);
+        mIsSubmittingComment = true;
 
         // generate a "fake" comment id to assign to the new comment so we can add it to the db
         // and reflect it in the adapter before the API call returns
@@ -417,6 +421,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                 if (isFinishing()) {
                     return;
                 }
+                mIsSubmittingComment = false;
                 mImgSubmitComment.setEnabled(true);
                 mEditComment.setEnabled(true);
                 if (succeeded) {
@@ -431,6 +436,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                     ToastUtils.showToast(
                             ReaderCommentListActivity.this, R.string.reader_toast_err_comment_failed, ToastUtils.Duration.LONG);
                 }
+                checkEmptyView();
             }
         };
 
@@ -449,6 +455,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             getCommentAdapter().addComment(newComment);
             // make sure it's scrolled into view
             scrollToCommentId(fakeCommentId);
+            checkEmptyView();
         }
     }
 
