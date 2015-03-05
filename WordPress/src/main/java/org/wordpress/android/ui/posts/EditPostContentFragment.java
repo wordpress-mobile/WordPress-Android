@@ -697,16 +697,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         });
     }
 
-    private void launchVideoLibrary() {
-        MediaUtils.launchVideoLibrary(this);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-
-    private void launchVideoCamera() {
-        MediaUtils.launchVideoCamera(this);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-
     private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
             // Create an AsyncTask to download the file
