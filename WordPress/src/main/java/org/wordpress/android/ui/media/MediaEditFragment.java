@@ -25,6 +25,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
@@ -258,13 +259,13 @@ public class MediaEditFragment extends Fragment {
     private void refreshImageView(Cursor cursor, boolean isLocal) {
         final String imageUri;
         if (isLocal) {
-            imageUri = cursor.getString(cursor.getColumnIndex("filePath"));
+            imageUri = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
         } else {
-            imageUri = cursor.getString(cursor.getColumnIndex("fileURL"));
+            imageUri = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
         }
         if (MediaUtils.isValidImage(imageUri)) {
-            int width = cursor.getInt(cursor.getColumnIndex("width"));
-            int height = cursor.getInt(cursor.getColumnIndex("height"));
+            int width = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
+            int height = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
 
             // differentiating between tablet and phone
             float screenWidth;
@@ -304,7 +305,7 @@ public class MediaEditFragment extends Fragment {
 
         mScrollView.scrollTo(0, 0);
 
-        String state = cursor.getString(cursor.getColumnIndex("uploadState"));
+        String state = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_UPLOAD_STATE));
         boolean isLocal = MediaUtils.isLocalFile(state);
         if (isLocal) {
             mNetworkImageView.setVisibility(View.GONE);
@@ -320,12 +321,12 @@ public class MediaEditFragment extends Fragment {
         mCaptionView.setEnabled(!isLocal);
         mDescriptionView.setEnabled(!isLocal);
 
-        mMediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
-        mTitleView.setText(cursor.getString(cursor.getColumnIndex("title")));
+        mMediaId = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID));
+        mTitleView.setText(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE)));
         mTitleView.requestFocus();
         mTitleView.setSelection(mTitleView.getText().length());
-        mCaptionView.setText(cursor.getString(cursor.getColumnIndex("caption")));
-        mDescriptionView.setText(cursor.getString(cursor.getColumnIndex("description")));
+        mCaptionView.setText(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION)));
+        mDescriptionView.setText(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DESCRIPTION)));
 
         refreshImageView(cursor, isLocal);
         disableEditingOnOldVersion();

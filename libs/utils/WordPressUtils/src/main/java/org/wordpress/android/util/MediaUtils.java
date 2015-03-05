@@ -11,8 +11,6 @@ import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.helpers.MediaFile;
-import org.wordpress.android.util.helpers.WPImageSpan;
 
 import java.io.DataInputStream;
 import java.io.File;

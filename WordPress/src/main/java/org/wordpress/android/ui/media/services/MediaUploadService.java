@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.helpers.MediaFile;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
@@ -106,11 +107,11 @@ public class MediaUploadService extends Service {
 
         mUploadInProgress = true;
 
-        final String blogIdStr = cursor.getString((cursor.getColumnIndex("blogId")));
-        final String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
-        String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
-        String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
-        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
+        final String blogIdStr = cursor.getString((cursor.getColumnIndex(WordPressDB.COLUMN_NAME_BLOG_ID)));
+        final String mediaId = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID));
+        String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
+        String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
+        String mimeType = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MIME_TYPE));
 
         MediaFile mediaFile = new MediaFile();
         mediaFile.setBlogId(blogIdStr);
@@ -125,7 +126,7 @@ public class MediaUploadService extends Service {
                 // once the file has been uploaded, delete the local database entry and
                 // download the new one so that we are up-to-date and so that users can edit it.
                 WordPress.wpDB.deleteMediaFile(blogIdStr, mediaId);
-                sendUpdateBroadcast(mediaId, null);
+                sendUpdateBroadcast(mediaId, id);
                 fetchMediaFile(id);
             }
 

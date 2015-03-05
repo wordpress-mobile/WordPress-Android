@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<org.wordpress.mediapicker.CheckableFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/media_item_height"
+    android:layout_marginLeft="@dimen/media_item_frame_margin_left"
+    android:layout_marginStart="@dimen/media_item_frame_margin_left"
+    android:layout_marginTop="@dimen/media_item_frame_margin_top"
+    android:layout_marginRight="@dimen/media_item_frame_margin_right"
+    android:layout_marginEnd="@dimen/media_item_frame_margin_right"
+    android:layout_marginBottom="@dimen/media_item_frame_margin_bottom"
+    android:paddingLeft="@dimen/media_item_frame_padding_left"
+    android:paddingTop="@dimen/media_item_frame_padding_top"
+    android:paddingRight="@dimen/media_item_frame_padding_right"
+    android:paddingEnd="@dimen/media_item_frame_padding_right"
+    android:paddingBottom="@dimen/media_item_frame_padding_bottom"
+    android:background="@drawable/media_item_frame_selector">
+
+    <ImageView
+        android:contentDescription="@string/cd_media_item_image"
+        android:id="@+id/wp_image_view_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:contentDescription="@string/cd_media_item_overlay"
+        android:id="@+id/wp_image_view_overlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:paddingEnd="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="4dp"
+        android:background="@drawable/dashicon_wordpress_alt"
+        android:scaleType="centerInside" />
+
+</org.wordpress.mediapicker.CheckableFrameLayout>
