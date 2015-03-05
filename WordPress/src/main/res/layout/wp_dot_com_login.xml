@@ -24,7 +24,9 @@
         android:inputType="textPassword"
         android:singleLine="true"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/password_visibility"/>
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/password_visibility"
+        android:layout_toStartOf="@+id/password_visibility"/>
 
     <ImageView
         android:id="@+id/password_visibility"
@@ -32,12 +34,14 @@
         android:layout_height="wrap_content"
         android:src="@drawable/dashicon_eye_closed"
         android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:layout_alignParentRight="true"
         android:tint="@color/nux_eye_icon_color_closed"
         android:layout_alignBottom="@+id/dotcomPassword"
         android:layout_marginBottom="16dp"
         android:layout_alignParentEnd="false"
-        android:layout_marginLeft="8dp"/>
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"/>
 
     <Button
         android:id="@+id/saveDotcom"
@@ -45,6 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_below="@id/dotcomPassword"
         android:text="@string/sign_in"/>
 
@@ -53,7 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/reader_hyperlink"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:text="@string/need_help_signin_wpcom"
         android:paddingLeft="@dimen/margin_small"

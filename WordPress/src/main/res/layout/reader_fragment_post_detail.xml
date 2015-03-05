@@ -41,7 +41,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/reader_detail_margin"
+                android:layout_marginStart="@dimen/reader_detail_margin"
                 android:layout_marginRight="@dimen/reader_detail_margin"
+                android:layout_marginEnd="@dimen/reader_detail_margin"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 

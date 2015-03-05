@@ -22,6 +22,7 @@
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
             android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
+            android:layout_marginEnd="@dimen/notifications_adjusted_font_margin"
             android:layout_marginTop="@dimen/comment_avatar_margin_top" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -31,6 +32,7 @@
             android:layout_alignTop="@id/header_avatar"
             android:layout_marginTop="@dimen/comment_user_margin_adjustment"
             android:layout_toRightOf="@id/header_avatar"
+            android:layout_toEndOf="@id/header_avatar"
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:singleLine="true"
@@ -45,6 +47,7 @@
             android:layout_alignTop="@id/header_avatar"
             android:layout_marginTop="@dimen/comment_snippet_margin_adjustment"
             android:layout_toRightOf="@id/header_avatar"
+            android:layout_toEndOf="@id/header_avatar"
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:singleLine="true"
@@ -87,7 +90,9 @@
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginRight="@dimen/margin_extra_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:background="@color/calypso_blue_light" />
     </LinearLayout>
 </LinearLayout>

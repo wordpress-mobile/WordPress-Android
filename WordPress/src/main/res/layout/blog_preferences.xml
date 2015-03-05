@@ -151,6 +151,7 @@
                     android:layout_marginTop="4dp"
                     android:text="@string/view_admin"
                     android:drawableRight="@drawable/dashicon_external_black"
+                    android:drawableEnd="@drawable/dashicon_external_black"
                     android:onClick="viewAdmin"
                     />
 

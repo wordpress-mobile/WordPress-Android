@@ -23,8 +23,10 @@
         android:layout_alignWithParentIfMissing="true"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@id/drag_handle"
+        android:layout_toEndOf="@id/drag_handle"
         android:inflatedId="@+id/media_grid_item_image"
         android:scaleType="fitCenter" />
 
@@ -32,8 +34,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@id/media_grid_item_image"
+        android:layout_toEndOf="@id/media_grid_item_image"
         android:orientation="vertical" >
 
         <org.wordpress.android.widgets.WPTextView

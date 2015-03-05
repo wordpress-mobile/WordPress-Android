@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="-3dp"
+                android:layout_marginStart="-3dp"
                 android:textColor="@color/calypso_grey"
                 android:textSize="18sp"
                 tools:text="\uf303" />
@@ -42,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
                 tools:text="TODAY" />
         </LinearLayout>
 
@@ -78,6 +80,7 @@
                     android:layout_width="@dimen/avatar_sz_medium"
                     android:layout_height="@dimen/avatar_sz_medium"
                     android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
+                    android:layout_marginEnd="@dimen/notifications_adjusted_font_margin"
                     android:layout_marginTop="@dimen/margin_small" />
 
                 <LinearLayout
@@ -103,6 +106,7 @@
                     android:layout_width="@dimen/note_icon_sz"
                     android:layout_height="@dimen/note_icon_sz"
                     android:layout_marginLeft="31dp"
+                    android:layout_marginStart="31dp"
                     android:layout_marginTop="35dp"
                     android:background="@drawable/shape_oval_blue_white_stroke"
                     android:gravity="center"

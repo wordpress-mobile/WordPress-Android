@@ -28,7 +28,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:background="@drawable/media_blue_button_selector"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
@@ -42,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/media_edit_save_button"
                 android:layout_toLeftOf="@id/media_edit_save_button"
+                android:layout_toStartOf="@id/media_edit_save_button"
                 android:hint="@string/media_edit_title_hint"
                 android:inputType="textCapSentences|textAutoCorrect" />
         </RelativeLayout>

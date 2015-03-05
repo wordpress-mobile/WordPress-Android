@@ -20,6 +20,7 @@
         android:layout_width="@dimen/avatar_sz_medium"
         android:layout_height="@dimen/avatar_sz_medium"
         android:layout_marginRight="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
         android:layout_weight="0" />
 
     <LinearLayout
@@ -34,6 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/grey_dark"

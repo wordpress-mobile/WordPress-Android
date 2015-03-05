@@ -26,7 +26,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginStart="@dimen/reader_detail_margin"
         android:layout_marginRight="@dimen/reader_detail_margin"
+        android:layout_marginEnd="@dimen/reader_detail_margin"
         android:layout_marginTop="@dimen/margin_small"
         android:background="?android:selectableItemBackground"
         android:orientation="horizontal">
@@ -35,6 +37,7 @@
             android:id="@+id/image_avatar"
             style="@style/ReaderImageView.Avatar"
             android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
             android:background="?android:selectableItemBackground" />
 
         <LinearLayout
@@ -67,6 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
             android:background="?android:selectableItemBackground"
             android:paddingBottom="@dimen/margin_large"
             android:paddingLeft="@dimen/margin_large"
@@ -80,7 +84,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginStart="@dimen/reader_detail_margin"
         android:layout_marginRight="@dimen/reader_detail_margin"
+        android:layout_marginEnd="@dimen/reader_detail_margin"
         android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
@@ -103,7 +109,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginStart="@dimen/reader_detail_margin"
         android:layout_marginRight="@dimen/reader_detail_margin"
+        android:layout_marginEnd="@dimen/reader_detail_margin"
         android:layout_marginTop="@dimen/margin_large"
         android:scrollbars="none" />
 
@@ -113,7 +121,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginStart="@dimen/reader_detail_margin"
         android:layout_marginRight="@dimen/reader_detail_margin"
+        android:layout_marginEnd="@dimen/reader_detail_margin"
         android:layout_marginTop="@dimen/margin_medium"
         android:background="?android:selectableItemBackground"
         android:visibility="gone"
@@ -142,7 +152,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginStart="@dimen/reader_detail_margin"
         android:layout_marginRight="@dimen/reader_detail_margin"
+        android:layout_marginEnd="@dimen/reader_detail_margin"
         android:layout_marginTop="@dimen/margin_medium"
         android:gravity="center"
         android:padding="@dimen/margin_medium"

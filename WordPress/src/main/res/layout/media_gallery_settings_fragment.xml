@@ -25,7 +25,9 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@color/white" />
 
     <ScrollView
@@ -58,7 +60,7 @@
                     style="@style/MediaGalleryText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left|center_vertical"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_weight="2"
                     android:button="@drawable/media_gallery_checkbox_selector"
                     android:text="@string/media_gallery_image_order_random" />
@@ -68,7 +70,7 @@
                     style="@style/MediaGalleryText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:layout_weight="1"
                     android:background="@drawable/media_gallery_option_selector"
                     android:padding="8dp"

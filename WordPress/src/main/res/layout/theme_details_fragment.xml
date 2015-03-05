@@ -14,6 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
             android:fontFamily="sans-serif-light"
             android:text="This is a text"
@@ -27,6 +28,7 @@
             android:layout_below="@id/theme_details_fragment_name"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal" >
 
@@ -35,6 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/theme_icon_current"
+                android:drawableStart="@drawable/theme_icon_current"
                 android:drawablePadding="8dp"
                 android:fontFamily="sans-serif-light"
                 android:paddingRight="16dp"
@@ -47,6 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/theme_icon_premium"
+                android:drawableStart="@drawable/theme_icon_premium"
                 android:drawablePadding="8dp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/theme_premium_theme"
@@ -61,7 +65,9 @@
             android:layout_below="@id/theme_details_fragment_attributes_container"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="12dp" />
 
         <LinearLayout
@@ -81,6 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/media_blue_button_selector"
                 android:fontFamily="sans-serif-light"
@@ -157,6 +164,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/theme_details_divider"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="18dp"
             android:text="@string/themes_details_label"
             android:textColor="@color/black"
@@ -168,7 +176,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/theme_details_fragment_details_label"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:fontFamily="sans-serif-light"
             android:textColor="@color/black"
             android:textSize="16sp"
@@ -181,6 +191,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/theme_details_fragment_details_description"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="18dp"
             android:text="@string/themes_features_label"
             android:textColor="@color/black"
@@ -192,7 +203,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/theme_details_fragment_features_label"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal" >
         </LinearLayout>

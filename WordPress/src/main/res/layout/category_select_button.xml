@@ -6,4 +6,5 @@
         android:layout_height="fill_parent"
         android:id="@+id/selectCategories"
         android:drawableRight="@drawable/ic_add_grey600_24dp"
+        android:drawableEnd="@drawable/ic_add_grey600_24dp"
         android:tag="select-category"/>

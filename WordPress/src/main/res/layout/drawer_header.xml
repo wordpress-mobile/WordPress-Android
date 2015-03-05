@@ -19,7 +19,9 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginLeft="@dimen/drawer_row_keyline"
+        android:layout_marginStart="@dimen/drawer_row_keyline"
         android:layout_marginRight="@dimen/drawer_row_keyline"
+        android:layout_marginEnd="@dimen/drawer_row_keyline"
         tools:listitem="@layout/spinner_textview_drawer"/>
 
     <org.wordpress.android.widgets.WPTextView
@@ -29,7 +31,9 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:layout_marginLeft="@dimen/drawer_row_keyline"
+        android:layout_marginStart="@dimen/drawer_row_keyline"
         android:layout_marginRight="@dimen/drawer_row_keyline"
+        android:layout_marginEnd="@dimen/drawer_row_keyline"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_large"
         android:visibility="gone"
