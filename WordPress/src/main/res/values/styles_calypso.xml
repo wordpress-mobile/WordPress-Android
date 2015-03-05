@@ -18,17 +18,17 @@
     </style>
 
     <style name="Calypso.TextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@color/calypso_blue_dark</item>
+        <item name="android:textColor">@color/grey_dark</item>
     </style>
 
     <style name="Calypso.Text.Date" parent="android:Widget.TextView">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColor">@color/calypso_grey</item>
+        <item name="android:textColor">@color/grey_lighten_10</item>
     </style>
 
     <style name="Calypso.Text.Header" parent="android:Widget.TextView">
         <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textColor">@color/calypso_grey</item>
+        <item name="android:textColor">@color/grey_lighten_10</item>
         <item name="android:textStyle">bold</item>
     </style>
 

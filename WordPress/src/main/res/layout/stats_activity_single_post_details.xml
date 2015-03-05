@@ -57,7 +57,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textColor="@color/calypso_blue_dark"
+                        android:textColor="@color/grey_dark"
                         android:layout_alignParentLeft="true" />
 
                     <org.wordpress.android.widgets.WPTextView
@@ -65,7 +65,7 @@
                         style="@style/StatsHeaderTotalsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/calypso_orange_dark"
+                        android:textColor="@color/notification_status_unapproved_dark"
                         android:text="0"
                         android:layout_alignParentRight="true" />
 

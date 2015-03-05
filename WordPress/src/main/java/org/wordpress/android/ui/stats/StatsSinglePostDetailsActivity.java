@@ -342,6 +342,9 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mGraphView.addSeries(mCurrentSeriesOnScreen);
         //mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
+        mGraphView.getGraphViewStyle().setMaxColumnWidth(
+                DisplayUtils.dpToPx(this, StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP)
+        );
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setGestureListener(this);
         mSelectedBarGraphIndex = (mSelectedBarGraphIndex != -1) ? mSelectedBarGraphIndex : dataToShowOnGraph.length - 1;

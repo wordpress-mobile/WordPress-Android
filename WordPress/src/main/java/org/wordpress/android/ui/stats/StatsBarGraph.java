@@ -103,19 +103,9 @@ class StatsBarGraph extends GraphView {
     private class HorizontalLabelsColor implements IndexDependentColor {
         public int get(int index) {
             if (mBarPositionToHighlight == index) {
-                return getResources().getColor(R.color.calypso_orange_dark);
+                return getResources().getColor(R.color.notification_status_unapproved_dark);
             } else {
                 return getResources().getColor(R.color.blue_dark);
-            }
-        }
-    }
-
-    private class HorizontalLabelsBackgroundColor implements IndexDependentColor {
-        public int get(int index) {
-            if (mBarPositionToHighlight == index) {
-                return getResources().getColor(R.color.calypso_orange_dark);
-            } else {
-                return Color.WHITE;
             }
         }
     }
@@ -123,7 +113,6 @@ class StatsBarGraph extends GraphView {
     private void setProperties() {
         GraphViewStyle gStyle =  getGraphViewStyle();
         gStyle.setHorizontalLabelsIndexDependentColor(new HorizontalLabelsColor());
-        gStyle.setHorizontalLabelsBackgroundIndexDependentColor(new HorizontalLabelsBackgroundColor());
         gStyle.setHorizontalLabelsColor(getResources().getColor(R.color.blue_dark));
         gStyle.setVerticalLabelsColor(getResources().getColor(R.color.stats_bar_graph_vertical_label));
         gStyle.setTextSize(getResources().getDimensionPixelSize(R.dimen.text_sz_extra_small));
@@ -158,6 +147,10 @@ class StatsBarGraph extends GraphView {
                            double minY, double diffX, double diffY, float horstart,
                            GraphViewSeriesStyle style) {
         float colwidth = graphwidth / values.length;
+        int maxColumnSize = getGraphViewStyle().getMaxColumnWidth();
+        if (maxColumnSize > 0 && colwidth > maxColumnSize) {
+          colwidth = maxColumnSize;
+        }
 
         paint.setStrokeWidth(style.thickness);
         paint.setColor(style.color);
@@ -184,9 +177,8 @@ class StatsBarGraph extends GraphView {
             float bottom = graphheight + border - 1;
 
             // Draw the orange selection behind the selected bar
-            if (mBarPositionToHighlight == i) {
-                paint.setColor(getResources().getColor(R.color.calypso_orange_dark));
-                paint.setAlpha(50);
+            if (mBarPositionToHighlight == i && style.outerhighlightColor != 0x00ffffff) {
+                paint.setColor(style.outerhighlightColor);
                 canvas.drawRect(left, 10f, right, bottom, paint);
             }
 
@@ -204,7 +196,7 @@ class StatsBarGraph extends GraphView {
                 // draw a real bar
                 paint.setAlpha(255);
                 if (mBarPositionToHighlight == i) {
-                    paint.setColor(getResources().getColor(R.color.calypso_orange_dark));
+                    paint.setColor(style.highlightColor);
                 } else {
                     paint.setColor(style.color);
                 }

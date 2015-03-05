@@ -223,7 +223,7 @@ public class Comment {
             final String author = (hasAuthorName() ? getAuthorName() : context.getString(R.string.anonymous));
             if (hasPostTitle()) {
                 formattedTitle = author
-                              + "<font color=" + HtmlUtils.colorResToHtmlColor(context, R.color.grey_medium) + ">"
+                              + "<font color=" + HtmlUtils.colorResToHtmlColor(context, R.color.grey_darken_10) + ">"
                               + " " + context.getString(R.string.on) + " "
                               + "</font>"
                               + getUnescapedPostTitle();

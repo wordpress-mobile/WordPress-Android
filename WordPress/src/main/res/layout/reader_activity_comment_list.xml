@@ -32,7 +32,7 @@
         android:paddingBottom="@dimen/margin_large"
         android:paddingTop="@dimen/margin_large"
         android:text="@string/reader_empty_comments"
-        android:textColor="@color/grey_medium"
+        android:textColor="@color/grey_darken_10"
         android:visibility="gone"
         app:fixWidowWords="true"
         tools:visibility="visible" />

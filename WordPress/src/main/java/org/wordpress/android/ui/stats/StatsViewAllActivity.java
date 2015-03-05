@@ -43,8 +43,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  *  Single item details activity.
  */
 public class StatsViewAllActivity extends ActionBarActivity
-        implements StatsAuthorsFragment.OnAuthorsSectionChangeListener,
-        StatsAbstractListFragment.OnRequestDataListener,
+        implements StatsAbstractListFragment.OnRequestDataListener,
         StatsAbstractFragment.TimeframeDateProvider {
 
     private boolean mIsInFront;
@@ -383,11 +382,6 @@ public class StatsViewAllActivity extends ActionBarActivity
         }, 75L);
     }
 
-    @Override
-    public void onAuthorsVisibilityChange(boolean isEmpty) {
-        // Nothing to do here, since the section must not disappear here.
-    }
-
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
         private final String mRequestBlogId;
         private final StatsTimeframe mTimeframe;
@@ -431,10 +425,9 @@ public class StatsViewAllActivity extends ActionBarActivity
 
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
-            if (volleyError != null) {
-                AppLog.e(AppLog.T.STATS, "Error while reading Stats details "
-                        + volleyError.getMessage(), volleyError);
-            }
+            AppLog.e(AppLog.T.STATS, "Error while reading Stats details!");
+            StatsUtils.logVolleyErrorDetails(volleyError);
+
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
             }

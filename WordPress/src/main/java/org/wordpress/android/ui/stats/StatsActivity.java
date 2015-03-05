@@ -68,7 +68,6 @@ import java.util.Map;
  * </p>
  */
 public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.ScrollViewListener,
-        StatsAuthorsFragment.OnAuthorsSectionChangeListener,
         StatsVisitorsAndViewsFragment.OnDateChangeListener,
         StatsAbstractListFragment.OnRequestDataListener,
         StatsAbstractFragment.TimeframeDateProvider {
@@ -367,14 +366,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
 
         ft.commitAllowingStateLoss();
-    }
-
-    // AuthorsFragment should be dismissed when 0 or 1 author.
-    public void onAuthorsVisibilityChange(boolean isEmpty) {
-        View authorsContainer = this.findViewById(R.id.stats_top_authors_container);
-        if (authorsContainer != null) {
-            authorsContainer.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        }
     }
 
     @Override

@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.ui.notifications.NotificationsConstants;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -93,7 +92,7 @@ public class UserNoteBlock extends NoteBlock {
                 noteBlockHolder.rootView.setOnClickListener(mOnClickListener);
             } else {
                 noteBlockHolder.avatarImageView.setOnTouchListener(null);
-                noteBlockHolder.rootView.setBackgroundColor(NotificationsConstants.COLOR_CALYPSO_WHITE);
+                noteBlockHolder.rootView.setBackgroundColor(view.getContext().getResources().getColor(R.color.white));
                 noteBlockHolder.rootView.setOnClickListener(null);
             }
         } else {

@@ -244,7 +244,8 @@ public class NotificationsUtils {
                     continue;
                 }
 
-                NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(rangeObject, shouldLink) {
+                NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(WordPress.getContext(), rangeObject,
+                        shouldLink) {
                     @Override
                     public void onClick(View widget) {
                         if (onNoteBlockTextClickListener != null) {
@@ -368,7 +369,7 @@ public class NotificationsUtils {
 
         boolean shouldLink = onNoteBlockTextClickListener != null;
 
-        NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(idBlock, shouldLink) {
+        NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(WordPress.getContext(), idBlock, shouldLink) {
             @Override
             public void onClick(View widget) {
                 if (onNoteBlockTextClickListener != null) {
