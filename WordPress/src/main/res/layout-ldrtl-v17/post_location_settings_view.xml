@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sectionLocationView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/locationText"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:drawableStart="@drawable/ic_action_location_searching"
+        android:gravity="center_vertical"
+        android:id="@+id/locationText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/locationLabel"
+        android:paddingBottom="4dp"
+        android:paddingEnd="4dp"
+        android:text="@string/loading"
+        android:textSize="@dimen/text_sz_large"
+        android:background="@drawable/selectable_background_wordpress"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/locationText"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/updateLocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_sz_large"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="@string/edit_location" />
+
+        <Button
+            android:id="@+id/removeLocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_sz_large"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="@string/remove_location" />
+    </LinearLayout>
+</LinearLayout>

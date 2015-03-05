@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    header used by reader post list when previewing posts with a specific tag
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_tag_info_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_primary"
+    android:orientation="horizontal">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_tag_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginStart="@dimen/reader_card_spacing"
+        android:layout_marginEnd="@dimen/reader_card_spacing"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingStart="@dimen/reader_card_content_padding"
+        android:paddingEnd="@dimen/reader_card_content_padding"
+        android:textColor="@color/blue_extra_light"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="@string/reader_label_tag_preview" />
+
+</FrameLayout>
