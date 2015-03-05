@@ -21,6 +21,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
@@ -50,7 +51,6 @@ public class PostsActivity extends WPDrawerActivity
     public static final String EXTRA_ERROR_INFO_LINK = "errorInfoLink";
 
     public static final int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3, POST_VIEW = 5;
-    public static final int ACTIVITY_EDIT_POST = 0;
     private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
     public ProgressDialog mLoadingDialog;
     public boolean mIsPage = false;
@@ -217,13 +217,13 @@ public class PostsActivity extends WPDrawerActivity
         i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
         i.putExtra(EditPostActivity.EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
-        startActivityForResult(i, ACTIVITY_EDIT_POST);
+        startActivityForResult(i, RequestCodes.EDIT_POST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
-            if (requestCode == ACTIVITY_EDIT_POST && resultCode == RESULT_OK) {
+            if (requestCode == RequestCodes.EDIT_POST && resultCode == RESULT_OK) {
                 if (data.getBooleanExtra("shouldRefresh", false)) {
                     mPostList.getPostListAdapter().loadPosts();
                 }

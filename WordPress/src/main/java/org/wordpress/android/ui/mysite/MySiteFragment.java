@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -60,7 +61,7 @@ public class MySiteFragment extends Fragment {
         switchSiteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.showSitePickerForResult(getActivity(), false);
+                ActivityLauncher.showSitePickerForResult(getActivity(), true);
             }
         });
 
@@ -76,7 +77,87 @@ public class MySiteFragment extends Fragment {
         statsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentSiteStats(getActivity(), mBlog);
+                ActivityLauncher.viewBlogStats(getActivity(), mBlog);
+            }
+        });
+
+        WPTextView blogPostsTextView = (WPTextView) rootView.findViewById(R.id.my_site_blog_posts_text_view);
+        blogPostsTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogPosts(getActivity());
+            }
+        });
+
+        WPTextView mediaTextView = (WPTextView) rootView.findViewById(R.id.my_site_media_text_view);
+        mediaTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogMedia(getActivity());
+            }
+        });
+
+        WPTextView pagesTextView = (WPTextView) rootView.findViewById(R.id.my_site_pages_text_view);
+        pagesTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogPages(getActivity());
+            }
+        });
+
+        WPTextView commentsTextView = (WPTextView) rootView.findViewById(R.id.my_site_comments_text_view);
+        commentsTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewBlogComments(getActivity(), mBlog);
+            }
+        });
+
+        WPTextView themesTextView = (WPTextView) rootView.findViewById(R.id.my_site_themes_text_view);
+        themesTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogThemes(getActivity());
+            }
+        });
+
+        WPTextView settingsTextView = (WPTextView) rootView.findViewById(R.id.my_site_settings_text_view);
+        settingsTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewBlogSettings(getActivity(), mBlog);
+            }
+        });
+
+        WPTextView viewAdminTextView = (WPTextView) rootView.findViewById(R.id.my_site_view_admin_text_view);
+        viewAdminTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewBlogAdmin(getActivity(), mBlog);
+            }
+        });
+
+        LinearLayout addPostContainer = (LinearLayout) rootView.findViewById(R.id.my_site_posts_add_button_container);
+        addPostContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, false);
+            }
+        });
+
+        LinearLayout addPageContainer = (LinearLayout) rootView.findViewById(R.id.my_site_pages_add_button_container);
+        addPageContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, true);
+            }
+        });
+
+        LinearLayout addMediaContainer = (LinearLayout) rootView.findViewById(R.id.my_site_media_add_button_container);
+        addMediaContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.addMedia(getActivity(), mBlog);
             }
         });
 

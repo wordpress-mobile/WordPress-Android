@@ -211,7 +211,7 @@
                 android:src="@drawable/my_site_icon_comments" />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/my_site_oages_text_view"
+                android:id="@+id/my_site_comments_text_view"
                 style="@style/MySiteListRowTextView"
                 android:layout_toRightOf="@id/my_site_comments_icon"
                 android:text="@string/comments" />
