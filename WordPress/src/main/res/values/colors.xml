@@ -12,7 +12,7 @@
     <color name="color_primary_dark">@color/status_bar_tint</color>
     <color name="color_accent">@color/orange_jazzy</color>
     <color name="color_control_activated">@color/blue_light</color>
-    <color name="color_control_highlight">@color/blue_light</color>
+    <color name="color_control_highlight">@color/pressed_wordpress</color>
 
     <color name="fab_color">@color/color_accent</color>
     <color name="list_selected">@color/semi_transparent_blue_light</color>
