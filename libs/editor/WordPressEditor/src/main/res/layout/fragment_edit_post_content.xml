@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:focusableInTouchMode="true">
 
     <ScrollView
@@ -46,7 +46,7 @@
                 android:textSize="18sp"
                 android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
                 android:imeOptions="flagNoExtractUi"
-                android:textColorLink="@color/wordpress_blue" />
+                android:textColorLink="@color/placeholder_content_text" />
         </LinearLayout>
     </ScrollView>
 
@@ -81,7 +81,7 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/format_bar_height"
         android:layout_gravity="bottom"
-        android:background="@color/grey_extra_light"
+        android:background="@color/format_bar_background"
         android:orientation="horizontal"
         android:visibility="gone">
 

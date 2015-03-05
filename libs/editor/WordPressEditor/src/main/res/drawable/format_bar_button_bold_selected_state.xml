@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/blue_medium"/>
+            <solid android:color="@color/format_bar_button_selected"/>
         </shape>
     </item>
     <item>

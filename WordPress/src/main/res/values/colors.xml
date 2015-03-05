@@ -136,8 +136,11 @@
     <color name="nux_eye_icon_color_open">@color/grey_lighten_10</color>
 
     <!-- Editor -->
-    <color name="image_options_label">@color/grey_lighten_20</color>
     <color name="post_detail_icon_tint">@color/grey_darken_20</color>
+    <color name="format_bar_button_selected">@color/blue_medium</color>
+    <color name="placeholder_content_text">@color/blue_wordpress</color>
+    <color name="format_bar_background">@color/grey_lighten_30</color>
+    <color name="image_options_label">@color/grey_lighten_20</color>
 
     <!-- Misc -->
     <color name="pressed_wordpress">@color/semi_transparent_blue_light</color>
