@@ -1889,9 +1889,11 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             final List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
 
             if (selectedContent != null && selectedContent.size() > 0) {
-                if (selectedContent.size() == 1 || MediaUtils.isVideo(selectedContent.get(0).getSource().toString())) {
-                    for (MediaItem content : selectedContent) {
-                        addMedia(content.getSource(), null, getActivity());
+                if (selectedContent.size() == 1) {
+                    if (selectedContent.get(0).getSource().toString().contains("wordpress.com")) {//MediaUtils.isVideo(selectedContent.get(0).getSource().toString())) {
+                        addExistingMediaToEditor(selectedContent.get(0).getTag());
+                    } else {
+                        addMedia(selectedContent.get(0).getSource(), null, getActivity());
                     }
                 } else {
                     final Editable editableText = mContentEditText.getText();
