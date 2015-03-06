@@ -1880,7 +1880,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
             if (selectedContent != null && selectedContent.size() > 0) {
                 if (selectedContent.size() == 1) {
-                    if (selectedContent.get(0).getSource().toString().contains("wordpress.com")) {//MediaUtils.isVideo(selectedContent.get(0).getSource().toString())) {
+                    if (selectedContent.get(0).getSource().toString().contains("wordpress.com")) {
                         addExistingMediaToEditor(selectedContent.get(0).getTag());
                     } else {
                         addMedia(selectedContent.get(0).getSource(), null, getActivity());
@@ -1910,7 +1910,11 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                             WPCollectionSpan collectionSpan = new WPCollectionSpan(getActivity(), bitmap);
 
                             for (final MediaItem selectedItem : selectedContent) {
-                                collectionSpan.addContent(selectedItem.getSource().toString());
+                                if (selectedItem.getPreviewSource() != null) {
+                                    collectionSpan.addContent(selectedItem.getPreviewSource().toString());
+                                } else if (selectedItem.getSource() != null) {
+                                    collectionSpan.addContent(selectedItem.getSource().toString());
+                                }
                             }
 
                             start = selectionStart;
