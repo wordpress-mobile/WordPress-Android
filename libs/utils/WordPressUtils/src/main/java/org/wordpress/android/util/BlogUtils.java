@@ -10,12 +10,10 @@ public class BlogUtils {
             Map<Object, Object> blogMap2 = (Map<Object, Object>) blog2;
 
             String blogName1 = MapUtils.getMapStr(blogMap1, "blogName");
-            if (blogName1.length() == 0) {
-                blogName1 = MapUtils.getMapStr(blogMap1, "url");
-            }
-
             String blogName2 = MapUtils.getMapStr(blogMap2, "blogName");
-            if (blogName2.length() == 0) {
+
+            if (blogName2.length() == 0 && blogName1.length() == 0) {
+                blogName1 = MapUtils.getMapStr(blogMap1, "url");
                 blogName2 = MapUtils.getMapStr(blogMap2, "url");
             }
 
