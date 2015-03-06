@@ -70,7 +70,7 @@ class CommentAdapter extends BaseAdapter {
 
         mStatusColorSpam = context.getResources().getColor(R.color.comment_status_spam);
         mStatusColorUnapproved = context.getResources().getColor(R.color.comment_status_unapproved);
-        mSelectionColor = context.getResources().getColor(R.color.blue_light);
+        mSelectionColor = context.getResources().getColor(R.color.semi_transparent_blue_light);
 
         mStatusTextSpam = context.getResources().getString(R.string.comment_status_spam);
         mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);
