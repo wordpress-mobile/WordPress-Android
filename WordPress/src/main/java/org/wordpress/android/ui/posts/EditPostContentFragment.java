@@ -1932,9 +1932,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                         @Override
                         protected void onPostExecute(WPCollectionSpan result) {
                             if (editableText != null && result != null) {
-                                editableText.insert(start, " ");
-                                editableText.setSpan(result, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                editableText.insert(end + 1, "\n");
+                                for (String content : result.getContent()) {
+                                    editableText.append("\n<img src=\"" + content + "\" android-uri=\"" + content + "\" />\n");
+                                }
                             }
                         }
                     };
