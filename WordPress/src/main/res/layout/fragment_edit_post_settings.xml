@@ -40,7 +40,7 @@
             android:layout_marginRight="@dimen/margin_large"
             android:background="@drawable/selectable_background_wordpress"
             android:text="@string/immediately"
-            android:textColor="@color/black"
+            android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large" />
 
         <TextView
