@@ -14,7 +14,6 @@ repositories {
     mavenCentral()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'http://download.crashlytics.com/maven' }
-    maven { url 'https://oss.sonatype.org/content/repositories/staging' }
 }
 
 apply plugin: 'com.android.application'
