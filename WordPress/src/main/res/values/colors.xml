@@ -23,7 +23,8 @@
     <color name="light_gray">@color/grey_lighten_30</color>
     <color name="gray">@color/grey_lighten_20</color>
     <color name="white">#FFFFFF</color>
-    <color name="black">@color/grey_dark</color>
+    <!-- note that black should NOT be used for text - use grey_dark instead -->
+    <color name="black">#000000</color>
     <color name="default_background">@color/grey_lighten_30</color>
 
     <!-- ==================================== -->
@@ -87,7 +88,7 @@
     <color name="media_gallery_option_default">@color/grey_lighten_30</color>
 
     <!-- Theme Details -->
-    <color name="theme_details_name">@color/black</color>
+    <color name="theme_details_name">@color/grey_dark</color>
     <color name="theme_details_button">@color/white</color>
     <color name="theme_details_premium">@color/orange_jazzy</color>
     <color name="theme_feature_text">@color/grey_dark</color>
