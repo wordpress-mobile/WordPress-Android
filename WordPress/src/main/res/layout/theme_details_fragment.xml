@@ -39,7 +39,7 @@
                 android:fontFamily="sans-serif-light"
                 android:paddingRight="16dp"
                 android:text="@string/theme_current_theme"
-                android:textColor="@color/wordpress_blue"
+                android:textColor="@color/blue_wordpress"
                 android:visibility="gone" />
 
             <TextView
@@ -159,7 +159,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="18dp"
             android:text="@string/themes_details_label"
-            android:textColor="@color/black"
+            android:textColor="@color/grey_dark"
             android:textSize="16sp" />
 
         <TextView
@@ -170,7 +170,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:fontFamily="sans-serif-light"
-            android:textColor="@color/black"
+            android:textColor="@color/grey_dark"
             android:textSize="16sp"
             android:textStyle="normal" />
 
@@ -183,7 +183,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="18dp"
             android:text="@string/themes_features_label"
-            android:textColor="@color/black"
+            android:textColor="@color/grey_dark"
             android:textSize="16sp" />
 
         <LinearLayout

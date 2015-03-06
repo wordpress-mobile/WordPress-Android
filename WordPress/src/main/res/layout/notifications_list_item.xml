@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="-3dp"
-                android:textColor="@color/calypso_grey"
+                android:textColor="@color/grey_lighten_10"
                 android:textSize="18sp"
                 tools:text="\uf303" />
 
@@ -128,7 +128,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:layout_marginTop="@dimen/margin_extra_small"
-                        android:textColor="@color/calypso_grey"/>
+                        android:textColor="@color/grey_lighten_10"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/note_subject"
@@ -136,7 +136,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:textColor="@color/calypso_blue_dark"
+                        android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_sz_large"
                         tools:text="Bob Ross commented on your post Happy Trees" />
 
@@ -149,7 +149,7 @@
                     android:layout_marginTop="-1dp"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:textColor="@color/calypso_blue"
+                    android:textColor="@color/grey"
                     android:textSize="@dimen/text_sz_large"
                     android:visibility="gone"
                     tools:text="What an amazing post!"

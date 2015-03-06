@@ -21,7 +21,7 @@
         style="@style/ReaderTextView.EmptyList"
         android:layout_centerInParent="true"
         android:text="@string/reader_empty_recommended_blogs"
-        android:textColor="@color/grey_medium"
+        android:textColor="@color/grey_darken_10"
         android:visibility="gone"
         app:fixWidowWords="true"
         tools:visibility="visible" />

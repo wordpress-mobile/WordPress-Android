@@ -35,7 +35,7 @@
         <item name="android:minHeight">48dp</item>
         <item name="android:paddingLeft">@dimen/margin_large</item>
         <item name="android:paddingRight">@dimen/margin_large</item>
-        <item name="android:textColor">@color/wordpress_blue</item>
+        <item name="android:textColor">@color/blue_wordpress</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 

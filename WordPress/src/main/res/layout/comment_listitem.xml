@@ -84,7 +84,7 @@
             android:layout_toRightOf="@+id/frame_avatar"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/grey_extra_dark"
+            android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
             tools:text="title" />
 
@@ -97,7 +97,7 @@
             android:layout_toRightOf="@+id/frame_avatar"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/grey_medium"
+            android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_medium"
             tools:text="comment" />
     </RelativeLayout>

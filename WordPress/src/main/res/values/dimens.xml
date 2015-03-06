@@ -12,12 +12,13 @@
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
+    <dimen name="fab_elevation">8dp</dimen>
 
-    <dimen name="card_elevation">1dp</dimen>
-    <dimen name="card_elevation_pressed">4dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_elevation_pressed">8dp</dimen>
 
     <dimen name="message_bar_elevation">2dp</dimen>
-    <dimen name="tabstrip_elevation">4dp</dimen>
+    <dimen name="tabs_elevation">4dp</dimen>
 
     <dimen name="drawer_width_static">300dp</dimen>
     <dimen name="drawer_row_height">40dp</dimen>
@@ -125,7 +126,8 @@
     <dimen name="progress_bar_height">3dp</dimen>
 
     <!-- stats -->
-    <dimen name="stats_button_corner_radius">4dp</dimen>
+    <dimen name="stats_button_corner_radius">2dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
+    <dimen name="stats_barchart_legend_item">12dp</dimen>
 
 </resources>

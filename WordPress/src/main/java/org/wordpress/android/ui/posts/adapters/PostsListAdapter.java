@@ -130,9 +130,9 @@ public class PostsListAdapter extends BaseAdapter {
             // Set post status TextView color
             if (post.isLocalDraft() || post.getStatusEnum() == PostStatus.DRAFT || post.hasLocalChanges() ||
                     post.isUploading()) {
-                wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.orange_dark));
+                wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.orange_fire));
             } else {
-                wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.grey_medium));
+                wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.grey_darken_10));
             }
 
             // Make status upper-case and add line break to stack vertically

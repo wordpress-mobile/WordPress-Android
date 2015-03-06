@@ -117,7 +117,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
 
         mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
-        mNoLinkColor = context.getResources().getColor(R.color.grey_medium);
+        mNoLinkColor = context.getResources().getColor(R.color.grey_darken_10);
 
         mLike = context.getString(R.string.reader_label_like);
         mLikedBy = context.getString(R.string.reader_label_liked_by);

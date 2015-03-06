@@ -56,7 +56,7 @@
                 android:layout_marginTop="@dimen/margin_small"
                 android:ellipsize="end"
                 android:maxLines="3"
-                android:textColor="@color/blue_extra_light"
+                android:textColor="@color/blue_light"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_blog_description" />
 

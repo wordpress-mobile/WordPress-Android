@@ -48,13 +48,13 @@ class ReaderResourceVars {
         marginExtraSmallPx = resources.getDimensionPixelSize(R.dimen.margin_extra_small);
         detailMarginWidthPx = resources.getDimensionPixelOffset(R.dimen.reader_detail_margin);
 
-        colorGreyExtraLight = resources.getColor(R.color.grey_extra_light);
+        colorGreyExtraLight = resources.getColor(R.color.grey_lighten_30);
         mediumAnimTime = resources.getInteger(android.R.integer.config_mediumAnimTime);
 
         linkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
-        greyMediumDarkStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_medium_dark);
+        greyMediumDarkStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_darken_30);
         greyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
-        greyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_extra_light);
+        greyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_lighten_30);
 
         // full-size image width must take margin and padding into account
         int listPadding = resources.getDimensionPixelOffset(R.dimen.margin_large);
