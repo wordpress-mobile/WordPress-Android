@@ -999,19 +999,20 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             mediaTitle = ImageUtils.getTitleForWPImageSpan(context, imageUri.getEncodedPath());
         }
 
-        WPImageSpan is = new WPImageSpan(context, thumbnailBitmap, imageUri);
-        MediaFile mediaFile = is.getMediaFile();
+        WPImageSpan imageSpan = new WPImageSpan(context, thumbnailBitmap, imageUri);
+        MediaFile mediaFile = imageSpan.getMediaFile();
         mediaFile.setPostID(mActivity.getPost().getLocalTablePostId());
         mediaFile.setTitle(mediaTitle);
-        mediaFile.setFilePath(is.getImageSource().toString());
-        MediaUtils.setWPImageSpanWidth(context, imageUri, is);
-        if (imageUri.getEncodedPath() != null)
+        mediaFile.setFilePath(imageSpan.getImageSource().toString());
+        MediaUtils.setWPImageSpanWidth(context, imageUri, imageSpan);
+        if (imageUri.getEncodedPath() != null) {
             mediaFile.setVideo(imageUri.getEncodedPath().contains("video"));
+        }
         mediaFile.save();
 
         if (ssb != null) {
             ssb.append(" ");
-            ssb.setSpan(is, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.setSpan(imageSpan, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
             ssb.setSpan(as, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             ssb.append("\n");
@@ -1026,9 +1027,10 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 selectionStart = temp;
             }
 
-            Editable s = mContentEditText.getText();
-            if (s == null)
+            Editable editable = mContentEditText.getText();
+            if (editable == null) {
                 return false;
+            }
 
             int line, column = 0;
             if (mContentEditText.getLayout() != null) {
@@ -1036,24 +1038,24 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
             }
 
-            WPImageSpan[] image_spans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
+            WPImageSpan[] image_spans = editable.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
             if (image_spans.length != 0) {
-                // insert a few line breaks if the cursor is already on an image
-                s.insert(selectionEnd, "\n\n");
+                // insert a few line breaks if the cursor imageSpan already on an image
+                editable.insert(selectionEnd, "\n\n");
                 selectionStart = selectionStart + 2;
                 selectionEnd = selectionEnd + 2;
             } else if (column != 0) {
-                // insert one line break if the cursor is not at the first column
-                s.insert(selectionEnd, "\n");
+                // insert one line break if the cursor imageSpan not at the first column
+                editable.insert(selectionEnd, "\n");
                 selectionStart = selectionStart + 1;
                 selectionEnd = selectionEnd + 1;
             }
 
-            s.insert(selectionStart, " ");
-            s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            editable.insert(selectionStart, " ");
+            editable.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-            s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            s.insert(selectionEnd + 1, "\n\n");
+            editable.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            editable.insert(selectionEnd + 1, "\n\n");
         }
         // Show the soft keyboard after adding media
         if (mActivity != null && mActivity.getSupportActionBar() != null && !mActivity.getSupportActionBar().isShowing()) {
