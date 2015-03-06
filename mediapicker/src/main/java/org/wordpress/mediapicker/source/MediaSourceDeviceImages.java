@@ -148,7 +148,8 @@ public class MediaSourceDeviceImages implements MediaSource {
         final Map<String, String> thumbnailData = getImageThumbnailData();
 
         Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        Cursor cursor = MediaStore.Images.Media.query(mContentResolver, imageUri, IMAGE_QUERY_COLUMNS);
+        Cursor cursor = MediaStore.Images.Media.query(mContentResolver, imageUri, IMAGE_QUERY_COLUMNS, null,
+                null, MediaStore.MediaColumns.DATE_MODIFIED + " DESC");
 
         if (cursor.moveToFirst()) {
             do {

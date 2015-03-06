@@ -135,7 +135,8 @@ public class MediaSourceDeviceVideos implements MediaSource {
         mMediaItems = new ArrayList<>();
 
         Uri videoUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-        Cursor cursor = MediaStore.Images.Media.query(mContentResolver, videoUri, VIDEO_QUERY_COLUMNS);
+        Cursor cursor = MediaStore.Images.Media.query(mContentResolver, videoUri, VIDEO_QUERY_COLUMNS, null,
+                null, MediaStore.MediaColumns.DATE_MODIFIED + " DESC");
 
         if (cursor.moveToFirst()) {
             do {
