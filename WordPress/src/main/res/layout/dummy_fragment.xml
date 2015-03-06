@@ -21,7 +21,7 @@
                 android:gravity="center"
                 android:padding="@dimen/margin_large"
                 android:text="Dummy Fragment"
-                android:textColor="@color/grey_medium"
+                android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_extra_large" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -33,7 +33,7 @@
                 android:gravity="center_vertical"
                 android:padding="@dimen/margin_large"
                 android:text="Settings"
-                android:textColor="@color/grey_medium_dark"
+                android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_extra_large" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -45,7 +45,7 @@
                 android:gravity="center_vertical"
                 android:padding="@dimen/margin_large"
                 android:text="Stats"
-                android:textColor="@color/grey_medium_dark"
+                android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_extra_large" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -57,7 +57,7 @@
                 android:gravity="center_vertical"
                 android:padding="@dimen/margin_large"
                 android:text="Posts"
-                android:textColor="@color/grey_medium_dark"
+                android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_extra_large" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -69,7 +69,7 @@
                 android:gravity="center_vertical"
                 android:padding="@dimen/margin_large"
                 android:text="Site Picker"
-                android:textColor="@color/grey_medium_dark"
+                android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_extra_large" />
 
         </LinearLayout>
@@ -80,8 +80,8 @@
         android:id="@+id/fab_button"
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:src="@drawable/ic_create_white_24dp" />

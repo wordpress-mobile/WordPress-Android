@@ -25,7 +25,6 @@
             android:background="@color/tab_background"
             android:elevation="@dimen/tabs_elevation"
             android:paddingBottom="@dimen/margin_large"
-            android:elevation="@dimen/tabstrip_elevation"
             android:paddingTop="@dimen/margin_large"
             android:textAppearance="@style/ReaderTabStripTextAppearance" />
 
