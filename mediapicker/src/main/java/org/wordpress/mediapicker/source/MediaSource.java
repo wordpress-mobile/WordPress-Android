@@ -22,6 +22,15 @@ public interface MediaSource extends Parcelable {
      */
     public interface OnMediaChange {
         /**
+         * To be called if Media is being loaded in the background. Listener may choose to display a
+         * progress indicator or alert the user in some fashion.
+         *
+         * @param complete
+         *  true if loading is finished, otherwise false
+         */
+        public void onMediaLoading(MediaSource source, boolean complete);
+
+        /**
          * To be called when new MediaItems have been added to the source.
          *
          * @param source

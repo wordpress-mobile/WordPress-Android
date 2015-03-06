@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ProgressBar;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -29,9 +30,13 @@ import java.util.List;
  */
 
 public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMediaChange {
+    private static final int LOADING_VIEW_TYPE = Integer.MAX_VALUE;
+
     private final LayoutInflater  mLayoutInflater;
     private final ImageLoader.ImageCache mImageCache;
     private final List<MediaSource> mMediaSources;
+
+    private boolean mLoadingMedia;
 
     public MediaSourceAdapter(Context context, List<MediaSource> sources, ImageLoader.ImageCache imageCache) {
         mMediaSources = sources;
@@ -47,16 +52,24 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
 
     @Override
     public int getViewTypeCount() {
-        return mMediaSources.size() == 0 ? 1 : mMediaSources.size();
+        return mLoadingMedia || mMediaSources.size() == 0 ? 1 : mMediaSources.size();
     }
 
     @Override
     public int getCount() {
+        if (mLoadingMedia) {
+            return 1;
+        }
+
         return totalItems();
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (mLoadingMedia) {
+            return LOADING_VIEW_TYPE;
+        }
+
         return mMediaSources.indexOf(sourceAtPosition(position));
     }
 
@@ -74,13 +87,28 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        if (mLoadingMedia) {
+            return getLoadingView(convertView, parent);
+        }
+
         MediaSource itemSource = sourceAtPosition(position);
 
         if (itemSource != null) {
+            if (convertView instanceof ProgressBar) {
+                convertView = null;
+            }
+
             return itemSource.getView(position - offsetAtPosition(position), convertView, parent, mLayoutInflater, mImageCache);
         }
 
         return null;
+    }
+
+    private View getLoadingView(View convertView, ViewGroup parent) {
+        convertView = new ProgressBar(mLayoutInflater.getContext());
+        ((ProgressBar)convertView).setIndeterminate(true);
+
+        return convertView;
     }
 
     /**
@@ -141,6 +169,12 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
         }
 
         return offset;
+    }
+
+    @Override
+    public void onMediaLoading(MediaSource source, boolean complete) {
+        mLoadingMedia = !complete;
+        notifyDataSetChanged();
     }
 
     @Override
