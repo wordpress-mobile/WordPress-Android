@@ -94,7 +94,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.MediaGalleryImageSpan;
-import org.wordpress.android.widgets.WPCollectionSpan;
 import org.wordpress.android.widgets.WPEditText;
 import org.wordpress.android.widgets.WPImageSpan;
 import org.wordpress.android.widgets.WPUnderlineSpan;
@@ -559,19 +558,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 }
             }
 
-            // Save all collections
-            WPCollectionSpan[] collectionSpans = postContentEditable.getSpans(0, postContentEditable.length(), WPCollectionSpan.class);
-            if (collectionSpans.length != 0) {
-                for (WPCollectionSpan replacementSpan : collectionSpans) {
-                    List<String> replacementContent = replacementSpan.getContent();
-
-                    for (String contentString : replacementContent) {
-                        int tagStart = postContentEditable.getSpanStart(replacementSpan);
-                        postContentEditable.insert(tagStart, "<img android-uri=\"" + contentString + "\" />");
-                    }
-                }
-            }
-
             WPImageSpan[] imageSpans = postContentEditable.getSpans(0, postContentEditable.length(), WPImageSpan.class);
             if (imageSpans.length != 0) {
                 for (WPImageSpan wpIS : imageSpans) {
@@ -802,8 +788,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
     private void updateMediaFileOnServer(WPImageSpan wpIS) {
         Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog == null || wpIS == null)
+        if (currentBlog == null || wpIS == null) {
             return;
+        }
 
         MediaFile mf = wpIS.getMediaFile();
 
@@ -1392,145 +1379,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     }
 
     /**
-     * Called when a WPCollectionSpan is tapped. Displays a list of items in the collection and
-     * allows users to select any number of them to remove. If there is only one item left after
-     * confirming deletion the span will be converted to a WPImageSpan. If no items remain the span
-     * will be deleted.
-     *
-     * @param collectionSpan
-     *  the tapped span
-     * @return
-     *  true if the tap was handled, false otherwise
-     */
-    private boolean collectionSpanTapped(final WPCollectionSpan collectionSpan) {
-        final List<String> collectionIds = collectionSpan.getContent();
-
-        if (collectionIds == null || collectionIds.isEmpty()) {
-            return false;
-        }
-
-        final LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-        final View alertView = layoutInflater.inflate(R.layout.alert_collection_viewer, null);
-        if (alertView == null) {
-            return false;
-        }
-
-        final ListView collectionList = (ListView) alertView.findViewById(R.id.collection_list);
-        if (collectionList == null) {
-            return false;
-        }
-
-        final List<String> removedContent = new ArrayList<>();
-
-        collectionList.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.collection_item_view, collectionIds) {
-            @Override
-            public View getView(final int position, View convertView, ViewGroup parent) {
-                if (convertView == null) {
-                    convertView = layoutInflater.inflate(R.layout.collection_item_view, parent, false);
-                }
-
-                final TextView text = (TextView) convertView.findViewById(R.id.collection_item_text);
-                final CheckBox checkbox = (CheckBox) convertView.findViewById(R.id.collection_item_checkbox);
-
-                if (checkbox != null && text != null) {
-                    text.setText(collectionIds.get(position));
-
-                    checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked) {
-                                text.setTextColor(getResources().getColor(R.color.grey));
-                                removedContent.add(collectionIds.get(position));
-                            } else {
-                                text.setTextColor(getResources().getColor(R.color.grey_dark));
-                                removedContent.remove(collectionIds.get(position));
-                            }
-                        }
-                    });
-                }
-
-                return convertView;
-            }
-        });
-
-        AlertDialog collectionDialog = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.delete_from_collection))
-                .setView(alertView).setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        for (String content : removedContent) {
-                            collectionSpan.removeContent(content);
-                        }
-
-                        if (collectionSpan.getContent().size() <= 1) {
-                            final Editable editableText = mContentEditText.getText();
-                            final int spanStart = editableText.getSpanStart(collectionSpan);
-                            final int spanEnd = editableText.getSpanEnd(collectionSpan);
-
-                            editableText.removeSpan(collectionSpan);
-
-                            if (collectionSpan.getContent().size() == 1) {
-                                final String previewSource = collectionSpan.getContent().get(0);
-                                AsyncTask<String, String, ImageSpan> background = new AsyncTask<String, String, ImageSpan>() {
-                                    Bitmap bitmap = null;
-                                    int start, end;
-
-                                    @Override
-                                    protected ImageSpan doInBackground(String... params) {
-                                        if (previewSource.contains("wordpress.com")) {
-                                            try {
-                                                URL url = new URL(previewSource);
-                                                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                            } catch (MalformedURLException exception) {
-                                            } catch (IOException ioException) {
-                                            }
-                                        } else {
-                                            bitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), previewSource, getMaximumThumbnailWidth());
-                                        }
-                                        WPImageSpan collectionSpan = new WPImageSpan(getActivity(), bitmap, Uri.parse(previewSource));
-
-                                        start = spanStart;
-                                        end = spanEnd;
-
-                                        if (start > end) {
-                                            int temp = end;
-                                            end = start;
-                                            start = temp;
-                                        }
-
-                                        return collectionSpan;
-                                    }
-
-                                    @Override
-                                    protected void onPostExecute(ImageSpan result) {
-                                        if (result != null) {
-                                            editableText.insert(start, " ");
-                                            editableText.setSpan(result, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                            editableText.insert(end + 1, "\n");
-                                        }
-                                    }
-                                };
-
-                                background.execute();
-                            }
-                        }
-
-                        dialog.dismiss();
-                    }
-                }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                }).create();
-        collectionDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        collectionDialog.show();
-        mScrollDetected = false;
-
-        return true;
-    }
-
-    /**
      * Rich Text Editor
      */
-
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         float pos = event.getY();
@@ -1568,10 +1418,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 if (s == null)
                     return false;
 
-                WPCollectionSpan[] collectionSpans = s.getSpans(charPosition, charPosition, WPCollectionSpan.class);
-                if (collectionSpans.length > 0) {
-                    return collectionSpanTapped(collectionSpans[0]);
-                }
 
                 // check if image span was tapped
                 WPImageSpan[] image_spans = s.getSpans(charPosition, charPosition, WPImageSpan.class);
@@ -1586,13 +1432,11 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 }
 
                 // get media gallery spans
-
                 MediaGalleryImageSpan[] gallerySpans = s.getSpans(charPosition, charPosition, MediaGalleryImageSpan.class);
                 if (gallerySpans.length > 0) {
                     final MediaGalleryImageSpan gallerySpan = gallerySpans[0];
                     startMediaGalleryActivity(gallerySpan.getMediaGallery());
                 }
-
             }
         } else if (event.getAction() == 1) {
             mScrollDetected = false;
@@ -1876,70 +1720,15 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      */
     private void handleMediaSelectionResult(Intent data) {
         if (data != null) {
-            final List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
-
+            final List<MediaItem> selectedContent =
+                    data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
             if (selectedContent != null && selectedContent.size() > 0) {
-                if (selectedContent.size() == 1) {
-                    if (selectedContent.get(0).getSource().toString().contains("wordpress.com")) {
-                        addExistingMediaToEditor(selectedContent.get(0).getTag());
+                for (MediaItem media : selectedContent) {
+                    if (media.getSource().toString().contains("wordpress.com")) {
+                        addExistingMediaToEditor(media.getTag());
                     } else {
-                        addMedia(selectedContent.get(0).getSource(), null, getActivity());
+                        addMedia(media.getSource(), null, getActivity());
                     }
-                } else {
-                    final Editable editableText = mContentEditText.getText();
-                    final int selectionStart = mContentEditText.getSelectionStart();
-                    final int selectionEnd = mContentEditText.getSelectionEnd();
-                    final String previewSource = selectedContent.get(0).getSource().toString();
-
-                    AsyncTask<String, String, WPCollectionSpan> background = new AsyncTask<String, String, WPCollectionSpan>() {
-                        Bitmap bitmap = null;
-                        int start, end;
-
-                        @Override
-                        protected WPCollectionSpan doInBackground(String... params) {
-                            if (previewSource.contains("wordpress.com")) {
-                                try {
-                                    URL url = new URL(previewSource);
-                                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                } catch (MalformedURLException exception) {
-                                } catch (IOException ioException) {
-                                }
-                            } else {
-                                bitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), previewSource, getMaximumThumbnailWidth());
-                            }
-                            WPCollectionSpan collectionSpan = new WPCollectionSpan(getActivity(), bitmap);
-
-                            for (final MediaItem selectedItem : selectedContent) {
-                                if (selectedItem.getPreviewSource() != null) {
-                                    collectionSpan.addContent(selectedItem.getPreviewSource().toString());
-                                } else if (selectedItem.getSource() != null) {
-                                    collectionSpan.addContent(selectedItem.getSource().toString());
-                                }
-                            }
-
-                            start = selectionStart;
-                            end = selectionEnd;
-
-                            if (start > end) {
-                                int temp = end;
-                                end = start;
-                                start = temp;
-                            }
-
-                            return collectionSpan;
-                        }
-
-                        @Override
-                        protected void onPostExecute(WPCollectionSpan result) {
-                            if (editableText != null && result != null) {
-                                for (String content : result.getContent()) {
-                                    editableText.append("\n<img src=\"" + content + "\" android-uri=\"" + content + "\" />\n");
-                                }
-                            }
-                        }
-                    };
-
-                    background.execute();
                 }
             }
         }
