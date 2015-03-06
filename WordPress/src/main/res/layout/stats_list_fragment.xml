@@ -132,7 +132,7 @@
             android:id="@+id/stats_list_empty_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/stats_lists_background_color"
+            android:background="@color/grey_light"
             android:padding="@dimen/margin_large"
             android:visibility="gone" />
     </LinearLayout>

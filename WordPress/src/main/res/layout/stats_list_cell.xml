@@ -95,7 +95,7 @@
         android:id="@+id/layout_child_container"
         android:orientation="vertical"
         android:visibility="gone"
-        android:background="@color/stats_lists_background_color"
+        android:background="@color/grey_light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
