@@ -26,10 +26,7 @@ public class MySiteFragment extends Fragment {
     private Blog mBlog;
 
     public static MySiteFragment newInstance() {
-        MySiteFragment fragment = new MySiteFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new MySiteFragment();
     }
 
     public void setBlog(Blog blog) {
