@@ -3,6 +3,10 @@
 <string-array name="available_languages" translatable="false">
 
 <item>
+en-us
+</item>
+
+<item>
 az
 </item>
 
