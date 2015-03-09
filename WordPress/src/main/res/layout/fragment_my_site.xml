@@ -15,7 +15,7 @@
             android:layout_marginRight="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@color/white"
-            android:elevation="@dimen/my_site_card_elevation">
+            android:elevation="@dimen/margin_extra_small">
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/my_site_blavatar"
@@ -67,7 +67,7 @@
                     android:gravity="center_vertical"
                     android:minHeight="0dp"
                     android:paddingBottom="@dimen/my_site_switch_site_button_padding_bottom"
-                    android:paddingTop="@dimen/my_site_switch_site_button_padding_top"
+                    android:paddingTop="@dimen/my_site_margin_general"
                     android:text="@string/switch_site_button"
                     android:textColor="@color/my_site_dark_blue"
                     android:textSize="@dimen/text_sz_medium" />
@@ -79,7 +79,7 @@
         <!--View Site-->
         <RelativeLayout
             style="@style/MySiteListRowLayout"
-            android:layout_marginTop="@dimen/my_site_list_margin_top">
+            android:layout_marginTop="@dimen/my_site_margin_general">
 
             <ImageView
                 android:id="@+id/my_site_view_site_icon"

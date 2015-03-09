@@ -337,9 +337,9 @@
     <style name="MySiteListHeaderLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingBottom">@dimen/my_site_header_padding_bottom</item>
+        <item name="android:paddingBottom">@dimen/my_site_margin_general</item>
         <item name="android:paddingLeft">@dimen/my_site_list_row_padding_left</item>
-        <item name="android:paddingTop">@dimen/my_site_header_padding_top</item>
+        <item name="android:paddingTop">@dimen/my_site_margin_general</item>
     </style>
 
     <style name="MySiteListHeaderTextView">

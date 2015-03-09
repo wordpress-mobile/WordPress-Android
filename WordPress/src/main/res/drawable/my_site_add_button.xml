@@ -2,6 +2,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
     <solid android:color="@color/my_site_button_bg" />
-    <corners android:radius="@dimen/my_site_add_button_radius" />
+    <corners android:radius="@dimen/margin_extra_small" />
 
 </shape>
