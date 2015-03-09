@@ -75,11 +75,6 @@
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
-    <string name="blog_posts">Blog Posts</string>
-    <string name="publish">Publish</string>
-    <string name="configuration">Configuration</string>
-    <string name="admin">Admin</string>
-    <string name="comments">Comments</string>
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
@@ -570,8 +565,8 @@
     <string name="new_media">New media</string>
     <string name="menu_search">Search</string>
     <string name="quick_photo">Quick photo</string>
-    <string name="view_site">View Site</string>
-    <string name="view_admin">View Admin</string>
+    <string name="view_site">View site</string>
+    <string name="view_admin">View admin</string>
 
     <!-- Image Alignment -->
     <string name="image_alignment">Alignment</string>
@@ -862,6 +857,15 @@
     <string name="hs__invalid_email_error">Enter a valid email address</string>
 
     <!--My Site-->
-    <string name="switch_site_button">Switch Site</string>
-    <string name="look_and_feel">Look and Feel</string>
+    <string name="my_site_header_admin">Admin</string>
+    <string name="my_site_header_configuration">Configuration</string>
+    <string name="my_site_header_look_and_feel">Look and Feel</string>
+    <string name="my_site_header_publish">Publish</string>
+
+    <string name="my_site_btn_blog_posts">Blog Posts</string>
+    <string name="my_site_btn_comments">Comments</string>
+    <string name="my_site_btn_switch_site">Switch Site</string>
+    <string name="my_site_btn_view_admin">View Admin</string>
+    <string name="my_site_btn_view_site">View Site</string>
+
 </resources>
