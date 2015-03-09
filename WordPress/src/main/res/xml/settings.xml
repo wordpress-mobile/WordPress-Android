@@ -68,14 +68,14 @@
     <PreferenceCategory
         android:key="@string/pref_key_about_section"
         android:title="@string/about">
-        <Preference android:title="@string/language"
-                    android:key="@string/pref_key_language"/>
         <Preference android:title="@string/app_title"
                     android:key="@string/pref_key_app_about"/>
         <Preference android:title="@string/open_source_licenses"
                     android:key="@string/pref_key_oss_licenses"/>
         <Preference android:title="@string/help_and_support"
                     android:key="@string/pref_key_help_and_support"/>
+        <Preference android:title="@string/language"
+                    android:key="@string/pref_key_language"/>
     </PreferenceCategory>
 
     <PreferenceCategory
