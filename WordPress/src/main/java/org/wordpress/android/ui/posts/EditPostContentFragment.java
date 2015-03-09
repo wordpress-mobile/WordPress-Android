@@ -148,7 +148,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
     private Map<Long, List<String>> mPendingGalleryUploads = new HashMap<>();
 
-    private boolean mBlogMediaAvailable;
+    // -1=no response yet, 0=unavailable, 1=available
+    private int mBlogMediaStatus = -1;
     private boolean mMediaUploadServiceStarted;
     private String mMediaCapturePath = "";
 
@@ -1676,18 +1677,20 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
                 @Override
                 public void onSuccess(int count) {
-                    mBlogMediaAvailable = true;
+                    mBlogMediaStatus = 1;
                 }
 
                 @Override
                 public void onFailure(final ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                    mBlogMediaAvailable = false;
+                    mBlogMediaStatus = 0;
+                    ToastUtils.showToast(getActivity(), R.string.error_refresh_media, ToastUtils.Duration.SHORT);
                 }
             };
             ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(0, MediaGridFragment.Filter.ALL, callback);
             getMediaTask.execute(apiArgs);
         } else {
-            mBlogMediaAvailable = false;
+            mBlogMediaStatus = 0;
+            ToastUtils.showToast(getActivity(), R.string.error_refresh_media, ToastUtils.Duration.SHORT);
         }
     }
 
@@ -1695,16 +1698,11 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      * Starts {@link org.wordpress.android.ui.media.MediaPickerActivity} after refreshing the blog media.
      */
     private void startMediaSelection() {
-        // Alert the user that blog media will not be available
-        if (!mBlogMediaAvailable) {
-            ToastUtils.showToast(getActivity(), R.string.error_refresh_media, ToastUtils.Duration.SHORT);
-        }
-
         Intent intent = new Intent(mActivity, MediaPickerActivity.class);
         intent.putExtra(MediaPickerActivity.ACTIVITY_TITLE_KEY, getString(R.string.add_to_post));
         intent.putParcelableArrayListExtra(MediaPickerActivity.DEVICE_IMAGE_MEDIA_SOURCES_KEY, imageMediaSelectionSources());
         intent.putParcelableArrayListExtra(MediaPickerActivity.DEVICE_VIDEO_MEDIA_SOURCES_KEY, videoMediaSelectionSources());
-        if (mBlogMediaAvailable) {
+        if (mBlogMediaStatus != 0) {
             intent.putParcelableArrayListExtra(MediaPickerActivity.BLOG_IMAGE_MEDIA_SOURCES_KEY, blogImageMediaSelectionSources());
             intent.putParcelableArrayListExtra(MediaPickerActivity.BLOG_VIDEO_MEDIA_SOURCES_KEY, blogVideoMediaSelectionSources());
         }
