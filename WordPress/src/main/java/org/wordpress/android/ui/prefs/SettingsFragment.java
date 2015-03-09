@@ -60,6 +60,7 @@ import java.util.Map;
 public class SettingsFragment extends PreferenceFragment {
     public static final String SETTINGS_PREFERENCES = "settings-pref";
 
+    private AlertDialog mDialog;
     private SharedPreferences mSettings;
     private WPEditTextPreference mTaglineTextPreference;
 
@@ -387,7 +388,6 @@ public class SettingsFragment extends PreferenceFragment {
         }
     };
 
-    private AlertDialog mDialog;
     private final OnPreferenceClickListener languagePreferenceClickListener = new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
