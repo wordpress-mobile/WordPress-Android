@@ -50,6 +50,8 @@ import org.wordpress.passcodelock.PasscodePreferencesActivity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -382,14 +384,22 @@ public class SettingsFragment extends PreferenceFragment {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
             dialogBuilder.setTitle(getString(R.string.language));
 
-            final String[] availableLocales = getResources().getStringArray(R.array.available_languages);
+            String[] availableLocales = getResources().getStringArray(R.array.available_languages);
             final String[] values = new String[availableLocales.length + 1];
+            final Map<String, String> localeMap = new HashMap<>();
 
-            values[0] = "Device" + " (" + Locale.getDefault().getDisplayLanguage() + ")";
             for (int i = 0; i < availableLocales.length; ++i) {
-                Locale locale = new Locale(availableLocales[i]);
+                String localString = availableLocales[i];
+                if (localString.contains("-")) {
+                    localString = localString.substring(0, localString.indexOf("-"));
+                }
+                Locale locale = new Locale(localString);
                 values[i + 1] = locale.getDisplayLanguage() + " (" + availableLocales[i] + ")";
+                localeMap.put(values[i + 1], availableLocales[i]);
             }
+            values[0] = "Device" + " (" + Locale.getDefault().getDisplayLanguage() + ")";
+            localeMap.put(values[0], Locale.getDefault().getLanguage());
+            Arrays.sort(values, 1, values.length);
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, values);
             ListView listView = new ListView(getActivity());
@@ -400,10 +410,10 @@ public class SettingsFragment extends PreferenceFragment {
                     Resources res = getResources();
                     DisplayMetrics dm = res.getDisplayMetrics();
                     Configuration conf = res.getConfiguration();
-                    conf.locale = new Locale(values[position]);
+                    conf.locale = new Locale(localeMap.get(values[position]));
                     res.updateConfiguration(conf, dm);
 
-                    mSettings.edit().putString(SETTINGS_PREFERENCES, availableLocales[position]).apply();
+                    mSettings.edit().putString(SETTINGS_PREFERENCES, localeMap.get(values[position])).apply();
 
                     Intent refresh = new Intent(getActivity(), getActivity().getClass());
                     startActivity(refresh);
