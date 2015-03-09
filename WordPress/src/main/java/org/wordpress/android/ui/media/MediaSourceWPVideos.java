@@ -25,6 +25,8 @@ public class MediaSourceWPVideos implements MediaSource {
     private static final String VIDEO_PRESS_HOST = "https://videos.files.wordpress.com/";
     private static final String VIDEO_PRESS_THUMBNAIL_APPEND = "_hd.thumbnail.jpg";
 
+    private boolean mLoading;
+    private OnMediaChange mListener;
     private List<MediaItem> mMediaItems = new ArrayList<>();
 
     public MediaSourceWPVideos() {
@@ -32,7 +34,10 @@ public class MediaSourceWPVideos implements MediaSource {
     }
 
     @Override
-    public void setListener(OnMediaChange onMediaChange) {
+    public void setListener(OnMediaChange listener) {
+        mListener = listener;
+
+        notifyLoadingStatus();
     }
 
     @Override
@@ -130,6 +135,8 @@ public class MediaSourceWPVideos implements MediaSource {
         Blog blog = WordPress.getCurrentBlog();
 
         if (blog != null) {
+            mLoading = true;
+            notifyLoadingStatus();
             Cursor videoCursor = MediaUtils.getWordPressMediaVideos(String.valueOf(blog.getLocalTableBlogId()));
 
             if (videoCursor != null) {
@@ -177,6 +184,15 @@ public class MediaSourceWPVideos implements MediaSource {
 
                 mMediaItems.add(newContent);
             } while (cursor.moveToNext());
+        }
+
+        mLoading = false;
+        notifyLoadingStatus();
+    }
+
+    private void notifyLoadingStatus() {
+        if (mListener != null) {
+            mListener.onMediaLoading(this, !mLoading);
         }
     }
 }

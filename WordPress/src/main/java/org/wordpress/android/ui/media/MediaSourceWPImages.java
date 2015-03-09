@@ -31,7 +31,6 @@ public class MediaSourceWPImages implements MediaSource {
     private final List<MediaItem> mMediaItems = new ArrayList<>();
 
     private boolean mLoading;
-
     private OnMediaChange mListener;
 
     public MediaSourceWPImages() {
