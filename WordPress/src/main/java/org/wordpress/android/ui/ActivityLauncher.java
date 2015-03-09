@@ -1,6 +1,7 @@
 package org.wordpress.android.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import org.wordpress.android.WordPress;
@@ -24,82 +25,81 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
-    public static void viewCurrentSite(Activity activity) {
-        Intent intent = new Intent(activity, ViewSiteActivity.class);
-        activity.startActivity(intent);
+    public static void viewCurrentSite(Context context) {
+        Intent intent = new Intent(context, ViewSiteActivity.class);
+        context.startActivity(intent);
     }
 
-    public static void viewBlogStats(Activity activity, Blog blog) {
+    public static void viewBlogStats(Context context, Blog blog) {
         if (blog == null) return;
 
-        Intent intent = new Intent(activity, StatsActivity.class);
+        Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blog.getLocalTableBlogId());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
-    public static void viewCurrentBlogPosts(Activity activity) {
-        Intent intent = new Intent(activity, PostsActivity.class);
-        activity.startActivity(intent);
+    public static void viewCurrentBlogPosts(Context context) {
+        Intent intent = new Intent(context, PostsActivity.class);
+        context.startActivity(intent);
     }
 
-    public static void viewCurrentBlogMedia(Activity activity) {
-        Intent intent = new Intent(activity, MediaBrowserActivity.class);
-        activity.startActivity(intent);
+    public static void viewCurrentBlogMedia(Context context) {
+        Intent intent = new Intent(context, MediaBrowserActivity.class);
+        context.startActivity(intent);
     }
 
-    public static void viewCurrentBlogPages(Activity activity) {
-        Intent intent = new Intent(activity, PagesActivity.class);
-        activity.startActivity(intent);
+    public static void viewCurrentBlogPages(Context context) {
+        Intent intent = new Intent(context, PagesActivity.class);
+        context.startActivity(intent);
     }
 
-    public static void viewBlogComments(Activity activity, Blog blog) {
+    public static void viewBlogComments(Context context, Blog blog) {
         if (blog == null) return;
 
-        Intent intent = new Intent(activity, CommentsActivity.class);
-        intent.putExtra("id", blog.getLocalTableBlogId());
-        activity.startActivity(intent);
+        Intent intent = new Intent(context, CommentsActivity.class);
+        context.startActivity(intent);
     }
 
-    public static void viewCurrentBlogThemes(Activity activity) {
-        Intent intent = new Intent(activity, ThemeBrowserActivity.class);
-        activity.startActivity(intent);
+    public static void viewCurrentBlogThemes(Context context) {
+        Intent intent = new Intent(context, ThemeBrowserActivity.class);
+        context.startActivity(intent);
     }
 
-    public static void viewBlogSettings(Activity activity, Blog blog) {
+    public static void viewBlogSettings(Context context, Blog blog) {
         if (blog == null) return;
 
-        Intent intent = new Intent(activity, BlogPreferencesActivity.class);
+        Intent intent = new Intent(context, BlogPreferencesActivity.class);
         intent.putExtra("id", blog.getLocalTableBlogId());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
-    public static void viewBlogAdmin(Activity activity, Blog blog) {
+    public static void viewBlogAdmin(Context context, Blog blog) {
         if (blog == null) return;
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN);
 
-        Intent intent = new Intent(activity, WPWebViewActivity.class);
+        Intent intent = new Intent(context, WPWebViewActivity.class);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, blog.getUsername());
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, blog.getPassword());
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, blog.getAdminUrl());
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPWebViewActivity.getBlogLoginUrl(blog));
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
-    public static void addNewBlogPostOrPage(Activity activity, Blog blog, boolean isPage) {
+    public static void addNewBlogPostOrPage(Context context, Blog blog, boolean isPage) {
         // Create a new post object
         Post newPost = new Post(blog.getLocalTableBlogId(), isPage);
         WordPress.wpDB.savePost(newPost);
 
-        Intent intent = new Intent(activity, EditPostActivity.class);
+        Intent intent = new Intent(context, EditPostActivity.class);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         intent.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
-        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+        context.startActivity(intent);
     }
 
-    public static void addMedia(Activity activity, Blog blog) {
+    public static void addMedia(Context context, Blog blog) {
         // TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/2394
     }
 }
