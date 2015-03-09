@@ -175,6 +175,9 @@ public class MediaSourceWPImages implements MediaSource {
             } while (cursor.moveToNext());
 
             removeDeletedEntries();
+        } else {
+            mLoading = false;
+            notifyLoadingStatus();
         }
     }
 
