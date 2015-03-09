@@ -4,7 +4,7 @@ LANG_FILE=tools/exported-language-codes.csv
 RESDIR=WordPress/src/main/res/
 
 # Language definitions resource file
-HEADER=\<?xml\ version=\”1.0\”\ encoding=\”UTF-8\”?\>\\n\<resources\>\\n\<string-array\ name=\”available_languages\”\>
+HEADER=\<?xml\ version=\"1.0\"\ encoding=\"UTF-8\"?\>\\n\<resources\>\\n\<string-array\ name=\"available_languages\"\>
 FOOTER=\\n\</string-array\>\\n\</resources\>\\n
 PREPEND=\\n\<item\>
 APPEND=\</item\>
