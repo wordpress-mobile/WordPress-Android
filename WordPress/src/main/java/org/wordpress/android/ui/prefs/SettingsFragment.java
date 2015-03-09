@@ -407,7 +407,7 @@ public class SettingsFragment extends PreferenceFragment {
                 values[i + 1] = locale.getDisplayLanguage() + " (" + availableLocales[i] + ")";
                 localeMap.put(values[i + 1], availableLocales[i]);
             }
-            values[0] = "Device" + " (" + Locale.getDefault().getDisplayLanguage() + ")";
+            values[0] = getActivity().getString(R.string.device) + " (" + Locale.getDefault().getLanguage() + ")";
             localeMap.put(values[0], Locale.getDefault().getLanguage());
             Arrays.sort(values, 1, values.length);
 

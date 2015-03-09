@@ -26,6 +26,7 @@
     <string name="anonymous">Anonymous</string>
 
     <!-- general strings -->
+    <string name="device">Device</string>
     <string name="post">Post</string>
     <string name="page">Page</string>
     <string name="posts">Posts</string>
