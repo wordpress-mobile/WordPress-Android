@@ -15,7 +15,7 @@
             android:layout_marginRight="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@color/white"
-            android:elevation="@dimen/margin_extra_small">
+            android:elevation="@dimen/card_elevation">
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/my_site_blavatar"
