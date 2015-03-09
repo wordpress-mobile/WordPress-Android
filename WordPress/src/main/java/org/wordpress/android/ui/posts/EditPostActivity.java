@@ -23,6 +23,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -304,8 +305,15 @@ public class EditPostActivity extends ActionBarActivity {
                 ToastUtils.showToast(this, R.string.error_publish_empty_post, Duration.SHORT);
                 return false;
             }
+
             savePost(false, false);
             trackSavePostAnalytics();
+
+            if (!NetworkUtils.isNetworkAvailable(this)) {
+                ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
+                return false;
+            }
+
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,9 +25,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.MediaUtils.RequestCode;
+import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.io.File;
@@ -74,13 +76,24 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        // register context for change in connection status
+        getActivity().registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    public void onStop() {
+        getActivity().unregisterReceiver(mReceiver);
+        super.onStop();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION));
-
-        startMediaUploadService();
+        resumeMediaUploadService();
     }
 
     @Override
@@ -102,6 +115,9 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
                     ToastUtils.showToast(context, errorMessage, ToastUtils.Duration.SHORT);
                 }
                 mCallback.onMediaAdded(mediaId);
+            } else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+                // Coming from zero connection. Re-register upload intent.
+                resumeMediaUploadService();
             }
         }
     };
@@ -224,7 +240,16 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     private void startMediaUploadService() {
-        getActivity().startService(new Intent(getActivity(), MediaUploadService.class));
+        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            getActivity().startService(new Intent(getActivity(), MediaUploadService.class));
+        }
+    }
+
+    private void resumeMediaUploadService() {
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.registerReceiver(mReceiver, new IntentFilter(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION));
+
+        startMediaUploadService();
     }
 
     @Override
