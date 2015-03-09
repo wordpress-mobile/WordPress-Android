@@ -50,6 +50,7 @@ public class ActivityLauncher {
 
     public static void viewCurrentBlogPages(Context context) {
         Intent intent = new Intent(context, PagesActivity.class);
+        intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
         context.startActivity(intent);
     }
 
