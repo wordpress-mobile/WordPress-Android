@@ -123,6 +123,15 @@ public class SettingsFragment extends PreferenceFragment {
         displayPreferences();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
+    }
+
     private void initNotifications() {
         // AuthenticatorRequest notification settings if needed
         if (WordPress.hasDotComToken(getActivity())) {
@@ -378,6 +387,7 @@ public class SettingsFragment extends PreferenceFragment {
         }
     };
 
+    private AlertDialog mDialog;
     private final OnPreferenceClickListener languagePreferenceClickListener = new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
@@ -429,7 +439,7 @@ public class SettingsFragment extends PreferenceFragment {
                 }
             });
 
-            dialogBuilder.show();
+            mDialog = dialogBuilder.show();
 
             return true;
         }
