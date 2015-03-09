@@ -292,7 +292,7 @@
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:background">#d4dfe5</item>
-        <item name="android:layout_marginRight">@dimen/my_site_list_row_icon_margin_right</item>
+        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
@@ -301,6 +301,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">@dimen/margin_medium</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
@@ -308,6 +309,7 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
+        <item name="android:paddingLeft">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MySiteAddButtonContainer">

@@ -133,7 +133,6 @@
     <dimen name="my_site_add_button_padding_bottom">5dp</dimen>
     <dimen name="my_site_blog_name_margin_top">11dp</dimen>
     <dimen name="my_site_list_row_height">48dp</dimen>
-    <dimen name="my_site_list_row_icon_margin_right">32dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
     <dimen name="my_site_list_row_padding_left">16dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
