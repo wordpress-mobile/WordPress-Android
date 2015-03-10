@@ -76,6 +76,16 @@
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
 
+    <!-- MediaPicker -->
+    <string name="add_to_post">Add to Post</string>
+    <string name="media_picker_title">Select media</string>
+    <string name="take_photo">Take a photo</string>
+    <string name="take_video">Take a video</string>
+    <string name="tab_title_device_images">Device Images</string>
+    <string name="tab_title_device_videos">Device Videos</string>
+    <string name="tab_title_site_images">Site Images</string>
+    <string name="tab_title_site_videos">Site Videos</string>
+
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
     <string name="media_add_popup_capture_photo">Capture photo</string>
@@ -285,6 +295,7 @@
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content</string>
     <string name="uploading_total">Uploading %1$d of %2$d</string>
+    <string name="delete_from_collection">Remove media</string>
 
     <!-- new account view -->
     <string name="signing_in">Signing in…</string>
@@ -737,6 +748,9 @@
     <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
     <string name="reader_toast_err_block_blog">Unable to block this blog</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
+    <string name="editor_toast_gallery_pending_formatted">Gallery creation pending %d uploads</string>
+    <string name="editor_toast_gallery_created_formatted">Gallery created with %d items</string>
+    <string name="editor_toast_invalid_path">Invalid file path</string>
 
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>

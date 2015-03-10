@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/capture_image"
+        android:title="@string/take_photo"
+        android:icon="@drawable/ic_action_camera"
+        android:enabled="true"
+        android:visible="true"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/capture_video"
+        android:title="@string/take_video"
+        android:icon="@drawable/ic_action_video"
+        android:enabled="true"
+        android:visible="true"
+        android:orderInCategory="101"
+        app:showAsAction="ifRoom|withText" />
+
+</menu>
