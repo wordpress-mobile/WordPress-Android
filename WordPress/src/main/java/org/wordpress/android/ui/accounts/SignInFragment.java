@@ -237,7 +237,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 // Used to pass data to an eventual support service
                 intent.putExtra(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
                 intent.putExtra(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
-                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, Tag.ORIGIN_SETTINGS_SCREEN_HELP);
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, Tag.ORIGIN_LOGIN_SCREEN_HELP);
                 startActivity(intent);
             }
         };
