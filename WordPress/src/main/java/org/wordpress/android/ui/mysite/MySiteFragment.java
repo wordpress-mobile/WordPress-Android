@@ -39,9 +39,7 @@ public class MySiteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // we want to open the last used blog by default
-        int lastBlogId = WordPress.wpDB.getLastBlogId();
-        mBlog = WordPress.getBlog(lastBlogId);
+        mBlog = WordPress.getCurrentBlog();
     }
 
     @Override
