@@ -420,7 +420,12 @@ public class SettingsFragment extends PreferenceFragment {
                     Resources res = getResources();
                     DisplayMetrics dm = res.getDisplayMetrics();
                     Configuration conf = res.getConfiguration();
-                    conf.locale = new Locale(localeMap.get(values[position]));
+                    String localString = localeMap.get(values[position]);
+                    if (localString.contains("-")) {
+                        conf.locale = new Locale(localString.substring(0, localString.indexOf("-")), localString.substring(localString.indexOf("-") + 1, localString.length()));
+                    } else {
+                        conf.locale = new Locale(localString);
+                    }
                     res.updateConfiguration(conf, dm);
 
                     mSettings.edit().putString(SETTINGS_PREFERENCES, localeMap.get(values[position])).apply();
