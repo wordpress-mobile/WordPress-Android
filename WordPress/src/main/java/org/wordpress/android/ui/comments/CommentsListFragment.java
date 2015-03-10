@@ -30,9 +30,9 @@ import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
-import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
@@ -147,9 +147,14 @@ public class CommentsListFragment extends Fragment {
         getCommentAdapter().loadComments();
 
         Bundle extras = getActivity().getIntent().getExtras();
-        mHasAutoRefreshedComments = extras.getBoolean(CommentsActivity.KEY_AUTO_REFRESHED);
-        mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(extras.getString(
-                CommentsActivity.KEY_EMPTY_VIEW_MESSAGE));
+        if (extras != null) {
+            mHasAutoRefreshedComments = extras.getBoolean(CommentsActivity.KEY_AUTO_REFRESHED);
+            mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(extras.getString(
+                    CommentsActivity.KEY_EMPTY_VIEW_MESSAGE));
+        } else {
+            mHasAutoRefreshedComments = false;
+            mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
+        }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);

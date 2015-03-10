@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/grey_extra_light" android:state_pressed="true" />
-    <item android:drawable="@color/grey_light" />
+    <item android:drawable="@drawable/reader_follow_button_pressed" android:state_pressed="true" />
+    <item android:drawable="@drawable/reader_follow_button" />
 </selector>

@@ -33,7 +33,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="@color/my_site_dark_blue"
+                android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_large"
                 android:textStyle="bold"
                 app:fontVariation="light" />
@@ -47,14 +47,14 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="@color/my_site_light_blue"
+                android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_medium" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/my_site_blavatar"
-                android:background="@color/my_site_button_bg">
+                android:background="@color/grey_light">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/switch_site"
@@ -69,7 +69,7 @@
                     android:paddingBottom="@dimen/my_site_switch_site_button_padding_bottom"
                     android:paddingTop="@dimen/my_site_margin_general"
                     android:text="@string/my_site_btn_switch_site"
-                    android:textColor="@color/my_site_dark_blue"
+                    android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_medium" />
 
             </LinearLayout>

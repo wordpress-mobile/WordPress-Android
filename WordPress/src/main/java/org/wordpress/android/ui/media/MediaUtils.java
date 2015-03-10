@@ -8,15 +8,20 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -34,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -41,6 +47,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import static org.wordpress.mediapicker.MediaUtils.fadeInImage;
 
 public class MediaUtils {
     public class RequestCode {
@@ -90,13 +98,60 @@ public class MediaUtils {
         return false;
     }
 
-    private static boolean isVideo(String url) {
+    public static boolean isVideo(String url) {
         if (url == null)
             return false;
         if (url.endsWith(".ogv") || url.endsWith(".mp4") || url.endsWith(".m4v") || url.endsWith(".mov") ||
                 url.endsWith(".wmv") || url.endsWith(".avi") || url.endsWith(".mpg") || url.endsWith(".3gp") || url.endsWith(".3g2"))
             return true;
         return false;
+    }
+
+    public static Cursor getWordPressMediaImages(String blogId) {
+        return WordPress.wpDB.getMediaImagesForBlog(blogId);
+    }
+
+    public static Cursor getWordPressMediaVideos(String blogId) {
+        return WordPress.wpDB.getMediaFilesForBlog(blogId);
+    }
+
+    public static class BackgroundDownloadWebImage extends AsyncTask<Uri, String, Bitmap> {
+        WeakReference<ImageView> mReference;
+
+        public BackgroundDownloadWebImage(ImageView resultStore) {
+            mReference = new WeakReference<>(resultStore);
+        }
+
+        @Override
+        protected Bitmap doInBackground(Uri... params) {
+            try {
+                String uri = params[0].toString();
+                Bitmap bitmap = WordPress.getBitmapCache().getBitmap(uri);
+
+                if (bitmap == null) {
+                    URL url = new URL(uri);
+                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    WordPress.getBitmapCache().put(uri, bitmap);
+                }
+
+                return bitmap;
+            }
+            catch(IOException notFoundException) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            ImageView imageView = mReference.get();
+
+            if (imageView != null) {
+                if (imageView.getTag() == this) {
+                    imageView.setImageBitmap(result);
+                    fadeInImage(imageView, result);
+                }
+            }
+        }
     }
 
     public static int getPlaceholder(String url) {
@@ -124,7 +179,6 @@ public class MediaUtils {
         return sdf.format(date);
     }
 
-
     public static void launchPictureLibrary(Fragment fragment) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -132,6 +186,17 @@ public class MediaUtils {
 
         AppLockManager.getInstance().setExtendedTimeout();
         fragment.startActivityForResult(Intent.createChooser(intent, fragment.getString(R.string.pick_photo)), RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+    }
+
+    public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
+        String state = android.os.Environment.getExternalStorageState();
+        if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
+            showSDCardRequiredDialog(activity);
+        } else {
+            Intent intent = prepareLaunchCameraIntent(callback);
+            activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+            AppLockManager.getInstance().setExtendedTimeout();
+        }
     }
 
     public static void launchCamera(Fragment fragment, LaunchCameraCallback callback) {
@@ -193,6 +258,12 @@ public class MediaUtils {
     public static void launchVideoCamera(Fragment fragment) {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        AppLockManager.getInstance().setExtendedTimeout();
+    }
+
+    public static void launchVideoCamera(Activity activity) {
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
@@ -270,13 +341,13 @@ public class MediaUtils {
             return null;
         }
 
-        String url = cursor.getString(cursor.getColumnIndex("fileURL"));
+        String url = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
         if (url == null) {
             cursor.close();
             return null;
         }
 
-        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
+        String mimeType = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MIME_TYPE));
         boolean isVideo = mimeType != null && mimeType.contains("video");
 
         Uri uri = Uri.parse(url);
@@ -285,17 +356,17 @@ public class MediaUtils {
         MediaFile mediaFile = imageSpan.getMediaFile();
         mediaFile.setMediaId(mediaId);
         mediaFile.setBlogId(blogId);
-        mediaFile.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
-        mediaFile.setDescription(cursor.getString(cursor.getColumnIndex("description")));
-        mediaFile.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-        mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
-        mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
+        mediaFile.setCaption(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION)));
+        mediaFile.setDescription(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DESCRIPTION)));
+        mediaFile.setTitle(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE)));
+        mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH)));
+        mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT)));
         mediaFile.setMimeType(mimeType);
-        mediaFile.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
-        mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
-        mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-        mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex("videoPressShortcode")));
-        mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex("fileURL")));
+        mediaFile.setFileName(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME)));
+        mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL)));
+        mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
+        mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_VIDEO_PRESS_SHORTCODE)));
+        mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL)));
         mediaFile.setVideo(isVideo);
         mediaFile.save();
         cursor.close();

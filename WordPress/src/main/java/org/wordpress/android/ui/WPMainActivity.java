@@ -48,7 +48,7 @@ public class WPMainActivity extends ActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.color_status_bar));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_tint));
         }
 
         super.onCreate(savedInstanceState);

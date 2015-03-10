@@ -59,7 +59,7 @@
                 android:singleLine="true"
                 android:text="@string/blogusername"
                 android:textColor="#666666"
-                android:textColorLink="@color/wordpress_blue"
+                android:textColorLink="@color/blue_wordpress"
                 android:textSize="12dip" />
         </LinearLayout>
     </LinearLayout>

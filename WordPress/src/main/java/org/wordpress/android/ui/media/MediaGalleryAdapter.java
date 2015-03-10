@@ -13,6 +13,7 @@ import com.mobeta.android.dslv.ResourceDragSortCursorAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -63,24 +64,24 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
             view.setTag(holder);
         }
 
-        String state = cursor.getString(cursor.getColumnIndex("uploadState"));
+        String state = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_UPLOAD_STATE));
         boolean isLocalFile = MediaUtils.isLocalFile(state);
 
         // file name
-        String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
+        String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
         if (holder.filenameView != null) {
             holder.filenameView.setText("File name: " + fileName);
         }
 
         // title of media
-        String title = cursor.getString(cursor.getColumnIndex("title"));
+        String title = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE));
         if (title == null || title.equals(""))
             title = fileName;
         holder.titleView.setText(title);
 
         // upload date
         if (holder.uploadDateView != null) {
-            String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
+            String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
             holder.uploadDateView.setText("Uploaded on: " + date);
         }
 
@@ -92,9 +93,9 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
         }
 
         // get the file extension from the fileURL
-        String filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex("filePath")));
+        String filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH)));
         if (filePath.isEmpty())
-            filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex("fileURL")));
+            filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL)));
 
         // file type
         String fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
@@ -107,8 +108,8 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
         // dimensions
         if (holder.dimensionView != null) {
             if( MediaUtils.isValidImage(filePath)) {
-                int width = cursor.getInt(cursor.getColumnIndex("width"));
-                int height = cursor.getInt(cursor.getColumnIndex("height"));
+                int width = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
+                int height = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
 
                 if (width > 0 && height > 0) {
                     String dimensions = width + "x" + height;
@@ -123,7 +124,7 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
     }
 
     private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
-        String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
+        String thumbnailURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
         if (thumbnailURL == null) {
             imageView.setImageUrl(null, null);
             return;

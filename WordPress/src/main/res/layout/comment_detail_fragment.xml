@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/calypso_blue_light">
+    android:background="@color/grey_light">
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -63,7 +63,7 @@
                     android:maxLines="1"
                     android:paddingBottom="@dimen/margin_extra_small"
                     android:paddingTop="@dimen/margin_extra_small"
-                    android:textColor="@color/grey_medium"
+                    android:textColor="@color/grey_darken_10"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="text_post_title" />
 

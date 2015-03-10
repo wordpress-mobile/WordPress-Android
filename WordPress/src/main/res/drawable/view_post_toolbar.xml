@@ -9,7 +9,7 @@
 
     <item>
         <shape>
-            <solid android:color="@color/grey_extra_light" />
+            <solid android:color="@color/grey_lighten_30" />
         </shape>
     </item>
 </layer-list>

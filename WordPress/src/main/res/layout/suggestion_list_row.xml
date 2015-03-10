@@ -23,7 +23,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:textColor="@color/calypso_blue_dark"
+        android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"
         tools:text="user_login" />
 
@@ -36,7 +36,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical|right"
         android:maxLines="1"
-        android:textColor="@color/calypso_blue"
+        android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_medium"
         tools:text="display_name" />
 

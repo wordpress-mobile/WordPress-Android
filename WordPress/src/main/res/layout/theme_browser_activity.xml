@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/tab_background"
-        android:elevation="@dimen/tabstrip_elevation" />
+        android:elevation="@dimen/tabs_elevation" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/theme_browser_pager"

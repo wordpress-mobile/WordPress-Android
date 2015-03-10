@@ -13,4 +13,8 @@
 
     <!-- duration of reader activity transition animation -->
     <integer name="reader_activity_anim_time">250</integer>
+
+    <!-- MediaPicker -->
+    <integer name="num_media_columns">2</integer>
+
 </resources>

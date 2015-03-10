@@ -9,12 +9,13 @@
         <item name="colorControlActivated">@color/color_control_activated</item>
         <item name="colorControlHighlight">@color/color_control_highlight</item>
 
-        <item name="android:windowBackground">@color/calypso_blue_light</item>
+        <item name="android:windowBackground">@color/grey_lighten_30</item>
         <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Dark.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
+        <item name="android:actionModeBackground">@color/color_primary_dark</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
         <item name="windowActionModeOverlay">true</item>
@@ -183,7 +184,7 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:gravity">center_horizontal|center_vertical</item>
-        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
     </style>
 
     <!-- NUX Styles -->
@@ -230,7 +231,7 @@
     </style>
 
     <style name="WordPress.EmptyList">
-        <item name="android:textColor">@color/grey_medium_dark</item>
+        <item name="android:textColor">@color/grey_darken_30</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_marginLeft">16dp</item>
         <item name="android:layout_marginRight">16dp</item>
@@ -249,7 +250,7 @@
         moderation views on comment detail
     -->
     <style name="WordPress.ModerateButton">
-        <item name="android:textColor">@color/calypso_blue</item>
+        <item name="android:textColor">@color/grey</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
@@ -276,7 +277,7 @@
     </style>
 
     <style name="WordPress.SwipeToRefresh">
-        <item name="refreshIndicatorColor">@color/blue_new_kid</item>
+        <item name="refreshIndicatorColor">@color/blue_medium</item>
     </style>
 
     <!--My Site Styles-->
@@ -305,7 +306,7 @@
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/my_site_dark_blue</item>
+        <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
@@ -347,7 +348,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:textColor">@color/my_site_light_blue</item>
+        <item name="android:textColor">@color/grey</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textAllCaps">true</item>
     </style>
@@ -357,7 +358,7 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginLeft">@dimen/margin_large</item>
-        <item name="android:background">@color/my_site_section_divider</item>
+        <item name="android:background">@color/grey_lighten_20</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
     </style>
 

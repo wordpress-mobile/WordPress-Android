@@ -47,9 +47,9 @@ import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
-import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -67,7 +67,6 @@ import java.util.Map;
  * </p>
  */
 public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.ScrollViewListener,
-        StatsAuthorsFragment.OnAuthorsSectionChangeListener,
         StatsVisitorsAndViewsFragment.OnDateChangeListener,
         StatsAbstractListFragment.OnRequestDataListener,
         StatsAbstractFragment.TimeframeDateProvider {
@@ -366,14 +365,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
 
         ft.commitAllowingStateLoss();
-    }
-
-    // AuthorsFragment should be dismissed when 0 or 1 author.
-    public void onAuthorsVisibilityChange(boolean isEmpty) {
-        View authorsContainer = this.findViewById(R.id.stats_top_authors_container);
-        if (authorsContainer != null) {
-            authorsContainer.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        }
     }
 
     @Override
