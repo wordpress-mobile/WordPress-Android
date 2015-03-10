@@ -1723,12 +1723,29 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             final List<MediaItem> selectedContent =
                     data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
             if (selectedContent != null && selectedContent.size() > 0) {
+                Integer localMediaAdded = 0;
+                Integer libraryMediaAdded = 0;
+
                 for (MediaItem media : selectedContent) {
                     if (media.getSource().toString().contains("wordpress.com")) {
                         addExistingMediaToEditor(media.getTag());
+                        ++libraryMediaAdded;
                     } else {
                         addMedia(media.getSource(), null, getActivity());
+                        ++localMediaAdded;
                     }
+                }
+
+                if (localMediaAdded > 0) {
+                    Map<String, Object> analyticsProperties = new HashMap<>();
+                    analyticsProperties.put("number_of_local_photos_added", String.valueOf(localMediaAdded));
+                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY, analyticsProperties);
+                }
+
+                if (libraryMediaAdded > 0) {
+                    Map<String, Object> analyticsProperties = new HashMap<>();
+                    analyticsProperties.put("number_of_wp_library_photos_added", String.valueOf(libraryMediaAdded));
+                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY, analyticsProperties);
                 }
             }
         }
