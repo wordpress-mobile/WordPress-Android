@@ -132,6 +132,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     private static final String TAG_FORMAT_BAR_BUTTON_STRIKE = "strike";
     private static final String TAG_FORMAT_BAR_BUTTON_QUOTE = "blockquote";
 
+    private static final String ANALYTIC_PROP_NUM_LOCAL_PHOTOS_ADDED = "number_of_local_photos_added";
+    private static final String ANALYTIC_PROP_NUM_WP_PHOTOS_ADDED = "number_of_wp_library_photos_added";
+
     private static final int CONTENT_ANIMATION_DURATION = 250;
     private static final int MIN_THUMBNAIL_WIDTH = 200;
 
@@ -1738,13 +1741,13 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
                 if (localMediaAdded > 0) {
                     Map<String, Object> analyticsProperties = new HashMap<>();
-                    analyticsProperties.put("number_of_local_photos_added", String.valueOf(localMediaAdded));
+                    analyticsProperties.put(ANALYTIC_PROP_NUM_LOCAL_PHOTOS_ADDED, localMediaAdded);
                     AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY, analyticsProperties);
                 }
 
                 if (libraryMediaAdded > 0) {
                     Map<String, Object> analyticsProperties = new HashMap<>();
-                    analyticsProperties.put("number_of_wp_library_photos_added", String.valueOf(libraryMediaAdded));
+                    analyticsProperties.put(ANALYTIC_PROP_NUM_WP_PHOTOS_ADDED, libraryMediaAdded);
                     AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY, analyticsProperties);
                 }
             }
