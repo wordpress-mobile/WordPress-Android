@@ -85,7 +85,6 @@ public class EditPostActivity extends ActionBarActivity {
             actionBar.setElevation(0.0f);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        WPActivityUtils.setWindowContentOverlayCompat(this);
 
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();

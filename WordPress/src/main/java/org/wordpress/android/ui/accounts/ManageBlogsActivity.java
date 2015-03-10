@@ -59,7 +59,6 @@ public class ManageBlogsActivity extends ActionBarActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        WPActivityUtils.setWindowContentOverlayCompat(this);
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),

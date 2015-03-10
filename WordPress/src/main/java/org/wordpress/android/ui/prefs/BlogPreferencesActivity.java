@@ -67,7 +67,6 @@ public class BlogPreferencesActivity extends ActionBarActivity {
             actionBar.setTitle(StringUtils.unescapeHTML(blog.getNameOrHostUrl()));
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        WPActivityUtils.setWindowContentOverlayCompat(this);
 
         mUsernameET = (EditText) findViewById(R.id.username);
         mPasswordET = (EditText) findViewById(R.id.password);

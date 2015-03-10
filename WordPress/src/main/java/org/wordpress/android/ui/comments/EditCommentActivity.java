@@ -71,7 +71,6 @@ public class EditCommentActivity extends ActionBarActivity {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        WPActivityUtils.setWindowContentOverlayCompat(this);
 
         loadComment(getIntent());
     }

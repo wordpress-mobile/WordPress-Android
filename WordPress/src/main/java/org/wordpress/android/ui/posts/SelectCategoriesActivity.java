@@ -66,7 +66,6 @@ public class SelectCategoriesActivity extends ActionBarActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        WPActivityUtils.setWindowContentOverlayCompat(this);
 
         mListView = (ListView)findViewById(android.R.id.list);
         mListScrollPositionManager = new ListScrollPositionManager(mListView, false);

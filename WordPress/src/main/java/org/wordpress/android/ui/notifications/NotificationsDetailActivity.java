@@ -43,7 +43,6 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
             actionBar.setElevation(0.0f);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        WPActivityUtils.setWindowContentOverlayCompat(this);
 
         if (savedInstanceState == null) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);

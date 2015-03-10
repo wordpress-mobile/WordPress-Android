@@ -44,7 +44,6 @@ public class AppLogViewerActivity extends ActionBarActivity {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        WPActivityUtils.setWindowContentOverlayCompat(this);
 
         final ListView listView = (ListView) findViewById(android.R.id.list);
         listView.setAdapter(new LogAdapter(this));

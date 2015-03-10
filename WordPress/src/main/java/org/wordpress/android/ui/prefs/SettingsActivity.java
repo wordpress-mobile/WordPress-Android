@@ -30,8 +30,6 @@ public class SettingsActivity extends ActionBarActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        WPActivityUtils.setWindowContentOverlayCompat(this);
-
         mCurrentBlogOnCreate = WordPress.getCurrentBlog();
         setContentView(R.layout.settings_activity);
         mSettingsFragment = new SettingsFragment();
