@@ -21,6 +21,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,7 @@ public class AppLogViewerActivity extends ActionBarActivity {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        WPActivityUtils.setWindowContentOverlayCompat(this);
 
         final ListView listView = (ListView) findViewById(android.R.id.list);
         listView.setAdapter(new LogAdapter(this));
