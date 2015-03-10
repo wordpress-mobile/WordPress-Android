@@ -7,6 +7,7 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 
@@ -53,7 +54,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case TAB_SITES:
-                return new DummyFragment();
+                return MySiteFragment.newInstance();
             case TAB_READER:
                 return ReaderPostListFragment.newInstance();
             case TAB_ME:

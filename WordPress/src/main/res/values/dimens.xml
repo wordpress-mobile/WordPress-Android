@@ -86,6 +86,7 @@
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">48dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
+    <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
 
     <dimen name="reader_button_icon">48dp</dimen>
@@ -146,5 +147,14 @@
     <dimen name="media_item_frame_padding_top">8dp</dimen>
     <dimen name="media_item_frame_padding_right">8dp</dimen>
     <dimen name="media_item_frame_padding_bottom">8dp</dimen>
+
+    <!-- my site -->
+    <dimen name="my_site_add_button_padding_bottom">5dp</dimen>
+    <dimen name="my_site_blog_name_margin_top">11dp</dimen>
+    <dimen name="my_site_list_row_height">48dp</dimen>
+    <dimen name="my_site_list_row_icon_size">24dp</dimen>
+    <dimen name="my_site_list_row_padding_left">16dp</dimen>
+    <dimen name="my_site_margin_general">10dp</dimen>
+    <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
 
 </resources>

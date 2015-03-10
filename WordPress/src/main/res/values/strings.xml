@@ -868,4 +868,17 @@
     <string name="hs__conversation_header">Support chat</string>
     <string name="hs__username_blank_error">Enter a valid name</string>
     <string name="hs__invalid_email_error">Enter a valid email address</string>
+
+    <!--My Site-->
+    <string name="my_site_header_admin">Admin</string>
+    <string name="my_site_header_configuration">Configuration</string>
+    <string name="my_site_header_look_and_feel">Look and Feel</string>
+    <string name="my_site_header_publish">Publish</string>
+
+    <string name="my_site_btn_blog_posts">Blog Posts</string>
+    <string name="my_site_btn_comments">Comments</string>
+    <string name="my_site_btn_switch_site">Switch Site</string>
+    <string name="my_site_btn_view_admin">View Admin</string>
+    <string name="my_site_btn_view_site">View Site</string>
+
 </resources>

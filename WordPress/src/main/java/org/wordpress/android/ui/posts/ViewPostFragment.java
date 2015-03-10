@@ -29,6 +29,7 @@ import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
@@ -143,7 +144,7 @@ public class ViewPostFragment extends Fragment {
                     Intent i = new Intent(getActivity().getApplicationContext(), EditPostActivity.class);
                     i.putExtra(EditPostActivity.EXTRA_IS_PAGE, WordPress.currentPost.isPage());
                     i.putExtra(EditPostActivity.EXTRA_POSTID, WordPress.currentPost.getLocalTablePostId());
-                    getActivity().startActivityForResult(i, PostsActivity.ACTIVITY_EDIT_POST);
+                    getActivity().startActivityForResult(i, RequestCodes.EDIT_POST);
                 }
             }
         });
