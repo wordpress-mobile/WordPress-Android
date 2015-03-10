@@ -114,6 +114,15 @@
 
         </LinearLayout>
 
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/stats_list_empty_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_sz_small"
+            android:padding="@dimen/margin_large"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -128,12 +137,5 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/stats_list_empty_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/grey_light"
-            android:padding="@dimen/margin_large"
-            android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>
