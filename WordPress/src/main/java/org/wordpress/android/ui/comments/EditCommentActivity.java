@@ -36,7 +36,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;

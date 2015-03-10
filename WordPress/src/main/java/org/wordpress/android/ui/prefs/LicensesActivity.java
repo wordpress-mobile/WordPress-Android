@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.WebViewActivity;
-import org.wordpress.android.util.WPActivityUtils;
 
 /**
  * Display open source licenses for the application.

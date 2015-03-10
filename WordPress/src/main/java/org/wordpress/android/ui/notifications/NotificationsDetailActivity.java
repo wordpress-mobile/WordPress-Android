@@ -25,7 +25,6 @@ import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 
 public class NotificationsDetailActivity extends ActionBarActivity implements
         CommentActions.OnNoteCommentActionListener {

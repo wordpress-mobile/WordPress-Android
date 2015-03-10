@@ -12,7 +12,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.WPActivityUtils;
 
 public class SettingsActivity extends ActionBarActivity {
     public static final int RESULT_SIGNED_OUT = 1;

@@ -21,7 +21,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
 

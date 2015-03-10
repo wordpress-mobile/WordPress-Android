@@ -25,7 +25,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;

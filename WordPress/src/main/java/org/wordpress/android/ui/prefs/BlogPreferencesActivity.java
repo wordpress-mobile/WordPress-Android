@@ -25,7 +25,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.Locale;
 
