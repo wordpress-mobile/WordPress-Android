@@ -50,6 +50,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GenericCallback;
+import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -231,12 +233,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         OnClickListener infoButtonListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent newAccountIntent = new Intent(getActivity(), HelpActivity.class);
+                Intent intent = new Intent(getActivity(), HelpActivity.class);
                 // Used to pass data to an eventual support service
-                newAccountIntent.putExtra(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
-                newAccountIntent.putExtra(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
-                newAccountIntent.putExtra(FROM_LOGIN_SCREEN_KEY, true);
-                startActivity(newAccountIntent);
+                intent.putExtra(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
+                intent.putExtra(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, Tag.ORIGIN_SETTINGS_SCREEN_HELP);
+                startActivity(intent);
             }
         };
         mInfoButton = (ImageView) rootView.findViewById(R.id.info_button);
