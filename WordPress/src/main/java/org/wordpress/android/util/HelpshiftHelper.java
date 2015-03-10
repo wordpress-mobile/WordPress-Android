@@ -10,15 +10,20 @@ import android.text.TextUtils;
 
 import com.helpshift.Helpshift;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class HelpshiftHelper {
+    public static String ORIGIN_KEY = "ORIGIN_KEY";
+    private static String HELPSHIFT_SCREEN_KEY = "helpshift_screen";
+    private static String HELPSHIFT_ORIGIN_KEY = "origin";
     private static HelpshiftHelper mInstance = null;
     private static HashMap<String, Object> mMetadata = new HashMap<String, Object>();
 
@@ -38,8 +43,10 @@ public class HelpshiftHelper {
     }
 
     public enum Tag {
-        LOGIN_SCREEN("login-screen"),
-        SETTINGS_SCREEN("settings-screen");
+        ORIGIN_UNKNOWN("origin:unknown"),
+        ORIGIN_LOGIN_SCREEN_HELP("origin:login-screen-help"),
+        ORIGIN_LOGIN_SCREEN_ERROR("origin:login-screen-error"),
+        ORIGIN_SETTINGS_SCREEN_HELP("origin:settings-screen-help");
 
         private final String mStringValue;
 
@@ -84,8 +91,17 @@ public class HelpshiftHelper {
      * Show conversation activity
      * Automatically add default metadata to this conversation
      */
-    public void showConversation(Activity activity) {
-        AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN);
+    public void showConversation(Activity activity, Tag origin) {
+        if (origin == null) {
+            origin = Tag.ORIGIN_UNKNOWN;
+        }
+        // track origin and helpshift screen in analytics
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.put(HELPSHIFT_SCREEN_KEY, "conversation");
+        properties.put(HELPSHIFT_ORIGIN_KEY, origin.toString());
+        AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN, properties);
+        // Add tags to Helpshift metadata
+        addTags(new Tag[]{origin});
         HashMap config = getHelpshiftConfig(activity);
         Helpshift.showConversation(activity, config);
     }
@@ -94,8 +110,17 @@ public class HelpshiftHelper {
      * Show FAQ activity
      * Automatically add default metadata to this conversation (users can start a conversation from FAQ screen).
      */
-    public void showFAQ(Activity activity) {
-        AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN);
+    public void showFAQ(Activity activity, Tag origin) {
+        if (origin == null) {
+            origin = Tag.ORIGIN_UNKNOWN;
+        }
+        // track origin and helpshift screen in analytics
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.put(HELPSHIFT_SCREEN_KEY, "faq");
+        properties.put(HELPSHIFT_ORIGIN_KEY, origin.toString());
+        AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN, properties);
+        // Add tags to Helpshift metadata
+        addTags(new Tag[]{origin});
         HashMap config = getHelpshiftConfig(activity);
         Helpshift.showFAQs(activity, config);
     }
