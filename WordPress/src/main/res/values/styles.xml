@@ -317,7 +317,6 @@
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="MySiteAddButton">
@@ -331,7 +330,7 @@
         <item name="android:paddingRight">@dimen/margin_large</item>
         <item name="android:paddingTop">@dimen/margin_small</item>
         <item name="android:text">@string/add</item>
-        <item name="android:textColor">@color/my_site_light_blue</item>
+        <item name="android:textColor">@drawable/my_site_add_button_text_color_selector</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>

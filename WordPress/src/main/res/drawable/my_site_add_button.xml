@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <solid android:color="@color/my_site_button_bg" />
-    <corners android:radius="@dimen/margin_extra_small" />
-
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/white" android:state_pressed="true" >
+        <shape>
+            <corners android:radius="@dimen/margin_extra_small" />
+        </shape>
+    </item>
+    <item android:drawable="@color/my_site_button_bg" >
+        <shape>
+            <corners android:radius="@dimen/margin_extra_small" />
+        </shape>
+    </item>
+</selector>
