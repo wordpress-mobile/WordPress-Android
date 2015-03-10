@@ -35,6 +35,8 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPEditTextPreference;
@@ -368,15 +370,16 @@ public class SettingsFragment extends PreferenceFragment {
     private final OnPreferenceClickListener launchActivitiyClickListener = new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Class activityToStart = HelpActivity.class;
+            Intent intent = new Intent(getActivity(), AboutActivity.class);
             if ("wp_pref_app_about".equals(preference.getKey())) {
-                activityToStart = AboutActivity.class;
+                intent = new Intent(getActivity(), AboutActivity.class);
             } else if ("wp_pref_open_source_licenses".equals(preference.getKey())) {
-                activityToStart = LicensesActivity.class;
+                intent = new Intent(getActivity(), LicensesActivity.class);
             } else if ("wp_pref_help_and_support".equals(preference.getKey())) {
-                activityToStart = HelpActivity.class;
+                intent = new Intent(getActivity(), HelpActivity.class);
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, Tag.ORIGIN_SETTINGS_SCREEN_HELP);
             }
-            startActivity(new Intent(getActivity(), activityToStart));
+            startActivity(intent);
             return true;
         }
     };
