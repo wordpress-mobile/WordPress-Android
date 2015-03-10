@@ -108,7 +108,8 @@
             android:theme="@style/CalypsoTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.comments.EditCommentActivity" />
+            android:name=".ui.comments.EditCommentActivity"
+            android:theme="@style/CalypsoTheme"/>
 
         <!-- Posts activities -->
         <activity
