@@ -47,7 +47,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_medium"
+                    android:layout_marginStart="@dimen/margin_medium"
                     android:layout_marginRight="@dimen/margin_medium"
+                    android:layout_marginEnd="@dimen/margin_medium"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:layout_marginBottom="@dimen/margin_small">
 
@@ -58,7 +60,8 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="@color/calypso_blue_dark"
-                        android:layout_alignParentLeft="true" />
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_views_totals"
@@ -67,7 +70,8 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/calypso_orange_dark"
                         android:text="0"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
 
                 </RelativeLayout>
 
@@ -84,6 +88,7 @@
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large"
                     style="@style/StatsModuleTitle"
                     android:text="@string/stats_months_and_years" />
 
@@ -91,7 +96,9 @@
                     android:id="@+id/stats_months_years_empty_module_placeholder"
                     layout="@layout/stats_empty_module_placeholder"
                     android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large"
                     android:layout_marginRight="@dimen/margin_large"
+                    android:layout_marginEnd="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_large"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -101,7 +108,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large"
                     android:layout_marginRight="@dimen/margin_large"
+                    android:layout_marginEnd="@dimen/margin_large"
                     android:paddingBottom="@dimen/margin_small"
                     android:paddingTop="@dimen/margin_small">
 
@@ -110,6 +119,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
                         android:text="@string/stats_period" />
 
                     <org.wordpress.android.widgets.WPTextView
@@ -117,6 +127,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:text="@string/stats_total" />
                 </RelativeLayout>
 
@@ -142,6 +153,7 @@
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large"
                     style="@style/StatsModuleTitle"
                     android:text="@string/stats_average_per_day" />
 
@@ -149,7 +161,9 @@
                     android:id="@+id/stats_averages_empty_module_placeholder"
                     layout="@layout/stats_empty_module_placeholder"
                     android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large"
                     android:layout_marginRight="@dimen/margin_large"
+                    android:layout_marginEnd="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_large"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -159,7 +173,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large"
                     android:layout_marginRight="@dimen/margin_large"
+                    android:layout_marginEnd="@dimen/margin_large"
                     android:paddingBottom="@dimen/margin_small"
                     android:paddingTop="@dimen/margin_small">
 
@@ -168,6 +184,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
                         android:text="@string/stats_period" />
 
                     <org.wordpress.android.widgets.WPTextView
@@ -175,6 +192,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:text="@string/stats_overall" />
                 </RelativeLayout>
 
@@ -200,6 +218,7 @@
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large"
                     style="@style/StatsModuleTitle"
                     android:text="@string/stats_recent_weeks" />
 
@@ -207,7 +226,9 @@
                     android:id="@+id/stats_recent_weeks_empty_module_placeholder"
                     layout="@layout/stats_empty_module_placeholder"
                     android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large"
                     android:layout_marginRight="@dimen/margin_large"
+                    android:layout_marginEnd="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_large"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -217,7 +238,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large"
                     android:layout_marginRight="@dimen/margin_large"
+                    android:layout_marginEnd="@dimen/margin_large"
                     android:paddingBottom="@dimen/margin_small"
                     android:paddingTop="@dimen/margin_small">
 
@@ -226,6 +249,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
                         android:text="@string/stats_period" />
 
                     <org.wordpress.android.widgets.WPTextView
@@ -233,6 +257,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:text="@string/stats_total" />
                 </RelativeLayout>
 

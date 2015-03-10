@@ -16,6 +16,7 @@
             style="@style/DrawerIcon"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/drawer_row_keyline"
+            android:layout_marginStart="@dimen/drawer_row_keyline"
             tools:src="@drawable/dashicon_admin_post_black" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -25,16 +26,21 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/drawer_text_keyline"
+            android:layout_marginStart="@dimen/drawer_text_keyline"
             android:layout_marginRight="@dimen/drawer_row_keyline"
+            android:layout_marginEnd="@dimen/drawer_row_keyline"
             android:layout_toLeftOf="@+id/drawer_row_badge"
+            android:layout_toStartOf="@+id/drawer_row_badge"
             tools:text="Drawer row title" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/drawer_row_badge"
             style="@style/DrawerBadge"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/drawer_row_keyline"
+            android:layout_marginEnd="@dimen/drawer_row_keyline"
             android:visibility="gone"
             tools:visibility="visible" />
 

@@ -32,7 +32,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"/>
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"/>
 
 
             <LinearLayout
@@ -63,7 +65,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"/>
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"/>
 
             <FrameLayout
                 android:id="@+id/stats_referrers_container"
@@ -71,7 +75,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"/>
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"/>
 
             <FrameLayout
                 android:id="@+id/stats_clicks_container"
@@ -79,7 +85,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"/>
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"/>
 
             <FrameLayout
                 android:id="@+id/stats_geoviews_container"
@@ -87,7 +95,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"/>
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"/>
 
             <FrameLayout
                 android:id="@+id/stats_search_terms_container"
@@ -95,7 +105,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 />
 
             <FrameLayout
@@ -104,7 +116,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 />
 
             <FrameLayout
@@ -113,7 +127,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 />
 
             <org.wordpress.android.widgets.WPTextView
@@ -132,7 +148,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 />
 
             <FrameLayout
@@ -141,7 +159,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 />
 
             <FrameLayout
@@ -150,7 +170,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 />
 
             <FrameLayout
@@ -159,7 +181,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"/>
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"/>
 
         </LinearLayout>
     </org.wordpress.android.ui.stats.ScrollViewExt>

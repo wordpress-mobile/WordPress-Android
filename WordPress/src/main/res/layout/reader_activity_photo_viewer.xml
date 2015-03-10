@@ -18,6 +18,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/margin_small"
         android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_small"
         android:background="@drawable/reader_photo_count_background"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingLeft="@dimen/margin_large"

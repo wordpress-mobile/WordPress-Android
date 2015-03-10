@@ -15,7 +15,8 @@
             layout="@layout/drawer"
             android:layout_width="@dimen/drawer_width_static"
             android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/margin_extra_small" />
+            android:layout_marginRight="@dimen/margin_extra_small"
+            android:layout_marginEnd="@dimen/margin_extra_small" />
 
         <LinearLayout
             android:id="@+id/activity_container"

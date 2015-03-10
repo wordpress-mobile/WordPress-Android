@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/image_post_comment"
+        android:layout_toStartOf="@+id/image_post_comment"
         android:background="@color/transparent"
         android:gravity="center_vertical"
         android:hint="@string/reader_hint_comment_on_post"
@@ -41,6 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:paddingRight="@dimen/margin_medium"
         android:src="@drawable/ic_send_grey600_24dp" />
@@ -50,7 +52,9 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:layout_centerVertical="true"
         android:visibility="gone" />
 

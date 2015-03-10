@@ -19,7 +19,7 @@
             android:id="@+id/media_grid_item_upload_state_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|right"
+            android:layout_gravity="top|end"
             android:visibility="gone">
 
             <ProgressBar
@@ -36,7 +36,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/media_grid_item_upload_progress"
-                android:gravity="right"
+                android:layout_toEndOf="@id/media_grid_item_upload_progress"
+                android:gravity="end"
                 android:paddingLeft="@dimen/margin_small"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_sz_small"/>
@@ -66,6 +67,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:layout_toLeftOf="@+id/media_grid_item_filetype"
+                android:layout_toStartOf="@+id/media_grid_item_filetype"
                 android:textSize="@dimen/text_sz_small"
                 android:textColor="@color/media_gallery_grid_label"/>
 
@@ -74,7 +76,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_extra_small"
+                android:layout_marginStart="@dimen/margin_extra_small"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textSize="@dimen/text_sz_small"

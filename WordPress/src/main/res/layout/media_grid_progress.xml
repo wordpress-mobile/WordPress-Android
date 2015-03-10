@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/progressbar"
+        android:layout_toEndOf="@+id/progressbar"
         android:gravity="center"
         android:padding="10dp"
         android:text="@string/loading"

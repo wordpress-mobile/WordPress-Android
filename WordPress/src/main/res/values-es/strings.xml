@@ -626,6 +626,7 @@
 	<string name="yes">Sí</string>
 	<string name="no">No</string>
 	<string name="on">en</string>
+    <string name="language">Lengua</string>
 	<string-array name="alignment_array">
 		<item>Ninguno</item>
 		<item>Izquierda</item>

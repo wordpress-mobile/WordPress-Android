@@ -47,6 +47,7 @@
                 style="@style/DrawerIcon"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/drawer_row_keyline"
+                android:layout_marginStart="@dimen/drawer_row_keyline"
                 android:src="@drawable/ic_settings_grey600_24dp" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -56,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/drawer_text_keyline"
+                android:layout_marginStart="@dimen/drawer_text_keyline"
                 android:text="@string/settings" />
         </RelativeLayout>
     </LinearLayout>

@@ -32,6 +32,7 @@
                 android:id="@+id/image_avatar"
                 style="@style/ReaderImageView.Avatar"
                 android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
                 android:layout_marginTop="@dimen/margin_large"
                 android:background="?android:selectableItemBackground"
                 tools:src="@drawable/gravatar_placeholder" />
@@ -42,9 +43,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_toLeftOf="@+id/image_more"
+                android:layout_toStartOf="@+id/image_more"
                 android:layout_toRightOf="@+id/image_avatar"
+                android:layout_toEndOf="@+id/image_avatar"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/grey_dark"
@@ -56,6 +60,7 @@
                 android:layout_below="@+id/text_blog_name"
                 android:layout_marginTop="@dimen/margin_small"
                 android:layout_toRightOf="@+id/image_avatar"
+                android:layout_toEndOf="@+id/image_avatar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -64,8 +69,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
                 android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/margin_large"
                 android:paddingLeft="@dimen/margin_large"
@@ -84,7 +91,9 @@
             style="@style/ReaderTextView.Post.Title"
             android:layout_below="@+id/image_featured"
             android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginStart="@dimen/reader_card_content_padding"
             android:layout_marginRight="@dimen/reader_card_content_padding"
+            android:layout_marginEnd="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_large"
             tools:text="text_title" />
 
@@ -94,7 +103,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_title"
             android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginStart="@dimen/reader_card_content_padding"
             android:layout_marginRight="@dimen/reader_card_content_padding"
+            android:layout_marginEnd="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_medium"
             tools:text="text_excerpt" />
 
@@ -103,6 +114,7 @@
             style="@style/ReaderTextView.Post.Tag"
             android:layout_below="@+id/text_excerpt"
             android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginStart="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_small"
             android:paddingBottom="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small"
@@ -115,7 +127,9 @@
             android:layout_height="1dp"
             android:layout_below="@+id/text_tag"
             android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginStart="@dimen/reader_card_content_padding"
             android:layout_marginRight="@dimen/reader_card_content_padding"
+            android:layout_marginEnd="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@color/reader_divider_grey" />
 
@@ -125,7 +139,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/divider"
             android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginStart="@dimen/reader_card_content_padding"
             android:layout_marginRight="@dimen/reader_card_content_padding"
+            android:layout_marginEnd="@dimen/reader_card_content_padding"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -141,6 +157,7 @@
                 android:id="@+id/image_reblog_btn"
                 style="@style/ReaderImageView.ButtonIcon"
                 android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
                 android:src="@drawable/reader_button_reblog" />
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -148,6 +165,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
                 wp:readerIcon="comment" />
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -155,6 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
                 wp:readerIcon="like" />
 
         </LinearLayout>

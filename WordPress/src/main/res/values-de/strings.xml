@@ -625,6 +625,7 @@
 	<string name="yes">Ja</string>
 	<string name="no">Nein</string>
 	<string name="error">Fehler</string>
+    <string name="language">Sprache</string>
 	<string name="category_refresh_error">Fehler beim Aktualisieren der Kategorien</string>
 	<string-array name="alignment_array">
 		<item>Keine</item>

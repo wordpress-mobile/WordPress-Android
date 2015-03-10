@@ -50,11 +50,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/imageView2"
                     android:layout_gravity="center_horizontal"
+                    android:layout_alignParentRight="false"
                     android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
                     android:src="@drawable/dashicon_edit"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:tint="@color/grey_medium"/>
             </RelativeLayout>
 
@@ -78,6 +81,7 @@
                     android:paddingRight="0dp"
                     android:paddingBottom="12dp"
                     android:layout_toLeftOf="@+id/textView"
+                    android:layout_toStartOf="@+id/textView"
                     app:persistenceEnabled="true"/>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -87,6 +91,7 @@
                     android:id="@+id/textView"
                     android:layout_alignParentEnd="false"
                     android:layout_marginTop="4dp"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
                     android:layout_alignParentTop="false"
                     android:paddingRight="8dp"
@@ -94,6 +99,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="4dp"
+                    android:layout_marginEnd="4dp"
                     android:textColor="@color/grey_medium"
                     android:textIsSelectable="true"
                     android:textSize="@dimen/nux_edit_field_font_size"/>
@@ -103,11 +109,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/imageView"
                     android:layout_gravity="center_horizontal"
+                    android:layout_alignParentRight="false"
                     android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
                     android:src="@drawable/dashicon_admin_site"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:tint="@color/grey_medium"/>
             </RelativeLayout>
 

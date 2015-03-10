@@ -20,6 +20,7 @@
         android:textColor="@color/blue_medium"
         android:textSize="@dimen/text_sz_medium"
         android:layout_marginLeft="-10dp"
+        android:layout_marginStart="-10dp"
         android:visibility="gone"
         tools:text="2"
         tools:visibility="visible" />

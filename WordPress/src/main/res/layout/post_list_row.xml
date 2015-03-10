@@ -36,7 +36,7 @@
         android:id="@+id/post_list_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="right"
+        android:gravity="end"
         android:layout_marginTop="8dp"
         android:textColor="@color/grey_medium"
         android:textSize="@dimen/text_sz_small"/>

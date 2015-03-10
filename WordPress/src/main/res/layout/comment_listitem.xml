@@ -17,6 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_extra_small">
 
             <org.wordpress.android.widgets.WPNetworkImageView
@@ -54,9 +55,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_small"
-            android:gravity="right"
+            android:gravity="end"
             android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
@@ -81,7 +84,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/layout_date_status"
+            android:layout_toStartOf="@+id/layout_date_status"
             android:layout_toRightOf="@+id/frame_avatar"
+            android:layout_toEndOf="@+id/frame_avatar"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/grey_extra_dark"
@@ -95,6 +100,7 @@
             android:layout_below="@+id/title"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_toRightOf="@+id/frame_avatar"
+            android:layout_toEndOf="@+id/frame_avatar"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/grey_medium"

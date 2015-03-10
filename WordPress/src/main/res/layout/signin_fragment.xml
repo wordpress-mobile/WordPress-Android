@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:baselineAligned="true"
-            android:gravity="right"
+            android:gravity="end"
             android:orientation="horizontal"
             app:maxWidth="@dimen/nux_width">
 
@@ -30,6 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
                 android:contentDescription="@string/help"
                 android:src="@drawable/dashicon_info"
@@ -62,9 +63,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="false"
                     android:layout_alignTop="@+id/nux_fragment_icon"
                     android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
                     android:contentDescription="@string/help"
                     android:src="@drawable/dashicon_info"
                     android:tint="@color/blue_dark" />
@@ -102,11 +105,14 @@
                     android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="false"
                     android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:src="@drawable/dashicon_admin_users"
                     android:tint="@color/grey_medium" />
             </RelativeLayout>
@@ -124,6 +130,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="38dp"
+                    android:layout_marginEnd="38dp"
                     android:hint="@string/password"
                     android:inputType="textPassword" />
 
@@ -131,11 +138,14 @@
                     android:id="@+id/imageView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="false"
                     android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:src="@drawable/dashicon_lock"
                     android:tint="@color/grey_medium" />
 
@@ -145,10 +155,12 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
                     android:src="@drawable/dashicon_eye_closed"
                     android:tint="@color/nux_eye_icon_color_closed" />
             </RelativeLayout>
@@ -194,11 +206,14 @@
                     android:id="@+id/imageView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="false"
                     android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:src="@drawable/dashicon_admin_site"
                     android:tint="@color/grey_medium" />
             </RelativeLayout>
@@ -206,7 +221,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/nux_button_height"
                 android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp">
 
                 <org.wordpress.android.widgets.WPTextView
@@ -247,7 +264,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_extra_large"
+                    android:layout_marginStart="@dimen/margin_extra_large"
                     android:layout_marginRight="@dimen/margin_extra_large"
+                    android:layout_marginEnd="@dimen/margin_extra_large"
                     android:gravity="center_horizontal"
                     android:text="@string/two_step_footer_label"
                     android:textColor="@color/white"
@@ -258,7 +277,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_extra_large"
+                    android:layout_marginStart="@dimen/margin_extra_large"
                     android:layout_marginRight="@dimen/margin_extra_large"
+                    android:layout_marginEnd="@dimen/margin_extra_large"
                     android:background="@drawable/selectable_background_wordpress"
                     android:text="@string/two_step_footer_button"
                     android:textColor="@color/white" />
@@ -271,7 +292,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/forgot_password" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -301,7 +324,9 @@
                 android:layout_height="48dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
                 android:gravity="center|top"
                 android:text="@string/nux_add_selfhosted_blog" />
 
@@ -317,7 +342,9 @@
                 android:layout_height="48dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
                 android:gravity="center|top"
                 android:text="@string/nux_welcome_create_account" />
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
