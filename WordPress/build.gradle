@@ -73,7 +73,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:21.0.+'
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
-    compile 'com.helpshift:android-aar:3.5.0'
+    compile 'com.helpshift:android-aar:3.7.2'
     compile 'commons-lang:commons-lang:2.6'
     compile 'com.cocosw:undobar:1.6@aar'
     compile 'de.greenrobot:eventbus:2.4.0'
