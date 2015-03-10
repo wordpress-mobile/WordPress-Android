@@ -26,6 +26,10 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.HashMap;
@@ -66,10 +70,14 @@ public class EditPostActivity extends ActionBarActivity {
 
     private Post mPost;
     private Post mOriginalPost;
+    private SuggestionAdapter mSuggestionAdapter;
+    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
+    private int remoteBlogId;
 
     private EditPostContentFragment mEditPostContentFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditPostPreviewFragment mEditPostPreviewFragment;
+    private SuggestionAutoCompleteText mTags;
 
     private boolean mIsNewPost;
 
@@ -220,6 +228,18 @@ public class EditPostActivity extends ActionBarActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_post, menu);
+
+        mTags = (SuggestionAutoCompleteText) findViewById(R.id.tags);
+        mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
+        mTags.setThreshold(1);
+
+        remoteBlogId = WordPress.getCurrentRemoteBlogId();
+        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
+        if (mSuggestionAdapter != null) {
+            mTags.setAdapter(mSuggestionAdapter);
+        }
+
         return true;
     }
 
