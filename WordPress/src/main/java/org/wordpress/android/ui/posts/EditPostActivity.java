@@ -26,6 +26,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.HashMap;
@@ -83,6 +84,7 @@ public class EditPostActivity extends ActionBarActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        WPActivityUtils.setWindowContentOverlayCompat(this);
 
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();

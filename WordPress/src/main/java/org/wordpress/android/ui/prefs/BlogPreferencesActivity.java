@@ -25,6 +25,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.Locale;
 
@@ -65,6 +66,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
             actionBar.setTitle(StringUtils.unescapeHTML(blog.getNameOrHostUrl()));
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        WPActivityUtils.setWindowContentOverlayCompat(this);
 
         mUsernameET = (EditText) findViewById(R.id.username);
         mPasswordET = (EditText) findViewById(R.id.password);

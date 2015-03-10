@@ -1,10 +1,15 @@
 package org.wordpress.android.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.TypedValue;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
@@ -28,6 +33,34 @@ public class WPActivityUtils {
             }
         }
         return context;
+    }
+
+    /**
+     * Set the window content overlay on device's that don't respect the theme
+     * attribute. Fixes API 18 issue with windowContentOverlay: https://code.google.com/p/android/issues/detail?id=58280
+     *
+     * From: http://stackoverflow.com/questions/17945785/what-happened-to-windowcontentoverlay-in-android-api-18/18093909
+     */
+    public static void setWindowContentOverlayCompat(Activity activity) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            // Get the content view
+            View contentView = activity.findViewById(android.R.id.content);
+
+            // Make sure it's a valid instance of a FrameLayout
+            if (contentView instanceof FrameLayout) {
+                TypedValue tv = new TypedValue();
+
+                // Get the windowContentOverlay value of the current theme
+                if (activity.getTheme().resolveAttribute(android.R.attr.windowContentOverlay, tv, true)) {
+
+                    // If it's a valid resource, set it as the foreground drawable
+                    // for the content view
+                    if (tv.resourceId != 0) {
+                        ((FrameLayout) contentView).setForeground(activity.getResources().getDrawable(tv.resourceId));
+                    }
+                }
+            }
+        }
     }
 
     public static Intent getIntentForActivityId(Context context, ActivityId id) {

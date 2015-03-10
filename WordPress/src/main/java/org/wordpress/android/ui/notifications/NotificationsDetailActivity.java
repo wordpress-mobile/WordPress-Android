@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 
 public class NotificationsDetailActivity extends ActionBarActivity implements
         CommentActions.OnNoteCommentActionListener {
@@ -41,6 +42,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        WPActivityUtils.setWindowContentOverlayCompat(this);
 
         if (savedInstanceState == null) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
