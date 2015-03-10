@@ -140,6 +140,12 @@ public class HelpshiftHelper {
         mMetadata.put(Helpshift.HSTagsKey, Tag.toString(tags));
     }
 
+    public void addTags(Tag[] tags) {
+        String[] oldTags = (String[]) mMetadata.get(Helpshift.HSTagsKey);
+        // Concatenate arrays
+        mMetadata.put(Helpshift.HSTagsKey, ArrayUtils.addAll(oldTags, Tag.toString(tags)));
+    }
+
     /**
      * Handle push notification
      */
