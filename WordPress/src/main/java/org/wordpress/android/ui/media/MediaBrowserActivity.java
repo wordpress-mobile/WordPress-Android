@@ -136,6 +136,11 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
 
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
+            FragmentManager manager = getFragmentManager();
+            MediaGridFragment mediaGridFragment = (MediaGridFragment)manager.findFragmentById(R.id.mediaGridFragment);
+            if (mediaGridFragment.isVisible()) {
+                mediaGridFragment.refreshSpinnerAdapter();
+            }
             setupBaseLayout();
         }
     };
