@@ -64,7 +64,7 @@
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/switch_site"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_large"
                         android:background="?android:attr/selectableItemBackground"
