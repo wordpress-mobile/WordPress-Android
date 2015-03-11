@@ -1,5 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -8,73 +9,78 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_medium"
             android:layout_marginRight="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@color/white"
-            android:elevation="@dimen/card_elevation">
+            card_view:cardCornerRadius="@dimen/cardview_default_radius"
+            card_view:cardElevation="@dimen/card_elevation">
 
-            <org.wordpress.android.widgets.WPNetworkImageView
-                android:id="@+id/my_site_blavatar"
-                android:layout_width="@dimen/blavatar_sz"
-                android:layout_height="@dimen/blavatar_sz"
-                android:layout_margin="@dimen/margin_large"
-                android:gravity="center_vertical" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/my_site_title_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/my_site_blog_name_margin_top"
-                android:layout_toRightOf="@id/my_site_blavatar"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_large"
-                android:textStyle="bold"
-                app:fontVariation="light" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/my_site_subtitle_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/my_site_title_label"
-                android:layout_toRightOf="@id/my_site_blavatar"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:textColor="@color/grey"
-                android:textSize="@dimen/text_sz_medium" />
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/my_site_blavatar"
-                android:background="@color/grey_light">
+                android:layout_height="wrap_content">
+
+                <org.wordpress.android.widgets.WPNetworkImageView
+                    android:id="@+id/my_site_blavatar"
+                    android:layout_width="@dimen/blavatar_sz"
+                    android:layout_height="@dimen/blavatar_sz"
+                    android:layout_margin="@dimen/margin_large"
+                    android:gravity="center_vertical" />
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/switch_site"
+                    android:id="@+id/my_site_title_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_large"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:drawableLeft="@drawable/switch_site_button_icon"
-                    android:drawablePadding="@dimen/margin_small"
+                    android:layout_marginTop="@dimen/my_site_blog_name_margin_top"
+                    android:layout_toRightOf="@id/my_site_blavatar"
+                    android:ellipsize="end"
                     android:gravity="center_vertical"
-                    android:minHeight="0dp"
-                    android:paddingBottom="@dimen/my_site_switch_site_button_padding_bottom"
-                    android:paddingTop="@dimen/my_site_margin_general"
-                    android:text="@string/my_site_btn_switch_site"
+                    android:maxLines="1"
                     android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/text_sz_large"
+                    android:textStyle="bold"
+                    app:fontVariation="light" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_subtitle_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/my_site_title_label"
+                    android:layout_toRightOf="@id/my_site_blavatar"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textColor="@color/grey"
                     android:textSize="@dimen/text_sz_medium" />
 
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/my_site_blavatar"
+                    android:background="@color/grey_light">
 
-        </RelativeLayout>
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/switch_site"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_large"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:drawableLeft="@drawable/switch_site_button_icon"
+                        android:drawablePadding="@dimen/margin_small"
+                        android:gravity="center_vertical"
+                        android:minHeight="0dp"
+                        android:paddingBottom="@dimen/my_site_switch_site_button_padding_bottom"
+                        android:paddingTop="@dimen/my_site_margin_general"
+                        android:text="@string/my_site_btn_switch_site"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="@dimen/text_sz_medium" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
 
         <!--View Site-->
         <RelativeLayout
