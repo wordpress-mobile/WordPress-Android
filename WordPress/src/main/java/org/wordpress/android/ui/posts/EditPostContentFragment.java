@@ -132,6 +132,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     private static final String TAG_FORMAT_BAR_BUTTON_STRIKE = "strike";
     private static final String TAG_FORMAT_BAR_BUTTON_QUOTE = "blockquote";
 
+    private static final String ANALYTIC_PROP_NUM_LOCAL_PHOTOS_ADDED = "number_of_local_photos_added";
+    private static final String ANALYTIC_PROP_NUM_WP_PHOTOS_ADDED = "number_of_wp_library_photos_added";
+
     private static final int CONTENT_ANIMATION_DURATION = 250;
     private static final int MIN_THUMBNAIL_WIDTH = 200;
 
@@ -1723,12 +1726,29 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             final List<MediaItem> selectedContent =
                     data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
             if (selectedContent != null && selectedContent.size() > 0) {
+                Integer localMediaAdded = 0;
+                Integer libraryMediaAdded = 0;
+
                 for (MediaItem media : selectedContent) {
                     if (media.getSource().toString().contains("wordpress.com")) {
                         addExistingMediaToEditor(media.getTag());
+                        ++libraryMediaAdded;
                     } else {
                         addMedia(media.getSource(), null, getActivity());
+                        ++localMediaAdded;
                     }
+                }
+
+                if (localMediaAdded > 0) {
+                    Map<String, Object> analyticsProperties = new HashMap<>();
+                    analyticsProperties.put(ANALYTIC_PROP_NUM_LOCAL_PHOTOS_ADDED, localMediaAdded);
+                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY, analyticsProperties);
+                }
+
+                if (libraryMediaAdded > 0) {
+                    Map<String, Object> analyticsProperties = new HashMap<>();
+                    analyticsProperties.put(ANALYTIC_PROP_NUM_WP_PHOTOS_ADDED, libraryMediaAdded);
+                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY, analyticsProperties);
                 }
             }
         }

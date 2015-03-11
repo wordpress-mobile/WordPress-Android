@@ -8,7 +8,6 @@
 	<string name="reader_likes_multi">%,d kishi buni yoqtiradi</string>
 	<string name="reader_toast_err_get_comment">Bu mulohazani yuklab bo‘lmadi</string>
 	<string name="reader_label_reply">Javob</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">Video</string>
 	<string name="download">Media saqlanmoqda</string>
 	<string name="comment_spammed">Mulohaza spam sifatida belgilandi</string>
@@ -171,7 +170,6 @@
 	<string name="uploading">Yuklanmoqda</string>
 	<string name="version">Versiya</string>
 	<string name="tos">Xizmat shartlari</string>
-	<string name="publisher">Muallif: Automattic, Inc</string>
 	<string name="app_title">WordPress for Android</string>
 	<string name="about">Haqida</string>
 	<string name="max_thumbnail_px_width">Asos enlik</string>

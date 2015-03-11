@@ -1,10 +1,15 @@
 package org.wordpress.android.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.TypedValue;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;

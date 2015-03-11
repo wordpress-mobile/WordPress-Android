@@ -81,6 +81,7 @@ public class EditPostActivity extends ActionBarActivity {
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setElevation(0.0f);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 

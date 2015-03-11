@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="publisher">Autor:</string>
+	<string name="stats_empty_search_terms">No se han grabado los términos de búsqueda</string>
+	<string name="comments_fetching">Recuperando comentarios…</string>
+	<string name="pages_fetching">Recuperando páginas…</string>
+	<string name="toast_err_post_uploading">No se puede abrir la entrada durante la carga</string>
+	<string name="posts_fetching">Recuperando entradas…</string>
+	<string name="media_fetching">Recuperando medios…</string>
+	<string name="stats_view_search_terms">Términos de búsqueda</string>
+	<string name="stats_empty_search_terms_desc">Aprende más sobre el tráfico que te traen las búsquedas viendo los términos que buscaron tus lectores para llegar a tu sitio.</string>
+	<string name="stats_entry_search_terms">Término de búsqueda</string>
+	<string name="stats_view_authors">Autores</string>
+	<string name="stats_search_terms_unknown_search_terms">Términos de búsqueda desconocidos</string>
+	<string name="stats_followers_total_wpcom_paged">Mostrando del %1$d al %2$d de %3$s suscriptores de WordPress.com</string>
+	<string name="error_notification_open">No se pudo abrir la notificación</string>
+	<string name="stats_followers_total_email_paged">Mostrando del %1$d al %2$d de %3$s suscriptores por correo electrónico</string>
+	<string name="reader_empty_posts_request_failed">No fue posible cargar las entradas</string>
 	<string name="stats_months_and_years">Meses y años</string>
 	<string name="stats_average_per_day">Media diaria</string>
 	<string name="reader_page_recommended_blogs">Blogs que te pueden gustar</string>
@@ -191,8 +207,6 @@
 	<string name="help_center">Centro de Ayuda</string>
 	<string name="forums">Foros</string>
 	<string name="ssl_certificate_error">Certificado SSL no válido</string>
-	<string name="loading_posts">Cargando entradas...</string>
-	<string name="loading_pages">Cargando páginas...</string>
 	<string name="reader_label_reblog_empty_link">Cambiar la visibilidad del blog</string>
 	<string name="forgot_password">¿Has olvidado la contraseña?</string>
 	<string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
@@ -332,7 +346,6 @@
 	<string name="create_a_link">Crear un enlace</string>
 	<string name="file_error_create">No se pudo crear un archivo temporal para subir el archivo multimedia. Asegúrate que haya suficiente espacio libre en tu dispositivo.</string>
 	<string name="post_not_found">Ocurrió un error al cargar la entrada. Actualiza tus entradas e intenta nuevamente.</string>
-	<string name="stats_view_top_authors">Autores top</string>
 	<string name="media_gallery_image_order">Orden de imágenes</string>
 	<string name="local_draft">Borrador local</string>
 	<string name="view_in_browser">Ver en el navegador</string>
@@ -365,7 +378,6 @@
 	<string name="content_required">Comentario obligatorio</string>
 	<string name="toast_comment_unedited">El comentario no ha cambiado</string>
 	<string name="self_hosted_blogs">Blogs autolaojados</string>
-	<string name="stats_view_search_engine_terms">Términos en buscadores</string>
 	<string name="jetpack_message_not_admin">Se necesita el plugin Jetpack para tener estadísticas. Contacta con el administrador del sitio para activarlo.</string>
 	<string name="jetpack_stats_unauthorized">No se puede acceder a las estadísticas</string>
 	<string name="reader_toast_err_reblog_requires_blog">Selecciona un blog</string>
@@ -399,9 +411,7 @@
 	<string name="error_refresh_media">Algo ha ido mal mientras actualizábamos la biblioteca multimedia. Inténtalo más tarde.</string>
 	<string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>
 	<string name="reader_likes_multi">A %,d personas les gusta esto</string>
-	<string name="reader_toast_err_get_comment">No ha sido posible recuperar este comentario</string>
 	<string name="reader_label_reply">Responder</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">Vídeo</string>
 	<string name="download">Descargando elemento multimedia</string>
 	<string name="comment_spammed">Comentado marcado como spam</string>
@@ -409,6 +419,7 @@
 	<string name="share_preference_title">Compartir en WordPress</string>
 	<string name="reset_auto_share_preference">Reiniciar los ajustes de compartir automaticamente</string>
 	<string name="always_use_these_settings_to_share">Utiliza siempre estos ajustes</string>
+	<string name="reader_toast_err_get_comment">No ha sido posible cargar este comentario</string>
 	<string name="reader_likes_you_and_one">A ti y a otra persona os gusta esto.</string>
 	<string name="select_date">Elegir fecha</string>
 	<string name="pick_photo">Elige una foto</string>
@@ -579,7 +590,6 @@
 	<string name="app_title">WordPress para Android</string>
 	<string name="version">Versión</string>
 	<string name="tos">Términos del servicio</string>
-	<string name="publisher">Editor: Automattic, Inc</string>
 	<string name="about">Acerca de</string>
 	<string name="max_thumbnail_px_width">Ancho de imagen por defecto</string>
 	<string name="image_alignment">Alineamiento</string>

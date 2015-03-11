@@ -39,6 +39,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setElevation(0.0f);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
