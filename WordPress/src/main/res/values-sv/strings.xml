@@ -114,9 +114,7 @@
 	<string name="ptr_tip_message">Tips: Dra ned för att uppdatera</string>
 	<string name="forums">Forum</string>
 	<string name="help">Hjälp</string>
-	<string name="loading_posts">Laddar inlägg...</string>
 	<string name="forgot_password">Glömt ditt lösenord?</string>
-	<string name="loading_pages">Laddar sidor...</string>
 	<string name="help_center">Hjälpcenter</string>
 	<string name="ssl_certificate_error">Ogiltigt SSL-ceritfikat</string>
 	<string name="reader_label_reblog_empty_link">Ändra bloggens synlighet</string>
@@ -307,8 +305,6 @@
 	<string name="file_error_create">Kunde inte skapa temporär mediafil för uppladdning. Se till att det finns tillräckligt med utrymme på din enhet.</string>
 	<string name="self_hosted_blogs">Egen-installerade bloggar</string>
 	<string name="stats_view_totals_followers_and_shares">Summor, följare &amp; delningar</string>
-	<string name="stats_view_top_authors">Främsta författarna</string>
-	<string name="stats_view_search_engine_terms">Sökmotortermer</string>
 	<string name="stats_visitors_and_views_header_all_time">Hela tiden</string>
 	<string name="site_address">Adress till din WordPress-installation (URL)</string>
 	<string name="email_reserved">E-postadressen har redan använts. Kolla efter ett aktiveringsmail i din inbox. Om du inte aktiverar kan du försöka igen om några dagar.</string>
@@ -322,7 +318,6 @@
 	<string name="creating_your_site">Skapar din webbplats</string>
 	<string name="reader_empty_posts_in_tag_updating">Hämtar inlägg...</string>
 	<string name="error_refresh_media">Ett fel uppstod när mediabiblioteket skulle uppdateras. Försök igen senare.</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="reader_label_reply">Svara</string>
 	<string name="video">Video</string>
 	<string name="download">Laddar ner media</string>
@@ -504,7 +499,6 @@
 	<string name="version">Version</string>
 	<string name="tos">Allmänna villkor</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="publisher">Utgivare: Automattic, Inc</string>
 	<string name="about">Om</string>
 	<string name="max_thumbnail_px_width">Förvald bildbredd</string>
 	<string name="image_alignment">Justering</string>

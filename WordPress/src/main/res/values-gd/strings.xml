@@ -8,7 +8,6 @@
 	<string name="reader_likes_multi">\'S toigh le %,d daoine seo</string>
 	<string name="reader_toast_err_get_comment">Chan urrainn dhuinn am beachd seo fhaighinn dhut</string>
 	<string name="reader_label_reply">Freagair</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">Video</string>
 	<string name="download">A\' luchdadh a-nuas a\' mheadhain</string>
 	<string name="comment_spammed">Chaidh comharra spama a chur ris a\' bheachd</string>
@@ -180,7 +179,6 @@
 	<string name="version">Tionndadh</string>
 	<string name="tos">Teirmichean na seirbheise</string>
 	<string name="app_title">WordPress airson Android</string>
-	<string name="publisher">Foillsichear: Automattic, Inc</string>
 	<string name="about">Mu dheidhinn</string>
 	<string name="max_thumbnail_px_width">Leud bunaiteach an deilbh</string>
 	<string name="image_alignment">Co-thaobhadh</string>
