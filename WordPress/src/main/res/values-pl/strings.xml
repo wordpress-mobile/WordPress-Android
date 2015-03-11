@@ -112,8 +112,6 @@
 	<string name="wpcom_signin_dialog_title">Logowanie do WordPress.com</string>
 	<string name="ptr_tip_message">Porada: przeciągnij w dół aby odświeżyć</string>
 	<string name="jetpack_stats_switch_user">Aktualnie wybrane konto w serwisie WordPress.com (%s) nie ma dostępu do statystyk tego blogu. Czy chcesz zalogować się na inne konto?</string>
-	<string name="loading_posts">Wczytywanie wpisów...</string>
-	<string name="loading_pages">Wczytywanie stron...</string>
 	<string name="help">Pomoc</string>
 	<string name="forgot_password">Nie pamiętasz hasła?</string>
 	<string name="forums">Fora</string>
@@ -268,7 +266,6 @@
 	<string name="open_source_licenses">Licencje otwartego oprogramowania</string>
 	<string name="self_hosted_blogs">Blogi własne</string>
 	<string name="stats_view_totals_followers_and_shares">Podsumowania, śledzący i udostępnienia</string>
-	<string name="stats_view_search_engine_terms">Słowa kluczowe</string>
 	<string name="stats_visitors_and_views_header_best_ever">Najlepszy dotychczas</string>
 	<string name="stats_visitors_and_views_header_all_time">Od początku</string>
 	<string name="pending_review">Oczekuje na przegląd</string>
@@ -279,7 +276,6 @@
 	<string name="site_address">Adres strony na Twoim hostingu</string>
 	<string name="email_cant_be_used_to_signup">Nie możesz użyć tego adresu email do rejestracji, ponieważ jego serwer blokuje naszą korespondencję. Użyj innego usługodawcy emailów.</string>
 	<string name="reader_title_applog">Dziennik aplikacji</string>
-	<string name="stats_view_top_authors">Najpopularniejsi autorzy</string>
 	<string name="blog_removed_successfully">Blog usunięto</string>
 	<string name="trash_no">Nie usuwaj</string>
 	<string name="dlg_spamming_comments">Uznane za spam</string>
@@ -324,7 +320,6 @@
 	<string name="error_refresh_media">Coś poszło nie tak podczas odświeżania biblioteki mediów. Spróbuj ponownie później.</string>
 	<string name="reader_toast_err_get_comment">Nie można pobrać tego komentarza</string>
 	<string name="reader_label_reply">Odpowiedz</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">Wideo</string>
 	<string name="download">Pobieranie mediów</string>
 	<string name="comment_spammed">Komentarz został oznaczony jako spam</string>
@@ -503,7 +498,6 @@
 	<string name="uploading">Przesyłanie</string>
 	<string name="version">Wersja</string>
 	<string name="app_title">WordPress dla Androida</string>
-	<string name="publisher">Wydawca: Automattic, Inc</string>
 	<string name="tos">Warunki korzystania</string>
 	<string name="about">O nas</string>
 	<string name="max_thumbnail_px_width">Domyślna szerokość obrazu</string>

@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_empty_search_terms_desc">방문자들이 내 사이트를 찾기 위해 검색한 용어를 확인하여 검색 트래픽에 대해 자세히 알아보세요.</string>
+	<string name="stats_empty_search_terms">기록된 검색어 없음</string>
+	<string name="error_notification_open">알림을 열 수 없음</string>
+	<string name="stats_followers_total_email_paged">%1$d 표시 - %2$d/%3$s 이메일 팔로워</string>
+	<string name="stats_followers_total_wpcom_paged">%1$d 표시 - %2$d/%3$s WordPress.com 팔로워</string>
+	<string name="stats_view_search_terms">검색어</string>
+	<string name="stats_entry_search_terms">검색어</string>
+	<string name="stats_view_authors">글쓴이</string>
+	<string name="stats_search_terms_unknown_search_terms">알 수 없는 검색어</string>
+	<string name="pages_fetching">페이지를 가져오는 중...</string>
+	<string name="toast_err_post_uploading">업로드하는 동안 글을 여는데 실패함.</string>
+	<string name="posts_fetching">글을 가져오는 중...</string>
+	<string name="reader_empty_posts_request_failed">글을 가져올 수 없음</string>
+	<string name="publisher">게시자:</string>
+	<string name="comments_fetching">답글을 가져오는 중...</string>
+	<string name="media_fetching">미디어를 가져오는 중...</string>
 	<string name="reader_page_recommended_blogs">회원님이 좋아할 만한 블로그</string>
 	<string name="stats_months_and_years">월 및 연도</string>
 	<string name="stats_recent_weeks">최근 몇 주</string>
@@ -192,8 +208,6 @@
 	<string name="forums">포럼</string>
 	<string name="help_center">도우미 센터</string>
 	<string name="reader_label_reblog_empty">워드프레스 블로그에 감춰진 게시물은 리블로그 할 수 없습니다.</string>
-	<string name="loading_posts">게시물을 로딩중..</string>
-	<string name="loading_pages">페이지를 로딩중...</string>
 	<string name="reader_label_reblog_empty_link">블로그 노출 변경</string>
 	<string name="ssl_certificate_error">잘못된 SSL 인증서</string>
 	<string name="ssl_certificate_ask_trust">일반적으로 문제없이 이 사이트에 연결하는 경우, 이 오류는 누군가가 사이트를 사칭하는 것을 의미 할 수 있습니다, 그렇다면 연결하면 안됩니다.  그래도 인증서를 신뢰 하시겠습니까?</string>
@@ -299,12 +313,10 @@
 	<string name="theme_current_theme">현재 테마</string>
 	<string name="theme_premium_theme">프리미엄 테마</string>
 	<string name="share_action_post">새 게시물</string>
-	<string name="stats_view_top_authors">인기 포스트</string>
 	<string name="stats_visitors_and_views_header_all_time">모든 기간</string>
 	<string name="new_media">새 미디어</string>
 	<string name="stats_view_tags_and_categories">태그 및 카테고리</string>
 	<string name="stats_view_totals_followers_and_shares">총 추종자 공유 수</string>
-	<string name="stats_view_search_engine_terms">검색어</string>
 	<string name="stats_visitors_and_views_header_best_ever">사상 최대</string>
 	<string name="media_gallery_image_order">이미지 순서</string>
 	<string name="comment_added">댓글 추가에 성공했습니다</string>
@@ -398,7 +410,6 @@
 	<string name="reader_empty_posts_in_tag_updating">리뷰 가져 오는 중 ...</string>
 	<string name="error_refresh_media">미디어 라이브러리를 새로고침 할때 오류가 발생했습니다. 나중에 다시 시도하십시오.</string>
 	<string name="comment_spammed">댓글이 스팸으로 처리됨</string>
-	<string name="copyright">ⓒ 2014 Automattic, Inc</string>
 	<string name="download">미디어를 다운로드 중</string>
 	<string name="reader_label_reply">회신</string>
 	<string name="video">동영상</string>
@@ -579,7 +590,6 @@
 	<string name="version">버전</string>
 	<string name="tos">이용 약관</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="publisher">게시자 : Automattic, Inc</string>
 	<string name="about">소개</string>
 	<string name="max_thumbnail_px_width">표준 이미지 폭</string>
 	<string name="image_alignment">배치</string>

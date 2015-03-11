@@ -58,8 +58,6 @@
 	<string name="ssl_certificate_error">अमान्य एसएसएल  प्रमाणपत्र</string>
 	<string name="forums">फोरम</string>
 	<string name="forgot_password">आपका पासवर्ड खो गया?</string>
-	<string name="loading_pages">पृष्ठों को लोड किया जा रहा...</string>
-	<string name="loading_posts">पोस्टो को लोड किया जा रहा...</string>
 	<string name="reader_label_reblog_empty_link">ब्लॉग दृश्यता बदलें</string>
 	<string name="reader_label_reblog_empty">इस पोस्ट को फिर से ब्लॉग करने के लिए आपके पास को भी प्रत्यक्ष वर्डप्रेस डॉट कॉम ब्लॉग नहीं है </string>
 	<string name="ssl_certificate_ask_trust">आप आमतौर पर समस्याओं के बिना इस साइट से कनेक्ट करते हैं, तो यह त्रुटि किसी साइट को प्रतिरूपित करने की कोशिश कर रहा है कि अर्थ हो सकता है, और यदि आप जारी नहीं किया जाना चाहिए. क्या आप फिर भी प्रमाण पत्र पर विश्वास करना चाहेंगे?</string>
@@ -188,7 +186,6 @@
 	<string name="comment_status_spam">स्पैम</string>
 	<string name="mnu_comment_spam">स्पैम</string>
 	<string name="stats_view_tags_and_categories">टैग्स और श्रेणिया</string>
-	<string name="stats_view_top_authors">शीर्ष लेखक</string>
 	<string name="wordpress_blog">वर्डप्रेस ब्लॉग</string>
 	<string name="view_admin">व्यवस्थापक को देखे</string>
 	<string name="view_in_browser">ब्राउज़र में देखें</string>
@@ -237,7 +234,6 @@
 	<string name="stats_visitors_and_views_header_best_ever">सर्वश्रेष्ठ</string>
 	<string name="local_changes">स्थानीय परिवर्तन</string>
 	<string name="local_draft">स्थानीय प्रारूप</string>
-	<string name="stats_view_search_engine_terms">खोज इंजन के शब्द</string>
 	<string name="category_parent">श्रेणी जनक (वैकल्पिक):</string>
 	<string name="category_slug">श्रेणी स्लग (वैकल्पिक)</string>
 	<string name="scaled_image_error">एक वैध बढ़ाया चौड़ाई का मान दर्ज करें</string>
@@ -264,7 +260,6 @@
 	<string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा...</string>
 	<string name="error_refresh_media">मीडिया लाइब्रेरी को रिफ्रेश करते समय कुछ गलत हो गया. बाद में पुन: प्रयास करें.</string>
 	<string name="video">वीडियो</string>
-	<string name="copyright">©2014 औटोमैट्टिक, इंक</string>
 	<string name="download">मीडिया डाउनलोड हो रहा</string>
 	<string name="reader_label_reply">जवाब दें</string>
 	<string name="reader_toast_err_get_comment">इस टिप्पणी को पुनः प्राप्त में असमर्थ</string>
@@ -440,7 +435,6 @@
 	<string name="version">संस्करण</string>
 	<string name="tos">सेवा की शर्तें</string>
 	<string name="app_title">एंड्राइड के लिए वर्डप्रेस</string>
-	<string name="publisher">प्रकाशक: Automattic, Inc</string>
 	<string name="about">के बारे में</string>
 	<string name="max_thumbnail_px_width">मूलभूत छवि की चौड़ाई</string>
 	<string name="image_alignment">संरेखण</string>
