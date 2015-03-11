@@ -36,8 +36,8 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
+import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -342,6 +342,9 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mGraphView.addSeries(mCurrentSeriesOnScreen);
         //mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
+        mGraphView.getGraphViewStyle().setMaxColumnWidth(
+                DisplayUtils.dpToPx(this, StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP)
+        );
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setGestureListener(this);
         mSelectedBarGraphIndex = (mSelectedBarGraphIndex != -1) ? mSelectedBarGraphIndex : dataToShowOnGraph.length - 1;

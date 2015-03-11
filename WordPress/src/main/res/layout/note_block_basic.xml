@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/calypso_blue_dark"
-        android:textColorLink="@color/calypso_blue_dark"
+        android:textColor="@color/grey_dark"
+        android:textColorLink="@color/grey_dark"
         app:fixWidowWords="true"/>
 </LinearLayout>

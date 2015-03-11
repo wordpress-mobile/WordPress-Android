@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;

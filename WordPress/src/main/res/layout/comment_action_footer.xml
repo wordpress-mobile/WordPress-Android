@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-4dp"
                 android:text="@string/reader_label_like"
-                android:textColor="@color/calypso_blue"
+                android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_small" />
         </LinearLayout>
 
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-4dp"
                 android:text="@string/mnu_comment_approve"
-                android:textColor="@color/calypso_blue"
+                android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_small" />
         </LinearLayout>
 

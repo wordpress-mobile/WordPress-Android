@@ -9,7 +9,7 @@
         <item name="colorControlActivated">@color/color_control_activated</item>
         <item name="colorControlHighlight">@color/color_control_highlight</item>
 
-        <item name="android:windowBackground">@color/calypso_blue_light</item>
+        <item name="android:windowBackground">@color/grey_lighten_30</item>
         <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Dark.WordPress</item>
@@ -183,7 +183,7 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:gravity">center_horizontal|center_vertical</item>
-        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
     </style>
 
     <!-- NUX Styles -->
@@ -230,7 +230,7 @@
     </style>
 
     <style name="WordPress.EmptyList">
-        <item name="android:textColor">@color/grey_medium_dark</item>
+        <item name="android:textColor">@color/grey_darken_30</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_marginLeft">16dp</item>
         <item name="android:layout_marginRight">16dp</item>
@@ -249,7 +249,7 @@
         moderation views on comment detail
     -->
     <style name="WordPress.ModerateButton">
-        <item name="android:textColor">@color/calypso_blue</item>
+        <item name="android:textColor">@color/grey</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
@@ -276,6 +276,6 @@
     </style>
 
     <style name="WordPress.SwipeToRefresh">
-        <item name="refreshIndicatorColor">@color/blue_new_kid</item>
+        <item name="refreshIndicatorColor">@color/blue_medium</item>
     </style>
 </resources>

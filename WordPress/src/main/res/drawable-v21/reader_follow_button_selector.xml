@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?android:attr/colorControlHighlight">
+    <item>
+        <selector>
+            <item
+                android:drawable="@drawable/reader_follow_button_pressed"
+                android:state_pressed="true" />
+            <item android:drawable="@drawable/reader_follow_button" />
+        </selector>
+    </item>
+</ripple>

@@ -147,7 +147,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (mActiveNotificationsMap.size() <= 1) {
             mBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.notification_icon)
-                    .setColor(getResources().getColor(R.color.wordpress_blue))
+                    .setColor(getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
                     .setContentText(message)
                     .setTicker(message)
@@ -210,7 +210,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             mBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.notification_icon)
-                    .setColor(getResources().getColor(R.color.wordpress_blue))
+                    .setColor(getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle("WordPress")
                     .setContentText(subject)
                     .setTicker(message)

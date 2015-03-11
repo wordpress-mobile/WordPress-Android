@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:layout_marginTop="8dp"
-        android:textColor="@color/grey_medium"
+        android:textColor="@color/grey_darken_10"
         android:textSize="@dimen/text_sz_small"/>
 
 </LinearLayout>

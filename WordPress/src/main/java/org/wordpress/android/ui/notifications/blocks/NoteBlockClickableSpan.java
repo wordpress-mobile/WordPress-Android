@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.TextPaint;
@@ -9,7 +10,7 @@ import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wordpress.android.ui.notifications.NotificationsConstants;
+import org.wordpress.android.R;
 import org.wordpress.android.util.JSONUtil;
 
 import javax.annotation.Nonnull;
@@ -27,14 +28,16 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private int[] mIndices;
     private boolean mPressed;
     private boolean mShouldLink;
-
-    private int mTextColor = NotificationsConstants.COLOR_CALYPSO_DARK_BLUE;
+    private Context mContext;
+    private int mTextColor;
 
     private final JSONObject mBlockData;
 
-    public NoteBlockClickableSpan(JSONObject idData, boolean shouldLink) {
+    public NoteBlockClickableSpan(Context context, JSONObject idData, boolean shouldLink) {
         mBlockData = idData;
         mShouldLink = shouldLink;
+        mContext = context;
+        mTextColor = context.getResources().getColor(R.color.grey_dark);
         processRangeData();
     }
 
@@ -59,7 +62,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
             // Apply different coloring for blockquotes
             if (getRangeType() == NoteBlockRangeType.BLOCKQUOTE) {
                 mShouldLink = false;
-                mTextColor = NotificationsConstants.COLOR_CALYPSO_BLUE;
+                mTextColor = mContext.getResources().getColor(R.color.grey);
             }
         }
     }
@@ -67,8 +70,9 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     @Override
     public void updateDrawState(@Nonnull TextPaint textPaint) {
         // Set background color
-        textPaint.bgColor = mPressed && !isBlockquoteType() ? NotificationsConstants.COLOR_CALYPSO_BLUE_BORDER : Color.TRANSPARENT;
-        textPaint.setColor(mShouldLink ? NotificationsConstants.COLOR_NEW_KID_BLUE : mTextColor);
+        textPaint.bgColor = mPressed && !isBlockquoteType() ?
+                mContext.getResources().getColor(R.color.grey_lighten_20) : Color.TRANSPARENT;
+        textPaint.setColor(mShouldLink ? mContext.getResources().getColor(R.color.blue_medium) : mTextColor);
         // No underlines
         textPaint.setUnderlineText(false);
     }
