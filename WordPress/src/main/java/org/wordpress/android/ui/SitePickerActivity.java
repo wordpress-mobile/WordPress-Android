@@ -64,6 +64,12 @@ public class SitePickerActivity extends ActionBarActivity {
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(ARG_VISIBLE_ONLY, mVisibleBlogsOnly);

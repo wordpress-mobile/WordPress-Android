@@ -14,7 +14,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.FloatingActionButton;
 
 /**
@@ -68,7 +67,7 @@ public class DummyFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.showToast(getActivity(), "I'm FAB but I don't do anything yet");
+                ActivityLauncher.addNewBlogPostOrPage(getActivity(), WordPress.getCurrentBlog(), false);
             }
         });
 
