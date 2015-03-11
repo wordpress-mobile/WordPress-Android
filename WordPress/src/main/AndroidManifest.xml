@@ -92,6 +92,7 @@
             android:theme="@style/CalypsoTheme"/>
         <activity
             android:name=".ui.prefs.SettingsActivity"
+            android:configChanges="locale|orientation"
             android:theme="@style/CalypsoTheme"/>
         <activity
             android:name=".ui.accounts.ManageBlogsActivity"

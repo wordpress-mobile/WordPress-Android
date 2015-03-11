@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:key="wp_pref_root">
+                  android:key="@string/pref_key_settings_root">
 
     <PreferenceCategory
         android:title="@string/wpcom_blogs"
-        android:key="wp_pref_wpcom">
+        android:key="@string/pref_key_wpcom">
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="wp_pref_self_hosted_blogs"
+        android:key="@string/pref_key_self_hosted"
         android:title="@string/self_hosted_blogs">
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/notifications"
-        android:key="wp_pref_notifications_category">
+        android:key="@string/pref_key_notifications_section">
         <Preference
-            android:key="wp_pref_manage_notifications"
+            android:key="@string/pref_key_notifications"
             android:title="@string/manage_notifications"/>
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/post_signature"
-        android:key="wp_post_signature">
+        android:key="@string/pref_key_post_sig_section">
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="wp_pref_signature_enabled"
+            android:key="@string/pref_key_post_sig_enabled"
             android:title="@string/post_signature"
             android:summary="@string/add_tagline"/>
 
         <org.wordpress.android.widgets.WPEditTextPreference
-            android:key="wp_pref_post_signature"
+            android:key="@string/pref_key_post_sig"
             android:title="@string/your_signature"/>
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="wp_passcode_lock_category"
+        android:key="@string/pref_key_passlock_section"
         android:persistent="false"
         android:title="@string/passcode_preference_title">
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="wp_pref_passlock_enabled"
+            android:key="@string/pref_key_passlock"
             android:title="@string/passcode_preference_title"/>
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="wp_share_pref"
+        android:key="@string/pref_key_shared_pref_section"
         android:persistent="false"
         android:title="@string/share_preference_title">
         <Preference
-            android:key="wp_reset_share_pref"
+            android:key="@string/pref_key_reset_shared_pref"
             android:persistent="false"
             android:title="@string/reset_auto_share_preference">
         </Preference>
@@ -57,30 +57,32 @@
 
     <PreferenceCategory
         android:title="@string/preference_privacy"
-        android:key="wp_privacy">
+        android:key="@string/pref_key_privacy_section">
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="wp_pref_send_usage_stats"
+            android:key="@string/pref_key_send_usage"
             android:title="@string/preference_send_usage_stats"
             android:summary="@string/preference_send_usage_stats_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="wp_pref_app_about_section"
+        android:key="@string/pref_key_about_section"
         android:title="@string/about">
         <Preference android:title="@string/app_title"
-                    android:key="wp_pref_app_about"/>
+                    android:key="@string/pref_key_app_about"/>
         <Preference android:title="@string/open_source_licenses"
-                    android:key="wp_pref_open_source_licenses"/>
+                    android:key="@string/pref_key_oss_licenses"/>
         <Preference android:title="@string/help_and_support"
-                    android:key="wp_pref_help_and_support"/>
+                    android:key="@string/pref_key_help_and_support"/>
+        <Preference android:title="@string/language"
+                    android:key="@string/pref_key_language"/>
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="wp_pref_app_signout_section"
+        android:key="@string/pref_key_signout_section"
         android:title="@string/sign_out">
         <Preference
-            android:key="wp_pref_sign_out"
+            android:key="@string/pref_key_signout"
             android:title="@string/sign_out"/>
     </PreferenceCategory>
 </PreferenceScreen>
