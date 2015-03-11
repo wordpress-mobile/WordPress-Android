@@ -51,7 +51,7 @@ function checkENStrings() {
 
 function checkNewLanguages() {
 	/bin/echo -n "Check for potential new languages..."
-	langs=`curl http://translate.wordpress.org/projects/android/dev 2> /dev/null \
+	langs=`curl -L http://translate.wordpress.org/projects/android/dev 2> /dev/null \
    		| grep -B 1 morethan90|grep "android/dev/" \
    		| sed "s+.*android/dev/\([a-zA-Z-]*\)/default.*+\1+"`
 	nerrors=''

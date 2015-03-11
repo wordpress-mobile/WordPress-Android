@@ -145,7 +145,6 @@
 	<string name="version">Versjon</string>
 	<string name="tos">Lisens</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="publisher">Utgiver: Automattic, Inc</string>
 	<string name="about">Om</string>
 	<string name="max_thumbnail_px_width">Standardbredde for bilder</string>
 	<string name="image_alignment">Justering</string>

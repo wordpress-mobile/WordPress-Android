@@ -70,8 +70,6 @@
 	<string name="media_empty_list">Nincs média</string>
 	<string name="need_help_signin_wpcom">Segítségre van szükség?</string>
 	<string name="ptr_tip_message">Tipp: A frissítéshez húzzuk le</string>
-	<string name="loading_posts">Bejegyzések betöltése...</string>
-	<string name="loading_pages">Oldalak betöltése...</string>
 	<string name="reader_label_reblog_empty_link">Blog láthatóságának módosítása</string>
 	<string name="help">Segítség</string>
 	<string name="forgot_password">Elfelejtett jelszó?</string>
@@ -248,7 +246,6 @@
 	<string name="posted_from">Ez a bejegyzés WordPress for Android alkalmazással készült</string>
 	<string name="uploading">Feltöltés</string>
 	<string name="tos">Szolgáltatási feltételek</string>
-	<string name="publisher">Kiadó: Automattic, Inc</string>
 	<string name="version">verzió</string>
 	<string name="app_title">WordPress for Android</string>
 	<string name="about">Névjegy</string>
