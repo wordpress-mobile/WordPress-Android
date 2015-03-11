@@ -649,8 +649,7 @@ class HtmlToSpannedConverter implements ContentHandler {
             } else if (tag.equalsIgnoreCase("img")) {
                 startImg(mSpannableStringBuilder, attributes, mImageGetter);
             } else {
-                if (tag.equalsIgnoreCase("html")
-                        || tag.equalsIgnoreCase("body")) {
+                if (tag.equalsIgnoreCase("html") || tag.equalsIgnoreCase("body")) {
                     return;
                 }
 

@@ -17,7 +17,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.mediapicker.MediaItem;
-import org.wordpress.mediapicker.MediaUtils;
 import org.wordpress.mediapicker.source.MediaSource;
 
 import java.io.IOException;
@@ -31,6 +30,7 @@ public class MediaSourceWPImages implements MediaSource {
     private final List<MediaItem> mVerifiedItems = new ArrayList<>();
     private final List<MediaItem> mMediaItems = new ArrayList<>();
 
+    private boolean mLoading;
     private OnMediaChange mListener;
 
     public MediaSourceWPImages() {
@@ -40,6 +40,8 @@ public class MediaSourceWPImages implements MediaSource {
     @Override
     public void setListener(OnMediaChange listener) {
         mListener = listener;
+
+        notifyLoadingStatus();
     }
 
     @Override
@@ -116,6 +118,9 @@ public class MediaSourceWPImages implements MediaSource {
         Blog blog = WordPress.getCurrentBlog();
 
         if (blog != null) {
+            mLoading = true;
+            notifyLoadingStatus();
+
             Cursor imageCursor = WordPressMediaUtils.getWordPressMediaImages(String.valueOf(blog.getLocalTableBlogId()));
 
             if (imageCursor != null) {
@@ -169,6 +174,9 @@ public class MediaSourceWPImages implements MediaSource {
             } while (cursor.moveToNext());
 
             removeDeletedEntries();
+        } else {
+            mLoading = false;
+            notifyLoadingStatus();
         }
     }
 
@@ -199,6 +207,8 @@ public class MediaSourceWPImages implements MediaSource {
 
             @Override
             public void onPostExecute(Void result) {
+                mLoading = false;
+                notifyLoadingStatus();
                 if (mVerifiedItems.size() > 0 && mListener != null) {
                     mListener.onMediaAdded(MediaSourceWPImages.this, mVerifiedItems);
                 }
@@ -207,5 +217,11 @@ public class MediaSourceWPImages implements MediaSource {
 
         List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
         backgroundCheck.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, existingItems);
+    }
+
+    private void notifyLoadingStatus() {
+        if (mListener != null) {
+            mListener.onMediaLoading(this, !mLoading);
+        }
     }
 }

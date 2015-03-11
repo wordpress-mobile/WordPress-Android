@@ -55,7 +55,6 @@
             <org.wordpress.android.widgets.WPTextView
                 style="@style/WordPress.NUXGreyButtonNoBg"
                 android:id="@+id/about_copyright"
-                android:text="@string/copyright"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

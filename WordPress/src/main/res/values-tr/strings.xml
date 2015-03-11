@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_empty_search_terms">Hiç arama terimi kaydedilmedi</string>
+	<string name="stats_entry_search_terms">Arama Terimi</string>
+	<string name="stats_view_authors">Yazarlar</string>
+	<string name="stats_view_search_terms">Arama Terimleri</string>
+	<string name="comments_fetching">Yorumlar alınıyor...</string>
+	<string name="pages_fetching">Sayfalar alınıyor…</string>
+	<string name="toast_err_post_uploading">Gönderi yüklenirken açılamıyor</string>
+	<string name="posts_fetching">Gönderiler alınıyor...</string>
+	<string name="media_fetching">Medya alınıyor…</string>
+	<string name="reader_empty_posts_request_failed">Gönderiler geri alınamıyor</string>
+	<string name="publisher">Yayımlayan:</string>
+	<string name="error_notification_open">Bildirim açılamadı</string>
+	<string name="stats_followers_total_email_paged">%1$d - %2$d / %3$s E-Posta Takipçisi gösteriliyor</string>
+	<string name="stats_search_terms_unknown_search_terms">Bilinmeyen Arama Terimleri</string>
+	<string name="stats_followers_total_wpcom_paged">%1$d - %2$d / %3$s WordPress.com Takipçisi gösteriliyor</string>
+	<string name="stats_empty_search_terms_desc">Ziyaretçilerin sitenizi bulmak için aradığı terimleri inceleyerek arama trafiğiniz hakkında daha fazla bilgi sahibi olun.</string>
 	<string name="post_uploading">Yükleniyor</string>
 	<string name="reader_label_new_posts">Yeni gönderiler</string>
 	<string name="stats_recent_weeks">Son Haftalar</string>
@@ -191,10 +207,8 @@
 	<string name="forums">Forumlar</string>
 	<string name="help_center">Yardım merkezi</string>
 	<string name="reader_label_reblog_empty_link">Blog görünürlüğünü değiştir</string>
-	<string name="loading_pages">Sayfalar yükleniyor...</string>
 	<string name="forgot_password">Parolanızı mı kaybettiniz?</string>
 	<string name="reader_label_reblog_empty">Reblog yapmak için görüntülenebilir bir WordPress.com blogunuz bulunmuyor.</string>
-	<string name="loading_posts">Yazılar yükleniyor...</string>
 	<string name="ssl_certificate_error">Geçersiz SSL setifikası</string>
 	<string name="ssl_certificate_ask_trust">Eğer bu siteye genelde sorunsuz şekilde bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>
 	<string name="wait_until_upload_completes">Yükleme tamamlanana kadar bekleyin</string>
@@ -353,7 +367,6 @@
 	<string name="trash_no">Çöp değil</string>
 	<string name="dlg_confirm_trash_comments">Çöpe gönderilsin mi?</string>
 	<string name="self_hosted_blogs">Kendi sunucusunda barınan bloglar</string>
-	<string name="stats_view_top_authors">Popüler yazarlar</string>
 	<string name="http_credentials">HTTP bilgileri (seçime bağlı)</string>
 	<string name="privacy_policy">Gizlilik politikası</string>
 	<string name="local_changes">Yerel değişiklikler</string>
@@ -379,7 +392,6 @@
 	<string name="share_action_post">Yeni yazı</string>
 	<string name="file_error_create">Geçici medya dosyası oluşturulamıyor. Cihazınızda yeterli boş alan olduğundan emin olun.</string>
 	<string name="stats_view_totals_followers_and_shares">Takipçi ve paylaşım toplamları</string>
-	<string name="stats_view_search_engine_terms">Ara motoru terimleri</string>
 	<string name="post_format">Yazı formatı</string>
 	<string name="new_post">Yeni yazı</string>
 	<string name="email_hint">Email adresi</string>
@@ -399,7 +411,6 @@
 	<string name="error_refresh_media">Medya kütüphanesi yenilenirken bir şeyler ters gitti. Daha sonra tekrar deneyin.</string>
 	<string name="reader_toast_err_get_comment">Bu yoruma erişilemiyor</string>
 	<string name="reader_label_reply">Yanıtla</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">Video</string>
 	<string name="download">Medya indiriliyor</string>
 	<string name="share_preference_title">WordPress ile paylaş</string>
@@ -579,7 +590,6 @@
 	<string name="version">Sürüm</string>
 	<string name="app_title">Android için WordPress</string>
 	<string name="tos">Hizmet Şartları</string>
-	<string name="publisher">Yayıncı: Automattic, Inc.</string>
 	<string name="about">Hakkında</string>
 	<string name="max_thumbnail_px_width">Varsayılan görsel genişliği</string>
 	<string name="image_alignment">Konumlandırma</string>

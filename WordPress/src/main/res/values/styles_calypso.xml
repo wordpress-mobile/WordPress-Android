@@ -4,6 +4,7 @@
 -->
 <resources>
     <style name="CalypsoTheme" parent="@style/WordPress">
+        <item name="android:windowContentOverlay">@null</item>
         <item name="android:popupMenuStyle">@style/Calypso.PopupMenu</item>
         <item name="android:textAppearanceSmallPopupMenu">@style/Calypso.TextAppearance</item>
         <item name="android:textAppearanceLargePopupMenu">@style/Calypso.TextAppearance</item>

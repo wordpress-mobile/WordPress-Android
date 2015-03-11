@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -15,7 +17,12 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -35,6 +42,8 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPEditTextPreference;
@@ -43,17 +52,25 @@ import org.wordpress.passcodelock.PasscodePreferencesActivity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class SettingsFragment extends PreferenceFragment {
+    public static final String SETTINGS_PREFERENCES = "settings-pref";
+
+    private AlertDialog mDialog;
     private SharedPreferences mSettings;
     private WPEditTextPreference mTaglineTextPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Resources resources = getResources();
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_SETTINGS);
@@ -71,18 +88,18 @@ public class SettingsFragment extends PreferenceFragment {
             }
         };
 
-        mTaglineTextPreference = (WPEditTextPreference) findPreference("wp_pref_post_signature");
+        mTaglineTextPreference = (WPEditTextPreference) findPreference(resources.getString(R.string.pref_key_post_sig));
         if (mTaglineTextPreference != null) {
             mTaglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
         }
-        findPreference("wp_pref_manage_notifications").setOnPreferenceClickListener(
-                notificationPreferenceClickListener);
-        findPreference("wp_pref_app_about").setOnPreferenceClickListener(launchActivitiyClickListener);
-        findPreference("wp_pref_open_source_licenses").setOnPreferenceClickListener(launchActivitiyClickListener);
-        findPreference("wp_pref_help_and_support").setOnPreferenceClickListener(launchActivitiyClickListener);
-        findPreference("wp_pref_passlock_enabled").setOnPreferenceChangeListener(passcodeCheckboxChangeListener);
-        findPreference("wp_pref_sign_out").setOnPreferenceClickListener(signOutPreferenceClickListener);
-        findPreference("wp_reset_share_pref").setOnPreferenceClickListener(resetAUtoSharePreferenceClickListener);
+        findPreference(resources.getString(R.string.pref_key_notifications)).setOnPreferenceClickListener(notificationPreferenceClickListener);
+        findPreference(resources.getString(R.string.pref_key_language)).setOnPreferenceClickListener(languagePreferenceClickListener);
+        findPreference(resources.getString(R.string.pref_key_app_about)).setOnPreferenceClickListener(launchActivitiyClickListener);
+        findPreference(resources.getString(R.string.pref_key_oss_licenses)).setOnPreferenceClickListener(launchActivitiyClickListener);
+        findPreference(resources.getString(R.string.pref_key_help_and_support)).setOnPreferenceClickListener(launchActivitiyClickListener);
+        findPreference(resources.getString(R.string.pref_key_passlock)).setOnPreferenceChangeListener(passcodeCheckboxChangeListener);
+        findPreference(resources.getString(R.string.pref_key_signout)).setOnPreferenceClickListener(signOutPreferenceClickListener);
+        findPreference(resources.getString(R.string.pref_key_reset_shared_pref)).setOnPreferenceClickListener(resetAUtoSharePreferenceClickListener);
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -91,7 +108,7 @@ public class SettingsFragment extends PreferenceFragment {
         // Passcode Lock not supported
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
             final CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(
-                    "wp_pref_passlock_enabled");
+                    resources.getString(R.string.pref_key_passlock));
             // disable on-click changes on the property
             passcodeEnabledCheckBoxPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
@@ -102,11 +119,20 @@ public class SettingsFragment extends PreferenceFragment {
                 }
             });
         } else {
-            PreferenceScreen rootScreen = (PreferenceScreen) findPreference("wp_pref_root");
-            PreferenceGroup passcodeGroup = (PreferenceGroup) findPreference("wp_passcode_lock_category");
+            PreferenceScreen rootScreen = (PreferenceScreen) findPreference(resources.getString(R.string.pref_key_settings_root));
+            PreferenceGroup passcodeGroup = (PreferenceGroup) findPreference(resources.getString(R.string.pref_key_passlock_section));
             rootScreen.removePreference(passcodeGroup);
         }
         displayPreferences();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
     }
 
     private void initNotifications() {
@@ -144,15 +170,15 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void hidePostSignatureCategory() {
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("wp_pref_root");
-        PreferenceCategory postSignature = (PreferenceCategory) findPreference("wp_post_signature");
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
+        PreferenceCategory postSignature = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_post_sig_section));
         if (preferenceScreen != null && postSignature != null) {
             preferenceScreen.removePreference(postSignature);
         }
     }
 
     private void hideNotificationBlogsCategory() {
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("wp_pref_notifications");
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
         PreferenceCategory blogs = (PreferenceCategory) findPreference("wp_pref_notification_blogs");
         if (preferenceScreen != null && blogs != null) {
             preferenceScreen.removePreference(blogs);
@@ -170,8 +196,7 @@ public class SettingsFragment extends PreferenceFragment {
 
         //update Passcode lock row if available
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
-            CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(
-                    "wp_pref_passlock_enabled");
+            CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(getResources().getString(R.string.pref_key_passlock));
             if (AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked()) {
                 passcodeEnabledCheckBoxPreference.setChecked(true);
             } else {
@@ -189,7 +214,7 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     public void refreshWPComAuthCategory() {
-        PreferenceCategory wpComCategory = (PreferenceCategory) findPreference("wp_pref_wpcom");
+        PreferenceCategory wpComCategory = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_wpcom));
         wpComCategory.removeAll();
         addWpComSignIn(wpComCategory, 0);
         addWpComShowHideButton(wpComCategory, 5);
@@ -202,7 +227,7 @@ public class SettingsFragment extends PreferenceFragment {
      * blog-specific settings.
      */
     void updateSelfHostedBlogsPreferenceCategory() {
-        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_self_hosted_blogs");
+        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_self_hosted));
         blogsCategory.removeAll();
         int order = 0;
 
@@ -257,8 +282,8 @@ public class SettingsFragment extends PreferenceFragment {
             signInPref.setOnPreferenceClickListener(signInPreferenceClickListener);
             wpComCategory.addPreference(signInPref);
 
-            PreferenceScreen rootScreen = (PreferenceScreen) findPreference("wp_pref_root");
-            PreferenceGroup notificationsGroup = (PreferenceGroup) findPreference("wp_pref_notifications_category");
+            PreferenceScreen rootScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
+            PreferenceGroup notificationsGroup = (PreferenceGroup) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
             if (notificationsGroup != null) {
                 rootScreen.removePreference(notificationsGroup);
             }
@@ -365,18 +390,81 @@ public class SettingsFragment extends PreferenceFragment {
         }
     };
 
+    private final OnPreferenceClickListener languagePreferenceClickListener = new OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+            dialogBuilder.setTitle(getString(R.string.language));
+
+            String[] availableLocales = getResources().getStringArray(R.array.available_languages);
+            final String[] values = new String[availableLocales.length + 1];
+            final Map<String, String> localeMap = new HashMap<>();
+
+            for (int i = 0; i < availableLocales.length; ++i) {
+                String localString = availableLocales[i];
+                if (localString.contains("-")) {
+                    localString = localString.substring(0, localString.indexOf("-"));
+                }
+                Locale locale = new Locale(localString);
+                values[i + 1] = locale.getDisplayLanguage() + " (" + availableLocales[i] + ")";
+                localeMap.put(values[i + 1], availableLocales[i]);
+            }
+            values[0] = getActivity().getString(R.string.device) + " (" + Locale.getDefault().getLanguage() + ")";
+            localeMap.put(values[0], Locale.getDefault().getLanguage());
+            Arrays.sort(values, 1, values.length);
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, values);
+            ListView listView = new ListView(getActivity());
+            listView.setAdapter(adapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Resources res = getResources();
+                    DisplayMetrics dm = res.getDisplayMetrics();
+                    Configuration conf = res.getConfiguration();
+                    String localString = localeMap.get(values[position]);
+                    if (localString.contains("-")) {
+                        conf.locale = new Locale(localString.substring(0, localString.indexOf("-")), localString.substring(localString.indexOf("-") + 1, localString.length()));
+                    } else {
+                        conf.locale = new Locale(localString);
+                    }
+                    res.updateConfiguration(conf, dm);
+
+                    mSettings.edit().putString(SETTINGS_PREFERENCES, localeMap.get(values[position])).apply();
+
+                    Intent refresh = new Intent(getActivity(), getActivity().getClass());
+                    startActivity(refresh);
+                    getActivity().finish();
+                }
+            });
+
+            dialogBuilder.setView(listView);
+            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            mDialog = dialogBuilder.show();
+
+            return true;
+        }
+    };
+
     private final OnPreferenceClickListener launchActivitiyClickListener = new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Class activityToStart = HelpActivity.class;
-            if ("wp_pref_app_about".equals(preference.getKey())) {
-                activityToStart = AboutActivity.class;
-            } else if ("wp_pref_open_source_licenses".equals(preference.getKey())) {
-                activityToStart = LicensesActivity.class;
-            } else if ("wp_pref_help_and_support".equals(preference.getKey())) {
-                activityToStart = HelpActivity.class;
+            Intent intent = new Intent(getActivity(), AboutActivity.class);
+            if (getActivity().getString(R.string.pref_key_app_about).equals(preference.getKey())) {
+                intent = new Intent(getActivity(), AboutActivity.class);
+            } else if (getActivity().getString(R.string.pref_key_oss_licenses).equals(preference.getKey())) {
+                intent = new Intent(getActivity(), LicensesActivity.class);
+            } else if (getActivity().getString(R.string.pref_key_help_and_support).equals(preference.getKey())) {
+                intent = new Intent(getActivity(), HelpActivity.class);
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, Tag.ORIGIN_SETTINGS_SCREEN_HELP);
             }
-            startActivity(new Intent(getActivity(), activityToStart));
+            startActivity(intent);
             return true;
         }
     };

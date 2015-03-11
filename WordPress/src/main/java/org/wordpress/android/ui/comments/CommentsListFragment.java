@@ -147,9 +147,14 @@ public class CommentsListFragment extends Fragment {
         getCommentAdapter().loadComments();
 
         Bundle extras = getActivity().getIntent().getExtras();
-        mHasAutoRefreshedComments = extras.getBoolean(CommentsActivity.KEY_AUTO_REFRESHED);
-        mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(extras.getString(
-                CommentsActivity.KEY_EMPTY_VIEW_MESSAGE));
+        if (extras != null) {
+            mHasAutoRefreshedComments = extras.getBoolean(CommentsActivity.KEY_AUTO_REFRESHED);
+            mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(extras.getString(
+                    CommentsActivity.KEY_EMPTY_VIEW_MESSAGE));
+        } else {
+            mHasAutoRefreshedComments = false;
+            mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
+        }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
