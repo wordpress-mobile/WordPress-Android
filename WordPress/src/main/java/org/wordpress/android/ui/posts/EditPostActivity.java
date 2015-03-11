@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -37,17 +37,22 @@ import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaGridFragment;
+import org.wordpress.android.ui.media.MediaPickerActivity;
+import org.wordpress.android.ui.media.MediaSourceWPImages;
+import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.WordPressMediaUtils.RequestCode;
+import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -57,6 +62,9 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.widgets.WPViewPager;
+import org.wordpress.mediapicker.source.MediaSource;
+import org.wordpress.mediapicker.source.MediaSourceDeviceImages;
+import org.wordpress.mediapicker.source.MediaSourceDeviceVideos;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
@@ -83,6 +91,10 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 10000;
     private Timer mAutoSaveTimer;
+
+    // -1=no response yet, 0=unavailable, 1=available
+    private int mBlogMediaStatus = -1;
+    private boolean mMediaUploadServiceStarted;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -226,6 +238,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     @Override
     protected void onResume() {
         super.onResume();
+        refreshBlogMedia();
         mAutoSaveTimer = new Timer();
         mAutoSaveTimer.scheduleAtFixedRate(new AutoSaveTask(), AUTOSAVE_INTERVAL_MILLIS, AUTOSAVE_INTERVAL_MILLIS);
     }
@@ -1081,6 +1094,173 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     }
     */
 
+    /**
+     * Create image {@link org.wordpress.mediapicker.source.MediaSource}'s for media selection.
+     *
+     * @return
+     *  list containing all sources to gather image media from
+     */
+    private ArrayList<MediaSource> imageMediaSelectionSources() {
+        ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
+        imageMediaSources.add(new MediaSourceDeviceImages(getContentResolver()));
+
+        return imageMediaSources;
+    }
+
+    private ArrayList<MediaSource> blogImageMediaSelectionSources() {
+        ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
+        imageMediaSources.add(new MediaSourceWPImages());
+
+        return imageMediaSources;
+    }
+
+    private ArrayList<MediaSource> blogVideoMediaSelectionSources() {
+        ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
+        imageMediaSources.add(new MediaSourceWPVideos());
+
+        return imageMediaSources;
+    }
+
+    /**
+     * Create video {@link org.wordpress.mediapicker.source.MediaSource}'s for media selection.
+     *
+     * @return
+     *  list containing all sources to gather video media from
+     */
+    private ArrayList<MediaSource> videoMediaSelectionSources() {
+        ArrayList<MediaSource> videoMediaSources = new ArrayList<>();
+        videoMediaSources.add(new MediaSourceDeviceVideos(getContentResolver()));
+
+        return videoMediaSources;
+    }
+
+    /**
+     * Starts {@link org.wordpress.android.ui.media.MediaPickerActivity} after refreshing the blog media.
+     */
+    private void startMediaSelection() {
+        Intent intent = new Intent(this, MediaPickerActivity.class);
+        intent.putExtra(MediaPickerActivity.ACTIVITY_TITLE_KEY, getString(R.string.add_to_post));
+        intent.putParcelableArrayListExtra(MediaPickerActivity.DEVICE_IMAGE_MEDIA_SOURCES_KEY,
+                imageMediaSelectionSources());
+        intent.putParcelableArrayListExtra(MediaPickerActivity.DEVICE_VIDEO_MEDIA_SOURCES_KEY,
+                videoMediaSelectionSources());
+        if (mBlogMediaStatus != 0) {
+            intent.putParcelableArrayListExtra(MediaPickerActivity.BLOG_IMAGE_MEDIA_SOURCES_KEY,
+                    blogImageMediaSelectionSources());
+            intent.putParcelableArrayListExtra(MediaPickerActivity.BLOG_VIDEO_MEDIA_SOURCES_KEY,
+                    blogVideoMediaSelectionSources());
+        }
+
+        startActivityForResult(intent, MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
+        overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
+    }
+
+    private void refreshBlogMedia() {
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            List<Object> apiArgs = new ArrayList<Object>();
+            apiArgs.add(WordPress.getCurrentBlog());
+            ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
+                @Override
+                public void onSuccess(int count) {
+                    mBlogMediaStatus = 1;
+                }
+
+                @Override
+                public void onFailure(final ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                    mBlogMediaStatus = 0;
+                    ToastUtils.showToast(EditPostActivity.this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);
+                }
+            };
+            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(0,
+                    MediaGridFragment.Filter.ALL, callback);
+            getMediaTask.execute(apiArgs);
+        } else {
+            mBlogMediaStatus = 0;
+            ToastUtils.showToast(this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);
+        }
+    }
+
+    /**
+     * Starts the upload service to upload selected media.
+     */
+    private void startMediaUploadService() {
+        if (!mMediaUploadServiceStarted) {
+            startService(new Intent(this, MediaUploadService.class));
+            mMediaUploadServiceStarted = true;
+        }
+    }
+
+    /**
+     * Stops the upload service.
+     */
+    private void stopMediaUploadService() {
+        if (mMediaUploadServiceStarted) {
+            stopService(new Intent(this, MediaUploadService.class));
+            mMediaUploadServiceStarted = false;
+        }
+    }
+
+    /**
+     * Queues a media file for upload and starts the MediaUploadService. Toasts will alert the user
+     * if there are issues with the file.
+     *
+     * @param path
+     *  local path of the media file to upload
+     * @param mediaIdOut
+     *  the new {@link org.wordpress.android.models.MediaFile} ID is added if non-null
+     */
+    private void queueFileForUpload(String path, ArrayList<String> mediaIdOut) {
+        // Invalid file path
+        if (TextUtils.isEmpty(path)) {
+            Toast.makeText(this, R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // File not found
+        File file = new File(path);
+        if (!file.exists()) {
+            Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Blog blog = WordPress.getCurrentBlog();
+        long currentTime = System.currentTimeMillis();
+        String mimeType = MediaUtils.getMediaFileMimeType(file);
+        String fileName = MediaUtils.getMediaFileName(file, mimeType);
+        MediaFile mediaFile = new MediaFile();
+
+        mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
+        mediaFile.setFileName(fileName);
+        mediaFile.setFilePath(path);
+        mediaFile.setUploadState("queued");
+        mediaFile.setDateCreatedGMT(currentTime);
+        mediaFile.setMediaId(String.valueOf(currentTime));
+
+        if (mimeType != null && mimeType.startsWith("image")) {
+            // get width and height
+            BitmapFactory.Options bfo = new BitmapFactory.Options();
+            bfo.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, bfo);
+            mediaFile.setWidth(bfo.outWidth);
+            mediaFile.setHeight(bfo.outHeight);
+        }
+
+        if (!TextUtils.isEmpty(mimeType)) {
+            mediaFile.setMimeType(mimeType);
+        }
+
+        if (mediaIdOut != null) {
+            mediaIdOut.add(mediaFile.getMediaId());
+        }
+
+        saveMediaFile(mediaFile);
+        startMediaUploadService();
+    }
+
+    /**
+     * EditorFragmentListener methods
+     */
+
     @Override
     public void onSettingsClicked() {
         mViewPager.setCurrentItem(PAGE_SETTINGS);
@@ -1088,7 +1268,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     @Override
     public void onAddMediaClicked() {
-        // TODO: launch MediaPicker
+        startMediaSelection();
     }
 
     @Override
