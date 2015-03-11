@@ -446,7 +446,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 startActivityForResult(i, ACTIVITY_REQUEST_CODE_CREATE_LINK);
             } else if (id == R.id.addPictureButton) {
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
-                mAddPictureButton.performLongClick();
+                mEditorFragmentListener.onAddMediaClicked();
             }
         }
     };
