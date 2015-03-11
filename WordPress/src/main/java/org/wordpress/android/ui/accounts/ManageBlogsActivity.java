@@ -54,6 +54,7 @@ public class ManageBlogsActivity extends ActionBarActivity {
         setTitle(getString(R.string.blogs_visibility));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setElevation(0.0f);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }

@@ -1,4 +1,3 @@
-
 package org.wordpress.android.util;
 
 import android.graphics.Bitmap;

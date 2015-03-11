@@ -14,7 +14,10 @@ import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
+
+import java.util.ArrayList;
 
 public class HelpActivity extends ActionBarActivity {
     final private static String FAQ_URL = "http://android.wordpress.org/faq/";
@@ -52,6 +55,7 @@ public class HelpActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Bundle extras = getIntent().getExtras();
+                Tag origin = Tag.ORIGIN_UNKNOWN;
                 if (extras != null) {
                     // This could be moved to WelcomeFragmentSignIn directly, but better to have all Helpshift
                     // related code at the same place (Note: value can be null).
@@ -59,8 +63,9 @@ public class HelpActivity extends ActionBarActivity {
                             SignInFragment.ENTERED_URL_KEY));
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
                             SignInFragment.ENTERED_USERNAME_KEY));
+                    origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
                 }
-                HelpshiftHelper.getInstance().showConversation(HelpActivity.this);
+                HelpshiftHelper.getInstance().showConversation(HelpActivity.this, origin);
             }
         });
 
@@ -68,7 +73,12 @@ public class HelpActivity extends ActionBarActivity {
         faqbutton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                HelpshiftHelper.getInstance().showFAQ(HelpActivity.this);
+                Bundle extras = getIntent().getExtras();
+                Tag origin = Tag.ORIGIN_UNKNOWN;
+                if (extras != null) {
+                    origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
+                }
+                HelpshiftHelper.getInstance().showFAQ(HelpActivity.this, origin);
             }
         });
     }
