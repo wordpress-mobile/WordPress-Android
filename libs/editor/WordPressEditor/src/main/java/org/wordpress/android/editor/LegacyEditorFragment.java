@@ -60,6 +60,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.helpers.MediaFile;
+import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.helpers.WPUnderlineSpan;
@@ -1009,5 +1010,41 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         if (mediaFile.getFileURL() != null) {
             loadWPImageSpanThumbnail(mediaFile, imageUrl, imageLoader);
         }
+    }
+
+    public void appendGallery(MediaGallery mediaGallery) {
+        Editable editableText = mContentEditText.getText();
+        if (editableText == null) {
+            return;
+        }
+
+        int selectionStart = mContentEditText.getSelectionStart();
+        int selectionEnd = mContentEditText.getSelectionEnd();
+
+        if (selectionStart > selectionEnd) {
+            int temp = selectionEnd;
+            selectionEnd = selectionStart;
+            selectionStart = temp;
+        }
+
+        int line, column = 0;
+        if (mContentEditText.getLayout() != null) {
+            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+        }
+
+        if (column != 0) {
+            // insert one line break if the cursor is not at the first column
+            editableText.insert(selectionEnd, "\n");
+            selectionStart = selectionStart + 1;
+            selectionEnd = selectionEnd + 1;
+        }
+
+        editableText.insert(selectionStart, " ");
+        MediaGalleryImageSpan is = new MediaGalleryImageSpan(getActivity(), mediaGallery, R.drawable.ab_icon_edit);
+        editableText.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+        editableText.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        editableText.insert(selectionEnd + 1, "\n\n");
     }
 }
