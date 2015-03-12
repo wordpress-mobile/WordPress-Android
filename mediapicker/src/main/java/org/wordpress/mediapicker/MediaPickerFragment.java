@@ -21,6 +21,12 @@ import org.wordpress.mediapicker.source.MediaSource;
 
 import java.util.ArrayList;
 
+/**
+ * A custom view may be provided. In order to work properly an AdapterView with id=media_adapter_view
+ * needs to be provided. A TextView may also be provided with id=media_empty_view to show loading
+ * and empty status.
+ */
+
 public class MediaPickerFragment extends Fragment
         implements AdapterView.OnItemClickListener,
         AbsListView.MultiChoiceModeListener {
@@ -187,12 +193,18 @@ public class MediaPickerFragment extends Fragment
         mAdapter = adapter;
     }
 
+    /**
+     * Helper method; notifies listener that media selection has started
+     */
     private void notifyMediaSelectionStarted() {
         if (mListener != null) {
             mListener.onMediaSelectionStarted();
         }
     }
 
+    /**
+     * Helper method; notifies listener of media selection changes
+     */
     private boolean notifyMediaSelected(int position, boolean selected) {
         MediaItem mediaItem = mAdapter.getItem(position);
 
@@ -213,18 +225,27 @@ public class MediaPickerFragment extends Fragment
         return true;
     }
 
+    /**
+     * Helper method; notifies listener of media selection confirmation
+     */
     private void notifyMediaSelectionConfirmed() {
         if (mListener != null) {
             mListener.onMediaSelectionConfirmed(mSelectedContent);
         }
     }
 
+    /**
+     * Helper method; notifies listener of a media gallery creation request
+     */
     private void notifyGalleryCreated() {
         if (mListener != null) {
             mListener.onGalleryCreated(mSelectedContent);
         }
     }
 
+    /**
+     * Helper method; notifies listener of media selection cancellation
+     */
     private void notifyMediaSelectionCancelled() {
         if (mListener != null) {
             mListener.onMediaSelectionCancelled();
