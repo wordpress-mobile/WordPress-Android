@@ -69,6 +69,8 @@ import org.wordpress.android.util.widgets.WPEditText;
 public class LegacyEditorFragment extends EditorFragmentAbstract implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
     public static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
+    public static final String ACTION_MEDIA_GALLERY_TOUCHED = "MEDIA_GALLERY_TOUCHED";
+    public static final String EXTRA_MEDIA_GALLERY = "EXTRA_MEDIA_GALLERY";
 
     private static final int MIN_THUMBNAIL_WIDTH = 200;
     private static final int CONTENT_ANIMATION_DURATION = 250;
@@ -772,8 +774,9 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 MediaGalleryImageSpan[] gallerySpans = spannable.getSpans(charPosition, charPosition, MediaGalleryImageSpan.class);
                 if (gallerySpans.length > 0) {
                     final MediaGalleryImageSpan gallerySpan = gallerySpans[0];
-                    // TODO: send action to create media gallery
-                    // startMediaGalleryActivity(gallerySpan.getMediaGallery());
+                    Intent intent = new Intent(ACTION_MEDIA_GALLERY_TOUCHED);
+                    intent.putExtra(EXTRA_MEDIA_GALLERY, gallerySpan.getMediaGallery());
+                    mActivity.sendBroadcast(intent);
                 }
             }
         } else if (event.getAction() == 1) {
