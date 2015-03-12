@@ -958,7 +958,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
 
         String mediaTitle;
-        if (imageUri.toString().contains("video") && !MediaUtils.isInMediaStore(imageUri)) {
+        if (MediaUtils.isVideo(imageUri.toString())) {
             mediaTitle = getResources().getString(R.string.video);
         } else {
             mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
@@ -969,7 +969,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         mediaFile.setTitle(mediaTitle);
         mediaFile.setFilePath(imageUri.toString());
         if (imageUri.getEncodedPath() != null) {
-            mediaFile.setVideo(imageUri.getEncodedPath().contains("video"));
+            mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
 
