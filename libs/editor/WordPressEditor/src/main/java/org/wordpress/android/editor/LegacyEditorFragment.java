@@ -1012,6 +1012,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         }
     }
 
+    @Override
     public void appendGallery(MediaGallery mediaGallery) {
         Editable editableText = mContentEditText.getText();
         if (editableText == null) {
