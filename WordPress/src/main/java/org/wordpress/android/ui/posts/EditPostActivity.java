@@ -20,21 +20,17 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Editable;
 import android.text.Html;
-import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.AlignmentSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import org.wordpress.android.Constants;
@@ -245,6 +241,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             }
         });
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+
+        registerReceiver(mGalleryReceiver,
+                new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
     }
 
     class AutoSaveTask extends TimerTask {
@@ -278,6 +277,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(mGalleryReceiver);
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED_POST);
     }
 
@@ -1217,6 +1217,15 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
         return videoMediaSources;
     }
+
+    private BroadcastReceiver mGalleryReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED.equals(intent.getAction())) {
+                startMediaGalleryActivity((MediaGallery)intent.getSerializableExtra(LegacyEditorFragment.EXTRA_MEDIA_GALLERY));
+            }
+        }
+    };
 
     /**
      * Handles media upload notifications. Used when uploading local media to create a gallery
