@@ -1233,12 +1233,18 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 if (mediaId != null && newId != null) {
                     for (Long galleryId : mPendingGalleryUploads.keySet()) {
                         if (mPendingGalleryUploads.get(galleryId).contains(mediaId)) {
-                            /*
-                            int selectionStart = 0;
-                            int selectionEnd = mContentEditText.length();
-                            Editable editableText = mContentEditText.getText();
 
-                            MediaGalleryImageSpan[] gallerySpans = editableText.getSpans(selectionStart, selectionEnd, MediaGalleryImageSpan.class);
+                            SpannableStringBuilder postContent;
+                            if (mEditorFragment.getSpannedContent() != null) {
+                                // needed by the legacy editor to save local drafts
+                                postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
+                            } else {
+                                postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
+                            }
+                            int selectionStart = 0;
+                            int selectionEnd = postContent.length();
+
+                            MediaGalleryImageSpan[] gallerySpans = postContent.getSpans(selectionStart, selectionEnd, MediaGalleryImageSpan.class);
                             if (gallerySpans.length != 0) {
                                 for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
                                     MediaGallery gallery = gallerySpan.getMediaGallery();
@@ -1247,14 +1253,13 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                                         galleryIds.add(newId);
                                         gallery.setIds(galleryIds);
                                         gallerySpan.setMediaGallery(gallery);
-                                        int spanStart = editableText.getSpanStart(gallerySpan);
-                                        int spanEnd = editableText.getSpanEnd(gallerySpan);
-                                        editableText.setSpan(gallerySpan, spanStart, spanEnd,
+                                        int spanStart = postContent.getSpanStart(gallerySpan);
+                                        int spanEnd = postContent.getSpanEnd(gallerySpan);
+                                        postContent.setSpan(gallerySpan, spanStart, spanEnd,
                                                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     }
                                 }
                             }
-                            */
 
                             mPendingGalleryUploads.get(galleryId).remove(mediaId);
                             if (mPendingGalleryUploads.get(galleryId).size() == 0) {
