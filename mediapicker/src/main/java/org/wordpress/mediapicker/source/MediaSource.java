@@ -61,6 +61,10 @@ public interface MediaSource extends Parcelable {
         public void onMediaChanged(MediaSource source, List<MediaItem> changedItems);
     }
 
+    // Load MediaItem data
+    public void gather(final OnMediaLoaded callback);
+    // Destroy MediaItem data
+    public void cleanup();
     // Can be ignored if no listener is needed
     public void setListener(final OnMediaChange listener);
     // Get the number of MediaItems accessible through the source

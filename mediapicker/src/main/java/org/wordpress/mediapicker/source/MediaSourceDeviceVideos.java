@@ -48,6 +48,14 @@ public class MediaSourceDeviceVideos implements MediaSource {
     }
 
     @Override
+    public void gather(OnMediaLoaded callback) {
+    }
+
+    @Override
+    public void cleanup() {
+    }
+
+    @Override
     public void setListener(final OnMediaChange listener) {
         // Ignored
     }
