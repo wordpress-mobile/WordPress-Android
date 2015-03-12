@@ -62,6 +62,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.widgets.WPViewPager;
+import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
 import org.wordpress.mediapicker.source.MediaSourceDeviceImages;
 import org.wordpress.mediapicker.source.MediaSourceDeviceVideos;
@@ -84,6 +85,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
+
+    private static final String ANALYTIC_PROP_NUM_LOCAL_PHOTOS_ADDED = "number_of_local_photos_added";
+    private static final String ANALYTIC_PROP_NUM_WP_PHOTOS_ADDED = "number_of_wp_library_photos_added";
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -960,6 +964,14 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
             Bundle extras;
             switch (requestCode) {
+                case MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
+                    if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_MEDIA_SELECTED) {
+                        handleMediaSelectionResult(data);
+                    } else if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_GALLERY_CREATED) {
+                        // TODO: enable media gallery
+                        // handleGalleryResult(data);
+                    }
+                    break;
                 case MediaGalleryActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
                         // TODO: enable media gallery
@@ -1093,6 +1105,46 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         s.insert(selectionEnd + 1, "\n\n");
     }
     */
+
+    /**
+     * Handles result from {@link org.wordpress.android.ui.media.MediaPickerActivity} by adding the
+     * selected media to the Post.
+     *
+     * @param data
+     *  result {@link android.content.Intent} with selected media items
+     */
+    private void handleMediaSelectionResult(Intent data) {
+        if (data != null) {
+            final List<MediaItem> selectedContent =
+                    data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
+            if (selectedContent != null && selectedContent.size() > 0) {
+                Integer localMediaAdded = 0;
+                Integer libraryMediaAdded = 0;
+
+                for (MediaItem media : selectedContent) {
+                    if (media.getSource().toString().contains("wordpress.com")) {
+                        addExistingMediaToEditor(media.getTag());
+                        ++libraryMediaAdded;
+                    } else {
+                        addMedia(media.getSource());
+                        ++localMediaAdded;
+                    }
+                }
+
+                if (localMediaAdded > 0) {
+                    Map<String, Object> analyticsProperties = new HashMap<>();
+                    analyticsProperties.put(ANALYTIC_PROP_NUM_LOCAL_PHOTOS_ADDED, localMediaAdded);
+                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY, analyticsProperties);
+                }
+
+                if (libraryMediaAdded > 0) {
+                    Map<String, Object> analyticsProperties = new HashMap<>();
+                    analyticsProperties.put(ANALYTIC_PROP_NUM_WP_PHOTOS_ADDED, libraryMediaAdded);
+                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY, analyticsProperties);
+                }
+            }
+        }
+    }
 
     /**
      * Create image {@link org.wordpress.mediapicker.source.MediaSource}'s for media selection.
