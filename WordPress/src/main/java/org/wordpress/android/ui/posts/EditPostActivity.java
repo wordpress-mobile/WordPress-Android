@@ -928,7 +928,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     }
 
     private boolean addMedia(Uri imageUri) {
-        if (!MediaUtils.isInMediaStore(imageUri)) {
+        if (!MediaUtils.isInMediaStore(imageUri) && !imageUri.toString().startsWith("/")) {
             imageUri = MediaUtils.downloadExternalMedia(this, imageUri);
         }
 
