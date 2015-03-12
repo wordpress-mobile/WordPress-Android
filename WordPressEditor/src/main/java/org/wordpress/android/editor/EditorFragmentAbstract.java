@@ -2,13 +2,12 @@ package org.wordpress.android.editor;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.text.Editable;
 import android.text.Spanned;
-import android.text.style.CharacterStyle;
 
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.util.helpers.MediaFile;
+import org.wordpress.android.util.helpers.MediaGallery;
 
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
@@ -16,6 +15,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract CharSequence getTitle();
     public abstract CharSequence getContent();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
+    public abstract void appendGallery(MediaGallery mediaGallery);
+
     // TODO: remove this as soon as we can (we'll need to drop the legacy editor or fix html2spanned translation)
     public abstract Spanned getSpannedContent();
 

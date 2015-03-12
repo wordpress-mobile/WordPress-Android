@@ -3,9 +3,7 @@ package org.wordpress.android.editor;
 import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.Spanned;
-import android.text.style.CharacterStyle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +19,7 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
+import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -152,6 +151,11 @@ public class EditorFragment extends EditorFragmentAbstract {
 
     @Override
     public void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader) {
+        // TODO
+    }
+
+    @Override
+    public void appendGallery(MediaGallery mediaGallery) {
         // TODO
     }
 
