@@ -21,7 +21,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
-import android.text.style.CharacterStyle;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -303,34 +302,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             createLinkFromSelection(linkURL, linkText);
         }
     }
-
-    // TODO: call MediaPicker-Android instead (see EditPostActivity.onAddMediaClicked)
-    /*
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case 0:
-                launchPictureLibrary();
-                return true;
-            case 1:
-                launchCamera();
-                return true;
-            case 2:
-                launchVideoLibrary();
-                return true;
-            case 3:
-                launchVideoCamera();
-                return true;
-            case 4:
-                startMediaGalleryActivity(null);
-                return true;
-            case 5:
-                startMediaGalleryAddActivity();
-                return true;
-        }
-        return false;
-    }
-    */
 
     public boolean hasEmptyContentFields() {
         return TextUtils.isEmpty(mTitleEditText.getText()) && TextUtils.isEmpty(mContentEditText.getText());
