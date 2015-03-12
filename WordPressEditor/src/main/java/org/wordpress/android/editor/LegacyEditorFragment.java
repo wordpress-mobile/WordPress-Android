@@ -426,7 +426,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     private WPEditImageSpan createWPEditImageSpanLocal(Context context, MediaFile mediaFile) {
         Uri imageUri = Uri.parse(mediaFile.getFilePath());
         Bitmap thumbnailBitmap;
-        if (imageUri.toString().contains("video") && !MediaUtils.isInMediaStore(imageUri)) {
+        if (MediaUtils.isVideo(imageUri.toString())) {
             thumbnailBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.media_movieclip);
         } else {
             thumbnailBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(context, imageUri.getEncodedPath(),
