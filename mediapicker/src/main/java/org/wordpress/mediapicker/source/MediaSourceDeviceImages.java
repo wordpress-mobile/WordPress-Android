@@ -104,7 +104,7 @@ public class MediaSourceDeviceImages implements MediaSource {
 
     @Override
     public MediaItem getMedia(int position) {
-        return mMediaItems != null ? mMediaItems.get(position) : null;
+        return mMediaItems.size() > 0 ? mMediaItems.get(position) : null;
     }
 
     @Override
@@ -190,18 +190,20 @@ public class MediaSourceDeviceImages implements MediaSource {
         Cursor cursor = MediaStore.Images.Media.query(mContentResolver, imageUri, IMAGE_QUERY_COLUMNS, null,
                 null, MediaStore.MediaColumns.DATE_MODIFIED + " DESC");
 
-        if (cursor.moveToFirst()) {
-            do {
-                MediaItem newContent = getMediaItemFromCursor(cursor, thumbnailData);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    MediaItem newContent = getMediaItemFromCursor(cursor, thumbnailData);
 
-                if (newContent != null && !imageIds.contains(newContent.getTag())) {
-                    mMediaItems.add(newContent);
-                    imageIds.add(newContent.getTag());
-                }
-            } while(cursor.moveToNext());
+                    if (newContent != null && !imageIds.contains(newContent.getTag())) {
+                        mMediaItems.add(newContent);
+                        imageIds.add(newContent.getTag());
+                    }
+                } while (cursor.moveToNext());
+            }
+
+            cursor.close();
         }
-
-        cursor.close();
     }
 
     /**

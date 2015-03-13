@@ -45,7 +45,9 @@ public class MediaSourceAdapter extends BaseAdapter {
                 source.gather(new MediaSource.OnMediaLoaded() {
                     @Override
                     public void onMediaLoaded(boolean success) {
-                        listener.onMediaLoaded(true);
+                        if (listener != null) {
+                            listener.onMediaLoaded(true);
+                        }
                     }
                 });
             }
@@ -54,7 +56,7 @@ public class MediaSourceAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return mMediaSources.size();
+        return mMediaSources.size() <= 0 ? 1 : mMediaSources.size();
     }
 
     @Override

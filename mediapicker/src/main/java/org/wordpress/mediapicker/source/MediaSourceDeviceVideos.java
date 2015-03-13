@@ -146,18 +146,20 @@ public class MediaSourceDeviceVideos implements MediaSource {
         Cursor cursor = MediaStore.Images.Media.query(mContentResolver, videoUri, VIDEO_QUERY_COLUMNS, null,
                 null, MediaStore.MediaColumns.DATE_MODIFIED + " DESC");
 
-        if (cursor.moveToFirst()) {
-            do {
-                MediaItem newContent = getMediaItemFromCursor(cursor, thumbnailData);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    MediaItem newContent = getMediaItemFromCursor(cursor, thumbnailData);
 
-                if (newContent != null && !videoIds.contains(newContent.getTag())) {
-                    mMediaItems.add(newContent);
-                    videoIds.add(newContent.getTag());
-                }
-            } while(cursor.moveToNext());
+                    if (newContent != null && !videoIds.contains(newContent.getTag())) {
+                        mMediaItems.add(newContent);
+                        videoIds.add(newContent.getTag());
+                    }
+                } while (cursor.moveToNext());
+            }
+
+            cursor.close();
         }
-
-        cursor.close();
     }
 
     private Map<String, String> getVideoThumbnailData() {
