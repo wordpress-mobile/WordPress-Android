@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -94,7 +95,12 @@ public class SampleActivity extends Activity
     }
 
     @Override
-    public void onGalleryCreated(ArrayList<MediaItem> mediaContent) {
+    public boolean onMenuItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.menu_media_content_selection_gallery) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -129,6 +135,7 @@ public class SampleActivity extends Activity
             if (position < mMediaPickers.size()) {
                 MediaPicker mediaPicker = mMediaPickers.get(position);
                 MediaPickerFragment fragment = new MediaPickerFragment();
+                fragment.setActionModeMenu(R.menu.menu_media_picker_action_mode);
                 fragment.setMediaSources(mediaPicker.mediaSources);
 
                 return fragment;
