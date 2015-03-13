@@ -14,18 +14,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.mediapicker.source.MediaSource;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * A custom view may be provided. In order to work properly an AdapterView with id=media_adapter_view
- * needs to be provided. A TextView may also be provided with id=media_empty_view to show loading
- * and empty status.
+ * By default the {@link org.wordpress.mediapicker.MediaSourceAdapter} is shown within
+ * a {@link android.widget.GridView}, but a subclass of {@link android.widget.AbsListView} may be provided
+ * with id=media_adapter_view. A subclass of {@link android.widget.TextView} may also be provided
+ * for the empty view; id=media_empty_view.
+ *
+ * MediaPickerFragment tracks a collection of MediaSources and listens for changes via the
+ * {@link org.wordpress.mediapicker.source.MediaSource.OnMediaChange} interface. While media is loading
+ * the adapter is hidden and a text view indicates the current action. If there is no media content
+ * in the adapter after a load or if the load fails the text will be updated.
+ *
+ * If the host {@link android.app.Activity} implements {@link org.wordpress.mediapicker.MediaPickerFragment.OnMediaSelected}
+ * it will be set as the listener. Otherwise you can set it explicitly with
+ * {@link org.wordpress.mediapicker.MediaPickerFragment#setListener(org.wordpress.mediapicker.MediaPickerFragment.OnMediaSelected)}.
+ *
+ * Menu items may be provided for Action Mode and their selection will be alerted with onMenuItemSelected.
+ * A selection confirmation button is automatically added and will call onMediaSelectionConfirmed when selected.
  */
 
 public class MediaPickerFragment extends Fragment
@@ -34,7 +48,10 @@ public class MediaPickerFragment extends Fragment
                    MediaSource.OnMediaChange {
     private static final String KEY_SELECTED_CONTENT = "selected-content";
     private static final String KEY_MEDIA_SOURCES    = "media-sources";
+    private static final String KEY_CUSTOM_VIEW      = "custom-view";
     private static final String KEY_ACTION_MODE_MENU = "action-mode-menu";
+
+    private static final int DEFAULT_VIEW = R.layout.media_picker_fragment;
 
     public interface OnMediaSelected {
         // Called when the first item is selected
@@ -54,14 +71,17 @@ public class MediaPickerFragment extends Fragment
     private ArrayList<MediaItem>   mSelectedContent;
     private ArrayList<MediaSource> mMediaSources;
     private OnMediaSelected        mListener;
+    private TextView               mEmptyView;
+    private AbsListView            mAdapterView;
     private MediaSourceAdapter     mAdapter;
-    private GridView               mGridView;
     private MenuItem               mGalleryMenuItem;
+    private int                    mCustomView;
     private int                    mActionModeMenu;
 
     public MediaPickerFragment() {
         super();
 
+        mCustomView = -1;
         mActionModeMenu = -1;
         mMediaSources = new ArrayList<>();
         mSelectedContent = new ArrayList<>();
@@ -88,8 +108,13 @@ public class MediaPickerFragment extends Fragment
             if (savedInstanceState.containsKey(KEY_SELECTED_CONTENT)) {
                 mSelectedContent = savedInstanceState.getParcelableArrayList(KEY_SELECTED_CONTENT);
             }
+
             if (savedInstanceState.containsKey(KEY_MEDIA_SOURCES)) {
                 mMediaSources = savedInstanceState.getParcelableArrayList(KEY_MEDIA_SOURCES);
+            }
+
+            if (savedInstanceState.containsKey(KEY_CUSTOM_VIEW)) {
+                mCustomView = savedInstanceState.getInt(KEY_CUSTOM_VIEW);
             }
 
             if (savedInstanceState.containsKey(KEY_ACTION_MODE_MENU)) {
@@ -97,11 +122,17 @@ public class MediaPickerFragment extends Fragment
             }
         }
 
-        View mediaPickerView = inflater.inflate(R.layout.media_picker_fragment, container, false);
+        int viewToInflate = mCustomView < 0 ? DEFAULT_VIEW : mCustomView;
+        View mediaPickerView = inflater.inflate(viewToInflate, container, false);
         if (mediaPickerView != null) {
-            mGridView = (GridView) mediaPickerView.findViewById(R.id.mediaGridView);
-            if (mGridView != null) {
-                layoutGridView();
+            mEmptyView = (TextView) mediaPickerView.findViewById(R.id.media_empty_view);
+            if (mEmptyView != null) {
+                mEmptyView.setText(getString(R.string.fetching_media));
+            }
+
+            mAdapterView = (AbsListView) mediaPickerView.findViewById(R.id.media_adapter_view);
+            if (mAdapterView != null) {
+                layoutAdapterView();
             }
         }
 
@@ -114,6 +145,7 @@ public class MediaPickerFragment extends Fragment
 
         outState.putParcelableArrayList(KEY_SELECTED_CONTENT, mSelectedContent);
         outState.putParcelableArrayList(KEY_MEDIA_SOURCES, mMediaSources);
+        outState.putInt(KEY_CUSTOM_VIEW, mCustomView);
         outState.putInt(KEY_ACTION_MODE_MENU, mActionModeMenu);
     }
 
@@ -218,6 +250,10 @@ public class MediaPickerFragment extends Fragment
         mActionModeMenu = id;
     }
 
+    public void setCustomView(int customView) {
+        mCustomView = customView;
+    }
+
     public void setListener(OnMediaSelected listener) {
         mListener = listener;
     }
@@ -227,6 +263,33 @@ public class MediaPickerFragment extends Fragment
     }
 
     /**
+     * Helper method; creates the adapter and initializes the AdapterView to display it
+     */
+    private void layoutAdapterView() {
+        Activity activity = getActivity();
+        Resources resources = activity.getResources();
+        int paddingLeft = Math.round(resources.getDimension(R.dimen.media_padding_left));
+        int paddingTop = Math.round(resources.getDimension(R.dimen.media_padding_top));
+        int paddingRight = Math.round(resources.getDimension(R.dimen.media_padding_right));
+        int paddingBottom = Math.round(resources.getDimension(R.dimen.media_padding_bottom));
+        Drawable background = resources.getDrawable(R.drawable.media_picker_background);
+        ImageLoader.ImageCache imageCache = mListener != null ? mListener.getImageCache() : null;
+
+        if (mAdapter == null) {
+            mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache, this);
+        }
+
+        // Use setBackground(Drawable) when API min is >= 16
+        mAdapterView.setBackgroundDrawable(background);
+        mAdapterView.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+        mAdapterView.setClipToPadding(false);
+        mAdapterView.setMultiChoiceModeListener(this);
+        mAdapterView.setOnItemClickListener(this);
+        mAdapterView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mAdapterView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        mAdapterView.setAdapter(mAdapter);
+    }
+
     /**
      * Adds a menu item to confirm media selection during Action Mode. Only adds one if one is not
      * defined.
@@ -289,38 +352,4 @@ public class MediaPickerFragment extends Fragment
             mListener.onMediaSelectionCancelled();
         }
     }
-
-    /**
-     * Helper method; creates the adapter and initializes the GridView to display it
-     */
-    private void layoutGridView() {
-        Activity activity = getActivity();
-        Resources resources = activity.getResources();
-        int numColumns = resources.getInteger(R.integer.num_media_columns);
-        int paddingLeft = Math.round(resources.getDimension(R.dimen.media_padding_left));
-        int paddingTop = Math.round(resources.getDimension(R.dimen.media_padding_top));
-        int paddingRight = Math.round(resources.getDimension(R.dimen.media_padding_right));
-        int paddingBottom = Math.round(resources.getDimension(R.dimen.media_padding_bottom));
-        int columnSpacingY = Math.round(resources.getDimension(R.dimen.media_spacing_vertical));
-        int columnSpacingX = Math.round(resources.getDimension(R.dimen.media_spacing_horizontal));
-        Drawable background = resources.getDrawable(R.drawable.media_picker_background);
-        ImageLoader.ImageCache imageCache = mListener != null ? mListener.getImageCache() : null;
-
-        if (mAdapter == null) {
-            mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache, this);
-        }
-
-        mGridView.setBackgroundDrawable(background);
-        mGridView.setNumColumns(numColumns);
-        mGridView.setVerticalSpacing(columnSpacingY);
-        mGridView.setHorizontalSpacing(columnSpacingX);
-        mGridView.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
-        mGridView.setClipToPadding(false);
-        mGridView.setMultiChoiceModeListener(this);
-        mGridView.setOnItemClickListener(this);
-        mGridView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-        mGridView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        mGridView.setAdapter(mAdapter);
-    }
-    mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache, this);
 }
