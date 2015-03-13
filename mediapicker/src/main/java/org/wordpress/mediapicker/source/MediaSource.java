@@ -18,7 +18,7 @@ import java.util.List;
 
 public interface MediaSource extends Parcelable {
     public interface OnMediaLoaded {
-        public void onMediaLoaded();
+        public void onMediaLoaded(boolean success);
     }
 
     /**

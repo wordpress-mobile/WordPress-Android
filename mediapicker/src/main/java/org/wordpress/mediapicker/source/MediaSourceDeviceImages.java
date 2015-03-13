@@ -47,19 +47,44 @@ public class MediaSourceDeviceImages implements MediaSource {
     private final List<MediaItem> mMediaItems;
 
     private ContentResolver mContentResolver;
+    private boolean mGatheringMedia;
 
     public MediaSourceDeviceImages() {
         mMediaItems = new ArrayList<>();
+        mGatheringMedia = false;
     }
 
     public MediaSourceDeviceImages(final ContentResolver contentResolver) {
         this();
         mContentResolver = contentResolver;
-        createMediaItems();
     }
 
     @Override
     public void gather(final OnMediaLoaded callback) {
+        if (!mGatheringMedia) {
+            new AsyncTask<Void, String, Void>() {
+                private boolean success;
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        createMediaItems();
+                        success = true;
+                    } catch (InterruptedException e) {
+                    }
+                    return null;
+                }
+
+                @Override
+                public void onPostExecute(Void result) {
+                    if (callback != null) {
+                        callback.onMediaLoaded(success);
+                    }
+                }
+            }.execute();
+
+            mGatheringMedia = true;
+        }
     }
 
     @Override
