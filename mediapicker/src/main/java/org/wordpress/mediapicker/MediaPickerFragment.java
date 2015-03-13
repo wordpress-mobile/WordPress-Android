@@ -43,9 +43,9 @@ import java.util.List;
  */
 
 public class MediaPickerFragment extends Fragment
-        implements AdapterView.OnItemClickListener,
-                   AbsListView.MultiChoiceModeListener,
-                   MediaSource.OnMediaChange {
+                              implements AdapterView.OnItemClickListener,
+                                         AbsListView.MultiChoiceModeListener,
+                                         MediaSource.OnMediaChange {
     private static final String KEY_SELECTED_CONTENT = "selected-content";
     private static final String KEY_MEDIA_SOURCES    = "media-sources";
     private static final String KEY_CUSTOM_VIEW      = "custom-view";
@@ -75,7 +75,6 @@ public class MediaPickerFragment extends Fragment
     private TextView               mEmptyView;
     private AbsListView            mAdapterView;
     private MediaSourceAdapter     mAdapter;
-    private MenuItem               mGalleryMenuItem;
     private int                    mCustomView;
     private int                    mActionModeMenu;
 
@@ -172,10 +171,6 @@ public class MediaPickerFragment extends Fragment
             mSelectedContent.remove(mAdapter.getItem(position));
         }
 
-        if (mGalleryMenuItem != null) {
-            mGalleryMenuItem.setVisible(mSelectedContent.size() > 0);
-        }
-
         mode.setTitle(getActivity().getTitle() + " (" + mSelectedContent.size() + ")");
     }
 
@@ -221,7 +216,6 @@ public class MediaPickerFragment extends Fragment
         notifyMediaSelectionCancelled();
 
         mSelectedContent.clear();
-        mGalleryMenuItem = null;
 
         getActivity().onActionModeFinished(mode);
     }
