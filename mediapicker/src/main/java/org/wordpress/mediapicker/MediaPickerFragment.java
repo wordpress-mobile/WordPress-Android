@@ -77,6 +77,7 @@ public class MediaPickerFragment extends Fragment
     private MediaSourceAdapter     mAdapter;
     private int                    mCustomView;
     private int                    mActionModeMenu;
+    private boolean mConfirmed;
 
     public MediaPickerFragment() {
         super();
@@ -186,6 +187,8 @@ public class MediaPickerFragment extends Fragment
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         notifyMediaSelectionStarted();
 
+        mConfirmed = false;
+
         MenuInflater menuInflater = getActivity().getMenuInflater();
 
         if (mActionModeMenu != -1) {
@@ -213,7 +216,9 @@ public class MediaPickerFragment extends Fragment
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        notifyMediaSelectionCancelled();
+        if (!mConfirmed) {
+            notifyMediaSelectionCancelled();
+        }
 
         mSelectedContent.clear();
 
@@ -370,6 +375,8 @@ public class MediaPickerFragment extends Fragment
         if (mListener != null) {
             mListener.onMediaSelectionConfirmed(mSelectedContent);
         }
+
+        mConfirmed = true;
     }
 
     /**
