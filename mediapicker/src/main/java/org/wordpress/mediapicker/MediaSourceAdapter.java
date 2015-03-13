@@ -29,23 +29,23 @@ import java.util.List;
  * </ul>
  */
 
-public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMediaChange {
     private static final int LOADING_VIEW_TYPE = Integer.MAX_VALUE;
 
+public class MediaSourceAdapter extends BaseAdapter {
     private final LayoutInflater  mLayoutInflater;
     private final ImageLoader.ImageCache mImageCache;
     private final List<MediaSource> mMediaSources;
 
     private boolean mLoadingMedia;
 
-    public MediaSourceAdapter(Context context, List<MediaSource> sources, ImageLoader.ImageCache imageCache) {
+    public MediaSourceAdapter(Context context, List<MediaSource> sources, ImageLoader.ImageCache imageCache, final MediaSource.OnMediaChange listener) {
         mMediaSources = sources;
         mLayoutInflater = LayoutInflater.from(context);
         mImageCache = imageCache;
 
         for (MediaSource source : mMediaSources) {
             if (source != null) {
-                source.setListener(this);
+                source.setListener(listener);
             }
         }
     }
@@ -169,26 +169,5 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
         }
 
         return offset;
-    }
-
-    @Override
-    public void onMediaLoading(MediaSource source, boolean complete) {
-        mLoadingMedia = !complete;
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMediaAdded(MediaSource source, List<MediaItem> addedItems) {
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMediaRemoved(MediaSource source, List<MediaItem> removedItems) {
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMediaChanged(MediaSource source, List<MediaItem> changedItems) {
-        notifyDataSetChanged();
     }
 }

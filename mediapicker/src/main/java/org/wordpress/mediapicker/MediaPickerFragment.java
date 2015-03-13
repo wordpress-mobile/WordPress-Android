@@ -29,7 +29,8 @@ import java.util.ArrayList;
 
 public class MediaPickerFragment extends Fragment
         implements AdapterView.OnItemClickListener,
-        AbsListView.MultiChoiceModeListener {
+                   AbsListView.MultiChoiceModeListener,
+                   MediaSource.OnMediaChange {
     private static final String KEY_SELECTED_CONTENT = "selected-content";
     private static final String KEY_MEDIA_SOURCES    = "media-sources";
 
@@ -157,7 +158,7 @@ public class MediaPickerFragment extends Fragment
             mGalleryMenuItem.setVisible(false);
         }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -185,6 +186,24 @@ public class MediaPickerFragment extends Fragment
         getActivity().onActionModeFinished(mode);
     }
 
+    @Override
+    public void onMediaLoaded(boolean success) {
+    }
+
+    @Override
+    public void onMediaAdded(MediaSource source, List<MediaItem> addedItems) {
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMediaRemoved(MediaSource source, List<MediaItem> removedItems) {
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMediaChanged(MediaSource source, List<MediaItem> changedItems) {
+        mAdapter.notifyDataSetChanged();
+    }
     public void setListener(OnMediaSelected listener) {
         mListener = listener;
     }
@@ -269,7 +288,7 @@ public class MediaPickerFragment extends Fragment
         ImageLoader.ImageCache imageCache = mListener != null ? mListener.getImageCache() : null;
 
         if (mAdapter == null) {
-            mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache);
+            mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache, this);
         }
 
         mGridView.setBackgroundDrawable(background);
@@ -284,4 +303,5 @@ public class MediaPickerFragment extends Fragment
         mGridView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mGridView.setAdapter(mAdapter);
     }
+    mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache, this);
 }
