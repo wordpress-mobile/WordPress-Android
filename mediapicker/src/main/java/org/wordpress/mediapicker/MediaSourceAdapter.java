@@ -29,14 +29,10 @@ import java.util.List;
  * </ul>
  */
 
-    private static final int LOADING_VIEW_TYPE = Integer.MAX_VALUE;
-
 public class MediaSourceAdapter extends BaseAdapter {
     private final LayoutInflater  mLayoutInflater;
     private final ImageLoader.ImageCache mImageCache;
     private final List<MediaSource> mMediaSources;
-
-    private boolean mLoadingMedia;
 
     public MediaSourceAdapter(Context context, List<MediaSource> sources, ImageLoader.ImageCache imageCache, final MediaSource.OnMediaChange listener) {
         mMediaSources = sources;
@@ -52,24 +48,16 @@ public class MediaSourceAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return mLoadingMedia || mMediaSources.size() == 0 ? 1 : mMediaSources.size();
+        return mMediaSources.size();
     }
 
     @Override
     public int getCount() {
-        if (mLoadingMedia) {
-            return 1;
-        }
-
         return totalItems();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mLoadingMedia) {
-            return LOADING_VIEW_TYPE;
-        }
-
         return mMediaSources.indexOf(sourceAtPosition(position));
     }
 
@@ -87,10 +75,6 @@ public class MediaSourceAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (mLoadingMedia) {
-            return getLoadingView(convertView, parent);
-        }
-
         MediaSource itemSource = sourceAtPosition(position);
 
         if (itemSource != null) {
@@ -102,13 +86,6 @@ public class MediaSourceAdapter extends BaseAdapter {
         }
 
         return null;
-    }
-
-    private View getLoadingView(View convertView, ViewGroup parent) {
-        convertView = new ProgressBar(mLayoutInflater.getContext());
-        ((ProgressBar)convertView).setIndeterminate(true);
-
-        return convertView;
     }
 
     /**
