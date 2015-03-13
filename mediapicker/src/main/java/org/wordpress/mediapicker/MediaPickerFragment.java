@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class MediaPickerFragment extends Fragment
                    MediaSource.OnMediaChange {
     private static final String KEY_SELECTED_CONTENT = "selected-content";
     private static final String KEY_MEDIA_SOURCES    = "media-sources";
+    private static final String KEY_ACTION_MODE_MENU = "action-mode-menu";
 
     public interface OnMediaSelected {
         // Called when the first item is selected
@@ -43,8 +45,8 @@ public class MediaPickerFragment extends Fragment
         public void onMediaSelectionConfirmed(ArrayList<MediaItem> mediaContent);
         // Called when the last selected item is deselected
         public void onMediaSelectionCancelled();
-        // Called when Gallery menu option has been selected
-        public void onGalleryCreated(ArrayList<MediaItem> mediaContent);
+        // Called when a menu item has been tapped
+        public boolean onMenuItemSelected(MenuItem menuItem);
         // Can handle null image cache
         public ImageLoader.ImageCache getImageCache();
     }
@@ -55,10 +57,12 @@ public class MediaPickerFragment extends Fragment
     private MediaSourceAdapter     mAdapter;
     private GridView               mGridView;
     private MenuItem               mGalleryMenuItem;
+    private int                    mActionModeMenu;
 
     public MediaPickerFragment() {
         super();
 
+        mActionModeMenu = -1;
         mMediaSources = new ArrayList<>();
         mSelectedContent = new ArrayList<>();
     }
@@ -87,6 +91,10 @@ public class MediaPickerFragment extends Fragment
             if (savedInstanceState.containsKey(KEY_MEDIA_SOURCES)) {
                 mMediaSources = savedInstanceState.getParcelableArrayList(KEY_MEDIA_SOURCES);
             }
+
+            if (savedInstanceState.containsKey(KEY_ACTION_MODE_MENU)) {
+                mActionModeMenu = savedInstanceState.getInt(KEY_ACTION_MODE_MENU);
+            }
         }
 
         View mediaPickerView = inflater.inflate(R.layout.media_picker_fragment, container, false);
@@ -106,6 +114,7 @@ public class MediaPickerFragment extends Fragment
 
         outState.putParcelableArrayList(KEY_SELECTED_CONTENT, mSelectedContent);
         outState.putParcelableArrayList(KEY_MEDIA_SOURCES, mMediaSources);
+        outState.putInt(KEY_ACTION_MODE_MENU, mActionModeMenu);
     }
 
     @Override
@@ -150,12 +159,14 @@ public class MediaPickerFragment extends Fragment
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         notifyMediaSelectionStarted();
-        getActivity().getMenuInflater().inflate(R.menu.media_picker_action_mode, menu);
 
-        mGalleryMenuItem = menu.findItem(R.id.menu_media_content_selection_gallery);
+        MenuInflater menuInflater = getActivity().getMenuInflater();
 
-        if (mGalleryMenuItem != null) {
-            mGalleryMenuItem.setVisible(false);
+        if (mActionModeMenu != -1) {
+            menuInflater.inflate(mActionModeMenu, menu);
+            addSelectionConfirmationButtonMenuItem(menu);
+        } else {
+            menuInflater.inflate(R.menu.media_picker_action_mode, menu);
         }
 
         return true;
@@ -163,17 +174,15 @@ public class MediaPickerFragment extends Fragment
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.menu_media_content_selection_gallery) {
-            notifyGalleryCreated();
+        if (menuItem.getItemId() == R.id.menu_media_selection_confirmed) {
+            notifyMediaSelectionConfirmed();
             mode.finish();
-        } else if (menuItem.getItemId() == R.id.menu_media_selection_confirmed) {
-            if (mSelectedContent.size() > 0) {
-                notifyMediaSelectionConfirmed();
-            }
-            mode.finish();
+            return true;
+        } else if (mListener != null) {
+            return mListener.onMenuItemSelected(menuItem);
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -204,6 +213,11 @@ public class MediaPickerFragment extends Fragment
     public void onMediaChanged(MediaSource source, List<MediaItem> changedItems) {
         mAdapter.notifyDataSetChanged();
     }
+
+    public void setActionModeMenu(int id) {
+        mActionModeMenu = id;
+    }
+
     public void setListener(OnMediaSelected listener) {
         mListener = listener;
     }
@@ -213,6 +227,20 @@ public class MediaPickerFragment extends Fragment
     }
 
     /**
+    /**
+     * Adds a menu item to confirm media selection during Action Mode. Only adds one if one is not
+     * defined.
+     *
+     * @param menu
+     * the menu to add a confirm option to
+     */
+    private void addSelectionConfirmationButtonMenuItem(Menu menu) {
+        if (menu != null && menu.findItem(R.id.menu_media_selection_confirmed) == null) {
+            menu.add(Menu.NONE, R.id.menu_media_selection_confirmed, Menu.FIRST, R.string.confirm)
+                    .setIcon(R.drawable.action_mode_confirm_checkmark);
+        }
+    }
+
      * Helper method; notifies listener that media selection has started
      */
     private void notifyMediaSelectionStarted() {
@@ -250,15 +278,6 @@ public class MediaPickerFragment extends Fragment
     private void notifyMediaSelectionConfirmed() {
         if (mListener != null) {
             mListener.onMediaSelectionConfirmed(mSelectedContent);
-        }
-    }
-
-    /**
-     * Helper method; notifies listener of a media gallery creation request
-     */
-    private void notifyGalleryCreated() {
-        if (mListener != null) {
-            mListener.onGalleryCreated(mSelectedContent);
         }
     }
 
