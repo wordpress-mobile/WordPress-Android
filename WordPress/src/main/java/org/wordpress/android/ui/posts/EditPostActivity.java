@@ -379,8 +379,15 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 ToastUtils.showToast(this, R.string.error_publish_empty_post, Duration.SHORT);
                 return false;
             }
+
             savePost(false, false);
             trackSavePostAnalytics();
+
+            if (!NetworkUtils.isNetworkAvailable(this)) {
+                ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
+                return false;
+            }
+
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();
