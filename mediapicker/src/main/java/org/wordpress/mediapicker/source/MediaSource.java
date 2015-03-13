@@ -17,19 +17,15 @@ import java.util.List;
  */
 
 public interface MediaSource extends Parcelable {
+    public interface OnMediaLoaded {
+        public void onMediaLoaded(boolean success);
+    }
+
     /**
      * Interface offered for any class to implement a listener for data set changes.
      */
     public interface OnMediaChange {
-        /**
-         * To be called if Media is being loaded in the background. Listener may choose to display a
-         * progress indicator or alert the user in some fashion.
-         *
-         * @param complete
-         *  true if loading is finished, otherwise false
-         */
-        public void onMediaLoading(MediaSource source, boolean complete);
-
+        public void onMediaLoaded(boolean success);
         /**
          * To be called when new MediaItems have been added to the source.
          *
@@ -61,6 +57,10 @@ public interface MediaSource extends Parcelable {
         public void onMediaChanged(MediaSource source, List<MediaItem> changedItems);
     }
 
+    // Load MediaItem data
+    public void gather(final OnMediaLoaded callback);
+    // Destroy MediaItem data
+    public void cleanup();
     // Can be ignored if no listener is needed
     public void setListener(final OnMediaChange listener);
     // Get the number of MediaItems accessible through the source

@@ -51,6 +51,16 @@ public class MediaSourceCaptureImage implements MediaSource, Camera.PictureCallb
     }
 
     @Override
+    public void gather(OnMediaLoaded callback) {
+
+    }
+
+    @Override
+    public void cleanup() {
+
+    }
+
+    @Override
     public void setListener(OnMediaChange listener) {
         mMediaListener = listener;
     }

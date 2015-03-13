@@ -8,6 +8,8 @@ import android.os.Bundle;
 
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -79,6 +81,7 @@ public class SampleActivity extends Activity
 
     @Override
     public void onMediaSelectionStarted() {
+        Toast.makeText(this, "Selection started", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -87,14 +90,23 @@ public class SampleActivity extends Activity
 
     @Override
     public void onMediaSelectionConfirmed(ArrayList<MediaItem> mediaContent) {
+        Toast.makeText(this, "Selected " + mediaContent.size() + " media item(s)", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onMediaSelectionCancelled() {
+        Toast.makeText(this, "Selection cancelled", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onGalleryCreated(ArrayList<MediaItem> mediaContent) {
+    public boolean onMenuItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.menu_media_content_selection_gallery) {
+            Toast.makeText(this, "Gallery creation requested", Toast.LENGTH_SHORT).show();
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -129,6 +141,12 @@ public class SampleActivity extends Activity
             if (position < mMediaPickers.size()) {
                 MediaPicker mediaPicker = mMediaPickers.get(position);
                 MediaPickerFragment fragment = new MediaPickerFragment();
+                if (position == 0) {
+                    fragment.setCustomView(R.layout.media_fragment_three_grid);
+                } else if (position == 1) {
+                    fragment.setCustomView(R.layout.media_fragment_four_grid);
+                }
+                fragment.setActionModeMenu(R.menu.menu_media_picker_action_mode);
                 fragment.setMediaSources(mediaPicker.mediaSources);
 
                 return fragment;

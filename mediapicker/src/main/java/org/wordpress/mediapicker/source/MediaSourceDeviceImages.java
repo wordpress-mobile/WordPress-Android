@@ -30,11 +30,13 @@ import java.util.Map;
  */
 
 public class MediaSourceDeviceImages implements MediaSource {
+    // Columns to query from the thumbnail MediaStore database
     private static final String[] THUMBNAIL_QUERY_COLUMNS = {
             MediaStore.Images.Thumbnails._ID,
             MediaStore.Images.Thumbnails.DATA,
             MediaStore.Images.Thumbnails.IMAGE_ID
     };
+    // Columns to query from the image MediaStore database
     private static final String[] IMAGE_QUERY_COLUMNS = {
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DATA,
@@ -42,15 +44,52 @@ public class MediaSourceDeviceImages implements MediaSource {
             MediaStore.Images.Media.ORIENTATION
     };
 
+    private final List<MediaItem> mMediaItems;
+
     private ContentResolver mContentResolver;
-    private List<MediaItem> mMediaItems;
+    private boolean mGatheringMedia;
 
     public MediaSourceDeviceImages() {
+        mMediaItems = new ArrayList<>();
+        mGatheringMedia = false;
     }
 
     public MediaSourceDeviceImages(final ContentResolver contentResolver) {
+        this();
         mContentResolver = contentResolver;
-        createMediaItems();
+    }
+
+    @Override
+    public void gather(final OnMediaLoaded callback) {
+        if (!mGatheringMedia) {
+            new AsyncTask<Void, String, Void>() {
+                private boolean success;
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        createMediaItems();
+                        success = true;
+                    } catch (InterruptedException e) {
+                    }
+                    return null;
+                }
+
+                @Override
+                public void onPostExecute(Void result) {
+                    if (callback != null) {
+                        callback.onMediaLoaded(success);
+                    }
+                }
+            }.execute();
+
+            mGatheringMedia = true;
+        }
+    }
+
+    @Override
+    public void cleanup() {
+        mMediaItems.clear();
     }
 
     @Override
@@ -65,7 +104,7 @@ public class MediaSourceDeviceImages implements MediaSource {
 
     @Override
     public MediaItem getMedia(int position) {
-        return mMediaItems != null ? mMediaItems.get(position) : null;
+        return mMediaItems.size() > 0 ? mMediaItems.get(position) : null;
     }
 
     @Override
@@ -109,7 +148,8 @@ public class MediaSourceDeviceImages implements MediaSource {
     }
 
     private void setMediaItems(List<MediaItem> mediaItems) {
-        mMediaItems = mediaItems;
+        mMediaItems.clear();
+        mMediaItems.addAll(mediaItems);
     }
 
     private void setImage(Uri imageSource, ImageLoader.ImageCache cache, ImageView imageView, MediaItem mediaItem, int width, int height) {
@@ -143,7 +183,6 @@ public class MediaSourceDeviceImages implements MediaSource {
      * Helper method; creates {@link org.wordpress.mediapicker.MediaItem}'s from MediaStore data
      */
     private void createMediaItems() {
-        mMediaItems = new ArrayList<>();
         final List<String> imageIds = new ArrayList<>();
         final Map<String, String> thumbnailData = getImageThumbnailData();
 
@@ -151,18 +190,20 @@ public class MediaSourceDeviceImages implements MediaSource {
         Cursor cursor = MediaStore.Images.Media.query(mContentResolver, imageUri, IMAGE_QUERY_COLUMNS, null,
                 null, MediaStore.MediaColumns.DATE_MODIFIED + " DESC");
 
-        if (cursor.moveToFirst()) {
-            do {
-                MediaItem newContent = getMediaItemFromCursor(cursor, thumbnailData);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    MediaItem newContent = getMediaItemFromCursor(cursor, thumbnailData);
 
-                if (newContent != null && !imageIds.contains(newContent.getTag())) {
-                    mMediaItems.add(newContent);
-                    imageIds.add(newContent.getTag());
-                }
-            } while(cursor.moveToNext());
+                    if (newContent != null && !imageIds.contains(newContent.getTag())) {
+                        mMediaItems.add(newContent);
+                        imageIds.add(newContent.getTag());
+                    }
+                } while (cursor.moveToNext());
+            }
+
+            cursor.close();
         }
-
-        cursor.close();
     }
 
     /**

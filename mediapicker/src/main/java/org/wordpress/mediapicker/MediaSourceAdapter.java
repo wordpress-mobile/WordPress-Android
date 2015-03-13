@@ -29,47 +29,43 @@ import java.util.List;
  * </ul>
  */
 
-public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMediaChange {
-    private static final int LOADING_VIEW_TYPE = Integer.MAX_VALUE;
-
+public class MediaSourceAdapter extends BaseAdapter {
     private final LayoutInflater  mLayoutInflater;
     private final ImageLoader.ImageCache mImageCache;
     private final List<MediaSource> mMediaSources;
 
-    private boolean mLoadingMedia;
-
-    public MediaSourceAdapter(Context context, List<MediaSource> sources, ImageLoader.ImageCache imageCache) {
+    public MediaSourceAdapter(Context context, List<MediaSource> sources, ImageLoader.ImageCache imageCache, final MediaSource.OnMediaChange listener) {
         mMediaSources = sources;
         mLayoutInflater = LayoutInflater.from(context);
         mImageCache = imageCache;
 
         for (MediaSource source : mMediaSources) {
             if (source != null) {
-                source.setListener(this);
+                source.setListener(listener);
+                source.gather(new MediaSource.OnMediaLoaded() {
+                    @Override
+                    public void onMediaLoaded(boolean success) {
+                        if (listener != null) {
+                            listener.onMediaLoaded(true);
+                        }
+                    }
+                });
             }
         }
     }
 
     @Override
     public int getViewTypeCount() {
-        return mLoadingMedia || mMediaSources.size() == 0 ? 1 : mMediaSources.size();
+        return mMediaSources.size() <= 0 ? 1 : mMediaSources.size();
     }
 
     @Override
     public int getCount() {
-        if (mLoadingMedia) {
-            return 1;
-        }
-
         return totalItems();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mLoadingMedia) {
-            return LOADING_VIEW_TYPE;
-        }
-
         return mMediaSources.indexOf(sourceAtPosition(position));
     }
 
@@ -87,10 +83,6 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (mLoadingMedia) {
-            return getLoadingView(convertView, parent);
-        }
-
         MediaSource itemSource = sourceAtPosition(position);
 
         if (itemSource != null) {
@@ -102,13 +94,6 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
         }
 
         return null;
-    }
-
-    private View getLoadingView(View convertView, ViewGroup parent) {
-        convertView = new ProgressBar(mLayoutInflater.getContext());
-        ((ProgressBar)convertView).setIndeterminate(true);
-
-        return convertView;
     }
 
     /**
@@ -169,26 +154,5 @@ public class MediaSourceAdapter extends BaseAdapter implements MediaSource.OnMed
         }
 
         return offset;
-    }
-
-    @Override
-    public void onMediaLoading(MediaSource source, boolean complete) {
-        mLoadingMedia = !complete;
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMediaAdded(MediaSource source, List<MediaItem> addedItems) {
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMediaRemoved(MediaSource source, List<MediaItem> removedItems) {
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMediaChanged(MediaSource source, List<MediaItem> changedItems) {
-        notifyDataSetChanged();
     }
 }

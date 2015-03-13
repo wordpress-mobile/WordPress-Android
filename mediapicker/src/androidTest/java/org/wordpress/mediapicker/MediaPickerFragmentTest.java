@@ -35,14 +35,12 @@ public class MediaPickerFragmentTest {
     private boolean tSelectionStarted;
     private boolean tSelectionCancelled;
     private boolean tSelectionConfirmed;
-    private boolean tGalleryCreated;
 
     @Before
     public void setUp() {
         tSelectionStarted = false;
         tSelectionCancelled = false;
         tSelectionConfirmed = false;
-        tGalleryCreated = false;
     }
 
     /**
@@ -76,25 +74,6 @@ public class MediaPickerFragmentTest {
         testFragment.onDestroyActionMode(mockActionMode);
 
         Assert.assertTrue(tSelectionCancelled);
-    }
-
-    /**
-     * Verifies that gallery creation is requested when the gallery option item is selected.
-     */
-    @Test
-    public void testGalleryRequest() {
-        final MediaPickerFragment testFragment = new MediaPickerFragment();
-        final ActionMode mockActionMode = mock(ActionMode.class);
-        final MenuItem mockMenuItem = mock(MenuItem.class);
-        final MediaActivity testListener = new MediaActivity();
-
-        when(mockMenuItem.getItemId()).thenReturn(R.id.menu_media_content_selection_gallery);
-
-        FragmentTestUtil.startFragment(testFragment);
-        testFragment.setListener(testListener);
-        testFragment.onActionItemClicked(mockActionMode, mockMenuItem);
-
-        Assert.assertTrue(tGalleryCreated);
     }
 
     /**
@@ -143,6 +122,14 @@ public class MediaPickerFragmentTest {
     }
 
     private MediaSource mMediaSourceOnMediaSelectedFalse = new MediaSource() {
+        @Override
+        public void gather(OnMediaLoaded callback) {
+        }
+
+        @Override
+        public void cleanup() {
+        }
+
         @Override
         public void setListener(OnMediaChange listener) {
         }
@@ -201,8 +188,8 @@ public class MediaPickerFragmentTest {
         }
 
         @Override
-        public void onGalleryCreated(ArrayList<MediaItem> mediaContent) {
-            tGalleryCreated = true;
+        public boolean onMenuItemSelected(MenuItem menuItem) {
+            return false;
         }
 
         @Override
