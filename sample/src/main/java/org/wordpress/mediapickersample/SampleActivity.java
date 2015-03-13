@@ -141,6 +141,11 @@ public class SampleActivity extends Activity
             if (position < mMediaPickers.size()) {
                 MediaPicker mediaPicker = mMediaPickers.get(position);
                 MediaPickerFragment fragment = new MediaPickerFragment();
+                if (position == 0) {
+                    fragment.setCustomView(R.layout.media_fragment_three_grid);
+                } else if (position == 1) {
+                    fragment.setCustomView(R.layout.media_fragment_four_grid);
+                }
                 fragment.setActionModeMenu(R.menu.menu_media_picker_action_mode);
                 fragment.setMediaSources(mediaPicker.mediaSources);
 
