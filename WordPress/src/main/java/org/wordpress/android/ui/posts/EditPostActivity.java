@@ -668,8 +668,10 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     private void fillContentEditorFields() {
         // Needed blog settings needed by the editor
-        mEditorFragment.setFeaturedImageSupported(WordPress.getCurrentBlog().isFeaturedImageCapable());
-        mEditorFragment.setBlogSettingMaxImageWidth(WordPress.getCurrentBlog().getMaxImageWidth());
+        if (WordPress.getCurrentBlog() != null) {
+            mEditorFragment.setFeaturedImageSupported(WordPress.getCurrentBlog().isFeaturedImageCapable());
+            mEditorFragment.setBlogSettingMaxImageWidth(WordPress.getCurrentBlog().getMaxImageWidth());
+        }
 
         // Set post title and content
         Post post = getPost();

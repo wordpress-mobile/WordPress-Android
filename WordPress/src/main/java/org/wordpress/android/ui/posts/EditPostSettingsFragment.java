@@ -105,8 +105,9 @@ public class EditPostSettingsFragment extends Fragment
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_edit_post_settings, container, false);
 
-        if (rootView == null)
+        if (rootView == null) {
             return null;
+        }
 
         mActivity = (EditPostActivity) getActivity();
 
