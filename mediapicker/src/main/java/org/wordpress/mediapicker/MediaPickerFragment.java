@@ -68,8 +68,9 @@ public class MediaPickerFragment extends Fragment
         public ImageLoader.ImageCache getImageCache();
     }
 
-    private ArrayList<MediaItem>   mSelectedContent;
-    private ArrayList<MediaSource> mMediaSources;
+    private final ArrayList<MediaSource> mMediaSources;
+    private final ArrayList<MediaItem>   mSelectedContent;
+
     private OnMediaSelected        mListener;
     private TextView               mEmptyView;
     private AbsListView            mAdapterView;
@@ -87,10 +88,6 @@ public class MediaPickerFragment extends Fragment
         mSelectedContent = new ArrayList<>();
     }
 
-    public void setMediaSources(ArrayList<MediaSource> mediaSources) {
-        mMediaSources = mediaSources;
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -106,11 +103,13 @@ public class MediaPickerFragment extends Fragment
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_SELECTED_CONTENT)) {
-                mSelectedContent = savedInstanceState.getParcelableArrayList(KEY_SELECTED_CONTENT);
+                ArrayList<MediaItem> mediaItems = savedInstanceState.getParcelableArrayList(KEY_SELECTED_CONTENT);
+                mSelectedContent.addAll(mediaItems);
             }
 
             if (savedInstanceState.containsKey(KEY_MEDIA_SOURCES)) {
-                mMediaSources = savedInstanceState.getParcelableArrayList(KEY_MEDIA_SOURCES);
+                ArrayList<MediaSource> mediaSources =  savedInstanceState.getParcelableArrayList(KEY_MEDIA_SOURCES);
+                mMediaSources.addAll(mediaSources);
             }
 
             if (savedInstanceState.containsKey(KEY_CUSTOM_VIEW)) {
@@ -248,6 +247,11 @@ public class MediaPickerFragment extends Fragment
 
     public void setActionModeMenu(int id) {
         mActionModeMenu = id;
+    }
+
+    public void setMediaSources(ArrayList<MediaSource> mediaSources) {
+        mMediaSources.clear();
+        mMediaSources.addAll(mediaSources);
     }
 
     public void setCustomView(int customView) {
