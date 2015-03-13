@@ -228,15 +228,29 @@ public class MediaPickerFragment extends Fragment
 
     @Override
     public void onMediaLoaded(boolean success) {
+        if (success) {
+            if (mAdapter.getCount() > 0) {
+                refreshEmptyView();
+                mAdapter.notifyDataSetChanged();
+            } else if (mEmptyView != null) {
+                mEmptyView.setText(getString(R.string.no_media));
+            }
+        } else {
+            if (mEmptyView != null) {
+                mEmptyView.setText(getString(R.string.error_fetching_media));
+            }
+        }
     }
 
     @Override
     public void onMediaAdded(MediaSource source, List<MediaItem> addedItems) {
+        refreshEmptyView();
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onMediaRemoved(MediaSource source, List<MediaItem> removedItems) {
+        refreshEmptyView();
         mAdapter.notifyDataSetChanged();
     }
 
@@ -292,6 +306,8 @@ public class MediaPickerFragment extends Fragment
         mAdapterView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mAdapterView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mAdapterView.setAdapter(mAdapter);
+
+        refreshEmptyView();
     }
 
     /**
@@ -308,6 +324,20 @@ public class MediaPickerFragment extends Fragment
         }
     }
 
+    /**
+     * Shows the empty view if the adapter count is 0.
+     */
+    private void refreshEmptyView() {
+        if (mAdapter.getCount() == 0) {
+            mEmptyView.setVisibility(View.VISIBLE);
+            mAdapterView.setVisibility(View.GONE);
+        } else {
+            mEmptyView.setVisibility(View.GONE);
+            mAdapterView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
      * Helper method; notifies listener that media selection has started
      */
     private void notifyMediaSelectionStarted() {

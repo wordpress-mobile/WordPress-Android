@@ -10,4 +10,8 @@
     <string name="cd_media_item_image">media item image</string>
     <string name="cd_media_item_overlay">media item overlay image</string>
 
+    <string name="fetching_media">Fetching media</string>
+    <string name="no_media">No media. Why not take a picture?</string>
+    <string name="error_fetching_media">Error gathering media from source</string>
+
 </resources>
