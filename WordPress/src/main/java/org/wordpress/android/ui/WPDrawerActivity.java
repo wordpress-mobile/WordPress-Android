@@ -41,6 +41,7 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
@@ -637,17 +638,30 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+    private void showPosts() {
+        Intent intent = new Intent(WPDrawerActivity.this, PostsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+    }
+
     private void showSettings() {
         startActivityForResult(new Intent(this, SettingsActivity.class), SETTINGS_REQUEST);
+    }
+
+    private boolean hasNoDotComAccountsAndIsNotOnPostsActivity() {
+        return (WordPress.wpDB.getNumDotComAccounts() == 0) && !(this instanceof PostsActivity);
     }
 
     /*
      * redirect to the Reader if there aren't any visible blogs
      * returns true if redirected, false otherwise
      */
-    protected boolean showReaderIfNoBlog() {
+    protected boolean showCorrectActivityForAccountIfRequired() {
         if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
             showReader();
+            return true;
+        } else if (hasNoDotComAccountsAndIsNotOnPostsActivity()) {
+            showPosts();
             return true;
         } else {
             return false;
@@ -668,7 +682,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                     }
                     WordPress.registerForCloudMessaging(this);
                     // If logged in without blog, redirect to the Reader view
-                    showReaderIfNoBlog();
+                    showCorrectActivityForAccountIfRequired();
                 } else {
                     finish();
                 }
