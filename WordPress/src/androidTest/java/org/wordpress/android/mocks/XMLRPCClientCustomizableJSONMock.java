@@ -6,6 +6,7 @@ import com.google.gson.internal.StringMap;
 import org.wordpress.android.TestUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.xmlrpc.android.LoggedInputStream;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -15,6 +16,8 @@ import java.io.InputStream;
 import java.net.URI;
 
 public class XMLRPCClientCustomizableJSONMock extends XMLRPCClientCustomizableMockAbstract {
+    private LoggedInputStream mLoggedInputStream;
+
     public XMLRPCClientCustomizableJSONMock(URI uri, String httpUser, String httpPassword) {
     }
 
@@ -30,8 +33,8 @@ public class XMLRPCClientCustomizableJSONMock extends XMLRPCClientCustomizableMo
         String filename = prefix + "-" + method + ".json";
         try {
             Gson gson = new Gson();
-            InputStream is = mContext.getAssets().open(filename);
-            String jsonString = TestUtils.convertStreamToString(is);
+            mLoggedInputStream = new LoggedInputStream(mContext.getAssets().open(filename));
+            String jsonString = TestUtils.convertStreamToString(mLoggedInputStream);
             AppLog.i(T.TESTS, "loading: " + filename);
             try {
                 // Try to load a JSONArray
@@ -47,6 +50,7 @@ public class XMLRPCClientCustomizableJSONMock extends XMLRPCClientCustomizableMo
     }
 
     public Object call(String method, Object[] params) throws XMLRPCException {
+        mLoggedInputStream = null;
         AppLog.v(T.TESTS, "XMLRPCClientCustomizableJSONMock: call: " + method);
         if ("login-failure".equals(mPrefix)) {
             // Wrong login
@@ -76,5 +80,12 @@ public class XMLRPCClientCustomizableJSONMock extends XMLRPCClientCustomizableMo
 
     public long callAsync(XMLRPCCallback listener, String methodName, Object[] params, File tempFile) {
         return 0;
+    }
+
+    public String getResponse() {
+        if (mLoggedInputStream == null) {
+            return "";
+        }
+        return mLoggedInputStream.getResponseDocument();
     }
 }
