@@ -24,19 +24,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * MediaPickerFragment tracks a collection of MediaSources and responds to changes via the
+ * {@link org.wordpress.mediapicker.source.MediaSource.OnMediaChange} interface.
+ *
+ * If the host Activity implements {@link org.wordpress.mediapicker.MediaPickerFragment.OnMediaSelected}
+ * it will automatically be set as the listener, otherwise a setter is provided. This interface is
+ * how user intent is delivered, while not having a listener won't break anything it's not very useful.
+ *
  * By default the {@link org.wordpress.mediapicker.MediaSourceAdapter} is shown within
  * a {@link android.widget.GridView}, but a subclass of {@link android.widget.AbsListView} may be provided
  * with id=media_adapter_view. A subclass of {@link android.widget.TextView} may also be provided
- * for the empty view; id=media_empty_view.
- *
- * MediaPickerFragment tracks a collection of MediaSources and listens for changes via the
- * {@link org.wordpress.mediapicker.source.MediaSource.OnMediaChange} interface. While media is loading
- * the adapter is hidden and a text view indicates the current action. If there is no media content
- * in the adapter after a load or if the load fails the text will be updated.
- *
- * If the host {@link android.app.Activity} implements {@link org.wordpress.mediapicker.MediaPickerFragment.OnMediaSelected}
- * it will be set as the listener. Otherwise you can set it explicitly with
- * {@link org.wordpress.mediapicker.MediaPickerFragment#setListener(org.wordpress.mediapicker.MediaPickerFragment.OnMediaSelected)}.
+ * for the empty view; id=media_empty_view. You can even provide a subclass of
+ * {@link org.wordpress.mediapicker.MediaSourceAdapter}.
  *
  * Menu items may be provided for Action Mode and their selection will be alerted with onMenuItemSelected.
  * A selection confirmation button is automatically added and will call onMediaSelectionConfirmed when selected.
@@ -54,8 +53,12 @@ public class MediaPickerFragment extends Fragment
     public static final String KEY_EMPTY_TEXT       = "key-empty-text";
     public static final String KEY_ERROR_TEXT       = "key-error-text";
 
+    // Default layout to be used if a custom layout is not provided
     private static final int DEFAULT_VIEW = R.layout.media_picker_fragment;
 
+    /**
+     * Interface to respond to user intent and provide a caching mechanism for the fragment.
+     */
     public interface OnMediaSelected {
         // Called when the first item is selected
         public void onMediaSelectionStarted();
@@ -67,10 +70,11 @@ public class MediaPickerFragment extends Fragment
         public void onMediaSelectionCancelled();
         // Called when a menu item has been tapped
         public boolean onMenuItemSelected(MenuItem menuItem);
-        // Can handle null image cache
+        // Should handle null image cache
         public ImageLoader.ImageCache getImageCache();
     }
 
+    // Current media sources and selected content from the sources
     private final ArrayList<MediaSource> mMediaSources;
     private final ArrayList<MediaItem>   mSelectedContent;
 
@@ -100,6 +104,7 @@ public class MediaPickerFragment extends Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
+        // Per the documentation, the host Activity is the default listener
         if (activity instanceof OnMediaSelected) {
             mListener = (OnMediaSelected) activity;
         }
@@ -328,6 +333,13 @@ public class MediaPickerFragment extends Fragment
         mListener = listener;
     }
 
+    /**
+     * Sets the {@link org.wordpress.mediapicker.source.MediaSource}'s to be presented. The current
+     * sources and selected content are cleaned up and cleared before the new list added.
+     *
+     * @param mediaSources
+     * the new sources
+     */
     public void setMediaSources(ArrayList<MediaSource> mediaSources) {
         mMediaSources.clear();
         mMediaSources.addAll(mediaSources);
@@ -412,12 +424,21 @@ public class MediaPickerFragment extends Fragment
         }
     }
 
+    /**
+     * Sets the adapter.
+     *
+     * @param adapter
+     * the new adapter
+     */
     public void setAdapter(MediaSourceAdapter adapter) {
         mAdapter = adapter;
     }
 
     /**
      * Helper method; creates the adapter and initializes the AdapterView to display it
+    /**
+     * Creates the {@link org.wordpress.mediapicker.MediaSourceAdapter} and initializes the adapter
+     * view to display it.
      */
     private void layoutAdapterView() {
         Activity activity = getActivity();
@@ -461,7 +482,8 @@ public class MediaPickerFragment extends Fragment
     }
 
     /**
-     * Shows the empty view if the adapter count is 0.
+     * If the current adapter does not have any items the empty view will be shown and the adapter
+     * view will be hidden. Otherwise the empty view will be hidden and the adapter view presented.
      */
     private void refreshEmptyView() {
         if (mAdapter.getCount() == 0) {
@@ -474,7 +496,7 @@ public class MediaPickerFragment extends Fragment
     }
 
     /**
-     * Helper method; notifies listener that media selection has started
+     * Notifies non-null listener that media selection has started.
      */
     private void notifyMediaSelectionStarted() {
         if (mListener != null) {
@@ -483,7 +505,7 @@ public class MediaPickerFragment extends Fragment
     }
 
     /**
-     * Helper method; notifies listener of media selection changes
+     * Notifies non-null listener when selection state changes on a media item.
      */
     private boolean notifyMediaSelected(int position, boolean selected) {
         MediaItem mediaItem = mAdapter.getItem(position);
@@ -506,7 +528,7 @@ public class MediaPickerFragment extends Fragment
     }
 
     /**
-     * Helper method; notifies listener of media selection confirmation
+     * Notifies non-null listener that media selection has been confirmed.
      */
     private void notifyMediaSelectionConfirmed() {
         if (mListener != null) {
@@ -517,7 +539,7 @@ public class MediaPickerFragment extends Fragment
     }
 
     /**
-     * Helper method; notifies listener of media selection cancellation
+     * Notifies non-null listener that media selection has been cancelled.
      */
     private void notifyMediaSelectionCancelled() {
         if (mListener != null) {
