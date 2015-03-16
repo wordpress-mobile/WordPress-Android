@@ -47,7 +47,7 @@ public class MediaPickerFragment extends Fragment
                                          MediaSource.OnMediaChange {
     public static final String KEY_SELECTED_CONTENT = "key-selected-content";
     public static final String KEY_MEDIA_SOURCES    = "key-media-sources";
-    public static final String KEY_CUSTOM_VIEW      = "key-custom-view";
+    public static final String KEY_CUSTOM_LAYOUT    = "key-custom-view";
     public static final String KEY_ACTION_MODE_MENU = "key-action-mode-menu";
     public static final String KEY_LOADING_TEXT     = "key-loading-text";
     public static final String KEY_EMPTY_TEXT       = "key-empty-text";
@@ -78,13 +78,22 @@ public class MediaPickerFragment extends Fragment
     private final ArrayList<MediaSource> mMediaSources;
     private final ArrayList<MediaItem>   mSelectedContent;
 
-    private OnMediaSelected        mListener;
-    private TextView               mEmptyView;
-    private AbsListView            mAdapterView;
-    private MediaSourceAdapter     mAdapter;
-    private int                    mCustomView;
-    private int                    mActionModeMenu;
-    private boolean mConfirmed;
+    // Callbacks for media selection events, use to track user intent
+    private OnMediaSelected    mListener;
+
+    // Required state tracking to prevent OnMediaSelectionCancelled from being called erroneously
+    private boolean            mConfirmed;
+
+    // Views utilized by this fragment
+    private TextView           mEmptyView;
+    private AbsListView        mAdapterView;
+
+    // Adapter for showing MediaSource content in the AdapterView
+    private MediaSourceAdapter mAdapter;
+
+    // Customizable view resources, some default behavior is defined as described in the docs
+    private int                mCustomLayout;
+    private int                mActionModeMenu;
 
     // Customizable status text messages, default values are provided
     private String             mLoadingText;
@@ -94,7 +103,7 @@ public class MediaPickerFragment extends Fragment
     public MediaPickerFragment() {
         super();
 
-        mCustomView = -1;
+        mCustomLayout = -1;
         mActionModeMenu = -1;
         mMediaSources = new ArrayList<>();
         mSelectedContent = new ArrayList<>();
@@ -111,35 +120,29 @@ public class MediaPickerFragment extends Fragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // If this is not being restored from a previous state use arguments to set state
+        if (savedInstanceState == null) {
+            restoreFromBundle(getArguments());
+        } else {
+            restoreFromBundle(savedInstanceState);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(KEY_SELECTED_CONTENT)) {
-                ArrayList<MediaItem> mediaItems = savedInstanceState.getParcelableArrayList(KEY_SELECTED_CONTENT);
-                mSelectedContent.addAll(mediaItems);
-            }
+        restoreFromBundle(savedInstanceState);
 
-            if (savedInstanceState.containsKey(KEY_MEDIA_SOURCES)) {
-                ArrayList<MediaSource> mediaSources =  savedInstanceState.getParcelableArrayList(KEY_MEDIA_SOURCES);
-                mMediaSources.addAll(mediaSources);
-            }
-
-            if (savedInstanceState.containsKey(KEY_CUSTOM_VIEW)) {
-                mCustomView = savedInstanceState.getInt(KEY_CUSTOM_VIEW);
-            }
-
-            if (savedInstanceState.containsKey(KEY_ACTION_MODE_MENU)) {
-                mActionModeMenu = savedInstanceState.getInt(KEY_ACTION_MODE_MENU);
-            }
-        }
-
-        int viewToInflate = mCustomView < 0 ? DEFAULT_VIEW : mCustomView;
+        int viewToInflate = mCustomLayout < 0 ? DEFAULT_VIEW : mCustomLayout;
         View mediaPickerView = inflater.inflate(viewToInflate, container, false);
         if (mediaPickerView != null) {
             mEmptyView = (TextView) mediaPickerView.findViewById(R.id.media_empty_view);
             if (mEmptyView != null) {
-                mEmptyView.setText(getString(R.string.fetching_media));
+                mEmptyView.setText(mLoadingText);
             }
 
             mAdapterView = (AbsListView) mediaPickerView.findViewById(R.id.media_adapter_view);
@@ -157,7 +160,7 @@ public class MediaPickerFragment extends Fragment
 
         outState.putParcelableArrayList(KEY_SELECTED_CONTENT, mSelectedContent);
         outState.putParcelableArrayList(KEY_MEDIA_SOURCES, mMediaSources);
-        outState.putInt(KEY_CUSTOM_VIEW, mCustomView);
+        outState.putInt(KEY_CUSTOM_LAYOUT, mCustomLayout);
         outState.putInt(KEY_ACTION_MODE_MENU, mActionModeMenu);
     }
 
@@ -245,11 +248,11 @@ public class MediaPickerFragment extends Fragment
                 refreshEmptyView();
                 mAdapter.notifyDataSetChanged();
             } else if (mEmptyView != null) {
-                mEmptyView.setText(getString(R.string.no_media));
+                mEmptyView.setText(mEmptyText);
             }
         } else {
             if (mEmptyView != null) {
-                mEmptyView.setText(getString(R.string.error_fetching_media));
+                mEmptyView.setText(mErrorText);
             }
         }
     }
@@ -271,8 +274,6 @@ public class MediaPickerFragment extends Fragment
         mAdapter.notifyDataSetChanged();
     }
 
-    public void setActionModeMenu(int id) {
-        mActionModeMenu = id;
     /**
      * Restores state from a given {@link android.os.Bundle}. Checks for media sources, selected
      * content, custom view, custom action mode menu, and custom empty text.
@@ -295,8 +296,8 @@ public class MediaPickerFragment extends Fragment
                 }
             }
 
-            if (bundle.containsKey(KEY_CUSTOM_VIEW)) {
-                setCustomLayout(bundle.getInt(KEY_CUSTOM_VIEW, -1));
+            if (bundle.containsKey(KEY_CUSTOM_LAYOUT)) {
+                setCustomLayout(bundle.getInt(KEY_CUSTOM_LAYOUT, -1));
             }
 
             if (bundle.containsKey(KEY_ACTION_MODE_MENU)) {
@@ -341,12 +342,36 @@ public class MediaPickerFragment extends Fragment
      * the new sources
      */
     public void setMediaSources(ArrayList<MediaSource> mediaSources) {
+        mSelectedContent.clear();
+
+        cleanupMediaSources();
         mMediaSources.clear();
-        mMediaSources.addAll(mediaSources);
+
+        // a null parameter results in a NullPointerException
+        if (mediaSources != null) {
+            mMediaSources.addAll(mediaSources);
+            generateAdapter();
+        }
     }
 
-    public void setCustomView(int customView) {
-        mCustomView = customView;
+    /**
+     * Sets the menu resource to be inflated when in Action Mode.
+     *
+     * @param id
+     * the ID of the menu resource, any value < 0 will use the default menu
+     */
+    public void setActionModeMenu(int id) {
+        mActionModeMenu = id;
+    }
+
+    /**
+     * Sets the layout resource to be used to display media content.
+     *
+     * @param customLayout
+     * the ID of the layout resource, any value < 0 will use the default layout
+     */
+    public void setCustomLayout(int customLayout) {
+        mCustomLayout = customLayout;
     }
 
     /**
@@ -435,7 +460,34 @@ public class MediaPickerFragment extends Fragment
     }
 
     /**
-     * Helper method; creates the adapter and initializes the AdapterView to display it
+     * Calls {@link org.wordpress.mediapicker.source.MediaSource.OnMediaChange#cleanup()} on all
+     * non-null sources.
+     */
+    private void cleanupMediaSources() {
+        for (MediaSource source : mMediaSources) {
+            if (source != null) {
+                source.cleanup();
+            }
+        }
+    }
+
+    /**
+     * Constructs the {@link org.wordpress.mediapicker.MediaSourceAdapter} and attaches it to the
+     * adapter view if possible.
+     */
+    private void generateAdapter() {
+        Activity activity = getActivity();
+
+        if (activity != null) {
+            ImageLoader.ImageCache imageCache = mListener != null ? mListener.getImageCache() : null;
+            mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache, this);
+
+            if (mAdapterView != null) {
+                mAdapterView.setAdapter(mAdapter);
+            }
+        }
+    }
+
     /**
      * Creates the {@link org.wordpress.mediapicker.MediaSourceAdapter} and initializes the adapter
      * view to display it.
@@ -448,11 +500,6 @@ public class MediaPickerFragment extends Fragment
         int paddingRight = Math.round(resources.getDimension(R.dimen.media_padding_right));
         int paddingBottom = Math.round(resources.getDimension(R.dimen.media_padding_bottom));
         Drawable background = resources.getDrawable(R.drawable.media_picker_background);
-        ImageLoader.ImageCache imageCache = mListener != null ? mListener.getImageCache() : null;
-
-        if (mAdapter == null) {
-            mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache, this);
-        }
 
         // Use setBackground(Drawable) when API min is >= 16
         mAdapterView.setBackgroundDrawable(background);
@@ -462,9 +509,10 @@ public class MediaPickerFragment extends Fragment
         mAdapterView.setOnItemClickListener(this);
         mAdapterView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mAdapterView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        mAdapterView.setAdapter(mAdapter);
 
         refreshEmptyView();
+        generateAdapter();
+
     }
 
     /**
