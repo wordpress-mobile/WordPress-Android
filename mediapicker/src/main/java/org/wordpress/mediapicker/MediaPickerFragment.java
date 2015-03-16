@@ -142,7 +142,11 @@ public class MediaPickerFragment extends Fragment
         if (mediaPickerView != null) {
             mEmptyView = (TextView) mediaPickerView.findViewById(R.id.media_empty_view);
             if (mEmptyView != null) {
-                mEmptyView.setText(mLoadingText);
+                if (mMediaSources.size() == 0) {
+                    mEmptyView.setText(getString(R.string.no_media_sources));
+                } else {
+                    mEmptyView.setText(mLoadingText);
+                }
             }
 
             mAdapterView = (AbsListView) mediaPickerView.findViewById(R.id.media_adapter_view);
