@@ -245,7 +245,7 @@ public class MediaPickerFragment extends Fragment
     public void onMediaLoaded(boolean success) {
         if (success) {
             if (mAdapter.getCount() > 0) {
-                refreshEmptyView();
+                toggleEmptyVisibility();
                 mAdapter.notifyDataSetChanged();
             } else if (mEmptyView != null) {
                 mEmptyView.setText(mEmptyText);
@@ -259,13 +259,13 @@ public class MediaPickerFragment extends Fragment
 
     @Override
     public void onMediaAdded(MediaSource source, List<MediaItem> addedItems) {
-        refreshEmptyView();
+        toggleEmptyVisibility();
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onMediaRemoved(MediaSource source, List<MediaItem> removedItems) {
-        refreshEmptyView();
+        toggleEmptyVisibility();
         mAdapter.notifyDataSetChanged();
     }
 
@@ -510,9 +510,9 @@ public class MediaPickerFragment extends Fragment
         mAdapterView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mAdapterView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
 
-        refreshEmptyView();
         generateAdapter();
 
+        toggleEmptyVisibility();
     }
 
     /**
@@ -533,7 +533,7 @@ public class MediaPickerFragment extends Fragment
      * If the current adapter does not have any items the empty view will be shown and the adapter
      * view will be hidden. Otherwise the empty view will be hidden and the adapter view presented.
      */
-    private void refreshEmptyView() {
+    private void toggleEmptyVisibility() {
         if (mAdapter.getCount() == 0) {
             mEmptyView.setVisibility(View.VISIBLE);
             mAdapterView.setVisibility(View.GONE);
