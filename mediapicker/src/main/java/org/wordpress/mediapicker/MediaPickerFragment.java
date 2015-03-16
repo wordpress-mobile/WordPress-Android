@@ -321,7 +321,18 @@ public class MediaPickerFragment extends Fragment
                     mErrorText = getString(R.string.error_fetching_media);
                 }
             }
+        } else {
+            setDefaultTextValues();
         }
+    }
+
+    /**
+     * Sets the default empty text strings.
+     */
+    private void setDefaultTextValues() {
+        setLoadingText(R.string.fetching_media);
+        setEmptyText(R.string.no_media);
+        setErrorText(R.string.error_fetching_media);
     }
 
     /**
