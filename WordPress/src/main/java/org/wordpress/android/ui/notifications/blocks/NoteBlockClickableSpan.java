@@ -128,8 +128,4 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     public String getUrl() {
         return mUrl;
     }
-
-    public boolean shouldShowBlogPreview() {
-        return mRangeType == NoteBlockRangeType.USER || mRangeType == NoteBlockRangeType.SITE;
-    }
 }
