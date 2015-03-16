@@ -2,6 +2,8 @@
 
 <resources>
 
+    <dimen name="empty_view_text_size">24sp</dimen>
+
     <!-- MediaPicker defaults -->
     <dimen name="media_padding_left">2dp</dimen>
     <dimen name="media_padding_top">2dp</dimen>
