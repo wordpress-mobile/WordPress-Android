@@ -46,11 +46,10 @@ public class MediaPickerFragment extends Fragment
                               implements AdapterView.OnItemClickListener,
                                          AbsListView.MultiChoiceModeListener,
                                          MediaSource.OnMediaChange {
-    private static final String KEY_SELECTED_CONTENT = "selected-content";
-    private static final String KEY_MEDIA_SOURCES    = "media-sources";
-    private static final String KEY_CUSTOM_VIEW      = "custom-view";
-    private static final String KEY_ACTION_MODE_MENU = "action-mode-menu";
-
+    public static final String KEY_SELECTED_CONTENT = "key-selected-content";
+    public static final String KEY_MEDIA_SOURCES    = "key-media-sources";
+    public static final String KEY_CUSTOM_VIEW      = "key-custom-view";
+    public static final String KEY_ACTION_MODE_MENU = "key-action-mode-menu";
     private static final int DEFAULT_VIEW = R.layout.media_picker_fragment;
 
     public interface OnMediaSelected {
