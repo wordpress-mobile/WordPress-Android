@@ -34,11 +34,13 @@ public class MediaSourceAdapter extends BaseAdapter {
     private final ImageLoader.ImageCache mImageCache;
     private final List<MediaSource> mMediaSources;
 
-    public MediaSourceAdapter(Context context, List<MediaSource> sources, ImageLoader.ImageCache imageCache, final MediaSource.OnMediaChange listener) {
+    public MediaSourceAdapter(Context context, List<MediaSource> sources, ImageLoader.ImageCache imageCache) {
         mMediaSources = sources;
         mLayoutInflater = LayoutInflater.from(context);
         mImageCache = imageCache;
+    }
 
+    public void gatherFromSources(final MediaSource.OnMediaChange listener) {
         for (MediaSource source : mMediaSources) {
             if (source != null) {
                 source.setListener(listener);

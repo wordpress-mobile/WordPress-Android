@@ -495,7 +495,8 @@ public class MediaPickerFragment extends Fragment
 
         if (activity != null) {
             ImageLoader.ImageCache imageCache = mListener != null ? mListener.getImageCache() : null;
-            mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache, this);
+            mAdapter = new MediaSourceAdapter(activity, mMediaSources, imageCache);
+            mAdapter.gatherFromSources(this);
 
             if (mAdapterView != null) {
                 mAdapterView.setAdapter(mAdapter);
