@@ -50,6 +50,10 @@ public class MediaPickerFragment extends Fragment
     public static final String KEY_MEDIA_SOURCES    = "key-media-sources";
     public static final String KEY_CUSTOM_VIEW      = "key-custom-view";
     public static final String KEY_ACTION_MODE_MENU = "key-action-mode-menu";
+    public static final String KEY_LOADING_TEXT     = "key-loading-text";
+    public static final String KEY_EMPTY_TEXT       = "key-empty-text";
+    public static final String KEY_ERROR_TEXT       = "key-error-text";
+
     private static final int DEFAULT_VIEW = R.layout.media_picker_fragment;
 
     public interface OnMediaSelected {
@@ -77,6 +81,11 @@ public class MediaPickerFragment extends Fragment
     private int                    mCustomView;
     private int                    mActionModeMenu;
     private boolean mConfirmed;
+
+    // Customizable status text messages, default values are provided
+    private String             mLoadingText;
+    private String             mEmptyText;
+    private String             mErrorText;
 
     public MediaPickerFragment() {
         super();
@@ -259,6 +268,64 @@ public class MediaPickerFragment extends Fragment
 
     public void setActionModeMenu(int id) {
         mActionModeMenu = id;
+    /**
+     * Restores state from a given {@link android.os.Bundle}. Checks for media sources, selected
+     * content, custom view, custom action mode menu, and custom empty text.
+     *
+     * @param bundle
+     * Bundle containing all the data, can be null
+     */
+    private void restoreFromBundle(Bundle bundle) {
+        if (bundle != null) {
+            if (bundle.containsKey(KEY_MEDIA_SOURCES)) {
+                ArrayList<MediaSource> mediaSources = bundle.getParcelableArrayList(KEY_MEDIA_SOURCES);
+                setMediaSources(mediaSources);
+
+                if (bundle.containsKey(KEY_SELECTED_CONTENT)) {
+                    ArrayList<MediaItem> mediaItems = bundle.getParcelableArrayList(KEY_SELECTED_CONTENT);
+
+                    if (mediaItems != null) {
+                        mSelectedContent.addAll(mediaItems);
+                    }
+                }
+            }
+
+            if (bundle.containsKey(KEY_CUSTOM_VIEW)) {
+                setCustomLayout(bundle.getInt(KEY_CUSTOM_VIEW, -1));
+            }
+
+            if (bundle.containsKey(KEY_ACTION_MODE_MENU)) {
+                setActionModeMenu(bundle.getInt(KEY_ACTION_MODE_MENU, -1));
+            }
+
+            if (bundle.containsKey(KEY_LOADING_TEXT)) {
+                if ((mLoadingText = bundle.getString(KEY_LOADING_TEXT)) == null) {
+                    mLoadingText = getString(R.string.fetching_media);
+                }
+            }
+
+            if (bundle.containsKey(KEY_EMPTY_TEXT)) {
+                if ((mEmptyText = bundle.getString(KEY_EMPTY_TEXT)) == null) {
+                    mEmptyText = getString(R.string.no_media);
+                }
+            }
+
+            if (bundle.containsKey(KEY_ERROR_TEXT)) {
+                if ((mErrorText = bundle.getString(KEY_ERROR_TEXT)) == null) {
+                    mErrorText = getString(R.string.error_fetching_media);
+                }
+            }
+        }
+    }
+
+    /**
+     * Sets the listener. Calling this method will overwrite the current listener.
+     *
+     * @param listener
+     * the new listener, can be null
+     */
+    public void setListener(OnMediaSelected listener) {
+        mListener = listener;
     }
 
     public void setMediaSources(ArrayList<MediaSource> mediaSources) {
@@ -270,8 +337,79 @@ public class MediaPickerFragment extends Fragment
         mCustomView = customView;
     }
 
-    public void setListener(OnMediaSelected listener) {
-        mListener = listener;
+    /**
+     * Sets the text to be displayed while media content is loading.
+     *
+     * @param loadingText
+     * the text to display while media is loading, can be null
+     */
+    public void setLoadingText(String loadingText) {
+        mLoadingText = loadingText;
+    }
+
+    /**
+     * Same as calling {@link #setLoadingText(String)} with {@link #getString(int)} for resId.
+     * Passing resId < 0 will set the text to null.
+     *
+     * @param resId
+     * resource ID of the string to display while media is loading
+     */
+    public void setLoadingText(int resId) {
+        if (resId < 0) {
+            setLoadingText(null);
+        } else {
+            setLoadingText(getString(resId));
+        }
+    }
+
+    /**
+     * Sets the text to be displayed if there is no media content to show.
+     *
+     * @param emptyText
+     * the text to display when there is no media, can be null
+     */
+    public void setEmptyText(String emptyText) {
+        mEmptyText = emptyText;
+    }
+
+    /**
+     * Same as calling {@link #setEmptyText(String)} with {@link #getString(int)} for resId.
+     * Passing resId < 0 will set the text to null.
+     *
+     * @param resId
+     * resource ID of the string to display when there is no media
+     */
+    public void setEmptyText(int resId) {
+        if (resId < 0) {
+            setEmptyText(null);
+        } else {
+            setEmptyText(getString(resId));
+        }
+    }
+
+    /**
+     * Sets the text to be displayed if an error occurs while loading media.
+     *
+     * @param errorText
+     * the text to display when an error occurs while loading, can be null
+     */
+    public void setErrorText(String errorText) {
+        mErrorText = errorText;
+    }
+
+    /**
+     * Same as calling {@link #setErrorText(String)} with {@link #getString(int)} for resId.
+     * Passing resId < 0 will set the text to null.
+     *
+     * @param resId
+     * resource ID of the string to display when there is an error loading media
+     */
+    public void setErrorText(int resId) {
+        if (resId < 0) {
+            setErrorText(null);
+        } else {
+            setErrorText(getString(resId));
+        }
     }
 
     public void setAdapter(MediaSourceAdapter adapter) {
