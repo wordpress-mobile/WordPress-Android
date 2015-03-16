@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.SparseArray;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -15,6 +14,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.models.Tag;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
@@ -22,11 +22,14 @@ import java.util.List;
 
 public class SuggestionService extends Service {
     private final IBinder mBinder = new SuggestionBinder();
-    private final List<Integer> mCurrentlyRequestingSiteIds = new ArrayList<Integer>();
+    private final List<Integer> mCurrentlyRequestingSuggestionsSiteIds = new ArrayList<Integer>();
+    private final List<Integer> mCurrentlyRequestingTagsSiteIds = new ArrayList<Integer>();
 
     // broadcast action to notify clients when summary data has changed
     public static final String ACTION_SUGGESTIONS_LIST_UPDATED = "SUGGESTIONS_LIST_UPDATED";
     public static final String SUGGESTIONS_LIST_UPDATED_EXTRA = "SUGGESTIONS_LIST_UPDATED_EXTRA";
+    public static final String ACTION_TAGS_LIST_UPDATED = "TAGS_LIST_UPDATED";
+    public static final String TAGS_LIST_UPDATED_EXTRA = "TAGS_LIST_UPDATED_EXTRA";
 
     @Override
     public void onCreate() {
@@ -51,22 +54,22 @@ public class SuggestionService extends Service {
     }
 
     public void updateSuggestions(final int remoteBlogId) {
-        if (mCurrentlyRequestingSiteIds.contains(remoteBlogId)) {
+        if (mCurrentlyRequestingSuggestionsSiteIds.contains(remoteBlogId)) {
             return;
         }
-        mCurrentlyRequestingSiteIds.add(remoteBlogId);
+        mCurrentlyRequestingSuggestionsSiteIds.add(remoteBlogId);
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 handleSuggestionsUpdatedResponse(remoteBlogId, jsonObject);
-                removeSiteIdFromRequestsAndStopServiceIfNecessary(remoteBlogId);
+                removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(remoteBlogId);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.SUGGESTION, volleyError);
-                removeSiteIdFromRequestsAndStopServiceIfNecessary(remoteBlogId);
+                removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(remoteBlogId);
             }
         };
 
@@ -97,11 +100,68 @@ public class SuggestionService extends Service {
         }.start();
     }
 
-    private void removeSiteIdFromRequestsAndStopServiceIfNecessary(Integer remoteBlogId) {
-        mCurrentlyRequestingSiteIds.remove(remoteBlogId);
+    private void removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(Integer remoteBlogId) {
+        mCurrentlyRequestingSuggestionsSiteIds.remove(remoteBlogId);
 
         // if there are no requests being made, we want to stop the service
-        if (mCurrentlyRequestingSiteIds.isEmpty()) {
+        if (mCurrentlyRequestingSuggestionsSiteIds.isEmpty()) {
+            AppLog.d(AppLog.T.SUGGESTION, "stopping suggestion service");
+            stopSelf();
+        }
+    }
+
+    public void updateTags(final int remoteBlogId) {
+        if (mCurrentlyRequestingTagsSiteIds.contains(remoteBlogId)) {
+            return;
+        }
+        mCurrentlyRequestingTagsSiteIds.add(remoteBlogId);
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleTagsUpdatedResponse(remoteBlogId, jsonObject);
+                removeSiteIdFromTagRequestsAndStopServiceIfNecessary(remoteBlogId);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(AppLog.T.SUGGESTION, volleyError);
+                removeSiteIdFromTagRequestsAndStopServiceIfNecessary(remoteBlogId);
+            }
+        };
+
+        AppLog.d(AppLog.T.SUGGESTION, "suggestion service > updating tags for siteId: " + remoteBlogId);
+        String path = "/sites/" + remoteBlogId + "/tags";
+        WordPress.getRestClientUtils().get(path, listener, errorListener);
+    }
+
+    private void handleTagsUpdatedResponse(final int remoteBlogId, final JSONObject jsonObject) {
+        new Thread() {
+            @Override
+            public void run() {
+                if (jsonObject == null) {
+                    return;
+                }
+
+                JSONArray jsonTags = jsonObject.optJSONArray("tags");
+                List<Tag> tags = Tag.tagListFromJSON(jsonTags, remoteBlogId);
+                if (tags != null) {
+                    SuggestionTable.insertTagsForSite(remoteBlogId, tags);
+
+                    LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(WordPress.getContext());
+                    Intent intent = new Intent(SuggestionService.ACTION_TAGS_LIST_UPDATED);
+                    intent.putExtra(SuggestionService.TAGS_LIST_UPDATED_EXTRA, remoteBlogId);
+                    lbm.sendBroadcast(intent);
+                }
+            }
+        }.start();
+    }
+
+    private void removeSiteIdFromTagRequestsAndStopServiceIfNecessary(Integer remoteBlogId) {
+        mCurrentlyRequestingTagsSiteIds.remove(remoteBlogId);
+
+        // if there are no requests being made, we want to stop the service
+        if (mCurrentlyRequestingTagsSiteIds.isEmpty()) {
             AppLog.d(AppLog.T.SUGGESTION, "stopping suggestion service");
             stopSelf();
         }

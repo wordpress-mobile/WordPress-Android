@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/margin_medium" />
 
-            <EditText
+            <org.wordpress.android.widgets.SuggestionAutoCompleteText
                 android:id="@+id/tags"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
