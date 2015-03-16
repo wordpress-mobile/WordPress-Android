@@ -166,6 +166,18 @@ public class MediaPickerFragment extends Fragment
         outState.putParcelableArrayList(KEY_MEDIA_SOURCES, mMediaSources);
         outState.putInt(KEY_CUSTOM_LAYOUT, mCustomLayout);
         outState.putInt(KEY_ACTION_MODE_MENU, mActionModeMenu);
+
+        if (mLoadingText != null && !mLoadingText.equals("")) {
+            outState.putString(KEY_LOADING_TEXT, mLoadingText);
+        }
+
+        if (mErrorText != null && !mErrorText.equals("")) {
+            outState.putString(KEY_ERROR_TEXT, mErrorText);
+        }
+
+        if (mEmptyText != null && !mEmptyText.equals("")) {
+            outState.putString(KEY_EMPTY_TEXT, mEmptyText);
+        }
     }
 
     @Override
@@ -331,12 +343,12 @@ public class MediaPickerFragment extends Fragment
     }
 
     /**
-     * Sets the default empty text strings.
+     * Sets the default empty text strings if they are not already set to something.
      */
     private void setDefaultTextValues() {
-        setLoadingText(R.string.fetching_media);
-        setEmptyText(R.string.no_media);
-        setErrorText(R.string.error_fetching_media);
+        if (mLoadingText == null || mLoadingText.isEmpty()) setLoadingText(R.string.fetching_media);
+        if (mEmptyText == null || mEmptyText.isEmpty()) setEmptyText(R.string.no_media);
+        if (mErrorText == null || mErrorText.isEmpty()) setErrorText(R.string.error_fetching_media);
     }
 
     /**
