@@ -99,7 +99,7 @@ public class SampleActivity extends Activity
     }
 
     @Override
-    public boolean onMenuItemSelected(MenuItem menuItem) {
+    public boolean onMenuItemSelected(MenuItem menuItem, ArrayList<MediaItem> selectedContent) {
         if (menuItem.getItemId() == R.id.menu_media_content_selection_gallery) {
             Toast.makeText(this, "Gallery creation requested", Toast.LENGTH_SHORT).show();
 

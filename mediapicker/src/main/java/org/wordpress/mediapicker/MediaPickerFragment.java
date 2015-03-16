@@ -69,7 +69,7 @@ public class MediaPickerFragment extends Fragment
         // Called when the last selected item is deselected
         public void onMediaSelectionCancelled();
         // Called when a menu item has been tapped
-        public boolean onMenuItemSelected(MenuItem menuItem);
+        public boolean onMenuItemSelected(MenuItem menuItem, ArrayList<MediaItem> selectedContent);
         // Should handle null image cache
         public ImageLoader.ImageCache getImageCache();
     }
@@ -228,7 +228,7 @@ public class MediaPickerFragment extends Fragment
             mode.finish();
             return true;
         } else if (mListener != null) {
-            return mListener.onMenuItemSelected(menuItem);
+            return mListener.onMenuItemSelected(menuItem, mSelectedContent);
         }
 
         return false;
