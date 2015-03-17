@@ -84,18 +84,18 @@ public class MediaPickerFragmentTest {
         final MediaPickerFragment testFragment = new MediaPickerFragment();
         final MediaActivity testListener = new MediaActivity();
         final ArrayList<MediaSource> testMediaSources = new ArrayList<>();
+        testMediaSources.add(mMediaSourceOnMediaSelectedFalse);
         final MediaSourceAdapter mockAdapter = mock(MediaSourceAdapter.class);
 
         when(mockAdapter.getItem(0)).thenReturn(new MediaItem());
         when(mockAdapter.getCount()).thenReturn(1);
         when(mockAdapter.getViewTypeCount()).thenReturn(1);
-        testFragment.setAdapter(mockAdapter);
-
-        testMediaSources.add(mMediaSourceOnMediaSelectedFalse);
-        testFragment.setListener(testListener);
-        testFragment.setMediaSources(testMediaSources);
+        when(mockAdapter.sourceAtPosition(0)).thenReturn(mMediaSourceOnMediaSelectedFalse);
 
         FragmentTestUtil.startFragment(testFragment);
+        testFragment.setListener(testListener);
+        testFragment.setMediaSources(testMediaSources);
+        testFragment.setAdapter(mockAdapter);
         testFragment.onItemClick(null, null, 0, 0);
 
         Assert.assertTrue(tSelectionConfirmed);
@@ -123,7 +123,7 @@ public class MediaPickerFragmentTest {
 
     private MediaSource mMediaSourceOnMediaSelectedFalse = new MediaSource() {
         @Override
-        public void gather(OnMediaLoaded callback) {
+        public void gather() {
         }
 
         @Override
@@ -136,7 +136,7 @@ public class MediaPickerFragmentTest {
 
         @Override
         public int getCount() {
-            return 0;
+            return 1;
         }
 
         @Override
@@ -188,7 +188,7 @@ public class MediaPickerFragmentTest {
         }
 
         @Override
-        public boolean onMenuItemSelected(MenuItem menuItem) {
+        public boolean onMenuItemSelected(MenuItem menuItem, ArrayList<MediaItem> selectedContent) {
             return false;
         }
 
