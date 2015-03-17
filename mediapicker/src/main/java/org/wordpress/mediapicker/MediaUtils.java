@@ -92,11 +92,11 @@ public class MediaUtils {
 
             if (mType == TYPE_IMAGE) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
-                options.outHeight = mHeight;
-                options.outWidth = mWidth;
-                options.inSampleSize = 4;
-                Bitmap imageBitmap = BitmapFactory.decodeFile(uri, options);
-                bitmap = ThumbnailUtils.extractThumbnail(imageBitmap, mWidth, mHeight);
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(uri, options);
+                options.inJustDecodeBounds = false;
+                options.inSampleSize = calculateInSampleSize(options);
+                bitmap = BitmapFactory.decodeFile(uri, options);
 
                 if (bitmap != null) {
                     Matrix rotation = new Matrix();
@@ -114,6 +114,29 @@ public class MediaUtils {
             }
 
             return bitmap;
+        }
+
+        // http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
+        private int calculateInSampleSize(BitmapFactory.Options options) {
+            // Raw height and width of image
+            final int height = options.outHeight;
+            final int width = options.outWidth;
+            int inSampleSize = 1;
+
+            if (height > mHeight || width > mWidth) {
+
+                final int halfHeight = height / 2;
+                final int halfWidth = width / 2;
+
+                // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+                // height and width larger than the requested height and width.
+                while ((halfHeight / inSampleSize) > mHeight
+                        && (halfWidth / inSampleSize) > mWidth) {
+                    inSampleSize *= 2;
+                }
+            }
+
+            return inSampleSize;
         }
 
         @Override
