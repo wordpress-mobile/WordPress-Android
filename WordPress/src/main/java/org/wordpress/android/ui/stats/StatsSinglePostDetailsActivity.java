@@ -325,7 +325,9 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         }
 
         GraphViewSeries mCurrentSeriesOnScreen = new GraphViewSeries(views);
-        mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
+        mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_main_series);
+        mCurrentSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.stats_bar_graph_main_series_highlight);
+        mCurrentSeriesOnScreen.getStyle().outerhighlightColor = getResources().getColor(R.color.stats_bar_graph_outer_highlight);
         mCurrentSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(this, 5);
 
         StatsBarGraph mGraphView;
