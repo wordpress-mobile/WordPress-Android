@@ -18,6 +18,7 @@ import org.wordpress.mediapicker.MediaPickerFragment;
 import org.wordpress.mediapicker.source.MediaSource;
 import org.wordpress.mediapicker.source.MediaSourceDeviceImages;
 import org.wordpress.mediapicker.source.MediaSourceDeviceVideos;
+import org.wordpress.mediapickersample.source.MediaSourceError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,8 @@ public class SampleActivity extends Activity
                             implements MediaPickerFragment.OnMediaSelected {
     private static final String TAB_TITLE_IMAGES = "Images";
     private static final String TAB_TITLE_VIDEOS = "Videos";
+    private static final String TAB_TITLE_EMPTY  = "Empty";
+    private static final String TAB_TITLE_ERROR  = "Error";
 
     private MediaPickerAdapter mMediaPickerAdapter;
     private SlidingTabLayout   mTabLayout;
@@ -77,6 +80,13 @@ public class SampleActivity extends Activity
         ArrayList<MediaSource> videoSources = new ArrayList<>();
         videoSources.add(new MediaSourceDeviceVideos(getContentResolver()));
         mMediaPickerAdapter.addTab(videoSources, TAB_TITLE_VIDEOS);
+
+        ArrayList<MediaSource> emptySources = new ArrayList<>();
+        mMediaPickerAdapter.addTab(emptySources, TAB_TITLE_EMPTY);
+
+        ArrayList<MediaSource> errorSources = new ArrayList<>();
+        errorSources.add(new MediaSourceError());
+        mMediaPickerAdapter.addTab(errorSources, TAB_TITLE_ERROR);
     }
 
     /*
@@ -115,6 +125,7 @@ public class SampleActivity extends Activity
 
     @Override
     public ImageLoader.ImageCache getImageCache() {
+        // TODO
         return null;
     }
 
@@ -146,9 +157,9 @@ public class SampleActivity extends Activity
                 MediaPicker mediaPicker = mMediaPickers.get(position);
                 MediaPickerFragment fragment = new MediaPickerFragment();
                 if (position == 0) {
-                    fragment.setCustomView(R.layout.media_fragment_three_grid);
+                    fragment.setCustomLayout(R.layout.media_fragment_three_grid);
                 } else if (position == 1) {
-                    fragment.setCustomView(R.layout.media_fragment_four_grid);
+                    fragment.setCustomLayout(R.layout.media_fragment_four_grid);
                 }
                 fragment.setActionModeMenu(R.menu.menu_media_picker_action_mode);
                 fragment.setMediaSources(mediaPicker.mediaSources);
