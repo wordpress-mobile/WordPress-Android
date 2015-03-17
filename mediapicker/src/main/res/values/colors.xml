@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- Used as the default background color -->
+    <color name="grey">#999999</color>
+
+</resources>

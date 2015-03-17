@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_media_selection_confirmed"
+        android:title="@string/confirm"
+        android:icon="@drawable/action_mode_confirm_checkmark"
+        android:enabled="true"
+        android:visible="true"
+        android:showAsAction="ifRoom" />
+
+</menu>

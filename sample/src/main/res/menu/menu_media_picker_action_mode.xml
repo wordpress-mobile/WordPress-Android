@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_media_content_selection_gallery"
+        android:title="@string/new_media_gallery"
+        android:icon="@drawable/tab_icon_create_gallery"
+        android:enabled="true"
+        android:visible="true" />
+
+    <item
+        android:id="@+id/menu_media_selection_confirmed"
+        android:title="@string/confirm"
+        android:icon="@drawable/action_mode_confirm_checkmark"
+        android:enabled="true"
+        android:visible="true" />
+
+</menu>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- MediaPicker defaults -->
+    <integer name="num_media_columns">2</integer>
+
+</resources>

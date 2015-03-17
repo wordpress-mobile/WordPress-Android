@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <dimen name="empty_view_text_size">24sp</dimen>
+
+    <!-- MediaPicker defaults -->
+    <dimen name="media_padding_left">2dp</dimen>
+    <dimen name="media_padding_top">2dp</dimen>
+    <dimen name="media_padding_right">2dp</dimen>
+    <dimen name="media_padding_bottom">2dp</dimen>
+    <dimen name="media_spacing_vertical">2dp</dimen>
+    <dimen name="media_spacing_horizontal">2dp</dimen>
+
+    <!-- Height of the media item view cell -->
+    <dimen name="media_item_height">128dp</dimen>
+
+    <!-- MediaItem View layout defaults -->
+    <!-- New media item layouts should contain their views in a CheckableFrameLayout (provided). -->
+    <!-- Note that these padding resources should be used in order to display the checked frame. -->
+    <dimen name="media_item_frame_margin_left">2dp</dimen>
+    <dimen name="media_item_frame_margin_top">2dp</dimen>
+    <dimen name="media_item_frame_margin_right">2dp</dimen>
+    <dimen name="media_item_frame_margin_bottom">2dp</dimen>
+    <dimen name="media_item_frame_padding_left">6dp</dimen>
+    <dimen name="media_item_frame_padding_top">6dp</dimen>
+    <dimen name="media_item_frame_padding_right">6dp</dimen>
+    <dimen name="media_item_frame_padding_bottom">6dp</dimen>
+
+</resources>
