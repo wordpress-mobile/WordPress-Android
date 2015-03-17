@@ -46,6 +46,7 @@ public class MediaSourceDeviceImages implements MediaSource {
 
     private final List<MediaItem> mMediaItems;
 
+    private OnMediaChange mListener;
     private ContentResolver mContentResolver;
     private boolean mGatheringMedia;
 
@@ -60,25 +61,19 @@ public class MediaSourceDeviceImages implements MediaSource {
     }
 
     @Override
-    public void gather(final OnMediaLoaded callback) {
+    public void gather() {
         if (!mGatheringMedia) {
             new AsyncTask<Void, String, Void>() {
-                private boolean success;
-
                 @Override
                 protected Void doInBackground(Void... params) {
-                    try {
-                        createMediaItems();
-                        success = true;
-                    } catch (InterruptedException e) {
-                    }
+                    createMediaItems();
                     return null;
                 }
 
                 @Override
                 public void onPostExecute(Void result) {
-                    if (callback != null) {
-                        callback.onMediaLoaded(success);
+                    if (mListener != null) {
+                        mListener.onMediaLoaded(true);
                     }
                 }
             }.execute();
@@ -94,12 +89,12 @@ public class MediaSourceDeviceImages implements MediaSource {
 
     @Override
     public void setListener(final OnMediaChange listener) {
-        // Ignored
+        mListener = listener;
     }
 
     @Override
     public int getCount() {
-        return mMediaItems != null ? mMediaItems.size() : 0;
+        return mMediaItems.size();
     }
 
     @Override
@@ -147,6 +142,10 @@ public class MediaSourceDeviceImages implements MediaSource {
         return !selected;
     }
 
+    /**
+     * Clears the current media items then adds the provided items.
+     * @param mediaItems
+     */
     private void setMediaItems(List<MediaItem> mediaItems) {
         mMediaItems.clear();
         mMediaItems.addAll(mediaItems);
@@ -209,7 +208,7 @@ public class MediaSourceDeviceImages implements MediaSource {
     /**
      * Helper method; creates a {@link java.util.Map} of media IDs to thumbnail data
      * @return
-     *  thumbnail data map
+     * thumbnail data map
      */
     private Map<String, String> getImageThumbnailData() {
         final Map<String, String> data = new HashMap<>();
@@ -235,10 +234,6 @@ public class MediaSourceDeviceImages implements MediaSource {
 
     /**
      * Helper method; creates a {@link org.wordpress.mediapicker.MediaItem} from cursor data
-     *
-     * @param imageCursor
-     * @param thumbnailData
-     * @return
      */
     private MediaItem getMediaItemFromCursor(Cursor imageCursor, Map<String, String> thumbnailData) {
         MediaItem newContent = null;

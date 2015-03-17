@@ -48,7 +48,7 @@ public class MediaSourceDeviceVideos implements MediaSource {
     }
 
     @Override
-    public void gather(OnMediaLoaded callback) {
+    public void gather() {
     }
 
     @Override

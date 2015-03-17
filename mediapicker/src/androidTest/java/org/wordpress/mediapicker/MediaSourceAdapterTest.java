@@ -34,7 +34,7 @@ public class MediaSourceAdapterTest {
     @Test
     public void testViewTypeCountWithNoSources() {
         final ArrayList<MediaSource> testSources = new ArrayList<>();
-        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null, null);
+        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null);
 
         Assert.assertEquals(1, testAdapter.getViewTypeCount());
     }
@@ -47,7 +47,7 @@ public class MediaSourceAdapterTest {
         final ArrayList<MediaSource> testSources = new ArrayList<>();
         testSources.add(new MediaSourceDeviceImages(mock(ContentResolver.class)));
 
-        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null, null);
+        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null);
 
         Assert.assertEquals(testSources.size(), testAdapter.getViewTypeCount());
     }
@@ -61,7 +61,7 @@ public class MediaSourceAdapterTest {
         testSources.add(new MediaSourceDeviceImages(mock(ContentResolver.class)));
         testSources.add(new MediaSourceDeviceVideos(mock(ContentResolver.class)));
 
-        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null, null);
+        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null);
 
         Assert.assertEquals(testSources.size(), testAdapter.getViewTypeCount());
     }
@@ -72,7 +72,7 @@ public class MediaSourceAdapterTest {
     @Test
     public void testViewTypeWithNoSources() {
         final ArrayList<MediaSource> testSources = new ArrayList<>();
-        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null, null);
+        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null);
 
         Assert.assertEquals(-1, testAdapter.getItemViewType(0));
     }
@@ -92,7 +92,7 @@ public class MediaSourceAdapterTest {
         testSources.add(mockSource1);
         testSources.add(mockSource2);
 
-        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null, null);
+        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null);
 
         Assert.assertEquals(1, testAdapter.getItemViewType(testItemCount + 1));
     }
@@ -109,7 +109,7 @@ public class MediaSourceAdapterTest {
         when(mockSource.getCount()).thenReturn(testItemCount);
         testSources.add(mockSource);
 
-        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null, null);
+        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null);
 
         Assert.assertEquals(testItemCount, testAdapter.getCount());
     }
@@ -129,7 +129,7 @@ public class MediaSourceAdapterTest {
         testSources.add(mockSource1);
         testSources.add(mockSource2);
 
-        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null, null);
+        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null);
 
         Assert.assertEquals(testItemCount * testSources.size(), testAdapter.getCount());
     }
@@ -152,7 +152,7 @@ public class MediaSourceAdapterTest {
         testSources.add(mockSource1);
         testSources.add(mockSource2);
 
-        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null, null);
+        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null);
         final MediaItem mediaItem = testAdapter.getItem(testItemCount + 1);
 
         Assert.assertEquals(testItem, mediaItem);
@@ -182,7 +182,7 @@ public class MediaSourceAdapterTest {
         testSources.add(mockSource1);
         testSources.add(mockSource2);
 
-        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null, null);
+        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null);
 
         Assert.assertEquals(testView, testAdapter.getView(testItemCount, null, null));
     }
@@ -202,7 +202,7 @@ public class MediaSourceAdapterTest {
         testSources.add(mockSource1);
         testSources.add(mockSource2);
 
-        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null, null);
+        final MediaSourceAdapter testAdapter = new MediaSourceAdapter(Robolectric.application, testSources, null);
 
         for (int i = 0; i < testItemCount * testSources.size(); ++i) {
             Assert.assertEquals(i, testAdapter.getItemId(i));
