@@ -484,6 +484,7 @@ public class MediaPickerFragment extends Fragment
      */
     public void setAdapter(MediaSourceAdapter adapter) {
         mAdapter = adapter;
+        mAdapterView.setAdapter(mAdapter);
     }
 
     /**
