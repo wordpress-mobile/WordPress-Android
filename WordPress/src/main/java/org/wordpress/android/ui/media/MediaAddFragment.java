@@ -27,6 +27,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.MediaUtils.RequestCode;
+import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -108,19 +109,38 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION.equals(action)) {
-                String mediaId = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA);
-                String errorMessage = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR);
-                if (errorMessage != null) {
-                    ToastUtils.showToast(context, errorMessage, ToastUtils.Duration.SHORT);
-                }
-                mCallback.onMediaAdded(mediaId);
-            } else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
                 // Coming from zero connection. Re-register upload intent.
                 resumeMediaUploadService();
             }
         }
     };
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaUploadEvents.MediaUploadFailed event) {
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), event.mErrorMessage, ToastUtils.Duration.SHORT);
+        }
+        mCallback.onMediaAdded(event.mLocalId);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaUploadEvents.MediaDownloadFailed event) {
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), event.mErrorMessage, ToastUtils.Duration.SHORT);
+        }
+        mCallback.onMediaAdded(event.mLocalId);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaUploadEvents.MediaDownloadSucceed event) {
+        mCallback.onMediaAdded(event.mLocalId);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaUploadEvents.MediaUploadSucceed event) {
+        mCallback.onMediaAdded(event.mLocalId);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -246,9 +266,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     private void resumeMediaUploadService() {
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION));
-
         startMediaUploadService();
     }
 

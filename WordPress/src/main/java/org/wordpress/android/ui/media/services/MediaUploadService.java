@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -22,6 +21,8 @@ import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * A service for uploading media files from the media browser.
  * Only one file is uploaded at a time.
@@ -29,11 +30,6 @@ import java.util.List;
 public class MediaUploadService extends Service {
     // time to wait before trying to upload the next file
     private static final int UPLOAD_WAIT_TIME = 1000;
-
-    /** Listen to this Intent for when there are updates to the upload queue **/
-    public static final String MEDIA_UPLOAD_INTENT_NOTIFICATION = "MEDIA_UPLOAD_INTENT_NOTIFICATION";
-    public static final String MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA = "MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA";
-    public static final String MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR = "MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR";
 
     private Context mContext;
     private Handler mHandler = new Handler();
@@ -86,10 +82,10 @@ public class MediaUploadService extends Service {
         // There should be no media files with an upload state of 'uploading' at the start of this service.
         // Since we won't be able to receive notifications for these, set them to 'failed'.
 
-        if(WordPress.getCurrentBlog() != null){
+        if (WordPress.getCurrentBlog() != null) {
             String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
             WordPress.wpDB.setMediaUploadingToFailed(blogId);
-            sendUpdateBroadcast(null, null);
+            EventBus.getDefault().post(new MediaUploadEvents.MediaUploadCancelled());
         }
     }
 
@@ -126,7 +122,7 @@ public class MediaUploadService extends Service {
                 // once the file has been uploaded, delete the local database entry and
                 // download the new one so that we are up-to-date and so that users can edit it.
                 WordPress.wpDB.deleteMediaFile(blogIdStr, mediaId);
-                sendUpdateBroadcast(mediaId, id);
+                EventBus.getDefault().post(new MediaUploadEvents.MediaUploadSucceed(mediaId, id));
                 fetchMediaFile(id);
             }
 
@@ -134,7 +130,8 @@ public class MediaUploadService extends Service {
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "failed");
                 mUploadInProgress = false;
-                sendUpdateBroadcast(mediaId, getString(R.string.upload_failed));
+                EventBus.getDefault().post(new MediaUploadEvents.MediaUploadFailed(mediaId,
+                        getString(R.string.upload_failed)));
                 mHandler.post(mFetchQueueTask);
                 // Only log the error if it's not caused by the network (internal inconsistency)
                 if (errorType != ErrorType.NETWORK_XMLRPC) {
@@ -144,7 +141,7 @@ public class MediaUploadService extends Service {
         });
 
         WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "uploading");
-        sendUpdateBroadcast(mediaId, null);
+        EventBus.getDefault().post(new MediaUploadEvents.MediaUploadStarted(mediaId));
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
         task.execute(apiArgs);
@@ -162,14 +159,14 @@ public class MediaUploadService extends Service {
                 String mediaId = mediaFile.getMediaId();
                 WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "uploaded");
                 mUploadInProgress = false;
-                sendUpdateBroadcast(id, null);
+                EventBus.getDefault().post(new MediaUploadEvents.MediaDownloadSucceed(id));
                 mHandler.post(mFetchQueueTask);
             }
 
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 mUploadInProgress = false;
-                sendUpdateBroadcast(id, getString(R.string.error_refresh_media));
+                EventBus.getDefault().post(new MediaUploadEvents.MediaDownloadFailed(id, errorMessage));
                 mHandler.post(mFetchQueueTask);
                 // Only log the error if it's not caused by the network (internal inconsistency)
                 if (errorType != ErrorType.NETWORK_XMLRPC) {
@@ -178,17 +175,5 @@ public class MediaUploadService extends Service {
             }
         });
         task.execute(apiArgs);
-    }
-
-    private void sendUpdateBroadcast(String mediaId, String errorMessage) {
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(mContext);
-        Intent intent = new Intent(MEDIA_UPLOAD_INTENT_NOTIFICATION);
-        if (mediaId != null) {
-            intent.putExtra(MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA, mediaId);
-        }
-        if (errorMessage != null) {
-            intent.putExtra(MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR, errorMessage);
-        }
-        lbm.sendBroadcast(intent);
     }
 }
