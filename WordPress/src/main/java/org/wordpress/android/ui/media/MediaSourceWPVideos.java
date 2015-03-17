@@ -25,19 +25,38 @@ public class MediaSourceWPVideos implements MediaSource {
     private static final String VIDEO_PRESS_HOST = "https://videos.files.wordpress.com/";
     private static final String VIDEO_PRESS_THUMBNAIL_APPEND = "_hd.thumbnail.jpg";
 
-    private boolean mLoading;
     private OnMediaChange mListener;
     private List<MediaItem> mMediaItems = new ArrayList<>();
 
     public MediaSourceWPVideos() {
-        fetchVideoData();
+    }
+
+    @Override
+    public void gather() {
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (blog != null) {
+            Cursor videoCursor = MediaUtils.getWordPressMediaVideos(String.valueOf(blog.getLocalTableBlogId()));
+
+            if (videoCursor != null) {
+                addWordPressVideosFromCursor(videoCursor);
+                videoCursor.close();
+            } else if (mListener != null){
+                mListener.onMediaLoaded(false);
+            }
+        } else if (mListener != null){
+            mListener.onMediaLoaded(false);
+        }
+    }
+
+    @Override
+    public void cleanup() {
+
     }
 
     @Override
     public void setListener(OnMediaChange listener) {
         mListener = listener;
-
-        notifyLoadingStatus();
     }
 
     @Override
@@ -131,21 +150,6 @@ public class MediaSourceWPVideos implements MediaSource {
     public void writeToParcel(Parcel dest, int flags) {
     }
 
-    private void fetchVideoData() {
-        Blog blog = WordPress.getCurrentBlog();
-
-        if (blog != null) {
-            mLoading = true;
-            notifyLoadingStatus();
-            Cursor videoCursor = MediaUtils.getWordPressMediaVideos(String.valueOf(blog.getLocalTableBlogId()));
-
-            if (videoCursor != null) {
-                addWordPressVideosFromCursor(videoCursor);
-                videoCursor.close();
-            }
-        }
-    }
-
     private void addWordPressVideosFromCursor(Cursor cursor) {
         if (cursor.moveToFirst()) {
             do {
@@ -186,13 +190,8 @@ public class MediaSourceWPVideos implements MediaSource {
             } while (cursor.moveToNext());
         }
 
-        mLoading = false;
-        notifyLoadingStatus();
-    }
-
-    private void notifyLoadingStatus() {
         if (mListener != null) {
-            mListener.onMediaLoading(this, !mLoading);
+            mListener.onMediaLoaded(true);
         }
     }
 }

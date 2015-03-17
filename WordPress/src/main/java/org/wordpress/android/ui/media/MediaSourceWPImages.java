@@ -30,18 +30,36 @@ public class MediaSourceWPImages implements MediaSource {
     private final List<MediaItem> mVerifiedItems = new ArrayList<>();
     private final List<MediaItem> mMediaItems = new ArrayList<>();
 
-    private boolean mLoading;
     private OnMediaChange mListener;
 
     public MediaSourceWPImages() {
-        fetchImageData();
+    }
+
+    @Override
+    public void gather() {
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (blog != null) {
+            Cursor imageCursor = MediaUtils.getWordPressMediaImages(String.valueOf(blog.getLocalTableBlogId()));
+
+            if (imageCursor != null) {
+                addWordPressImagesFromCursor(imageCursor);
+                imageCursor.close();
+            } else if (mListener != null){
+                mListener.onMediaLoaded(false);
+            }
+        } else if (mListener != null){
+            mListener.onMediaLoaded(false);
+        }
+    }
+
+    @Override
+    public void cleanup() {
     }
 
     @Override
     public void setListener(OnMediaChange listener) {
         mListener = listener;
-
-        notifyLoadingStatus();
     }
 
     @Override
@@ -94,6 +112,10 @@ public class MediaSourceWPImages implements MediaSource {
         return !selected;
     }
 
+    /*
+    Parcelable interface
+     */
+
     public static final Creator<MediaSourceWPImages> CREATOR =
             new Creator<MediaSourceWPImages>() {
                 public MediaSourceWPImages createFromParcel(Parcel in) {
@@ -112,22 +134,6 @@ public class MediaSourceWPImages implements MediaSource {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-    }
-
-    private void fetchImageData() {
-        Blog blog = WordPress.getCurrentBlog();
-
-        if (blog != null) {
-            mLoading = true;
-            notifyLoadingStatus();
-
-            Cursor imageCursor = MediaUtils.getWordPressMediaImages(String.valueOf(blog.getLocalTableBlogId()));
-
-            if (imageCursor != null) {
-                addWordPressImagesFromCursor(imageCursor);
-                imageCursor.close();
-            }
-        }
     }
 
     private void addWordPressImagesFromCursor(Cursor cursor) {
@@ -174,9 +180,8 @@ public class MediaSourceWPImages implements MediaSource {
             } while (cursor.moveToNext());
 
             removeDeletedEntries();
-        } else {
-            mLoading = false;
-            notifyLoadingStatus();
+        } else if (mListener != null) {
+            mListener.onMediaLoaded(true);
         }
     }
 
@@ -207,21 +212,13 @@ public class MediaSourceWPImages implements MediaSource {
 
             @Override
             public void onPostExecute(Void result) {
-                mLoading = false;
-                notifyLoadingStatus();
-                if (mVerifiedItems.size() > 0 && mListener != null) {
-                    mListener.onMediaAdded(MediaSourceWPImages.this, mVerifiedItems);
+                if (mListener != null) {
+                    mListener.onMediaLoaded(mVerifiedItems.size() > 0);
                 }
             }
         };
 
         List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
         backgroundCheck.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, existingItems);
-    }
-
-    private void notifyLoadingStatus() {
-        if (mListener != null) {
-            mListener.onMediaLoading(this, !mLoading);
-        }
     }
 }

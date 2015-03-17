@@ -244,8 +244,12 @@ public class MediaPickerActivity extends ActionBarActivity
     }
 
     @Override
-    public void onGalleryCreated(ArrayList<MediaItem> mediaContent) {
-        finishWithResults(mediaContent, ACTIVITY_RESULT_CODE_GALLERY_CREATED);
+    public boolean onMenuItemSelected(MenuItem menuItem, ArrayList<MediaItem> selectedContent) {
+        if (menuItem.getItemId() == R.id.menu_media_content_selection_gallery) {
+            finishWithResults(selectedContent, ACTIVITY_RESULT_CODE_GALLERY_CREATED);
+        }
+
+        return false;
     }
 
     @Override
@@ -292,7 +296,7 @@ public class MediaPickerActivity extends ActionBarActivity
             List<MediaSource> mediaSources = intent.getParcelableArrayListExtra(DEVICE_IMAGE_MEDIA_SOURCES_KEY);
             if (mediaSources != null) {
                 mMediaSources[0] = new ArrayList<>();
-                mMediaSources[0].addAll(mediaSources);
+                mMediaSources[0].add(new MediaSourceDeviceImages(getContentResolver()));
             }
 
             mediaSources = intent.getParcelableArrayListExtra(DEVICE_VIDEO_MEDIA_SOURCES_KEY);
@@ -461,7 +465,7 @@ public class MediaPickerActivity extends ActionBarActivity
             }
         }
 
-        private List<MediaPicker> mMediaPickers;
+        private final List<MediaPicker> mMediaPickers;
 
         private MediaPickerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
