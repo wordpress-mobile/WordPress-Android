@@ -3,9 +3,13 @@ package org.wordpress.android.ui.media;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -36,6 +40,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
@@ -65,6 +70,21 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
     private Menu mMenu;
     private FeatureSet mFeatureSet;
     private String mQuery;
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+                // Coming from zero connection. Continue what's pending for delete
+                String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+                if (WordPress.wpDB.getMediaDeleteQueueItems(blogId).getCount() > 0) {
+                    startMediaDeleteService();
+                }
+            }
+        }
+    };
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,6 +123,18 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
             // We arrived here from a share action
             uploadSharedFiles();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    public void onStop() {
+        unregisterReceiver(mReceiver);
+        super.onStop();
     }
 
     @Override
@@ -476,7 +508,9 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
     }
 
     private void startMediaDeleteService() {
-        startService(new Intent(this, MediaDeleteService.class));
+        if (NetworkUtils.isNetworkAvailable(this)) {
+           startService(new Intent(this, MediaDeleteService.class));
+        }
     }
 
     @Override
@@ -546,7 +580,7 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
         // mark items for delete without actually deleting items yet,
         // and then refresh the grid
         WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, sanitizedIds);
-        startService(new Intent(this, MediaDeleteService.class));
+        startMediaDeleteService();
         if (mMediaGridFragment != null) {
             mMediaGridFragment.clearSelectedItems();
             mMediaGridFragment.refreshMediaFromDB();
