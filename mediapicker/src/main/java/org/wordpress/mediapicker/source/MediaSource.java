@@ -17,10 +17,6 @@ import java.util.List;
  */
 
 public interface MediaSource extends Parcelable {
-    public interface OnMediaLoaded {
-        public void onMediaLoaded(boolean success);
-    }
-
     /**
      * Interface offered for any class to implement a listener for data set changes.
      */
@@ -58,7 +54,7 @@ public interface MediaSource extends Parcelable {
     }
 
     // Load MediaItem data
-    public void gather(final OnMediaLoaded callback);
+    public void gather();
     // Destroy MediaItem data
     public void cleanup();
     // Can be ignored if no listener is needed

@@ -51,7 +51,7 @@ public class MediaSourceCaptureImage implements MediaSource, Camera.PictureCallb
     }
 
     @Override
-    public void gather(OnMediaLoaded callback) {
+    public void gather() {
 
     }
 

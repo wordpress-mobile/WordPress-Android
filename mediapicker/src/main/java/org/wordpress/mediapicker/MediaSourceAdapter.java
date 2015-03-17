@@ -44,14 +44,7 @@ public class MediaSourceAdapter extends BaseAdapter {
         for (MediaSource source : mMediaSources) {
             if (source != null) {
                 source.setListener(listener);
-                source.gather(new MediaSource.OnMediaLoaded() {
-                    @Override
-                    public void onMediaLoaded(boolean success) {
-                        if (listener != null) {
-                            listener.onMediaLoaded(true);
-                        }
-                    }
-                });
+                source.gather();
             }
         }
     }
