@@ -157,4 +157,10 @@
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
 
+    <!--me-->
+    <dimen name="me_avatar_margin_top">24dp</dimen>
+    <dimen name="me_list_margin_top">20dp</dimen>
+    <dimen name="me_list_row_height">56dp</dimen>
+    <dimen name="me_list_row_icon_size">24dp</dimen>
+
 </resources>

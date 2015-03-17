@@ -143,4 +143,7 @@
     <!-- Misc -->
     <color name="pressed_wordpress">@color/semi_transparent_blue_light</color>
     <color name="background_grey">@color/grey_lighten_30</color>
+
+    <!--Me-->
+    <color name="me_list_row_border">#D8E3EA</color>
 </resources>

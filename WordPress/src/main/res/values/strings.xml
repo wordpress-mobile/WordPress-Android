@@ -881,4 +881,8 @@
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
 
+    <!--Me-->
+    <string name="me_btn_user_settings">User Settings</string>
+    <string name="me_btn_support">Support</string>
+
 </resources>

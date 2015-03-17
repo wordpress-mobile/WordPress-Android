@@ -298,7 +298,7 @@
     </style>
 
     <style name="MySiteListRowTextView">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">@dimen/margin_medium</item>
@@ -360,6 +360,32 @@
         <item name="android:layout_marginLeft">@dimen/margin_large</item>
         <item name="android:background">@color/grey_lighten_20</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="MeListRowLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/me_list_row_height</item>
+        <item name="android:background">@drawable/me_list_row_bg</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="MeListRowIcon">
+        <item name="android:layout_width">@dimen/me_list_row_icon_size</item>
+        <item name="android:layout_height">@dimen/me_list_row_icon_size</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginLeft">@dimen/margin_medium</item>
+        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="MeListRowTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:padding">@dimen/margin_extra_large</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
 </resources>
