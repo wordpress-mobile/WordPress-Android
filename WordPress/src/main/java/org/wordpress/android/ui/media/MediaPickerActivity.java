@@ -29,6 +29,7 @@ import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
 import org.wordpress.mediapicker.MediaPickerFragment;
+import org.wordpress.mediapicker.source.MediaSourceDeviceImages;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -362,10 +363,10 @@ public class MediaPickerActivity extends ActionBarActivity
         if (mViewPager != null) {
             mViewPager.setPagingEnabled(true);
 
-            mMediaPickerAdapter.addTab(mMediaSources[0] != null ? mMediaSources[0] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_images));
-            mMediaPickerAdapter.addTab(mMediaSources[1] != null ? mMediaSources[1] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_videos));
-            mMediaPickerAdapter.addTab(mMediaSources[2] != null ? mMediaSources[2] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_images));
-            mMediaPickerAdapter.addTab(mMediaSources[3] != null ? mMediaSources[3] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_videos));
+            mMediaPickerAdapter.addTab(mMediaSources[0] != null ? mMediaSources[0] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_images), "Loading device videos", "Error fetching device images", null);
+            mMediaPickerAdapter.addTab(mMediaSources[1] != null ? mMediaSources[1] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_videos), "Loading device images", "Error fetching device videos ", null);
+            mMediaPickerAdapter.addTab(mMediaSources[2] != null ? mMediaSources[2] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_images), "Loading library images", "Unable to fetch blog images ", null);
+            mMediaPickerAdapter.addTab(mMediaSources[3] != null ? mMediaSources[3] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_videos), "Loading library videos", "Unable to fetch blog videos ", null);
 
             mViewPager.setAdapter(mMediaPickerAdapter);
 
@@ -456,10 +457,16 @@ public class MediaPickerActivity extends ActionBarActivity
      */
     public class MediaPickerAdapter extends FragmentPagerAdapter {
         private class MediaPicker {
+            public String loadingText;
+            public String errorText;
+            public String emptyText;
             public String pickerTitle;
             public ArrayList<MediaSource> mediaSources;
 
-            public MediaPicker(String name, ArrayList<MediaSource> sources) {
+            public MediaPicker(String name, String loading, String error, String empty, ArrayList<MediaSource> sources) {
+                loadingText = loading;
+                errorText = error;
+                emptyText = empty;
                 pickerTitle = name;
                 mediaSources = sources;
             }
@@ -478,6 +485,10 @@ public class MediaPickerActivity extends ActionBarActivity
             if (position < mMediaPickers.size()) {
                 MediaPicker mediaPicker = mMediaPickers.get(position);
                 MediaPickerFragment fragment = new MediaPickerFragment();
+                fragment.setLoadingText(mediaPicker.loadingText);
+                fragment.setErrorText(mediaPicker.errorText);
+                fragment.setEmptyText(mediaPicker.emptyText);
+                fragment.setActionModeMenu(R.menu.menu_media_picker_action_mode);
                 fragment.setMediaSources(mediaPicker.mediaSources);
 
                 return fragment;
@@ -496,8 +507,8 @@ public class MediaPickerActivity extends ActionBarActivity
             return mMediaPickers.get(position).pickerTitle;
         }
 
-        public void addTab(ArrayList<MediaSource> mediaSources, String tabName) {
-            mMediaPickers.add(new MediaPicker(tabName, mediaSources));
+        public void addTab(ArrayList<MediaSource> mediaSources, String tabName, String loading, String error, String empty) {
+            mMediaPickers.add(new MediaPicker(tabName, loading, error, empty, mediaSources));
         }
     }
 }
