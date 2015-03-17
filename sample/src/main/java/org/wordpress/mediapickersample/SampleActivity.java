@@ -22,6 +22,10 @@ import org.wordpress.mediapicker.source.MediaSourceDeviceVideos;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Demonstrates the intended usage of the MediaPicker-Android library.
+ */
+
 public class SampleActivity extends Activity
                             implements MediaPickerFragment.OnMediaSelected {
     private static final String TAB_TITLE_IMAGES = "Images";
@@ -63,7 +67,7 @@ public class SampleActivity extends Activity
     }
 
     /**
-     * Helper method; adds tabs to the ViewPager.
+     * Adds tabs to the adapter.
      */
     private void initializeTabs() {
         ArrayList<MediaSource> imageSources = new ArrayList<>();

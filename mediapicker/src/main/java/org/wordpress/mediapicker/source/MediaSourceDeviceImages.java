@@ -142,6 +142,10 @@ public class MediaSourceDeviceImages implements MediaSource {
         return !selected;
     }
 
+    /**
+     * Clears the current media items then adds the provided items.
+     * @param mediaItems
+     */
     private void setMediaItems(List<MediaItem> mediaItems) {
         mMediaItems.clear();
         mMediaItems.addAll(mediaItems);
@@ -204,7 +208,7 @@ public class MediaSourceDeviceImages implements MediaSource {
     /**
      * Helper method; creates a {@link java.util.Map} of media IDs to thumbnail data
      * @return
-     *  thumbnail data map
+     * thumbnail data map
      */
     private Map<String, String> getImageThumbnailData() {
         final Map<String, String> data = new HashMap<>();
@@ -230,10 +234,6 @@ public class MediaSourceDeviceImages implements MediaSource {
 
     /**
      * Helper method; creates a {@link org.wordpress.mediapicker.MediaItem} from cursor data
-     *
-     * @param imageCursor
-     * @param thumbnailData
-     * @return
      */
     private MediaItem getMediaItemFromCursor(Cursor imageCursor, Map<String, String> thumbnailData) {
         MediaItem newContent = null;
