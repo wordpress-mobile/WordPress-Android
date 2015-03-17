@@ -85,7 +85,6 @@ public class MediaUploadService extends Service {
         if (WordPress.getCurrentBlog() != null) {
             String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
             WordPress.wpDB.setMediaUploadingToFailed(blogId);
-            EventBus.getDefault().post(new MediaUploadEvents.MediaUploadCancelled());
         }
     }
 
@@ -141,7 +140,6 @@ public class MediaUploadService extends Service {
         });
 
         WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "uploading");
-        EventBus.getDefault().post(new MediaUploadEvents.MediaUploadStarted(mediaId));
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
         task.execute(apiArgs);
@@ -159,14 +157,12 @@ public class MediaUploadService extends Service {
                 String mediaId = mediaFile.getMediaId();
                 WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "uploaded");
                 mUploadInProgress = false;
-                EventBus.getDefault().post(new MediaUploadEvents.MediaDownloadSucceed(id));
                 mHandler.post(mFetchQueueTask);
             }
 
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 mUploadInProgress = false;
-                EventBus.getDefault().post(new MediaUploadEvents.MediaDownloadFailed(id, errorMessage));
                 mHandler.post(mFetchQueueTask);
                 // Only log the error if it's not caused by the network (internal inconsistency)
                 if (errorType != ErrorType.NETWORK_XMLRPC) {

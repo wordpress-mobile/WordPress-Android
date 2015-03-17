@@ -125,19 +125,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(MediaUploadEvents.MediaDownloadFailed event) {
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), event.mErrorMessage, ToastUtils.Duration.SHORT);
-        }
-        mCallback.onMediaAdded(event.mLocalId);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaUploadEvents.MediaDownloadSucceed event) {
-        mCallback.onMediaAdded(event.mLocalId);
-    }
-
-    @SuppressWarnings("unused")
     public void onEventMainThread(MediaUploadEvents.MediaUploadSucceed event) {
         mCallback.onMediaAdded(event.mLocalId);
     }
