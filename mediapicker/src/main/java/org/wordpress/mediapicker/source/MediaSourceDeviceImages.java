@@ -144,7 +144,6 @@ public class MediaSourceDeviceImages implements MediaSource {
 
     /**
      * Clears the current media items then adds the provided items.
-     * @param mediaItems
      */
     private void setMediaItems(List<MediaItem> mediaItems) {
         mMediaItems.clear();

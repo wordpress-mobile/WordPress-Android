@@ -91,7 +91,11 @@ public class MediaUtils {
             Bitmap bitmap = null;
 
             if (mType == TYPE_IMAGE) {
-                Bitmap imageBitmap = BitmapFactory.decodeFile(uri);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.outHeight = mHeight;
+                options.outWidth = mWidth;
+                options.inSampleSize = 4;
+                Bitmap imageBitmap = BitmapFactory.decodeFile(uri, options);
                 bitmap = ThumbnailUtils.extractThumbnail(imageBitmap, mWidth, mHeight);
 
                 if (bitmap != null) {
