@@ -36,4 +36,8 @@ public class XMLRPCClientEmptyMock implements XMLRPCClientInterface {
     public long callAsync(XMLRPCCallback listener, String methodName, Object[] params, File tempFile) {
         return 0;
     }
+
+    public String getResponse() {
+        return null;
+    }
 }

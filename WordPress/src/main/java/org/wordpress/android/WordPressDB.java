@@ -1633,6 +1633,12 @@ public class WordPressDB {
                 new String[]{"delete", blogId});
     }
 
+    /** Get all media files scheduled for delete for a given blogId **/
+    public Cursor getMediaDeleteQueueItems(String blogId) {
+        return db.rawQuery("SELECT blogId, mediaId FROM " + MEDIA_TABLE + " WHERE uploadState=? AND blogId=?",
+                new String[]{"delete", blogId});
+    }
+
 
     public int getWPCOMBlogID() {
         int id = -1;
