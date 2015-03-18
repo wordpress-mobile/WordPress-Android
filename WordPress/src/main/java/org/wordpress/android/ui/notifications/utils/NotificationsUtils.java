@@ -385,31 +385,40 @@ public class NotificationsUtils {
     }
 
     public static void handleNoteBlockSpanClick(NotificationsDetailActivity activity, NoteBlockClickableSpan clickedSpan) {
-        if (clickedSpan.shouldShowBlogPreview()) {
-            // Show blog preview
-            activity.showBlogPreviewActivity(clickedSpan.getSiteId());
-        } else if (clickedSpan.getRangeType() == NoteBlockRangeType.POST) {
-            // Show post detail
-            activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
-        } else if (clickedSpan.getRangeType() == NoteBlockRangeType.COMMENT) {
-            // For now, show post detail for comments
-            activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getPostId());
-        } else if (clickedSpan.getRangeType() == NoteBlockRangeType.STAT) {
-            // We can open native stats, but only if the site is stored in the app locally.
-            int localTableSiteId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
-                    (int)clickedSpan.getSiteId()
-            );
+        switch (clickedSpan.getRangeType()) {
+            case SITE:
+                // Show blog preview
+                activity.showBlogPreviewActivity(clickedSpan.getId());
+                break;
+            case USER:
+                // Show blog preview
+                activity.showBlogPreviewActivity(clickedSpan.getSiteId());
+                break;
+            case POST:
+                // Show post detail
+                activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
+                break;
+            case COMMENT:
+                // For now, show post detail for comments
+                activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getPostId());
+                break;
+            case STAT:
+                // We can open native stats, but only if the site is stored in the app locally.
+                int localTableSiteId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+                        (int) clickedSpan.getSiteId()
+                );
 
-            if (localTableSiteId > 0) {
-                activity.showStatsActivityForSite(localTableSiteId);
-            } else if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
-                activity.showWebViewActivityForUrl(clickedSpan.getUrl());
-            }
-        } else {
-            // We don't know what type of id this is, let's see if it has a URL and push a webview
-            if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
-                activity.showWebViewActivityForUrl(clickedSpan.getUrl());
-            }
+                if (localTableSiteId > 0) {
+                    activity.showStatsActivityForSite(localTableSiteId);
+                } else if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
+                    activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                }
+                break;
+            default:
+                // We don't know what type of id this is, let's see if it has a URL and push a webview
+                if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
+                    activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                }
         }
     }
 
