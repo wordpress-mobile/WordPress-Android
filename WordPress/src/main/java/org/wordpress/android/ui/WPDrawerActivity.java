@@ -5,15 +5,12 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -46,6 +43,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
@@ -57,6 +55,8 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Base class for Activities that include a standard action bar and menu drawer.
@@ -134,9 +134,20 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver();
 
         if (isAnimatingRefreshButton) {
             isAnimatingRefreshButton = false;
@@ -153,7 +164,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver();
         refreshMenuDrawer();
         if (mDrawerToggle != null) {
             // Sync the toggle state after onRestoreInstanceState has occurred.
@@ -773,63 +783,40 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     public void onSignout() {
     }
 
-    /**
-     * broadcast receiver which detects when user signs out of the app and calls onSignout()
-     * so descendants of this activity can do cleanup upon signout
-     */
-    private void registerReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(WordPress.BROADCAST_ACTION_SIGNOUT);
-        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
-        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
-        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
-        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
-        filter.addAction(WordPress.BROADCAST_ACTION_REST_API_UNAUTHORIZED);
-        filter.addAction(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED);
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-        lbm.registerReceiver(mReceiver, filter);
+    // Events
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.UserSignedOut event) {
+        onSignout();
     }
 
-    private void unregisterReceiver() {
-        try {
-            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-            lbm.unregisterReceiver(mReceiver);
-        } catch (IllegalArgumentException e) {
-            // exception occurs if receiver already unregistered (safe to ignore)
-        }
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.InvalidCredentialsDetected event) {
+        AuthenticationDialogUtils.showAuthErrorView(this);
     }
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent == null || intent.getAction() == null)
-                return;
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.RestApiUnauthorized event) {
+        AuthenticationDialogUtils.showAuthErrorView(this);
+    }
 
-            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIGNOUT)) {
-                onSignout();
-                return;
-            }
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.TwoFactorAuthenticationDetected event) {
+        AuthenticationDialogUtils.showAuthErrorView(this);
+    }
 
-            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS)
-                    || intent.getAction().equals(WordPress.BROADCAST_ACTION_REST_API_UNAUTHORIZED)
-                    || intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
-                AuthenticationDialogUtils.showAuthErrorView(WPDrawerActivity.this);
-                return;
-            }
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.InvalidSslCertificateDetected event) {
+        SelfSignedSSLCertsManager.askForSslTrust(this, null);
+    }
 
-            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE)) {
-                SelfSignedSSLCertsManager.askForSslTrust(WPDrawerActivity.this, null);
-                return;
-            }
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.LoginLimitDetected event) {
+        ToastUtils.showToast(this, R.string.limit_reached, Duration.LONG);
+    }
 
-            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT)) {
-                ToastUtils.showToast(context, R.string.limit_reached, Duration.LONG);
-                return;
-            }
-
-            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED)) {
-                initBlogSpinner();
-            }
-        }
-    };
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.BlogListChanged event) {
+        initBlogSpinner();
+    }
 }
