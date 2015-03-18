@@ -1,35 +1,96 @@
-# MediaPicker
-MediaPicker is an Android Fragment that allows capture and selection of media assets from a variety of sources.
+# WordPress for Android #
 
-# Features
-* Select individual or multiple media items (image or video)
-* Capture new media content during selection
-* Configuration of which media content is presented; both media source and content type
-* MediaSource interface to provide media from anywhere
+[![Build Status](https://travis-ci.org/wordpress-mobile/WordPress-Android.svg?branch=develop)](https://travis-ci.org/wordpress-mobile/WordPress-Android)
 
-## Usage
-The MediaPicker library comes with two MediaSources for accessing media on device view the MediaStore.
+If you're just looking to install WordPress for Android, you can find
+it on [Google Play][1]. If you're a developer wanting to contribute,
+read on.
 
-The sample project is an example of how to configure the MediaPickerFragment to display different sets of media content (one for images, one for videos).
+## Build Instructions ##
 
-## Testing
-Much of the functionality of the library is tested. You can run tests and generate a code coverage report by running the jacocoTestReport task.
+The [gradle build system][2] will fetch all dependencies and generate
+files you need to build the project. You first need to generate the
+local.properties (replace YOUR_SDK_DIR with your actual android SDK directory)
+file and create the gradle.properties file. The easiest way is to copy
+our example:
 
-[Robolectric][2] is used to unit test Android elements in isolation, please use this framework when writing new tests to keep them lightweight.
+    $ echo "sdk.dir=YOUR_SDK_DIR" > local.properties
+    $ cp ./WordPress/gradle.properties-example ./WordPress/gradle.properties
 
-## Installation
-The MediaPicker library is hosted on Maven Central. Example build.gradle dependency:
->dependencies {<br>&nbsp;&nbsp;&nbsp;&nbsp;compile 'org.wordpress:mediapicker:1.+'<br>}
+Note: this is the default `./WordPress/gradle.properties` file. If you
+want to use WordPress.com functions (login to a WordPress.com account,
+access the Reader and Stats for example), you'll have to get a WordPress.com
+OAuth2 ID and secret. Please read the
+[OAuth2 Authentication](#oauth2-authentication) section.
 
-## Author(s)
-WordPress, mobile@automattic.com
+The previous command creates a `libs/` directory and clones all dependencies needed
+by the main WordPress for Android project. You can now build, install and
+test the project:
 
-## License(s)
-MediaPicker is available under the GNU GPL v2 or MIT licenses.
+    $ ./gradlew assembleVanillaDebug # assemble the debug .apk
+    $ ./gradlew installVanillaDebug  # install the debug .apk if you have an
+                                     # emulator or an Android device connected
+    $ ./gradlew WordPress:cAT        # assemble, install and run unit tests
 
-## Apps that use this library
+You can use [Android Studio][3] by importing the project as a Gradle project.
 
-* [WordPress for Android][1]
+## Directory structure ##
 
-[1]: https://github.com/wordpress-mobile/WordPress-Android
-[2]: http://robolectric.org/
+    |-- libs                    # dependencies used to build debug variants
+    |-- tools                   # script collection
+    `-- WordPress
+        |-- build.gradle        # main build script
+        |-- gradle.properties   # properties imported by the build script
+        `-- src                 # android specific Java code
+            |-- androidTest     # test assets, resources and code
+            |-- main            #
+            |   |-- assets      # main project assets
+            |   |-- java        # main project java code
+            |   `-- res         # main project resources
+            |-- vanilla         # vanilla variant specific manifest
+            `-- zbetagroup      # beta variant specific resources and manifest
+
+## OAuth2 Authentication ##
+
+In order to use WordPress.com functions you will need a client ID and
+a client secret key. These details will be used to authenticate your
+application and verify that the API calls being made are valid. You can
+create an application or view details for your existing applications with
+our [WordPress.com applications manager][5].
+
+When creating your application, you should select "Native client" for the
+application type. The applications manager currently requires a "redirect URL",
+but this isn't used for mobile apps. Just use "https://localhost".
+
+Once you've created your application in the [applications manager][5], you'll
+need to edit the `./WordPress/gradle.properties` file and change the
+`WP.OAUTH.APP.ID` and `WP.OAUTH.APP.SECRET` fields. Then you can compile and
+run the app on a device or an emulator and try to login with a WordPress.com
+account.
+
+Read more about [OAuth2][6] and the [WordPress.com REST endpoint][7].
+
+## How we work ##
+
+You can read more about [Code Style Guidelines](CODESTYLE.md) we adopted, and
+how we're organizing branches in our repository in the
+[Contribution Guide](CONTRIBUTING.md).
+
+## Need help to build or hack? ##
+
+Say hello on our [Slack][4] channel: `#mobile`.
+
+## License
+
+WordPress for Android is an Open Source project covered by the
+[GNU General Public License version 2](LICENSE.md). Note: code
+in the `libs/` directory comes from external libraries, which might
+be covered by a different license compatible with the GPLv2.
+
+[1]: https://play.google.com/store/apps/details?id=org.wordpress.android
+[2]: http://tools.android.com/tech-docs/new-build-system/user-guide
+[3]: http://developer.android.com/sdk/installing/studio.html
+[4]: https://make.wordpress.org/chat/
+[5]: https://developer.wordpress.com/apps/
+[6]: https://developer.wordpress.com/docs/oauth2/
+[7]: https://developer.wordpress.com/docs/api/

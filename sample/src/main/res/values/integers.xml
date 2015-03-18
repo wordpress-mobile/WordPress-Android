@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<resources>
-
-    <!-- MediaPicker options -->
-    <integer name="media_grid_num_columns">3</integer>
-
-</resources>
