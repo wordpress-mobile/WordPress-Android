@@ -38,8 +38,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.DrawerItems.DrawerItem;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.notifications.NotificationsActivity;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
@@ -57,7 +55,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Map;
 
@@ -817,13 +814,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
                     || intent.getAction().equals(WordPress.BROADCAST_ACTION_REST_API_UNAUTHORIZED)
                     || intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
                 AuthenticationDialogUtils.showAuthErrorView(WPDrawerActivity.this);
-                return;
-            }
-
-            if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)
-                    && WPDrawerActivity.this instanceof NotificationsActivity) {
-                AuthenticationDialogUtils.showAuthErrorView(WPDrawerActivity.this, R.string.sign_in_again,
-                        R.string.simperium_connection_error);
                 return;
             }
 
