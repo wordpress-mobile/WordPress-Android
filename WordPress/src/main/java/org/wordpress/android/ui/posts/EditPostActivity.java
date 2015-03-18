@@ -212,6 +212,10 @@ public class EditPostActivity extends ActionBarActivity {
     protected void onDestroy() {
         super.onDestroy();
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED_POST);
+
+        if (mSuggestionServiceConnectionManager != null) {
+            mSuggestionServiceConnectionManager.unbindFromService();
+        }
     }
 
     @Override
