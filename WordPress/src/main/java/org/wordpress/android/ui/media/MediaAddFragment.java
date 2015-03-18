@@ -14,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,9 +99,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     @Override
     public void onPause() {
         super.onPause();
-
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.unregisterReceiver(mReceiver);
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
