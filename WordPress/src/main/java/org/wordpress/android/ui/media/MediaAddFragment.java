@@ -34,6 +34,8 @@ import org.wordpress.android.util.ToastUtils;
 import java.io.File;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * An invisible fragment in charge of launching the right intents to camera, video, and image library.
  * Also queues up media for upload and listens to notifications from the upload service.
@@ -78,13 +80,14 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     @Override
     public void onStart() {
         super.onStart();
-
+        EventBus.getDefault().register(this);
         // register context for change in connection status
         getActivity().registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
     public void onStop() {
+        EventBus.getDefault().unregister(this);
         getActivity().unregisterReceiver(mReceiver);
         super.onStop();
     }
