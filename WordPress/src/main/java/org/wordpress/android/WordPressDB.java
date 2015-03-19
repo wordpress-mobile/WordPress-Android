@@ -408,7 +408,7 @@ public class WordPressDB {
     public boolean isDotComAccountVisible(int blogId) {
         String[] args = {Integer.toString(blogId)};
         return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE +
-                                         " WHERE isHidden = 0 AND blogId=?", args);
+                " WHERE isHidden = 0 AND blogId=?", args);
     }
 
     public boolean isBlogInDatabase(int blogId, String xmlRpcUrl) {
@@ -892,6 +892,16 @@ public class WordPressDB {
         c.close();
 
         return posts;
+    }
+
+    public int clearAllUploadingPosts(int localTableBlogId, boolean isPage) {
+        ContentValues values = new ContentValues();
+        values.put("isUploading", 0);
+        return db.update(POSTS_TABLE, values, "blogID=? AND isPage=? AND isUploading=1",
+                new String[]{
+                        String.valueOf(localTableBlogId),
+                        String.valueOf(SqlUtils.boolToSql(isPage))
+                });
     }
 
     public long savePost(Post post) {
