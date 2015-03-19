@@ -1045,7 +1045,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         }
 
         editableText.insert(selectionStart, " ");
-        MediaGalleryImageSpan is = new MediaGalleryImageSpan(getActivity(), mediaGallery, R.drawable.ab_icon_edit);
+        MediaGalleryImageSpan is = new MediaGalleryImageSpan(getActivity(), mediaGallery,
+                R.drawable.icon_mediagallery_placeholder);
         editableText.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
         editableText.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
