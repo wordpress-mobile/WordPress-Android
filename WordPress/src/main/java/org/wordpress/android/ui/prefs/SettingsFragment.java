@@ -178,7 +178,7 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void hideNotificationBlogsCategory() {
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
         PreferenceCategory blogs = (PreferenceCategory) findPreference("wp_pref_notification_blogs");
         if (preferenceScreen != null && blogs != null) {
             preferenceScreen.removePreference(blogs);
@@ -246,7 +246,6 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     void displayPreferences() {
-        // Post signature
         if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
             hidePostSignatureCategory();
             hideNotificationBlogsCategory();
