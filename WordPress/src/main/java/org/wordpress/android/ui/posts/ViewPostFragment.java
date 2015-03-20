@@ -243,10 +243,9 @@ public class ViewPostFragment extends Fragment {
 
     public void loadPost(final Post post) {
         // Don't load if the Post object or title are null, see #395
-        if (post == null || post.getTitle() == null)
+        if (!isAdded() || getView() == null || post == null || post.getTitle() == null) {
             return;
-        if (!isAdded() || getView() == null)
-            return;
+        }
 
         // create handler on UI thread
         final Handler handler = new Handler();
@@ -255,7 +254,7 @@ public class ViewPostFragment extends Fragment {
         // important when using WPHtml.fromHtml() for drafts that contain images since
         // thumbnails may take some time to create
         final WebView webView = (WebView) getView().findViewById(R.id.viewPostWebView);
-        webView.setWebViewClient(new WPWebViewClient(WordPress.getCurrentBlog()));
+        webView.setWebViewClient(new WPWebViewClient(getActivity(), WordPress.getCurrentBlog()));
         new Thread() {
             @Override
             public void run() {
