@@ -518,6 +518,9 @@ public class MediaGridAdapter extends CursorAdapter {
 
     public void setItemSelected(int position, boolean selected) {
         Cursor cursor = (Cursor) getItem(position);
+        if (cursor == null) {
+            return;
+        }
         int columnIndex = cursor.getColumnIndex("mediaId");
         if (columnIndex != -1) {
             String mediaId = cursor.getString(columnIndex);
