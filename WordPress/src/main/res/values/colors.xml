@@ -104,16 +104,13 @@
     <color name="stats_link_text_color">@color/blue_wordpress</color>
     <color name="stats_module_content_list_header">@color/grey</color>
     <color name="stats_blue_labels">@color/grey_darken_20</color>
-    <color name="stats_bar_graph_views">@color/blue_wordpress</color>
-    <color name="stats_bar_graph_grid">@color/grey_lighten_20</color>
-    <color name="stats_bar_graph_vertical_label">@color/grey</color>
-    <color name="stats_div_color">@color/grey_lighten_10</color>
-    <color name="stats_lists_background_color">@color/grey_light</color>
+    <color name="stats_bar_graph_main_series">@color/blue_wordpress</color>
+    <color name="stats_bar_graph_main_series_highlight">@color/orange_jazzy</color>
+    <color name="stats_bar_graph_outer_highlight">#1Af0821e</color> <!-- 10% Opacity on orange_jazzy #f0821e -->
+    <color name="stats_bar_graph_secondary_series">@color/blue_dark</color>
+    <color name="stats_bar_graph_secondary_series_highlight">@color/orange_fire</color>
     <color name="stats_empty_placeholder_color">@color/translucent_grey_lighten_30</color>
 
-    <!-- TODO: Stats "custom" colors - calypso_orange_dark doesn't exist anymore -->
-    <color name="stats_bar_graph_views_inner">#004e70</color>
-    <color name="stats_bar_graph_outer_highlight">#40f0821e</color> <!-- 25% Opacity on calypso_orange_dark -->
 
     <!-- Reader  -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>
@@ -131,7 +128,7 @@
 
     <!-- NUX -->
     <color name="nux_grey_button">@color/grey_lighten_20</color>
-    <color name="nux_alert_bg">@color/grey_darken_30</color>
+    <color name="nux_alert_bg">@color/grey_dark</color>
     <color name="nux_background">@color/blue_wordpress</color>
     <color name="nux_eye_icon_color_closed">@color/grey_lighten_20</color>
     <color name="nux_eye_icon_color_open">@color/grey_lighten_10</color>
