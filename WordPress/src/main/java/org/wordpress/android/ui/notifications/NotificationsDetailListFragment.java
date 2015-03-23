@@ -25,7 +25,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
-import org.wordpress.android.ui.notifications.blocks.HeaderUserNoteBlock;
+import org.wordpress.android.ui.notifications.blocks.HeaderNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
@@ -188,6 +188,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (mNote.getParentCommentId() > 0 || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
                 // show comment detail
                 detailActivity.showCommentDetailForNote(mNote);
+            } else if (mNote.isFollowType()) {
+                detailActivity.showBlogPreviewActivity(mNote.getSiteId());
             } else {
                 // otherwise, load the post in the Reader
                 detailActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
@@ -242,7 +244,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             // Add the note header if one was provided
             if (mNote.getHeader() != null) {
-                HeaderUserNoteBlock headerNoteBlock = new HeaderUserNoteBlock(
+                HeaderNoteBlock headerNoteBlock = new HeaderNoteBlock(
                         getActivity(),
                         mNote.getHeader(),
                         mOnNoteBlockTextClickListener,

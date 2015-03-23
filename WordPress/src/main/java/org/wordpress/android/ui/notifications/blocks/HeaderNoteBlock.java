@@ -17,7 +17,7 @@ import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 // Note header, displayed at top of detail view
-public class HeaderUserNoteBlock extends NoteBlock {
+public class HeaderNoteBlock extends NoteBlock {
 
     private final JSONArray mHeaderArray;
 
@@ -25,9 +25,9 @@ public class HeaderUserNoteBlock extends NoteBlock {
     private Boolean mIsComment;
     private int mAvatarSize;
 
-    public HeaderUserNoteBlock(Context context, JSONArray headerArray,
-                               OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                               UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener) {
+    public HeaderNoteBlock(Context context, JSONArray headerArray,
+                           OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                           UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener) {
         super(new JSONObject(), onNoteBlockTextClickListener);
 
         mHeaderArray = headerArray;
