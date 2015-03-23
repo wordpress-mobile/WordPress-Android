@@ -50,7 +50,7 @@ public class ViewSiteActivity extends WPDrawerActivity {
         }
         createMenuDrawer(R.layout.webview);
         mWebView = (WebView) findViewById(R.id.webView);
-        mWebView.setWebViewClient(new WPWebViewClient(mBlog));
+        mWebView.setWebViewClient(new WPWebViewClient(this, mBlog));
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
         mWebView.getSettings().setJavaScriptEnabled(true);
