@@ -18,10 +18,15 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
+import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.StatsTimeframe;
+import org.wordpress.android.ui.stats.StatsViewAllActivity;
+import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -159,12 +164,20 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         ReaderActivityLauncher.showReaderPostDetail(this, siteId, postId);
     }
 
-    public void showStatsActivityForSite(int localTableSiteId) {
+    public void showStatsActivityForSite(int localTableSiteId, NoteBlockRangeType rangeType) {
         if (isFinishing()) return;
 
-        Intent intent = new Intent(this, StatsActivity.class);
+        Intent intent;
+        if (rangeType == NoteBlockRangeType.FOLLOW) {
+            intent = new Intent(this, StatsViewAllActivity.class);
+            intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS.ordinal());
+            intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
+        } else {
+            intent = new Intent(this, StatsActivity.class);
+            intent.putExtra(StatsActivity.ARG_NO_MENU_DRAWER, true);
+        }
+
         intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableSiteId);
-        intent.putExtra(StatsActivity.ARG_NO_MENU_DRAWER, true);
         startActivity(intent);
     }
 

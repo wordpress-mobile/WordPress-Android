@@ -404,13 +404,14 @@ public class NotificationsUtils {
                 activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getPostId());
                 break;
             case STAT:
+            case FOLLOW:
                 // We can open native stats, but only if the site is stored in the app locally.
                 int localTableSiteId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
                         (int) clickedSpan.getSiteId()
                 );
 
                 if (localTableSiteId > 0) {
-                    activity.showStatsActivityForSite(localTableSiteId);
+                    activity.showStatsActivityForSite(localTableSiteId, clickedSpan.getRangeType());
                 } else if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
                     activity.showWebViewActivityForUrl(clickedSpan.getUrl());
                 }
