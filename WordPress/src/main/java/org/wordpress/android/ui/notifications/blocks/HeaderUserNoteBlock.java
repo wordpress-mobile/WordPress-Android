@@ -51,7 +51,7 @@ public class HeaderUserNoteBlock extends NoteBlock {
     public View configureView(View view) {
         final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder)view.getTag();
 
-        Spannable spannable = NotificationsUtils.getSpannableContentFromIndices(
+        Spannable spannable = NotificationsUtils.getSpannableContentForRanges(
                 mHeaderArray.optJSONObject(0),
                 null,
                 null);
