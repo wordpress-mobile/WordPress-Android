@@ -9,7 +9,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainExampleActivity"
-            android:label="@string/title_activity_example" >
+            android:label="@string/title_activity_example"
+            android:exported="true">
         </activity>
         <activity
             android:name=".EditorExampleActivity" >
