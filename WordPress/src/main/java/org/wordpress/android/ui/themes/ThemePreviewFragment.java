@@ -17,13 +17,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPWebChromeClient;
 import org.wordpress.android.util.WPWebViewClient;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * A fragment to display a preview of the theme being applied on a blog.
@@ -141,8 +136,6 @@ public class ThemePreviewFragment extends Fragment {
                         (ProgressBar) view.findViewById(R.id.progress_bar),
                         false));
 
-        mWebView.setWebViewClient(new WPWebViewClient(mBlog));
-
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setSavePassword(false);
         mWebView.getSettings().setJavaScriptEnabled(true);
@@ -150,6 +143,13 @@ public class ThemePreviewFragment extends Fragment {
         loadAuthenticatedUrl(previewURL);
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mWebView.setWebViewClient(new WPWebViewClient(getActivity(), mBlog));
     }
 
     private void refreshViews() {
