@@ -2,6 +2,7 @@ package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -97,7 +98,32 @@ public class EditorFragment extends EditorFragmentAbstract {
             }
         });
         String htmlEditor = getHtmlEditor();
+
         mWebView.loadDataWithBaseURL("file:///android_asset/", htmlEditor, "text/html", "utf-8", "");
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+        // TODO: Replace postDelay with a callback from JS
+        mWebView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String htmlFile = "";
+                try {
+                    htmlFile = getStringFromAsset("example-content.html");
+                    htmlFile = htmlFile.replace("\\", "\\\\");
+                    htmlFile = htmlFile.replace("\"", "\\\"");
+                    htmlFile = htmlFile.replace("'", "\\'");
+                    htmlFile = htmlFile.replace("\r", "\\r");
+                    htmlFile = htmlFile.replace("\n", "\\n");
+                } catch (IOException e) {
+                    AppLog.e(T.EDITOR, e.getMessage());
+                }
+
+                // Load example file into editor content field
+                mWebView.loadUrl("JavaScript:ZSSEditor.getField('zss_field_content').setHTML('" + htmlFile + "');");
+            }
+        }, 5000);
     }
 
     private String getStringFromAsset(String filename) throws IOException {
