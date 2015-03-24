@@ -357,7 +357,7 @@
     <string name="search_location">Search</string>
     <string name="edit_location">Edit</string>
 
-    <!-- preferences -->
+    <!-- Preference keys -->
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
     <string name="pref_key_wpcom" translatable="false">wp_pref_wpcom</string>
     <string name="pref_key_self_hosted" translatable="false">wp_pref_self_hosted_blogs</string>
@@ -379,6 +379,11 @@
     <string name="pref_key_help_and_support" translatable="false">wp_pref_help_and_support</string>
     <string name="pref_key_signout_section" translatable="false">wp_pref_app_signout_section</string>
     <string name="pref_key_signout" translatable="false">wp_pref_sign_out</string>
+    <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
+    <string name="pref_notifications_enabled" translatable="false">wp_pref_notifications_enabled</string>
+    <string name="pref_notification_types" translatable="false">wp_pref_notification_types</string>
+
+    <!-- preferences -->
     <string name="help_and_support">Help and support</string>
     <string name="open_source_licenses">Open source licenses</string>
     <string name="wpcom_blogs">WordPress.com blogs</string>

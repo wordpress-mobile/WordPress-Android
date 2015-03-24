@@ -221,8 +221,9 @@ public class NotificationsUtils {
         return "org.wordpress.android.playstore";
     }
 
-    public static Spannable getSpannableContentFromIndices(JSONObject subject, TextView textView,
-                                                           final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+    // Builds a Spannable with range objects found in the note JSON
+    public static Spannable getSpannableContentForRanges(JSONObject subject, TextView textView,
+                                                         final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         if (subject == null) {
             return new SpannableStringBuilder();
         }

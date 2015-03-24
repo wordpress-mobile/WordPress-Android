@@ -57,7 +57,7 @@ public class NotificationSettingsFragment extends PreferenceFragment {
 
         // Add notifications group back in case it was previously removed from being logged out
         PreferenceCategory notificationTypesCategory = (PreferenceCategory) findPreference(
-                "wp_pref_notification_types");
+                getString(R.string.pref_notification_types));
         notificationTypesCategory.removeAll();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -87,7 +87,8 @@ public class NotificationSettingsFragment extends PreferenceFragment {
                 }
             }
 
-            PreferenceCategory selectBlogsCategory = (PreferenceCategory) findPreference("wp_pref_notification_blogs");
+            PreferenceCategory selectBlogsCategory = (PreferenceCategory) findPreference(
+                    getActivity().getString(R.string.pref_notification_blogs));
             selectBlogsCategory.removeAll();
             for (int i = 0; i < mMutedBlogsList.size(); i++) {
                 StringMap<?> blogMap = mMutedBlogsList.get(i);
@@ -111,7 +112,8 @@ public class NotificationSettingsFragment extends PreferenceFragment {
             return;
         }
 
-        CheckBoxPreference notificationsEnabledCheckBox = (CheckBoxPreference) findPreference("wp_pref_notifications_enabled");
+        CheckBoxPreference notificationsEnabledCheckBox = (CheckBoxPreference) findPreference(
+                getString(R.string.pref_notifications_enabled));
         notificationsEnabledCheckBox.setOnPreferenceChangeListener(mNotificationsEnabledChangeListener);
     }
 
@@ -222,8 +224,8 @@ public class NotificationSettingsFragment extends PreferenceFragment {
             } else if (v.getId() == R.id.notifications8Hours) {
                 muteUntilMap.put("value", String.valueOf((System.currentTimeMillis() / 1000) + (3600 * 8)));
             }
-            CheckBoxPreference enabledCheckBoxPreference = (CheckBoxPreference) findPreference(
-                    "wp_pref_notifications_enabled");
+            CheckBoxPreference enabledCheckBoxPreference = (CheckBoxPreference) findPreference(getString(R.string
+                    .pref_notifications_enabled));
             enabledCheckBoxPreference.setChecked(false);
             mNotificationSettings.put("mute_until", muteUntilMap);
             mNotificationSettingsChanged = true;
