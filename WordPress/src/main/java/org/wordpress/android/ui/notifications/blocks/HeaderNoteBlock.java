@@ -25,12 +25,15 @@ public class HeaderNoteBlock extends NoteBlock {
     private Boolean mIsComment;
     private int mAvatarSize;
 
-    public HeaderNoteBlock(Context context, JSONArray headerArray,
+    private WPNetworkImageView.ImageType mImageType;
+
+    public HeaderNoteBlock(Context context, JSONArray headerArray, WPNetworkImageView.ImageType imageType,
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener,
                            UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener) {
         super(new JSONObject(), onNoteBlockTextClickListener);
 
         mHeaderArray = headerArray;
+        mImageType = imageType;
         mGravatarClickedListener = onGravatarClickedListener;
 
         if (context != null) {
@@ -56,7 +59,8 @@ public class HeaderNoteBlock extends NoteBlock {
                 null,
                 null);
         noteBlockHolder.nameTextView.setText(spannable);
-        noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
+
+        noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), mImageType);
         if (!TextUtils.isEmpty(getUserUrl())) {
             noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
         } else {

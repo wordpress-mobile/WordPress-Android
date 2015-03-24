@@ -34,6 +34,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -244,9 +245,11 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             // Add the note header if one was provided
             if (mNote.getHeader() != null) {
+                ImageType imageType = mNote.isFollowType() ? ImageType.BLAVATAR : ImageType.AVATAR;
                 HeaderNoteBlock headerNoteBlock = new HeaderNoteBlock(
                         getActivity(),
                         mNote.getHeader(),
+                        imageType,
                         mOnNoteBlockTextClickListener,
                         mOnGravatarClickedListener
                 );
