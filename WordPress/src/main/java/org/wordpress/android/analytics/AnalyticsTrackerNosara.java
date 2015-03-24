@@ -288,7 +288,13 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         TracksClient.NosaraUserType userType = mAnonID != null ?
                 TracksClient.NosaraUserType.ANON :
                 TracksClient.NosaraUserType.WPCOM;
-        mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
+
+        if (properties != null && properties.size() > 0) {
+            JSONObject propertiesToJSON = new JSONObject(properties);
+            mNosaraClient.track(EVENTS_PREFIX + eventName, propertiesToJSON, user, userType);
+        } else {
+            mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
+        }
     }
 
     @Override
