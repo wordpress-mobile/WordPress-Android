@@ -55,8 +55,8 @@ import java.util.Set;
  * Accessible via the menu drawer as "Media"
  */
 public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridListener,
-        MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback,
-        MediaAddFragmentCallback {
+        MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
+        MediaEditFragmentCallback, MediaAddFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
 
     private MediaGridFragment mMediaGridFragment;
@@ -84,7 +84,6 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
             }
         }
     };
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
