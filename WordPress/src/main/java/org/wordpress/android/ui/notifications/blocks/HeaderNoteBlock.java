@@ -47,7 +47,7 @@ public class HeaderNoteBlock extends NoteBlock {
     }
 
     public int getLayoutResourceId() {
-        return R.layout.note_block_user_header;
+        return R.layout.note_block_header;
     }
 
     @Override
