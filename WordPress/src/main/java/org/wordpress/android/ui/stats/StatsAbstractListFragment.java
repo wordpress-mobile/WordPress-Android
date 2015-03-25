@@ -1,12 +1,8 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.util.SparseBooleanArray;
 import android.view.Gravity;
@@ -27,11 +23,11 @@ import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
 
+import de.greenrobot.event.EventBus;
 
 public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
@@ -165,19 +161,21 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        //AppLog.d(AppLog.T.STATS, this.getTag() + " > onPause");
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.unregisterReceiver(mReceiver);
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
     public void onResume() {
         //AppLog.d(AppLog.T.STATS, this.getTag() + " > onResume");
         super.onResume();
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SECTION_UPDATED));
 
         // Init the UI
         if (mDatamodels != null) {
@@ -409,55 +407,35 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         }
     };
 
-    /*
- * receives broadcast when data has been updated
- */
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = StringUtils.notNullStr(intent.getAction());
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdated event) {
+        if (!isAdded()) {
+            return;
+        }
 
-            if (!action.equals(StatsService.ACTION_STATS_SECTION_UPDATED)) {
-                return;
-            }
-
-            if (!intent.hasExtra(StatsService.EXTRA_ENDPOINT_NAME)) {
-                return;
-            }
-
-            if (!isAdded()) {
-                return;
-            }
-
-            StatsService.StatsEndpointsEnum sectionToUpdate = (StatsService.StatsEndpointsEnum) intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_NAME);
-            StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionsToUpdate();
-            int indexOfDatamodelMatch = -1;
-            for (int i = 0; i < getSectionsToUpdate().length; i++) {
-                if (sectionToUpdate == sectionsToUpdate[i]) {
-                    indexOfDatamodelMatch = i;
-                    break;
-                }
-            }
-
-            if (-1 == indexOfDatamodelMatch) {
-                return;
-            }
-
-            mGroupIdToExpandedMap.clear();
-            if (action.equals(StatsService.ACTION_STATS_SECTION_UPDATED)) {
-                Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_DATA);
-
-                if (mDatamodels == null) {
-                    mDatamodels = new Serializable[getSectionsToUpdate().length];
-                }
-
-                //dataObj = (dataObj == null || dataObj instanceof VolleyError) ? null : dataObj;
-                mDatamodels[indexOfDatamodelMatch] = dataObj;
-                updateUI();
+        StatsService.StatsEndpointsEnum sectionToUpdate = event.mEndPointName;
+        StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionsToUpdate();
+        int indexOfDatamodelMatch = -1;
+        for (int i = 0; i < getSectionsToUpdate().length; i++) {
+            if (sectionToUpdate == sectionsToUpdate[i]) {
+                indexOfDatamodelMatch = i;
+                break;
             }
         }
-    };
 
+        if (-1 == indexOfDatamodelMatch) {
+            return;
+        }
+
+        mGroupIdToExpandedMap.clear();
+
+        if (mDatamodels == null) {
+            mDatamodels = new Serializable[getSectionsToUpdate().length];
+        }
+
+        mDatamodels[indexOfDatamodelMatch] = event.mResponseObjectModel;
+        updateUI();
+    }
 
     @Override
     protected void resetDataModel() {

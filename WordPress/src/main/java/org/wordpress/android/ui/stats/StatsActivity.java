@@ -4,16 +4,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -29,8 +26,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -41,10 +36,8 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
@@ -55,7 +48,6 @@ import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -239,9 +231,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     protected void onResume() {
         super.onResume();
         mIsInFront = true;
-        // register to receive broadcasts when StatsService starts/stops updating
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATING));
     }
 
     @Override
@@ -249,8 +238,6 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         super.onPause();
         mIsInFront = false;
         mIsUpdatingStats = false;
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-        lbm.unregisterReceiver(mReceiver);
         mSwipeToRefreshHelper.setRefreshing(false);
         mUpdateStatsHandler.removeCallbacks(mUpdateStatsRequestedRunnable);
     }
@@ -696,66 +683,10 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
     }
 
-    /*
-     * receiver for broadcast from StatsService which alerts when stats update has started/ended
-     */
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = StringUtils.notNullStr(intent.getAction());
-
-            if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
-                mIsUpdatingStats = intent.getBooleanExtra(StatsService.EXTRA_IS_UPDATING, false);
-                mSwipeToRefreshHelper.setRefreshing(mIsUpdatingStats);
-
-                // Check if there were errors
-                if (intent.getBooleanExtra(StatsService.EXTRA_IS_ERROR, false) && !isFinishing()
-                        && (mSignInDialog == null || !mSignInDialog.isShowing())) {
-                    Serializable errorObject = intent.getSerializableExtra(StatsService.EXTRA_ERROR_OBJECT);
-                    if (errorObject instanceof String && errorObject.toString().contains("unauthorized")
-                            && errorObject.toString().contains("403")) {
-                        // This site has the wrong WP.com credentials
-                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
-                                StatsActivity.this);
-                        // Read the current wpcom username from blog settings, then read it from
-                        // the app wpcom account.
-                        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-                        // If currentBlog is null at this point just exit.
-                        if (currentBlog==null) {
-                            return;
-                        }
-                        String username = StringUtils.notNullStr(currentBlog.getDotcom_username());
-                        if (username.equals("")) {
-                            username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
-                        }
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(StatsActivity.this);
-                        builder.setTitle(getString(R.string.jetpack_stats_unauthorized))
-                        .setMessage(getString(R.string.jetpack_stats_switch_user, username));
-                        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                startWPComLoginActivity();
-                            }
-                        });
-                        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // User cancelled the dialog
-                            }
-                        });
-                        mSignInDialog = builder.create();
-                        mSignInDialog.show();
-                    } else if (errorObject instanceof VolleyError) {
-                        AuthenticationDialogUtils.showToastOrAuthAlert(StatsActivity.this, (VolleyError) errorObject,
-                                StatsActivity.this.getString(R.string.error_refresh_stats));
-                    } else {
-                        ToastUtils.showToast(StatsActivity.this,
-                                StatsActivity.this.getString(R.string.error_refresh_stats),
-                                Duration.LONG);
-                    }
-                } // End error check
-            }
-        }
-    };
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
+        mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
+    }
 
     /*
     * make sure the passed timeframe is the one selected in the actionbar
@@ -878,5 +809,4 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             return true;
         }
     };
-
 }
