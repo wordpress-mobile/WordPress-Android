@@ -32,6 +32,7 @@ import android.widget.Toast;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
@@ -74,12 +75,15 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
                 // Coming from zero connection. Continue what's pending for delete
-                String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-                if (WordPress.wpDB.getMediaDeleteQueueItems(blogId).getCount() > 0) {
-                    startMediaDeleteService();
+                Blog currentBlog = WordPress.getCurrentBlog();
+
+                if (currentBlog != null) {
+                    String blogId = String.valueOf(currentBlog.getLocalTableBlogId());
+                    if (WordPress.wpDB.getMediaDeleteQueueItems(blogId).getCount() > 0) {
+                        startMediaDeleteService();
+                    }
                 }
             }
         }
