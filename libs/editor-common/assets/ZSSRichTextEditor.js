@@ -8,7 +8,8 @@
  */
 
 // If we are using iOS or desktop
-var isUsingiOS = true;
+var isUsingiOS = false;
+var isUsingAndroid = true;
 
 // THe default callback parameter separator
 var defaultCallbackSeparator = '~';
@@ -197,6 +198,8 @@ ZSSEditor.callback = function(callbackScheme, callbackPath) {
 	
 	if (isUsingiOS) {
         ZSSEditor.callbackThroughIFrame(url);
+    } else if (isUsingAndroid) {
+        nativeCallbackHandler.executeCallback(callbackScheme);
 	} else {
 		console.log(url);
 	}

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
+import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -99,31 +100,13 @@ public class EditorFragment extends EditorFragmentAbstract {
         });
         String htmlEditor = getHtmlEditor();
 
+        mWebView.addJavascriptInterface(new JsCallbackHandler(), "nativeCallbackHandler");
+
         mWebView.loadDataWithBaseURL("file:///android_asset/", htmlEditor, "text/html", "utf-8", "");
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
-        // TODO: Replace postDelay with a callback from JS
-        mWebView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                String htmlFile = "";
-                try {
-                    htmlFile = getStringFromAsset("example-content.html");
-                    htmlFile = htmlFile.replace("\\", "\\\\");
-                    htmlFile = htmlFile.replace("\"", "\\\"");
-                    htmlFile = htmlFile.replace("'", "\\'");
-                    htmlFile = htmlFile.replace("\r", "\\r");
-                    htmlFile = htmlFile.replace("\n", "\\n");
-                } catch (IOException e) {
-                    AppLog.e(T.EDITOR, e.getMessage());
-                }
-
-                // Load example file into editor content field
-                mWebView.loadUrl("JavaScript:ZSSEditor.getField('zss_field_content').setHTML('" + htmlFile + "');");
-            }
-        }, 5000);
     }
 
     private String getStringFromAsset(String filename) throws IOException {
@@ -188,5 +171,32 @@ public class EditorFragment extends EditorFragmentAbstract {
     @Override
     public Spanned getSpannedContent() {
         return null;
+    }
+
+    class JsCallbackHandler {
+        @JavascriptInterface
+        public void executeCallback(final String callbackId) {
+            if (callbackId.equals("callback-dom-loaded")) {
+                // Run on UI thread
+                mWebView.post(new Runnable() {
+                    public void run() {
+                        String htmlFile = "";
+                        try {
+                            htmlFile = getStringFromAsset("example-content.html");
+                            htmlFile = htmlFile.replace("\\", "\\\\");
+                            htmlFile = htmlFile.replace("\"", "\\\"");
+                            htmlFile = htmlFile.replace("'", "\\'");
+                            htmlFile = htmlFile.replace("\r", "\\r");
+                            htmlFile = htmlFile.replace("\n", "\\n");
+                        } catch (IOException e) {
+                            AppLog.e(T.EDITOR, e.getMessage());
+                        }
+
+                        // Load example file into editor content field
+                        mWebView.loadUrl("JavaScript:ZSSEditor.getField('zss_field_content').setHTML('" + htmlFile + "');");
+                    }
+                });
+            }
+        }
     }
 }
