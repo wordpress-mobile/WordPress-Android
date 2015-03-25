@@ -217,7 +217,7 @@ public class ReaderWebView extends WebView {
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
             // Intercept requests for private images and add the WP.com authorization header
-            if (mIsPrivatePost && !TextUtils.isEmpty(mToken) && isImageUrl(url)) {
+            if (mIsPrivatePost && !TextUtils.isEmpty(mToken) && UrlUtils.isImageUrl(url)) {
                 DefaultHttpClient client = new DefaultHttpClient();
                 HttpGet httpGet = new HttpGet(url);
                 httpGet.setHeader("Authorization", "Bearer " + mToken);
@@ -232,15 +232,6 @@ public class ReaderWebView extends WebView {
 
             return super.shouldInterceptRequest(view, url);
         }
-    }
-
-    private static boolean isImageUrl(String url) {
-        if (TextUtils.isEmpty(url)) return false;
-
-        String cleanedUrl = UrlUtils.removeQuery(url.toLowerCase());
-
-        return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg") ||
-                cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
     }
 
     private static class ReaderWebChromeClient extends WebChromeClient {

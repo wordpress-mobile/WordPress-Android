@@ -86,7 +86,11 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                 accountUsers[validBlogCtr] = curHash.get("username").toString();
                 accountIDs[validBlogCtr] = (Integer)curHash.get("id");
                 String url = curHash.get("url").toString();
-                blavatars[validBlogCtr] = GravatarUtils.blavatarFromUrl(url, 60);
+                if (url != null) {
+                    blavatars[validBlogCtr] = GravatarUtils.blavatarFromUrl(url, 60);
+                } else {
+                    blavatars[validBlogCtr] = "";
+                }
                 accountNames.add(validBlogCtr, blogNames[i]);
                 validBlogCtr++;
             }

@@ -6,7 +6,6 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
@@ -15,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
@@ -51,6 +49,7 @@ import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
@@ -89,15 +88,6 @@ public class WordPress extends Application {
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
 
-    public static final String BROADCAST_ACTION_SIGNOUT = "wp-signout";
-    public static final String BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS = "XMLRPC_INVALID_CREDENTIALS";
-    public static final String BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE = "INVALID_SSL_CERTIFICATE";
-    public static final String BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH = "TWO_FA_AUTH";
-    public static final String BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT = "LOGIN_LIMIT";
-    public static final String BROADCAST_ACTION_REST_API_UNAUTHORIZED = "REST_API_UNAUTHORIZED";
-    public static final String BROADCAST_ACTION_BLOG_LIST_CHANGED = "BLOG_LIST_CHANGED";
-
-    private static final int SECONDS_BETWEEN_STATS_UPDATE = 30 * 60;
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
 
@@ -269,7 +259,7 @@ public class WordPress extends Application {
         public void onAuthFailed() {
             if (getContext() == null) return;
             // If this is called, it means the WP.com token is no longer valid.
-            sendLocalBroadcast(getContext(), BROADCAST_ACTION_REST_API_UNAUTHORIZED);
+            EventBus.getDefault().post(new CoreEvents.RestApiUnauthorized());
         }
     };
 
@@ -562,7 +552,7 @@ public class WordPress extends Application {
 
         // send broadcast that user is signing out - this is received by WPDrawerActivity
         // descendants
-        sendLocalBroadcast(context, BROADCAST_ACTION_SIGNOUT);
+        EventBus.getDefault().post(new CoreEvents.UserSignedOut());
     }
 
     public static class SignOutAsync extends AsyncTask<Void, Void, Void> {
@@ -633,16 +623,6 @@ public class WordPress extends Application {
 
         // Reset Simperium buckets (removes local data)
         SimperiumUtils.resetBucketsAndDeauthorize();
-    }
-
-    public static boolean sendLocalBroadcast(Context context, String action) {
-        if (context == null || TextUtils.isEmpty(action)) {
-            return false;
-        }
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(context);
-        Intent intent = new Intent();
-        intent.setAction(action);
-        return lbm.sendBroadcast(intent);
     }
 
     public static String getLoginUrl(Blog blog) {

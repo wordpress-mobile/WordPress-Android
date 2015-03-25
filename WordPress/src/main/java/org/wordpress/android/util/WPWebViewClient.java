@@ -1,16 +1,26 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.GeneralSecurityException;
 
 /**
@@ -19,11 +29,13 @@ import java.security.GeneralSecurityException;
  */
 public class WPWebViewClient extends WebViewClient {
     private final Blog mBlog;
-    private String mCurrentUrl;
+    private String mToken;
 
-    public WPWebViewClient(Blog blog) {
+    public WPWebViewClient(Context context, Blog blog) {
         super();
         this.mBlog = blog;
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        mToken = settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, "");
     }
 
     @Override
@@ -43,7 +55,6 @@ public class WPWebViewClient extends WebViewClient {
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
-        mCurrentUrl = url;
     }
 
     @Override
@@ -79,5 +90,25 @@ public class WPWebViewClient extends WebViewClient {
         }
 
         super.onReceivedSslError(view, handler, error);
+    }
+
+    @Override
+    public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+        // Intercept requests for private images and add the WP.com authorization header
+        if (mBlog != null && mBlog.isPrivate() && !TextUtils.isEmpty(mToken) && UrlUtils.isImageUrl(url)) {
+            DefaultHttpClient client = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(url);
+            httpGet.setHeader("Authorization", "Bearer " + mToken);
+            try {
+                HttpResponse httpResponse = client.execute(httpGet);
+                InputStream responseInputStream = httpResponse.getEntity().getContent();
+                return new WebResourceResponse(httpResponse.getEntity().getContentType().toString(),
+                        "UTF-8", responseInputStream);
+            } catch (IOException e) {
+                AppLog.e(AppLog.T.POSTS, "Invalid post detail request: " + e.getMessage());
+            }
+        }
+
+        return super.shouldInterceptRequest(view, url);
     }
 }

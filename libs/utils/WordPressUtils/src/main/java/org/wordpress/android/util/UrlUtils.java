@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.net.Uri;
+import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 import android.webkit.URLUtil;
 
@@ -194,5 +195,15 @@ public class UrlUtils {
             return false;
         }
         return true;
+    }
+
+    // returns true if the passed url is for an image
+    public static boolean isImageUrl(String url) {
+        if (TextUtils.isEmpty(url)) return false;
+
+        String cleanedUrl = removeQuery(url.toLowerCase());
+
+        return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg") ||
+                cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
     }
 }
