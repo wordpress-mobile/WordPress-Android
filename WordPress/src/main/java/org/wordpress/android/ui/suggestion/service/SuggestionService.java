@@ -4,8 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.SparseArray;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -20,13 +18,11 @@ import org.wordpress.android.util.AppLog;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 public class SuggestionService extends Service {
     private final IBinder mBinder = new SuggestionBinder();
     private final List<Integer> mCurrentlyRequestingSiteIds = new ArrayList<Integer>();
-
-    // broadcast action to notify clients when summary data has changed
-    public static final String ACTION_SUGGESTIONS_LIST_UPDATED = "SUGGESTIONS_LIST_UPDATED";
-    public static final String SUGGESTIONS_LIST_UPDATED_EXTRA = "SUGGESTIONS_LIST_UPDATED_EXTRA";
 
     @Override
     public void onCreate() {
@@ -87,11 +83,7 @@ public class SuggestionService extends Service {
                 List<Suggestion> suggestions = Suggestion.suggestionListFromJSON(jsonSuggestions, remoteBlogId);
                 if (suggestions != null) {
                     SuggestionTable.insertSuggestionsForSite(remoteBlogId, suggestions);
-
-                    LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(WordPress.getContext());
-                    Intent intent = new Intent(SuggestionService.ACTION_SUGGESTIONS_LIST_UPDATED);
-                    intent.putExtra(SuggestionService.SUGGESTIONS_LIST_UPDATED_EXTRA, remoteBlogId);
-                    lbm.sendBroadcast(intent);
+                    EventBus.getDefault().post(new SuggestionEvents.SuggestionListUpdated(remoteBlogId));
                 }
             }
         }.start();

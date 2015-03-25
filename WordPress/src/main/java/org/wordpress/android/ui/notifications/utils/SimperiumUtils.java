@@ -5,8 +5,6 @@
 package org.wordpress.android.ui.notifications.utils;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
@@ -16,12 +14,13 @@ import com.simperium.client.User;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
-public class SimperiumUtils {
-    public static final String BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED = "simperium-not-authorized";
+import de.greenrobot.event.EventBus;
 
+public class SimperiumUtils {
     private static Simperium mSimperium;
     private static Bucket<Note> mNotesBucket;
     private static Bucket<BucketObject> mMetaBucket;
@@ -56,9 +55,7 @@ public class SimperiumUtils {
                             case NOT_AUTHORIZED:
                                 mNotesBucket.stop();
                                 mMetaBucket.stop();
-                                Intent simperiumNotAuthorizedIntent = new Intent();
-                                simperiumNotAuthorizedIntent.setAction(BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
-                                LocalBroadcastManager.getInstance(context).sendBroadcast(simperiumNotAuthorizedIntent);
+                                EventBus.getDefault().post(new NotificationEvents.SimperiumNotAuthorized());
                                 break;
                             default:
                                 AppLog.d(AppLog.T.SIMPERIUM, "User not authorized yet");
