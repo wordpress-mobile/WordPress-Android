@@ -96,6 +96,9 @@ dependencies {
     // Simperium
     compile 'com.simperium.android:simperium:0.6.2'
 
+    // Automattic Tracks
+    compile 'com.automattic:tracks:1.0.0'
+
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
     releaseCompile project(path:':libs:networking:WordPressNetworking', configuration: 'release')
@@ -106,8 +109,7 @@ dependencies {
     debugCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'debug')
     releaseCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'release')
     debugCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'debug')
-    releaseCompile project(path:':libs:automattictracks:AutomatticTracks', configuration: 'release')
-    debugCompile project(path:':libs:automattictracks:AutomatticTracks', configuration: 'debug')
+
 }
 
 
