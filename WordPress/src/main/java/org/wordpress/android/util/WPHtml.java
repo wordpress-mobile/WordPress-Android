@@ -798,6 +798,8 @@ class HtmlToSpannedConverter implements ContentHandler {
     }
 
     private void startImg(SpannableStringBuilder text, Attributes attributes, WPHtml.ImageGetter img) {
+        if (ctx == null) return;
+
         String src = attributes.getValue("android-uri");
 
         Bitmap resizedBitmap = null;
