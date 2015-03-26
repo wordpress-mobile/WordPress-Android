@@ -3,10 +3,8 @@ package org.wordpress.android.ui.stats.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -15,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.util.AppLog;
@@ -24,6 +23,8 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Background service to retrieve Stats.
@@ -39,16 +40,6 @@ public class StatsService extends Service {
     public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS,
         VIDEO_PLAYS, COMMENTS, FOLLOWERS_WPCOM, FOLLOWERS_EMAIL, COMMENT_FOLLOWERS, TAGS_AND_CATEGORIES,
         PUBLICIZE, SEARCH_TERMS}
-
-    // broadcast action to notify clients of update start/end
-    public static final String ACTION_STATS_UPDATING = "ACTION_STATS_UPDATING";
-    public static final String ACTION_STATS_SECTION_UPDATED = "ACTION_STATS_SECTION_UPDATED";
-    public static final String EXTRA_IS_UPDATING = "is-updating";
-    public static final String EXTRA_ENDPOINT_NAME = "updated-endpoint-name";
-    public static final String EXTRA_ENDPOINT_DATA = "updated-endpoint-data";
-
-    public static final String EXTRA_IS_ERROR = "is-error";
-    public static final String EXTRA_ERROR_OBJECT = "error-object";
 
     private String mServiceBlogId;
     private StatsTimeframe mServiceRequestedTimeframe;
@@ -167,7 +158,7 @@ public class StatsService extends Service {
                 AppLog.i(T.STATS, "Update started for blogID - " + blogId + " with the following period: " + period
                         + " on the following date: " + mServiceRequestedDate);
 
-                broadcastUpdate(true);
+                EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(true));
 
                 synchronized (mStatsNetworkRequests) {
                     if (updateGraphStats) {
@@ -284,7 +275,7 @@ public class StatsService extends Service {
                             AppLog.e(AppLog.T.STATS, e);
                         }
                     }
-                    notifySectionUpdated();
+                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mResponseObjectModel));
                     checkAllRequestsFinished();
                 }
             });
@@ -306,21 +297,11 @@ public class StatsService extends Service {
                     AppLog.e(T.STATS, this.getClass().getName() + " responded with an Error");
                     StatsUtils.logVolleyErrorDetails(volleyError);
                     mResponseObjectModel = volleyError;
-                    notifySectionUpdated();
+                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mResponseObjectModel));
                     checkAllRequestsFinished();
                 }
             });
         }
-
-        private void notifySectionUpdated() {
-            Intent intent = new Intent()
-                    .setAction(ACTION_STATS_SECTION_UPDATED)
-                    .putExtra(EXTRA_ENDPOINT_NAME, mEndpointName)
-                    .putExtra(EXTRA_ENDPOINT_DATA, mResponseObjectModel);
-            LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
-        }
-
-
     }
 
     private void stopService() {
@@ -329,7 +310,7 @@ public class StatsService extends Service {
         if (currentServiceBlogId == null || currentServiceBlogId.equals(mRequestBlogId)) {
             stopService();
         }*/
-        broadcastUpdate(false);
+        EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(false));
         stopSelf(mServiceStartId);
     }
 
@@ -347,21 +328,5 @@ public class StatsService extends Service {
 
     boolean isNetworkingDone() {
         return mNumberOfFinishedNetworkCalls == mNumberOfNetworkCalls;
-    }
-
-    /*
-     * broadcast that the update has started/ended - used by StatsActivity to animate refresh icon
-     * while update is in progress
-     */
-    private void broadcastUpdate(boolean isUpdating) {
-        Intent intent = new Intent()
-                .setAction(ACTION_STATS_UPDATING)
-                .putExtra(EXTRA_IS_UPDATING, isUpdating);
-       /* if (mErrorObject != null) {
-            intent.putExtra(EXTRA_IS_ERROR, true);
-            intent.putExtra(EXTRA_ERROR_OBJECT, mErrorObject);
-        }
-*/
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

@@ -40,7 +40,6 @@ import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
 import javax.annotation.Nonnull;
 
 public class NotificationsListFragment extends Fragment implements Bucket.Listener<Note> {
-    public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
