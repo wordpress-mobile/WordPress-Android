@@ -21,6 +21,7 @@ public class EditPostPreviewFragment extends Fragment {
     private EditPostActivity mActivity;
     private WebView mWebView;
     private TextView mTextView;
+    private LoadPostPreviewTask mLoadTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,14 +54,25 @@ public class EditPostPreviewFragment extends Fragment {
         }
     }
 
-    public void loadPost() {
-        new LoadPostPreviewTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mLoadTask != null) {
+            mLoadTask.cancel(true);
+            mLoadTask = null;
+        }
     }
 
+    public void loadPost() {
+        if (mLoadTask == null) {
+            mLoadTask = new LoadPostPreviewTask();
+            mLoadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
 
     // Load post content in the background
     private class LoadPostPreviewTask extends AsyncTask<Void, Void, Spanned> {
-
         @Override
         protected Spanned doInBackground(Void... params) {
             Spanned contentSpannable;
@@ -77,7 +89,7 @@ public class EditPostPreviewFragment extends Fragment {
             if (post.isLocalDraft()) {
                 contentSpannable = WPHtml.fromHtml(
                         postContent.replaceAll("\uFFFC", ""),
-                        getActivity(),
+                        mActivity,
                         post,
                         Math.min(mTextView.getWidth(), mTextView.getHeight())
                 );
@@ -105,6 +117,8 @@ public class EditPostPreviewFragment extends Fragment {
                             "text/html", "utf-8", null);
                 }
             }
+
+            mLoadTask = null;
         }
     }
 }
