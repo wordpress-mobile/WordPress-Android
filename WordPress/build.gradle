@@ -109,7 +109,6 @@ dependencies {
     debugCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'debug')
     releaseCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'release')
     debugCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'debug')
-
 }
 
 
