@@ -61,7 +61,7 @@ public class WPMeShortlinks {
         if (post==null || blog==null)
             return null;
 
-        if (!blog.isDotcomFlag() && !blog.isJetpackPowered())
+        if (!blog.isDotCom() && !blog.isJetpackPowered())
             return null;
 
         String postID = post.getRemotePostId();
@@ -93,7 +93,7 @@ public class WPMeShortlinks {
         //Calculate the blog shortlink
         String blogShortlink = null;
         try {
-            double blogID = blog.isDotcomFlag() ? blog.getRemoteBlogId() : Double.parseDouble(blog.getApi_blogid());
+            double blogID = blog.isDotCom() ? blog.getRemoteBlogId() : Double.parseDouble(blog.getApi_blogid());
             blogShortlink = wpme_dec2sixtwo(blogID);
         } catch (NumberFormatException e) {
             AppLog.e(T.UTILS, "Remote Blog ID cannot be converted to double", e);
@@ -117,11 +117,11 @@ public class WPMeShortlinks {
         if (blog==null)
             return null;
 
-        if (!blog.isDotcomFlag() && !blog.isJetpackPowered())
+        if (!blog.isDotCom() && !blog.isJetpackPowered())
             return null;
 
         try {
-            double blogID = blog.isDotcomFlag() ? blog.getRemoteBlogId() : Double.parseDouble(blog.getApi_blogid());
+            double blogID = blog.isDotCom() ? blog.getRemoteBlogId() : Double.parseDouble(blog.getApi_blogid());
             String shortlink = wpme_dec2sixtwo(blogID);
             String shortlinkWithProtocol = (shortlink == null) ? blog.getHomeURL() : "http://wp.me/" + shortlink;
             return shortlinkWithProtocol;

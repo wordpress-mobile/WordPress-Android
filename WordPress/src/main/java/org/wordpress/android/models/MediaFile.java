@@ -36,7 +36,7 @@ public class MediaFile {
     public static String VIDEOPRESS_SHORTCODE_ID = "videopress_shortcode";
 
     public MediaFile(String blogId, Map<?, ?> resultMap) {
-        boolean isDotCom = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag());
+        boolean isDotCom = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotCom());
 
         setBlogId(blogId);
         setMediaId(MapUtils.getMapStr(resultMap, "attachment_id"));

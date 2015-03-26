@@ -74,9 +74,6 @@ public class LoginWPCom extends LoginAbstract {
             @SuppressLint("CommitPrefEdits")
             @Override
             public void onResponse(final Oauth.Token token) {
-                // Once we have a token, start up Simperium
-                SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
-
                 if (mJetpackBlog != null) {
                     // Store token in blog object for Jetpack sites
                     mJetpackBlog.setApi_key(token.toString());
@@ -84,13 +81,28 @@ public class LoginWPCom extends LoginAbstract {
                 }
 
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-                if (mJetpackBlog == null || TextUtils.isEmpty(settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null))) {
+                SharedPreferences.Editor editor = settings.edit();
+
+                String existingUsername = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+                if (settings.contains(WordPress.IS_SIGNED_OUT_PREFERENCE) && existingUsername != null &&
+                        !existingUsername.equals(mUsername)) {
+                    // If user has signed out and back in with a different username, we must clear the old data
+                    WordPress.wpDB.dangerouslyDeleteDatabaseContent();
+                    WordPress.removeWpComUserRelatedData(WordPress.getContext());
+                    existingUsername = null;
+                }
+
+                // Once we have a token, start up Simperium
+                SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
+
+                if (mJetpackBlog == null || TextUtils.isEmpty(existingUsername)) {
                     // Store token in global account
-                    SharedPreferences.Editor editor = settings.edit();
                     editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
                     editor.putString(WordPress.ACCESS_TOKEN_PREFERENCE, token.toString());
-                    editor.commit();
                 }
+
+                editor.remove(WordPress.IS_SIGNED_OUT_PREFERENCE);
+                editor.commit();
 
                 mCallback.onSuccess();
             }

@@ -145,7 +145,7 @@ public class ApiHelper {
         }
 
         // Software version
-        if (!currentBlog.isDotcomFlag()) {
+        if (!currentBlog.isDotCom()) {
             Map<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
             String wpVersion = MapUtils.getMapStr(sv, "value");
             if (wpVersion.length() > 0) {

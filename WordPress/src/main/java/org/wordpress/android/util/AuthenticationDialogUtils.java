@@ -78,7 +78,7 @@ public class AuthenticationDialogUtils {
         }
 
         // WP.com errors will show the sign in activity
-        if (WordPress.getCurrentBlog() == null || (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag())) {
+        if (WordPress.getCurrentBlog() == null || (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotCom())) {
             Intent signInIntent = new Intent(activity, SignInActivity.class);
             signInIntent.putExtra(SignInActivity.ARG_IS_AUTH_ERROR, true);
             signInIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

@@ -237,7 +237,7 @@ public class DrawerItems {
                     return WordPress.wpDB.getNumVisibleAccounts() != 0;
                 case THEMES:
                     Blog blog = WordPress.getCurrentBlog();
-                    return (blog != null && blog.isAdmin() && blog.isDotcomFlag());
+                    return (blog != null && blog.isAdmin() && blog.isDotCom());
                 case STATS:
                     return WordPress.wpDB.getNumVisibleAccounts() != 0;
                 case VIEW_SITE:

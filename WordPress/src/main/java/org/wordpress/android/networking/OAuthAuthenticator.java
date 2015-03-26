@@ -23,7 +23,7 @@ public class OAuthAuthenticator implements Authenticator {
                 String jetpackToken = blog.getApi_key();
 
                 // valid OAuth tokens are 64 chars
-                if (jetpackToken != null && jetpackToken.length() == 64 && !blog.isDotcomFlag()) {
+                if (jetpackToken != null && jetpackToken.length() == 64 && !blog.isDotCom()) {
                     token = jetpackToken;
                 }
             }

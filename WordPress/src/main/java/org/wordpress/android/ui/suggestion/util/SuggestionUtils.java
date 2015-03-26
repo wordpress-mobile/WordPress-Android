@@ -14,7 +14,7 @@ public class SuggestionUtils {
 
     public static SuggestionAdapter setupSuggestions(final int remoteBlogId, Context context, SuggestionServiceConnectionManager serviceConnectionManager) {
         Blog blog = WordPress.wpDB.getBlogForDotComBlogId(Integer.toString(remoteBlogId));
-        boolean isDotComFlag = (blog != null && blog.isDotcomFlag());
+        boolean isDotComFlag = (blog != null && blog.isDotCom());
 
         return SuggestionUtils.setupSuggestions(remoteBlogId, context, serviceConnectionManager, isDotComFlag);
     }

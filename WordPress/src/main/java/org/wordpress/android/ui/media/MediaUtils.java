@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -300,7 +299,7 @@ public class MediaUtils {
         if (WordPress.currentBlog.getWpVersion() == null)
             return true;
 
-        if (WordPress.currentBlog.isDotcomFlag())
+        if (WordPress.currentBlog.isDotCom())
             return true;
 
         Version minVersion;

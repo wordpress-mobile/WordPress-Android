@@ -19,7 +19,7 @@ import org.wordpress.android.util.StringUtils;
  * and missed a few important fields
  */
 public class CommentTable {
-    private static final String COMMENTS_TABLE = "comments";
+    public static final String COMMENTS_TABLE = "comments";
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + COMMENTS_TABLE + " ("

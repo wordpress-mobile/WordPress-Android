@@ -5,10 +5,12 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -423,10 +425,26 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private final Callback mFetchBlogListCallback = new Callback() {
         @Override
         public void onSuccess(final List<Map<String, Object>> userBlogList) {
+            if (!isAdded()) return;
+
             if (userBlogList != null) {
                 if (isWPComLogin()) {
                     BlogUtils.addBlogs(userBlogList, mUsername);
                 } else {
+                    // If app is signed out, check for a matching username. No match? Then delete existing accounts
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    if (settings.contains(WordPress.IS_SIGNED_OUT_PREFERENCE)) {
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.remove(WordPress.IS_SIGNED_OUT_PREFERENCE);
+                        editor.commit();
+
+                        if (!WordPress.wpDB.hasDotOrgAccountForUsername(mUsername)) {
+                            WordPress.wpDB.dangerouslyDeleteDatabaseContent();
+                            // Clear WPCom login info (could have been set up for Jetpack stats auth)
+                            WordPress.removeWpComUserRelatedData(WordPress.getContext());
+                        }
+                    }
+
                     BlogUtils.addBlogs(userBlogList, mUsername, mPassword, mHttpUsername, mHttpPassword);
                 }
 

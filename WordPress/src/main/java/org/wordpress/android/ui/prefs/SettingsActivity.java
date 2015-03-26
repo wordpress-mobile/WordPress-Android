@@ -47,18 +47,11 @@ public class SettingsActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mSettingsFragment.refreshWPComAuthCategory();
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void finish() {
+    public void checkForBlogChangeAndFinish() {
         Intent data = new Intent();
         boolean currentBlogChanged = false;
         if (mCurrentBlogOnCreate != null) {
-            if (mCurrentBlogOnCreate.isDotcomFlag()) {
+            if (mCurrentBlogOnCreate.isDotCom()) {
                 if (!WordPress.wpDB.isDotComAccountVisible(mCurrentBlogOnCreate.getRemoteBlogId())) {
                     // dotcom blog has been hidden or removed
                     currentBlogChanged = true;
@@ -79,7 +72,14 @@ public class SettingsActivity extends ActionBarActivity {
         data.putExtra(SettingsActivity.CURRENT_BLOG_CHANGED, currentBlogChanged);
         setResult(Activity.RESULT_OK, data);
         AnalyticsTracker.loadPrefHasUserOptedOut(true);
-        super.finish();
+
+        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mSettingsFragment.refreshWPComAuthCategory();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

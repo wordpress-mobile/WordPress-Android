@@ -322,7 +322,7 @@ public class WordPressDB {
         values.put("maxImageWidth", blog.getMaxImageWidth());
         values.put("maxImageWidthId", blog.getMaxImageWidthId());
         values.put("blogId", blog.getRemoteBlogId());
-        values.put("dotcomFlag", blog.isDotcomFlag());
+        values.put("dotcomFlag", blog.isDotCom());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -506,7 +506,7 @@ public class WordPressDB {
         }
         boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getLocalTableBlogId(),
                 null) > 0;
-        if (blog.isDotcomFlag()) {
+        if (blog.isDotCom()) {
             returnValue = updateWPComCredentials(blog.getUsername(), blog.getPassword());
         }
 
@@ -523,25 +523,30 @@ public class WordPressDB {
     }
 
     public boolean deleteAccount(Context ctx, int id) {
-        // TODO: should this also delete posts and other related info?
         int rowsAffected = db.delete(SETTINGS_TABLE, "id=?", new String[]{Integer.toString(id)});
         deleteQuickPressShortcutsForAccount(ctx, id);
+        deleteAllPostsForLocalTableBlogId(id);
         return (rowsAffected > 0);
     }
 
-    public void deleteAllAccounts() {
-        List<Integer> ids = getAllAccountIDs();
-        if (ids.size() == 0)
-            return;
+    public void dangerouslyDeleteDatabaseContent() {
+        // Deletes all the things! Use wisely.
 
-        db.beginTransaction();
+        db.delete(SETTINGS_TABLE, null, null);
+        db.delete(POSTS_TABLE, null, null);
+        db.delete(MEDIA_TABLE, null, null);
+        db.delete(CATEGORIES_TABLE, null, null);
+        db.delete(CommentTable.COMMENTS_TABLE, null, null);
+    }
+
+    public boolean hasDotOrgAccountForUsername(String username) {
+        if (TextUtils.isEmpty(username)) return false;
+
+        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "username=?", new String[]{username}, null, null, null);
         try {
-            for (int id: ids) {
-                deleteAccount(context, id);
-            }
-            db.setTransactionSuccessful();
+            return c.getCount() > 0;
         } finally {
-            db.endTransaction();
+            SqlUtils.closeCursor(c);
         }
     }
 
@@ -586,7 +591,7 @@ public class WordPressDB {
                 blog.setMaxImageWidth(c.getString(c.getColumnIndex("maxImageWidth")));
                 blog.setMaxImageWidthId(c.getInt(c.getColumnIndex("maxImageWidthId")));
                 blog.setRemoteBlogId(c.getInt(c.getColumnIndex("blogId")));
-                blog.setDotcomFlag(c.getInt(c.getColumnIndex("dotcomFlag")) > 0);
+                blog.setIsDotCom(c.getInt(c.getColumnIndex("dotcomFlag")) > 0);
                 if (c.getString(c.getColumnIndex("dotcom_username")) != null) {
                     blog.setDotcom_username(c.getString(c.getColumnIndex("dotcom_username")));
                 }
@@ -626,7 +631,7 @@ public class WordPressDB {
     public boolean isRemoteBlogIdDotComOrJetpack(int remoteBlogId) {
         int localId = getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
         Blog blog = instantiateBlogByLocalId(localId);
-        return blog != null && (blog.isDotcomFlag() || blog.isJetpackPowered());
+        return blog != null && (blog.isDotCom() || blog.isJetpackPowered());
     }
 
     public Blog getBlogForDotComBlogId(String dotComBlogId) {
@@ -785,6 +790,11 @@ public class WordPressDB {
                 new String[]{String.valueOf(post.getLocalTableBlogId()), String.valueOf(post.getLocalTablePostId())});
 
         return (result == 1);
+    }
+
+    // Deletes all posts for the given blogId
+    private void deleteAllPostsForLocalTableBlogId(int localBlogId) {
+        db.delete(POSTS_TABLE, "blogID=?", new String[]{String.valueOf(localBlogId)});
     }
 
     public Object[] arrayListToArray(Object array) {

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts;
 
 import android.content.Context;
 
-import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
@@ -111,7 +110,7 @@ public class BlogUtils {
             // deprecated
             blog.setMaxImageWidthId(0);
             blog.setRemoteBlogId(Integer.parseInt(blogId));
-            blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
+            blog.setIsDotCom(xmlRpcUrl.contains("wordpress.com"));
             // assigned later in getOptions call
             blog.setWpVersion("");
             blog.setAdmin(isAdmin);
