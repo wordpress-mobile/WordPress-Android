@@ -439,7 +439,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                         editor.commit();
 
                         if (!WordPress.wpDB.hasDotOrgAccountForUsername(mUsername)) {
-                            WordPress.wpDB.dangerouslyDeleteDatabaseContent();
+                            WordPress.wpDB.dangerouslyDeleteAllContent();
                             // Clear WPCom login info (could have been set up for Jetpack stats auth)
                             WordPress.removeWpComUserRelatedData(WordPress.getContext());
                         }

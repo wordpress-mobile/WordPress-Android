@@ -537,7 +537,6 @@ public class WordPress extends Application {
         }
 
         // Set a shared preference to signify that this user signed out
-        // WPLaunchActivity will check for the preference to show the auth activity
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(IS_SIGNED_OUT_PREFERENCE, true);

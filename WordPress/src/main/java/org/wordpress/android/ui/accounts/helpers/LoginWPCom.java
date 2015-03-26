@@ -87,7 +87,7 @@ public class LoginWPCom extends LoginAbstract {
                 if (settings.contains(WordPress.IS_SIGNED_OUT_PREFERENCE) && existingUsername != null &&
                         !existingUsername.equals(mUsername)) {
                     // If user has signed out and back in with a different username, we must clear the old data
-                    WordPress.wpDB.dangerouslyDeleteDatabaseContent();
+                    WordPress.wpDB.dangerouslyDeleteAllContent();
                     WordPress.removeWpComUserRelatedData(WordPress.getContext());
                     existingUsername = null;
                 }

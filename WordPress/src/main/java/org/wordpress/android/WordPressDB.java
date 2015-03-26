@@ -529,7 +529,7 @@ public class WordPressDB {
         return (rowsAffected > 0);
     }
 
-    public void dangerouslyDeleteDatabaseContent() {
+    public void dangerouslyDeleteAllContent() {
         // Deletes all the things! Use wisely.
 
         db.delete(SETTINGS_TABLE, null, null);
