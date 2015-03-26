@@ -130,9 +130,9 @@ public class BlogTest extends InstrumentationTestCase {
     }
 
     public void testGetSetDotcomFlag() {
-        assertFalse(blog.isDotcomFlag());
-        blog.setDotcomFlag(true);
-        assertTrue(blog.isDotcomFlag());
+        assertFalse(blog.isDotCom());
+        blog.setIsDotCom(true);
+        assertTrue(blog.isDotCom());
     }
 
     public void testGetSetWpVersion() {
@@ -257,7 +257,7 @@ public class BlogTest extends InstrumentationTestCase {
         assertFalse(blog.isPhotonCapable());
         assertFalse(blog.isPrivate());
         blog.setBlogOptions("");
-        blog.setDotcomFlag(true);
+        blog.setIsDotCom(true);
         assertTrue(blog.isPhotonCapable());
     }
 
@@ -274,11 +274,11 @@ public class BlogTest extends InstrumentationTestCase {
 
     public void testGetSetDotComBlogId() {
         assertNull(blog.getDotComBlogId());
-        assertFalse(blog.isDotcomFlag());
+        assertFalse(blog.isDotCom());
         blog.setApi_blogid("1");
         blog.setRemoteBlogId(2);
         assertEquals("1", blog.getDotComBlogId());
-        blog.setDotcomFlag(true);
+        blog.setIsDotCom(true);
         assertEquals("2", blog.getDotComBlogId());
     }
 }

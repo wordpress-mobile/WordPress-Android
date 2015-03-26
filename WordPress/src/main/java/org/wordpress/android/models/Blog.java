@@ -33,7 +33,7 @@ public class Blog {
     private String dotcom_password;
     private String api_key;
     private String api_blogid;
-    private boolean dotcomFlag;
+    private boolean isDotCom;
     private String wpVersion;
     private String httpuser = "";
     private String httppassword = "";
@@ -64,7 +64,7 @@ public class Blog {
         this.dotcom_password = dotcom_password;
         this.api_key = api_key;
         this.api_blogid = api_blogid;
-        this.dotcomFlag = dotcomFlag;
+        this.isDotCom = dotcomFlag;
         this.wpVersion = wpVersion;
         this.httpuser = httpuser;
         this.httppassword = httppassword;
@@ -249,12 +249,12 @@ public class Blog {
         api_blogid = apiBlogid;
     }
 
-    public boolean isDotcomFlag() {
-        return dotcomFlag;
+    public boolean isDotCom() {
+        return isDotCom;
     }
 
-    public void setDotcomFlag(boolean dotcomFlag) {
-        this.dotcomFlag = dotcomFlag;
+    public void setIsDotCom(boolean isDotCom) {
+        this.isDotCom = isDotCom;
     }
 
     public String getWpVersion() {
@@ -438,7 +438,7 @@ public class Blog {
     }
 
     public boolean isPhotonCapable() {
-        return ((isDotcomFlag() && !isPrivate()) || (isJetpackPowered() && !hasValidHTTPAuthCredentials()));
+        return ((isDotCom() && !isPrivate()) || (isJetpackPowered() && !hasValidHTTPAuthCredentials()));
     }
 
     public boolean hasValidJetpackCredentials() {
@@ -456,7 +456,7 @@ public class Blog {
      * @return WP.com blogId string, potentially null for Jetpack sites
      */
     public String getDotComBlogId() {
-        if (isDotcomFlag())
+        if (isDotCom())
             return String.valueOf(getRemoteBlogId());
         else
             return getApi_blogid();
