@@ -53,15 +53,15 @@
         <LinearLayout style="@style/MeListRowLayout">
 
             <ImageView
-                android:id="@+id/me_user_settings_icon"
+                android:id="@+id/me_settings_icon"
                 style="@style/MeListRowIcon"
-                android:contentDescription="@string/me_btn_user_settings"
-                android:src="@drawable/me_icon_user_settings" />
+                android:contentDescription="@string/me_btn_settings"
+                android:src="@drawable/me_icon_settings" />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/me_user_settings_text_view"
+                android:id="@+id/me_settings_text_view"
                 style="@style/MeListRowTextView"
-                android:text="@string/me_btn_user_settings" />
+                android:text="@string/me_btn_settings" />
 
         </LinearLayout>
 
@@ -77,6 +77,21 @@
                 android:id="@+id/me_support_text_view"
                 style="@style/MeListRowTextView"
                 android:text="@string/me_btn_support" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/MeListRowLayout">
+
+            <ImageView
+                android:id="@+id/me_login_logout_icon"
+                style="@style/MeListRowIcon"
+                android:contentDescription="@string/me_btn_login_logout"
+                android:src="@drawable/me_icon_login_logout" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/me_login_logout_text_view"
+                style="@style/MeListRowTextView"
+                tools:text="@string/me_btn_login_logout" />
 
         </LinearLayout>
 

@@ -12,12 +12,14 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 
@@ -110,5 +112,15 @@ public class ActivityLauncher {
 
     public static void addMedia(Context context, Blog blog) {
         // TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/2394
+    }
+
+    public static void viewAccountSettings(Context context) {
+        Intent intent = new Intent(context, SettingsActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void viewHelpAndSupport(Context context) {
+        Intent intent = new Intent(context, HelpActivity.class);
+        context.startActivity(intent);
     }
 }

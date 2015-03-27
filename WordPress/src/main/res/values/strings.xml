@@ -882,7 +882,10 @@
     <string name="my_site_btn_view_site">View Site</string>
 
     <!--Me-->
-    <string name="me_btn_user_settings">User Settings</string>
-    <string name="me_btn_support">Support</string>
+    <string name="me_btn_settings">Account Settings</string>
+    <string name="me_btn_support">Help &amp; Support</string>
+    <string name="me_btn_login_logout">Login/Logout</string>
+    <string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>
+    <string name="me_disconnect_from_wordpress_com">Disconnect from WordPress.com</string>
 
 </resources>
