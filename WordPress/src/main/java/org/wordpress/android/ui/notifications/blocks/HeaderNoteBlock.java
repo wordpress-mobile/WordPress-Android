@@ -17,7 +17,7 @@ import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 // Note header, displayed at top of detail view
-public class HeaderUserNoteBlock extends NoteBlock {
+public class HeaderNoteBlock extends NoteBlock {
 
     private final JSONArray mHeaderArray;
 
@@ -25,12 +25,15 @@ public class HeaderUserNoteBlock extends NoteBlock {
     private Boolean mIsComment;
     private int mAvatarSize;
 
-    public HeaderUserNoteBlock(Context context, JSONArray headerArray,
-                               OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                               UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener) {
+    private WPNetworkImageView.ImageType mImageType;
+
+    public HeaderNoteBlock(Context context, JSONArray headerArray, WPNetworkImageView.ImageType imageType,
+                           OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                           UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener) {
         super(new JSONObject(), onNoteBlockTextClickListener);
 
         mHeaderArray = headerArray;
+        mImageType = imageType;
         mGravatarClickedListener = onGravatarClickedListener;
 
         if (context != null) {
@@ -44,7 +47,7 @@ public class HeaderUserNoteBlock extends NoteBlock {
     }
 
     public int getLayoutResourceId() {
-        return R.layout.note_block_user_header;
+        return R.layout.note_block_header;
     }
 
     @Override
@@ -56,7 +59,8 @@ public class HeaderUserNoteBlock extends NoteBlock {
                 null,
                 null);
         noteBlockHolder.nameTextView.setText(spannable);
-        noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
+
+        noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), mImageType);
         if (!TextUtils.isEmpty(getUserUrl())) {
             noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
         } else {

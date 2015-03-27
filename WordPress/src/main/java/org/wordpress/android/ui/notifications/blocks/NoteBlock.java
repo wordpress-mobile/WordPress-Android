@@ -175,6 +175,9 @@ public class NoteBlock {
         // Note text
         if (!TextUtils.isEmpty(getNoteText())) {
             if (mIsBadge) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                params.gravity = Gravity.CENTER_HORIZONTAL;
+                noteBlockHolder.getTextView().setLayoutParams(params);
                 noteBlockHolder.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
                 noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), 8), 0, 0);
             } else {
