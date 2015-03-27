@@ -542,7 +542,6 @@ public class WordPress extends Application {
         editor.putBoolean(IS_SIGNED_OUT_PREFERENCE, true);
         editor.commit();
 
-        //wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
 
