@@ -205,7 +205,7 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
 
                 // Support video only if you are self-hosted or are a dot-com blog with the video
                 // press upgrade
-                boolean selfHosted = !WordPress.getCurrentBlog().isDotCom();
+                boolean selfHosted = !WordPress.getCurrentBlog().isDotcomFlag();
                 boolean isVideoEnabled = selfHosted
                         || (mFeatureSet != null && mFeatureSet.isVideopressEnabled());
 
@@ -259,7 +259,7 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
 
     /** Get the feature set for a wordpress.com hosted blog **/
     private void getFeatureSet() {
-        if (WordPress.getCurrentBlog() == null || !WordPress.getCurrentBlog().isDotCom())
+        if (WordPress.getCurrentBlog() == null || !WordPress.getCurrentBlog().isDotcomFlag())
             return;
 
         ApiHelper.GetFeatures task = new ApiHelper.GetFeatures(new Callback() {

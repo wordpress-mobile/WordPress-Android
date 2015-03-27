@@ -77,7 +77,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         mImageWidthSpinner = (Spinner) findViewById(R.id.maxImageWidth);
         Button removeBlogButton = (Button) findViewById(R.id.remove_account);
 
-        if (blog.isDotCom()) {
+        if (blog.isDotcomFlag()) {
             // Hide credentials section
             RelativeLayout credentialsRL = (RelativeLayout) findViewById(R.id.sectionContent);
             credentialsRL.setVisibility(View.GONE);
@@ -199,7 +199,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         mHttpUsernameET.setText(blog.getHttpuser());
         mHttpPasswordET.setText(blog.getHttppassword());
         TextView httpUserLabel = (TextView) findViewById(R.id.l_httpuser);
-        if (blog.isDotCom()) {
+        if (blog.isDotcomFlag()) {
             mHttpUsernameET.setVisibility(View.GONE);
             mHttpPasswordET.setVisibility(View.GONE);
             httpUserLabel.setVisibility(View.GONE);

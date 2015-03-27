@@ -51,7 +51,7 @@ public class SettingsActivity extends ActionBarActivity {
         Intent data = new Intent();
         boolean currentBlogChanged = false;
         if (mCurrentBlogOnCreate != null) {
-            if (mCurrentBlogOnCreate.isDotCom()) {
+            if (mCurrentBlogOnCreate.isDotcomFlag()) {
                 if (!WordPress.wpDB.isDotComAccountVisible(mCurrentBlogOnCreate.getRemoteBlogId())) {
                     // dotcom blog has been hidden or removed
                     currentBlogChanged = true;

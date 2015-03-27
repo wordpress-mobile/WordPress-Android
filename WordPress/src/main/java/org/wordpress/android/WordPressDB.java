@@ -322,7 +322,7 @@ public class WordPressDB {
         values.put("maxImageWidth", blog.getMaxImageWidth());
         values.put("maxImageWidthId", blog.getMaxImageWidthId());
         values.put("blogId", blog.getRemoteBlogId());
-        values.put("dotcomFlag", blog.isDotCom());
+        values.put("dotcomFlag", blog.isDotcomFlag());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -506,7 +506,7 @@ public class WordPressDB {
         }
         boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getLocalTableBlogId(),
                 null) > 0;
-        if (blog.isDotCom()) {
+        if (blog.isDotcomFlag()) {
             returnValue = updateWPComCredentials(blog.getUsername(), blog.getPassword());
         }
 
@@ -591,7 +591,7 @@ public class WordPressDB {
                 blog.setMaxImageWidth(c.getString(c.getColumnIndex("maxImageWidth")));
                 blog.setMaxImageWidthId(c.getInt(c.getColumnIndex("maxImageWidthId")));
                 blog.setRemoteBlogId(c.getInt(c.getColumnIndex("blogId")));
-                blog.setIsDotCom(c.getInt(c.getColumnIndex("dotcomFlag")) > 0);
+                blog.setDotcomFlag(c.getInt(c.getColumnIndex("dotcomFlag")) > 0);
                 if (c.getString(c.getColumnIndex("dotcom_username")) != null) {
                     blog.setDotcom_username(c.getString(c.getColumnIndex("dotcom_username")));
                 }
@@ -631,7 +631,7 @@ public class WordPressDB {
     public boolean isRemoteBlogIdDotComOrJetpack(int remoteBlogId) {
         int localId = getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
         Blog blog = instantiateBlogByLocalId(localId);
-        return blog != null && (blog.isDotCom() || blog.isJetpackPowered());
+        return blog != null && (blog.isDotcomFlag() || blog.isJetpackPowered());
     }
 
     public Blog getBlogForDotComBlogId(String dotComBlogId) {

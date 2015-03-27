@@ -409,7 +409,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         if (requestCode == SignInActivity.REQUEST_CODE) {
             mResultCode = resultCode;
             final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-            if (resultCode == RESULT_OK && currentBlog != null && !currentBlog.isDotCom()) {
+            if (resultCode == RESULT_OK && currentBlog != null && !currentBlog.isDotcomFlag()) {
                 if (StatsUtils.getBlogId(mLocalBlogID) == null) {
                     final Handler handler = new Handler();
                     // Attempt to get the Jetpack blog ID
@@ -626,7 +626,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         // Make sure the blogId is available.
         if (blogId != null) {
             // for self-hosted sites; launch the user into an activity where they can provide their credentials
-            if (!currentBlog.isDotCom()
+            if (!currentBlog.isDotcomFlag()
                     && !currentBlog.hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
                 if (WordPress.hasDotComToken(this)) {
                     // Let's try the global wpcom credentials them first
@@ -642,7 +642,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             }
         } else {
             // blogId is null at this point.
-            if (!currentBlog.isDotCom()) {
+            if (!currentBlog.isDotcomFlag()) {
                 // Refresh blog settings/options that includes 'jetpack_client_id'needed here
                 new ApiHelper.RefreshBlogContentTask(currentBlog,
                         new VerifyJetpackSettingsCallback()).execute(false);
@@ -655,7 +655,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
 
         // check again that we've valid credentials for a Jetpack site
-        if (!currentBlog.isDotCom()
+        if (!currentBlog.isDotcomFlag()
                 && !currentBlog.hasValidJetpackCredentials()
                 && !WordPress.hasDotComToken(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);

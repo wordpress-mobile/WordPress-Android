@@ -106,7 +106,7 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
 
     private boolean areThemesAccessible() {
         // themes are only accessible to admin wordpress.com users
-        if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotCom()) {
+        if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag()) {
             Intent intent = new Intent(ThemeBrowserActivity.this, PostsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);

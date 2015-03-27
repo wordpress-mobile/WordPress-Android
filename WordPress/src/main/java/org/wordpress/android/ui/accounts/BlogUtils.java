@@ -110,7 +110,7 @@ public class BlogUtils {
             // deprecated
             blog.setMaxImageWidthId(0);
             blog.setRemoteBlogId(Integer.parseInt(blogId));
-            blog.setIsDotCom(xmlRpcUrl.contains("wordpress.com"));
+            blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
             // assigned later in getOptions call
             blog.setWpVersion("");
             blog.setAdmin(isAdmin);

@@ -114,7 +114,7 @@ public class PostUploadService extends Service {
     }
 
     private FeatureSet synchronousGetFeatureSet() {
-        if (WordPress.getCurrentBlog() == null || !WordPress.getCurrentBlog().isDotCom()) {
+        if (WordPress.getCurrentBlog() == null || !WordPress.getCurrentBlog().isDotcomFlag()) {
             return null;
         }
         ApiHelper.GetFeatures task = new ApiHelper.GetFeatures();
@@ -713,7 +713,7 @@ public class PostUploadService extends Service {
             Object[] params = {1, mBlog.getUsername(), mBlog.getPassword(), m};
 
             FeatureSet featureSet = synchronousGetFeatureSet();
-            boolean selfHosted = WordPress.currentBlog != null && !WordPress.currentBlog.isDotCom();
+            boolean selfHosted = WordPress.currentBlog != null && !WordPress.currentBlog.isDotcomFlag();
             boolean isVideoEnabled = selfHosted || (featureSet != null && mFeatureSet.isVideopressEnabled());
             if (isVideoEnabled) {
                 File tempFile;

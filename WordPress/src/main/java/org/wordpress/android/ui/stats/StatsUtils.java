@@ -263,7 +263,7 @@ public class StatsUtils {
         if (currentBlog == null) {
             return null;
         }
-        if (currentBlog.isDotCom()) {
+        if (currentBlog.isDotcomFlag()) {
             return String.valueOf(currentBlog.getRemoteBlogId());
         } else {
             return currentBlog.getApi_blogid();

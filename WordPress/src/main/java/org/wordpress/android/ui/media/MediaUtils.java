@@ -299,7 +299,7 @@ public class MediaUtils {
         if (WordPress.currentBlog.getWpVersion() == null)
             return true;
 
-        if (WordPress.currentBlog.isDotCom())
+        if (WordPress.currentBlog.isDotcomFlag())
             return true;
 
         Version minVersion;

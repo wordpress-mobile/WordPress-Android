@@ -454,7 +454,7 @@ public class WPHtml {
                 // use the correct resize settings.
                 width = Math.min(width, maxImageWidth);
                 // Use inline CSS on self-hosted blogs to enforce picture resize settings
-                if (!currentBlog.isDotCom()) {
+                if (!currentBlog.isDotcomFlag()) {
                     inlineCSS = String.format(" style=\"width:%dpx;max-width:%dpx;\" ", width, width);
                 }
             }
