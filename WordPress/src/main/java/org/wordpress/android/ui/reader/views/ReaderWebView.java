@@ -16,9 +16,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -37,7 +35,8 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPRestClient;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /*
  * WebView descendant used by ReaderPostDetailFragment - handles
@@ -234,8 +233,10 @@ public class ReaderWebView extends WebView {
                 HttpParams params = new BasicHttpParams();
                 HttpConnectionParams.setTcpNoDelay(params, true);
                 HttpConnectionParams.setConnectionTimeout(params, WPRestClient.REST_TIMEOUT_MS);
+
                 HttpProtocolParams.setUserAgent(params, WordPress.getUserAgent());
                 HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+
                 ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(100));
                 ConnManagerParams.setMaxTotalConnections(params, 100);
 
@@ -249,14 +250,18 @@ public class ReaderWebView extends WebView {
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
             // Intercept requests for private images and add the WP.com authorization header
             if (mIsPrivatePost && !TextUtils.isEmpty(mToken) && UrlUtils.isImageUrl(url)) {
-                HttpGet httpGet = new HttpGet(url);
-                httpGet.setHeader("Authorization", "Bearer " + mToken);
                 try {
-                    HttpResponse httpResponse = getHttpClient().execute(httpGet);
-                    InputStream responseInputStream = httpResponse.getEntity().getContent();
-                    return new WebResourceResponse(httpResponse.getEntity().getContentType().toString(), "UTF-8", responseInputStream);
+                    URL imageUrl = new URL(url);
+                    HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
+                    conn.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);
+                    conn.setConnectTimeout(WPRestClient.REST_TIMEOUT_MS);
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Authorization", "Bearer " + mToken);
+                    conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
+                    conn.connect();
+                    return new WebResourceResponse(conn.getContentType(), "UTF-8", conn.getInputStream());
                 } catch (IOException e) {
-                    AppLog.e(AppLog.T.READER, "Invalid reader detail request: " + e.getMessage());
+                    AppLog.e(AppLog.T.READER, e);
                 }
             }
 
