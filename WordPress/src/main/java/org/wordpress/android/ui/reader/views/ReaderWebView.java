@@ -16,19 +16,6 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.apache.http.HttpVersion;
-import org.apache.http.conn.params.ConnManagerParams;
-import org.apache.http.conn.params.ConnPerRouteBean;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
@@ -221,29 +208,6 @@ public class ReaderWebView extends WebView {
             } else {
                 return false;
             }
-        }
-
-        private static DefaultHttpClient mHttpClient;
-        private static synchronized DefaultHttpClient getHttpClient() {
-            if (mHttpClient ==  null) {
-                SchemeRegistry schemeRegistry = new SchemeRegistry();
-                schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-                schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
-
-                HttpParams params = new BasicHttpParams();
-                HttpConnectionParams.setTcpNoDelay(params, true);
-                HttpConnectionParams.setConnectionTimeout(params, WPRestClient.REST_TIMEOUT_MS);
-
-                HttpProtocolParams.setUserAgent(params, WordPress.getUserAgent());
-                HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-
-                ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(100));
-                ConnManagerParams.setMaxTotalConnections(params, 100);
-
-                ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager(params, schemeRegistry);
-                mHttpClient = new DefaultHttpClient(manager, params);
-            }
-            return mHttpClient;
         }
 
         @Override
