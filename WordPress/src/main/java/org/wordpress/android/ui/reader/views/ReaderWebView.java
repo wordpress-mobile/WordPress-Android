@@ -223,6 +223,7 @@ public class ReaderWebView extends WebView {
                     conn.setConnectTimeout(WPRestClient.REST_TIMEOUT_MS);
                     conn.setRequestProperty("Authorization", "Bearer " + mToken);
                     conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
+                    conn.setRequestProperty("Connection", "Keep-Alive");
                     conn.connect();
                     if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         InputStream inputStream = new BufferedInputStream(conn.getInputStream());
@@ -233,7 +234,7 @@ public class ReaderWebView extends WebView {
                 }
             }
 
-            return super.shouldInterceptRequest(view, url);
+            return null;
         }
     }
 

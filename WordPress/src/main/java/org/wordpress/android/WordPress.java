@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
+import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -61,6 +62,7 @@ import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
@@ -148,6 +150,7 @@ public class WordPress extends Application {
         versionName = PackageUtils.getVersionName(this);
         HelpshiftHelper.init(this);
         initWpDb();
+        enableHttpResponseCache(mContext);
 
         // EventBus setup
         EventBus.TAG = "WordPress-EVENT";
@@ -539,6 +542,7 @@ public class WordPress extends Application {
         wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
+        flushHttpCache();
 
         // General analytics resets
         AnalyticsTracker.endSession(false);
@@ -667,6 +671,27 @@ public class WordPress extends Application {
                        + Build.MANUFACTURER + " " + Build.MODEL + "/" + Build.PRODUCT + ")";
         }
         return mUserAgent;
+    }
+
+    /*
+     * enable caching for HttpUrlConnection
+     * http://developer.android.com/training/efficient-downloads/redundant_redundant.html
+     */
+    private static void enableHttpResponseCache(Context context) {
+        try {
+            long httpCacheSize = 5 * 1024 * 1024; // 5MB
+            File httpCacheDir = new File(context.getCacheDir(), "http");
+            HttpResponseCache.install(httpCacheDir, httpCacheSize);
+        } catch (IOException e) {
+            AppLog.w(T.UTILS, "Failed to enable http response cache");
+        }
+    }
+
+    private static void flushHttpCache() {
+        HttpResponseCache cache = HttpResponseCache.getInstalled();
+        if (cache != null) {
+            cache.flush();
+        }
     }
 
     /**
