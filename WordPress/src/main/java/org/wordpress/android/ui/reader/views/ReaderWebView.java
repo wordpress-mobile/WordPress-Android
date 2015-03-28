@@ -21,7 +21,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPRestClient;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -219,11 +221,13 @@ public class ReaderWebView extends WebView {
                     HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
                     conn.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);
                     conn.setConnectTimeout(WPRestClient.REST_TIMEOUT_MS);
-                    conn.setRequestMethod("GET");
                     conn.setRequestProperty("Authorization", "Bearer " + mToken);
                     conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
                     conn.connect();
-                    return new WebResourceResponse(conn.getContentType(), "UTF-8", conn.getInputStream());
+                    if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        InputStream inputStream = new BufferedInputStream(conn.getInputStream());
+                        return new WebResourceResponse(conn.getContentType(), "UTF-8", inputStream);
+                    }
                 } catch (IOException e) {
                     AppLog.e(AppLog.T.READER, e);
                 }
