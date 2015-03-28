@@ -12,18 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.io.IOException;
@@ -36,19 +33,19 @@ import java.io.InputStream;
 public class ReaderWebView extends WebView {
 
     public interface ReaderWebViewUrlClickListener {
-        public boolean onUrlClick(String url);
-        public boolean onImageUrlClick(String imageUrl, View view, int x, int y);
+        boolean onUrlClick(String url);
+        boolean onImageUrlClick(String imageUrl, View view, int x, int y);
     }
 
     public interface ReaderCustomViewListener {
-        public void onCustomViewShown();
-        public void onCustomViewHidden();
-        public ViewGroup onRequestCustomView();
-        public ViewGroup onRequestContentView();
+        void onCustomViewShown();
+        void onCustomViewHidden();
+        ViewGroup onRequestCustomView();
+        ViewGroup onRequestContentView();
     }
 
     public interface ReaderWebViewPageFinishedListener {
-        public void onPageFinished(WebView view, String url);
+        void onPageFinished(WebView view, String url);
     }
 
     private ReaderWebChromeClient mReaderChromeClient;
