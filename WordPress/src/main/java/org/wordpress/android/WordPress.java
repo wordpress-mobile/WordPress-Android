@@ -784,8 +784,10 @@ public class WordPress extends Application {
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
 
-                // Rate limited WPCom blog list Update
-                sUpdateWordPressComBlogList.runIfNotLimited();
+                if (hasDotComToken(mContext)) {
+                    // Rate limited WPCom blog list Update
+                    sUpdateWordPressComBlogList.runIfNotLimited();
+                }
 
                 // Rate limited blog options Update
                 sUpdateCurrentBlogOption.runIfNotLimited();
