@@ -3,10 +3,8 @@ package org.wordpress.android.ui.stats;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -38,6 +36,7 @@ import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import de.greenrobot.event.EventBus;
 
 /**
  *  Single item details activity.
@@ -414,7 +413,7 @@ public class StatsViewAllActivity extends ActionBarActivity
                         try {
                             //AppLog.d(AppLog.T.STATS, response.toString());
                             final Serializable resp = StatsUtils.parseResponse(mEndpointName, mRequestBlogId, response);
-                            notifySectionUpdated(mEndpointName, resp);
+                            EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, resp));
                         } catch (JSONException e) {
                             AppLog.e(AppLog.T.STATS, e);
                         }
@@ -448,14 +447,6 @@ public class StatsViewAllActivity extends ActionBarActivity
 
     private void resetModelVariables() {
         mRestResponse = null;
-    }
-
-    private void notifySectionUpdated(StatsService.StatsEndpointsEnum sectionName, Serializable data) {
-        Intent intent = new Intent()
-                .setAction(StatsService.ACTION_STATS_SECTION_UPDATED)
-                .putExtra(StatsService.EXTRA_ENDPOINT_NAME, sectionName)
-                .putExtra(StatsService.EXTRA_ENDPOINT_DATA, data);
-        LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
     }
 
     // Fragments call these two methods below to access the current timeframe/date selected by the user.

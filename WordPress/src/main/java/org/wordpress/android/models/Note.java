@@ -34,6 +34,7 @@ public class Note extends Syncable {
     private static final String NOTE_UNKNOWN_TYPE = "unknown";
     private static final String NOTE_COMMENT_TYPE = "comment";
     private static final String NOTE_MATCHER_TYPE = "automattcher";
+    private static final String NOTE_FOLLOW_TYPE = "follow";
 
     // JSON action keys
     private static final String ACTION_KEY_REPLY = "replyto-comment";
@@ -111,6 +112,10 @@ public class Note extends Syncable {
         return isType(NOTE_MATCHER_TYPE);
     }
 
+    public Boolean isFollowType() {
+        return isType(NOTE_FOLLOW_TYPE);
+    }
+
     public String getLocalStatus() {
         return StringUtils.notNullStr(mLocalStatus);
     }
@@ -135,7 +140,7 @@ public class Note extends Syncable {
     }
 
     public Spannable getFormattedSubject() {
-        return NotificationsUtils.getSpannableContentFromIndices(getSubject(), null, null);
+        return NotificationsUtils.getSpannableContentForRanges(getSubject(), null, null);
     }
 
     public String getTitle() {

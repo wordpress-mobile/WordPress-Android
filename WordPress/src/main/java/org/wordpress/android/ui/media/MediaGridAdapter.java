@@ -520,6 +520,9 @@ public class MediaGridAdapter extends CursorAdapter {
 
     public void setItemSelected(int position, boolean selected) {
         Cursor cursor = (Cursor) getItem(position);
+        if (cursor == null) {
+            return;
+        }
         int columnIndex = cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID);
         if (columnIndex != -1) {
             String mediaId = cursor.getString(columnIndex);

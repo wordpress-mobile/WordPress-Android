@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF" >
+    android:background="@color/white" >
 
     <LinearLayout
         android:id="@+id/postBar"
@@ -15,20 +15,16 @@
         android:paddingBottom="6dp"
         android:paddingTop="6dp" >
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/postTitle"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/margin_extra_large"
             android:paddingRight="@dimen/margin_extra_large"
-            android:shadowColor="#FFFFFF"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="1"
             android:singleLine="true"
             android:textSize="@dimen/text_sz_extra_large"
-            android:textStyle="bold" />
+            android:textColor="@color/grey_dark"/>
     </LinearLayout>
 
     <ScrollView
@@ -44,7 +40,7 @@
             <WebView
                 android:id="@+id/viewPostWebView"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
+                android:layout_height="fill_parent"/>
 
             <TextView
                 android:id="@+id/viewPostTextView"
@@ -87,6 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:orientation="horizontal" >
 
             <ImageButton

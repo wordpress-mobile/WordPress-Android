@@ -27,9 +27,14 @@ footer, header, hgroup, menu, nav, section {
 body {line-height: 1;}
 /* -------------------------- */
 
+@font-face {
+    font-family: 'OpenSans';
+    src: url('fonts/OpenSans-Regular.ttf');
+}
+
 body {
-	font-family: 'DroidSans',Arial,sans-serif;
-	color: #464646;
+	font-family: 'OpenSans','DroidSans',Arial,sans-serif;
+	color: #2e4453;
 	font-size: 14pt;
 	width: 100%;
 	background: #fff;
@@ -48,7 +53,7 @@ embed,object,img{display: block; max-width:100%; height: auto;}
 }
 
 #container {
-    padding: 10px;
+    padding: 16px;
 }
 
 p { 

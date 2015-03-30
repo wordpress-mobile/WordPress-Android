@@ -111,11 +111,13 @@ public class ReaderBlogInfoView extends FrameLayout {
 
         int imageResId = (blogInfo.isExternal() ? R.drawable.gravatar_placeholder : R.drawable.blavatar_placeholder);
         int imageSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-        String imageUrl;
+        String imageUrl = "";
         if (blogInfo.hasImageUrl()) {
             imageUrl = GravatarUtils.fixGravatarUrl(blogInfo.getImageUrl(), imageSz);
         } else {
-            imageUrl = GravatarUtils.blavatarFromUrl(blogInfo.getUrl(), imageSz);
+            if (blogInfo.getUrl() != null) {
+                imageUrl = GravatarUtils.blavatarFromUrl(blogInfo.getUrl(), imageSz);
+            }
         }
         imgBlavatar.setErrorImageResId(imageResId);
         imgBlavatar.setImageUrl(imageUrl, ImageType.BLAVATAR);

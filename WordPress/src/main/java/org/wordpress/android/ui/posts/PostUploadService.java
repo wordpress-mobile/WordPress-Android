@@ -254,8 +254,8 @@ public class PostUploadService extends Service {
                 // add the tagline
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-                if (prefs.getBoolean("wp_pref_signature_enabled", false)) {
-                    String tagline = prefs.getString("wp_pref_post_signature", "");
+                if (prefs.getBoolean(getString(R.string.pref_key_post_sig_enabled), false)) {
+                    String tagline = prefs.getString(getString(R.string.pref_key_post_sig), "");
                     if (!TextUtils.isEmpty(tagline)) {
                         String tag = "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
                         if (TextUtils.isEmpty(moreContent))

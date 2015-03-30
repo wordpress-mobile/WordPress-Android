@@ -12,22 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPRestClient;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /*
  * WebView descendant used by ReaderPostDetailFragment - handles
@@ -36,19 +34,19 @@ import java.io.InputStream;
 public class ReaderWebView extends WebView {
 
     public interface ReaderWebViewUrlClickListener {
-        public boolean onUrlClick(String url);
-        public boolean onImageUrlClick(String imageUrl, View view, int x, int y);
+        boolean onUrlClick(String url);
+        boolean onImageUrlClick(String imageUrl, View view, int x, int y);
     }
 
     public interface ReaderCustomViewListener {
-        public void onCustomViewShown();
-        public void onCustomViewHidden();
-        public ViewGroup onRequestCustomView();
-        public ViewGroup onRequestContentView();
+        void onCustomViewShown();
+        void onCustomViewHidden();
+        ViewGroup onRequestCustomView();
+        ViewGroup onRequestContentView();
     }
 
     public interface ReaderWebViewPageFinishedListener {
-        public void onPageFinished(WebView view, String url);
+        void onPageFinished(WebView view, String url);
     }
 
     private ReaderWebChromeClient mReaderChromeClient;
@@ -217,30 +215,27 @@ public class ReaderWebView extends WebView {
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
             // Intercept requests for private images and add the WP.com authorization header
-            if (mIsPrivatePost && !TextUtils.isEmpty(mToken) && isImageUrl(url)) {
-                DefaultHttpClient client = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet(url);
-                httpGet.setHeader("Authorization", "Bearer " + mToken);
+            if (mIsPrivatePost && !TextUtils.isEmpty(mToken) && UrlUtils.isImageUrl(url)) {
                 try {
-                    HttpResponse httpResponse = client.execute(httpGet);
-                    InputStream responseInputStream = httpResponse.getEntity().getContent();
-                    return new WebResourceResponse(httpResponse.getEntity().getContentType().toString(), "UTF-8", responseInputStream);
+                    URL imageUrl = new URL(url);
+                    HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
+                    conn.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);
+                    conn.setConnectTimeout(WPRestClient.REST_TIMEOUT_MS);
+                    conn.setRequestProperty("Authorization", "Bearer " + mToken);
+                    conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
+                    conn.setRequestProperty("Connection", "Keep-Alive");
+                    conn.connect();
+                    if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        InputStream inputStream = new BufferedInputStream(conn.getInputStream());
+                        return new WebResourceResponse(conn.getContentType(), "UTF-8", inputStream);
+                    }
                 } catch (IOException e) {
-                    AppLog.e(AppLog.T.READER, "Invalid reader detail request: " + e.getMessage());
+                    AppLog.e(AppLog.T.READER, e);
                 }
             }
 
-            return super.shouldInterceptRequest(view, url);
+            return null;
         }
-    }
-
-    private static boolean isImageUrl(String url) {
-        if (TextUtils.isEmpty(url)) return false;
-
-        String cleanedUrl = UrlUtils.removeQuery(url.toLowerCase());
-
-        return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg") ||
-                cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
     }
 
     private static class ReaderWebChromeClient extends WebChromeClient {

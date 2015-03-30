@@ -1,14 +1,10 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +39,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 
 public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         implements StatsBarGraph.OnGestureListener {
@@ -283,17 +280,20 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.unregisterReceiver(mReceiver);
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SECTION_UPDATED));
 
         if (mVisitsData != null) {
             updateUI();
@@ -650,47 +650,30 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         return getString(R.string.stats_view_visitors_and_views);
     }
 
-    /*
-     * receives broadcast when data has been updated
-     */
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = StringUtils.notNullStr(intent.getAction());
-
-            if (!isAdded()) {
-                return;
-            }
-
-            if (!action.equals(StatsService.ACTION_STATS_SECTION_UPDATED)) {
-                return;
-            }
-
-            if (!intent.hasExtra(StatsService.EXTRA_ENDPOINT_NAME)) {
-                return;
-            }
-
-            StatsService.StatsEndpointsEnum sectionToUpdate = (StatsService.StatsEndpointsEnum) intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_NAME);
-            if (sectionToUpdate != StatsService.StatsEndpointsEnum.VISITS) {
-                return;
-            }
-
-            if (action.equals(StatsService.ACTION_STATS_SECTION_UPDATED)) {
-                Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_DATA);
-
-                mVisitsData = (dataObj == null || dataObj instanceof VolleyError) ? null : (VisitsModel) dataObj;
-                mSelectedBarGraphBarIndex = -1;
-                mSelectedOverviewItemIndex = 0;
-
-                // Reset the bar to highlight
-                if (mGraphView != null) {
-                    mGraphView.resetHighlightBar();
-                }
-
-                updateUI();
-            }
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdated event) {
+        if (!isAdded()) {
+            return;
         }
-    };
+
+        StatsService.StatsEndpointsEnum sectionToUpdate = event.mEndPointName;
+        if (sectionToUpdate != StatsService.StatsEndpointsEnum.VISITS) {
+            return;
+        }
+
+        Serializable dataObj = event.mResponseObjectModel;
+
+        mVisitsData = (dataObj == null || dataObj instanceof VolleyError) ? null : (VisitsModel) dataObj;
+        mSelectedBarGraphBarIndex = -1;
+        mSelectedOverviewItemIndex = 0;
+
+        // Reset the bar to highlight
+        if (mGraphView != null) {
+            mGraphView.resetHighlightBar();
+        }
+
+        updateUI();
+    }
 
     @Override
     public void onBarTapped(int tappedBar) {

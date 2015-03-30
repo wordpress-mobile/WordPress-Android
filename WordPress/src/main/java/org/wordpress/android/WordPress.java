@@ -6,16 +6,15 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
+import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
@@ -52,6 +51,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
@@ -63,6 +63,7 @@ import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
@@ -74,6 +75,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import io.fabric.sdk.android.Fabric;
 
 public class WordPress extends Application {
     public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
@@ -90,15 +92,6 @@ public class WordPress extends Application {
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
 
-    public static final String BROADCAST_ACTION_SIGNOUT = "wp-signout";
-    public static final String BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS = "XMLRPC_INVALID_CREDENTIALS";
-    public static final String BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE = "INVALID_SSL_CERTIFICATE";
-    public static final String BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH = "TWO_FA_AUTH";
-    public static final String BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT = "LOGIN_LIMIT";
-    public static final String BROADCAST_ACTION_REST_API_UNAUTHORIZED = "REST_API_UNAUTHORIZED";
-    public static final String BROADCAST_ACTION_BLOG_LIST_CHANGED = "BLOG_LIST_CHANGED";
-
-    private static final int SECONDS_BETWEEN_STATS_UPDATE = 30 * 60;
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
 
@@ -154,11 +147,13 @@ public class WordPress extends Application {
         // Enable log recording
         AppLog.enableRecording(true);
         if (!PackageUtils.isDebugBuild()) {
-            Crashlytics.start(this);
+            Fabric.with(this, new Crashlytics());
         }
+
         versionName = PackageUtils.getVersionName(this);
         HelpshiftHelper.init(this);
         initWpDb();
+        enableHttpResponseCache(mContext);
 
         // EventBus setup
         EventBus.TAG = "WordPress-EVENT";
@@ -269,7 +264,7 @@ public class WordPress extends Application {
         public void onAuthFailed() {
             if (getContext() == null) return;
             // If this is called, it means the WP.com token is no longer valid.
-            sendLocalBroadcast(getContext(), BROADCAST_ACTION_REST_API_UNAUTHORIZED);
+            EventBus.getDefault().post(new CoreEvents.RestApiUnauthorized());
         }
     };
 
@@ -549,6 +544,7 @@ public class WordPress extends Application {
         wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
+        flushHttpCache();
 
         // General analytics resets
         AnalyticsTracker.endSession(false);
@@ -562,7 +558,7 @@ public class WordPress extends Application {
 
         // send broadcast that user is signing out - this is received by WPDrawerActivity
         // descendants
-        sendLocalBroadcast(context, BROADCAST_ACTION_SIGNOUT);
+        EventBus.getDefault().post(new CoreEvents.UserSignedOut());
     }
 
     public static class SignOutAsync extends AsyncTask<Void, Void, Void> {
@@ -635,16 +631,6 @@ public class WordPress extends Application {
         SimperiumUtils.resetBucketsAndDeauthorize();
     }
 
-    public static boolean sendLocalBroadcast(Context context, String action) {
-        if (context == null || TextUtils.isEmpty(action)) {
-            return false;
-        }
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(context);
-        Intent intent = new Intent();
-        intent.setAction(action);
-        return lbm.sendBroadcast(intent);
-    }
-
     public static String getLoginUrl(Blog blog) {
         String loginURL = null;
         Gson gson = new Gson();
@@ -687,6 +673,27 @@ public class WordPress extends Application {
                        + Build.MANUFACTURER + " " + Build.MODEL + "/" + Build.PRODUCT + ")";
         }
         return mUserAgent;
+    }
+
+    /*
+     * enable caching for HttpUrlConnection
+     * http://developer.android.com/training/efficient-downloads/redundant_redundant.html
+     */
+    private static void enableHttpResponseCache(Context context) {
+        try {
+            long httpCacheSize = 5 * 1024 * 1024; // 5MB
+            File httpCacheDir = new File(context.getCacheDir(), "http");
+            HttpResponseCache.install(httpCacheDir, httpCacheSize);
+        } catch (IOException e) {
+            AppLog.w(T.UTILS, "Failed to enable http response cache");
+        }
+    }
+
+    private static void flushHttpCache() {
+        HttpResponseCache cache = HttpResponseCache.getInstalled();
+        if (cache != null) {
+            cache.flush();
+        }
     }
 
     /**

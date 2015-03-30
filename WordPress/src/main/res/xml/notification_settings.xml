@@ -3,15 +3,15 @@
                   android:key="wp_pref_notifications_root">
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="wp_pref_notifications_enabled"
+        android:key="@string/pref_notifications_enabled"
         android:title="@string/enable_notifications"/>
     <PreferenceCategory
         android:title="@string/types"
-        android:key="wp_pref_notification_types">
+        android:key="@string/pref_notification_types">
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/blogs"
-        android:key="wp_pref_notification_blogs">
+        android:key="@string/pref_notification_blogs">
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/options">
         <CheckBoxPreference

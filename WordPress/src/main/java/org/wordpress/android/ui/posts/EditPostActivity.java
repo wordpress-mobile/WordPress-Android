@@ -16,10 +16,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -53,6 +53,7 @@ import org.wordpress.android.ui.media.MediaSourceWPImages;
 import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.WordPressMediaUtils.RequestCode;
+import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -83,6 +84,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends ActionBarActivity implements EditorFragmentListener {
     public static final String EXTRA_POSTID = "postId";
@@ -258,18 +261,23 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         refreshBlogMedia();
         mAutoSaveTimer = new Timer();
         mAutoSaveTimer.scheduleAtFixedRate(new AutoSaveTask(), AUTOSAVE_INTERVAL_MILLIS, AUTOSAVE_INTERVAL_MILLIS);
+    }
 
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-        lbm.registerReceiver(mMediaUploadReceiver,
-                new IntentFilter(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION));
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-        lbm.unregisterReceiver(mMediaUploadReceiver);
         stopMediaUploadService();
         mAutoSaveTimer.cancel();
     }
@@ -1236,67 +1244,58 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
     };
 
+
     /**
      * Handles media upload notifications. Used when uploading local media to create a gallery
      * after media selection.
      */
-    private BroadcastReceiver mMediaUploadReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION.equals(action)) {
-                String mediaId = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA);
-                String newId = intent.getStringExtra(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION_ERROR);
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaUploadEvents.MediaUploadSucceed event) {
+        for (Long galleryId : mPendingGalleryUploads.keySet()) {
+            if (mPendingGalleryUploads.get(galleryId).contains(event.mLocalId)) {
+                SpannableStringBuilder postContent;
+                if (mEditorFragment.getSpannedContent() != null) {
+                    // needed by the legacy editor to save local drafts
+                    postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
+                } else {
+                    postContent = new SpannableStringBuilder(StringUtils.notNullStr((String)
+                            mEditorFragment.getContent()));
+                }
+                int selectionStart = 0;
+                int selectionEnd = postContent.length();
 
-                if (mediaId != null && newId != null) {
-                    for (Long galleryId : mPendingGalleryUploads.keySet()) {
-                        if (mPendingGalleryUploads.get(galleryId).contains(mediaId)) {
-
-                            SpannableStringBuilder postContent;
-                            if (mEditorFragment.getSpannedContent() != null) {
-                                // needed by the legacy editor to save local drafts
-                                postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
-                            } else {
-                                postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
-                            }
-                            int selectionStart = 0;
-                            int selectionEnd = postContent.length();
-
-                            MediaGalleryImageSpan[] gallerySpans = postContent.getSpans(selectionStart, selectionEnd, MediaGalleryImageSpan.class);
-                            if (gallerySpans.length != 0) {
-                                for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
-                                    MediaGallery gallery = gallerySpan.getMediaGallery();
-                                    if (gallery.getUniqueId() == galleryId) {
-                                        ArrayList<String> galleryIds = gallery.getIds();
-                                        galleryIds.add(newId);
-                                        gallery.setIds(galleryIds);
-                                        gallerySpan.setMediaGallery(gallery);
-                                        int spanStart = postContent.getSpanStart(gallerySpan);
-                                        int spanEnd = postContent.getSpanEnd(gallerySpan);
-                                        postContent.setSpan(gallerySpan, spanStart, spanEnd,
-                                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    }
-                                }
-                            }
-
-                            mPendingGalleryUploads.get(galleryId).remove(mediaId);
-                            if (mPendingGalleryUploads.get(galleryId).size() == 0) {
-                                mPendingGalleryUploads.remove(galleryId);
-                            }
+                MediaGalleryImageSpan[] gallerySpans = postContent.getSpans(selectionStart, selectionEnd,
+                        MediaGalleryImageSpan.class);
+                if (gallerySpans.length != 0) {
+                    for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
+                        MediaGallery gallery = gallerySpan.getMediaGallery();
+                        if (gallery.getUniqueId() == galleryId) {
+                            ArrayList<String> galleryIds = gallery.getIds();
+                            galleryIds.add(event.mRemoteId);
+                            gallery.setIds(galleryIds);
+                            gallerySpan.setMediaGallery(gallery);
+                            int spanStart = postContent.getSpanStart(gallerySpan);
+                            int spanEnd = postContent.getSpanEnd(gallerySpan);
+                            postContent.setSpan(gallerySpan, spanStart, spanEnd,
+                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }
                     }
+                }
 
-                    if (mPendingGalleryUploads.size() == 0) {
-                        stopMediaUploadService();
-                        NotificationManager notificationManager = (NotificationManager)
-                                getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.cancel(10);
-                    }
+                mPendingGalleryUploads.get(galleryId).remove(event.mLocalId);
+                if (mPendingGalleryUploads.get(galleryId).size() == 0) {
+                    mPendingGalleryUploads.remove(galleryId);
                 }
             }
         }
-    };
 
+        if (mPendingGalleryUploads.size() == 0) {
+            stopMediaUploadService();
+            NotificationManager notificationManager = (NotificationManager) getSystemService(
+                    Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(10);
+        }
+    }
 
     /**
      * Starts {@link org.wordpress.android.ui.media.MediaPickerActivity} after refreshing the blog media.

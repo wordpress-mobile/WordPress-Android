@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -239,7 +238,6 @@ public class GCMIntentService extends GCMBaseIntentService {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(PUSH_NOTIFICATION_ID, mBuilder.build());
-        broadcastNewNotification(context);
     }
 
     @Override
@@ -278,12 +276,6 @@ public class GCMIntentService extends GCMBaseIntentService {
         }
 
         handleDefaultPush(context, extras);
-    }
-
-    public void broadcastNewNotification(Context context) {
-        Intent msgIntent = new Intent();
-        msgIntent.setAction(NotificationsListFragment.NOTIFICATION_ACTION);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
     }
 
     @Override

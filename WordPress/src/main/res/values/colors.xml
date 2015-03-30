@@ -128,7 +128,7 @@
 
     <!-- NUX -->
     <color name="nux_grey_button">@color/grey_lighten_20</color>
-    <color name="nux_alert_bg">@color/grey_darken_30</color>
+    <color name="nux_alert_bg">@color/grey_dark</color>
     <color name="nux_background">@color/blue_wordpress</color>
     <color name="nux_eye_icon_color_closed">@color/grey_lighten_20</color>
     <color name="nux_eye_icon_color_open">@color/grey_lighten_10</color>
