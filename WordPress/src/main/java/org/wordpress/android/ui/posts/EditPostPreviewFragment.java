@@ -18,6 +18,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 
 public class EditPostPreviewFragment extends Fragment {
+    // TODO: remove mActivity and rely on getActivity()
     private EditPostActivity mActivity;
     private WebView mWebView;
     private TextView mTextView;
