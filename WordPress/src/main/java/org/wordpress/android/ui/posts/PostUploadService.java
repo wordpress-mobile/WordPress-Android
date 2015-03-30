@@ -53,7 +53,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -796,8 +795,6 @@ public class PostUploadService extends Service {
         }
 
         private Object uploadFileHelper(Object[] params, final File tempFile) {
-            AppLog.d(T.POSTS, "uploadFileHelper: " + Arrays.toString(params));
-
             // Create listener for tracking upload progress in the notification
             if (mClient instanceof XMLRPCClient) {
                 XMLRPCClient xmlrpcClient = (XMLRPCClient) mClient;
