@@ -648,6 +648,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         mixpanelInstructionsForEventName("Support - Opened Helpshift Screen");
                 instructions.addSuperPropertyToFlag("opened_helpshift_screen");
                 break;
+            case SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Support - Replied to Helpshift");
+                instructions.addSuperPropertyToFlag("support_replied_to_helpshift");
+                break;
             case LOGIN_FAILED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Failed Login");
