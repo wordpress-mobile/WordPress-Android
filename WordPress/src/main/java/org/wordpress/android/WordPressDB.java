@@ -1649,6 +1649,10 @@ public class WordPressDB {
                 new String[]{"delete", blogId});
     }
 
+    public boolean hasMediaDeleteQueueItems(int blogId) {
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + MEDIA_TABLE + " WHERE uploadState=? AND blogId=?",
+                new String[]{"delete", Integer.toString(blogId)});
+    }
 
     public int getWPCOMBlogID() {
         int id = -1;
