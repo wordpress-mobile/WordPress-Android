@@ -77,13 +77,9 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
         public void onReceive(Context context, Intent intent) {
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
                 // Coming from zero connection. Continue what's pending for delete
-                Blog currentBlog = WordPress.getCurrentBlog();
-
-                if (currentBlog != null) {
-                    String blogId = String.valueOf(currentBlog.getLocalTableBlogId());
-                    if (WordPress.wpDB.getMediaDeleteQueueItems(blogId).getCount() > 0) {
-                        startMediaDeleteService();
-                    }
+                int blogId = WordPress.getCurrentLocalTableBlogId();
+                if (blogId != -1 && WordPress.wpDB.hasMediaDeleteQueueItems(blogId)) {
+                    startMediaDeleteService();
                 }
             }
         }
