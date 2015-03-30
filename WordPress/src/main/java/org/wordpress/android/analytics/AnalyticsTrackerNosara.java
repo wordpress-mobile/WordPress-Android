@@ -3,7 +3,6 @@ package org.wordpress.android.analytics;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.automattic.android.tracks.TracksClient;
 
@@ -16,10 +15,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
-    public static final String LOGTAG = "AnalyticsTrackerNosara";
 
     private static final String JETPACK_USER = "jetpack_user";
-    private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
+    private static final String NUMBER_OF_BLOGS = "number_of_blogs";
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
@@ -276,7 +274,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
 
 
         if (eventName == null) {
-            Log.w(LOGTAG, "There is NO match for the event " + stat.name() + "stat");
+            AppLog.w(AppLog.T.STATS, "There is NO match for the event " + stat.name() + "stat");
             return;
         }
 
@@ -318,7 +316,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             builder.append(currentPart);
         }
         uuid = builder.toString();
-        Log.d(LOGTAG, "anon UUID generato " + uuid);
+        AppLog.d(AppLog.T.STATS, "New anon ID generated: " + uuid);
         return uuid;
     }
 
@@ -359,7 +357,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         try {
             JSONObject properties = new JSONObject();
             properties.put(JETPACK_USER, jetpackUser);
-            properties.put(MIXPANEL_NUMBER_OF_BLOGS, numBlogs);
+            properties.put(NUMBER_OF_BLOGS, numBlogs);
             mNosaraClient.registerUserProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
@@ -373,7 +371,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         }
         mNosaraClient.clearUserProperties();
 
-        // Reset the anon token here
+        // Reset the anon ID here
         mAnonID = null;
         mWpcomUserName = null;
     }
