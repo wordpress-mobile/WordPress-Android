@@ -17,7 +17,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.util.WPWebChromeClient;
+import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.util.WPWebViewClient;
 
 /**

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="ToggleButton">
+        <item name="android:minWidth">@dimen/format_bar_height</item>
+        <item name="android:minHeight">@dimen/format_bar_height</item>
+        <item name="android:textOn">""</item>
+        <item name="android:textOff">""</item>
+    </style>
+</resources>

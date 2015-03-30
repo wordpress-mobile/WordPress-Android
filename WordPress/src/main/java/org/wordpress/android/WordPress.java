@@ -47,6 +47,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
@@ -178,10 +179,9 @@ public class WordPress extends Application {
         }
 
         HelpshiftHelper.init(this);
-
-        AnalyticsTracker.init();
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
-        AnalyticsTracker.beginSession();
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
+        AnalyticsTracker.init(getContext());
+        AnalyticsUtils.refreshMetadata();
         AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 
         registerForCloudMessaging(this);
@@ -804,7 +804,7 @@ public class WordPress extends Application {
          * 2. the app was in background and is now foreground
          */
         public void onFromBackground() {
-            AnalyticsTracker.beginSession();
+            AnalyticsUtils.refreshMetadata();
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {

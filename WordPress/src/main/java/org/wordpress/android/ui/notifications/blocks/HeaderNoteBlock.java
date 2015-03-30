@@ -11,9 +11,9 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 // Note header, displayed at top of detail view
@@ -89,19 +89,19 @@ public class HeaderNoteBlock extends NoteBlock {
     };
 
     private String getUserName() {
-        return JSONUtil.queryJSON(mHeaderArray, "[0].text", "");
+        return JSONUtils.queryJSON(mHeaderArray, "[0].text", "");
     }
 
     private String getAvatarUrl() {
-        return GravatarUtils.fixGravatarUrl(JSONUtil.queryJSON(mHeaderArray, "[0].media[0].url", ""), mAvatarSize);
+        return GravatarUtils.fixGravatarUrl(JSONUtils.queryJSON(mHeaderArray, "[0].media[0].url", ""), mAvatarSize);
     }
 
     private String getUserUrl() {
-        return JSONUtil.queryJSON(mHeaderArray, "[0].ranges[0].url", "");
+        return JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].url", "");
     }
 
     private String getSnippet() {
-        return JSONUtil.queryJSON(mHeaderArray, "[1].text", "");
+        return JSONUtils.queryJSON(mHeaderArray, "[1].text", "");
     }
 
     @Override
@@ -152,8 +152,8 @@ public class HeaderNoteBlock extends NoteBlock {
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site
                     // In the future we can use this to load a 'profile view' (currently in R&D)
-                    long siteId = Long.valueOf(JSONUtil.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
-                    long userId = Long.valueOf(JSONUtil.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
+                    long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
+                    long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
                     String siteUrl = getUserUrl();
                     if (siteId > 0 && userId > 0) {
                         mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
