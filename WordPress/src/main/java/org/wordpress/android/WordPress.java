@@ -72,6 +72,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import io.fabric.sdk.android.Fabric;
 
 public class WordPress extends Application {
     public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
@@ -143,8 +144,9 @@ public class WordPress extends Application {
         // Enable log recording
         AppLog.enableRecording(true);
         if (!PackageUtils.isDebugBuild()) {
-            Crashlytics.start(this);
+            Fabric.with(this, new Crashlytics());
         }
+
         versionName = PackageUtils.getVersionName(this);
         HelpshiftHelper.init(this);
         initWpDb();
