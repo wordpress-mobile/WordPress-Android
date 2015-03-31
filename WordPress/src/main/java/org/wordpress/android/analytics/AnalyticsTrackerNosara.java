@@ -18,11 +18,12 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
 
     private static final String JETPACK_USER = "jetpack_user";
     private static final String NUMBER_OF_BLOGS = "number_of_blogs";
+    private static final String TRACKS_ANON_ID = "nosara_tracks_anon_id";
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
-    private String mAnonID = null;
     private String mWpcomUserName = null;
+    private String mAnonID = null; // do not access this variable directly. Use methods.
 
     private TracksClient mNosaraClient;
 
@@ -272,20 +273,26 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 break;
         }
 
-
         if (eventName == null) {
             AppLog.w(AppLog.T.STATS, "There is NO match for the event " + stat.name() + "stat");
             return;
         }
 
-        if (shouldGenerateAnonID()) {
-            mAnonID = getNewAnonID();
+        final String user;
+        final TracksClient.NosaraUserType userType;
+        if (mWpcomUserName != null) {
+            user = mWpcomUserName;
+            userType = TracksClient.NosaraUserType.WPCOM;
+        } else {
+            // This is just a security checks since the anonID is already available here.
+            // refresh metadata is called on login/logout/startup and it loads/generates the anonId when necessary.
+            if (getAnonID() == null) {
+                user = generateNewAnonID();
+            } else {
+                user = getAnonID();
+            }
+            userType = TracksClient.NosaraUserType.ANON;
         }
-
-        final String user = mAnonID != null ? mAnonID : mWpcomUserName;
-        TracksClient.NosaraUserType userType = mAnonID != null ?
-                TracksClient.NosaraUserType.ANON :
-                TracksClient.NosaraUserType.WPCOM;
 
         if (properties != null && properties.size() > 0) {
             JSONObject propertiesToJSON = new JSONObject(properties);
@@ -304,11 +311,25 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         refreshMetadata();
     }
 
-    private boolean shouldGenerateAnonID() {
-        return (mAnonID == null && mWpcomUserName == null);
+    private void clearAnonID() {
+        mAnonID = null;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+        if (preferences.contains(TRACKS_ANON_ID)) {
+            final SharedPreferences.Editor editor = preferences.edit();
+            editor.remove(TRACKS_ANON_ID);
+            editor.commit();
+        }
     }
 
-    private String getNewAnonID() {
+    private String getAnonID() {
+        if (mAnonID == null) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+            mAnonID = preferences.getString(TRACKS_ANON_ID, null);
+        }
+        return mAnonID;
+    }
+
+    private String generateNewAnonID() {
         String uuid = UUID.randomUUID().toString();
         String[] uuidSplitted = uuid.split("-");
         StringBuilder builder = new StringBuilder();
@@ -317,6 +338,12 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         }
         uuid = builder.toString();
         AppLog.d(AppLog.T.STATS, "New anon ID generated: " + uuid);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+        final SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(TRACKS_ANON_ID, uuid);
+        editor.commit();
+
+        mAnonID = uuid;
         return uuid;
     }
 
@@ -334,21 +361,21 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             return;
         }
 
-        boolean connected = WordPress.hasDotComToken(WordPress.getContext());
-        if (connected) {
+        boolean isWordPressComConnected = WordPress.hasDotComToken(WordPress.getContext());
+        if (isWordPressComConnected) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
             String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
             mWpcomUserName = username;
             // Re-unify the user
-            if (mAnonID != null) {
-                mNosaraClient.trackAliasUser(mWpcomUserName, mAnonID);
-                mAnonID = null;
+            if (getAnonID() != null) {
+                mNosaraClient.trackAliasUser(mWpcomUserName, getAnonID());
+                clearAnonID();
             }
         } else {
-            // Not wpcom connected. Check if mAnon is already present
+            // Not wpcom connected. Check if anonID is already present
             mWpcomUserName = null;
-            if (shouldGenerateAnonID()) {
-                mAnonID = getNewAnonID();
+            if (getAnonID() == null) {
+                generateNewAnonID();
             }
         }
 
@@ -370,9 +397,8 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             return;
         }
         mNosaraClient.clearUserProperties();
-
         // Reset the anon ID here
-        mAnonID = null;
+        clearAnonID();
         mWpcomUserName = null;
     }
 
