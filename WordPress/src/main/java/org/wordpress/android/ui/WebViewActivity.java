@@ -2,8 +2,8 @@
 package org.wordpress.android.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -17,7 +17,7 @@ import org.wordpress.android.R;
 public abstract class WebViewActivity extends ActionBarActivity {
     /** Primary webview used to display content. */
 
-    public static final String URL = "url";
+    private static final String URL = "url";
 
     protected WebView mWebView;
 
@@ -32,14 +32,11 @@ public abstract class WebViewActivity extends ActionBarActivity {
         // such as AuthenticatedWebViewActivity
         setTitle("");
 
-        setContentView(R.layout.webview);
+        setContentView(R.layout.webview);Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
         // note: do NOT call mWebView.getSettings().setUserAgentString(WordPress.getUserAgent())
         // here since it causes problems with the browser-sniffing that some sites rely on to
         // format the page for mobile display

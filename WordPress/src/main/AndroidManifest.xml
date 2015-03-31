@@ -260,7 +260,7 @@
         </activity>
         <activity
             android:name=".ui.ViewSiteActivity"
-            android:theme="@style/WordPress.DrawerActivity" />
+            android:theme="@style/Calypso.NoActionBar" />
 
         <activity
             android:name=".ui.SitePickerActivity"
