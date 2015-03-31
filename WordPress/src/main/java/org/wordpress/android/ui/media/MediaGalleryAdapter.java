@@ -15,6 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 
 /**

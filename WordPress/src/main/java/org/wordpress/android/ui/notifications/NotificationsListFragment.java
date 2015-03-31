@@ -34,13 +34,12 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
-import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import javax.annotation.Nonnull;
 
 public class NotificationsListFragment extends Fragment implements Bucket.Listener<Note> {
-    public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";

@@ -2,13 +2,9 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -33,7 +29,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
-import org.wordpress.android.ui.suggestion.service.SuggestionService;
+import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -46,11 +42,13 @@ import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 public class ViewPostFragment extends Fragment {
     /** Called when the activity is first created. */
 
-    private OnDetailPostActionListener onDetailPostActionListener;
-    PostsActivity parentActivity;
+    private OnDetailPostActionListener mOnDetailPostActionListener;
+    PostsActivity mParentActivity;
 
     private ViewGroup mLayoutCommentBox;
     private SuggestionAutoCompleteText mEditComment;
@@ -74,31 +72,29 @@ public class ViewPostFragment extends Fragment {
         if (WordPress.currentPost != null && !getView().isLayoutRequested()) {
             loadPost(WordPress.currentPost);
         }
-
-        parentActivity = (PostsActivity) getActivity();
-        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
-                .registerReceiver(mReceiver, new IntentFilter(SuggestionService.ACTION_SUGGESTIONS_LIST_UPDATED));
+        mParentActivity = (PostsActivity) getActivity();
     }
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int updatedBlogId = intent.getIntExtra(SuggestionService.SUGGESTIONS_LIST_UPDATED_EXTRA, 0);
-            int remoteBlogId = WordPress.getCurrentRemoteBlogId();
-            // check if the updated suggestions are for the current blog and update the suggestions
-            if (updatedBlogId != 0 && remoteBlogId == updatedBlogId) {
-                List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(remoteBlogId);
-                mSuggestionAdapter.setSuggestionList(suggestions);
-            }
+    @SuppressWarnings("unused")
+    public void onEventMainThread(SuggestionEvents.SuggestionListUpdated event) {
+        int remoteBlogId = WordPress.getCurrentRemoteBlogId();
+        // check if the updated suggestions are for the current blog and update the suggestions
+        if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == remoteBlogId) {
+            List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
+            mSuggestionAdapter.setSuggestionList(suggestions);
         }
-    };
+    }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
-        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
-                .unregisterReceiver(mReceiver);
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -111,7 +107,7 @@ public class ViewPostFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.viewpost, container, false);
+        final View v = inflater.inflate(R.layout.view_post_fragment, container, false);
         v.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -139,8 +135,8 @@ public class ViewPostFragment extends Fragment {
         ImageButton editPostButton = (ImageButton) v.findViewById(R.id.editPost);
         editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                if (WordPress.currentPost != null && !parentActivity.isRefreshing()) {
-                    onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_EDIT, WordPress.currentPost);
+                if (WordPress.currentPost != null && !mParentActivity.isRefreshing()) {
+                    mOnDetailPostActionListener.onDetailPostAction(PostsActivity.POST_EDIT, WordPress.currentPost);
                     Intent i = new Intent(getActivity().getApplicationContext(), EditPostActivity.class);
                     i.putExtra(EditPostActivity.EXTRA_IS_PAGE, WordPress.currentPost.isPage());
                     i.putExtra(EditPostActivity.EXTRA_POSTID, WordPress.currentPost.getLocalTablePostId());
@@ -152,8 +148,8 @@ public class ViewPostFragment extends Fragment {
 
         mShareUrlButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                if (!parentActivity.isRefreshing()) {
-                    onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_SHARE, WordPress.currentPost);
+                if (!mParentActivity.isRefreshing()) {
+                    mOnDetailPostActionListener.onDetailPostAction(PostsActivity.POST_SHARE, WordPress.currentPost);
                 }
             }
         });
@@ -161,16 +157,16 @@ public class ViewPostFragment extends Fragment {
         ImageButton deletePostButton = (ImageButton) v.findViewById(R.id.deletePost);
         deletePostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                if (!parentActivity.isRefreshing()) {
-                    onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_DELETE, WordPress.currentPost);
+                if (!mParentActivity.isRefreshing()) {
+                    mOnDetailPostActionListener.onDetailPostAction(PostsActivity.POST_DELETE, WordPress.currentPost);
                 }
             }
         });
 
         mViewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_VIEW, WordPress.currentPost);
-                if (!parentActivity.isRefreshing()) {
+                mOnDetailPostActionListener.onDetailPostAction(PostsActivity.POST_VIEW, WordPress.currentPost);
+                if (!mParentActivity.isRefreshing()) {
                     loadPostPreview();
                 }
             }
@@ -179,7 +175,7 @@ public class ViewPostFragment extends Fragment {
         mAddCommentButton = (ImageButton) v.findViewById(R.id.addComment);
         mAddCommentButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                if (!parentActivity.isRefreshing()) {
+                if (!mParentActivity.isRefreshing()) {
                     toggleCommentBox();
                 }
             }
@@ -234,7 +230,7 @@ public class ViewPostFragment extends Fragment {
         super.onAttach(activity);
         try {
             // check that the containing activity implements our callback
-            onDetailPostActionListener = (OnDetailPostActionListener) activity;
+            mOnDetailPostActionListener = (OnDetailPostActionListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString()
@@ -244,10 +240,9 @@ public class ViewPostFragment extends Fragment {
 
     public void loadPost(final Post post) {
         // Don't load if the Post object or title are null, see #395
-        if (post == null || post.getTitle() == null)
+        if (!isAdded() || getView() == null || post == null || post.getTitle() == null) {
             return;
-        if (!isAdded() || getView() == null)
-            return;
+        }
 
         // create handler on UI thread
         final Handler handler = new Handler();
@@ -256,7 +251,7 @@ public class ViewPostFragment extends Fragment {
         // important when using WPHtml.fromHtml() for drafts that contain images since
         // thumbnails may take some time to create
         final WebView webView = (WebView) getView().findViewById(R.id.viewPostWebView);
-        webView.setWebViewClient(new WPWebViewClient(WordPress.getCurrentBlog()));
+        webView.setWebViewClient(new WPWebViewClient(getActivity(), WordPress.getCurrentBlog()));
         new Thread() {
             @Override
             public void run() {
@@ -426,7 +421,7 @@ public class ViewPostFragment extends Fragment {
                 if (!isAdded())
                     return;
 
-                parentActivity.attemptToSelectPost();
+                mParentActivity.attemptToSelectPost();
 
                 mEditComment.setEnabled(true);
                 mAddCommentButton.setEnabled(true);
@@ -437,7 +432,7 @@ public class ViewPostFragment extends Fragment {
                     ToastUtils.showToast(getActivity(), R.string.comment_added);
                     hideCommentBox();
                     mEditComment.setText(null);
-                    parentActivity.refreshComments();
+                    mParentActivity.refreshComments();
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_comment_failed, ToastUtils.Duration.LONG);
                 }

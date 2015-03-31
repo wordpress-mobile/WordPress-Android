@@ -19,7 +19,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.WPWebChromeClient;
+import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -50,7 +50,7 @@ public class ViewSiteActivity extends WPDrawerActivity {
         }
         createMenuDrawer(R.layout.webview);
         mWebView = (WebView) findViewById(R.id.webView);
-        mWebView.setWebViewClient(new WPWebViewClient(mBlog));
+        mWebView.setWebViewClient(new WPWebViewClient(this, mBlog));
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
         mWebView.getSettings().setJavaScriptEnabled(true);

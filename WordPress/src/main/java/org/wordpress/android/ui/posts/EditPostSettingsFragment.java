@@ -46,13 +46,13 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.ui.media.MediaUtils;
+import org.wordpress.android.ui.media.WordPressMediaUtils.RequestCode;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
-import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.LocationHelper;
+import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.helpers.LocationHelper;
 import org.xmlrpc.android.ApiHelper;
 
 import java.lang.reflect.Type;
@@ -105,8 +105,9 @@ public class EditPostSettingsFragment extends Fragment
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_edit_post_settings, container, false);
 
-        if (rootView == null)
+        if (rootView == null) {
             return null;
+        }
 
         mActivity = (EditPostActivity) getActivity();
 
@@ -265,7 +266,7 @@ public class EditPostSettingsFragment extends Fragment
 
             if (!post.isPage()) {
                 if (post.getJSONCategories() != null) {
-                    mCategories = JSONUtil.fromJSONArrayToStringList(post.getJSONCategories());
+                    mCategories = JSONUtils.fromJSONArrayToStringList(post.getJSONCategories());
                 }
             }
             String tags = post.getKeywords();
@@ -302,7 +303,8 @@ public class EditPostSettingsFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
+        if (data != null || ((requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
+                requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
             Bundle extras;
 
             switch (requestCode) {
