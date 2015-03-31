@@ -183,9 +183,12 @@ public class PostUploadService extends Service {
         @Override
         protected void onCancelled(Boolean aBoolean) {
             super.onCancelled(aBoolean);
-            mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
-                    mErrorUnavailableVideoPress);
-            WordPress.postUploadFailed(mPost.getLocalTableBlogId());
+            // mPostUploadNotifier and mPost can be null if onCancelled is called before doInBackground
+            if (mPostUploadNotifier != null && mPost != null) {
+                mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
+                        mErrorUnavailableVideoPress);
+                WordPress.postUploadFailed(mPost.getLocalTableBlogId());
+            }
         }
 
         @Override
