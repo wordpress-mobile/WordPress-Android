@@ -63,7 +63,6 @@ import de.greenrobot.event.EventBus;
  * Base class for Activities that include a standard action bar and menu drawer.
  */
 public abstract class WPDrawerActivity extends ActionBarActivity {
-    public static final int NEW_BLOG_CANCELED = 10;
     private static final String SCROLL_POSITION_ID = "WPDrawerActivity";
 
     private static int[] mBlogIDs;

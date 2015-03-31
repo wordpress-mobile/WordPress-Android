@@ -205,7 +205,7 @@
         <!-- Reader Activities -->
         <activity
             android:name=".ui.reader.ReaderPostListActivity"
-            android:theme="@style/WordPress.DrawerActivity"
+            android:theme="@style/Calypso.NoActionBar"
             android:label="@string/reader" />
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"

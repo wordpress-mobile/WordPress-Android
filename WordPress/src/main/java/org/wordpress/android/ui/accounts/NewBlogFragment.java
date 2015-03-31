@@ -20,8 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
-import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
@@ -80,7 +78,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private void signoutAndFinish() {
         if (mSignoutOnCancelMode) {
             WordPress.signOut(getActivity());
-            getActivity().setResult(WPDrawerActivity.NEW_BLOG_CANCELED);
+            getActivity().setResult(Activity.RESULT_CANCELED);
             getActivity().finish();
         }
     }
