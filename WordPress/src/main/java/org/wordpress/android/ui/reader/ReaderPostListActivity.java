@@ -4,32 +4,32 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 
 import javax.annotation.Nonnull;
 
 import de.greenrobot.event.EventBus;
 
 /*
- * this activity serves as the host for ReaderPostListFragment
+ * serves as the host for ReaderPostListFragment
  */
 
-public class ReaderPostListActivity extends WPDrawerActivity {
+public class ReaderPostListActivity extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createMenuDrawer(R.layout.reader_activity_post_list);
+        setContentView(R.layout.reader_activity_post_list);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         readIntent(getIntent(), savedInstanceState);
     }
 
@@ -43,17 +43,6 @@ public class ReaderPostListActivity extends WPDrawerActivity {
             postListType = (ReaderTypes.ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
         } else {
             postListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
-        }
-
-        // hide drawer toggle and enable back arrow click if this is blog preview or tag preview
-        if (postListType.isPreviewType() && getDrawerToggle() != null) {
-            getDrawerToggle().setDrawerIndicatorEnabled(false);
-            getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
         }
 
         if (savedInstanceState == null) {
@@ -94,11 +83,6 @@ public class ReaderPostListActivity extends WPDrawerActivity {
             default:
                 break;
         }
-
-        // hide the static drawer for blog/tag preview
-        if (isStaticMenuDrawer() && postListType.isPreviewType()) {
-            hideDrawer();
-        }
     }
 
     @Override
@@ -113,7 +97,6 @@ public class ReaderPostListActivity extends WPDrawerActivity {
     public void onBackPressed() {
         ReaderPostListFragment fragment = getListFragment();
         if (fragment == null || !fragment.goBackInTagHistory()) {
-            setToolbarClickListener();
             super.onBackPressed();
         }
     }
@@ -141,19 +124,6 @@ public class ReaderPostListActivity extends WPDrawerActivity {
                 }
                 break;
         }
-    }
-
-    @Override
-    public void onSignout() {
-        super.onSignout();
-
-        AppLog.i(T.READER, "reader post list > user signed out");
-        EventBus.getDefault().removeStickyEvent(ReaderEvents.HasPerformedInitialUpdate.class);
-
-        // reader database will have been cleared by the time this is called, but the fragment must
-        // be removed or else it will continue to show the same articles - onResume() will take
-        // care of re-displaying the correct fragment if necessary
-        removeListFragment();
     }
 
     private void removeListFragment() {
