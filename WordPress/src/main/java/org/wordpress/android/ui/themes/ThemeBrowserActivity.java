@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,7 +29,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Theme;
-import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragmentCallback;
 import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragmentCallback;
@@ -46,7 +47,7 @@ import java.util.ArrayList;
 /**
  * The theme browser. Accessible via side menu drawer.
  */
-public class ThemeBrowserActivity extends WPDrawerActivity implements
+public class ThemeBrowserActivity extends ActionBarActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback {
 
     private ThemePagerAdapter mThemePagerAdapter;
@@ -75,17 +76,18 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
             AnalyticsTracker.track(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER);
         }
 
-        setTitle(R.string.themes);
+        setContentView(R.layout.theme_browser_activity);
 
-        createMenuDrawer(R.layout.theme_browser_activity);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setElevation(0.0f);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(getString(R.string.themes));
 
         mThemePagerAdapter = new ThemePagerAdapter(getFragmentManager());
-
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
 
         mViewPager = (ViewPager) findViewById(R.id.theme_browser_pager);
         mViewPager.setAdapter(mThemePagerAdapter);
@@ -129,10 +131,6 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
         } else {
             mViewPager.setVisibility(View.GONE);
             mTabLayout.setVisibility(View.GONE);
-        }
-
-        if (getDrawerToggle() != null) {
-            getDrawerToggle().setDrawerIndicatorEnabled(backstackCount == 0);
         }
     }
 
@@ -205,7 +203,7 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
                             AppLog.d(T.THEMES, "Failed to fetch themes: failed authenticate user");
                         } else {
                             Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG)
-                                 .show();
+                                    .show();
                             AppLog.d(T.THEMES, "Failed to fetch themes: " + response.toString());
                         }
                         if (mThemePagerAdapter != null && mThemePagerAdapter.getItem(page) != null &&
@@ -251,18 +249,20 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-
-        if (itemId == R.id.menu_search) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            if (mSearchFragment == null) {
-                mSearchFragment = ThemeSearchFragment.newInstance();
-            }
-            ft.add(R.id.theme_browser_container, mSearchFragment, ThemeSearchFragment.TAG);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.addToBackStack(null);
-            ft.commit();
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_search:
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                if (mSearchFragment == null) {
+                    mSearchFragment = ThemeSearchFragment.newInstance();
+                }
+                ft.add(R.id.theme_browser_container, mSearchFragment, ThemeSearchFragment.TAG);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(null);
+                ft.commit();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -450,14 +450,6 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
                 }
         );
 
-    }
-
-    @Override
-    public void onBlogChanged() {
-        if (areThemesAccessible()) {
-            fetchThemes(mViewPager.getCurrentItem());
-            setRefreshing(true, mViewPager.getCurrentItem());
-        }
     }
 
     @Override

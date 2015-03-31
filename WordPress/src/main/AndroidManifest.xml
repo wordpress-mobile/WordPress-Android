@@ -184,7 +184,7 @@
         <!-- Theme Activities -->
         <activity
             android:name=".ui.themes.ThemeBrowserActivity"
-            android:theme="@style/WordPress.DrawerActivity" >
+            android:theme="@style/Calypso.NoActionBar" >
         </activity>
 
         <!-- Deep Linking Activity -->
