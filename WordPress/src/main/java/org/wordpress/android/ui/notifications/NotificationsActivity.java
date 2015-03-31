@@ -2,16 +2,17 @@ package org.wordpress.android.ui.notifications;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 
-public class NotificationsActivity extends WPDrawerActivity {
+public class NotificationsActivity extends ActionBarActivity {
     private static final String TAG_NOTES_LIST = "notesList";
 
     private NotificationsListFragment mNotesListFragment;
@@ -21,13 +22,13 @@ public class NotificationsActivity extends WPDrawerActivity {
         super.onCreate(savedInstanceState);
         AppLog.i(AppLog.T.NOTIFS, "Creating NotificationsActivity");
 
-        createMenuDrawer(R.layout.notifications_activity);
+        setContentView(R.layout.notifications_activity);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(getResources().getString(R.string.notifications));
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.notifications));
 
         if (savedInstanceState == null) {
             mNotesListFragment = new NotificationsListFragment();
@@ -76,5 +77,14 @@ public class NotificationsActivity extends WPDrawerActivity {
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.SimperiumNotAuthorized event) {
         AuthenticationDialogUtils.showAuthErrorView(this, R.string.sign_in_again, R.string.simperium_connection_error);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
