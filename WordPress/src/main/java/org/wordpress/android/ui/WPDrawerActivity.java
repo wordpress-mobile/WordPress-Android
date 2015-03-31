@@ -643,7 +643,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     }
 
     private boolean hasNoDotComAccountsAndIsNotOnPostsActivity() {
-        return (WordPress.wpDB.getNumDotComAccounts() == 0) && !(this instanceof PostsActivity);
+        return (WordPress.wpDB.getNumDotComAccounts() == 0);// && !(this instanceof PostsActivity);
     }
 
     /*

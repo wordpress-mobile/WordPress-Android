@@ -140,14 +140,14 @@
         </activity>
         <activity
             android:name=".ui.posts.PostsActivity"
-            android:theme="@style/WordPress.DrawerActivity" >
+            android:theme="@style/Calypso.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.posts.PagesActivity"
-            android:theme="@style/WordPress.DrawerActivity" />
+            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
             android:theme="@style/CalypsoTheme"/>
