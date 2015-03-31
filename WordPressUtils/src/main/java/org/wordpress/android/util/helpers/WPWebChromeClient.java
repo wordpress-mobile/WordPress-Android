@@ -1,6 +1,7 @@
 package org.wordpress.android.util.helpers;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -26,7 +27,10 @@ public class WPWebChromeClient extends WebChromeClient {
     }
 
     public void onProgressChanged(WebView webView, int progress) {
-        if (mActivity != null && !mActivity.isFinishing() && mAutoUpdateActivityTitle) {
+        if (mActivity != null
+                && !mActivity.isFinishing()
+                && mAutoUpdateActivityTitle
+                && !TextUtils.isEmpty(webView.getTitle())) {
             mActivity.setTitle(webView.getTitle());
         }
         if (mProgressBar != null) {
