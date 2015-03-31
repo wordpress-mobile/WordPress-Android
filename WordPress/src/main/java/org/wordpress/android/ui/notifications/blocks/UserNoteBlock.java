@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,8 +9,8 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -133,15 +132,15 @@ public class UserNoteBlock extends NoteBlock {
     }
 
     String getUserUrl() {
-        return JSONUtil.queryJSON(getNoteData(), "meta.links.home", "");
+        return JSONUtils.queryJSON(getNoteData(), "meta.links.home", "");
     }
 
     private String getUserBlogTitle() {
-        return JSONUtil.queryJSON(getNoteData(), "meta.titles.home", "");
+        return JSONUtils.queryJSON(getNoteData(), "meta.titles.home", "");
     }
 
     private String getUserBlogTagline() {
-        return JSONUtil.queryJSON(getNoteData(), "meta.titles.tagline", "");
+        return JSONUtils.queryJSON(getNoteData(), "meta.titles.tagline", "");
     }
 
     private boolean hasUserUrl() {
@@ -189,8 +188,8 @@ public class UserNoteBlock extends NoteBlock {
     };
 
     private void showBlogPreview() {
-        long siteId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.site", 0));
-        long userId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.user", 0));
+        long siteId = Long.valueOf(JSONUtils.queryJSON(getNoteData(), "meta.ids.site", 0));
+        long userId = Long.valueOf(JSONUtils.queryJSON(getNoteData(), "meta.ids.user", 0));
         String siteUrl = getUserUrl();
         if (mGravatarClickedListener != null) {
             mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
