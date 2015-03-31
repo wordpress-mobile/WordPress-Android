@@ -154,7 +154,7 @@
 
         <!-- Stats Activities -->
         <activity android:name=".ui.stats.StatsActivity"
-                  android:theme="@style/WordPress.DrawerActivity"/>
+                  android:theme="@style/Calypso.NoActionBar"/>
 
         <activity android:name=".ui.stats.StatsViewAllActivity"
                   android:theme="@style/CalypsoTheme"/>
@@ -162,7 +162,8 @@
         <activity android:name=".ui.stats.StatsSinglePostDetailsActivity"
             android:theme="@style/CalypsoTheme"/>
 
-        <activity android:name=".ui.WPWebViewActivity"/>
+        <activity android:name=".ui.WPWebViewActivity"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Media Activities -->
         <activity

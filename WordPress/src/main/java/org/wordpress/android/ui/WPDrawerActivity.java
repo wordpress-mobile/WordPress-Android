@@ -87,7 +87,7 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         boolean menuDrawerDisabled = false;
         if (getIntent() != null) {
-            menuDrawerDisabled = getIntent().getBooleanExtra(StatsActivity.ARG_NO_MENU_DRAWER, false);
+            //menuDrawerDisabled = getIntent().getBooleanExtra(StatsActivity.ARG_NO_MENU_DRAWER, false);
         }
         if (isStaticMenuDrawer() && !menuDrawerDisabled) {
             setContentView(R.layout.activity_drawer_static);

@@ -168,7 +168,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
             intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
         } else {
             intent = new Intent(this, StatsActivity.class);
-            intent.putExtra(StatsActivity.ARG_NO_MENU_DRAWER, true);
+            //intent.putExtra(StatsActivity.ARG_NO_MENU_DRAWER, true);
         }
 
         intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableSiteId);
