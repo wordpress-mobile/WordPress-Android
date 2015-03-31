@@ -32,7 +32,9 @@ public abstract class WebViewActivity extends ActionBarActivity {
         // such as AuthenticatedWebViewActivity
         setTitle("");
 
-        setContentView(R.layout.webview);Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setContentView(R.layout.webview);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

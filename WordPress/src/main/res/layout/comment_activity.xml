@@ -8,8 +8,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
+
     <fragment
         android:id="@+id/fragment_comment_list"
+        android:layout_below="@+id/toolbar"
         android:tag="@string/fragment_tag_comment_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
