@@ -52,7 +52,6 @@ import java.util.Set;
 
 /**
  * The main activity in which the user can browse their media.
- * Accessible via the menu drawer as "Media"
  */
 public class MediaBrowserActivity extends ActionBarActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
@@ -71,7 +70,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
     private FeatureSet mFeatureSet;
     private String mQuery;
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
@@ -153,7 +152,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
         } else {
-            multi_stream = new ArrayList<Uri>();
+            multi_stream = new ArrayList<>();
             multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
         }
         mMediaAddFragment.uploadList(multi_stream);
@@ -179,7 +178,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         String captureVideo = getResources().getString(R.string.media_add_popup_capture_video);
         String pickPhotoFromGallery = getResources().getString(R.string.select_photo);
         String pickVideoFromGallery = getResources().getString(R.string.select_video);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(MediaBrowserActivity.this,
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(MediaBrowserActivity.this,
                 R.layout.actionbar_add_media_cell,
                 new String[] {
                         capturePhoto, captureVideo, pickPhotoFromGallery, pickVideoFromGallery
@@ -259,7 +258,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
 
         });
 
-        List<Object> apiArgs = new ArrayList<Object>();
+        List<Object> apiArgs = new ArrayList<>();
         apiArgs.add(WordPress.getCurrentBlog());
         task.execute(apiArgs);
     }
@@ -366,11 +365,6 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -510,7 +504,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
 
     public void deleteMedia(final ArrayList<String> ids) {
         final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        Set<String> sanitizedIds = new HashSet<String>(ids.size());
+        Set<String> sanitizedIds = new HashSet<>(ids.size());
 
         // phone layout: pop the item fragment if it's visible
         getFragmentManager().popBackStack();
