@@ -45,7 +45,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
- * The theme browser. Accessible via side menu drawer.
+ * The theme browser.
  */
 public class ThemeBrowserActivity extends ActionBarActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback {

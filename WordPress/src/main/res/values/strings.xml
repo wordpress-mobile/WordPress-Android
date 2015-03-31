@@ -303,11 +303,6 @@
     <string name="signing_in">Signing in…</string>
     <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
 
-    <!-- Menu Drawer -->
-    <string name="open_drawer">Open menu drawer</string>
-    <string name="close_drawer">Close menu drawer</string>
-
-
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>

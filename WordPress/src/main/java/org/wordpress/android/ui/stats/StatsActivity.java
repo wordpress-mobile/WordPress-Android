@@ -54,7 +54,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The native stats activity, accessible via the menu drawer.
+ * The native stats activity
  * <p>
  * By pressing a spinner on the action bar, the user can select which timeframe they wish to see.
  * </p>
