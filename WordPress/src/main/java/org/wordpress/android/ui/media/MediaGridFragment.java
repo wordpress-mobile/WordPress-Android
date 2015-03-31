@@ -39,14 +39,13 @@ import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
-import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 
@@ -798,8 +797,8 @@ public class MediaGridFragment extends Fragment
             }
             ArrayList<String> ids = mGridAdapter.getSelectedItems();
             Intent i = new Intent(getActivity(), EditPostActivity.class);
-            i.setAction(EditPostContentFragment.NEW_MEDIA_POST);
-            i.putExtra(EditPostContentFragment.NEW_MEDIA_POST_EXTRA, ids.iterator().next());
+            i.setAction(EditPostActivity.NEW_MEDIA_POST);
+            i.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA, ids.iterator().next());
             startActivity(i);
         }
 
@@ -828,8 +827,8 @@ public class MediaGridFragment extends Fragment
                 return;
             }
             Intent i = new Intent(getActivity(), EditPostActivity.class);
-            i.setAction(EditPostContentFragment.NEW_MEDIA_GALLERY);
-            i.putStringArrayListExtra(EditPostContentFragment.NEW_MEDIA_GALLERY_EXTRA_IDS,
+            i.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
+            i.putStringArrayListExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS,
                     mGridAdapter.getSelectedItems());
             startActivity(i);
         }

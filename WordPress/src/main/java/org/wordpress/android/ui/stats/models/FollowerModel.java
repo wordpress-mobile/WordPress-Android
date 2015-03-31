@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.io.Serializable;
@@ -21,8 +21,8 @@ public class FollowerModel implements Serializable {
         this.mBlogId = mBlogId;
         this.mLabel = followerJSONData.getString("label");
 
-        setAvatar(JSONUtil.getString(followerJSONData, "avatar"));
-        setURL(JSONUtil.getString(followerJSONData, "url"));
+        setAvatar(JSONUtils.getString(followerJSONData, "avatar"));
+        setURL(JSONUtils.getString(followerJSONData, "url"));
 
         this.mDateSubscribed = followerJSONData.getString("date_subscribed");
 

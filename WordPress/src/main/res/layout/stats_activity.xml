@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.wordpress.android.util.ptr.CustomSwipeRefreshLayout
+<org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ptr_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/grey_lighten_30">
 
     <org.wordpress.android.ui.stats.ScrollViewExt xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -163,4 +164,4 @@
 
         </LinearLayout>
     </org.wordpress.android.ui.stats.ScrollViewExt>
-</org.wordpress.android.util.ptr.CustomSwipeRefreshLayout>
+</org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>

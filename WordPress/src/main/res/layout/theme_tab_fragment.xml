@@ -13,7 +13,7 @@
         android:visibility="gone"
         android:layout_margin="16dp"/>
 
-    <org.wordpress.android.util.ptr.CustomSwipeRefreshLayout
+    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -31,7 +31,7 @@
             android:stretchMode="columnWidth"
             android:layout_below="@id/theme_no_search_result_text">
         </GridView>
-    </org.wordpress.android.util.ptr.CustomSwipeRefreshLayout>
+    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"

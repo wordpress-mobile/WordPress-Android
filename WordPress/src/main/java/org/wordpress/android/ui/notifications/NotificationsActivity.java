@@ -1,14 +1,15 @@
 package org.wordpress.android.ui.notifications;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AuthenticationDialogUtils;
 
 public class NotificationsActivity extends WPDrawerActivity {
     private static final String TAG_NOTES_LIST = "notesList";
@@ -70,5 +71,10 @@ public class NotificationsActivity extends WPDrawerActivity {
         if (mNotesListFragment != null) {
             mNotesListFragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.SimperiumNotAuthorized event) {
+        AuthenticationDialogUtils.showAuthErrorView(this, R.string.sign_in_again, R.string.simperium_connection_error);
     }
 }

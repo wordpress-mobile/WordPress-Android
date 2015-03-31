@@ -2,7 +2,7 @@ package org.wordpress.android.models;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class Tag {
             return null;
         }
 
-        String tag = JSONUtil.getString(json, "name");
+        String tag = JSONUtils.getString(json, "name");
 
         // the api currently doesn't return a taxonomy field but we want to be ready for when it does
         return new Tag(siteID, tag);

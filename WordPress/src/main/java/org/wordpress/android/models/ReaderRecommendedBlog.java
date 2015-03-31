@@ -1,7 +1,7 @@
 package org.wordpress.android.models;
 
 import org.json.JSONObject;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class ReaderRecommendedBlog {
@@ -28,12 +28,12 @@ public class ReaderRecommendedBlog {
         blog.followRecoId = json.optLong("follow_reco_id");
         blog.score = json.optInt("score");
 
-        blog.setTitle(JSONUtil.getString(json, "title"));
-        blog.setImageUrl(JSONUtil.getString(json, "image"));
-        blog.setReason(JSONUtil.getStringDecoded(json, "reason"));
+        blog.setTitle(JSONUtils.getString(json, "title"));
+        blog.setImageUrl(JSONUtils.getString(json, "image"));
+        blog.setReason(JSONUtils.getStringDecoded(json, "reason"));
 
         // the "url" field points to an API endpoint, "blog_domain" contains the actual url
-        blog.setBlogUrl(JSONUtil.getString(json, "blog_domain"));
+        blog.setBlogUrl(JSONUtils.getString(json, "blog_domain"));
 
         return blog;
     }

@@ -1,24 +1,24 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'http://download.crashlytics.com/maven' }
+        maven { url 'https://maven.fabric.io/repo' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
         classpath 'com.github.nrudenko:gradle-android-cq-plugin:0.1+'
-        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:+'
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 
 repositories {
     mavenCentral()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
-    maven { url 'http://download.crashlytics.com/maven' }
+    maven { url 'https://maven.fabric.io/repo' }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'android-cq'
-apply plugin: 'crashlytics'
+apply plugin: 'io.fabric'
 
 android {
     packagingOptions {
@@ -27,12 +27,12 @@ android {
     }
 
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.8-rc-2"
-        versionCode 168
+        versionName "3.9-rc-2"
+        versionCode 172
         minSdkVersion 14
         targetSdkVersion 21
 
@@ -58,12 +58,13 @@ android {
 
         debug {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
+            ext.enableCrashlytics = false
         }
     }
 }
 
 dependencies {
-    compile 'com.crashlytics.android:crashlytics:+'
+    compile 'com.crashlytics.sdk.android:crashlytics:2.2.2'
 
     // Provided by maven central
     compile 'org.wordpress:mediapicker:1.1.4'
@@ -79,7 +80,6 @@ dependencies {
     compile 'com.cocosw:undobar:1.6@aar'
     compile 'de.greenrobot:eventbus:2.4.0'
 
-    compile 'com.mixpanel.android:mixpanel-android:4.3.0@aar'
     compile 'com.mcxiaoke.volley:library:1.0.+'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
@@ -106,8 +106,18 @@ dependencies {
     debugCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'debug')
     releaseCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'release')
     debugCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'debug')
+    releaseCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'release')
+    debugCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'debug')
+    releaseCompile project(path:':libs:editor:WordPressEditor', configuration: 'release')
+    debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
 }
 
+configurations.all {
+    // Exclude packaged wordpress sub projects, force the use of the source project
+    // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
+    exclude group: 'org.wordpress', module: 'utils'
+    exclude group: 'org.wordpress', module: 'analytics'
+}
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")

@@ -10,8 +10,8 @@ import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.R;
-import org.wordpress.android.util.JSONUtil;
 
 import javax.annotation.Nonnull;
 
@@ -44,11 +44,11 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     private void processRangeData() {
         if (mBlockData != null) {
-            mId = JSONUtil.queryJSON(mBlockData, "id", 0);
-            mSiteId = JSONUtil.queryJSON(mBlockData, "site_id", 0);
-            mPostId = JSONUtil.queryJSON(mBlockData, "post_id", 0);
-            mRangeType = NoteBlockRangeType.fromString(JSONUtil.queryJSON(mBlockData, "type", ""));
-            mUrl = JSONUtil.queryJSON(mBlockData, "url", "");
+            mId = JSONUtils.queryJSON(mBlockData, "id", 0);
+            mSiteId = JSONUtils.queryJSON(mBlockData, "site_id", 0);
+            mPostId = JSONUtils.queryJSON(mBlockData, "post_id", 0);
+            mRangeType = NoteBlockRangeType.fromString(JSONUtils.queryJSON(mBlockData, "type", ""));
+            mUrl = JSONUtils.queryJSON(mBlockData, "url", "");
             mIndices = new int[]{0,0};
             JSONArray indicesArray = mBlockData.optJSONArray("indices");
             if (indicesArray != null) {
@@ -56,12 +56,12 @@ public class NoteBlockClickableSpan extends ClickableSpan {
                 mIndices[1] = indicesArray.optInt(1);
             }
 
-            // Don't link ranges that we don't know the type of, unless we have a URL
-            mShouldLink = mShouldLink && (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
+            // Don't link certain range types, or unknown ones, unless we have a URL
+            mShouldLink = mShouldLink && mRangeType != NoteBlockRangeType.BLOCKQUOTE &&
+                    (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
 
-            // Apply different coloring for blockquotes
-            if (getRangeType() == NoteBlockRangeType.BLOCKQUOTE) {
-                mShouldLink = false;
+            // Apply grey color to some types
+            if (getRangeType() == NoteBlockRangeType.BLOCKQUOTE || getRangeType() == NoteBlockRangeType.POST) {
                 mTextColor = mContext.getResources().getColor(R.color.grey);
             }
         }
@@ -127,9 +127,5 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     public String getUrl() {
         return mUrl;
-    }
-
-    public boolean shouldShowBlogPreview() {
-        return mRangeType == NoteBlockRangeType.USER || mRangeType == NoteBlockRangeType.SITE;
     }
 }
