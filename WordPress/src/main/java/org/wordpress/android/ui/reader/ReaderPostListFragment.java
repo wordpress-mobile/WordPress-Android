@@ -16,8 +16,6 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -461,12 +459,23 @@ public class ReaderPostListFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setHasOptionsMenu(true);
-
-        // configure the tag spinner for posts in followed tags (shown in main viewpager activity)
+        // configure the toolbar for posts in followed tags (shown in main viewpager activity)
         if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
+            final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
+            toolbar.setVisibility(View.VISIBLE);
+            toolbar.inflateMenu(R.menu.reader_list);
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    if (menuItem.getItemId() == R.id.menu_tags) {
+                        ReaderActivityLauncher.showReaderSubsForResult(getActivity());
+                        return true;
+                    }
+                    return false;
+                }
+            });
             if (mSpinner == null) {
-                enableTagSpinner();
+                enableTagSpinner(toolbar);
             }
             selectTagInSpinner(getCurrentTag());
         }
@@ -564,31 +573,10 @@ public class ReaderPostListFragment extends Fragment
         mFollowButton.setIsFollowed(isFollowing);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        // only followed tag list has a menu
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            inflater.inflate(R.menu.reader_list, menu);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_tags:
-                ReaderActivityLauncher.showReaderSubsForResult(getActivity());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     /*
-         * blocks the blog associated with the passed post and removes all posts in that blog
-         * from the adapter
-         */
+     * blocks the blog associated with the passed post and removes all posts in that blog
+     * from the adapter
+     */
     private void blockBlogForPost(final ReaderPost post) {
         if (post == null || !hasPostAdapter()) {
             return;
@@ -642,11 +630,8 @@ public class ReaderPostListFragment extends Fragment
     /*
      * enables the tag spinner in the toolbar, used only for posts in followed tags
      */
-    private void enableTagSpinner() {
+    private void enableTagSpinner(Toolbar toolbar) {
         if (!isAdded()) return;
-
-        final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
-        toolbar.setVisibility(View.VISIBLE);
 
         mSpinner = (Spinner) toolbar.findViewById(R.id.reader_spinner);
         mSpinner.setAdapter(getSpinnerAdapter());
