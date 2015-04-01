@@ -10,8 +10,8 @@ import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.R;
-import org.wordpress.android.util.JSONUtil;
 
 import javax.annotation.Nonnull;
 
@@ -44,11 +44,11 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     private void processRangeData() {
         if (mBlockData != null) {
-            mId = JSONUtil.queryJSON(mBlockData, "id", 0);
-            mSiteId = JSONUtil.queryJSON(mBlockData, "site_id", 0);
-            mPostId = JSONUtil.queryJSON(mBlockData, "post_id", 0);
-            mRangeType = NoteBlockRangeType.fromString(JSONUtil.queryJSON(mBlockData, "type", ""));
-            mUrl = JSONUtil.queryJSON(mBlockData, "url", "");
+            mId = JSONUtils.queryJSON(mBlockData, "id", 0);
+            mSiteId = JSONUtils.queryJSON(mBlockData, "site_id", 0);
+            mPostId = JSONUtils.queryJSON(mBlockData, "post_id", 0);
+            mRangeType = NoteBlockRangeType.fromString(JSONUtils.queryJSON(mBlockData, "type", ""));
+            mUrl = JSONUtils.queryJSON(mBlockData, "url", "");
             mIndices = new int[]{0,0};
             JSONArray indicesArray = mBlockData.optJSONArray("indices");
             if (indicesArray != null) {

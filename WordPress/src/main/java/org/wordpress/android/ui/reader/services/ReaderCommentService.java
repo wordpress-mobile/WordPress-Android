@@ -25,7 +25,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -146,7 +146,7 @@ public class ReaderCommentService extends Service {
                             serverComments.add(comment);
 
                             // extract and save likes for this comment
-                            JSONObject jsonLikes = JSONUtil.getJSONChild(jsonComment, "meta/data/likes");
+                            JSONObject jsonLikes = JSONUtils.getJSONChild(jsonComment, "meta/data/likes");
                             if (jsonLikes != null) {
                                 ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonLikes);
                                 ReaderUserTable.addOrUpdateUsers(likingUsers);

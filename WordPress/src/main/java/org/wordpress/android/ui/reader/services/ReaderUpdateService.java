@@ -23,7 +23,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -192,8 +192,8 @@ public class ReaderUpdateService extends Service {
             String internalName = it.next();
             JSONObject jsonTopic = jsonTopics.optJSONObject(internalName);
             if (jsonTopic != null) {
-                String tagName = JSONUtil.getStringDecoded(jsonTopic, "title");
-                String endpoint = JSONUtil.getString(jsonTopic, "URL");
+                String tagName = JSONUtils.getStringDecoded(jsonTopic, "title");
+                String endpoint = JSONUtils.getString(jsonTopic, "URL");
                 topics.add(new ReaderTag(tagName, endpoint, topicType));
             }
         }

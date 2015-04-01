@@ -19,7 +19,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.WPWebChromeClient;
+import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.passcodelock.AppLockManager;
 
