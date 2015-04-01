@@ -25,7 +25,7 @@ public class ReferrerGroupModel implements Serializable {
     private String mIcon;
     private int mTotal;
     private String mUrl;
-    private List<SingleItemModel> mResults;
+    private List<ReferrerResultModel> mResults;
 
     public ReferrerGroupModel(String blogId, String date, JSONObject groupJSON) throws JSONException {
         setBlogId(blogId);
@@ -35,44 +35,26 @@ public class ReferrerGroupModel implements Serializable {
         setName(groupJSON.getString("name"));
         setTotal(groupJSON.getInt("total"));
         setIcon(JSONUtils.getString(groupJSON, "icon"));
-
         // if URL is set in the response there is one result only. No need to unfold "results"
         if (!TextUtils.isEmpty(JSONUtils.getString(groupJSON, "url"))) {
             setUrl(JSONUtils.getString(groupJSON, "url"));
         } else {
-            // Referrers is a 3-levels depth structure. We don't have 3 levels UI for now. Unfold childs here.
-            JSONArray resultsJSON = groupJSON.getJSONArray("results");
             mResults = new ArrayList<>();
+            JSONArray resultsJSON = groupJSON.getJSONArray("results");
             for (int i = 0; i < resultsJSON.length(); i++) {
                 JSONObject currentResultJSON = resultsJSON.getJSONObject(i);
-                if (currentResultJSON.has("children")) {
-                    JSONArray currentResultChildensJSON = currentResultJSON.getJSONArray("children");
-                    for (int j = 0; j < currentResultChildensJSON.length(); j++) {
-                        JSONObject currentChild = currentResultChildensJSON.getJSONObject(j);
-                        mResults.add(getChildren(blogId, date, currentChild));
-                    }
-                } else {
-                    mResults.add(getChildren(blogId, date, currentResultJSON));
-                }
+                ReferrerResultModel currentResultModel = new ReferrerResultModel(blogId,
+                        date, currentResultJSON);
+                mResults.add(currentResultModel);
             }
-
-            // Sort the childs by views.
-            Collections.sort(mResults, new java.util.Comparator<SingleItemModel>() {
-                public int compare(SingleItemModel o1, SingleItemModel o2) {
+            // Sort the results by views.
+            Collections.sort(mResults, new java.util.Comparator<ReferrerResultModel>() {
+                public int compare(ReferrerResultModel o1, ReferrerResultModel o2) {
                     // descending order
-                    return o2.getTotals() - o1.getTotals();
+                    return o2.getViews() - o1.getViews();
                 }
             });
-
         }
-    }
-
-    private SingleItemModel getChildren(String blogId, String date, JSONObject child) throws JSONException {
-        String name = child.getString("name");
-        int totals = child.getInt("views");
-        String icon = child.optString("icon");
-        String url = child.optString("url");
-        return new SingleItemModel(blogId, date, null, name, totals, url, icon);
     }
 
     public String getBlogId() {
@@ -131,5 +113,5 @@ public class ReferrerGroupModel implements Serializable {
         this.mIcon = icon;
     }
 
-    public List<SingleItemModel> getResults() { return mResults; }
+    public List<ReferrerResultModel> getResults() { return mResults; }
 }

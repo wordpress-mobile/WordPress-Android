@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.BaseExpandableListAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.ReferrerGroupModel;
+import org.wordpress.android.ui.stats.models.ReferrerResultModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -99,7 +101,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         @Override
         public Object getChild(int groupPosition, int childPosition) {
             ReferrerGroupModel currentGroup = groups.get(groupPosition);
-            List<SingleItemModel> results = currentGroup.getResults();
+            List<ReferrerResultModel> results = currentGroup.getResults();
             return results.get(childPosition);
         }
 
@@ -112,7 +114,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
 
-            final SingleItemModel children = (SingleItemModel) getChild(groupPosition, childPosition);
+            final ReferrerResultModel children = (ReferrerResultModel) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
@@ -123,18 +125,32 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
-            String name = children.getTitle();
-            int total = children.getTotals();
+            String name = children.getName();
+            int total = children.getViews();
 
             // The link icon
             holder.showLinkIcon();
 
             // name, url
-            holder.setEntryTextOrLink(children.getUrl(), name);
+            List<SingleItemModel> thirdLevelChildren = children.getChildren();
+            if (thirdLevelChildren != null && thirdLevelChildren.size() > 0 ) {
+                holder.setEntryTextOrLink(thirdLevelChildren.get(0).getUrl(), name);
+            } else {
+                holder.setEntryTextOrLink(children.getUrl(), name);
+            }
+
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
-            holder.networkImageView.setVisibility(View.GONE);
+            if (!TextUtils.isEmpty(children.getIcon())) {
+                holder.networkImageView.setImageUrl(
+                        GravatarUtils.fixGravatarUrl(children.getIcon(), mResourceVars.headerAvatarSizePx),
+                        WPNetworkImageView.ImageType.BLAVATAR);
+                holder.networkImageView.setVisibility(View.VISIBLE);
+            } else {
+                holder.networkImageView.setVisibility(View.GONE);
+            }
+
             // no more btm
             holder.imgMore.setVisibility(View.GONE);
 
@@ -144,7 +160,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         @Override
         public int getChildrenCount(int groupPosition) {
             ReferrerGroupModel currentGroup = groups.get(groupPosition);
-            List<SingleItemModel> referrals = currentGroup.getResults();
+            List<ReferrerResultModel> referrals = currentGroup.getResults();
             if (referrals == null) {
                 return 0;
             } else {
