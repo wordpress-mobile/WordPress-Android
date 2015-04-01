@@ -26,13 +26,14 @@ public class AnalyticsUtils {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
         boolean isUserConnected = WordPress.isSignedIn(WordPress.getContext());
+        boolean isWordPressComUser = WordPress.hasDotComToken(WordPress.getContext());
         boolean isJetpackUser = WordPress.wpDB.hasAnyJetpackBlogs();
         int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
 
         retrieveAndSaveEmailAddressIfApplicable();
-        AnalyticsTracker.refreshMetadata(isUserConnected, isJetpackUser, sessionCount, numBlogs, versionCode,
-                username, email);
+        AnalyticsTracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
+                versionCode, username, email);
     }
 
     /**
@@ -45,13 +46,14 @@ public class AnalyticsUtils {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
         boolean isUserConnected = WordPress.isSignedIn(WordPress.getContext());
+        boolean isWordPressComUser = WordPress.hasDotComToken(WordPress.getContext());
         boolean isJetpackUser = WordPress.wpDB.hasAnyJetpackBlogs();
         int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
         String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
         String email = AppPrefs.getMixpanelUserEmail();
-        AnalyticsTracker.refreshMetadata(isUserConnected, isJetpackUser, sessionCount, numBlogs, versionCode,
-                username, email);
+        AnalyticsTracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
+                versionCode, username, email);
     }
 
     /**

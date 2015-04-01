@@ -185,7 +185,6 @@ public class WordPress extends Application {
         AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
         AnalyticsTracker.init(getContext());
         AnalyticsUtils.refreshMetadata();
-        AnalyticsTracker.beginSession();
         AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 
         registerForCloudMessaging(this);
