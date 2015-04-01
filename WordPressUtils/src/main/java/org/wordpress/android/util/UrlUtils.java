@@ -33,11 +33,14 @@ public class UrlUtils {
     }
 
     public static String getDomainFromUrl(final String urlString) {
-        if (urlString == null) {
-            return "";
+        if (urlString != null) {
+            Uri uri = Uri.parse(urlString);
+            if (uri.getHost() != null) {
+                return uri.getHost();
+            }
         }
-        Uri uri = Uri.parse(urlString);
-        return uri.getHost();
+
+        return "";
     }
 
     /**
