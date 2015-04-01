@@ -669,6 +669,7 @@ public class StatsActivity extends ActionBarActivity
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
         mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
+        mIsUpdatingStats = event.mUpdating;
     }
 
     /*
