@@ -5,7 +5,7 @@
     <dimen name="format_bar_height">40dp</dimen>
     <dimen name="category_row_height">60dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
-    <dimen name="toolbar_height">48dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
 
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_padding">10dp</dimen>
