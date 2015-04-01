@@ -39,14 +39,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.+'
     compile 'com.android.support:support-v4:21.0.+'
     compile 'org.wordpress:analytics:1.0.0'
-    releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
-    debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
-}
-
-configurations.all {
-    // Exclude packaged wordpress sub projects, force the use of the source project
-    // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
-    exclude group: 'org.wordpress', module: 'utils'
+	compile 'org.wordpress:utils:1.5.0'
 }
 
 signing {
