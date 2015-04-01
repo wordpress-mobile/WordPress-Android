@@ -113,12 +113,13 @@ public class StatsViewAllActivity extends ActionBarActivity
             mTimeframe = (StatsTimeframe) extras.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
             mDate = extras.getString(StatsAbstractFragment.ARGS_START_DATE);
             mStatsViewType = (StatsViewType) extras.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE);
-            if (mStatsViewType == null || mTimeframe == null || mDate == null) {
-                Toast.makeText(this, getResources().getText(R.string.stats_generic_error),
-                        Toast.LENGTH_SHORT).show();
-                finish();
-            }
             mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
+        }
+
+        if (mStatsViewType == null || mTimeframe == null || mDate == null) {
+            Toast.makeText(this, getResources().getText(R.string.stats_generic_error),
+                    Toast.LENGTH_SHORT).show();
+            finish();
         }
 
         // Setup the top date label. It's available on those fragments that are affected by the top date selector.
