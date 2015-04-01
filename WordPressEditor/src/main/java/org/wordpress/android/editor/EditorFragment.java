@@ -104,9 +104,7 @@ public class EditorFragment extends EditorFragmentAbstract {
 
         mWebView.loadDataWithBaseURL("file:///android_asset/", htmlEditor, "text/html", "utf-8", "");
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
-        }
+        enableWebDebugging(true);
     }
 
     private String getStringFromAsset(String filename) throws IOException {
@@ -133,6 +131,14 @@ public class EditorFragment extends EditorFragmentAbstract {
         } catch (IOException e) {
             AppLog.e(T.EDITOR, e.getMessage());
             return null;
+        }
+    }
+
+    @SuppressLint("NewApi")
+    private void enableWebDebugging(boolean enable) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            AppLog.i(T.EDITOR, "Enabling web debugging");
+            WebView.setWebContentsDebuggingEnabled(enable);
         }
     }
 
