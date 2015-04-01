@@ -890,6 +890,7 @@
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
+    <string name="my_site_btn_blog_settings">Site Settings</string>
     <string name="my_site_btn_comments">Comments</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
