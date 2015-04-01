@@ -14,7 +14,6 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 
 import java.util.EnumMap;
 import java.util.Iterator;
@@ -163,10 +162,9 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         mMixpanel.flush();
     }
 
-    // refreshMetadata()
     @Override
-    public void refreshMetadata(boolean isUserConnected, boolean isJetpackUser, int sessionCount, int numBlogs,
-                                int versionCode, String username, String email) {
+    public void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
+                                int sessionCount, int numBlogs, int versionCode, String username, String email) {
         // Register super properties
         try {
             JSONObject properties = new JSONObject();
