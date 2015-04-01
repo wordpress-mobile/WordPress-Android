@@ -232,12 +232,6 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.reader_activity_scale_in, R.anim.reader_flyout);
-    }
-
-    @Override
     public void onDestroy() {
         if (mSuggestionServiceConnectionManager != null) {
             mSuggestionServiceConnectionManager.unbindFromService();

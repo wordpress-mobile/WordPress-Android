@@ -202,7 +202,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             fragment.hideCustomView();
         } else {
             super.onBackPressed();
-            overridePendingTransition(R.anim.reader_activity_scale_in, R.anim.reader_activity_slide_out);
         }
     }
 

@@ -193,7 +193,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
                 R.anim.reader_activity_slide_in,
-                R.anim.reader_activity_scale_out);
+                R.anim.do_nothing);
         ActivityCompat.startActivityForResult(activity, detailIntent, NOTE_DETAIL_REQUEST_CODE, options.toBundle());
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
