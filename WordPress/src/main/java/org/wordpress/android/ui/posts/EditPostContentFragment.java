@@ -16,6 +16,7 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
@@ -394,7 +395,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                             Uri capturedImageUri = Uri.fromFile(f);
                             if (!addMedia(capturedImageUri, null, getActivity()))
                                 Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-                            getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+                            broadcastMediaAdded(capturedImageUri, Uri.parse("file://" + Environment.getExternalStorageDirectory()));
                             AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                         } catch (RuntimeException e) {
                             AppLog.e(T.POSTS, e);
@@ -1899,6 +1900,29 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
         mediaFile.save();
         startMediaUploadService();
+    }
+
+    /**
+     * Used to notify system of new media.
+     *
+     * ACTION_MEDIA_MOUNTED is protected as of 4.4 and ACTION_MEDIA_SCANNER_SCAN_FILE does not
+     * work on pre 4.4
+     *
+     * @param newMediaUri
+     * URI of the newly added media
+     * @param dirUri
+     * directory where the new media was added
+     */
+    private void broadcastMediaAdded(Uri newMediaUri, Uri dirUri) {
+        Intent mediaIntent;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mediaIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newMediaUri);
+        } else {
+            mediaIntent = new Intent(Intent.ACTION_MEDIA_MOUNTED, dirUri);
+        }
+
+        getActivity().sendBroadcast(mediaIntent);
     }
 
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
