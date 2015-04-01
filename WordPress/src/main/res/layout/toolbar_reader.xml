@@ -9,6 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
+    android:id="@+id/toolbar_reader"
     android:minHeight="?attr/actionBarSize"
     android:visibility="gone"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"

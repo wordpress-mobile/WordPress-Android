@@ -9,10 +9,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <include
+        android:id="@+id/toolbar_reader"
+        layout="@layout/toolbar_reader" />
+
     <org.wordpress.android.ui.reader.views.ReaderRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_reader"
         android:scrollbars="vertical"
         tools:listitem="@layout/reader_cardview_tag" />
 
