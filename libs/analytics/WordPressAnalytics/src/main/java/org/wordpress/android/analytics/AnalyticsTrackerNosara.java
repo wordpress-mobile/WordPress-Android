@@ -8,7 +8,6 @@ import com.automattic.android.tracks.TracksClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 
 import java.util.Map;
@@ -26,13 +25,15 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
     private String mAnonID = null; // do not access this variable directly. Use methods.
 
     private TracksClient mNosaraClient;
+    private Context mContext;
 
-    public AnalyticsTrackerNosara(Context ctx) {
-        if (null == ctx) {
+    public AnalyticsTrackerNosara(Context context) {
+        if (null == context) {
             mNosaraClient = null;
             return;
         }
-        mNosaraClient = TracksClient.getClient(ctx);
+        mContext = context;
+        mNosaraClient = TracksClient.getClient(context);
     }
 
     @Override
@@ -302,18 +303,9 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         }
     }
 
-    @Override
-    public void beginSession() {
-        if (mNosaraClient == null) {
-            return;
-        }
-
-        refreshMetadata();
-    }
-
     private void clearAnonID() {
         mAnonID = null;
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (preferences.contains(TRACKS_ANON_ID)) {
             final SharedPreferences.Editor editor = preferences.edit();
             editor.remove(TRACKS_ANON_ID);
@@ -323,7 +315,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
 
     private String getAnonID() {
         if (mAnonID == null) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
             mAnonID = preferences.getString(TRACKS_ANON_ID, null);
         }
         return mAnonID;
@@ -338,7 +330,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         }
         uuid = builder.toString();
         AppLog.d(AppLog.T.STATS, "New anon ID generated: " + uuid);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         final SharedPreferences.Editor editor = preferences.edit();
         editor.putString(TRACKS_ANON_ID, uuid);
         editor.commit();
@@ -356,15 +348,13 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
     }
 
     @Override
-    public void refreshMetadata() {
+    public void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
+                                int sessionCount, int numBlogs, int versionCode, String username, String email) {
         if (mNosaraClient == null) {
             return;
         }
 
-        boolean isWordPressComConnected = WordPress.hasDotComToken(WordPress.getContext());
-        if (isWordPressComConnected) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-            String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+        if (isWordPressComUser) {
             mWpcomUserName = username;
             // Re-unify the user
             if (getAnonID() != null) {
@@ -379,17 +369,16 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             }
         }
 
-        boolean jetpackUser = WordPress.wpDB.hasAnyJetpackBlogs();
-        int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
         try {
             JSONObject properties = new JSONObject();
-            properties.put(JETPACK_USER, jetpackUser);
+            properties.put(JETPACK_USER, isJetpackUser);
             properties.put(NUMBER_OF_BLOGS, numBlogs);
             mNosaraClient.registerUserProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
         }
     }
+
 
     @Override
     public void clearAllData() {
