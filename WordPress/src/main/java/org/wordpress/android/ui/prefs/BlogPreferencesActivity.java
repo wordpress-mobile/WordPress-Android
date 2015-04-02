@@ -156,7 +156,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
 
     private void loadSettingsForBlog() {
         ArrayAdapter<Object> spinnerArrayAdapter = new ArrayAdapter<Object>(this,
-                R.layout.spinner_textview, new String[]{
+                R.layout.simple_spinner_item, new String[]{
                 "Original Size", "100", "200", "300", "400", "500", "600", "700", "800",
                 "900", "1000", "1100", "1200", "1300", "1400", "1500", "1600", "1700",
                 "1800", "1900", "2000"
