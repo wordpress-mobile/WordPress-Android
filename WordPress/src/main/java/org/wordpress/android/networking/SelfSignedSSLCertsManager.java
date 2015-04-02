@@ -10,6 +10,7 @@ import android.os.Bundle;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.GenericCallback;
@@ -68,18 +69,7 @@ public class SelfSignedSSLCertsManager {
         );
         alert.setNeutralButton(R.string.ssl_certificate_details, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(ctx, SSLCertsViewActivity.class);
-                try {
-                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(ctx);
-                    String lastFailureChainDescription =
-                            selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
-                    intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
-                    ctx.startActivity(intent);
-                } catch (GeneralSecurityException e) {
-                    AppLog.e(T.API, e);
-                } catch (IOException e) {
-                    AppLog.e(T.API, e);
-                }
+                ActivityLauncher.viewSSLCerts(ctx);
             }
         });
         alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

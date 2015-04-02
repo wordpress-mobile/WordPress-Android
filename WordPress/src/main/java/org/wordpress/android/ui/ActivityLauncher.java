@@ -12,6 +12,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.networking.SSLCertsViewActivity;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -20,6 +22,10 @@ import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.util.AppLog;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
 
@@ -110,5 +116,20 @@ public class ActivityLauncher {
 
     public static void addMedia(Context context, Blog blog) {
         // TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/2394
+    }
+
+    public static void viewSSLCerts(Context context) {
+        try {
+            Intent intent = new Intent(context, SSLCertsViewActivity.class);
+            SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(context);
+            String lastFailureChainDescription =
+                    selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
+            intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
+            context.startActivity(intent);
+        } catch (GeneralSecurityException e) {
+            AppLog.e(AppLog.T.API, e);
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.API, e);
+        }
     }
 }
