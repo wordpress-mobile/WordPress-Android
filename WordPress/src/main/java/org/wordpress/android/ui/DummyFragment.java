@@ -31,8 +31,7 @@ public class DummyFragment extends Fragment {
         txtSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().startActivityForResult(
-                        new Intent(getActivity(), SettingsActivity.class), RequestCodes.SETTINGS);
+                ActivityLauncher.viewSettings(getActivity());
             }
         });
 

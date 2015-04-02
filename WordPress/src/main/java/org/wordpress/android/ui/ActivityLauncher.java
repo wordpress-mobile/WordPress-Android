@@ -20,6 +20,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
@@ -131,5 +132,10 @@ public class ActivityLauncher {
         } catch (IOException e) {
             AppLog.e(AppLog.T.API, e);
         }
+    }
+
+    public static void viewSettings(Activity activity) {
+        Intent i = new Intent(activity, SettingsActivity.class);
+        activity.startActivityForResult(i, RequestCodes.SETTINGS);
     }
 }

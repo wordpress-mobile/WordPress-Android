@@ -26,6 +26,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -200,8 +201,7 @@ public class ReaderReblogActivity extends ActionBarActivity {
                         txtEmpty.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent i = new Intent(ReaderReblogActivity.this, SettingsActivity.class);
-                                startActivityForResult(i, RequestCodes.SETTINGS);
+                                ActivityLauncher.viewSettings(ReaderReblogActivity.this);
                             }
                         });
                     }
