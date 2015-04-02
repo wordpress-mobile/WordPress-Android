@@ -48,8 +48,6 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogStats(Context context, Blog blog) {
-        if (blog == null) return;
-
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blog.getLocalTableBlogId());
         context.startActivity(intent);
@@ -72,8 +70,6 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogComments(Context context, Blog blog) {
-        if (blog == null) return;
-
         Intent intent = new Intent(context, CommentsActivity.class);
         context.startActivity(intent);
     }
@@ -84,16 +80,12 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogSettings(Context context, Blog blog) {
-        if (blog == null) return;
-
         Intent intent = new Intent(context, BlogPreferencesActivity.class);
         intent.putExtra("id", blog.getLocalTableBlogId());
         context.startActivity(intent);
     }
 
     public static void viewBlogAdmin(Context context, Blog blog) {
-        if (blog == null) return;
-
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN);
 
         Intent intent = new Intent(context, WPWebViewActivity.class);
@@ -115,6 +107,13 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         intent.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         context.startActivity(intent);
+    }
+
+    public static void editBlogPostorPage(Activity activity, long postOrPageId, boolean isPage) {
+        Intent intent = new Intent(activity.getApplicationContext(), EditPostActivity.class);
+        intent.putExtra(EditPostActivity.EXTRA_POSTID, postOrPageId);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
+        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     public static void addMedia(Context context, Blog blog) {

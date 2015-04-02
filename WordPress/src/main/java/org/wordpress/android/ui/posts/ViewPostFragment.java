@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spanned;
@@ -25,7 +24,7 @@ import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.Suggestion;
-import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
@@ -137,10 +136,9 @@ public class ViewPostFragment extends Fragment {
             public void onClick(View v) {
                 if (WordPress.currentPost != null && !mParentActivity.isRefreshing()) {
                     mOnDetailPostActionListener.onDetailPostAction(PostsActivity.POST_EDIT, WordPress.currentPost);
-                    Intent i = new Intent(getActivity().getApplicationContext(), EditPostActivity.class);
-                    i.putExtra(EditPostActivity.EXTRA_IS_PAGE, WordPress.currentPost.isPage());
-                    i.putExtra(EditPostActivity.EXTRA_POSTID, WordPress.currentPost.getLocalTablePostId());
-                    getActivity().startActivityForResult(i, RequestCodes.EDIT_POST);
+                    long postId = WordPress.currentPost.getLocalTablePostId();
+                    boolean isPage = WordPress.currentPost.isPage();
+                    ActivityLauncher.editBlogPostorPage(getActivity(), postId, isPage);
                 }
             }
         });
