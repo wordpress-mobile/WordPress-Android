@@ -2,7 +2,6 @@ package org.wordpress.android.ui.prefs;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -22,8 +21,6 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -33,8 +30,6 @@ import java.util.Locale;
  * Activity for configuring blog specific settings.
  */
 public class BlogPreferencesActivity extends ActionBarActivity {
-    private boolean mIsViewingAdmin;
-
     // The blog this activity is managing settings for.
     private Blog blog;
     private boolean mBlogDeleted;
@@ -79,10 +74,11 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         Button removeBlogButton = (Button) findViewById(R.id.remove_account);
 
         if (blog.isDotcomFlag()) {
-            // Hide credentials section
-            RelativeLayout credentialsRL = (RelativeLayout) findViewById(R.id.sectionContent);
+            View credentialsRL = findViewById(R.id.sectionContent);
             credentialsRL.setVisibility(View.GONE);
-            removeBlogButton.setVisibility(View.GONE);
+            // sectionSettings contains only the "remove blog" button
+            View sectionSettings = findViewById(R.id.sectionSettings);
+            sectionSettings.setVisibility(View.GONE);
         }
         loadSettingsForBlog();
     }
@@ -90,14 +86,13 @@ public class BlogPreferencesActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mIsViewingAdmin = false;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        if (mBlogDeleted || mIsViewingAdmin) {
+        if (mBlogDeleted) {
             return;
         }
 
@@ -301,22 +296,5 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         });
         dialogBuilder.setCancelable(false);
         dialogBuilder.create().show();
-    }
-
-    /**
-     * View the blog admin area in the web browser
-     */
-    public void viewAdmin(View view) {
-        if (blog == null) return;
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN);
-        mIsViewingAdmin = true;
-        Intent intent = new Intent(this, WPWebViewActivity.class);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, blog.getUsername());
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, blog.getPassword());
-        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, blog.getAdminUrl());
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPWebViewActivity.getBlogLoginUrl(blog));
-        intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
-        startActivity(intent);
     }
 }
