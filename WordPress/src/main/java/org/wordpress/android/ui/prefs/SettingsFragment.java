@@ -137,7 +137,7 @@ public class SettingsFragment extends PreferenceFragment {
 
     private void initNotifications() {
         // AuthenticatorRequest notification settings if needed
-        if (WordPress.hasDotComToken(getActivity())) {
+        if (WordPress.hasDotComToken()) {
             String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
             if (settingsJson == null) {
                 com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -262,7 +262,7 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void addWpComSignIn(PreferenceCategory wpComCategory, int order) {
-        if (WordPress.hasDotComToken(getActivity())) {
+        if (WordPress.hasDotComToken()) {
             String username = mSettings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
             Preference usernamePref = new Preference(getActivity());
             usernamePref.setTitle(getString(R.string.username));

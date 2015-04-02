@@ -111,7 +111,7 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
     private void finishIfNoVisibleBlogs() {
         // If not signed in, then ask to sign in, else inform the user to set at least one blog
         // visible
-        if (!WordPress.isSignedIn(getBaseContext())) {
+        if (!WordPress.isSignedIn()) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
             startActivity(new Intent(this, SignInActivity.class));
             finish();

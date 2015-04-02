@@ -224,8 +224,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
         mEditReply.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d",
-                WordPress.getLoggedInUsername(getActivity(), WordPress.getCurrentBlog()),
-                getRemoteBlogId(), getCommentId()));
+                WordPress.getLoggedInUsername(WordPress.getCurrentBlog()), getRemoteBlogId(), getCommentId()));
 
         mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
 
@@ -624,7 +623,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // the post this comment is on can only be requested if this is a .com blog or a
         // jetpack-enabled self-hosted blog, and we have valid .com credentials
         boolean isDotComOrJetpack = WordPress.wpDB.isRemoteBlogIdDotComOrJetpack(mRemoteBlogId);
-        boolean canRequestPost = isDotComOrJetpack && WordPress.hasDotComToken(getActivity());
+        boolean canRequestPost = isDotComOrJetpack && WordPress.hasDotComToken();
 
         final String title;
         final boolean hasTitle;

@@ -90,7 +90,7 @@ public class ViewSiteActivity extends ActionBarActivity {
 
         String postData = WPWebViewActivity.getAuthenticationPostData(
                 authenticationUrl, siteURL, mBlog.getUsername(), mBlog.getPassword(),
-                WordPress.getDotComToken(this)
+                WordPress.getDotComToken()
         );
 
         mWebView.postUrl(authenticationUrl, postData.getBytes());

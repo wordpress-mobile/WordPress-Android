@@ -190,7 +190,7 @@ public class PostsActivity extends ActionBarActivity
 
         // posts can't be shown if there aren't any visible blogs, so redirect to the reader and
         // exit the post list in this situation
-        if (WordPress.isSignedIn(PostsActivity.this)) {
+        if (WordPress.isSignedIn()) {
             // TODO:
             /*if (showCorrectActivityForAccountIfRequired()) {
                 finish();

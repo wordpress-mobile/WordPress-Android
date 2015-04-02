@@ -98,9 +98,9 @@ public class WPDelayedHurlStack implements HttpStack {
             }
 
             if (StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && mCtx != null
-                    && WordPress.getWPComAuthToken(mCtx) != null) {
+                    && WordPress.getDotComToken() != null) {
                 // Add the auth header to access private WP.com files
-                additionalHeaders.put("Authorization", "Bearer " + WordPress.getWPComAuthToken(mCtx));
+                additionalHeaders.put("Authorization", "Bearer " + WordPress.getDotComToken());
             }
         }
 

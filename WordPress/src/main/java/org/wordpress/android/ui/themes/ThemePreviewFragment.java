@@ -169,7 +169,7 @@ public class ThemePreviewFragment extends Fragment {
 
         String authenticationUrl = WordPress.getLoginUrl(mBlog);
         String postData = WPWebViewActivity.getAuthenticationPostData(authenticationUrl, url,
-                mBlog.getUsername(), mBlog.getPassword(), WordPress.getDotComToken(getActivity())
+                mBlog.getUsername(), mBlog.getPassword(), WordPress.getDotComToken()
         );
 
         mWebView.postUrl(authenticationUrl, postData.getBytes());

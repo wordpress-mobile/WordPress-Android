@@ -108,8 +108,8 @@ public class ReaderCommentListActivity extends ActionBarActivity {
 
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
-        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d", WordPress.getLoggedInUsername(this,
-                null), mPostId, mBlogId));
+        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d", WordPress.getLoggedInUsername(null),
+                mPostId, mBlogId));
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
 
         if (!loadPost()) {

@@ -13,8 +13,10 @@ import android.util.Base64;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
+import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.Post;
@@ -72,7 +74,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 29;
+    private static final int DATABASE_VERSION = 30;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -278,9 +280,38 @@ public class WordPressDB {
                 // Remove WordPress.com credentials
                 removeDotComCredentials();
                 currentVersion++;
+            case 29:
+                // Migrate WordPress.com token and infos to the DB
+                AccountTable.createTables(db);
+                migratePreferencesToAccountTable(context);
         }
-
         db.setVersion(DATABASE_VERSION);
+    }
+
+    private void migratePreferencesToAccountTable(Context context) {
+        final String ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
+        final String WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        String oldAccessToken = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
+        String oldUsername = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
+        Account account = new Account();
+        account.setUserName(oldUsername);
+        if (oldAccessToken != null) {
+            account.setAccessToken(oldAccessToken);
+            account.setIsLoggedIn(true);
+            account.setIsWordPressComUser(true);
+        }
+        if (getNumVisibleAccounts() != 0) {
+            account.setIsLoggedIn(true);
+        }
+        AccountTable.save(account, db);
+
+        // Remove preferences
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.remove(WPCOM_USERNAME_PREFERENCE);
+        editor.remove(ACCESS_TOKEN_PREFERENCE);
+        editor.apply();
     }
 
     public SQLiteDatabase getDatabase() {

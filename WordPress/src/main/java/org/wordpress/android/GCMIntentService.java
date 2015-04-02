@@ -271,7 +271,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        if (!WordPress.hasDotComToken(context)) {
+        if (!WordPress.hasDotComToken()) {
             return;
         }
 

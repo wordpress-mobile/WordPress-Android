@@ -173,7 +173,7 @@ public class WPMainActivity extends ActionBarActivity
     * is already signed in
     */
     private boolean showSignInIfRequired() {
-        if (WordPress.isSignedIn(this)) {
+        if (WordPress.isSignedIn()) {
             return true;
         }
         showSignIn();

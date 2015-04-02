@@ -623,7 +623,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         if (ctx == null) return;
 
         if (isDotComXMLRPCEndpoint(mPostMethod.getURI())) {
-            String token = WordPress.getWPComAuthToken(ctx);
+            String token = WordPress.getDotComToken();
             if (!TextUtils.isEmpty(token)) {
                 setAuthorizationHeader(token);
             }

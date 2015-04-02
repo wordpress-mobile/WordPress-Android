@@ -212,7 +212,8 @@ public class WPWebViewActivity extends WebViewActivity {
      *
      */
     protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password) {
-        String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password, WordPress.getDotComToken(this));
+        String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password,
+                WordPress.getDotComToken());
 
         mWebView.postUrl(authenticationURL, postData.getBytes());
     }

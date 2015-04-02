@@ -41,7 +41,7 @@ public class DeepLinkingIntentReceiverActivity extends ActionBarActivity {
 
             // if user is logged in, show the post right away - otherwise show welcome activity
             // and then show the post once the user has logged in
-            if (WordPress.hasDotComToken(this)) {
+            if (WordPress.hasDotComToken()) {
                 showPost();
             } else {
                 Intent intent = new Intent(this, SignInActivity.class);
