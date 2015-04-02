@@ -32,6 +32,11 @@ public class UrlUtils {
         }
     }
 
+    /**
+     *
+     * @param urlString url to get domain from
+     * @return domain of uri if available. Empty string otherwise.
+     */
     public static String getDomainFromUrl(final String urlString) {
         if (urlString != null) {
             Uri uri = Uri.parse(urlString);
