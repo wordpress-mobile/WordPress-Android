@@ -14,6 +14,8 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -137,5 +139,10 @@ public class ActivityLauncher {
     public static void viewSettings(Activity activity) {
         Intent i = new Intent(activity, SettingsActivity.class);
         activity.startActivityForResult(i, RequestCodes.SETTINGS);
+    }
+
+    public static void newAccount(Activity activity) {
+        Intent intent = new Intent(activity, NewAccountActivity.class);
+        activity.startActivityForResult(intent, SignInActivity.CREATE_ACCOUNT_REQUEST);
     }
 }
