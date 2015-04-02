@@ -12,7 +12,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.posts.PostsActivity;
-import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.widgets.FloatingActionButton;
 

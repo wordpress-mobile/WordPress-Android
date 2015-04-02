@@ -3,7 +3,6 @@ package org.wordpress.android.networking;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.http.SslCertificate;
 import android.os.Bundle;
 
