@@ -4,10 +4,13 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'org.robolectric:robolectric-gradle-plugin:0.14.1'
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'robolectric'
+apply plugin: 'jacoco'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
@@ -41,6 +44,17 @@ dependencies {
     compile 'org.wordpress:analytics:1.0.0'
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
+
+    // Test libraries
+    testCompile 'junit:junit:4.10'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'org.robolectric:robolectric:2.4'
+
+    // Workaround for IDE bug
+    // http://stackoverflow.com/questions/22246183/android-studio-doesnt-recognize-espresso-classes
+    provided 'junit:junit:4.10'
+    provided 'org.mockito:mockito-core:1.10.19'
+    provided 'org.robolectric:robolectric:2.4'
 }
 
 configurations.all {
@@ -102,5 +116,45 @@ uploadArchives {
                 }
             }
         }
+    }
+}
+
+//
+// Testing and code coverage
+//
+
+robolectric {
+    include '**/*Test.class'
+    exclude '**/ApplicationTest.class'
+}
+
+jacoco {
+    toolVersion = "0.7.1.201405082137"
+}
+
+// Use these to define which classes to include and exclude from code coverage analysis
+def coverageSourceDirs = [ 'src/main/java' ]
+def coverageExclusions = [ '**/R.class',
+                           '**/R$*.class',
+                           '**/*$ViewInjector*.*',
+                           '**/BuildConfig.*',
+                           '**/Manifest*.*' ]
+
+task jacocoTestReport(type: JacocoReport, dependsOn: "testDebug") {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports"
+
+    classDirectories = fileTree(
+            dir: 'build/intermediates/classes/debug',
+            excludes: coverageExclusions
+    )
+
+    additionalSourceDirs = files(coverageSourceDirs)
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files('build/jacoco/testDebug.exec')
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
     }
 }
