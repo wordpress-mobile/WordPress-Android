@@ -114,7 +114,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
 
-            final ReferrerResultModel children = (ReferrerResultModel) getChild(groupPosition, childPosition);
+            final ReferrerResultModel currentReferrerResult = (ReferrerResultModel) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
@@ -125,26 +125,26 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
-            String name = children.getName();
-            int total = children.getViews();
+            String name = currentReferrerResult.getName();
+            int views = currentReferrerResult.getViews();
 
             // The link icon
             holder.showLinkIcon();
 
             // name, url
-            List<SingleItemModel> thirdLevelChildren = children.getChildren();
+            List<SingleItemModel> thirdLevelChildren = currentReferrerResult.getChildren();
             if (thirdLevelChildren != null && thirdLevelChildren.size() > 0 ) {
                 holder.setEntryTextOrLink(thirdLevelChildren.get(0).getUrl(), name);
             } else {
-                holder.setEntryTextOrLink(children.getUrl(), name);
+                holder.setEntryTextOrLink(currentReferrerResult.getUrl(), name);
             }
 
             // totals
-            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(views));
 
-            if (!TextUtils.isEmpty(children.getIcon())) {
+            if (!TextUtils.isEmpty(currentReferrerResult.getIcon())) {
                 holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(children.getIcon(), mResourceVars.headerAvatarSizePx),
+                        GravatarUtils.fixGravatarUrl(currentReferrerResult.getIcon(), mResourceVars.headerAvatarSizePx),
                         WPNetworkImageView.ImageType.BLAVATAR);
                 holder.networkImageView.setVisibility(View.VISIBLE);
             } else {

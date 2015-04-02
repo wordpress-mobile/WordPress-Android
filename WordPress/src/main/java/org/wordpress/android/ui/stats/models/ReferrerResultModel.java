@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A model to represent a referrer group stat
+ * A model to represent a referrer result in stat
  */
 public class ReferrerResultModel implements Serializable {
     private String mBlogId;

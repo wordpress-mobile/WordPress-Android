@@ -35,14 +35,18 @@ public class ReferrerGroupModel implements Serializable {
         setName(groupJSON.getString("name"));
         setTotal(groupJSON.getInt("total"));
         setIcon(JSONUtils.getString(groupJSON, "icon"));
-        // if URL is set in the response there is one result only. No need to unfold "results"
+
+        // if URL is set in the response there is one result only.
         if (!TextUtils.isEmpty(JSONUtils.getString(groupJSON, "url"))) {
             setUrl(JSONUtils.getString(groupJSON, "url"));
-        } else {
+        }
+
+        // results is an array when there are results, otherwise it's an object.
+        JSONArray resultsArray = groupJSON.optJSONArray("results");
+        if (resultsArray != null) {
             mResults = new ArrayList<>();
-            JSONArray resultsJSON = groupJSON.getJSONArray("results");
-            for (int i = 0; i < resultsJSON.length(); i++) {
-                JSONObject currentResultJSON = resultsJSON.getJSONObject(i);
+            for (int i = 0; i < resultsArray.length(); i++) {
+                JSONObject currentResultJSON = resultsArray.getJSONObject(i);
                 ReferrerResultModel currentResultModel = new ReferrerResultModel(blogId,
                         date, currentResultJSON);
                 mResults.add(currentResultModel);
