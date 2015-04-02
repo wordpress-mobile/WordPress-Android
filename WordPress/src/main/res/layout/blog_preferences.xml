@@ -20,21 +20,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/l_section1"
                 style="@style/WordPressSettingsSectionHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/account_details" />
 
-            <EditText
+            <org.wordpress.android.widgets.OpenSansEditText
                 android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/username"
                 android:singleLine="true" />
 
-            <EditText
+            <org.wordpress.android.widgets.OpenSansEditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -42,21 +42,21 @@
                 android:inputType="textPassword"
                 android:singleLine="true" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/l_httpuser"
                 style="@style/WordPressSubHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/http_credentials" />
 
-            <EditText
+            <org.wordpress.android.widgets.OpenSansEditText
                 android:id="@+id/httpuser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:hint="@string/httpuser" />
 
-            <EditText
+            <org.wordpress.android.widgets.OpenSansEditText
                 android:id="@+id/httppassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -72,14 +72,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium">
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/l_section2"
                 style="@style/WordPressSettingsSectionHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/media" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/l_maxImageWidth"
                 style="@style/WordPressSubHeader"
                 android:layout_width="match_parent"
@@ -88,31 +88,34 @@
 
             <Spinner
                 android:id="@+id/maxImageWidth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="12dp" />
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <CheckBox
                 android:id="@+id/fullSizeImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:textColor="@color/grey_dark"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:text="@string/upload_full_size_image" />
 
             <CheckBox
                 android:id="@+id/scaledImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/grey_dark"
                 android:text="@string/upload_scaled_image" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/l_scaledImage"
                 style="@style/WordPressSubHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/scaled_image" />
 
-            <EditText
+            <org.wordpress.android.widgets.OpenSansEditText
                 android:id="@+id/scaledImageWidth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -121,27 +124,12 @@
                 android:singleLine="true" />
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/sectionSettings"
+        <org.wordpress.android.widgets.OpenSansButton
+            android:id="@+id/remove_account"
+            android:layout_marginTop="@dimen/margin_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium">
-
-            <TextView
-                android:id="@+id/l_section4"
-                style="@style/WordPressSettingsSectionHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/manage" />
-
-            <Button
-                android:id="@+id/remove_account"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/remove_account"
-                android:onClick="removeBlog" />
-        </LinearLayout>
+            android:text="@string/remove_account" />
     </LinearLayout>
 
 </ScrollView>

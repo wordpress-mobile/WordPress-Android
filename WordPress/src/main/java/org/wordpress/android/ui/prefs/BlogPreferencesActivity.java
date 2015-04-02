@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,8 +22,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.StringUtils;
-
-import java.util.Locale;
 
 /**
  * Activity for configuring blog specific settings.
@@ -73,19 +70,22 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         mImageWidthSpinner = (Spinner) findViewById(R.id.maxImageWidth);
         Button removeBlogButton = (Button) findViewById(R.id.remove_account);
 
+        // remove blog & credentials apply only to dot org
         if (blog.isDotcomFlag()) {
             View credentialsRL = findViewById(R.id.sectionContent);
             credentialsRL.setVisibility(View.GONE);
-            // sectionSettings contains only the "remove blog" button
-            View sectionSettings = findViewById(R.id.sectionSettings);
-            sectionSettings.setVisibility(View.GONE);
+            removeBlogButton.setVisibility(View.GONE);
+        } else {
+            removeBlogButton.setVisibility(View.VISIBLE);
+            removeBlogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    removeBlog();
+                }
+            });
         }
-        loadSettingsForBlog();
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        loadSettingsForBlog();
     }
 
     @Override
@@ -155,16 +155,6 @@ public class BlogPreferencesActivity extends ActionBarActivity {
     }
 
     private void loadSettingsForBlog() {
-        // Set header labels to upper case
-        ((TextView) findViewById(R.id.l_section1))
-                .setText(getResources().getString(R.string.account_details).toUpperCase(Locale.getDefault()));
-        ((TextView) findViewById(R.id.l_section2))
-                .setText(getResources().getString(R.string.media).toUpperCase(Locale.getDefault()));
-        ((TextView) findViewById(R.id.l_maxImageWidth))
-                .setText(getResources().getString(R.string.max_thumbnail_px_width).toUpperCase(Locale.getDefault()));
-        ((TextView) findViewById(R.id.l_httpuser))
-                .setText(getResources().getString(R.string.http_credentials).toUpperCase(Locale.getDefault()));
-
         ArrayAdapter<Object> spinnerArrayAdapter = new ArrayAdapter<Object>(this,
                 R.layout.spinner_textview, new String[]{
                 "Original Size", "100", "200", "300", "400", "500", "600", "700", "800",
@@ -215,7 +205,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         scaledImage.setChecked(false);
         scaledImage.setVisibility(View.GONE);
 
-        // sets up a state listener for the fullsize checkbox
+        // sets up a state listener for the full-size checkbox
         CheckBox fullSizeImageCheckBox = (CheckBox) findViewById(R.id.fullSizeImage);
         fullSizeImageCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,8 +234,6 @@ public class BlogPreferencesActivity extends ActionBarActivity {
 
     /**
      * Hides / shows the scaled image settings
-     *
-     * @param show
      */
     private void showScaledSetting(boolean show) {
         TextView tw = (TextView) findViewById(R.id.l_scaledImage);
@@ -257,7 +245,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
     /**
      * Remove the blog this activity is managing settings for.
      */
-    public void removeBlog(View view) {
+    private void removeBlog() {
         final BlogPreferencesActivity activity = this;
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
