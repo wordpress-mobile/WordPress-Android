@@ -170,7 +170,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         Intent intent;
         if (rangeType == NoteBlockRangeType.FOLLOW) {
             intent = new Intent(this, StatsViewAllActivity.class);
-            intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS.ordinal());
+            intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
             intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
         } else {
             intent = new Intent(this, StatsActivity.class);

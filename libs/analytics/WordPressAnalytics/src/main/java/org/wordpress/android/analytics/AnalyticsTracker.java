@@ -91,8 +91,8 @@ public final class AnalyticsTracker {
         void track(Stat stat);
         void track(Stat stat, Map<String, ?> properties);
         void endSession();
-        void refreshMetadata(boolean isUserConnected, boolean isJetpackUser, int sessionCount, int numBlogs,
-                             int versionCode, String username, String email);
+        void refreshMetadata(boolean isUserConnected,boolean isWordPressComUser, boolean isJetpackUser,
+                             int sessionCount, int numBlogs, int versionCode, String username, String email);
         void clearAllData();
         void registerPushNotificationToken(String regId);
     }
@@ -167,11 +167,11 @@ public final class AnalyticsTracker {
         }
     }
 
-    public static void refreshMetadata(boolean isUserConnected, boolean isJetpackUser, int sessionCount, int numBlogs,
-                                       int versionCode, String username, String email) {
+    public static void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
+                                       int sessionCount, int numBlogs, int versionCode, String username, String email) {
         for (Tracker tracker : TRACKERS) {
-            tracker.refreshMetadata(isUserConnected, isJetpackUser, sessionCount, numBlogs, versionCode, username,
-                    email);
+            tracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
+                    versionCode, username, email);
         }
     }
 }
