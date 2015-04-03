@@ -174,7 +174,7 @@ public class WPMainActivity extends ActionBarActivity
     * is already signed in
     */
     private boolean showSignInIfRequired() {
-        if (AccountHelper.getDefaultAccount().isSignedIn()) {
+        if (AccountHelper.isSignedIn()) {
             return true;
         }
         showSignIn();

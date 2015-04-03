@@ -25,8 +25,8 @@ public class AnalyticsUtils {
     public static void refreshMetadata(String username, String email) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
-        boolean isUserConnected = AccountHelper.getDefaultAccount().isSignedIn();
-        boolean isJetpackUser = AccountHelper.getDefaultAccount().isJetPackUser();
+        boolean isUserConnected = AccountHelper.isSignedIn();
+        boolean isJetpackUser = AccountHelper.isJetPackUser();
         int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
 
@@ -44,8 +44,8 @@ public class AnalyticsUtils {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
-        boolean isUserConnected = AccountHelper.getDefaultAccount().isSignedIn();
-        boolean isJetpackUser = AccountHelper.getDefaultAccount().isJetPackUser();
+        boolean isUserConnected = AccountHelper.isSignedIn();
+        boolean isJetpackUser = AccountHelper.isJetPackUser();
         int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
         String username = AccountHelper.getDefaultAccount().getUserName();

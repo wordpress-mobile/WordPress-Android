@@ -128,7 +128,7 @@ public class ViewPostFragment extends Fragment {
         mEditComment.setHint(R.string.reader_hint_comment_on_post);
         if (WordPress.currentPost != null && WordPress.getCurrentRemoteBlogId() != -1) {
             mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%s",
-                    AccountHelper.getDefaultAccount().getCurrentUsername(WordPress.getCurrentBlog()),
+                    AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
                     WordPress.getCurrentRemoteBlogId(), WordPress.currentPost.getRemotePostId()));
         }
 
