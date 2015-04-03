@@ -1,147 +1,64 @@
 package org.wordpress.android.models;
 
+import android.text.TextUtils;
+
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.AccountTable;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 /**
  * Class for managing logged in user informations.
  */
-public class Account {
-    // General state
-    private boolean mIsLoggedIn;
-    private boolean mIsWordPressComUser;
-
-    // WordPress.com only - data fetched from the REST API endpoint
-    private String mUserName;
-    private long mUserId;
-    private String mDisplayName;
-    private String mProfileUrl;
-    private String mAvatarUrl;
-    private long mPrimaryBlogId;
-    private int mSiteCount;
-    private int mVisibleSiteCount;
-    private String mAccessToken;
-
-    public Account() {
-        init();
-    }
-
-    public void init() {
-        mIsLoggedIn = false;
-        mIsWordPressComUser = false;
-        mUserName = "";
-        mUserId = 0;
-        mDisplayName = "";
-        mProfileUrl = "";
-        mAvatarUrl = "";
-        mPrimaryBlogId = 0;
-        mSiteCount = 0;
-        mVisibleSiteCount = 0;
-        mAccessToken = "";
-    }
-
-    public void updateFromRestResponse(JSONObject json) {
-        mIsWordPressComUser = true;
-        mIsLoggedIn = true;
-        mUserId = json.optLong("ID");
-        mUserName = json.optString("username");
-        mDisplayName = json.optString("display_name");
-        mProfileUrl = json.optString("profile_URL");
-        mAvatarUrl = json.optString("avatar_URL");
-        mPrimaryBlogId = json.optLong("primary_blog");
-        mSiteCount = json.optInt("site_count");
-        mVisibleSiteCount = json.optInt("visible_site_count");
-    }
-
-    public long getUserId() {
-        return mUserId;
-    }
-
-    public void setUserId(long userId) {
-        mUserId = userId;
-    }
-
-    public boolean isSignedIn() {
-        return mIsLoggedIn;
-    }
-
-    public void setIsLoggedIn(boolean isLoggedIn) {
-        mIsLoggedIn = isLoggedIn;
-    }
-
-    public void setPrimaryBlogId(long primaryBlogId) {
-        mPrimaryBlogId = primaryBlogId;
-    }
-
-    public long getPrimaryBlogId() {
-        return mPrimaryBlogId;
-    }
-
-    public String getUserName() {
-        return mUserName;
-    }
-
-    public void setUserName(String userName) {
-        mUserName = userName;
-    }
-
+public class Account extends AccountModel {
     public boolean isJetPackUser() {
         return WordPress.wpDB.hasAnyJetpackBlogs();
     }
 
-    public boolean isWordPressComUser() {
-        return mIsWordPressComUser;
+    public String getCurrentUsername(Blog blog) {
+        if (!TextUtils.isEmpty(getUserName())) {
+            return getUserName();
+        } else if (blog != null) {
+            return blog.getUsername();
+        }
+        return "";
     }
 
-    public void setIsWordPressComUser(boolean isWordPressComUser) {
-        mIsWordPressComUser = isWordPressComUser;
+    public boolean isSignedIn() {
+        return hasAccessToken() || (WordPress.wpDB.getNumVisibleAccounts() != 0);
     }
 
-    public String getAccessToken() {
-        return mAccessToken;
+    public void fetchAccountDetails() {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null) {
+                    updateFromRestResponse(jsonObject);
+                    save();
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.API, volleyError);
+            }
+        };
+
+        WordPress.getRestClientUtilsV1_1().get("me", listener, errorListener);
     }
 
-    public void setAccessToken(String accessToken) {
-        mAccessToken = accessToken;
+    public void signout() {
+        init();
+        save();
     }
 
-    public String getDisplayName() {
-        return mDisplayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        mDisplayName = displayName;
-    }
-
-    public String getProfileUrl() {
-        return mProfileUrl;
-    }
-
-    public void setProfileUrl(String profileUrl) {
-        mProfileUrl = profileUrl;
-    }
-
-    public String getAvatarUrl() {
-        return mAvatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        mAvatarUrl = avatarUrl;
-    }
-
-    public int getSiteCount() {
-        return mSiteCount;
-    }
-
-    public void setSiteCount(int siteCount) {
-        mSiteCount = siteCount;
-    }
-
-    public int getVisibleSiteCount() {
-        return mVisibleSiteCount;
-    }
-
-    public void setVisibleSiteCount(int visibleSiteCount) {
-        mVisibleSiteCount = visibleSiteCount;
+    public void save() {
+        AccountTable.save(this);
     }
 }

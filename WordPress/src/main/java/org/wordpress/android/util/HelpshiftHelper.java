@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.helpshift.Helpshift;
@@ -16,7 +14,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -181,9 +178,7 @@ public class HelpshiftHelper {
         }
 
         // wpcom user
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-        mMetadata.put("wpcom-username", username);
+        mMetadata.put("wpcom-username", AccountHelper.getDefaultAccount().getUserName());
     }
 
     private HashMap getHelpshiftConfig(Context context) {

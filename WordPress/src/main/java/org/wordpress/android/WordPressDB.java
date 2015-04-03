@@ -166,6 +166,10 @@ public class WordPressDB {
     // add hidden flag to blog settings (accounts)
     private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
 
+    // used for migration
+    private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
+    private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
+
     private SQLiteDatabase db;
 
     protected static final String PASSWORD_SECRET = BuildConfig.DB_SECRET;
@@ -289,28 +293,21 @@ public class WordPressDB {
     }
 
     private void migratePreferencesToAccountTable(Context context) {
-        final String ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
-        final String WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
-
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String oldAccessToken = settings.getString(ACCESS_TOKEN_PREFERENCE, null);
-        String oldUsername = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
+        String oldAccessToken = settings.getString(DEPRECATED_ACCESS_TOKEN_PREFERENCE, null);
+        String oldUsername = settings.getString(DEPRECATED_WPCOM_USERNAME_PREFERENCE, null);
         Account account = new Account();
         account.setUserName(oldUsername);
         if (oldAccessToken != null) {
             account.setAccessToken(oldAccessToken);
-            account.setIsLoggedIn(true);
             account.setIsWordPressComUser(true);
-        }
-        if (getNumVisibleAccounts() != 0) {
-            account.setIsLoggedIn(true);
         }
         AccountTable.save(account, db);
 
         // Remove preferences
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.remove(WPCOM_USERNAME_PREFERENCE);
-        editor.remove(ACCESS_TOKEN_PREFERENCE);
+        editor.remove(DEPRECATED_WPCOM_USERNAME_PREFERENCE);
+        editor.remove(DEPRECATED_ACCESS_TOKEN_PREFERENCE);
         editor.apply();
     }
 
@@ -331,7 +328,7 @@ public class WordPressDB {
             String username = c.getString(0);
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, username);
+            editor.putString(DEPRECATED_WPCOM_USERNAME_PREFERENCE, username);
             editor.commit();
         }
 

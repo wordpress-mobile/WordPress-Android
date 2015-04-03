@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.accounts.helpers;
 
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -13,9 +11,12 @@ import com.wordpress.rest.Oauth.Listener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.*;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.VolleyUtils;
@@ -83,13 +84,13 @@ public class LoginWPCom extends LoginAbstract {
                     WordPress.wpDB.saveBlog(mJetpackBlog);
                 }
 
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-                if (mJetpackBlog == null || TextUtils.isEmpty(settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null))) {
+                Account account = AccountHelper.getDefaultAccount();
+                if (mJetpackBlog == null || TextUtils.isEmpty(account.getUserName())) {
                     // Store token in global account
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
-                    editor.putString(WordPress.ACCESS_TOKEN_PREFERENCE, token.toString());
-                    editor.commit();
+                    account.setAccessToken(token.toString());
+                    account.setUserName(mUsername);
+                    account.save();
+                    account.fetchAccountDetails();
                 }
 
                 mCallback.onSuccess();

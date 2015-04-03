@@ -19,6 +19,7 @@ import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -98,9 +99,9 @@ public class WPDelayedHurlStack implements HttpStack {
             }
 
             if (StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && mCtx != null
-                    && WordPress.getDotComToken() != null) {
+                    && AccountHelper.getDefaultAccount().hasAccessToken()) {
                 // Add the auth header to access private WP.com files
-                additionalHeaders.put("Authorization", "Bearer " + WordPress.getDotComToken());
+                additionalHeaders.put("Authorization", "Bearer " + AccountHelper.getDefaultAccount().getAccessToken());
             }
         }
 

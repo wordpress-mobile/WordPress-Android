@@ -15,6 +15,7 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
@@ -173,7 +174,7 @@ public class WPMainActivity extends ActionBarActivity
     * is already signed in
     */
     private boolean showSignInIfRequired() {
-        if (WordPress.isSignedIn()) {
+        if (AccountHelper.getDefaultAccount().isSignedIn()) {
             return true;
         }
         showSignIn();

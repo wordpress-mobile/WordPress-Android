@@ -32,6 +32,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -127,7 +128,7 @@ public class ViewPostFragment extends Fragment {
         mEditComment.setHint(R.string.reader_hint_comment_on_post);
         if (WordPress.currentPost != null && WordPress.getCurrentRemoteBlogId() != -1) {
             mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%s",
-                    WordPress.getLoggedInUsername(WordPress.getCurrentBlog()),
+                    AccountHelper.getDefaultAccount().getCurrentUsername(WordPress.getCurrentBlog()),
                     WordPress.getCurrentRemoteBlogId(), WordPress.currentPost.getRemotePostId()));
         }
 
@@ -251,7 +252,7 @@ public class ViewPostFragment extends Fragment {
         // important when using WPHtml.fromHtml() for drafts that contain images since
         // thumbnails may take some time to create
         final WebView webView = (WebView) getView().findViewById(R.id.viewPostWebView);
-        webView.setWebViewClient(new WPWebViewClient(getActivity(), WordPress.getCurrentBlog()));
+        webView.setWebViewClient(new WPWebViewClient(WordPress.getCurrentBlog()));
         new Thread() {
             @Override
             public void run() {

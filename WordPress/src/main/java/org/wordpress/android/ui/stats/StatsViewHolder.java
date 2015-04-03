@@ -2,8 +2,6 @@ package org.wordpress.android.ui.stats;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,9 +11,9 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -78,8 +76,7 @@ public class StatsViewHolder {
                             }
                             AppLog.d(AppLog.T.UTILS, "Opening the Authenticated in-app browser : " + url);
                             // Let's try the global wpcom credentials
-                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(view.getContext());
-                            String statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+                            String statsAuthenticatedUser = AccountHelper.getDefaultAccount().getUserName();
                             if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
                                 // Still empty. Do not eat the event, but let's open the default Web Browser.
 

@@ -7,9 +7,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -41,7 +41,7 @@ public class DeepLinkingIntentReceiverActivity extends ActionBarActivity {
 
             // if user is logged in, show the post right away - otherwise show welcome activity
             // and then show the post once the user has logged in
-            if (WordPress.hasDotComToken()) {
+            if (AccountHelper.getDefaultAccount().hasAccessToken()) {
                 showPost();
             } else {
                 Intent intent = new Intent(this, SignInActivity.class);

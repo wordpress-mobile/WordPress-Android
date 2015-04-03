@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -166,7 +167,7 @@ public class WPWebViewActivity extends WebViewActivity {
                 AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity!!");
                 finish();
             }
-            mWebView.setWebViewClient(new WPWebViewClient(this, blog));
+            mWebView.setWebViewClient(new WPWebViewClient(blog));
         } else {
             mWebView.setWebViewClient(new WebViewClient());
         }
@@ -213,7 +214,7 @@ public class WPWebViewActivity extends WebViewActivity {
      */
     protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password) {
         String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password,
-                WordPress.getDotComToken());
+                AccountHelper.getDefaultAccount().getAccessToken());
 
         mWebView.postUrl(authenticationURL, postData.getBytes());
     }
