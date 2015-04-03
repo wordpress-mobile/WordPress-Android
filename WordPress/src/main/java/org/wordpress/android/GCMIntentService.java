@@ -19,9 +19,9 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.ui.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
-import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -140,7 +140,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         NotificationCompat.Builder mBuilder;
 
-        Intent resultIntent = new Intent(this, NotificationsActivity.class);
+        Intent resultIntent = new Intent(this, WPMainActivity.class);
+        resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction("android.intent.action.MAIN");
@@ -163,7 +164,8 @@ public class GCMIntentService extends GCMBaseIntentService {
             // Add some actions if this is a comment notification
             String noteType = extras.getString("type");
             if (noteType != null && noteType.equals("c")) {
-                Intent commentReplyIntent = new Intent(this, NotificationsActivity.class);
+                Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
+                commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
                 commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 commentReplyIntent.setAction("android.intent.action.MAIN");
@@ -266,7 +268,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (extras.containsKey("mp_message")) {
             String mpMessage = intent.getExtras().getString("mp_message");
             String title = getString(R.string.app_name);
-            Intent resultIntent = new Intent(this, NotificationsActivity.class);
+            Intent resultIntent = new Intent(this, WPMainActivity.class);
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,

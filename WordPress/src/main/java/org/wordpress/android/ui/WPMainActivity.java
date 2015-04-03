@@ -6,7 +6,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 
+import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -14,9 +16,11 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
+import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
@@ -40,6 +44,8 @@ public class WPMainActivity extends ActionBarActivity
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
+
+    public static String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,13 +74,50 @@ public class WPMainActivity extends ActionBarActivity
         mTabs.setOnPageChangeListener(this);
 
         if (savedInstanceState == null) {
-            if (showSignInIfRequired()) {
-                // return to the tab that was showing the last time
-                int position = AppPrefs.getMainTabIndex();
-                if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
-                    mViewPager.setCurrentItem(position);
+            if (WordPress.isSignedIn(this)) {
+                // open note detail if activity called from a push, otherwise return to the tab
+                // that was showing last time
+                boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH, false));
+                if (openedFromPush) {
+                    getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
+                    launchWithNoteId();
+                } else {
+                    int position = AppPrefs.getMainTabIndex();
+                    if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
+                        mViewPager.setCurrentItem(position);
+                    }
                 }
+            } else {
+                showSignIn();
             }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        AppLog.i(AppLog.T.NOTIFS, "Main activity new intent");
+        if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
+            launchWithNoteId();
+        }
+    }
+
+    /*
+     * called when app is launched from a push notification, switches to the notification tab
+     * and opens the desired note detail
+     */
+    private void launchWithNoteId() {
+        if (isFinishing() || getIntent() == null) return;
+
+        mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
+
+        String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
+        boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
+
+        if (!TextUtils.isEmpty(noteId)) {
+            NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard);
+            GCMIntentService.clearNotificationsMap();
         }
     }
 
@@ -140,8 +183,10 @@ public class WPMainActivity extends ActionBarActivity
                 break;
             case RequestCodes.SETTINGS:
                 // user returned from settings
-                if (showSignInIfRequired()) {
+                if (WordPress.isSignedIn(this)) {
                     WordPress.registerForCloudMessaging(this);
+                } else {
+                    showSignIn();
                 }
                 break;
             case RequestCodes.SITE_PICKER:
@@ -162,18 +207,6 @@ public class WPMainActivity extends ActionBarActivity
         }
     }
 
-   /*
-    * displays the sign-in activity if the user isn't logged in - returns true if user
-    * is already signed in
-    */
-    private boolean showSignInIfRequired() {
-        if (WordPress.isSignedIn(this)) {
-            return true;
-        }
-        showSignIn();
-        return false;
-    }
-
     private void showSignIn() {
         startActivityForResult(new Intent(this, SignInActivity.class), RequestCodes.ADD_ACCOUNT);
     }
@@ -189,6 +222,16 @@ public class WPMainActivity extends ActionBarActivity
         return null;
     }
 
+    /*
+     * returns the notification list fragment from the notification tab
+     */
+    private NotificationsListFragment getNotificationListFragment() {
+        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_NOTIFS);
+        if (fragment != null && fragment instanceof NotificationsListFragment) {
+            return (NotificationsListFragment) fragment;
+        }
+        return null;
+    }
     /*
      * returns the my site fragment from the sites tab
      */

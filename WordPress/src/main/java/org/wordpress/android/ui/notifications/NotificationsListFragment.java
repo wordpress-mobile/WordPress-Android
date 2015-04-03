@@ -93,7 +93,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
                         // open the latest version of this note just in case it has changed - this can
                         // happen if the note was tapped from the list fragment after it was updated
                         // by another fragment (such as NotificationCommentLikeFragment)
-                        openNote(noteId, getActivity(), false);
+                        openNote(getActivity(), noteId, false);
                     }
                 });
             }
@@ -181,7 +181,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     /**
      * Open a note fragment based on the type of note
      */
-    public void openNote(final String noteId, Activity activity, boolean shouldShowKeyboard) {
+    public static void openNote(Activity activity, final String noteId, boolean shouldShowKeyboard) {
         if (noteId == null || activity == null) {
             return;
         }
