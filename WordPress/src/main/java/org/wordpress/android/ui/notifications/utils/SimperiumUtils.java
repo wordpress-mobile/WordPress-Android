@@ -10,6 +10,7 @@ import com.simperium.Simperium;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketNameInvalid;
 import com.simperium.client.BucketObject;
+import com.simperium.client.Query;
 import com.simperium.client.User;
 
 import org.wordpress.android.BuildConfig;
@@ -121,5 +122,13 @@ public class SimperiumUtils {
         if (mSimperium != null) {
             mSimperium.getUser().setStatus(User.Status.UNKNOWN);
         }
+    }
+
+    public static boolean hasUnreadNotes() {
+        if (getNotesBucket() == null) return false;
+
+        Query<Note> query = new Query<>(getNotesBucket());
+        query.where(Note.Schema.UNREAD_INDEX, Query.ComparisonType.EQUAL_TO, true);
+        return query.execute().getCount() > 0;
     }
 }

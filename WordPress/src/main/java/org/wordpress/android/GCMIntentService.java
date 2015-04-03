@@ -20,6 +20,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
+import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -38,6 +39,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import de.greenrobot.event.EventBus;
 
 public class GCMIntentService extends GCMBaseIntentService {
     public static final int PUSH_NOTIFICATION_ID = 1337;
@@ -238,6 +241,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(PUSH_NOTIFICATION_ID, mBuilder.build());
+
+        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
     @Override

@@ -176,6 +176,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
         mIcons = icons;
     }
 
+    public boolean isBadged(int position) {
+        final View badgeView = mTabStrip.findViewWithTag(makeBadgeTag(position));
+        return badgeView != null && badgeView.getVisibility() == View.VISIBLE;
+    }
+
     /*
      * adds or removes a badge for the tab at the passed index - only enabled when showing icons
      */

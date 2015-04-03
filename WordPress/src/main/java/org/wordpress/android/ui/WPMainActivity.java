@@ -13,6 +13,8 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.mysite.MySiteFragment;
+import org.wordpress.android.ui.notifications.NotificationEvents;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AuthenticationDialogUtils;
@@ -105,6 +107,12 @@ public class WPMainActivity extends ActionBarActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        checkNoteBadge();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -192,6 +200,27 @@ public class WPMainActivity extends ActionBarActivity
         return null;
     }
 
+    /*
+     * badges/unbadges the notifications tab depending on whether there are unread notes
+     */
+    private void checkNoteBadge() {
+        new Thread() {
+            @Override
+            public void run() {
+                final boolean hasUnreadNotes = SimperiumUtils.hasUnreadNotes();
+                boolean isBadged = mTabs.isBadged(WPMainTabAdapter.TAB_NOTIFS);
+                if (hasUnreadNotes != isBadged) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, hasUnreadNotes);
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
     // Events
 
     @SuppressWarnings("unused")
@@ -227,5 +256,10 @@ public class WPMainActivity extends ActionBarActivity
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.BlogListChanged event) {
         // TODO: reload blog list if showing
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
+        checkNoteBadge();
     }
 }
