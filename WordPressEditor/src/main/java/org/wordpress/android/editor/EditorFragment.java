@@ -32,6 +32,8 @@ public class EditorFragment extends EditorFragmentAbstract {
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
 
+    private static final String JS_CALLBACK_HANDLER = "nativeCallbackHandler";
+
     private String mParamTitle;
     private String mParamContent;
     private WebView mWebView;
@@ -98,9 +100,10 @@ public class EditorFragment extends EditorFragmentAbstract {
                 AppLog.d(T.EDITOR, message + " -- from line " + lineNumber + " of " + sourceId);
             }
         });
-        String htmlEditor = getHtmlEditor();
 
-        mWebView.addJavascriptInterface(new JsCallbackHandler(), "nativeCallbackHandler");
+        String htmlEditor = getHtmlFromFile("android-editor.html");
+
+        mWebView.addJavascriptInterface(new JsCallbackHandler(), JS_CALLBACK_HANDLER);
 
         mWebView.loadDataWithBaseURL("file:///android_asset/", htmlEditor, "text/html", "utf-8", "");
 
@@ -125,9 +128,9 @@ public class EditorFragment extends EditorFragmentAbstract {
         return sb.toString();
     }
 
-    private String getHtmlEditor() {
+    private String getHtmlFromFile(String filename) {
         try {
-            return getStringFromAsset("android-editor.html");
+            return getStringFromAsset(filename);
         } catch (IOException e) {
             AppLog.e(T.EDITOR, e.getMessage());
             return null;
@@ -186,23 +189,14 @@ public class EditorFragment extends EditorFragmentAbstract {
                 // Run on UI thread
                 mWebView.post(new Runnable() {
                     public void run() {
-                        String htmlFile = "";
-                        try {
-                            htmlFile = getStringFromAsset("example-content.html");
-                            htmlFile = htmlFile.replace("\\", "\\\\");
-                            htmlFile = htmlFile.replace("\"", "\\\"");
-                            htmlFile = htmlFile.replace("'", "\\'");
-                            htmlFile = htmlFile.replace("\r", "\\r");
-                            htmlFile = htmlFile.replace("\n", "\\n");
-                        } catch (IOException e) {
-                            AppLog.e(T.EDITOR, e.getMessage());
-                        }
+                        String title = "I'm editing a post!";
+                        String contentHtml = getHtmlFromFile("example-content.html");
 
                         // Load example content into editor
                         mWebView.loadUrl("javascript:ZSSEditor.getField('zss_field_title').setHTML('" +
-                                "I\\'m editing a post!" + "');");
+                                Utils.escapeHtml(title) + "');");
                         mWebView.loadUrl("javascript:ZSSEditor.getField('zss_field_content').setHTML('" +
-                                htmlFile + "');");
+                                Utils.escapeHtml(contentHtml) + "');");
                     }
                 });
             }
