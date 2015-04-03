@@ -222,7 +222,7 @@ public class WordPress extends Application {
         try {
             wpDB = new WordPressDB(this);
             // verify account data
-            List<Map<String, Object>> accounts = wpDB.getAllAccounts();
+            List<Map<String, Object>> accounts = wpDB.getAllBlogs();
             for (Map<String, Object> account : accounts) {
                 if (account == null || account.get("blogName") == null || account.get("url") == null) {
                     return false;
@@ -391,12 +391,12 @@ public class WordPress extends Application {
      * select the first one.
      */
     public static Blog getCurrentBlog() {
-        if (currentBlog == null || !wpDB.isDotComAccountVisible(currentBlog.getRemoteBlogId())) {
+        if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
             // attempt to restore the last active blog
             setCurrentBlogToLastActive();
 
             // fallback to just using the first blog
-            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
+            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
             if (currentBlog == null && accounts.size() > 0) {
                 int id = Integer.valueOf(accounts.get(0).get("id").toString());
                 setCurrentBlog(id);
@@ -427,7 +427,7 @@ public class WordPress extends Application {
      * @return the current blog
      */
     public static Blog setCurrentBlogToLastActive() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
 
         int lastBlogId = WordPress.wpDB.getLastBlogId();
         if (lastBlogId != -1) {
@@ -485,7 +485,7 @@ public class WordPress extends Application {
             AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
         }
 
-        wpDB.deleteAllAccounts();
+        wpDB.deleteAllBlogs();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
         flushHttpCache();

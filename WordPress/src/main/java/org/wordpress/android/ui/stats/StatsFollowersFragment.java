@@ -81,7 +81,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             public void run() {
                 // Read all the dotcomBlog blogs and get the list of home URLs.
                 // This will be used later to check if the user is a member of followers blog marked as private.
-                List <Map<String, Object>> dotComUserBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"homeURL"});
+                List <Map<String, Object>> dotComUserBlogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1",
+                        new String[]{"homeURL"});
                 for (Map<String, Object> blog : dotComUserBlogs) {
                     if (blog != null && blog.get("homeURL") != null && blog.get("blogId") != null) {
                         String normURL = normalizeAndRemoveScheme(blog.get("homeURL").toString());

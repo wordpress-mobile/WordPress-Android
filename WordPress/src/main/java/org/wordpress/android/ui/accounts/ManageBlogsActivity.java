@@ -110,7 +110,7 @@ public class ManageBlogsActivity extends ActionBarActivity {
         for (Map<String, Object> item : mAccounts) {
             item.put("isHidden", false);
         }
-        WordPress.wpDB.setAllDotComAccountsVisibility(true);
+        WordPress.wpDB.setAllDotComBlogsVisibility(true);
         ((BlogsAdapter) getListView().getAdapter()).notifyDataSetChanged();
     }
 
@@ -118,7 +118,7 @@ public class ManageBlogsActivity extends ActionBarActivity {
         for (Map<String, Object> item : mAccounts) {
             item.put("isHidden", true);
         }
-        WordPress.wpDB.setAllDotComAccountsVisibility(false);
+        WordPress.wpDB.setAllDotComBlogsVisibility(false);
         ((BlogsAdapter) getListView().getAdapter()).notifyDataSetChanged();
     }
 
@@ -129,13 +129,13 @@ public class ManageBlogsActivity extends ActionBarActivity {
 
     private void loadAccounts() {
         ListView listView = getListView();
-        mAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"isHidden"});
+        mAccounts = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"isHidden"});
         listView.setAdapter(new BlogsAdapter(this, R.layout.manageblogs_listitem, mAccounts));
     }
 
     private void setItemChecked(int position, boolean checked) {
         int blogId = MapUtils.getMapInt(mAccounts.get(position), "id");
-        WordPress.wpDB.setDotComAccountsVisibility(blogId, checked);
+        WordPress.wpDB.setDotComBlogsVisibility(blogId, checked);
         Map<String, Object> item = mAccounts.get(position);
         item.put("isHidden", checked ? "0" : "1");
     }

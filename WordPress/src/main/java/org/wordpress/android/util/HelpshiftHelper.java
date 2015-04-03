@@ -171,7 +171,7 @@ public class HelpshiftHelper {
 
         // List blogs name and url
         int counter = 1;
-        for (Map<String, Object> account : WordPress.wpDB.getAllAccounts()) {
+        for (Map<String, Object> account : WordPress.wpDB.getAllBlogs()) {
             mMetadata.put("blog-name-" + counter, MapUtils.getMapStr(account, "blogName"));
             mMetadata.put("blog-url-" + counter, MapUtils.getMapStr(account, "url"));
             counter += 1;

@@ -221,7 +221,7 @@ public class SettingsFragment extends PreferenceFragment {
         wpComCategory.removeAll();
         addWpComSignIn(wpComCategory, 0);
         addWpComShowHideButton(wpComCategory, 5);
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccountsBy("dotcomFlag = 1 AND isHidden = 0", null);
+        List<Map<String, Object>> accounts = WordPress.wpDB.getBlogsBy("dotcomFlag = 1 AND isHidden = 0", null);
         addAccounts(wpComCategory, accounts, 10);
     }
 
@@ -244,12 +244,12 @@ public class SettingsFragment extends PreferenceFragment {
         blogsCategory.addPreference(addBlogPreference);
 
         // Add self hosted list
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccountsBy("dotcomFlag=0", null);
+        List<Map<String, Object>> accounts = WordPress.wpDB.getBlogsBy("dotcomFlag=0", null);
         addAccounts(blogsCategory, accounts, order);
     }
 
     void displayPreferences() {
-        if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
+        if (WordPress.wpDB.getNumVisibleBlogs() == 0) {
             hidePostSignatureCategory();
             hideNotificationBlogsCategory();
         } else {
@@ -293,7 +293,7 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void addWpComShowHideButton(PreferenceCategory wpComCategory, int order) {
-        if (WordPress.wpDB.getNumDotComAccounts() > 0) {
+        if (WordPress.wpDB.getNumDotComBlogs() > 0) {
             Preference manageBlogPreference = new Preference(getActivity());
             manageBlogPreference.setTitle(R.string.show_and_hide_blogs);
             Intent intentManage = new Intent(getActivity(), ManageBlogsActivity.class);

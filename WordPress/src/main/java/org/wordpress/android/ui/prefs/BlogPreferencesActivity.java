@@ -270,7 +270,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 boolean deleteSuccess =
-                        WordPress.wpDB.deleteAccount(BlogPreferencesActivity.this, blog.getLocalTableBlogId());
+                        WordPress.wpDB.deleteBlog(BlogPreferencesActivity.this, blog.getLocalTableBlogId());
                 if (deleteSuccess) {
                     AnalyticsUtils.refreshMetadata();
                     Toast.makeText(activity, getResources().getText(R.string.blog_removed_successfully),

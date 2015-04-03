@@ -151,7 +151,7 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
     }
 
     private String[] getBlogNames() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
         if (accounts.size() > 0) {
             final String blogNames[] = new String[accounts.size()];
             mAccountIDs = new int[accounts.size()];

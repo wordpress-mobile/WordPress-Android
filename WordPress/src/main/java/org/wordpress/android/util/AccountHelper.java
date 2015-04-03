@@ -25,7 +25,7 @@ public class AccountHelper {
     }
 
     public static boolean isSignedIn() {
-        return getDefaultAccount().hasAccessToken() || (WordPress.wpDB.getNumVisibleAccounts() != 0);
+        return getDefaultAccount().hasAccessToken() || (WordPress.wpDB.getNumVisibleBlogs() != 0);
     }
 
     public static boolean isJetPackUser() {

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts;
 
 import android.content.Context;
 
-import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
@@ -33,14 +32,14 @@ public class BlogUtils {
         retValue = addBlogs(newBlogList, username);
 
         // Delete blogs if not in blogList
-        List<Map<String, Object>> allBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
+        List<Map<String, Object>> allBlogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", null);
         Set<String> newBlogURLs = new HashSet<String>();
         for (Map<String, Object> blog : newBlogList) {
             newBlogURLs.add(blog.get("xmlrpc").toString() + blog.get("blogid").toString());
         }
         for (Map<String, Object> blog : allBlogs) {
             if (!newBlogURLs.contains(blog.get("url").toString() + blog.get("blogId"))) {
-                WordPress.wpDB.deleteAccount(context, Integer.parseInt(blog.get("id").toString()));
+                WordPress.wpDB.deleteBlog(context, Integer.parseInt(blog.get("id").toString()));
                 retValue = true;
             }
         }

@@ -27,7 +27,7 @@ public class AnalyticsUtils {
         int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
         boolean isUserConnected = AccountHelper.isSignedIn();
         boolean isJetpackUser = AccountHelper.isJetPackUser();
-        int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
+        int numBlogs = WordPress.wpDB.getVisibleBlogs().size();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
 
         retrieveAndSaveEmailAddressIfApplicable();
@@ -46,7 +46,7 @@ public class AnalyticsUtils {
         int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
         boolean isUserConnected = AccountHelper.isSignedIn();
         boolean isJetpackUser = AccountHelper.isJetPackUser();
-        int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
+        int numBlogs = WordPress.wpDB.getVisibleBlogs().size();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
         String username = AccountHelper.getDefaultAccount().getUserName();
         String email = AppPrefs.getMixpanelUserEmail();
