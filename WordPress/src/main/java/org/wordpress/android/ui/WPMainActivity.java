@@ -8,10 +8,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 
+import com.simperium.client.Bucket;
+
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.mysite.MySiteFragment;
@@ -39,7 +42,7 @@ import de.greenrobot.event.EventBus;
  */
 
 public class WPMainActivity extends ActionBarActivity
-    implements ViewPager.OnPageChangeListener
+    implements ViewPager.OnPageChangeListener, Bucket.Listener<Note>
 {
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
@@ -125,6 +128,11 @@ public class WPMainActivity extends ActionBarActivity
     public void onPageSelected(int position) {
         // remember the index of this page
         AppPrefs.setMainTabIndex(position);
+
+        if (position == WPMainTabAdapter.TAB_NOTIFS && getNotificationListFragment() != null) {
+            getNotificationListFragment().updateLastSeenTime();
+            mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, false);
+        }
     }
 
     @Override
@@ -135,6 +143,15 @@ public class WPMainActivity extends ActionBarActivity
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         // nop
+    }
+
+    @Override
+    protected void onPause() {
+        if (SimperiumUtils.getNotesBucket() != null) {
+            SimperiumUtils.getNotesBucket().removeListener(this);
+        }
+
+        super.onPause();
     }
 
     @Override
@@ -152,6 +169,12 @@ public class WPMainActivity extends ActionBarActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Start listening to Simperium Note bucket
+        if (SimperiumUtils.getNotesBucket() != null) {
+            SimperiumUtils.getNotesBucket().addListener(this);
+        }
+
         checkNoteBadge();
     }
 
@@ -304,5 +327,30 @@ public class WPMainActivity extends ActionBarActivity
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
         checkNoteBadge();
+    }
+
+    /*
+     * Simperium Note bucket listeners
+     */
+    @Override
+    public void onNetworkChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String s) {
+        if (changeType == Bucket.ChangeType.INSERT || changeType == Bucket.ChangeType.MODIFY) {
+            checkNoteBadge();
+        }
+    }
+
+    @Override
+    public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
+        // noop
+    }
+
+    @Override
+    public void onDeleteObject(Bucket<Note> noteBucket, Note note) {
+        // noop
+    }
+
+    @Override
+    public void onSaveObject(Bucket<Note> noteBucket, Note note) {
+        // noop
     }
 }

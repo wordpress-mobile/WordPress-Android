@@ -226,7 +226,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         }
     }
 
-    void updateLastSeenTime() {
+    public void updateLastSeenTime() {
         // set the timestamp to now
         try {
             if (mNotesAdapter != null && mNotesAdapter.getCount() > 0 && SimperiumUtils.getMetaBucket() != null) {
@@ -251,10 +251,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
             @Override
             public void run() {
                 mNotesAdapter.reloadNotes();
-                updateLastSeenTime();
-
                 restoreListScrollPosition();
-
                 mEmptyTextView.setVisibility(mNotesAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
             }
         });
