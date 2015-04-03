@@ -12,7 +12,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.posts.PostsActivity;
-import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.widgets.FloatingActionButton;
 
 /**
@@ -38,9 +37,7 @@ public class DummyFragment extends Fragment {
         txtStats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), StatsActivity.class);
-                intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, WordPress.getCurrentBlog().getLocalTableBlogId());
-                getActivity().startActivity(intent);
+                ActivityLauncher.viewBlogStats(getActivity(), WordPress.getCurrentBlog().getLocalTableBlogId());
             }
         });
 

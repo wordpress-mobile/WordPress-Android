@@ -49,9 +49,9 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewBlogStats(Context context, Blog blog) {
+    public static void viewBlogStats(Context context, int blogLocalTableId) {
         Intent intent = new Intent(context, StatsActivity.class);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blog.getLocalTableBlogId());
+        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
         context.startActivity(intent);
     }
 

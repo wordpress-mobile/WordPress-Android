@@ -72,7 +72,7 @@ public class MySiteFragment extends Fragment {
         statsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogStats(getActivity(), mBlog);
+                ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
             }
         });
 
