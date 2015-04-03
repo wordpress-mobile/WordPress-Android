@@ -26,4 +26,4 @@ Finally, update `[PROJECT_ROOT]\.git\info\exclude` to ignore the symlink locally
 
 ## LICENSE ##
 
-This library is licensed under [MIT](LICENSE-MIT).
+WordPress-Editor-Android is an Open Source project covered by the [GNU General Public License version 2](LICENSE.md).
