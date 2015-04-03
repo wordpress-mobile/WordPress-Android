@@ -198,7 +198,8 @@ public class EditorFragment extends EditorFragmentAbstract {
                             AppLog.e(T.EDITOR, e.getMessage());
                         }
 
-                        // Load example file into editor content field
+                        // Load example content into editor
+                        mWebView.loadUrl("JavaScript:ZSSEditor.getField('zss_field_title').setHTML('" + "I\\'m editing a post!" + "');");
                         mWebView.loadUrl("JavaScript:ZSSEditor.getField('zss_field_content').setHTML('" + htmlFile + "');");
                     }
                 });
