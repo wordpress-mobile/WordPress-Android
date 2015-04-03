@@ -24,6 +24,8 @@ import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.StatsSinglePostDetailsActivity;
+import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 
@@ -143,5 +145,11 @@ public class ActivityLauncher {
     public static void newAccount(Activity activity) {
         Intent intent = new Intent(activity, NewAccountActivity.class);
         activity.startActivityForResult(intent, SignInActivity.CREATE_ACCOUNT_REQUEST);
+    }
+
+    public static void viewStatsSinglePostDetails(Context context, PostModel post) {
+        Intent statsPostViewIntent = new Intent(context, StatsSinglePostDetailsActivity.class);
+        statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_OBJECT, post);
+        context.startActivity(statsPostViewIntent);
     }
 }
