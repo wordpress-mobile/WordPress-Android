@@ -26,13 +26,14 @@ public class AnalyticsUtils {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
         boolean isUserConnected = AccountHelper.isSignedIn();
+        boolean isWordPressComUser = AccountHelper.getDefaultAccount().isWordPressComUser();
         boolean isJetpackUser = AccountHelper.isJetPackUser();
         int numBlogs = WordPress.wpDB.getVisibleBlogs().size();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
 
         retrieveAndSaveEmailAddressIfApplicable();
-        AnalyticsTracker.refreshMetadata(isUserConnected, isJetpackUser, sessionCount, numBlogs, versionCode,
-                username, email);
+        AnalyticsTracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
+                versionCode, username, email);
     }
 
     /**
@@ -45,13 +46,14 @@ public class AnalyticsUtils {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
         boolean isUserConnected = AccountHelper.isSignedIn();
+        boolean isWordPressComUser = AccountHelper.getDefaultAccount().isWordPressComUser();
         boolean isJetpackUser = AccountHelper.isJetPackUser();
         int numBlogs = WordPress.wpDB.getVisibleBlogs().size();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
         String username = AccountHelper.getDefaultAccount().getUserName();
         String email = AppPrefs.getMixpanelUserEmail();
-        AnalyticsTracker.refreshMetadata(isUserConnected, isJetpackUser, sessionCount, numBlogs, versionCode,
-                username, email);
+        AnalyticsTracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
+                versionCode, username, email);
     }
 
     /**

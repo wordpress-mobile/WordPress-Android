@@ -86,7 +86,7 @@ public class SitePickerActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void onItemSelected(@NonNull SiteRecord site) {
+    private void onItemSelected(@NonNull SiteRecord site) {
         Intent data = new Intent();
         data.putExtra(KEY_LOCAL_ID, site.localId);
         data.putExtra(KEY_BLOG_ID, site.blogId);
@@ -105,6 +105,10 @@ public class SitePickerActivity extends ActionBarActivity {
             } else {
                 accounts = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"isHidden"});
             }
+
+            // always show dot.org accounts
+            accounts.addAll(WordPress.wpDB.getBlogsBy("dotcomFlag!=1", null));
+
             mSites = new SiteList(accounts);
             return true;
         }

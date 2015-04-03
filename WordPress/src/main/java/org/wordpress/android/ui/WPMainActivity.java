@@ -40,10 +40,6 @@ public class WPMainActivity extends ActionBarActivity
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
 
-    private int mPreviousPosition = -1;
-
-    private static final String KEY_INITIAL_UPDATE = "initial_update_performed";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -82,19 +78,9 @@ public class WPMainActivity extends ActionBarActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void onPageSelected(int position) {
         // remember the index of this page
         AppPrefs.setMainTabIndex(position);
-
-        mTabs.setBadge(mPreviousPosition, false);
-        mTabs.setBadge(position, true);
-
-        mPreviousPosition = position;
     }
 
     @Override
@@ -182,7 +168,6 @@ public class WPMainActivity extends ActionBarActivity
     }
 
     private void showSignIn() {
-        mPreviousPosition = -1;
         startActivityForResult(new Intent(this, SignInActivity.class), RequestCodes.ADD_ACCOUNT);
     }
 

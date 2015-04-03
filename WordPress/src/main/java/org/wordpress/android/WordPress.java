@@ -30,6 +30,7 @@ import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;
@@ -174,7 +175,9 @@ public class WordPress extends Application {
         }
 
         HelpshiftHelper.init(this);
+
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
         AnalyticsTracker.init(getContext());
         AnalyticsUtils.refreshMetadata();
         AnalyticsTracker.track(Stat.APPLICATION_STARTED);
