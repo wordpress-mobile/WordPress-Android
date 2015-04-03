@@ -199,8 +199,10 @@ public class EditorFragment extends EditorFragmentAbstract {
                         }
 
                         // Load example content into editor
-                        mWebView.loadUrl("JavaScript:ZSSEditor.getField('zss_field_title').setHTML('" + "I\\'m editing a post!" + "');");
-                        mWebView.loadUrl("JavaScript:ZSSEditor.getField('zss_field_content').setHTML('" + htmlFile + "');");
+                        mWebView.loadUrl("javascript:ZSSEditor.getField('zss_field_title').setHTML('" +
+                                "I\\'m editing a post!" + "');");
+                        mWebView.loadUrl("javascript:ZSSEditor.getField('zss_field_content').setHTML('" +
+                                htmlFile + "');");
                     }
                 });
             }
