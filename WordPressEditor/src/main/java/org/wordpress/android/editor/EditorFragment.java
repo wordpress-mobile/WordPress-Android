@@ -83,19 +83,19 @@ public class EditorFragment extends EditorFragmentAbstract {
         });
         mWebView.setWebChromeClient(new WebChromeClient() {
             public boolean onConsoleMessage(ConsoleMessage cm) {
-                AppLog.e(T.EDITOR, cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
+                AppLog.d(T.EDITOR, cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
                 return true;
             }
 
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                AppLog.e(T.EDITOR, message);
+                AppLog.d(T.EDITOR, message);
                 return true;
             }
 
             @Override
             public void onConsoleMessage(String message, int lineNumber, String sourceId) {
-                AppLog.e(T.EDITOR, message + " -- from line " + lineNumber + " of " + sourceId);
+                AppLog.d(T.EDITOR, message + " -- from line " + lineNumber + " of " + sourceId);
             }
         });
         String htmlEditor = getHtmlEditor();
