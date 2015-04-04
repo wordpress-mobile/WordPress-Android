@@ -2,12 +2,14 @@ package org.wordpress.android.editor;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.text.Editable;
 import android.text.Spanned;
 
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
+import org.wordpress.android.util.helpers.WPImageSpan;
 
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
@@ -65,6 +67,14 @@ public abstract class EditorFragmentAbstract extends Fragment {
         public void onEditorFragmentInitialized();
         public void onSettingsClicked();
         public void onAddMediaClicked();
+        public void onImageSettingsButtonClicked(String button,
+                                             WPImageSpan span,
+                                             Editable postContent,
+                                             String title,
+                                             int selectedItemPosition,
+                                             int editTextIntegerClamped,
+                                             String captionText,
+                                             boolean isFeatured);
         // TODO: remove saveMediaFile, it's currently needed for the legacy editor - we should have something like
         // "EditorFragmentAbstract.getFeaturedImage()" returning the remote id
         public void saveMediaFile(MediaFile mediaFile);

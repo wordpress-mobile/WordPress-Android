@@ -61,6 +61,7 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -560,6 +561,16 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
 
         @Override
+        public int getItemPosition(Object object) {
+            if (object instanceof EditPostSettingsFragment) {
+                EditPostSettingsFragment f = (EditPostSettingsFragment) object;
+                f.updateFragment();
+            }
+
+            return super.getItemPosition(object);
+        }
+
+        @Override
         public int getCount() {
             // Show 3 total pages.
             return 3;
@@ -568,6 +579,14 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     public boolean isEditingPostContent() {
         return (mViewPager.getCurrentItem() == PAGE_CONTENT);
+    }
+
+    public EditorFragmentAbstract getEditorFragment() {
+        return mEditorFragment;
+    }
+
+    public EditPostSettingsFragment getEditPostSettingsFragment() {
+        return mEditPostSettingsFragment;
     }
 
     // Moved from EditPostContentFragment
@@ -1370,7 +1389,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
      * @param path
      *  local path of the media file to upload
      * @param mediaIdOut
-     *  the new {@link org.wordpress.android.models.MediaFile} ID is added if non-null
+     *  the new {@link org.wordpress.android.util.helpers.MediaFile} ID is added if non-null
      */
     private void queueFileForUpload(String path, ArrayList<String> mediaIdOut) {
         // Invalid file path
@@ -1435,6 +1454,51 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     }
 
     @Override
+    public void onImageSettingsButtonClicked(String button,
+                                             WPImageSpan span,
+                                             Editable postContent,
+                                             String title,
+                                             int selectedItemPosition,
+                                             int editTextIntegerClamped,
+                                             String captionText,
+                                             boolean isFeatured) {
+        setMediaFileAttributes(span, postContent, title, selectedItemPosition,
+                editTextIntegerClamped, captionText, isFeatured);
+
+        if (button.contains("featured")) {
+            setFeaturedImageInSettings(span);
+            mViewPager.setCurrentItem(PAGE_SETTINGS);
+        }
+    }
+
+    public void setMediaFileAttributes(WPImageSpan span,
+                                       Editable postContent,
+                                       String title,
+                                       int selectedItemPosition,
+                                       int editTextIntegerClamped,
+                                       String captionText,
+                                       boolean isFeatured) {
+        MediaFile mediaFile = span.getMediaFile();
+        mediaFile.setTitle(title);
+        mediaFile.setHorizontalAlignment(selectedItemPosition);
+        mediaFile.setWidth(editTextIntegerClamped);
+        mediaFile.setCaption(captionText);
+        mediaFile.setFeatured(isFeatured);
+        if (isFeatured) {
+            WPImageSpan[] imageSpansInContent = postContent.getSpans(0, postContent.length(), WPImageSpan.class);
+            if (imageSpansInContent.length != 0) {
+                for (WPImageSpan wpIS : imageSpansInContent) {
+                    if (!wpIS.getMediaFile().equals(mediaFile)) {
+                        wpIS.getMediaFile().setFeatured(false);
+                    }
+                }
+            }
+        }
+
+        saveMediaFile(mediaFile);
+    }
+
+    @Override
     public void onEditorFragmentInitialized() {
         fillContentEditorFields();
     }
@@ -1442,5 +1506,23 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     @Override
     public void saveMediaFile(MediaFile mediaFile) {
         WordPress.wpDB.saveMediaFile(mediaFile);
+    }
+
+    public void setFeaturedImageInSettings(WPImageSpan wpImageSpan) {
+        if (wpImageSpan != null) {
+            String imageURL;
+            if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
+                String photonUrl = wpImageSpan.getImageSource().toString();
+                imageURL = PhotonUtils.getPhotonImageUrl(photonUrl, getMaximumThumbnailWidthForEditor(), 0);
+            } else {
+                imageURL = wpImageSpan.getMediaFile().getFileURL() != null ?
+                        wpImageSpan.getMediaFile().getFileURL() : wpImageSpan.getMediaFile().getThumbnailURL();
+            }
+            mEditPostSettingsFragment.setFeaturedImage(imageURL);
+        }
+    }
+
+    public int getBlogMediaStatus() {
+        return mBlogMediaStatus;
     }
 }

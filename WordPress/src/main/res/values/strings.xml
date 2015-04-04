@@ -121,7 +121,9 @@
     <string name="media_fetching">Fetching media…</string>
 
     <!-- featured image management-->
-    <string name="add_featured_image">Add a featured image</string>
+    <string name="set_featured_image">Set featured image</string>
+    <string name="set_as_featured_image">Set as featured image</string>
+    <string name="remove_featured_image">Remove featured image</string>
     <string name="featured_image">Featured Image</string>
 
     <!-- Upload Media -->

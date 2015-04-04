@@ -15,7 +15,7 @@
     <string name="image_settings">Image settings</string>
     <string name="title">Title</string>
     <string name="width">Width</string>
-    <string name="featured">Use as featured image</string>
+    <string name="featured">Set as featured image</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="image_alignment">Alignment</string>
     <string name="horizontal_alignment">Horizontal alignment</string>

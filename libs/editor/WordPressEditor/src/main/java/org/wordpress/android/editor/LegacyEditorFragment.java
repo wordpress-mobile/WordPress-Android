@@ -16,6 +16,7 @@ import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -38,8 +39,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -560,54 +559,54 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
      */
     public void showImageSettings(final View alertView, final EditText titleText,
                                   final EditText caption, final EditText imageWidthText,
-                                  final CheckBox featuredCheckBox, final CheckBox featuredInPostCheckBox,
-                                  final int maxWidth, final Spinner alignmentSpinner, final WPImageSpan imageSpan) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getString(R.string.image_settings));
-        builder.setView(alertView);
-        builder.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String title = (titleText.getText() != null) ? titleText.getText().toString() : "";
-                MediaFile mediaFile = imageSpan.getMediaFile();
-                if (mediaFile == null) {
-                    return;
-                }
-                mediaFile.setTitle(title);
-                mediaFile.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
-                mediaFile.setWidth(getEditTextIntegerClamped(imageWidthText, 10, maxWidth));
-                String captionText = (caption.getText() != null) ? caption.getText().toString() : "";
-                mediaFile.setCaption(captionText);
-                mediaFile.setFeatured(featuredCheckBox.isChecked());
-                if (featuredCheckBox.isChecked()) {
-                    // remove featured flag from all other images
-                    Spannable contentSpannable = mContentEditText.getText();
-                    WPImageSpan[] imageSpans =
-                            contentSpannable.getSpans(0, contentSpannable.length(), WPImageSpan.class);
-                    if (imageSpans.length > 1) {
-                        for (WPImageSpan postImageSpan : imageSpans) {
-                            if (postImageSpan != imageSpan) {
-                                MediaFile postMediaFile = postImageSpan.getMediaFile();
-                                postMediaFile.setFeatured(false);
-                                postMediaFile.setFeaturedInPost(false);
-                                // TODO: remove this
-                                mEditorFragmentListener.saveMediaFile(postMediaFile);
-                            }
-                        }
+                                  final int maxWidth, final Spinner alignmentSpinner,
+                                  final Button featuredImageButton, final WPImageSpan span) {
+        final AlertDialog ad = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.image_settings))
+                .setView(alertView)
+                .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String title = (titleText.getText() != null) ? titleText.getText().toString() : "";
+                        MediaFile mediaFile = span.getMediaFile();
+                        if (mediaFile == null)
+                            return;
+                        mEditorFragmentListener.
+                                onImageSettingsButtonClicked(getString(android.R.string.ok),
+                                        span,
+                                        new SpannableStringBuilder(mContentEditText.getText()),
+                                        title,
+                                        alignmentSpinner.getSelectedItemPosition(),
+                                        getEditTextIntegerClamped(imageWidthText, 10, maxWidth),
+                                        (caption.getText() != null) ? caption.getText().toString() : "",
+                                        false);
                     }
-                }
-                mediaFile.setFeaturedInPost(featuredInPostCheckBox.isChecked());
-                // TODO: remove this
-                mEditorFragmentListener.saveMediaFile(mediaFile);
+                })
+                .setNegativeButton(getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+
+        ad.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        ad.show();
+        featuredImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = (titleText.getText() != null) ? titleText.getText().toString() : "";
+                MediaFile mediaFile = span.getMediaFile();
+                if (mediaFile == null)
+                    return;
+                mEditorFragmentListener.onImageSettingsButtonClicked(getString(R.string.featured),
+                        span,
+                        new SpannableStringBuilder(mContentEditText.getText()),
+                        title,
+                        alignmentSpinner.getSelectedItemPosition(),
+                        getEditTextIntegerClamped(imageWidthText, 10, maxWidth),
+                        (caption.getText() != null) ? caption.getText().toString() : "",
+                        true);
+                ad.dismiss();
             }
         });
-        builder.setNegativeButton(getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        alertDialog.show();
     }
 
     @Override
@@ -663,29 +662,16 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         final EditText imageWidthText = (EditText) alertView.findViewById(R.id.imageWidthText);
                         final EditText titleText = (EditText) alertView.findViewById(R.id.title);
                         final EditText caption = (EditText) alertView.findViewById(R.id.caption);
-                        final CheckBox featuredCheckBox = (CheckBox) alertView.findViewById(R.id.featuredImage);
-                        final CheckBox featuredInPostCheckBox = (CheckBox) alertView.findViewById(R.id.featuredInPost);
+                        final Button featuredImageButton = (Button) alertView.findViewById(R.id.setFeaturedImageButtonInDialog);
 
                         // show featured image checkboxes if supported
                         if (mFeaturedImageSupported) {
-                            featuredCheckBox.setVisibility(View.VISIBLE);
-                            featuredInPostCheckBox.setVisibility(View.VISIBLE);
+                            featuredImageButton.setVisibility(View.VISIBLE);
                         }
-
-                        featuredCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                if (isChecked) {
-                                    featuredInPostCheckBox.setVisibility(View.VISIBLE);
-                                } else {
-                                    featuredInPostCheckBox.setVisibility(View.GONE);
-                                }
-
-                            }
-                        });
 
                         final SeekBar seekBar = (SeekBar) alertView.findViewById(R.id.imageWidth);
                         final Spinner alignmentSpinner = (Spinner) alertView.findViewById(R.id.alignment_spinner);
+
                         ArrayAdapter<CharSequence> adapter =
                                 ArrayAdapter.createFromResource(getActivity(), R.array.alignment_array,
                                         android.R.layout.simple_spinner_item);
@@ -696,15 +682,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         seekBar.setProgress(mediaFile.getWidth());
                         titleText.setText(mediaFile.getTitle());
                         caption.setText(mediaFile.getCaption());
-                        featuredCheckBox.setChecked(mediaFile.isFeatured());
-
-                        if (mediaFile.isFeatured()) {
-                            featuredInPostCheckBox.setVisibility(View.VISIBLE);
-                        } else {
-                            featuredInPostCheckBox.setVisibility(View.GONE);
-                        }
-
-                        featuredInPostCheckBox.setChecked(mediaFile.isFeaturedInPost());
 
                         alignmentSpinner.setSelection(mediaFile.getHorizontalAlignment(), true);
 
@@ -757,8 +734,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                             }
                         });
 
-                        showImageSettings(alertView, titleText, caption, imageWidthText, featuredCheckBox,
-                                featuredInPostCheckBox, maxWidth, alignmentSpinner, imageSpan);
+                        showImageSettings(alertView, titleText, caption, imageWidthText,
+                                maxWidth, alignmentSpinner, featuredImageButton, imageSpan);
                         mScrollDetected = false;
                         return true;
                     }
