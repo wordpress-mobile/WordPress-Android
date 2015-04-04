@@ -68,6 +68,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
+import org.wordpress.android.widgets.ScrollDirectionListener;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -80,7 +81,8 @@ import de.greenrobot.event.EventBus;
 public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
                    ReaderInterfaces.OnTagSelectedListener,
-                   ReaderInterfaces.OnPostPopupListener {
+                   ReaderInterfaces.OnPostPopupListener,
+                   ReaderInterfaces.AutoHideToolbarListener {
 
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
@@ -92,6 +94,7 @@ public class ReaderPostListFragment extends Fragment
     private View mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
+    private Toolbar mReaderToolbar;
 
     private ViewGroup mTagInfoView;
     private ReaderBlogInfoView mBlogInfoView;
@@ -461,10 +464,10 @@ public class ReaderPostListFragment extends Fragment
 
         // configure the toolbar for posts in followed tags (shown in main viewpager activity)
         if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
-            final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
-            toolbar.setVisibility(View.VISIBLE);
-            toolbar.inflateMenu(R.menu.reader_list);
-            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            mReaderToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
+            mReaderToolbar.setVisibility(View.VISIBLE);
+            mReaderToolbar.inflateMenu(R.menu.reader_list);
+            mReaderToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     if (menuItem.getItemId() == R.id.menu_tags) {
@@ -474,8 +477,23 @@ public class ReaderPostListFragment extends Fragment
                     return false;
                 }
             });
+            // auto-hide the reader toolbar when user scrolls
+            mRecyclerView.setScrollDirectionListener(new ScrollDirectionListener() {
+                @Override
+                public void onScrollUp() {
+                    onShowHideToolbar(true);
+                }
+                @Override
+                public void onScrollDown() {
+                    onShowHideToolbar(false);
+                }
+                @Override
+                public void onScrollCompleted() {
+                    // noop
+                }
+            });
             if (mSpinner == null) {
-                enableTagSpinner(toolbar);
+                enableTagSpinner(mReaderToolbar);
             }
             selectTagInSpinner(getCurrentTag());
         }
@@ -1417,5 +1435,12 @@ public class ReaderPostListFragment extends Fragment
         ReaderUpdateService.startService(getActivity(),
                 EnumSet.of(ReaderUpdateService.UpdateTask.TAGS,
                            ReaderUpdateService.UpdateTask.FOLLOWED_BLOGS));
+    }
+
+    @Override
+    public void onShowHideToolbar(boolean show) {
+        if (isAdded() && mReaderToolbar != null) {
+            ReaderAnim.animateTopBar(mReaderToolbar, show);
+        }
     }
 }
