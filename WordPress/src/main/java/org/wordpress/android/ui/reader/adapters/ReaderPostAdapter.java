@@ -336,7 +336,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         mOnPostPopupListener = onPostPopupListener;
     }
 
-    ReaderTypes.ReaderPostListType getPostListType() {
+    private ReaderTypes.ReaderPostListType getPostListType() {
         return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
@@ -374,19 +374,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     /*
      * same as refresh() above but first clears the existing posts
      */
-    void reload() {
+    private void reload() {
         clear();
         loadPosts();
     }
 
-    void removeItem(int position) {
+    private void removeItem(int position) {
         if (isValidPosition(position)) {
             mPosts.remove(position);
             notifyItemRemoved(position);
         }
     }
 
-    void removePost(ReaderPost post) {
+    private void removePost(ReaderPost post) {
         removeItem(indexOfPost(post));
     }
 
@@ -413,7 +413,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         }
     }
 
-    int indexOfPost(ReaderPost post) {
+    private int indexOfPost(ReaderPost post) {
         return mPosts.indexOfPost(post);
     }
 
@@ -479,7 +479,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         return (getItemCount() == 0);
     }
 
-    boolean isValidPosition(int position) {
+    private boolean isValidPosition(int position) {
         return (position >= 0 && position < getItemCount());
     }
 

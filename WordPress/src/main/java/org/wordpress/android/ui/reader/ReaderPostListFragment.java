@@ -81,8 +81,7 @@ import de.greenrobot.event.EventBus;
 public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
                    ReaderInterfaces.OnTagSelectedListener,
-                   ReaderInterfaces.OnPostPopupListener,
-                   ReaderInterfaces.AutoHideToolbarListener {
+                   ReaderInterfaces.OnPostPopupListener {
 
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
@@ -481,11 +480,11 @@ public class ReaderPostListFragment extends Fragment
             mRecyclerView.setScrollDirectionListener(new ScrollDirectionListener() {
                 @Override
                 public void onScrollUp() {
-                    onShowHideToolbar(true);
+                    showReaderToolbar(true);
                 }
                 @Override
                 public void onScrollDown() {
-                    onShowHideToolbar(false);
+                    showReaderToolbar(false);
                 }
                 @Override
                 public void onScrollCompleted() {
@@ -677,6 +676,15 @@ public class ReaderPostListFragment extends Fragment
                 // nop
             }
         });
+    }
+
+    /*
+     * animates the toolbar above the reader fragment containing the tag spinner
+     */
+    private void showReaderToolbar(boolean show) {
+        if (isAdded() && mReaderToolbar != null) {
+            ReaderAnim.animateTopBar(mReaderToolbar, show);
+        }
     }
 
     /*
@@ -1436,12 +1444,5 @@ public class ReaderPostListFragment extends Fragment
         ReaderUpdateService.startService(getActivity(),
                 EnumSet.of(ReaderUpdateService.UpdateTask.TAGS,
                            ReaderUpdateService.UpdateTask.FOLLOWED_BLOGS));
-    }
-
-    @Override
-    public void onShowHideToolbar(boolean show) {
-        if (isAdded() && mReaderToolbar != null) {
-            ReaderAnim.animateTopBar(mReaderToolbar, show);
-        }
     }
 }
