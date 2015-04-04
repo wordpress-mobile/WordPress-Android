@@ -1,11 +1,11 @@
 package org.wordpress.android.ui;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 
 import com.simperium.client.Bucket;
@@ -35,20 +35,13 @@ import de.greenrobot.event.EventBus;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-
-/*
- * TODO: handle notifications & reader with no wp.com account
- * TODO: notifications tab needs a badge when their are unseen notes
- */
-
-public class WPMainActivity extends ActionBarActivity
-    implements ViewPager.OnPageChangeListener, Bucket.Listener<Note>
-{
+public class WPMainActivity extends Activity
+    implements ViewPager.OnPageChangeListener, Bucket.Listener<Note> {
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
 
-    public static String ARG_OPENED_FROM_PUSH = "opened_from_push";
+    public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -255,6 +248,7 @@ public class WPMainActivity extends ActionBarActivity
         }
         return null;
     }
+
     /*
      * returns the my site fragment from the sites tab
      */
@@ -267,9 +261,16 @@ public class WPMainActivity extends ActionBarActivity
     }
 
     /*
-     * badges/unbadges the notifications tab depending on whether there are unread notes
+     * badges the notifications tab depending on whether there are unread notes
      */
+    private boolean mIsCheckingNoteBadge;
     private void checkNoteBadge() {
+        if (mIsCheckingNoteBadge) {
+            AppLog.v(AppLog.T.NOTIFS, "already checking note badge");
+            return;
+        }
+
+        mIsCheckingNoteBadge = true;
         new Thread() {
             @Override
             public void run() {
@@ -280,8 +281,11 @@ public class WPMainActivity extends ActionBarActivity
                         @Override
                         public void run() {
                             mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, hasUnreadNotes);
+                            mIsCheckingNoteBadge = false;
                         }
                     });
+                } else {
+                    mIsCheckingNoteBadge = false;
                 }
             }
         }.start();
