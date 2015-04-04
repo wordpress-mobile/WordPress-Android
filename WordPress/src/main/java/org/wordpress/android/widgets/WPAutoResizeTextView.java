@@ -3,7 +3,7 @@ package org.wordpress.android.widgets;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import org.wordpress.android.util.AutoResizeTextView;
+import org.wordpress.android.util.widgets.AutoResizeTextView;
 
 /**
  * custom AutoTextView used in layouts - enables keeping custom typeface handling in one place (so we

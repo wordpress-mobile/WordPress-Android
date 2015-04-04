@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
+import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;
@@ -46,6 +48,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
@@ -61,6 +64,7 @@ import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
@@ -72,6 +76,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import io.fabric.sdk.android.Fabric;
 
 public class WordPress extends Application {
     public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
@@ -143,11 +148,13 @@ public class WordPress extends Application {
         // Enable log recording
         AppLog.enableRecording(true);
         if (!PackageUtils.isDebugBuild()) {
-            Crashlytics.start(this);
+            Fabric.with(this, new Crashlytics());
         }
+
         versionName = PackageUtils.getVersionName(this);
         HelpshiftHelper.init(this);
         initWpDb();
+        enableHttpResponseCache(mContext);
 
         // EventBus setup
         EventBus.TAG = "WordPress-EVENT";
@@ -174,9 +181,10 @@ public class WordPress extends Application {
 
         HelpshiftHelper.init(this);
 
-        AnalyticsTracker.init();
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
-        AnalyticsTracker.beginSession();
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
+        AnalyticsTracker.init(getContext());
+        AnalyticsUtils.refreshMetadata();
         AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 
         registerForCloudMessaging(this);
@@ -544,6 +552,7 @@ public class WordPress extends Application {
 
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
+        flushHttpCache();
 
         // General analytics resets
         AnalyticsTracker.endSession(false);
@@ -674,6 +683,27 @@ public class WordPress extends Application {
         return mUserAgent;
     }
 
+    /*
+     * enable caching for HttpUrlConnection
+     * http://developer.android.com/training/efficient-downloads/redundant_redundant.html
+     */
+    private static void enableHttpResponseCache(Context context) {
+        try {
+            long httpCacheSize = 5 * 1024 * 1024; // 5MB
+            File httpCacheDir = new File(context.getCacheDir(), "http");
+            HttpResponseCache.install(httpCacheDir, httpCacheSize);
+        } catch (IOException e) {
+            AppLog.w(T.UTILS, "Failed to enable http response cache");
+        }
+    }
+
+    private static void flushHttpCache() {
+        HttpResponseCache cache = HttpResponseCache.getInstalled();
+        if (cache != null) {
+            cache.flush();
+        }
+    }
+
     /**
      * Detect when the app goes to the background and come back to the foreground.
      *
@@ -782,7 +812,7 @@ public class WordPress extends Application {
          * 2. the app was in background and is now foreground
          */
         public void onFromBackground() {
-            AnalyticsTracker.beginSession();
+            AnalyticsUtils.refreshMetadata();
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {

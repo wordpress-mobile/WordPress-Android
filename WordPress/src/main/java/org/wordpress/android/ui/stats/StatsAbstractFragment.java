@@ -10,9 +10,9 @@ import org.wordpress.android.ui.stats.service.StatsService;
 
 public abstract class StatsAbstractFragment extends Fragment {
     public static final String TAG = StatsAbstractFragment.class.getSimpleName();
-
-    protected static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
-    protected static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
+    public static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
+    public static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
+    
     protected static final String ARGS_START_DATE = "ARGS_START_DATE";
     protected static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
 
@@ -77,7 +77,7 @@ public abstract class StatsAbstractFragment extends Fragment {
         }
 
         Bundle args = new Bundle();
-        args.putInt(ARGS_VIEW_TYPE, viewType.ordinal());
+        args.putSerializable(ARGS_VIEW_TYPE, viewType);
         args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
         fragment.setArguments(args);
 
@@ -101,8 +101,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     protected StatsViewType getViewType() {
-        int ordinal = getArguments().getInt(ARGS_VIEW_TYPE);
-        return StatsViewType.values()[ordinal];
+        return (StatsViewType) getArguments().getSerializable(ARGS_VIEW_TYPE);
     }
 
     protected int getLocalTableBlogID() {

@@ -25,7 +25,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 /**
@@ -72,20 +72,20 @@ public class NoteBlock {
     }
 
     public String getMetaHomeTitle() {
-        return JSONUtil.queryJSON(mNoteData, "meta.titles.home", "");
+        return JSONUtils.queryJSON(mNoteData, "meta.titles.home", "");
     }
 
     public long getMetaSiteId() {
-        return JSONUtil.queryJSON(mNoteData, "meta.ids.site", -1);
+        return JSONUtils.queryJSON(mNoteData, "meta.ids.site", -1);
     }
 
     public String getMetaSiteUrl() {
-        return JSONUtil.queryJSON(mNoteData, "meta.links.home", "");
+        return JSONUtils.queryJSON(mNoteData, "meta.links.home", "");
     }
 
     JSONObject getNoteMediaItem() {
         if (mMediaItem == null) {
-            mMediaItem = JSONUtil.queryJSON(mNoteData, "media[0]", new JSONObject());
+            mMediaItem = JSONUtils.queryJSON(mNoteData, "media[0]", new JSONObject());
         }
 
         return mMediaItem;
@@ -175,6 +175,9 @@ public class NoteBlock {
         // Note text
         if (!TextUtils.isEmpty(getNoteText())) {
             if (mIsBadge) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                params.gravity = Gravity.CENTER_HORIZONTAL;
+                noteBlockHolder.getTextView().setLayoutParams(params);
                 noteBlockHolder.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
                 noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), 8), 0, 0);
             } else {

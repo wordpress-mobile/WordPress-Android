@@ -18,7 +18,7 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
@@ -655,7 +655,8 @@ public class ApiHelper {
             }
             for (Object result : results) {
                 resultMap = (Map<?, ?>) result;
-                MediaFile mediaFile = new MediaFile(blogId, resultMap);
+                boolean isDotCom = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag());
+                MediaFile mediaFile = new MediaFile(blogId, resultMap, isDotCom);
                 WordPress.wpDB.saveMediaFile(mediaFile);
             }
             WordPress.wpDB.deleteFilesMarkedForDeleted(blogId);
@@ -797,8 +798,9 @@ public class ApiHelper {
             }
 
             if (results != null && blogId != null) {
-                MediaFile mediaFile = new MediaFile(blogId, results);
-                mediaFile.save();
+                boolean isDotCom = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag());
+                MediaFile mediaFile = new MediaFile(blogId, results, isDotCom);
+                WordPress.wpDB.saveMediaFile(mediaFile);
                 return mediaFile;
             } else {
                 return null;
