@@ -54,6 +54,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GenericCallback;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -436,12 +437,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     if (settings.contains(WordPress.IS_SIGNED_OUT_PREFERENCE)) {
                         SharedPreferences.Editor editor = settings.edit();
                         editor.remove(WordPress.IS_SIGNED_OUT_PREFERENCE);
-                        editor.commit();
+                        editor.apply();
 
-                        if (!WordPress.wpDB.hasDotOrgAccountForUsername(mUsername)) {
-                            WordPress.wpDB.dangerouslyDeleteAllContent();
-                            // Clear WPCom login info (could have been set up for Jetpack stats auth)
-                            WordPress.removeWpComUserRelatedData(WordPress.getContext());
+                        if (userBlogList.size() > 0) {
+                            String xmlrpcUrl = MapUtils.getMapStr(userBlogList.get(0), "xmlrpc");
+                            if (!WordPress.wpDB.hasDotOrgAccountForUsernameAndUrl(mUsername, xmlrpcUrl)) {
+                                WordPress.wpDB.dangerouslyDeleteAllContent();
+                                // Clear WPCom login info (could have been set up for Jetpack stats auth)
+                                WordPress.removeWpComUserRelatedData(WordPress.getContext());
+                                WordPress.currentBlog = null;
+                            }
                         }
                     }
 

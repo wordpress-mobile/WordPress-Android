@@ -540,7 +540,7 @@ public class WordPress extends Application {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(IS_SIGNED_OUT_PREFERENCE, true);
-        editor.commit();
+        editor.apply();
 
         wpDB.updateLastBlogId(-1);
         currentBlog = null;

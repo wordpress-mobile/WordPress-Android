@@ -90,6 +90,7 @@ public class LoginWPCom extends LoginAbstract {
                     WordPress.wpDB.dangerouslyDeleteAllContent();
                     WordPress.removeWpComUserRelatedData(WordPress.getContext());
                     existingUsername = null;
+                    WordPress.currentBlog = null;
                 }
 
                 // Once we have a token, start up Simperium
@@ -102,7 +103,7 @@ public class LoginWPCom extends LoginAbstract {
                 }
 
                 editor.remove(WordPress.IS_SIGNED_OUT_PREFERENCE);
-                editor.commit();
+                editor.apply();
 
                 mCallback.onSuccess();
             }

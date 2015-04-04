@@ -539,10 +539,10 @@ public class WordPressDB {
         db.delete(CommentTable.COMMENTS_TABLE, null, null);
     }
 
-    public boolean hasDotOrgAccountForUsername(String username) {
-        if (TextUtils.isEmpty(username)) return false;
+    public boolean hasDotOrgAccountForUsernameAndUrl(String username, String url) {
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(url)) return false;
 
-        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "username=?", new String[]{username}, null, null, null);
+        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "username=? AND url=?", new String[]{username, url}, null, null, null);
         try {
             return c.getCount() > 0;
         } finally {
