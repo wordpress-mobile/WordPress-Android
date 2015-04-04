@@ -76,6 +76,7 @@ public class EditPostSettingsFragment extends Fragment
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
+    private Button mAddFeaturedImageButton;
 
     private ArrayList<String> mCategories;
 
@@ -128,9 +129,11 @@ public class EditPostSettingsFragment extends Fragment
             }
         });
         mTagsEditText = (EditText) rootView.findViewById(R.id.tags);
+        mAddFeaturedImageButton = (Button) rootView.findViewById(R.id.addFeaturedImage);
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
 
         // Set header labels to upper case
+        ((TextView) rootView.findViewById(R.id.featuredImageLabel)).setText(getResources().getString(R.string.featured_image).toUpperCase());
         ((TextView) rootView.findViewById(R.id.categoryLabel)).setText(getResources().getString(R.string.categories).toUpperCase());
         ((TextView) rootView.findViewById(R.id.statusLabel)).setText(getResources().getString(R.string.status).toUpperCase());
         ((TextView) rootView.findViewById(R.id.postFormatLabel)).setText(getResources().getString(R.string.post_format).toUpperCase());

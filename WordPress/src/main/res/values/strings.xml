@@ -120,6 +120,10 @@
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_fetching">Fetching media…</string>
 
+    <!-- featured image management-->
+    <string name="add_featured_image">Add a featured image</string>
+    <string name="featured_image">Featured Image</string>
+
     <!-- Upload Media -->
     <string name="media_no_video_title">VideoPress unavailable</string>
     <string name="media_no_video_message">Get the VideoPress upgrade to upload video!</string>
