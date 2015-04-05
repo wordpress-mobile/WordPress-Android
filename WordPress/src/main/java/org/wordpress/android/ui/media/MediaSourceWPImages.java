@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Parcel;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ import org.wordpress.mediapicker.source.MediaSource;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -166,38 +166,48 @@ public class MediaSourceWPImages implements MediaSource {
     }
 
     private void removeDeletedEntries() {
-        AsyncTask<List<MediaItem>, Void, Void> backgroundCheck = new AsyncTask<List<MediaItem>, Void, Void>() {
-            @Override
-            protected Void doInBackground(List<MediaItem>[] params) {
-                for (MediaItem mediaItem : params[0]) {
-                    try {
-                        URL mediaUrl = new URL(mediaItem.getSource().toString());
-                        HttpURLConnection connection = (HttpURLConnection) mediaUrl.openConnection();
-                        connection.setRequestMethod("GET");
-                        connection.connect();
-                        int responseCode = connection.getResponseCode();
+        List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
 
-                        if (responseCode == 200) {
-                            mVerifiedItems.add(mediaItem);
+        for (MediaItem mediaItem : existingItems) {
+            final boolean callLoaded = existingItems.indexOf(mediaItem) == existingItems.size() - 1;
+
+            AsyncTask<MediaItem, Void, MediaItem> backgroundCheck = new AsyncTask<MediaItem, Void, MediaItem>() {
+                @Override
+                protected MediaItem doInBackground(MediaItem[] params) {
+                    MediaItem mediaItem = params[0];
+                        try {
+                            URL mediaUrl = new URL(mediaItem.getSource().toString());
+                            HttpURLConnection connection = (HttpURLConnection) mediaUrl.openConnection();
+                            connection.setRequestMethod("GET");
+                            connection.connect();
+                            int responseCode = connection.getResponseCode();
+
+                            if (responseCode == 200) {
+                                mVerifiedItems.add(mediaItem);
+                            }
+                        } catch (IOException ioException) {
+                            Log.e("", "Error reading from " + mediaItem.getSource() + "\nexception:" + ioException);
                         }
-                    } catch (IOException ioException) {
-                        Log.e("", "Error reading from " + mediaItem.getSource() + "\nexception:" + ioException);
+
+                    return mediaItem;
+                }
+
+                @Override
+                public void onPostExecute(MediaItem result) {
+                    Log.e("", "xyz 3");
+                    if (mListener != null) {
+                        List<MediaItem> resultList = new ArrayList<>();
+                        resultList.add(result);
+                        mListener.onMediaAdded(MediaSourceWPImages.this, resultList);
+
+                        if (callLoaded) {
+                            mListener.onMediaLoaded(mVerifiedItems.size() > 0);
+                        }
                     }
                 }
-
-                return null;
-            }
-
-            @Override
-            public void onPostExecute(Void result) {
-                if (mListener != null) {
-                    mListener.onMediaLoaded(mVerifiedItems.size() > 0);
-                }
-            }
-        };
-
-        List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
-        backgroundCheck.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, existingItems);
+            };
+            backgroundCheck.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaItem);
+        }
     }
 
     /**
