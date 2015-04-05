@@ -15,6 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
 
@@ -36,7 +37,7 @@ public class MediaSourceWPVideos implements MediaSource {
         Blog blog = WordPress.getCurrentBlog();
 
         if (blog != null) {
-            Cursor videoCursor = MediaUtils.getWordPressMediaVideos(String.valueOf(blog.getLocalTableBlogId()));
+            Cursor videoCursor = WordPressMediaUtils.getWordPressMediaVideos(String.valueOf(blog.getLocalTableBlogId()));
 
             if (videoCursor != null) {
                 addWordPressVideosFromCursor(videoCursor);
@@ -89,7 +90,8 @@ public class MediaSourceWPVideos implements MediaSource {
                     imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     if (imageBitmap == null) {
                         imageView.setImageResource(R.color.grey_darken_10);
-                        MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(imageView);
+                        WordPressMediaUtils.BackgroundDownloadWebImage bgDownload =
+                                new WordPressMediaUtils.BackgroundDownloadWebImage(imageView);
                         imageView.setTag(bgDownload);
                         bgDownload.execute(mediaItem.getPreviewSource());
                     } else {

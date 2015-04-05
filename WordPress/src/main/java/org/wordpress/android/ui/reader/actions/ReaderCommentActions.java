@@ -16,14 +16,13 @@ import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ReaderCommentActions {
-
     /*
      * used by post detail to generate a temporary "fake" comment id (see below)
      */
@@ -149,7 +148,7 @@ public class ReaderCommentActions {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                boolean success = (jsonObject != null && JSONUtil.getBool(jsonObject, "success"));
+                boolean success = (jsonObject != null && JSONUtils.getBool(jsonObject, "success"));
                 if (success) {
                     AppLog.d(T.READER, String.format("comment %s succeeded", actionName));
                 } else {

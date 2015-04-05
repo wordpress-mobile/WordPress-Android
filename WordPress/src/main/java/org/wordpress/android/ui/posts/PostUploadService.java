@@ -31,16 +31,16 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SystemServiceFactory;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -254,8 +254,8 @@ public class PostUploadService extends Service {
                 // add the tagline
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-                if (prefs.getBoolean("wp_pref_signature_enabled", false)) {
-                    String tagline = prefs.getString("wp_pref_post_signature", "");
+                if (prefs.getBoolean(getString(R.string.pref_key_post_sig_enabled), false)) {
+                    String tagline = prefs.getString(getString(R.string.pref_key_post_sig), "");
                     if (!TextUtils.isEmpty(tagline)) {
                         String tag = "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
                         if (TextUtils.isEmpty(moreContent))

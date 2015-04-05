@@ -40,7 +40,7 @@ public class MediaSourceWPImages implements MediaSource {
         Blog blog = WordPress.getCurrentBlog();
 
         if (blog != null) {
-            Cursor imageCursor = MediaUtils.getWordPressMediaImages(String.valueOf(blog.getLocalTableBlogId()));
+            Cursor imageCursor = WordPressMediaUtils.getWordPressMediaImages(String.valueOf(blog.getLocalTableBlogId()));
 
             if (imageCursor != null) {
                 addWordPressImagesFromCursor(imageCursor);
@@ -91,7 +91,7 @@ public class MediaSourceWPImages implements MediaSource {
 
                     if (imageBitmap == null) {
                         imageView.setImageResource(R.color.grey_darken_10);
-                        MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(imageView);
+                        WordPressMediaUtils.BackgroundDownloadWebImage bgDownload = new WordPressMediaUtils.BackgroundDownloadWebImage(imageView);
                         imageView.setTag(bgDownload);
                         bgDownload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaItem.getPreviewSource());
                     } else {

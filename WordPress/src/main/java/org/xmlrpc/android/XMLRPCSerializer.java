@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Xml;
 
-import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;

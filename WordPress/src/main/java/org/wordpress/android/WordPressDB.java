@@ -16,7 +16,7 @@ import org.json.JSONArray;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
@@ -454,7 +454,7 @@ public class WordPressDB {
     public boolean isDotComAccountVisible(int blogId) {
         String[] args = {Integer.toString(blogId)};
         return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE +
-                                         " WHERE isHidden = 0 AND blogId=?", args);
+                " WHERE isHidden = 0 AND blogId=?", args);
     }
 
     public boolean isBlogInDatabase(int blogId, String xmlRpcUrl) {
@@ -938,6 +938,16 @@ public class WordPressDB {
         c.close();
 
         return posts;
+    }
+
+    public int clearAllUploadingPosts(int localTableBlogId, boolean isPage) {
+        ContentValues values = new ContentValues();
+        values.put("isUploading", 0);
+        return db.update(POSTS_TABLE, values, "blogID=? AND isPage=? AND isUploading=1",
+                new String[]{
+                        String.valueOf(localTableBlogId),
+                        String.valueOf(SqlUtils.boolToSql(isPage))
+                });
     }
 
     public long savePost(Post post) {
@@ -1633,6 +1643,16 @@ public class WordPressDB {
                 new String[]{"delete", blogId});
     }
 
+    /** Get all media files scheduled for delete for a given blogId **/
+    public Cursor getMediaDeleteQueueItems(String blogId) {
+        return db.rawQuery("SELECT blogId, mediaId FROM " + MEDIA_TABLE + " WHERE uploadState=? AND blogId=?",
+                new String[]{"delete", blogId});
+    }
+
+    public boolean hasMediaDeleteQueueItems(int blogId) {
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + MEDIA_TABLE + " WHERE uploadState=? AND blogId=?",
+                new String[]{"delete", Integer.toString(blogId)});
+    }
 
     public int getWPCOMBlogID() {
         int id = -1;

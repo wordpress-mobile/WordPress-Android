@@ -25,11 +25,12 @@ import org.wordpress.android.ui.EmptyViewAnimationHandler;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
-import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.FloatingActionButton;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
@@ -70,6 +71,11 @@ public class PostsListFragment extends ListFragment
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras != null) {
                 mIsPage = extras.getBoolean(PostsActivity.EXTRA_VIEW_PAGES);
+            }
+            // If PostUploadService is not running, check for posts stuck with an uploading state
+            Blog currentBlog = WordPress.getCurrentBlog();
+            if (!ServiceUtils.isServiceRunning(getActivity(), PostUploadService.class) && currentBlog != null) {
+                WordPress.wpDB.clearAllUploadingPosts(currentBlog.getLocalTableBlogId(), mIsPage);
             }
         }
     }

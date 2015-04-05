@@ -3,6 +3,7 @@ package org.wordpress.android.mocks;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.LoggedInputStream;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -16,6 +17,7 @@ import java.net.URI;
 
 public class XMLRPCClientCustomizableXMLMock extends XMLRPCClientCustomizableMockAbstract {
     XMLRPCClient mXmlRpcClient;
+    private LoggedInputStream mLoggedInputStream;
 
     public XMLRPCClientCustomizableXMLMock(URI uri, String httpUser, String httpPassword) {
         // Used to test ctor and preparePostMethod
@@ -33,8 +35,8 @@ public class XMLRPCClientCustomizableXMLMock extends XMLRPCClientCustomizableMoc
         // Filename: default-wp.getUsersBlogs.xml
         String filename = prefix + "-" + method + ".xml";
         try {
-            InputStream is = mContext.getAssets().open(filename);
-            return XMLRPCClient.parseXMLRPCResponse(is, null);
+            mLoggedInputStream = new LoggedInputStream(mContext.getAssets().open(filename));
+            return XMLRPCClient.parseXMLRPCResponse(mLoggedInputStream, null);
         } catch (FileNotFoundException e) {
             AppLog.e(T.TESTS, "file not found: " + filename);
         }
@@ -42,6 +44,7 @@ public class XMLRPCClientCustomizableXMLMock extends XMLRPCClientCustomizableMoc
     }
 
     public Object call(String method, Object[] params) throws XMLRPCException, IOException, XmlPullParserException {
+        mLoggedInputStream = null;
         try {
             mXmlRpcClient.preparePostMethod(method, params, null);
         } catch (IOException e) {
@@ -77,5 +80,12 @@ public class XMLRPCClientCustomizableXMLMock extends XMLRPCClientCustomizableMoc
 
     public long callAsync(XMLRPCCallback listener, String methodName, Object[] params, File tempFile) {
         return 0;
+    }
+
+    public String getResponse() {
+        if (mLoggedInputStream == null) {
+            return "";
+        }
+        return mLoggedInputStream.getResponseDocument();
     }
 }

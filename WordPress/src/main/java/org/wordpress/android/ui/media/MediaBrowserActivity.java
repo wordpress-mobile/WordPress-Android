@@ -3,9 +3,13 @@ package org.wordpress.android.ui.media;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -28,6 +32,7 @@ import android.widget.Toast;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
@@ -36,6 +41,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
@@ -50,8 +56,8 @@ import java.util.Set;
  * Accessible via the menu drawer as "Media"
  */
 public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridListener,
-        MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback,
-        MediaAddFragmentCallback {
+        MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
+        MediaEditFragmentCallback, MediaAddFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
 
     private MediaGridFragment mMediaGridFragment;
@@ -65,6 +71,19 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
     private Menu mMenu;
     private FeatureSet mFeatureSet;
     private String mQuery;
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
+                // Coming from zero connection. Continue what's pending for delete
+                int blogId = WordPress.getCurrentLocalTableBlogId();
+                if (blogId != -1 && WordPress.wpDB.hasMediaDeleteQueueItems(blogId)) {
+                    startMediaDeleteService();
+                }
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,6 +122,18 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
             // We arrived here from a share action
             uploadSharedFiles();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    public void onStop() {
+        unregisterReceiver(mReceiver);
+        super.onStop();
     }
 
     @Override
@@ -476,7 +507,9 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
     }
 
     private void startMediaDeleteService() {
-        startService(new Intent(this, MediaDeleteService.class));
+        if (NetworkUtils.isNetworkAvailable(this)) {
+           startService(new Intent(this, MediaDeleteService.class));
+        }
     }
 
     @Override
@@ -530,7 +563,7 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
 
         // Make sure there are no media in "uploading"
         for (String currentID : ids) {
-            if (MediaUtils.canDeleteMedia(blogId, currentID)) {
+            if (WordPressMediaUtils.canDeleteMedia(blogId, currentID)) {
                 sanitizedIds.add(currentID);
             }
         }
@@ -546,7 +579,7 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
         // mark items for delete without actually deleting items yet,
         // and then refresh the grid
         WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, sanitizedIds);
-        startService(new Intent(this, MediaDeleteService.class));
+        startMediaDeleteService();
         if (mMediaGridFragment != null) {
             mMediaGridFragment.clearSelectedItems();
             mMediaGridFragment.refreshMediaFromDB();

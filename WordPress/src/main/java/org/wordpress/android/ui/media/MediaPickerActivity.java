@@ -24,12 +24,13 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.mediapicker.MediaItem;
-import org.wordpress.mediapicker.source.MediaSource;
 import org.wordpress.mediapicker.MediaPickerFragment;
 import org.wordpress.mediapicker.source.MediaSourceDeviceImages;
+import org.wordpress.mediapicker.source.MediaSource;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -133,7 +134,7 @@ public class MediaPickerActivity extends ActionBarActivity
         if (item.getItemId() == android.R.id.home) {
             finish();
         } else if (item.getItemId() == R.id.capture_image) {
-            MediaUtils.launchCamera(this, new MediaUtils.LaunchCameraCallback() {
+            WordPressMediaUtils.launchCamera(this, new WordPressMediaUtils.LaunchCameraCallback() {
                 @Override
                 public void onMediaCapturePathReady(String mediaCapturePath) {
                     mCapturePath = mediaCapturePath;
@@ -141,7 +142,7 @@ public class MediaPickerActivity extends ActionBarActivity
             });
             return true;
         } else if (item.getItemId() == R.id.capture_video) {
-            MediaUtils.launchVideoCamera(this);
+            WordPressMediaUtils.launchVideoCamera(this);
             return true;
         }
 
@@ -153,7 +154,7 @@ public class MediaPickerActivity extends ActionBarActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+            case WordPressMediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                 File file = new File(mCapturePath);
                 Uri imageUri = Uri.fromFile(file);
 
@@ -169,7 +170,7 @@ public class MediaPickerActivity extends ActionBarActivity
                     finishWithResults(imageResult, ACTIVITY_RESULT_CODE_MEDIA_SELECTED);
                 }
                 break;
-            case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+            case WordPressMediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                 Uri videoUri = data != null ? data.getData() : null;
 
                 if (videoUri != null) {

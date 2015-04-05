@@ -4,12 +4,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -56,7 +52,7 @@ import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
-import org.wordpress.android.ui.suggestion.service.SuggestionService;
+import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AniUtils;
@@ -75,6 +71,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * comment detail displayed from both the notification list and the comment list
@@ -368,28 +366,24 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         showComment();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
-                .registerReceiver(mReceiver, new IntentFilter(SuggestionService.ACTION_SUGGESTIONS_LIST_UPDATED));
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int updatedBlogId = intent.getIntExtra(SuggestionService.SUGGESTIONS_LIST_UPDATED_EXTRA, 0);
-            // check if the updated suggestions are for the current blog and update the suggestions
-            if (updatedBlogId != 0 && mRemoteBlogId == updatedBlogId) {
-                List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(mRemoteBlogId);
-                mSuggestionAdapter.setSuggestionList(suggestions);
-            }
+    @SuppressWarnings("unused")
+    public void onEventMainThread(SuggestionEvents.SuggestionListUpdated event) {
+        // check if the updated suggestions are for the current blog and update the suggestions
+        if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == mRemoteBlogId) {
+            List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
+            mSuggestionAdapter.setSuggestionList(suggestions);
         }
-    };
+    }
 
     @Override
     public void onPause() {
@@ -399,8 +393,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mComment = null;
         }
         EditTextUtils.hideSoftInput(mEditReply);
-        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
-                .unregisterReceiver(mReceiver);
     }
 
     @Override
