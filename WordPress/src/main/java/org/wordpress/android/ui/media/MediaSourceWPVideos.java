@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.media;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -33,7 +34,7 @@ public class MediaSourceWPVideos implements MediaSource {
     }
 
     @Override
-    public void gather() {
+    public void gather(Context context) {
         Blog blog = WordPress.getCurrentBlog();
 
         if (blog != null) {
@@ -52,7 +53,7 @@ public class MediaSourceWPVideos implements MediaSource {
 
     @Override
     public void cleanup() {
-
+        mMediaItems.clear();
     }
 
     @Override
@@ -128,30 +129,6 @@ public class MediaSourceWPVideos implements MediaSource {
         return cursorEntry;
     }
 
-    /*
-        Parcelable interface
-     */
-
-    public static final Creator<MediaSourceWPVideos> CREATOR =
-            new Creator<MediaSourceWPVideos>() {
-                public MediaSourceWPVideos createFromParcel(Parcel in) {
-                    return new MediaSourceWPVideos();
-                }
-
-                public MediaSourceWPVideos[] newArray(int size) {
-                    return new MediaSourceWPVideos[size];
-                }
-            };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
-
     private void addWordPressVideosFromCursor(Cursor cursor) {
         if (cursor.moveToFirst()) {
             do {
@@ -195,5 +172,29 @@ public class MediaSourceWPVideos implements MediaSource {
         if (mListener != null) {
             mListener.onMediaLoaded(true);
         }
+    }
+
+    /**
+     * {@link android.os.Parcelable} interface
+     */
+
+    public static final Creator<MediaSourceWPVideos> CREATOR =
+            new Creator<MediaSourceWPVideos>() {
+                public MediaSourceWPVideos createFromParcel(Parcel in) {
+                    return new MediaSourceWPVideos();
+                }
+
+                public MediaSourceWPVideos[] newArray(int size) {
+                    return new MediaSourceWPVideos[size];
+                }
+            };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
     }
 }

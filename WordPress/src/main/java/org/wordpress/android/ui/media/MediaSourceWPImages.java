@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.media;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -36,7 +37,9 @@ public class MediaSourceWPImages implements MediaSource {
     }
 
     @Override
-    public void gather() {
+    public void gather(Context context) {
+        mMediaItems.clear();
+
         Blog blog = WordPress.getCurrentBlog();
 
         if (blog != null) {
@@ -55,6 +58,7 @@ public class MediaSourceWPImages implements MediaSource {
 
     @Override
     public void cleanup() {
+        mMediaItems.clear();
     }
 
     @Override
@@ -110,30 +114,6 @@ public class MediaSourceWPImages implements MediaSource {
     @Override
     public boolean onMediaItemSelected(MediaItem mediaItem, boolean selected) {
         return !selected;
-    }
-
-    /*
-    Parcelable interface
-     */
-
-    public static final Creator<MediaSourceWPImages> CREATOR =
-            new Creator<MediaSourceWPImages>() {
-                public MediaSourceWPImages createFromParcel(Parcel in) {
-                    return new MediaSourceWPImages();
-                }
-
-                public MediaSourceWPImages[] newArray(int size) {
-                    return new MediaSourceWPImages[size];
-                }
-            };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
     }
 
     private void addWordPressImagesFromCursor(Cursor cursor) {
@@ -200,11 +180,9 @@ public class MediaSourceWPImages implements MediaSource {
                         if (responseCode == 200) {
                             mVerifiedItems.add(mediaItem);
                         }
-                    } catch (MalformedURLException e) {
                     } catch (IOException ioException) {
+                        Log.e("", "Error reading from " + mediaItem.getSource() + "\nexception:" + ioException);
                     }
-
-                    Thread.yield();
                 }
 
                 return null;
@@ -220,5 +198,29 @@ public class MediaSourceWPImages implements MediaSource {
 
         List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
         backgroundCheck.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, existingItems);
+    }
+
+    /**
+     * {@link android.os.Parcelable} interface
+     */
+
+    public static final Creator<MediaSourceWPImages> CREATOR =
+            new Creator<MediaSourceWPImages>() {
+                public MediaSourceWPImages createFromParcel(Parcel in) {
+                    return new MediaSourceWPImages();
+                }
+
+                public MediaSourceWPImages[] newArray(int size) {
+                    return new MediaSourceWPImages[size];
+                }
+            };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
     }
 }

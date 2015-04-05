@@ -29,7 +29,6 @@ import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.MediaPickerFragment;
-import org.wordpress.mediapicker.source.MediaSourceDeviceImages;
 import org.wordpress.mediapicker.source.MediaSource;
 
 import java.io.File;
@@ -298,7 +297,7 @@ public class MediaPickerActivity extends ActionBarActivity
             List<MediaSource> mediaSources = intent.getParcelableArrayListExtra(DEVICE_IMAGE_MEDIA_SOURCES_KEY);
             if (mediaSources != null) {
                 mMediaSources[0] = new ArrayList<>();
-                mMediaSources[0].add(new MediaSourceDeviceImages(getContentResolver()));
+                mMediaSources[0].addAll(mediaSources);
             }
 
             mediaSources = intent.getParcelableArrayListExtra(DEVICE_VIDEO_MEDIA_SOURCES_KEY);
@@ -474,16 +473,22 @@ public class MediaPickerActivity extends ActionBarActivity
         }
 
         private final List<MediaPicker> mMediaPickers;
+        private final List<MediaPickerFragment> mFragments;
 
         private MediaPickerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
 
             mMediaPickers = new ArrayList<>();
+            mFragments = new ArrayList<>();
         }
 
         @Override
         public Fragment getItem(int position) {
             if (position < mMediaPickers.size()) {
+                if (position < mFragments.size() && mFragments.get(position) != null) {
+                    return mFragments.get(position);
+                }
+
                 MediaPicker mediaPicker = mMediaPickers.get(position);
                 MediaPickerFragment fragment = new MediaPickerFragment();
                 fragment.setLoadingText(mediaPicker.loadingText);
@@ -491,6 +496,8 @@ public class MediaPickerActivity extends ActionBarActivity
                 fragment.setEmptyText(mediaPicker.emptyText);
                 fragment.setActionModeMenu(R.menu.menu_media_picker_action_mode);
                 fragment.setMediaSources(mediaPicker.mediaSources);
+
+                mFragments.add(position, fragment);
 
                 return fragment;
             }
