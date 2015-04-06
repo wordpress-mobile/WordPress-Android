@@ -121,7 +121,7 @@ public class WordPress extends Application {
      */
     public static RateLimitedTask sUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
-            if (getContext() != null && isSignedIn(getContext())) {
+            if (getContext() != null && hasDotComToken(getContext())) {
                 new GenericUpdateBlogListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
             return true;
@@ -814,10 +814,8 @@ public class WordPress extends Application {
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
 
-                if (hasDotComToken(mContext)) {
-                    // Rate limited WPCom blog list Update
-                    sUpdateWordPressComBlogList.runIfNotLimited();
-                }
+                // Rate limited WPCom blog list Update
+                sUpdateWordPressComBlogList.runIfNotLimited();
 
                 // Rate limited blog options Update
                 sUpdateCurrentBlogOption.runIfNotLimited();
