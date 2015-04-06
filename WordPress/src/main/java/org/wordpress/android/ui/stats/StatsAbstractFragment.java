@@ -77,7 +77,7 @@ public abstract class StatsAbstractFragment extends Fragment {
         }
 
         Bundle args = new Bundle();
-        args.putInt(ARGS_VIEW_TYPE, viewType.ordinal());
+        args.putSerializable(ARGS_VIEW_TYPE, viewType);
         args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
         fragment.setArguments(args);
 
@@ -101,8 +101,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     protected StatsViewType getViewType() {
-        int ordinal = getArguments().getInt(ARGS_VIEW_TYPE);
-        return StatsViewType.values()[ordinal];
+        return (StatsViewType) getArguments().getSerializable(ARGS_VIEW_TYPE);
     }
 
     protected int getLocalTableBlogID() {

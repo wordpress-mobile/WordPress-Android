@@ -687,6 +687,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
         mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
+        mIsUpdatingStats = event.mUpdating;
     }
 
     /*
