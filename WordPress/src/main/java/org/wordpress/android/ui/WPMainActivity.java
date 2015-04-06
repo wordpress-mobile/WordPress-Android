@@ -1,5 +1,6 @@
 package org.wordpress.android.ui;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
@@ -42,9 +43,7 @@ public class WPMainActivity extends ActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_tint));
-        }
+        setStatusBarColor();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -74,6 +73,13 @@ public class WPMainActivity extends ActionBarActivity
                     mViewPager.setCurrentItem(position);
                 }
             }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusBarColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_tint));
         }
     }
 
