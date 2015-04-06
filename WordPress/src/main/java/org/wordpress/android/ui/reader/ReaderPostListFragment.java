@@ -84,10 +84,6 @@ public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
                    ReaderInterfaces.OnTagSelectedListener,
                    ReaderInterfaces.OnPostPopupListener {
-    private static final String READER_DETAIL_TYPE_KEY = "post-detail-type";
-    private static final String READER_DETAIL_TYPE_NORMAL = "normal";
-    private static final String READER_DETAIL_TYPE_BLOG_PREVIEW = "preview-blog";
-    private static final String READER_DETAIL_TYPE_TAG_PREVIEW = "preview-tag";
 
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
@@ -1308,14 +1304,14 @@ public class ReaderPostListFragment extends Fragment
 
         ReaderPostListType type = getPostListType();
         Map<String, Object> analyticsProperties = new HashMap<>();
-        analyticsProperties.put(READER_DETAIL_TYPE_KEY, READER_DETAIL_TYPE_NORMAL);
 
         switch (type) {
             case TAG_FOLLOWED:
             case TAG_PREVIEW:
-                if (type == ReaderPostListType.TAG_PREVIEW) {
-                    analyticsProperties.put(READER_DETAIL_TYPE_KEY, READER_DETAIL_TYPE_TAG_PREVIEW);
-                }
+                String key = (type == ReaderPostListType.TAG_PREVIEW ?
+                        AnalyticsTracker.READER_DETAIL_TYPE_TAG_PREVIEW :
+                        AnalyticsTracker.READER_DETAIL_TYPE_NORMAL);
+                analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY, key);
                 ReaderActivityLauncher.showReaderPostPagerForTag(
                         getActivity(),
                         getCurrentTag(),
@@ -1324,7 +1320,8 @@ public class ReaderPostListFragment extends Fragment
                         postId);
                 break;
             case BLOG_PREVIEW:
-                analyticsProperties.put(READER_DETAIL_TYPE_KEY, READER_DETAIL_TYPE_BLOG_PREVIEW);
+                analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY,
+                        AnalyticsTracker.READER_DETAIL_TYPE_BLOG_PREVIEW);
                 ReaderActivityLauncher.showReaderPostPagerForBlog(
                         getActivity(),
                         blogId,
