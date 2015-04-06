@@ -56,7 +56,14 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPosts(Context context) {
+        ActivityLauncher.viewCurrentBlogPosts(context, true);
+    }
+
+    public static void viewCurrentBlogPosts(Context context, boolean animated) {
         Intent intent = new Intent(context, PostsActivity.class);
+        if (!animated) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        }
         context.startActivity(intent);
     }
 

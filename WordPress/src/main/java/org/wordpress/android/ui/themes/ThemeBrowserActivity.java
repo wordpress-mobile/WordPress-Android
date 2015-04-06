@@ -3,7 +3,6 @@ package org.wordpress.android.ui.themes;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -29,7 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Theme;
-import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragmentCallback;
 import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragmentCallback;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
@@ -109,9 +108,7 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
     private boolean areThemesAccessible() {
         // themes are only accessible to admin wordpress.com users
         if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag()) {
-            Intent intent = new Intent(ThemeBrowserActivity.this, PostsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            ActivityLauncher.viewCurrentBlogPosts(ThemeBrowserActivity.this, false);
             return false;
         }
         return true;

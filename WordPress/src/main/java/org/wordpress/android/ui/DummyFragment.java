@@ -1,7 +1,6 @@
 package org.wordpress.android.ui;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.widgets.FloatingActionButton;
 
 /**
@@ -45,8 +43,7 @@ public class DummyFragment extends Fragment {
         txtPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), PostsActivity.class);
-                getActivity().startActivity(intent);
+                ActivityLauncher.viewCurrentBlogPosts(getActivity());
             }
         });
 
