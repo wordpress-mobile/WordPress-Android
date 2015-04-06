@@ -51,6 +51,7 @@ public class Post implements Serializable {
     private boolean isLocalChange;
     private String mediaPaths;
     private String quickPostType;
+    private String featuredImage;
     private PostLocation mPostLocation;
 
     public Post() {
@@ -207,7 +208,7 @@ public class Post implements Serializable {
     }
 
     public String getKeywords() {
-            return StringUtils.notNullStr(keywords);
+        return StringUtils.notNullStr(keywords);
     }
 
     public void setKeywords(String mtKeywords) {
@@ -396,6 +397,14 @@ public class Post implements Serializable {
         this.localTablePostId = id;
     }
 
+    public String getFeaturedImage() {
+        return featuredImage;
+    }
+
+    public void setFeaturedImage(String featuredImage) {
+        this.featuredImage = featuredImage;
+    }
+
     public void setQuickPostType(String type) {
         this.quickPostType = type;
     }
@@ -426,15 +435,15 @@ public class Post implements Serializable {
      */
     public boolean hasChanges(Post otherPost) {
         return otherPost == null || !(StringUtils.equals(title, otherPost.title) &&
-                                      StringUtils.equals(description, otherPost.description) &&
-                                      StringUtils.equals(excerpt, otherPost.excerpt) &&
-                                      StringUtils.equals(keywords, otherPost.keywords) &&
-                                      StringUtils.equals(categories, otherPost.categories) &&
-                                      StringUtils.equals(status, otherPost.status) &&
-                                      StringUtils.equals(password, otherPost.password) &&
-                                      StringUtils.equals(postFormat, otherPost.postFormat) &&
-                                      this.dateCreatedGmt == otherPost.dateCreatedGmt &&
-                                      PostLocation.equals(this.mPostLocation, otherPost.mPostLocation)
+                StringUtils.equals(description, otherPost.description) &&
+                StringUtils.equals(excerpt, otherPost.excerpt) &&
+                StringUtils.equals(keywords, otherPost.keywords) &&
+                StringUtils.equals(categories, otherPost.categories) &&
+                StringUtils.equals(status, otherPost.status) &&
+                StringUtils.equals(password, otherPost.password) &&
+                StringUtils.equals(postFormat, otherPost.postFormat) &&
+                this.dateCreatedGmt == otherPost.dateCreatedGmt &&
+                PostLocation.equals(this.mPostLocation, otherPost.mPostLocation)
         );
     }
 

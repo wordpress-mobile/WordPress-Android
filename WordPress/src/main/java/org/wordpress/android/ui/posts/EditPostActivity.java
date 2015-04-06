@@ -55,6 +55,7 @@ import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.WordPressMediaUtils.RequestCode;
 import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.posts.actions.PostActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -677,7 +678,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
         @Override
         protected Spanned doInBackground(String... params) {
-            if (params.length < 1 || getPost() == null) {
+            if (getPost() == null || params.length < 1) {
                 return null;
             }
 
@@ -689,6 +690,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         protected void onPostExecute(Spanned spanned) {
             if (spanned != null) {
                 mEditorFragment.setContent(spanned);
+                contentHasFeaturedImage();
             }
         }
     }
@@ -711,6 +713,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 }
                 else {
                     mEditorFragment.setContent(post.getContent().replaceAll("\uFFFC", ""));
+                    PostActions.syncFeaturedImageInSettings(post, mEditPostSettingsFragment);
                 }
             }
             if (!TextUtils.isEmpty(post.getTitle())) {
@@ -1465,7 +1468,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         setMediaFileAttributes(span, postContent, title, selectedItemPosition,
                 editTextIntegerClamped, captionText, isFeatured);
 
-        if (button.contains("featured")) {
+        if (button.equalsIgnoreCase(getString(R.string.featured))) {
             setFeaturedImageInSettings(span);
             mViewPager.setCurrentItem(PAGE_SETTINGS);
         }
@@ -1483,8 +1486,10 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         mediaFile.setHorizontalAlignment(selectedItemPosition);
         mediaFile.setWidth(editTextIntegerClamped);
         mediaFile.setCaption(captionText);
+
         mediaFile.setFeatured(isFeatured);
         if (isFeatured) {
+            mediaFile.setFeaturedInPost(true);
             WPImageSpan[] imageSpansInContent = postContent.getSpans(0, postContent.length(), WPImageSpan.class);
             if (imageSpansInContent.length != 0) {
                 for (WPImageSpan wpIS : imageSpansInContent) {
@@ -1508,7 +1513,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         WordPress.wpDB.saveMediaFile(mediaFile);
     }
 
-    public void setFeaturedImageInSettings(WPImageSpan wpImageSpan) {
+    private void setFeaturedImageInSettings(WPImageSpan wpImageSpan) {
         if (wpImageSpan != null) {
             String imageURL;
             if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
@@ -1518,11 +1523,28 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 imageURL = wpImageSpan.getMediaFile().getFileURL() != null ?
                         wpImageSpan.getMediaFile().getFileURL() : wpImageSpan.getMediaFile().getThumbnailURL();
             }
+
+            mPost.setFeaturedImage(imageURL);
             mEditPostSettingsFragment.setFeaturedImage(imageURL);
         }
     }
 
     public int getBlogMediaStatus() {
         return mBlogMediaStatus;
+    }
+
+    private boolean contentHasFeaturedImage() {
+        Spannable postContent = (Spannable) mEditorFragment.getSpannedContent();
+        WPImageSpan[] imageSpans = postContent.getSpans(0, postContent.length(), WPImageSpan.class);
+        if (imageSpans.length != 0) {
+            for (WPImageSpan wpIS : imageSpans) {
+                if (wpIS.getMediaFile().isFeatured()) {
+                    setFeaturedImageInSettings(wpIS);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

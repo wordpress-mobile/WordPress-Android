@@ -664,7 +664,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         final EditText caption = (EditText) alertView.findViewById(R.id.caption);
                         final Button featuredImageButton = (Button) alertView.findViewById(R.id.setFeaturedImageButtonInDialog);
 
-                        // show featured image checkboxes if supported
                         if (mFeaturedImageSupported) {
                             featuredImageButton.setVisibility(View.VISIBLE);
                         }
