@@ -6,6 +6,7 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.AccountTable;
+import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -20,6 +21,8 @@ public class Account extends AccountModel {
                 if (jsonObject != null) {
                     updateFromRestResponse(jsonObject);
                     save();
+
+                    ReaderUserTable.addOrUpdateUser(ReaderUser.fromJson(jsonObject));
                 }
             }
         };
