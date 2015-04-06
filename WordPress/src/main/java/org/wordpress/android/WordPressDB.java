@@ -288,6 +288,7 @@ public class WordPressDB {
                 // Migrate WordPress.com token and infos to the DB
                 AccountTable.createTables(db);
                 migratePreferencesToAccountTable(context);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }

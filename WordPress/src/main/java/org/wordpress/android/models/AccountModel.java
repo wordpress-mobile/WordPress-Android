@@ -3,6 +3,7 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.util.StringUtils;
 
 public class AccountModel {
     // General state
@@ -65,7 +66,7 @@ public class AccountModel {
     }
 
     public String getUserName() {
-        return mUserName;
+        return StringUtils.notNullStr(mUserName);
     }
 
     public void setUserName(String userName) {
@@ -94,7 +95,7 @@ public class AccountModel {
     }
 
     public String getDisplayName() {
-        return mDisplayName;
+        return StringUtils.notNullStr(mDisplayName);
     }
 
     public void setDisplayName(String displayName) {
@@ -102,7 +103,7 @@ public class AccountModel {
     }
 
     public String getProfileUrl() {
-        return mProfileUrl;
+        return StringUtils.notNullStr(mProfileUrl);
     }
 
     public void setProfileUrl(String profileUrl) {
@@ -110,7 +111,7 @@ public class AccountModel {
     }
 
     public String getAvatarUrl() {
-        return mAvatarUrl;
+        return StringUtils.notNullStr(mAvatarUrl);
     }
 
     public void setAvatarUrl(String avatarUrl) {

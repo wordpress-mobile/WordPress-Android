@@ -34,6 +34,7 @@ public class Account extends AccountModel {
         WordPress.getRestClientUtilsV1_1().get("me", listener, errorListener);
     }
 
+
     public void signout() {
         init();
         save();

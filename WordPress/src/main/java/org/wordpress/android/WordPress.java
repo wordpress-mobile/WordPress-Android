@@ -166,6 +166,11 @@ public class WordPress extends Application {
         // Volley networking setup
         setupVolleyQueue();
 
+        // Refresh account informations
+        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+            AccountHelper.getDefaultAccount().fetchAccountDetails();
+        }
+
         ABTestingUtils.init();
 
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);

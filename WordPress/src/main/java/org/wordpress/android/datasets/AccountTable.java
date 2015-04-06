@@ -21,17 +21,17 @@ public class AccountTable {
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + " ("
-                + "	local_id                INTEGER PRIMARY KEY DEFAULT 0,"
-                + "	is_wordpress_com_user   INTEGER DEFAULT 0,"
-                + "	user_name	            TEXT,"
-                + "	user_id	                INTEGER DEFAULT 0,"
-                + "	display_name	        TEXT,"
-                + "	profile_url 	        TEXT,"
-                + " avatar_url   	        TEXT,"
-                + " primary_blog_id         INTEGER DEFAULT 0,"
-                + " site_count              TEXT,"
-                + " visible_site_count      TEXT,"
-                + " access_token            TEXT)");
+                + "local_id                INTEGER PRIMARY KEY DEFAULT 0,"
+                + "is_wordpress_com_user   INTEGER DEFAULT 0,"
+                + "user_name               TEXT,"
+                + "user_id                 INTEGER DEFAULT 0,"
+                + "display_name            TEXT,"
+                + "profile_url             TEXT,"
+                + "avatar_url              TEXT,"
+                + "primary_blog_id         INTEGER DEFAULT 0,"
+                + "site_count              INTEGER DEFAULT 0,"
+                + "visible_site_count      INTEGER DEFAULT 0,"
+                + "access_token            TEXT)");
     }
 
     private static void dropTables(SQLiteDatabase db) {
