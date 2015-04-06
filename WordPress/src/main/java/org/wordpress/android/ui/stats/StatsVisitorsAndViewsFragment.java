@@ -558,9 +558,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     //Calculate the end of the week
                     parsedDate = sdf.parse(date);
                     c = Calendar.getInstance();
+                    c.setFirstDayOfWeek(Calendar.MONDAY);
                     c.setTime(parsedDate);
                     // first day of this week
-                    c.setFirstDayOfWeek(Calendar.MONDAY);
                     c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY );
                     String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     // last day of this week
