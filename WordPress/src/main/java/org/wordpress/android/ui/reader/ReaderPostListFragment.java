@@ -681,10 +681,14 @@ public class ReaderPostListFragment extends Fragment
     /*
      * animates the toolbar above the reader fragment containing the tag spinner
      */
-    private void showReaderToolbar(boolean show) {
+    public void showReaderToolbar(boolean show) {
         if (isAdded() && mReaderToolbar != null) {
             ReaderAnim.animateTopBar(mReaderToolbar, show);
         }
+    }
+
+    public boolean isReaderToolbarShowing() {
+        return mReaderToolbar != null && mReaderToolbar.getVisibility() == View.VISIBLE;
     }
 
     /*

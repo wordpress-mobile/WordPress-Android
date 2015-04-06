@@ -122,15 +122,29 @@ public class WPMainActivity extends Activity
         // remember the index of this page
         AppPrefs.setMainTabIndex(position);
 
-        if (position == WPMainTabAdapter.TAB_NOTIFS && getNotificationListFragment() != null) {
-            getNotificationListFragment().updateLastSeenTime();
-            mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, false);
+        switch (position) {
+            case WPMainTabAdapter.TAB_NOTIFS:
+                if (getNotificationListFragment() != null) {
+                    getNotificationListFragment().updateLastSeenTime();
+                    mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, false);
+                }
+                break;
         }
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        // nop
+        int position = mViewPager.getCurrentItem();
+        if (position == WPMainTabAdapter.TAB_READER) {
+            ReaderPostListFragment fragment = getReaderListFragment();
+            if (fragment != null) {
+                if (state == ViewPager.SCROLL_STATE_DRAGGING && fragment.isReaderToolbarShowing()) {
+                    fragment.showReaderToolbar(false);
+                } else if (state == ViewPager.SCROLL_STATE_SETTLING && !fragment.isReaderToolbarShowing()) {
+                    fragment.showReaderToolbar(true);
+                }
+            }
+        }
     }
 
     @Override
