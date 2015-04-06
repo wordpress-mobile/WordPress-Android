@@ -194,7 +194,6 @@ public class MediaSourceWPImages implements MediaSource {
 
                 @Override
                 public void onPostExecute(MediaItem result) {
-                    Log.e("", "xyz 3");
                     if (mListener != null) {
                         List<MediaItem> resultList = new ArrayList<>();
                         resultList.add(result);
