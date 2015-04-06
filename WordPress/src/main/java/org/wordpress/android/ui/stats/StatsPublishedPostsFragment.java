@@ -57,7 +57,7 @@ public class StatsPublishedPostsFragment extends StatsAbstractListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        // No lobels on columns for this module
+        // No labels on columns for this module
         TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
         entryLabel.setVisibility(View.GONE);
         TextView totalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
@@ -65,9 +65,12 @@ public class StatsPublishedPostsFragment extends StatsAbstractListFragment {
         return view;
     }
 
-    /*
-    This module has a slightly different UI on the top of it. Changes includes no-labels on columns.
-    Title is created at run-time by using the no. of posts published in it.
+    /**
+     * This module has a slightly different UI on the top of it.
+     *
+     * Changes are:
+     * - "no-labels" on columns.
+     * - Title is created at run-time by using the number of posts published in the timeframe.
      */
     @Override
     protected void showHideNoResultsUI(boolean showNoResultsUI) {
