@@ -552,25 +552,34 @@ public class WordPressDB {
     }
 
     public boolean deleteBlog(Context ctx, int id) {
-        // TODO: should this also delete posts and other related info?
         int rowsAffected = db.delete(BLOGS_TABLE, "id=?", new String[]{Integer.toString(id)});
         deleteQuickPressShortcutsForBlog(ctx, id);
+        deleteAllPostsForLocalTableBlogId(id);
         return (rowsAffected > 0);
     }
 
-    public void deleteAllBlogs() {
-        List<Integer> ids = getAllBlogsIDs();
-        if (ids.size() == 0)
-            return;
+    /**
+     * Deletes all the things! Use wisely.
+     */
+    public void dangerouslyDeleteAllContent() {
+        db.delete(BLOGS_TABLE, null, null);
+        db.delete(POSTS_TABLE, null, null);
+        db.delete(MEDIA_TABLE, null, null);
+        db.delete(CATEGORIES_TABLE, null, null);
+        db.delete(CommentTable.COMMENTS_TABLE, null, null);
+    }
 
-        db.beginTransaction();
+    public boolean hasDotOrgBlogForUsernameAndUrl(String username, String url) {
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(url)) {
+            return false;
+        }
+
+        Cursor c = db.query(BLOGS_TABLE, new String[]{"id"}, "username=? AND url=?", new String[]{username, url}, null,
+                null, null);
         try {
-            for (int id: ids) {
-                deleteBlog(context, id);
-            }
-            db.setTransactionSuccessful();
+            return c.getCount() > 0;
         } finally {
-            db.endTransaction();
+            SqlUtils.closeCursor(c);
         }
     }
 
@@ -814,6 +823,11 @@ public class WordPressDB {
                 new String[]{String.valueOf(post.getLocalTableBlogId()), String.valueOf(post.getLocalTablePostId())});
 
         return (result == 1);
+    }
+
+    // Deletes all posts for the given blogId
+    private void deleteAllPostsForLocalTableBlogId(int localBlogId) {
+        db.delete(POSTS_TABLE, "blogID=?", new String[]{String.valueOf(localBlogId)});
     }
 
     public Object[] arrayListToArray(Object array) {

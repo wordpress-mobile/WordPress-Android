@@ -19,6 +19,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 public class LoginWPCom extends LoginAbstract {
@@ -75,9 +76,6 @@ public class LoginWPCom extends LoginAbstract {
             @SuppressLint("CommitPrefEdits")
             @Override
             public void onResponse(final Oauth.Token token) {
-                // Once we have a token, start up Simperium
-                SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
-
                 if (mJetpackBlog != null) {
                     // Store token in blog object for Jetpack sites
                     mJetpackBlog.setApi_key(token.toString());
@@ -85,13 +83,26 @@ public class LoginWPCom extends LoginAbstract {
                 }
 
                 Account account = AccountHelper.getDefaultAccount();
-                if (mJetpackBlog == null || TextUtils.isEmpty(account.getUserName())) {
+
+                // If user has signed out and back in with a different username, we must clear the old data
+                if (StringUtils.equals(account.getUserName(), mUsername) && account.isUserTappedSignedOutButton()) {
+                    account.setUserTappedSignedOutButton(false);
+                    account.save();
+                    WordPress.wpDB.dangerouslyDeleteAllContent();
+                    WordPress.removeWpComUserRelatedData(WordPress.getContext());
+                    WordPress.currentBlog = null;
+                }
+
+                if (mJetpackBlog == null) {
                     // Store token in global account
                     account.setAccessToken(token.toString());
                     account.setUserName(mUsername);
                     account.save();
                     account.fetchAccountDetails();
                 }
+
+                // Once we have a token, start up Simperium
+                SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
 
                 mCallback.onSuccess();
             }

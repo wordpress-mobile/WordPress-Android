@@ -25,6 +25,9 @@ public class AccountHelper {
     }
 
     public static boolean isSignedIn() {
+        if (getDefaultAccount().isUserTappedSignedOutButton()) {
+            return false;
+        }
         return getDefaultAccount().hasAccessToken() || (WordPress.wpDB.getNumVisibleBlogs() != 0);
     }
 

@@ -6,6 +6,7 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
 import android.net.http.HttpResponseCache;
@@ -13,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
@@ -473,7 +475,6 @@ public class WordPress extends Application {
     public static int getCurrentLocalTableBlogId() {
         return (getCurrentBlog() != null ? getCurrentBlog().getLocalTableBlogId() : -1);
     }
-
     public static void signOutAsyncWithProgressBar(Context context, SignOutCallback callback) {
         new SignOutAsync(context, callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -483,8 +484,6 @@ public class WordPress extends Application {
      * again
      */
     public static void signOut(Context context) {
-        removeWpComUserRelatedData(context);
-
         try {
             SelfSignedSSLCertsManager.getInstance(context).emptyLocalKeyStoreFile();
         } catch (GeneralSecurityException e) {
@@ -493,7 +492,9 @@ public class WordPress extends Application {
             AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
         }
 
-        wpDB.deleteAllBlogs();
+        // Save that this user signed out
+        AccountHelper.getDefaultAccount().setUserTappedSignedOutButton(true);
+
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
         flushHttpCache();

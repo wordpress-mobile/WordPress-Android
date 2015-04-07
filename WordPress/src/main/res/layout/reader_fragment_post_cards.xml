@@ -5,15 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/toolbar_reader"
-        layout="@layout/toolbar_reader" />
-
     <FrameLayout
         android:id="@+id/frame_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_reader"
         android:visibility="gone" />
 
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
@@ -29,6 +24,10 @@
             android:scrollbars="vertical" />
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+    <include
+        android:id="@+id/toolbar_reader"
+        layout="@layout/toolbar_reader" />
 
     <include
         android:id="@+id/empty_view"
