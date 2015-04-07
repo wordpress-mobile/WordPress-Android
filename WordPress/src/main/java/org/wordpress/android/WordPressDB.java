@@ -523,25 +523,30 @@ public class WordPressDB {
     }
 
     public boolean deleteAccount(Context ctx, int id) {
-        // TODO: should this also delete posts and other related info?
         int rowsAffected = db.delete(SETTINGS_TABLE, "id=?", new String[]{Integer.toString(id)});
         deleteQuickPressShortcutsForAccount(ctx, id);
+        deleteAllPostsForLocalTableBlogId(id);
         return (rowsAffected > 0);
     }
 
-    public void deleteAllAccounts() {
-        List<Integer> ids = getAllAccountIDs();
-        if (ids.size() == 0)
-            return;
+    public void dangerouslyDeleteAllContent() {
+        // Deletes all the things! Use wisely.
 
-        db.beginTransaction();
+        db.delete(SETTINGS_TABLE, null, null);
+        db.delete(POSTS_TABLE, null, null);
+        db.delete(MEDIA_TABLE, null, null);
+        db.delete(CATEGORIES_TABLE, null, null);
+        db.delete(CommentTable.COMMENTS_TABLE, null, null);
+    }
+
+    public boolean hasDotOrgAccountForUsernameAndUrl(String username, String url) {
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(url)) return false;
+
+        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "username=? AND url=?", new String[]{username, url}, null, null, null);
         try {
-            for (int id: ids) {
-                deleteAccount(context, id);
-            }
-            db.setTransactionSuccessful();
+            return c.getCount() > 0;
         } finally {
-            db.endTransaction();
+            SqlUtils.closeCursor(c);
         }
     }
 
@@ -785,6 +790,11 @@ public class WordPressDB {
                 new String[]{String.valueOf(post.getLocalTableBlogId()), String.valueOf(post.getLocalTablePostId())});
 
         return (result == 1);
+    }
+
+    // Deletes all posts for the given blogId
+    private void deleteAllPostsForLocalTableBlogId(int localBlogId) {
+        db.delete(POSTS_TABLE, "blogID=?", new String[]{String.valueOf(localBlogId)});
     }
 
     public Object[] arrayListToArray(Object array) {

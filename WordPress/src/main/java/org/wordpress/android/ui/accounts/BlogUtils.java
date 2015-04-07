@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts;
 
 import android.content.Context;
 
-import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
