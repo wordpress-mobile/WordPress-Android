@@ -138,7 +138,7 @@ public class ViewPostFragment extends Fragment {
                     mOnDetailPostActionListener.onDetailPostAction(PostsActivity.POST_EDIT, WordPress.currentPost);
                     long postId = WordPress.currentPost.getLocalTablePostId();
                     boolean isPage = WordPress.currentPost.isPage();
-                    ActivityLauncher.editBlogPostorPage(getActivity(), postId, isPage);
+                    ActivityLauncher.editBlogPostOrPageForResult(getActivity(), postId, isPage);
                 }
             }
         });

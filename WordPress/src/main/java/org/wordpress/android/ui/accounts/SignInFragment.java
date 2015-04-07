@@ -326,7 +326,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         public void onClick(View v) {
             Activity activity = getActivity();
             if (activity != null) {
-                ActivityLauncher.newAccount(activity);
+                ActivityLauncher.newAccountForResult(activity);
             }
         }
     };

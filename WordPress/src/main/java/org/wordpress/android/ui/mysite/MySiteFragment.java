@@ -104,7 +104,7 @@ public class MySiteFragment extends Fragment {
         commentsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogComments(getActivity(), mBlog);
+                ActivityLauncher.viewBlogComments(getActivity());
             }
         });
 

@@ -200,7 +200,7 @@ public class ReaderReblogActivity extends ActionBarActivity {
                         txtEmpty.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ActivityLauncher.viewSettings(ReaderReblogActivity.this);
+                                ActivityLauncher.viewSettingsForResult(ReaderReblogActivity.this);
                             }
                         });
                     }

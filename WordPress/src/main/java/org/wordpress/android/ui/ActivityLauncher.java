@@ -71,7 +71,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewBlogComments(Context context, Blog blog) {
+    public static void viewBlogComments(Context context) {
         Intent intent = new Intent(context, CommentsActivity.class);
         context.startActivity(intent);
     }
@@ -111,7 +111,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void editBlogPostorPage(Activity activity, long postOrPageId, boolean isPage) {
+    public static void editBlogPostOrPageForResult(Activity activity, long postOrPageId, boolean isPage) {
         Intent intent = new Intent(activity.getApplicationContext(), EditPostActivity.class);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, postOrPageId);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
@@ -137,12 +137,12 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewSettings(Activity activity) {
+    public static void viewSettingsForResult(Activity activity) {
         Intent i = new Intent(activity, SettingsActivity.class);
         activity.startActivityForResult(i, RequestCodes.SETTINGS);
     }
 
-    public static void newAccount(Activity activity) {
+    public static void newAccountForResult(Activity activity) {
         Intent intent = new Intent(activity, NewAccountActivity.class);
         activity.startActivityForResult(intent, SignInActivity.CREATE_ACCOUNT_REQUEST);
     }
