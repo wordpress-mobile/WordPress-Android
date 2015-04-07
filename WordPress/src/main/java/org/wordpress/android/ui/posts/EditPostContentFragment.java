@@ -33,7 +33,6 @@ import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
 import android.text.style.CharacterStyle;
-import android.text.style.ImageSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -55,7 +54,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -106,11 +104,8 @@ import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1687,10 +1682,13 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 @Override
                 public void onFailure(final ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                     mBlogMediaStatus = 0;
-                    ToastUtils.showToast(getActivity(), R.string.error_refresh_media, ToastUtils.Duration.SHORT);
+                    if (isAdded()) {
+                        ToastUtils.showToast(getActivity(), R.string.error_refresh_media, ToastUtils.Duration.SHORT);
+                    }
                 }
             };
-            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(0, MediaGridFragment.Filter.ALL, callback);
+            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(0,
+                    MediaGridFragment.Filter.ALL, callback);
             getMediaTask.execute(apiArgs);
         } else {
             mBlogMediaStatus = 0;
