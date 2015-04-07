@@ -447,6 +447,10 @@ public class Post implements Serializable {
         );
     }
 
+    public boolean hasFeaturedImage() {
+        return featuredImage != null;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

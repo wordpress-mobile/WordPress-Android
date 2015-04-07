@@ -34,6 +34,7 @@ import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.posts.actions.PostActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -171,6 +172,9 @@ public class PostUploadService extends Service {
             if (postUploadedSuccessfully) {
                 WordPress.postUploaded(mPost.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
                 mPostUploadNotifier.cancelNotification();
+                if (mPost.hasFeaturedImage()) {
+                    PostActions.updatePostFeaturedImage(mPost);
+                }
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
             } else {
                 WordPress.postUploadFailed(mPost.getLocalTableBlogId());

@@ -16,7 +16,6 @@ import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -560,7 +559,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     public void showImageSettings(final View alertView, final EditText titleText,
                                   final EditText caption, final EditText imageWidthText,
                                   final int maxWidth, final Spinner alignmentSpinner,
-                                  final Button featuredImageButton, final WPImageSpan span) {
+                                  final WPImageSpan span) {
         final AlertDialog ad = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.image_settings))
                 .setView(alertView)
                 .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
@@ -569,15 +568,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         MediaFile mediaFile = span.getMediaFile();
                         if (mediaFile == null)
                             return;
-                        mEditorFragmentListener.
-                                onImageSettingsButtonClicked(getString(android.R.string.ok),
-                                        span,
-                                        new SpannableStringBuilder(mContentEditText.getText()),
-                                        title,
-                                        alignmentSpinner.getSelectedItemPosition(),
-                                        getEditTextIntegerClamped(imageWidthText, 10, maxWidth),
-                                        (caption.getText() != null) ? caption.getText().toString() : "",
-                                        false);
                     }
                 })
                 .setNegativeButton(getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
@@ -589,24 +579,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
         ad.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         ad.show();
-        featuredImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String title = (titleText.getText() != null) ? titleText.getText().toString() : "";
-                MediaFile mediaFile = span.getMediaFile();
-                if (mediaFile == null)
-                    return;
-                mEditorFragmentListener.onImageSettingsButtonClicked(getString(R.string.featured),
-                        span,
-                        new SpannableStringBuilder(mContentEditText.getText()),
-                        title,
-                        alignmentSpinner.getSelectedItemPosition(),
-                        getEditTextIntegerClamped(imageWidthText, 10, maxWidth),
-                        (caption.getText() != null) ? caption.getText().toString() : "",
-                        true);
-                ad.dismiss();
-            }
-        });
     }
 
     @Override
@@ -662,12 +634,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         final EditText imageWidthText = (EditText) alertView.findViewById(R.id.imageWidthText);
                         final EditText titleText = (EditText) alertView.findViewById(R.id.title);
                         final EditText caption = (EditText) alertView.findViewById(R.id.caption);
-                        final Button featuredImageButton = (Button) alertView.findViewById(R.id.setFeaturedImageButtonInDialog);
-
-                        if (mFeaturedImageSupported) {
-                            featuredImageButton.setVisibility(View.VISIBLE);
-                        }
-
                         final SeekBar seekBar = (SeekBar) alertView.findViewById(R.id.imageWidth);
                         final Spinner alignmentSpinner = (Spinner) alertView.findViewById(R.id.alignment_spinner);
 
@@ -734,7 +700,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         });
 
                         showImageSettings(alertView, titleText, caption, imageWidthText,
-                                maxWidth, alignmentSpinner, featuredImageButton, imageSpan);
+                                maxWidth, alignmentSpinner, imageSpan);
                         mScrollDetected = false;
                         return true;
                     }

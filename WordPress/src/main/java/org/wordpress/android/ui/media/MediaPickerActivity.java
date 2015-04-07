@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -62,6 +63,11 @@ public class MediaPickerActivity extends ActionBarActivity
     public static final int ACTIVITY_RESULT_CODE_GALLERY_CREATED  = 6002;
 
     /**
+     * Setting featured image flag
+     */
+    public static final String SET_FEATURED_IMAGE = "set-featured-image";
+
+    /**
      * Pass a {@link String} with this key in the {@link android.content.Intent} to set the title.
      */
     public static final String ACTIVITY_TITLE_KEY           = "activity-title";
@@ -87,16 +93,22 @@ public class MediaPickerActivity extends ActionBarActivity
 
     private static final long   TAB_ANIMATION_DURATION_MS = 250l;
 
+
     private MediaPickerAdapter     mMediaPickerAdapter;
     private ArrayList<MediaSource>[] mMediaSources;
     private SlidingTabLayout       mTabLayout;
     private WPViewPager            mViewPager;
     private ActionMode             mActionMode;
     private String                 mCapturePath;
+    private boolean mSetFeaturedImageMode = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().hasExtra(SET_FEATURED_IMAGE)) {
+            mSetFeaturedImageMode = true;
+        }
 
         lockRotation();
         addMediaSources();
@@ -107,7 +119,11 @@ public class MediaPickerActivity extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.media_picker, menu);
+        if (mSetFeaturedImageMode) {
+            inflater.inflate(R.menu.featured_image_picker, menu);
+        } else {
+            inflater.inflate(R.menu.media_picker, menu);
+        }
 
         return true;
     }
@@ -234,7 +250,12 @@ public class MediaPickerActivity extends ActionBarActivity
     @Override
     public void onMediaSelectionConfirmed(ArrayList<MediaItem> mediaContent) {
         if (mediaContent != null) {
-            finishWithResults(mediaContent, ACTIVITY_RESULT_CODE_MEDIA_SELECTED);
+            if (mSetFeaturedImageMode && mediaContent.size() > 1) {
+                showFeaturedImageOnlyOne();
+                finish();
+            } else {
+                finishWithResults(mediaContent, ACTIVITY_RESULT_CODE_MEDIA_SELECTED);
+            }
         } else {
             finish();
         }
@@ -496,5 +517,9 @@ public class MediaPickerActivity extends ActionBarActivity
         public void addTab(ArrayList<MediaSource> mediaSources, String tabName) {
             mMediaPickers.add(new MediaPicker(tabName, mediaSources));
         }
+    }
+
+    private void showFeaturedImageOnlyOne() {
+        Toast.makeText(this, getResources().getText(R.string.featured_image_only_one), Toast.LENGTH_SHORT).show();
     }
 }

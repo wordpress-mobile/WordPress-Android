@@ -56,6 +56,11 @@ public class PostActions {
      * Current post
      */
     public static void removeFeaturedImageInSettings(final Post post) {
+        if (!post.isPublished()) {
+            post.setFeaturedImage("");
+            return;
+        }
+
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -84,6 +89,11 @@ public class PostActions {
      * Specifically used to handle featured_image management in Android.
      */
     public static void updatePostFeaturedImage(final Post post) {
+        if (!post.isPublished()) {
+            AppLog.e(AppLog.T.POSTS, "Cannot update local post");
+            return;
+        }
+
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -103,49 +113,6 @@ public class PostActions {
         Log.i("featured_image", post.getFeaturedImage());
         params.put("featured_image", post.getFeaturedImage());
 
-        if (!post.isPublished()) {
-            AppLog.e(AppLog.T.POSTS, "Cannot update local post");
-        }
-
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Upload featuredImage to server
-     */
-    public static void uploadPostFeaturedImage(final Post post, String mediaFile,
-                                               final EditPostSettingsFragment editPostSettingsFragment) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                String featuredImageURL = JSONUtils.getString(jsonObject, "URL");
-                if (!featuredImageURL.isEmpty()) {
-                    post.setFeaturedImage(featuredImageURL);
-                    editPostSettingsFragment.setFeaturedImage(post.getFeaturedImage());
-                }
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.POSTS, volleyError);
-            }
-        };
-        AppLog.d(AppLog.T.POSTS, "update post featured image");
-        String path = "sites/" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(WordPress.getCurrentBlog().getHomeURL()))
-                + "/media/new/";
-        /*
-        TODO: Get the right params for uploadingMedia to server
-        Map<String, String[]> params = new HashMap<>();
-        Log.i("media", mediaFile);
-        String mediaURLs[] = new String[1];
-        mediaURLs[0] = mediaFile;
-        params.put("media_urls", mediaURLs);
-        */
-        Map<String, String> params = new HashMap<>();
-        params.put("media", mediaFile);
-        // not working
-        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
-
     }
 }

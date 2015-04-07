@@ -19,7 +19,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -27,6 +26,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -62,7 +62,6 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -690,7 +689,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         protected void onPostExecute(Spanned spanned) {
             if (spanned != null) {
                 mEditorFragment.setContent(spanned);
-                contentHasFeaturedImage();
+                if (mPost.hasFeaturedImage()) {
+                    mEditPostSettingsFragment.setFeaturedImage(mPost.getFeaturedImage());
+                }
             }
         }
     }
@@ -707,11 +708,13 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent())) {
                 if (post.isLocalDraft()) {
+                    Log.i("featuredImage", "featured image: " + mPost.getFeaturedImage());
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                             post.getContent().replaceAll("\uFFFC", ""));
                 }
                 else {
+                    Log.i("featuredImage", "featured image: " + mPost.getFeaturedImage());
                     mEditorFragment.setContent(post.getContent().replaceAll("\uFFFC", ""));
                     PostActions.syncFeaturedImageInSettings(post, mEditPostSettingsFragment);
                 }
@@ -1457,53 +1460,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     }
 
     @Override
-    public void onImageSettingsButtonClicked(String button,
-                                             WPImageSpan span,
-                                             Editable postContent,
-                                             String title,
-                                             int selectedItemPosition,
-                                             int editTextIntegerClamped,
-                                             String captionText,
-                                             boolean isFeatured) {
-        setMediaFileAttributes(span, postContent, title, selectedItemPosition,
-                editTextIntegerClamped, captionText, isFeatured);
-
-        if (button.equalsIgnoreCase(getString(R.string.featured))) {
-            setFeaturedImageInSettings(span);
-            mViewPager.setCurrentItem(PAGE_SETTINGS);
-        }
-    }
-
-    public void setMediaFileAttributes(WPImageSpan span,
-                                       Editable postContent,
-                                       String title,
-                                       int selectedItemPosition,
-                                       int editTextIntegerClamped,
-                                       String captionText,
-                                       boolean isFeatured) {
-        MediaFile mediaFile = span.getMediaFile();
-        mediaFile.setTitle(title);
-        mediaFile.setHorizontalAlignment(selectedItemPosition);
-        mediaFile.setWidth(editTextIntegerClamped);
-        mediaFile.setCaption(captionText);
-
-        mediaFile.setFeatured(isFeatured);
-        if (isFeatured) {
-            mediaFile.setFeaturedInPost(true);
-            WPImageSpan[] imageSpansInContent = postContent.getSpans(0, postContent.length(), WPImageSpan.class);
-            if (imageSpansInContent.length != 0) {
-                for (WPImageSpan wpIS : imageSpansInContent) {
-                    if (!wpIS.getMediaFile().equals(mediaFile)) {
-                        wpIS.getMediaFile().setFeatured(false);
-                    }
-                }
-            }
-        }
-
-        saveMediaFile(mediaFile);
-    }
-
-    @Override
     public void onEditorFragmentInitialized() {
         fillContentEditorFields();
     }
@@ -1513,38 +1469,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         WordPress.wpDB.saveMediaFile(mediaFile);
     }
 
-    private void setFeaturedImageInSettings(WPImageSpan wpImageSpan) {
-        if (wpImageSpan != null) {
-            String imageURL;
-            if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
-                String photonUrl = wpImageSpan.getImageSource().toString();
-                imageURL = PhotonUtils.getPhotonImageUrl(photonUrl, getMaximumThumbnailWidthForEditor(), 0);
-            } else {
-                imageURL = wpImageSpan.getMediaFile().getFileURL() != null ?
-                        wpImageSpan.getMediaFile().getFileURL() : wpImageSpan.getMediaFile().getThumbnailURL();
-            }
-
-            mPost.setFeaturedImage(imageURL);
-            mEditPostSettingsFragment.setFeaturedImage(imageURL);
-        }
-    }
-
     public int getBlogMediaStatus() {
         return mBlogMediaStatus;
-    }
-
-    private boolean contentHasFeaturedImage() {
-        Spannable postContent = (Spannable) mEditorFragment.getSpannedContent();
-        WPImageSpan[] imageSpans = postContent.getSpans(0, postContent.length(), WPImageSpan.class);
-        if (imageSpans.length != 0) {
-            for (WPImageSpan wpIS : imageSpans) {
-                if (wpIS.getMediaFile().isFeatured()) {
-                    setFeaturedImageInSettings(wpIS);
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

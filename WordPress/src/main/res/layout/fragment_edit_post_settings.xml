@@ -79,8 +79,7 @@
                 android:layout_marginLeft="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"
                 android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
-                android:visibility="gone"/>
+                android:paddingRight="@dimen/margin_medium"/>
 
             <Button
                 android:id="@+id/removeFeaturedImageButton"
@@ -102,12 +101,25 @@
                 android:padding="@dimen/margin_medium"
                 android:visibility="gone"/>
 
-            <ImageView
-                android:id="@+id/featuredImageViewLocal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/margin_medium"
-                android:visibility="gone"/>
+            <RelativeLayout
+                android:id="@+id/ImageContainerWithIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/featuredImageViewLocal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/margin_medium"
+                    android:visibility="gone"/>
+                <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+                    android:id="@+id/featuredImageSettingIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+
 
             <TextView
                 android:id="@+id/categoryLabel"

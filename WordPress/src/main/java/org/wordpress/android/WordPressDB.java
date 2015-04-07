@@ -72,7 +72,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 29;
+    private static final int DATABASE_VERSION = 30;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -160,6 +160,9 @@ public class WordPressDB {
     private static final String ADD_MEDIA_DATE_GMT = "alter table media add date_created_gmt date;";
     private static final String ADD_MEDIA_UPLOAD_STATE = "alter table media add uploadState default '';";
     private static final String ADD_MEDIA_VIDEOPRESS_SHORTCODE = "alter table media add videoPressShortcode text default '';";
+
+    // add featured image to post
+    private static final String ADD_FEATURED_IMAGE = "alter table posts add featuredImage text default '';";
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
@@ -277,6 +280,10 @@ public class WordPressDB {
             case 28:
                 // Remove WordPress.com credentials
                 removeDotComCredentials();
+                currentVersion++;
+            case 29:
+                // Add featured image field to every post
+                db.execSQL(ADD_FEATURED_IMAGE);
                 currentVersion++;
         }
 
@@ -879,6 +886,7 @@ public class WordPressDB {
                     values.put("wp_author_display_name", MapUtils.getMapStr(postMap, "wp_author_display_name"));
                     values.put("post_status", MapUtils.getMapStr(postMap, (isPage) ? "page_status" : "post_status"));
                     values.put("userid", MapUtils.getMapStr(postMap, "userid"));
+                    values.put("featuredImage", MapUtils.getMapStr(postMap, "featuredImage"));
 
                     if (isPage) {
                         values.put("isPage", true);
@@ -976,6 +984,7 @@ public class WordPressDB {
             putPostLocation(post, values);
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
+            values.put("featuredImage", post.getFeaturedImage());
 
             result = db.insert(POSTS_TABLE, null, values);
 
@@ -1012,6 +1021,8 @@ public class WordPressDB {
             values.put("wp_post_format", post.getPostFormat());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
+            values.put("featuredImage", post.getFeaturedImage());
+
             putPostLocation(post, values);
 
             result = db.update(POSTS_TABLE, values, "blogID=? AND id=? AND isPage=?",
@@ -1117,6 +1128,7 @@ public class WordPressDB {
                 post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
                 post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
                 post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
+                post.setFeaturedImage(c.getString(c.getColumnIndex("featuredImage")));
 
                 int latColumnIndex = c.getColumnIndex("latitude");
                 int lngColumnIndex = c.getColumnIndex("longitude");
