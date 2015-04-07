@@ -108,7 +108,7 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
     private boolean areThemesAccessible() {
         // themes are only accessible to admin wordpress.com users
         if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag()) {
-            ActivityLauncher.viewCurrentBlogPosts(ThemeBrowserActivity.this, false);
+            ActivityLauncher.viewCurrentBlogPosts(ThemeBrowserActivity.this);
             return false;
         }
         return true;
