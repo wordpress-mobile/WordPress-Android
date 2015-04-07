@@ -5,12 +5,10 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -43,11 +41,11 @@ import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
-import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -377,7 +375,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         try {
             String primaryBlogId = jsonObject.getString("primary_blog");
             // Look for a visible blog with this id in the DB
-            List<Map<String, Object>> blogs = WordPress.wpDB.getAccountsBy("isHidden = 0 AND blogId = " + primaryBlogId,
+            List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("isHidden = 0 AND blogId = " + primaryBlogId,
                     null, 1);
             if (blogs != null && !blogs.isEmpty()) {
                 Map<String, Object> primaryBlog = blogs.get(0);
@@ -427,22 +425,20 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private final Callback mFetchBlogListCallback = new Callback() {
         @Override
         public void onSuccess(final List<Map<String, Object>> userBlogList) {
-            if (!isAdded()) return;
+            if (!isAdded()) {
+                return;
+            }
 
             if (userBlogList != null) {
                 if (isWPComLogin()) {
                     BlogUtils.addBlogs(userBlogList, mUsername);
                 } else {
                     // If app is signed out, check for a matching username. No match? Then delete existing accounts
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    if (settings.contains(WordPress.IS_SIGNED_OUT_PREFERENCE)) {
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.remove(WordPress.IS_SIGNED_OUT_PREFERENCE);
-                        editor.apply();
-
+                    if (AccountHelper.getDefaultAccount().isUserTappedSignedOutButton()) {
+                        AccountHelper.getDefaultAccount().setUserTappedSignedOutButton(false);
                         if (userBlogList.size() > 0) {
                             String xmlrpcUrl = MapUtils.getMapStr(userBlogList.get(0), "xmlrpc");
-                            if (!WordPress.wpDB.hasDotOrgAccountForUsernameAndUrl(mUsername, xmlrpcUrl)) {
+                            if (!WordPress.wpDB.hasDotOrgBlogForUsernameAndUrl(mUsername, xmlrpcUrl)) {
                                 WordPress.wpDB.dangerouslyDeleteAllContent();
                                 // Clear WPCom login info (could have been set up for Jetpack stats auth)
                                 WordPress.removeWpComUserRelatedData(WordPress.getContext());
@@ -462,13 +458,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
             if (isWPComLogin()) {
                 wpcomPostLoginActions();
-                // Fire off a request to get current user data
+                // Fire off a synchronous request to get the primary blog
                 WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        // Update Reader Current user.
-                        ReaderUserActions.setCurrentUser(jsonObject);
-
                         // Set primary blog
                         setPrimaryBlog(jsonObject);
                         finishCurrentActivity(userBlogList);
@@ -875,7 +868,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
      * user selects it.
      */
     private void refreshFirstBlogContent() {
-        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getAccountsBy("isHidden = 0", null, 1);
+        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 1);
         if (visibleBlogs != null && !visibleBlogs.isEmpty()) {
             Map<String, Object> firstBlog = visibleBlogs.get(0);
             refreshBlogContent(firstBlog);

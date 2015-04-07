@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.passcodelock.AppLockManager;
@@ -56,7 +57,7 @@ public class ViewSiteActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mWebView = (WebView) findViewById(R.id.webView);
-        mWebView.setWebViewClient(new WPWebViewClient(this, mBlog));
+        mWebView.setWebViewClient(new WPWebViewClient(mBlog));
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
         mWebView.getSettings().setJavaScriptEnabled(true);
@@ -90,7 +91,7 @@ public class ViewSiteActivity extends ActionBarActivity {
 
         String postData = WPWebViewActivity.getAuthenticationPostData(
                 authenticationUrl, siteURL, mBlog.getUsername(), mBlog.getPassword(),
-                WordPress.getDotComToken(this)
+                AccountHelper.getDefaultAccount().getAccessToken()
         );
 
         mWebView.postUrl(authenticationUrl, postData.getBytes());

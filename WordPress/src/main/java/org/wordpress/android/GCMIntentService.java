@@ -24,9 +24,9 @@ import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiv
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -63,21 +63,13 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     protected void handleDefaultPush(Context context, Bundle extras) {
-        long wpcomUserID = AppPrefs.getCurrentUserId();
+        long wpcomUserID = AccountHelper.getDefaultAccount().getUserId();
         String userIDFromPN = extras.getString("user");
-        if (userIDFromPN != null) { //It is always populated server side, but better to double check it here.
-            if (wpcomUserID <= 0) {
-                // TODO: Do not abort the execution here, at least for this release, since there might be
-                // an issue for users that update the app.
-                // If they have never used the Reader, then they won't have a userId.
-                // Code for next release is below:
-                /* AppLog.e(T.NOTIFS, "No wpcom userId found in the app. Aborting.");
-                   return; */
-            } else {
-                if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
-                    AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
-                    return;
-                }
+        // userIDFromPN is always set server side, but better to double check it here.
+        if (userIDFromPN != null) {
+            if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
+                AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
+                return;
             }
         }
 
@@ -278,7 +270,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        if (!WordPress.hasDotComToken(context)) {
+        if (!AccountHelper.getDefaultAccount().hasAccessToken()) {
             return;
         }
 

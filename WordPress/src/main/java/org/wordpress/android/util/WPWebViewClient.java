@@ -1,10 +1,7 @@
 package org.wordpress.android.util;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
@@ -15,7 +12,6 @@ import android.webkit.WebViewClient;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 
@@ -31,11 +27,10 @@ public class WPWebViewClient extends WebViewClient {
     private final Blog mBlog;
     private String mToken;
 
-    public WPWebViewClient(Context context, Blog blog) {
+    public WPWebViewClient(Blog blog) {
         super();
         this.mBlog = blog;
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        mToken = settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, "");
+        mToken = AccountHelper.getDefaultAccount().getAccessToken();
     }
 
     @Override

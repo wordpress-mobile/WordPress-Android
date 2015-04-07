@@ -20,6 +20,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -111,7 +112,7 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
     private void finishIfNoVisibleBlogs() {
         // If not signed in, then ask to sign in, else inform the user to set at least one blog
         // visible
-        if (!WordPress.isSignedIn(getBaseContext())) {
+        if (!AccountHelper.isSignedIn()) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
             startActivity(new Intent(this, SignInActivity.class));
             finish();
@@ -150,7 +151,7 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
     }
 
     private String[] getBlogNames() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
         if (accounts.size() > 0) {
             final String blogNames[] = new String[accounts.size()];
             mAccountIDs = new int[accounts.size()];

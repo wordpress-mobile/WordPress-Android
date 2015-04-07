@@ -1,5 +1,6 @@
 package org.wordpress.android.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
@@ -45,9 +47,7 @@ public class WPMainActivity extends Activity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_tint));
-        }
+        setStatusBarColor();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -70,10 +70,11 @@ public class WPMainActivity extends Activity
         mTabs.setOnPageChangeListener(this);
 
         if (savedInstanceState == null) {
-            if (WordPress.isSignedIn(this)) {
+            if (AccountHelper.isSignedIn()) {
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
-                boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH, false));
+                boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
+                        false));
                 if (openedFromPush) {
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
                     launchWithNoteId();
@@ -86,6 +87,13 @@ public class WPMainActivity extends Activity
             } else {
                 showSignIn();
             }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusBarColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_tint));
         }
     }
 
@@ -213,7 +221,7 @@ public class WPMainActivity extends Activity
                 break;
             case RequestCodes.SETTINGS:
                 // user returned from settings
-                if (WordPress.isSignedIn(this)) {
+                if (AccountHelper.isSignedIn()) {
                     WordPress.registerForCloudMessaging(this);
                 } else {
                     showSignIn();

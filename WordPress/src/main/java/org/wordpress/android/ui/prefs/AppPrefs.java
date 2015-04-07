@@ -11,9 +11,6 @@ import org.wordpress.android.ui.ActivityId;
 
 public class AppPrefs {
     public enum PrefKey {
-        // id of the current user
-        USER_ID,
-
         // name of last shown activity
         LAST_ACTIVITY_STR,
 
@@ -99,17 +96,6 @@ public class AppPrefs {
             editor.remove(key.name());
         }
         editor.apply();
-    }
-
-    public static long getCurrentUserId() {
-        return getLong(PrefKey.USER_ID);
-    }
-    public static void setCurrentUserId(long userId) {
-        if (userId == 0) {
-            remove(PrefKey.USER_ID);
-        } else {
-            setLong(PrefKey.USER_ID, userId);
-        }
     }
 
     public static ReaderTag getReaderTag() {

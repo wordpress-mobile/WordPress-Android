@@ -101,13 +101,13 @@ public class SitePickerActivity extends ActionBarActivity {
         protected Boolean doInBackground(Void... params) {
             List<Map<String, Object>> accounts;
             if (mVisibleBlogsOnly) {
-                accounts = WordPress.wpDB.getVisibleDotComAccounts();
+                accounts = WordPress.wpDB.getVisibleDotComBlogs();
             } else {
-                accounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"isHidden"});
+                accounts = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"isHidden"});
             }
 
             // always show dot.org accounts
-            accounts.addAll(WordPress.wpDB.getAccountsBy("dotcomFlag!=1", null));
+            accounts.addAll(WordPress.wpDB.getBlogsBy("dotcomFlag!=1", null));
 
             mSites = new SiteList(accounts);
             return true;

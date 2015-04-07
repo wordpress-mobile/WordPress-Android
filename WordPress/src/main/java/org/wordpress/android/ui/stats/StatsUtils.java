@@ -2,8 +2,6 @@ package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
@@ -31,6 +29,7 @@ import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -238,8 +237,7 @@ public class StatsUtils {
 
         if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
             // Let's try the global wpcom credentials
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-            statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+            statsAuthenticatedUser = AccountHelper.getDefaultAccount().getUserName();
         }
 
         if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {

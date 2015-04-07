@@ -39,6 +39,7 @@ import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -137,7 +138,7 @@ public class SettingsFragment extends PreferenceFragment {
 
     private void initNotifications() {
         // AuthenticatorRequest notification settings if needed
-        if (WordPress.hasDotComToken(getActivity())) {
+        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
             String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
             if (settingsJson == null) {
                 com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -224,7 +225,7 @@ public class SettingsFragment extends PreferenceFragment {
         wpComCategory.removeAll();
         addWpComSignIn(wpComCategory, 0);
         addWpComShowHideButton(wpComCategory, 5);
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccountsBy("dotcomFlag = 1 AND isHidden = 0", null);
+        List<Map<String, Object>> accounts = WordPress.wpDB.getBlogsBy("dotcomFlag = 1 AND isHidden = 0", null);
         addAccounts(wpComCategory, accounts, 10);
     }
 
@@ -247,12 +248,12 @@ public class SettingsFragment extends PreferenceFragment {
         blogsCategory.addPreference(addBlogPreference);
 
         // Add self hosted list
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccountsBy("dotcomFlag=0", null);
+        List<Map<String, Object>> accounts = WordPress.wpDB.getBlogsBy("dotcomFlag=0", null);
         addAccounts(blogsCategory, accounts, order);
     }
 
     void displayPreferences() {
-        if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
+        if (WordPress.wpDB.getNumVisibleBlogs() == 0) {
             hidePostSignatureCategory();
             hideNotificationBlogsCategory();
         } else {
@@ -266,8 +267,8 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void addWpComSignIn(PreferenceCategory wpComCategory, int order) {
-        if (WordPress.hasDotComToken(getActivity())) {
-            String username = mSettings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+            String username = AccountHelper.getDefaultAccount().getUserName();
             Preference usernamePref = new Preference(getActivity());
             usernamePref.setTitle(getString(R.string.username));
             usernamePref.setSummary(username);
@@ -296,7 +297,7 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void addWpComShowHideButton(PreferenceCategory wpComCategory, int order) {
-        if (WordPress.wpDB.getNumDotComAccounts() > 0) {
+        if (WordPress.wpDB.getNumDotComBlogs() > 0) {
             Preference manageBlogPreference = new Preference(getActivity());
             manageBlogPreference.setTitle(R.string.show_and_hide_blogs);
             Intent intentManage = new Intent(getActivity(), ManageBlogsActivity.class);

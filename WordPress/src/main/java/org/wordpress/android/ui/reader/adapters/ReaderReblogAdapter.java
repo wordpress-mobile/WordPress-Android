@@ -146,7 +146,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
         @Override
         protected Boolean doInBackground(Void... voids) {
             // only .com blogs support reblogging
-            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleDotComAccounts();
+            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleDotComBlogs();
             if (accounts == null || accounts.size() == 0) {
                 return false;
             }

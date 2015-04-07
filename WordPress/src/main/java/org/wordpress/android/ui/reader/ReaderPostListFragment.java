@@ -48,7 +48,6 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
-import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
@@ -1426,8 +1425,6 @@ public class ReaderPostListFragment extends Fragment
             // update current user to ensure we have their user_id as well as their latest info
             // in case they changed their avatar, name, etc. since last time
             AppLog.d(T.READER, "reader post list > updating current user");
-            ReaderUserActions.updateCurrentUser();
-
             EventBus.getDefault().postSticky(new ReaderEvents.HasPerformedInitialUpdate());
         }
     }
