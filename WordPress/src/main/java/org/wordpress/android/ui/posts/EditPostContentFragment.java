@@ -48,6 +48,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -1729,7 +1730,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 Integer libraryMediaAdded = 0;
 
                 for (MediaItem media : selectedContent) {
-                    if (media.getSource().toString().contains("wordpress.com")) {
+                    if (URLUtil.isNetworkUrl(media.getSource().toString())) {
                         addExistingMediaToEditor(media.getTag());
                         ++libraryMediaAdded;
                     } else {
@@ -1779,7 +1780,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                         if (MediaUtils.isVideo(sourceString)) {
                             // Videos cannot be added to a gallery, insert inline instead
                             addMedia(source, null, getActivity());
-                        } else if (sourceString.contains("wordpress.com")) {
+                        } else if (URLUtil.isNetworkUrl(sourceString)) {
                             blogMediaIds.add(id);
                             AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
                         } else if (MediaUtils.isValidImage(sourceString)) {
