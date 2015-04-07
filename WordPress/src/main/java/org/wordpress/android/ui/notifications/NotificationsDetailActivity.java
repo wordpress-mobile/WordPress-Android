@@ -14,6 +14,7 @@ import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailActivity;
@@ -165,18 +166,15 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
     public void showStatsActivityForSite(int localTableSiteId, NoteBlockRangeType rangeType) {
         if (isFinishing()) return;
 
-        Intent intent;
         if (rangeType == NoteBlockRangeType.FOLLOW) {
-            intent = new Intent(this, StatsViewAllActivity.class);
+            Intent intent = new Intent(this, StatsViewAllActivity.class);
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
             intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
+            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableSiteId);
+            startActivity(intent);
         } else {
-            intent = new Intent(this, StatsActivity.class);
-            //intent.putExtra(StatsActivity.ARG_NO_MENU_DRAWER, true);
+            ActivityLauncher.viewBlogStats(this, localTableSiteId);
         }
-
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableSiteId);
-        startActivity(intent);
     }
 
     public void showWebViewActivityForUrl(String url) {

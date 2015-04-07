@@ -225,7 +225,9 @@
         </RelativeLayout>
 
         <!--Look & Feel-->
-        <LinearLayout style="@style/MySiteListHeaderLayout">
+        <LinearLayout
+            android:id="@+id/my_site_look_and_feel_header"
+            style="@style/MySiteListHeaderLayout">
 
             <org.wordpress.android.widgets.WPTextView
                 style="@style/MySiteListHeaderTextView"
@@ -236,7 +238,9 @@
         </LinearLayout>
 
         <!--Themes-->
-        <RelativeLayout style="@style/MySiteListRowLayout">
+        <RelativeLayout
+            android:id="@+id/my_site_themes_container"
+            style="@style/MySiteListRowLayout">
 
             <ImageView
                 android:id="@+id/my_site_themes_icon"

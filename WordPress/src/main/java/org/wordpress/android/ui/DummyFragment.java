@@ -1,7 +1,6 @@
 package org.wordpress.android.ui;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,9 +10,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.posts.PostsActivity;
-import org.wordpress.android.ui.prefs.SettingsActivity;
-import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.widgets.FloatingActionButton;
 
 /**
@@ -31,8 +27,7 @@ public class DummyFragment extends Fragment {
         txtSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().startActivityForResult(
-                        new Intent(getActivity(), SettingsActivity.class), RequestCodes.SETTINGS);
+                ActivityLauncher.viewSettingsForResult(getActivity());
             }
         });
 
@@ -40,9 +35,7 @@ public class DummyFragment extends Fragment {
         txtStats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), StatsActivity.class);
-                intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, WordPress.getCurrentBlog().getLocalTableBlogId());
-                getActivity().startActivity(intent);
+                ActivityLauncher.viewBlogStats(getActivity(), WordPress.getCurrentBlog().getLocalTableBlogId());
             }
         });
 
@@ -50,8 +43,7 @@ public class DummyFragment extends Fragment {
         txtPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), PostsActivity.class);
-                getActivity().startActivity(intent);
+                ActivityLauncher.viewCurrentBlogPosts(getActivity());
             }
         });
 

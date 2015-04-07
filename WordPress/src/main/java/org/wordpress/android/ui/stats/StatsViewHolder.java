@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.util.AccountHelper;
@@ -121,9 +121,7 @@ public class StatsViewHolder {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent statsPostViewIntent = new Intent(view.getContext(), StatsSinglePostDetailsActivity.class);
-                        statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_OBJECT, currentItem);
-                        view.getContext().startActivity(statsPostViewIntent);
+                        ActivityLauncher.viewStatsSinglePostDetails(view.getContext(), currentItem);
                     }
                 });
         entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_link_text_color));
