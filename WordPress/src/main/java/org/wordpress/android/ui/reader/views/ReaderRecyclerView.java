@@ -5,9 +5,17 @@ import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
+import org.wordpress.android.widgets.ScrollDirectionListener;
+
 public class ReaderRecyclerView extends RecyclerView {
+    private float mLastMotionY;
+    private int mInitialScrollCheckY;
+    private boolean mIsMoving;
+    private static final int SCROLL_CHECK_DELAY = 100;
+    private ScrollDirectionListener mScrollDirectionListener;
 
     public ReaderRecyclerView(Context context) {
         super(context);
@@ -28,6 +36,73 @@ public class ReaderRecyclerView extends RecyclerView {
         if (!isInEditMode()) {
             setLayoutManager(new LinearLayoutManager(context));
         }
+    }
+
+    public void setScrollDirectionListener(ScrollDirectionListener listener) {
+        mScrollDirectionListener = listener;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (mScrollDirectionListener != null) {
+            int action = event.getAction() & MotionEvent.ACTION_MASK;
+
+            switch (action) {
+                case MotionEvent.ACTION_MOVE :
+                    if (mIsMoving) {
+                        int yDiff = (int) (event.getY() - mLastMotionY);
+                        if (yDiff < 0) {
+                            mScrollDirectionListener.onScrollDown();
+                        } else if (yDiff > 0) {
+                            mScrollDirectionListener.onScrollUp();
+                        }
+                        mLastMotionY = event.getY();
+                    } else {
+                        mIsMoving = true;
+                        mLastMotionY = event.getY();
+                    }
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    if (mIsMoving) {
+                        mIsMoving = false;
+                        startScrollCheck();
+                    }
+                    break;
+
+                default :
+                    mIsMoving = false;
+                    break;
+            }
+        }
+
+        return super.onTouchEvent(event);
+    }
+
+    private void startScrollCheck() {
+        mInitialScrollCheckY = getScrollY();
+        post(mScrollTask);
+    }
+
+    private final Runnable mScrollTask = new Runnable() {
+        @Override
+        public void run() {
+            if (mInitialScrollCheckY == getScrollY()) {
+                if (mScrollDirectionListener != null) {
+                    mScrollDirectionListener.onScrollCompleted();
+                }
+            } else {
+                mInitialScrollCheckY = getScrollY();
+                postDelayed(mScrollTask, SCROLL_CHECK_DELAY);
+            }
+        }
+    };
+
+    public boolean canScrollUp() {
+        return canScrollVertically(-1);
+    }
+    public boolean canScrollDown() {
+        return canScrollVertically(1);
     }
 
     /**

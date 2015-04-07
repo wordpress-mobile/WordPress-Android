@@ -29,8 +29,11 @@ import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import de.greenrobot.event.EventBus;
 
 public class NotificationsDetailActivity extends ActionBarActivity implements
         CommentActions.OnNoteCommentActionListener {
@@ -64,6 +67,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
                     if (note.isUnread()) {
                         // mark as read which syncs with simperium
                         note.markAsRead();
+                        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
                     }
 
                     Fragment detailFragment = getDetailFragmentForNote(note);

@@ -19,7 +19,7 @@ import org.wordpress.android.util.StringUtils;
  * and missed a few important fields
  */
 public class CommentTable {
-    private static final String COMMENTS_TABLE = "comments";
+    public static final String COMMENTS_TABLE = "comments";
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + COMMENTS_TABLE + " ("
@@ -64,7 +64,7 @@ public class CommentTable {
         int numDeleted = 0;
 
         // get rid of comments on blogs that don't exist or are hidden
-        String sql = " blog_id NOT IN (SELECT DISTINCT id FROM " + WordPressDB.SETTINGS_TABLE
+        String sql = " blog_id NOT IN (SELECT DISTINCT id FROM " + WordPressDB.BLOGS_TABLE
                    + " WHERE isHidden = 0)";
         numDeleted += db.delete(COMMENTS_TABLE, sql, null);
 

@@ -7,10 +7,8 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +32,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -611,10 +610,9 @@ public class StatsActivity extends ActionBarActivity
             // for self-hosted sites; launch the user into an activity where they can provide their credentials
             if (!currentBlog.isDotcomFlag()
                     && !currentBlog.hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
-                if (WordPress.hasDotComToken(this)) {
+                if (AccountHelper.getDefaultAccount().hasAccessToken()) {
                     // Let's try the global wpcom credentials them first
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-                    String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+                    String username = AccountHelper.getDefaultAccount().getUserName();
                     currentBlog.setDotcom_username(username);
                     WordPress.wpDB.saveBlog(currentBlog);
                     mSwipeToRefreshHelper.setRefreshing(true);
@@ -638,9 +636,8 @@ public class StatsActivity extends ActionBarActivity
         }
 
         // check again that we've valid credentials for a Jetpack site
-        if (!currentBlog.isDotcomFlag()
-                && !currentBlog.hasValidJetpackCredentials()
-                && !WordPress.hasDotComToken(this)) {
+        if (!currentBlog.isDotcomFlag() && !currentBlog.hasValidJetpackCredentials() &&
+                !AccountHelper.getDefaultAccount().hasAccessToken()) {
             mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
             return;

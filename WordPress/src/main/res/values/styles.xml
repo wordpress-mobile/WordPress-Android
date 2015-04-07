@@ -78,29 +78,20 @@
         <item name="android:background">@drawable/btn_cab_done_wordpress</item>
     </style>
 
-    <style name="WordPressSectionHeader">
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginLeft">4dp</item>
-        <item name="android:layout_marginRight">4dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:textColor">#AAAAAA</item>
-        <item name="android:textSize">14sp</item>
+    <style name="WordPressSettingsSectionHeader">
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="WordPressSettingsSectionHeader" parent="WordPressSectionHeader">
-        <item name="android:background">@drawable/section_header</item>
-        <item name="android:textColor">#323232</item>
-        <item name="android:paddingBottom">6dp</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="WordPressSubHeader">
-        <item name="android:textSize">14sp</item>
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginLeft">12dp</item>
-        <item name="android:textColor">#AAAAAA</item>
-        <item name="android:layout_marginBottom">-4dp</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:textColor">@color/grey</item>
     </style>
 
     <style name="WordPressTitleAppearance" parent="@android:style/TextAppearance">
