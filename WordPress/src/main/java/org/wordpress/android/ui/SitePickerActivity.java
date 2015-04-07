@@ -24,6 +24,7 @@ import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -94,31 +95,26 @@ public class SitePickerActivity extends ActionBarActivity {
         finish();
     }
 
-    private class LoadSitesTask extends AsyncTask<Void, Void, Boolean> {
-        private SiteList mSites;
-
+    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
         @Override
-        protected Boolean doInBackground(Void... params) {
-            List<Map<String, Object>> accounts;
+        protected SiteList doInBackground(Void... params) {
+            List<Map<String, Object>> blogs;
             if (mVisibleBlogsOnly) {
-                accounts = WordPress.wpDB.getVisibleDotComBlogs();
+                blogs = WordPress.wpDB.getVisibleDotComBlogs();
             } else {
-                accounts = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"isHidden"});
+                blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"isHidden"});
             }
 
-            // always show dot.org accounts
-            accounts.addAll(WordPress.wpDB.getBlogsBy("dotcomFlag!=1", null));
+            // include self-hosted, then sort all by name
+            blogs.addAll(WordPress.wpDB.getBlogsBy("dotcomFlag!=1", null));
+            Collections.sort(blogs, BlogUtils.BlogNameComparator);
 
-            mSites = new SiteList(accounts);
-            return true;
+            return new SiteList(blogs);
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                SiteAdapter adapter = new SiteAdapter(SitePickerActivity.this, mSites);
-                mRecycler.setAdapter(adapter);
-            }
+        protected void onPostExecute(SiteList sites) {
+            mRecycler.setAdapter(new SiteAdapter(SitePickerActivity.this, sites));
         }
     }
 
@@ -206,8 +202,10 @@ public class SitePickerActivity extends ActionBarActivity {
 
     class SiteList extends ArrayList<SiteRecord> {
         SiteList(List<Map<String, Object>> accounts) {
-            for (Map<String, Object> account: accounts) {
-                add(new SiteRecord(account));
+            if (accounts != null) {
+                for (Map<String, Object> account : accounts) {
+                    add(new SiteRecord(account));
+                }
             }
         }
     }
