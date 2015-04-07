@@ -71,7 +71,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewBlogComments(Context context) {
+    public static void viewCurrentBlogComments(Context context) {
         Intent intent = new Intent(context, CommentsActivity.class);
         context.startActivity(intent);
     }
