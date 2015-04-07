@@ -105,15 +105,6 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
         mSearchFragment = (ThemeSearchFragment) fm.findFragmentByTag(ThemeSearchFragment.TAG);
     }
 
-    private boolean areThemesAccessible() {
-        // themes are only accessible to admin wordpress.com users
-        if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag()) {
-            ActivityLauncher.viewCurrentBlogPosts(ThemeBrowserActivity.this);
-            return false;
-        }
-        return true;
-    }
-
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
             setupBaseLayout();
@@ -134,15 +125,13 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (areThemesAccessible()) {
-            mIsRunning = true;
+        mIsRunning = true;
 
-            // fetch themes if we don't have any
-            if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null
-                    && WordPress.wpDB.getThemeCount(getBlogId()) == 0) {
-                fetchThemes(mViewPager.getCurrentItem());
-                setRefreshing(true, mViewPager.getCurrentItem());
-            }
+        // fetch themes if we don't have any
+        if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null
+                && WordPress.wpDB.getThemeCount(getBlogId()) == 0) {
+            fetchThemes(mViewPager.getCurrentItem());
+            setRefreshing(true, mViewPager.getCurrentItem());
         }
     }
 
