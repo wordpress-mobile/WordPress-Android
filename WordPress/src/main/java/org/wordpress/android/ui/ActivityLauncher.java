@@ -77,12 +77,10 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogThemes(Context context) {
-        // themes are only accessible to admin wordpress.com users
-        if (WordPress.getCurrentBlog() == null || !WordPress.getCurrentBlog().isDotcomFlag()) {
-            return;
+        if (ThemeBrowserActivity.isAccessible()) {
+            Intent intent = new Intent(context, ThemeBrowserActivity.class);
+            context.startActivity(intent);
         }
-        Intent intent = new Intent(context, ThemeBrowserActivity.class);
-        context.startActivity(intent);
     }
 
     public static void viewBlogSettings(Context context, Blog blog) {

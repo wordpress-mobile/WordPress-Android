@@ -27,8 +27,8 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragmentCallback;
 import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragmentCallback;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
@@ -428,10 +428,12 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
                     @Override
                     public void onErrorResponse(VolleyError arg0) {
                         mIsActivatingTheme = false;
-                        if (mDetailsFragment != null && mDetailsFragment.isVisible()) mDetailsFragment.onThemeActivated(
-                                false);
-                        if (ref.get() != null) Toast.makeText(ref.get(), R.string.theme_set_failed, Toast.LENGTH_LONG)
-                                                    .show();
+                        if (mDetailsFragment != null && mDetailsFragment.isVisible())
+                            mDetailsFragment.onThemeActivated(
+                                    false);
+                        if (ref.get() != null)
+                            Toast.makeText(ref.get(), R.string.theme_set_failed, Toast.LENGTH_LONG)
+                                    .show();
                     }
                 }
         );
@@ -468,5 +470,11 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
         for (int i = Math.max(page - 1, 0); i <= Math.min(page + 1, mThemePagerAdapter.getCount() - 1); ++i) {
             mThemePagerAdapter.getItem(i).setRefreshing(refreshing);
         }
+    }
+
+    public static boolean isAccessible() {
+        // themes are only accessible to admin wordpress.com users
+        Blog blog = WordPress.getCurrentBlog();
+        return (blog != null && blog.isAdmin() && blog.isDotcomFlag());
     }
 }

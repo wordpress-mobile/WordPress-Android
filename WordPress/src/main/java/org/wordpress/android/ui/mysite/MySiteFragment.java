@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -21,6 +23,8 @@ public class MySiteFragment extends Fragment {
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
     private WPTextView mBlogSubtitleTextView;
+    private LinearLayout mLookAndFeelHeader;
+    private RelativeLayout mThemesContainer;
     private int mBlavatarSz;
 
     private Blog mBlog;
@@ -51,6 +55,8 @@ public class MySiteFragment extends Fragment {
         mBlavatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.my_site_blavatar);
         mBlogTitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_title_label);
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
+        mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
+        mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.my_site_themes_container);
 
         WPTextView switchSiteTextView = (WPTextView) rootView.findViewById(R.id.switch_site);
         switchSiteTextView.setOnClickListener(new View.OnClickListener() {
@@ -165,6 +171,10 @@ public class MySiteFragment extends Fragment {
         if (!isAdded() || mBlog == null) {
             return;
         }
+
+        int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
+        mLookAndFeelHeader.setVisibility(themesVisibility);
+        mThemesContainer.setVisibility(themesVisibility);
 
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
         mBlogTitleTextView.setText(mBlog.getBlogName());
