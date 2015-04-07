@@ -17,6 +17,7 @@ import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StatsReferrersFragment extends StatsAbstractListFragment {
@@ -92,17 +93,66 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
         private final List<ReferrerGroupModel> groups;
+        private final List<List<MyChildModel>> childs;
 
         public MyExpandableListAdapter(Context context, List<ReferrerGroupModel> groups) {
             this.groups = groups;
             this.inflater = LayoutInflater.from(context);
+
+            // The code below flattens the 3-levels tree of children to a 2-levels structure
+            // that will be used later to populate the UI
+            this.childs = new ArrayList<>(groups.size());
+            // pre-populate the structure with null values
+            for (int i = 0; i < groups.size(); i++) {
+                this.childs.add(null);
+            }
+            for (int i = 0; i < groups.size(); i++) {
+                ReferrerGroupModel currentGroup = groups.get(i);
+                List<ReferrerResultModel> referrals = currentGroup.getResults();
+                if (referrals != null) {
+                    // Children available for the current group
+                    // Children could be a 2-levels or a 3-levels structure
+                    List<MyChildModel> currentGroupChilds = new ArrayList<>();
+                    for (ReferrerResultModel refResult : referrals) {
+                        List<SingleItemModel> thirdLevelChildren = refResult.getChildren();
+                        if (thirdLevelChildren != null && thirdLevelChildren.size() > 0 ) {
+                            for (SingleItemModel currentThirdLevelChild: thirdLevelChildren) {
+                                MyChildModel myChild = new MyChildModel();
+                                if (!TextUtils.isEmpty(currentThirdLevelChild.getIcon())) {
+                                    myChild.icon = currentThirdLevelChild.getIcon();
+                                } else {
+                                    myChild.icon = refResult.getIcon();
+                                }
+                                myChild.url = currentThirdLevelChild.getUrl();
+                                myChild.name = currentThirdLevelChild.getTitle();
+                                myChild.views = currentThirdLevelChild.getTotals();
+                                currentGroupChilds.add(myChild);
+                            }
+                        } else {
+                            MyChildModel myChild = new MyChildModel();
+                            myChild.icon = refResult.getIcon();
+                            myChild.url = refResult.getUrl();
+                            myChild.name = refResult.getName();
+                            myChild.views = refResult.getViews();
+                            currentGroupChilds.add(myChild);
+                        }
+                    }
+                    this.childs.set(i, currentGroupChilds);
+                }
+            }
+        }
+
+        private final class MyChildModel {
+            String name;
+            int views;
+            String url;
+            String icon;
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            ReferrerGroupModel currentGroup = groups.get(groupPosition);
-            List<ReferrerResultModel> results = currentGroup.getResults();
-            return results.get(childPosition);
+            List<MyChildModel> currentGroupChilds = childs.get(groupPosition);
+            return currentGroupChilds.get(childPosition);
         }
 
         @Override
@@ -114,37 +164,32 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
 
-            final ReferrerResultModel currentReferrerResult = (ReferrerResultModel) getChild(groupPosition, childPosition);
+            final MyChildModel currentChild = (MyChildModel) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(convertView);
+                viewHolder.networkImageView.setErrorImageResId(R.drawable.stats_icon_default_site_avatar);
+                viewHolder.networkImageView.setDefaultImageResId(R.drawable.stats_icon_default_site_avatar);
                 convertView.setTag(viewHolder);
             }
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
-            String name = currentReferrerResult.getName();
-            int views = currentReferrerResult.getViews();
+            String name = currentChild.name;
+            int views = currentChild.views;
 
             // The link icon
             holder.showLinkIcon();
-
-            // name, url
-            List<SingleItemModel> thirdLevelChildren = currentReferrerResult.getChildren();
-            if (thirdLevelChildren != null && thirdLevelChildren.size() > 0 ) {
-                holder.setEntryTextOrLink(thirdLevelChildren.get(0).getUrl(), name);
-            } else {
-                holder.setEntryTextOrLink(currentReferrerResult.getUrl(), name);
-            }
+            holder.setEntryTextOrLink(currentChild.url, name);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(views));
 
-            if (!TextUtils.isEmpty(currentReferrerResult.getIcon())) {
+            if (!TextUtils.isEmpty(currentChild.icon)) {
                 holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(currentReferrerResult.getIcon(), mResourceVars.headerAvatarSizePx),
+                        GravatarUtils.fixGravatarUrl(currentChild.icon, mResourceVars.headerAvatarSizePx),
                         WPNetworkImageView.ImageType.BLAVATAR);
                 holder.networkImageView.setVisibility(View.VISIBLE);
             } else {
@@ -159,12 +204,11 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            ReferrerGroupModel currentGroup = groups.get(groupPosition);
-            List<ReferrerResultModel> referrals = currentGroup.getResults();
-            if (referrals == null) {
+            List<MyChildModel> currentGroupChilds = childs.get(groupPosition);
+            if (currentGroupChilds == null) {
                 return 0;
             } else {
-                return referrals.size();
+                return currentGroupChilds.size();
             }
         }
 

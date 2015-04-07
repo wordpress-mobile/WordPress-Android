@@ -59,7 +59,7 @@ public class ReferrerResultModel implements Serializable {
     private SingleItemModel getChildren(String blogId, String date, JSONObject child) throws JSONException {
         String name = child.getString("name");
         int totals = child.getInt("views");
-        String icon = child.optString("icon");
+        String icon = JSONUtils.getString(child, "icon");
         String url = child.optString("url");
         return new SingleItemModel(blogId, date, null, name, totals, url, icon);
     }
