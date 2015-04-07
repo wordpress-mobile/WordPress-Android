@@ -84,12 +84,16 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogSettings(Context context, Blog blog) {
+        if (blog == null) return;
+
         Intent intent = new Intent(context, BlogPreferencesActivity.class);
         intent.putExtra("id", blog.getLocalTableBlogId());
         context.startActivity(intent);
     }
 
     public static void viewBlogAdmin(Context context, Blog blog) {
+        if (blog == null) return;
+
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN);
 
         Intent intent = new Intent(context, WPWebViewActivity.class);
@@ -102,6 +106,8 @@ public class ActivityLauncher {
     }
 
     public static void addNewBlogPostOrPage(Context context, Blog blog, boolean isPage) {
+        if (blog == null) return;
+
         // Create a new post object
         Post newPost = new Post(blog.getLocalTableBlogId(), isPage);
         WordPress.wpDB.savePost(newPost);
@@ -150,6 +156,8 @@ public class ActivityLauncher {
     }
 
     public static void viewStatsSinglePostDetails(Context context, PostModel post) {
+        if (post == null) return;
+
         Intent statsPostViewIntent = new Intent(context, StatsSinglePostDetailsActivity.class);
         statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_OBJECT, post);
         context.startActivity(statsPostViewIntent);
