@@ -11,6 +11,11 @@ import java.util.Map;
 public final class AnalyticsTracker {
     private static boolean mHasUserOptedOut;
 
+    public static final String READER_DETAIL_TYPE_KEY = "post-detail-type";
+    public static final String READER_DETAIL_TYPE_NORMAL = "normal";
+    public static final String READER_DETAIL_TYPE_BLOG_PREVIEW = "preview-blog";
+    public static final String READER_DETAIL_TYPE_TAG_PREVIEW = "preview-tag";
+
     public enum Stat {
         APPLICATION_OPENED,
         APPLICATION_CLOSED,
@@ -29,6 +34,8 @@ public final class AnalyticsTracker {
         READER_LOADED_FRESHLY_PRESSED,
         READER_COMMENTED_ON_ARTICLE,
         READER_BLOCKED_BLOG,
+        READER_BLOG_PREVIEW,
+        READER_TAG_PREVIEW,
         STATS_ACCESSED,
         STATS_VIEW_ALL_ACCESSED,
         STATS_SINGLE_POST_ACCESSED,
@@ -89,8 +96,8 @@ public final class AnalyticsTracker {
         void track(Stat stat);
         void track(Stat stat, Map<String, ?> properties);
         void endSession();
-        void refreshMetadata(boolean isUserConnected, boolean isJetpackUser, int sessionCount, int numBlogs,
-                             int versionCode, String username, String email);
+        void refreshMetadata(boolean isUserConnected,boolean isWordPressComUser, boolean isJetpackUser,
+                             int sessionCount, int numBlogs, int versionCode, String username, String email);
         void clearAllData();
         void registerPushNotificationToken(String regId);
     }
@@ -165,11 +172,11 @@ public final class AnalyticsTracker {
         }
     }
 
-    public static void refreshMetadata(boolean isUserConnected, boolean isJetpackUser, int sessionCount, int numBlogs,
-                                       int versionCode, String username, String email) {
+    public static void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
+                                       int sessionCount, int numBlogs, int versionCode, String username, String email) {
         for (Tracker tracker : TRACKERS) {
-            tracker.refreshMetadata(isUserConnected, isJetpackUser, sessionCount, numBlogs, versionCode, username,
-                    email);
+            tracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
+                    versionCode, username, email);
         }
     }
 }

@@ -14,7 +14,6 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 
 import java.util.EnumMap;
 import java.util.Iterator;
@@ -163,10 +162,9 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         mMixpanel.flush();
     }
 
-    // refreshMetadata()
     @Override
-    public void refreshMetadata(boolean isUserConnected, boolean isJetpackUser, int sessionCount, int numBlogs,
-                                int versionCode, String username, String email) {
+    public void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
+                                int sessionCount, int numBlogs, int versionCode, String username, String email) {
         // Register super properties
         try {
             JSONObject properties = new JSONObject();
@@ -318,6 +316,18 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         mixpanelInstructionsForEventName("Reader - Blocked Blog");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_blocked_a_blog");
                 instructions.setCurrentDateForPeopleProperty("last_time_blocked_a_blog");
+                break;
+            case READER_BLOG_PREVIEW:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Blog Preview");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_viewed_blog_preview");
+                instructions.setCurrentDateForPeopleProperty("last_time_viewed_blog_preview");
+                break;
+            case READER_TAG_PREVIEW:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Tag Preview");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_viewed_tag_preview");
+                instructions.setCurrentDateForPeopleProperty("last_time_viewed_tag_preview");
                 break;
             case EDITOR_CREATED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
