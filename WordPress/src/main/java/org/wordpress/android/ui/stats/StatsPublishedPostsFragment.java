@@ -32,8 +32,8 @@ public class StatsPublishedPostsFragment extends StatsAbstractListFragment {
         }
 
         if (hasPublishedPostsAndPages()) {
-            List<PostModel> postViews = ((PublishedPostsAndPagesModel) mDatamodels[0]).getPublishedPostsAndPages();
-            ArrayAdapter adapter = new PublishedPostsAndPagesAdapter(getActivity(), getLocalTableBlogID(), postViews);
+            List<PostModel> postViews = getPublishedPostsAndPages();
+            ArrayAdapter adapter = new PublishedPostsAndPagesAdapter(getActivity(), postViews);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
             mModuleTitleTextView.setText(postViews.size() + " " + getTitle());
@@ -46,7 +46,7 @@ public class StatsPublishedPostsFragment extends StatsAbstractListFragment {
         return !isDataEmpty() && ((PublishedPostsAndPagesModel) mDatamodels[0]).hasPublishedPostsAndPages();
     }
 
-    private List<PostModel> getTopPostsAndPages() {
+    private List<PostModel> getPublishedPostsAndPages() {
         if (!hasPublishedPostsAndPages()) {
             return null;
         }
@@ -88,7 +88,7 @@ public class StatsPublishedPostsFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return hasPublishedPostsAndPages() && getTopPostsAndPages().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
+        return hasPublishedPostsAndPages() && getPublishedPostsAndPages().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
     @Override
@@ -133,12 +133,10 @@ public class StatsPublishedPostsFragment extends StatsAbstractListFragment {
 
         private List<PostModel> list;
         private final LayoutInflater inflater;
-        private final int localTableBlogID;
 
-        public PublishedPostsAndPagesAdapter(Context context, int localTableBlogID, List<PostModel> list) {
+        public PublishedPostsAndPagesAdapter(Context context, List<PostModel> list) {
             super(context, R.layout.stats_list_cell, list);
             this.list = list;
-            this.localTableBlogID = localTableBlogID;
             inflater = LayoutInflater.from(context);
         }
 

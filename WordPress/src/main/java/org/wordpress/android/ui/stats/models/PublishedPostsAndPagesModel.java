@@ -4,17 +4,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.JSONUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
 public class PublishedPostsAndPagesModel implements Serializable {
     private final String mBlogID;
-    private List<PostModel> mTopPostsAndPages;
+    private List<PostModel> mPublishedPostsAndPages;
     private int mFound = 0;
 
 
@@ -30,7 +28,7 @@ public class PublishedPostsAndPagesModel implements Serializable {
 
         JSONArray postViewsArray = response.optJSONArray("posts");
         if (postViewsArray != null && postViewsArray.length() > 0) {
-            mTopPostsAndPages = new ArrayList<>(postViewsArray.length());
+            mPublishedPostsAndPages = new ArrayList<>(postViewsArray.length());
             for (int i = 0; i < postViewsArray.length(); i++) {
                 try {
                     JSONObject postObject = postViewsArray.getJSONObject(i);
@@ -41,7 +39,7 @@ public class PublishedPostsAndPagesModel implements Serializable {
                     String itemType = postObject.getString("type");
                     PostModel currentModel = new PostModel(blogID, 0L, itemID, itemTitle,
                             itemTotal, itemURL, null, itemType);
-                    mTopPostsAndPages.add(currentModel);
+                    mPublishedPostsAndPages.add(currentModel);
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.STATS, "Unexpected PostModel object in published posts and pages array" +
                             "at position " + i + " Response: " + response.toString(), e);
@@ -55,11 +53,11 @@ public class PublishedPostsAndPagesModel implements Serializable {
     }
 
     public List<PostModel> getPublishedPostsAndPages() {
-        return mTopPostsAndPages;
+        return mPublishedPostsAndPages;
     }
 
     public boolean hasPublishedPostsAndPages() {
-        return mTopPostsAndPages != null && mTopPostsAndPages.size() > 0;
+        return mPublishedPostsAndPages != null && mPublishedPostsAndPages.size() > 0;
     }
 
     public int getFound() {
