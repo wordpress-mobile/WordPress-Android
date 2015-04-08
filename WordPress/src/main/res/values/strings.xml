@@ -436,6 +436,7 @@
     <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
+    <string name="stats_view_published">Published</string>
 
     <!-- stats: label for the entries -->
     <string name="stats_entry_country">Country</string>
@@ -484,6 +485,8 @@
     <string name="stats_empty_followers_desc">Keep track of your overall number of followers, and how long each one has been following your site.</string>
     <string name="stats_empty_search_terms">No search terms recorded</string>
     <string name="stats_empty_search_terms_desc">Learn more about your search traffic by looking at the terms your visitors searched for to find your site.</string>
+    <string name="stats_empty_published_posts_title">Nothing Published</string>
+    <string name="stats_empty_published_posts_desc">No posts or pages to display</string>
 
     <!-- stats: views and visitors -->
     <string name="stats_visitors_and_views_header_today">Today</string>
