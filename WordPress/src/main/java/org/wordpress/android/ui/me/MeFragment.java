@@ -7,14 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.Account;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
 public class MeFragment extends Fragment {
 
     private WPNetworkImageView mAvatarImageView;
-    private WPTextView mFullNameTextView;
+    private WPTextView mDisplayNameTextView;
     private WPTextView mUsernameTextView;
     private WPTextView mLoginLogoutTextView;
 
@@ -32,7 +34,7 @@ public class MeFragment extends Fragment {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_me, container, false);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
-        mFullNameTextView = (WPTextView) rootView.findViewById(R.id.me_full_name);
+        mDisplayNameTextView = (WPTextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (WPTextView) rootView.findViewById(R.id.me_username);
 
         WPTextView settingsTextView = (WPTextView) rootView.findViewById(R.id.me_settings_text_view);
@@ -59,10 +61,25 @@ public class MeFragment extends Fragment {
     }
 
     private void refreshAccountDetails() {
-        mAvatarImageView.setImageUrl("http://lorempixum.com/128/128", WPNetworkImageView.ImageType.AVATAR);
-        mFullNameTextView.setText("Full Name");
-        mUsernameTextView.setText("@username");
+        Account defaultAccount = AccountHelper.getDefaultAccount();
+        // we only want to show user details for WordPress.com users
+        if (defaultAccount.isWordPressComUser()) {
+            mAvatarImageView.setVisibility(View.VISIBLE);
+            mDisplayNameTextView.setVisibility(View.VISIBLE);
+            mUsernameTextView.setVisibility(View.VISIBLE);
 
-        mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
+            mAvatarImageView.setImageUrl(defaultAccount.getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
+            mDisplayNameTextView.setText(defaultAccount.getDisplayName());
+            mUsernameTextView.setText("@" + defaultAccount.getUserName());
+
+            mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
+        }
+        else {
+            mAvatarImageView.setVisibility(View.GONE);
+            mDisplayNameTextView.setVisibility(View.GONE);
+            mUsernameTextView.setVisibility(View.GONE);
+
+            mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
+        }
     }
 }
