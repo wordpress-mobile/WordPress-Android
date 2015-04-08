@@ -363,10 +363,30 @@ public class MediaPickerActivity extends ActionBarActivity
         if (mViewPager != null) {
             mViewPager.setPagingEnabled(true);
 
-            mMediaPickerAdapter.addTab(mMediaSources[0] != null ? mMediaSources[0] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_images), "Loading device videos", "Error fetching device images", null);
-            mMediaPickerAdapter.addTab(mMediaSources[1] != null ? mMediaSources[1] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_videos), "Loading device images", "Error fetching device videos ", null);
-            mMediaPickerAdapter.addTab(mMediaSources[2] != null ? mMediaSources[2] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_images), "Loading library images", "Unable to fetch blog images ", null);
-            mMediaPickerAdapter.addTab(mMediaSources[3] != null ? mMediaSources[3] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_videos), "Loading library videos", "Unable to fetch blog videos ", null);
+            mMediaPickerAdapter.addTab(mMediaSources[0] != null ? mMediaSources[0] :
+                    new ArrayList<MediaSource>(),
+                    getString(R.string.tab_title_device_images),
+                    getString(R.string.loading_images),
+                    getString(R.string.error_loading_images),
+                    getString(R.string.no_device_images));
+            mMediaPickerAdapter.addTab(mMediaSources[1] != null ? mMediaSources[1] :
+                    new ArrayList<MediaSource>(),
+                    getString(R.string.tab_title_device_videos),
+                    getString(R.string.loading_videos),
+                    getString(R.string.error_loading_videos),
+                    getString(R.string.no_device_videos));
+            mMediaPickerAdapter.addTab(mMediaSources[2] != null ? mMediaSources[2] :
+                    new ArrayList<MediaSource>(),
+                    getString(R.string.tab_title_site_images),
+                    getString(R.string.loading_blog_images),
+                    getString(R.string.error_loading_blog_images),
+                    getString(R.string.no_blog_images));
+            mMediaPickerAdapter.addTab(mMediaSources[3] != null ? mMediaSources[3] :
+                    new ArrayList<MediaSource>(),
+                    getString(R.string.tab_title_site_videos),
+                    getString(R.string.loading_blog_videos),
+                    getString(R.string.error_loading_blog_videos),
+                    getString(R.string.no_blog_videos));
 
             mViewPager.setAdapter(mMediaPickerAdapter);
 
@@ -473,22 +493,16 @@ public class MediaPickerActivity extends ActionBarActivity
         }
 
         private final List<MediaPicker> mMediaPickers;
-        private final List<MediaPickerFragment> mFragments;
 
         private MediaPickerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
 
             mMediaPickers = new ArrayList<>();
-            mFragments = new ArrayList<>();
         }
 
         @Override
         public Fragment getItem(int position) {
             if (position < mMediaPickers.size()) {
-                if (position < mFragments.size() && mFragments.get(position) != null) {
-                    return mFragments.get(position);
-                }
-
                 MediaPicker mediaPicker = mMediaPickers.get(position);
                 MediaPickerFragment fragment = new MediaPickerFragment();
                 fragment.setLoadingText(mediaPicker.loadingText);
@@ -496,8 +510,6 @@ public class MediaPickerActivity extends ActionBarActivity
                 fragment.setEmptyText(mediaPicker.emptyText);
                 fragment.setActionModeMenu(R.menu.menu_media_picker_action_mode);
                 fragment.setMediaSources(mediaPicker.mediaSources);
-
-                mFragments.add(position, fragment);
 
                 return fragment;
             }

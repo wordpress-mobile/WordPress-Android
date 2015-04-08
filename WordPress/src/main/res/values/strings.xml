@@ -119,6 +119,19 @@
     <string name="pick_video">Select video</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_fetching">Fetching media…</string>
+    <string name="loading_videos">Loading videos</string>
+    <string name="loading_images">Loading images</string>
+    <string name="loading_blog_images">Fetching library images</string>
+    <string name="loading_blog_videos">Fetching library videos</string>
+    <string name="no_media">No media</string>
+    <string name="error_loading_images">Error loading device images</string>
+    <string name="error_loading_videos">"Error loading device videos "</string>
+    <string name="error_loading_blog_images">"Unable to fetch blog images "</string>
+    <string name="error_loading_blog_videos">"Unable to fetch blog videos "</string>
+    <string name="no_device_images">No images on device</string>
+    <string name="no_device_videos">No videos on device</string>
+    <string name="no_blog_images">No blog images</string>
+    <string name="no_blog_videos">No blog videos</string>
 
     <!-- Upload Media -->
     <string name="media_no_video_title">VideoPress unavailable</string>

@@ -97,7 +97,7 @@ public class MediaSourceWPImages implements MediaSource {
                         imageView.setImageResource(R.color.grey_darken_10);
                         WordPressMediaUtils.BackgroundDownloadWebImage bgDownload = new WordPressMediaUtils.BackgroundDownloadWebImage(imageView);
                         imageView.setTag(bgDownload);
-                        bgDownload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaItem.getPreviewSource());
+                        bgDownload.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mediaItem.getPreviewSource());
                     } else {
                         imageView.setImageBitmap(imageBitmap);
                     }
@@ -172,6 +172,8 @@ public class MediaSourceWPImages implements MediaSource {
             final boolean callLoaded = existingItems.indexOf(mediaItem) == existingItems.size() - 1;
 
             AsyncTask<MediaItem, Void, MediaItem> backgroundCheck = new AsyncTask<MediaItem, Void, MediaItem>() {
+                int responseCode;
+
                 @Override
                 protected MediaItem doInBackground(MediaItem[] params) {
                     MediaItem mediaItem = params[0];
@@ -180,13 +182,12 @@ public class MediaSourceWPImages implements MediaSource {
                             HttpURLConnection connection = (HttpURLConnection) mediaUrl.openConnection();
                             connection.setRequestMethod("GET");
                             connection.connect();
-                            int responseCode = connection.getResponseCode();
+                            responseCode = connection.getResponseCode();
 
-                            if (responseCode == 200) {
-                                mVerifiedItems.add(mediaItem);
-                            }
                         } catch (IOException ioException) {
                             Log.e("", "Error reading from " + mediaItem.getSource() + "\nexception:" + ioException);
+
+                            return null;
                         }
 
                     return mediaItem;
@@ -194,13 +195,16 @@ public class MediaSourceWPImages implements MediaSource {
 
                 @Override
                 public void onPostExecute(MediaItem result) {
-                    if (mListener != null) {
+                    if (mListener != null && result != null) {
                         List<MediaItem> resultList = new ArrayList<>();
                         resultList.add(result);
-                        mListener.onMediaAdded(MediaSourceWPImages.this, resultList);
+                        if (responseCode == 200) {
+                            mVerifiedItems.add(result);
+                            mListener.onMediaAdded(MediaSourceWPImages.this, resultList);
+                        }
 
                         if (callLoaded) {
-                            mListener.onMediaLoaded(mVerifiedItems.size() > 0);
+                            mListener.onMediaLoaded(true);
                         }
                     }
                 }
