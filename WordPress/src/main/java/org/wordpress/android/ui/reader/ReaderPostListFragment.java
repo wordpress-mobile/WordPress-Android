@@ -1302,11 +1302,16 @@ public class ReaderPostListFragment extends Fragment
     public void onPostSelected(long blogId, long postId) {
         if (!isAdded()) return;
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
+        ReaderPostListType type = getPostListType();
+        Map<String, Object> analyticsProperties = new HashMap<>();
 
-        switch (getPostListType()) {
+        switch (type) {
             case TAG_FOLLOWED:
             case TAG_PREVIEW:
+                String key = (type == ReaderPostListType.TAG_PREVIEW ?
+                        AnalyticsTracker.READER_DETAIL_TYPE_TAG_PREVIEW :
+                        AnalyticsTracker.READER_DETAIL_TYPE_NORMAL);
+                analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY, key);
                 ReaderActivityLauncher.showReaderPostPagerForTag(
                         getActivity(),
                         getCurrentTag(),
@@ -1315,12 +1320,15 @@ public class ReaderPostListFragment extends Fragment
                         postId);
                 break;
             case BLOG_PREVIEW:
+                analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY,
+                        AnalyticsTracker.READER_DETAIL_TYPE_BLOG_PREVIEW);
                 ReaderActivityLauncher.showReaderPostPagerForBlog(
                         getActivity(),
                         blogId,
                         postId);
                 break;
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE, analyticsProperties);
     }
 
     /*

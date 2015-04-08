@@ -19,7 +19,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -31,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import org.wordpress.android.Constants;
@@ -1121,7 +1121,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         if (MediaUtils.isVideo(sourceString)) {
                             // Videos cannot be added to a gallery, insert inline instead
                             addMedia(source);
-                        } else if (sourceString.contains("wordpress.com")) {
+                        } else if (URLUtil.isNetworkUrl(sourceString)) {
                             blogMediaIds.add(id);
                             AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
                         } else if (MediaUtils.isValidImage(sourceString)) {
@@ -1171,7 +1171,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 Integer libraryMediaAdded = 0;
 
                 for (MediaItem media : selectedContent) {
-                    if (media.getSource().toString().contains("wordpress.com")) {
+                    if (URLUtil.isNetworkUrl(media.getSource().toString())) {
                         addExistingMediaToEditor(media.getTag());
                         ++libraryMediaAdded;
                     } else {
