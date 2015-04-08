@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="posts_fetching">Beiträge werden abgerufen...</string>
+	<string name="media_fetching">Medien werden abgerufen…</string>
+	<string name="comments_fetching">Kommentare werden abgerufen...</string>
+	<string name="pages_fetching">Seiten werden abgerufen…</string>
+	<string name="toast_err_post_uploading">Der Beitrag kann während dem Hochladen nicht geöffnet werden.</string>
+	<string name="stats_empty_search_terms">Es wurden keine Suchbegriffe verzeichnet.</string>
+	<string name="stats_empty_search_terms_desc">Erfahre mehr über deinen Suchverkehr, indem du dir die Begriffe ansiehst, nach denen deine Besucher gesucht haben, um deine Website zu finden.</string>
+	<string name="stats_followers_total_email_paged">Es werden %1$d - %2$d von %3$s E-Mail-Followern angezeigt.</string>
+	<string name="stats_followers_total_wpcom_paged">Es werden %1$d - %2$d von %3$s WordPress.com Followern angezeigt.</string>
+	<string name="reader_empty_posts_request_failed">Beiträge können nicht abgerufen werden.</string>
+	<string name="publisher">Herausgeber:</string>
+	<string name="error_notification_open">Benachrichtigung konnte nicht geöffnet werden.</string>
+	<string name="stats_search_terms_unknown_search_terms">Unbekannte Suchbegriffe</string>
+	<string name="stats_entry_search_terms">Suchbegriff</string>
+	<string name="stats_view_search_terms">Suchbegriffe</string>
+	<string name="stats_view_authors">Autoren</string>
 	<string name="reader_page_recommended_blogs">Blogs, die dir gefallen könnten</string>
 	<string name="stats_months_and_years">Monate und Jahre</string>
 	<string name="stats_average_per_day">Durchschnitt pro Tag</string>
@@ -192,8 +208,6 @@
 	<string name="forums">Forums</string>
 	<string name="help_center">Hilfecenter</string>
 	<string name="ssl_certificate_error">Ungültiges SSL Zertifikat</string>
-	<string name="loading_pages">Lädt Seiten...</string>
-	<string name="loading_posts">Lädt Beiträge...</string>
 	<string name="reader_label_reblog_empty">Du hast keine sichtbaren WordPress.com-Blogs um diesen Beitrag zu rebloggen.</string>
 	<string name="reader_label_reblog_empty_link">Blog-Sichtbarkeit ändern</string>
 	<string name="ssl_certificate_ask_trust">Wenn du dich üblicherweise ohne Probleme mit dieser Website verbinden kannst, könnte dieser Fehler bedeute, dass sich jemand als diese Website ausgibt und du daher nicht weitermachen solltest. Möchtest du dem Zertifikat trotzdem vertrauen?</string>
@@ -322,7 +336,6 @@
 	<string name="new_post">Neuer Beitrag</string>
 	<string name="reader_toast_err_add_tag">Hinzufügen des Tags nicht möglich</string>
 	<string name="delete_post">Beitrag löschen</string>
-	<string name="stats_view_search_engine_terms">Suchbegriffe</string>
 	<string name="media_error_no_permission">Du hast keine Berichtigung die Mediathek zu sehen</string>
 	<string name="site_address">Deine selbst-gehostete Adresse (URL)</string>
 	<string name="reader_title_applog">Anwendungslog</string>
@@ -356,7 +369,6 @@
 	<string name="dlg_trashing_comments">Verschiebe in Papierkorb</string>
 	<string name="themes_live_preview">Live-Vorschau</string>
 	<string name="theme_premium_theme">Premium-Theme</string>
-	<string name="stats_view_top_authors">Top-Autoren</string>
 	<string name="author_email">Autor-E-Mail</string>
 	<string name="category_name">Kategorie-Name</string>
 	<string name="media_gallery_image_order">Bild-Reihenfolge</string>
@@ -397,7 +409,6 @@
 	<string name="creating_your_site">Erstelle deine Webseite</string>
 	<string name="reader_empty_posts_in_tag_updating">Hole Beiträge...</string>
 	<string name="error_refresh_media">Etwas ist schief gelaufen beim Aktualisieren der Mediathek. Bitte versuche es später nochmal.</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="reader_label_reply">Antworten</string>
 	<string name="comment_spammed">Kommentar als Spam markiert</string>
 	<string name="always_use_these_settings_to_share">Immer diese Einstellungen benutzen</string>
@@ -579,7 +590,6 @@
 	<string name="version">Version</string>
 	<string name="tos">Nutzungsbedingungen</string>
 	<string name="app_title">WordPress für Android</string>
-	<string name="publisher">Herausgeber: Automattic, Inc</string>
 	<string name="about">Über</string>
 	<string name="max_thumbnail_px_width">Standardbreite für Bilder</string>
 	<string name="image_alignment">Ausrichtung</string>

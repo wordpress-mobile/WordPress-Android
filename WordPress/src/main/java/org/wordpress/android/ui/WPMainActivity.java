@@ -1,55 +1,53 @@
 package org.wordpress.android.ui;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 
+import com.simperium.client.Bucket;
+
+import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.mysite.MySiteFragment;
+import org.wordpress.android.ui.notifications.NotificationEvents;
+import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AuthenticationDialogUtils;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-
-/*
- * TODO: handle notifications & reader with no wp.com account
- * TODO: notifications tab needs a badge when their are unseen notes
- */
-
-public class WPMainActivity extends ActionBarActivity
-    implements ViewPager.OnPageChangeListener
-{
+public class WPMainActivity extends Activity
+    implements ViewPager.OnPageChangeListener, Bucket.Listener<Note> {
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
 
-    private int mPreviousPosition = -1;
-
-    private static final String KEY_INITIAL_UPDATE = "initial_update_performed";
+    public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_tint));
-        }
+        setStatusBarColor();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -72,31 +70,59 @@ public class WPMainActivity extends ActionBarActivity
         mTabs.setOnPageChangeListener(this);
 
         if (savedInstanceState == null) {
-            if (showSignInIfRequired()) {
-                // return to the tab that was showing the last time
-                int position = AppPrefs.getMainTabIndex();
-                if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
-                    mViewPager.setCurrentItem(position);
+            if (AccountHelper.isSignedIn()) {
+                // open note detail if activity called from a push, otherwise return to the tab
+                // that was showing last time
+                boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
+                        false));
+                if (openedFromPush) {
+                    getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
+                    launchWithNoteId();
+                } else {
+                    int position = AppPrefs.getMainTabIndex();
+                    if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
+                        mViewPager.setCurrentItem(position);
+                    }
                 }
+            } else {
+                showSignIn();
             }
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusBarColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_tint));
+        }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver();
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        AppLog.i(AppLog.T.NOTIFS, "Main activity new intent");
+        if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
+            launchWithNoteId();
+        }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver();
+    /*
+     * called when app is launched from a push notification, switches to the notification tab
+     * and opens the desired note detail
+     */
+    private void launchWithNoteId() {
+        if (isFinishing() || getIntent() == null) return;
+
+        mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
+
+        String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
+        boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
+
+        if (!TextUtils.isEmpty(noteId)) {
+            NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard);
+            GCMIntentService.clearNotificationsMap();
+        }
     }
 
     @Override
@@ -104,20 +130,67 @@ public class WPMainActivity extends ActionBarActivity
         // remember the index of this page
         AppPrefs.setMainTabIndex(position);
 
-        mTabs.setBadge(mPreviousPosition, false);
-        mTabs.setBadge(position, true);
-
-        mPreviousPosition = position;
+        switch (position) {
+            case WPMainTabAdapter.TAB_NOTIFS:
+                if (getNotificationListFragment() != null) {
+                    getNotificationListFragment().updateLastSeenTime();
+                    mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, false);
+                }
+                break;
+        }
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        // nop
+        int position = mViewPager.getCurrentItem();
+        if (position == WPMainTabAdapter.TAB_READER) {
+            ReaderPostListFragment fragment = getReaderListFragment();
+            if (fragment != null) {
+                if (state == ViewPager.SCROLL_STATE_DRAGGING && fragment.isReaderToolbarShowing()) {
+                    fragment.showReaderToolbar(false);
+                } else if (state == ViewPager.SCROLL_STATE_SETTLING && !fragment.isReaderToolbarShowing()) {
+                    fragment.showReaderToolbar(true);
+                }
+            }
+        }
     }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         // nop
+    }
+
+    @Override
+    protected void onPause() {
+        if (SimperiumUtils.getNotesBucket() != null) {
+            SimperiumUtils.getNotesBucket().removeListener(this);
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Start listening to Simperium Note bucket
+        if (SimperiumUtils.getNotesBucket() != null) {
+            SimperiumUtils.getNotesBucket().addListener(this);
+        }
+
+        checkNoteBadge();
     }
 
     @Override
@@ -148,8 +221,10 @@ public class WPMainActivity extends ActionBarActivity
                 break;
             case RequestCodes.SETTINGS:
                 // user returned from settings
-                if (showSignInIfRequired()) {
+                if (AccountHelper.isSignedIn()) {
                     WordPress.registerForCloudMessaging(this);
+                } else {
+                    showSignIn();
                 }
                 break;
             case RequestCodes.SITE_PICKER:
@@ -170,20 +245,7 @@ public class WPMainActivity extends ActionBarActivity
         }
     }
 
-   /*
-    * displays the sign-in activity if the user isn't logged in - returns true if user
-    * is already signed in
-    */
-    private boolean showSignInIfRequired() {
-        if (WordPress.isSignedIn(this)) {
-            return true;
-        }
-        showSignIn();
-        return false;
-    }
-
     private void showSignIn() {
-        mPreviousPosition = -1;
         startActivityForResult(new Intent(this, SignInActivity.class), RequestCodes.ADD_ACCOUNT);
     }
 
@@ -199,6 +261,17 @@ public class WPMainActivity extends ActionBarActivity
     }
 
     /*
+     * returns the notification list fragment from the notification tab
+     */
+    private NotificationsListFragment getNotificationListFragment() {
+        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_NOTIFS);
+        if (fragment != null && fragment instanceof NotificationsListFragment) {
+            return (NotificationsListFragment) fragment;
+        }
+        return null;
+    }
+
+    /*
      * returns the my site fragment from the sites tab
      */
     private MySiteFragment getMySiteFragment() {
@@ -209,63 +282,101 @@ public class WPMainActivity extends ActionBarActivity
         return null;
     }
 
-    /**
-     * broadcast receiver which detects when user signs out of the app and calls onSignout()
-     * so descendants of this activity can do cleanup upon signout
+    /*
+     * badges the notifications tab depending on whether there are unread notes
      */
-    private void registerReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(WordPress.BROADCAST_ACTION_SIGNOUT);
-        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
-        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
-        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
-        filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
-        filter.addAction(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED);
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-        lbm.registerReceiver(mReceiver, filter);
+    private boolean mIsCheckingNoteBadge;
+    private void checkNoteBadge() {
+        if (mIsCheckingNoteBadge) {
+            AppLog.v(AppLog.T.NOTIFS, "already checking note badge");
+            return;
+        }
+
+        mIsCheckingNoteBadge = true;
+        new Thread() {
+            @Override
+            public void run() {
+                final boolean hasUnreadNotes = SimperiumUtils.hasUnreadNotes();
+                boolean isBadged = mTabs.isBadged(WPMainTabAdapter.TAB_NOTIFS);
+                if (hasUnreadNotes != isBadged) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, hasUnreadNotes);
+                            mIsCheckingNoteBadge = false;
+                        }
+                    });
+                } else {
+                    mIsCheckingNoteBadge = false;
+                }
+            }
+        }.start();
     }
 
-    private void unregisterReceiver() {
-        try {
-            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-            lbm.unregisterReceiver(mReceiver);
-        } catch (IllegalArgumentException e) {
-            // exception occurs if receiver already unregistered (safe to ignore)
+    // Events
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.UserSignedOut event) {
+        showSignIn();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.InvalidCredentialsDetected event) {
+        AuthenticationDialogUtils.showAuthErrorView(this);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.RestApiUnauthorized event) {
+        AuthenticationDialogUtils.showAuthErrorView(this);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.TwoFactorAuthenticationDetected event) {
+        AuthenticationDialogUtils.showAuthErrorView(this);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.InvalidSslCertificateDetected event) {
+        SelfSignedSSLCertsManager.askForSslTrust(this, null);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.LoginLimitDetected event) {
+        ToastUtils.showToast(this, R.string.limit_reached, ToastUtils.Duration.LONG);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.BlogListChanged event) {
+        // TODO: reload blog list if showing
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
+        checkNoteBadge();
+    }
+
+    /*
+     * Simperium Note bucket listeners
+     */
+    @Override
+    public void onNetworkChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String s) {
+        if (changeType == Bucket.ChangeType.INSERT || changeType == Bucket.ChangeType.MODIFY) {
+            checkNoteBadge();
         }
     }
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent == null || intent.getAction() == null) {
-                return;
-            }
-            switch (intent.getAction()) {
-                case WordPress.BROADCAST_ACTION_SIGNOUT:
-                    showSignIn();
-                    break;
-                case WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS:
-                case WordPress.BROADCAST_ACTION_REST_API_UNAUTHORIZED:
-                case WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH:
-                    AuthenticationDialogUtils.showAuthErrorView(WPMainActivity.this);
-                    break;
-                case SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED:
-                    // TODO: this applies to the notifications tab, should show message there
-                    AuthenticationDialogUtils.showAuthErrorView(
-                            WPMainActivity.this,
-                            R.string.sign_in_again,
-                            R.string.simperium_connection_error);
-                    break;
-                case WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE:
-                    SelfSignedSSLCertsManager.askForSslTrust(WPMainActivity.this, null);
-                    break;
-                case WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT:
-                    ToastUtils.showToast(context, R.string.limit_reached, ToastUtils.Duration.LONG);
-                    break;
-                case WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED:
-                    // TODO: reload blog list if showing
-                    break;
-            }
-        }
-    };
+    @Override
+    public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
+        // noop
+    }
+
+    @Override
+    public void onDeleteObject(Bucket<Note> noteBucket, Note note) {
+        // noop
+    }
+
+    @Override
+    public void onSaveObject(Bucket<Note> noteBucket, Note note) {
+        // noop
+    }
 }

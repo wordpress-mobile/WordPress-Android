@@ -11,9 +11,6 @@ import org.wordpress.android.ui.ActivityId;
 
 public class AppPrefs {
     public enum PrefKey {
-        // id of the current user
-        USER_ID,
-
         // name of last shown activity
         LAST_ACTIVITY_STR,
 
@@ -25,7 +22,7 @@ public class AppPrefs {
         READER_SUBS_PAGE_TITLE,
 
         // email retrieved and attached to mixpanel profile
-        MIXPANEL_EMAIL_ADDRESS_RETRIEVED,
+        MIXPANEL_EMAIL_ADDRESS,
 
         // index of the last active tab in main activity
         MAIN_TAB_INDEX,
@@ -101,17 +98,6 @@ public class AppPrefs {
         editor.apply();
     }
 
-    public static long getCurrentUserId() {
-        return getLong(PrefKey.USER_ID);
-    }
-    public static void setCurrentUserId(long userId) {
-        if (userId == 0) {
-            remove(PrefKey.USER_ID);
-        } else {
-            setLong(PrefKey.USER_ID, userId);
-        }
-    }
-
     public static ReaderTag getReaderTag() {
         String tagName = getString(PrefKey.READER_TAG_NAME);
         if (TextUtils.isEmpty(tagName)) {
@@ -132,7 +118,7 @@ public class AppPrefs {
         }
     }
 
-    /*
+    /**
      * title of the last active page in ReaderSubsActivity - this is stored rather than
      * the index of the page so we can re-order pages without affecting this value
      */
@@ -143,7 +129,7 @@ public class AppPrefs {
         setString(PrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
     }
 
-    /*
+    /**
      * name of the last shown activity - used at startup to restore the previously selected
      * activity, also used by analytics tracker
      */
@@ -159,12 +145,13 @@ public class AppPrefs {
 
 
     // Mixpanel email retrieval check
-    public static Boolean getMixpanelEmailRetrievalCheck() {
-        return getBoolean(PrefKey.MIXPANEL_EMAIL_ADDRESS_RETRIEVED, false);
+
+    public static String getMixpanelUserEmail() {
+        return getString(PrefKey.MIXPANEL_EMAIL_ADDRESS, null);
     }
 
-    public static void setMixpanelEmailRetrievalCheck(boolean b) {
-        setBoolean(PrefKey.MIXPANEL_EMAIL_ADDRESS_RETRIEVED, b);
+    public static void setMixpanelUserEmail(String email) {
+        setString(PrefKey.MIXPANEL_EMAIL_ADDRESS, email);
     }
 
     public static int getMainTabIndex() {

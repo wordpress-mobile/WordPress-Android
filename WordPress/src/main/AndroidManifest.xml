@@ -89,26 +89,32 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
+            android:theme="@style/CalypsoTheme"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".ui.prefs.LicensesActivity"/>
+            android:name=".ui.prefs.LicensesActivity"
+            android:theme="@style/CalypsoTheme"/>
         <activity
-            android:name=".ui.prefs.SettingsActivity"/>
+            android:name=".ui.prefs.SettingsActivity"
+            android:configChanges="locale|orientation"
+            android:theme="@style/CalypsoTheme"/>
         <activity
-            android:name=".ui.accounts.ManageBlogsActivity"/>
+            android:name=".ui.accounts.ManageBlogsActivity"
+            android:theme="@style/CalypsoTheme"/>
         <activity
             android:name=".networking.SSLCertsViewActivity"/>
 
         <!-- Comments activities -->
         <activity
             android:name=".ui.comments.CommentsActivity"
-            android:theme="@style/WordPress.DrawerActivity" />
+            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.comments.CommentDetailActivity"
             android:theme="@style/CalypsoTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.comments.EditCommentActivity" />
+            android:name=".ui.comments.EditCommentActivity"
+            android:theme="@style/CalypsoTheme"/>
 
         <!-- Posts activities -->
         <activity
@@ -116,7 +122,7 @@
             android:label="@string/add_new_category"
             android:theme="@style/WordPress.Dialog" />
         <activity
-            android:name=".ui.posts.EditLinkActivity"
+            android:name=".editor.legacy.EditLinkActivity"
             android:label="@string/create_a_link"
             android:theme="@style/WordPress.Dialog"
             android:windowSoftInputMode="stateVisible" />
@@ -124,7 +130,7 @@
             android:name=".ui.posts.EditPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden|adjustResize"
-            android:theme="@style/WordPress.DropDownListView.Light">
+            android:theme="@style/CalypsoTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.posts.PostsActivity" />
@@ -134,20 +140,21 @@
         </activity>
         <activity
             android:name=".ui.posts.PostsActivity"
-            android:theme="@style/WordPress.DrawerActivity" >
+            android:theme="@style/Calypso.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.posts.PagesActivity"
-            android:theme="@style/WordPress.DrawerActivity" />
+            android:theme="@style/Calypso.NoActionBar" />
         <activity
-            android:name=".ui.posts.SelectCategoriesActivity" />
+            android:name=".ui.posts.SelectCategoriesActivity"
+            android:theme="@style/CalypsoTheme"/>
 
         <!-- Stats Activities -->
         <activity android:name=".ui.stats.StatsActivity"
-                  android:theme="@style/WordPress.DrawerActivity"/>
+                  android:theme="@style/Calypso.NoActionBar"/>
 
         <activity android:name=".ui.stats.StatsViewAllActivity"
                   android:theme="@style/CalypsoTheme"/>
@@ -155,7 +162,8 @@
         <activity android:name=".ui.stats.StatsSinglePostDetailsActivity"
             android:theme="@style/CalypsoTheme"/>
 
-        <activity android:name=".ui.WPWebViewActivity"/>
+        <activity android:name=".ui.WPWebViewActivity"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Media Activities -->
         <activity
@@ -164,7 +172,7 @@
             android:windowSoftInputMode="stateHidden" />
 
         <activity android:name=".ui.media.MediaBrowserActivity"
-                  android:theme="@style/WordPress.DrawerActivity" >
+                  android:theme="@style/Calypso.NoActionBar" >
         </activity>
 
         <activity android:name=".ui.media.MediaGalleryActivity">
@@ -176,7 +184,7 @@
         <!-- Theme Activities -->
         <activity
             android:name=".ui.themes.ThemeBrowserActivity"
-            android:theme="@style/WordPress.DrawerActivity" >
+            android:theme="@style/Calypso.NoActionBar" >
         </activity>
 
         <!-- Deep Linking Activity -->
@@ -197,7 +205,7 @@
         <!-- Reader Activities -->
         <activity
             android:name=".ui.reader.ReaderPostListActivity"
-            android:theme="@style/WordPress.DrawerActivity"
+            android:theme="@style/Calypso.NoActionBar"
             android:label="@string/reader" />
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
@@ -210,6 +218,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.AppLogViewerActivity"
+            android:theme="@style/CalypsoTheme"
             android:label="@string/reader_title_applog" />
         <activity
             android:name=".ui.reader.ReaderUserListActivity"
@@ -252,7 +261,7 @@
         </activity>
         <activity
             android:name=".ui.ViewSiteActivity"
-            android:theme="@style/WordPress.DrawerActivity" />
+            android:theme="@style/Calypso.NoActionBar" />
 
         <activity
             android:name=".ui.SitePickerActivity"
@@ -260,9 +269,6 @@
             android:label="@string/site_picker_title" />
 
         <!-- Notifications activities -->
-        <activity
-            android:name=".ui.notifications.NotificationsActivity"
-            android:theme="@style/WordPress.DrawerActivity" />
         <activity
             android:name=".ui.notifications.NotificationsDetailActivity"
             android:theme="@style/CalypsoTheme" />

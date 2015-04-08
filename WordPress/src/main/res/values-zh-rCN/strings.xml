@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_followers_total_email_paged">正在显示 %1$d - %2$d 位（共 %3$s 位）电子邮件关注者</string>
+	<string name="stats_followers_total_wpcom_paged">正在显示 %1$d - %2$d 位（共 %3$s 位）WordPress.com 关注者</string>
+	<string name="reader_empty_posts_request_failed">无法检索文章</string>
+	<string name="publisher">发布者：</string>
+	<string name="stats_search_terms_unknown_search_terms">未知搜索字词</string>
+	<string name="error_notification_open">无法打开通知</string>
+	<string name="stats_entry_search_terms">搜索字词</string>
+	<string name="stats_empty_search_terms">未记录任何搜索字词</string>
+	<string name="stats_view_search_terms">搜索字词</string>
+	<string name="media_fetching">正在获取媒体…</string>
+	<string name="posts_fetching">正在获取文章…</string>
+	<string name="pages_fetching">正在获取页面…</string>
+	<string name="toast_err_post_uploading">无法在上传文章的同时打开文章</string>
+	<string name="stats_empty_search_terms_desc">要了解更多有关搜索流量的信息，请查看您的访客用于搜索您站点的字词。</string>
+	<string name="stats_view_authors">作者</string>
+	<string name="comments_fetching">正在提取评论…</string>
 	<string name="error_copy_to_clipboard">复制文本到剪贴板时出错</string>
 	<string name="reader_page_recommended_blogs">您可能喜欢的博客</string>
 	<string name="stats_months_and_years">月和年</string>
@@ -187,8 +203,6 @@
 	<string name="wpcom_signin_dialog_title">WordPress.com注册</string>
 	<string name="jetpack_stats_switch_user">现有的WordPress.com账号（%s）没有访问博客统计的权限.你想要注册一个新账号么</string>
 	<string name="ptr_tip_message">注意:下拉以刷新</string>
-	<string name="loading_posts">正在加载文章...</string>
-	<string name="loading_pages">正在加载页面...</string>
 	<string name="reader_label_reblog_empty_link">改变博客的可见性</string>
 	<string name="help">帮助</string>
 	<string name="forgot_password">忘记密码？</string>
@@ -384,8 +398,6 @@
 	<string name="blog_title_invalid">无效的网站标题</string>
 	<string name="stats_view_totals_followers_and_shares">统计，订阅，分享</string>
 	<string name="stats_view_tags_and_categories">标签和分类</string>
-	<string name="stats_view_top_authors">热门作者</string>
-	<string name="stats_view_search_engine_terms">搜索引擎条款</string>
 	<string name="stats_visitors_and_views_header_best_ever">过去最好</string>
 	<string name="stats_visitors_and_views_header_all_time">所有时间</string>
 	<string name="deleting_page">正在删除页面</string>
@@ -401,7 +413,6 @@
 	<string name="reader_likes_multi">%,d 人喜欢</string>
 	<string name="reader_toast_err_get_comment">无法检索此评论</string>
 	<string name="reader_label_reply">回复</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">视频</string>
 	<string name="download">下载媒体文件</string>
 	<string name="cant_share_no_visible_blog">没有一个博客，你不能分享到WordPress</string>
@@ -579,7 +590,6 @@
 	<string name="version">版本</string>
 	<string name="tos">服务条款</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="publisher">发行商: Automattic, Inc</string>
 	<string name="about">关于</string>
 	<string name="max_thumbnail_px_width">默认图像宽度</string>
 	<string name="image_alignment">对齐</string>

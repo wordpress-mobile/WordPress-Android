@@ -26,9 +26,6 @@
         <item name="swipeToRefreshStyle">@style/WordPress.SwipeToRefresh</item>
     </style>
 
-    <!-- see values-21/styles.xml -->
-    <style name="WordPress.DrawerActivity" parent="Calypso.NoActionBar" />
-
     <style name="WordPress.DropDownListView.Light" parent="WordPress">
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
@@ -81,36 +78,20 @@
         <item name="android:background">@drawable/btn_cab_done_wordpress</item>
     </style>
 
-    <style name="WordPressSectionHeader">
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginLeft">4dp</item>
-        <item name="android:layout_marginRight">4dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:textColor">#AAAAAA</item>
-        <item name="android:textSize">14sp</item>
+    <style name="WordPressSettingsSectionHeader">
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="WordPressSettingsSectionHeader" parent="WordPressSectionHeader">
-        <item name="android:background">@drawable/section_header</item>
-        <item name="android:textColor">#323232</item>
-        <item name="android:paddingBottom">6dp</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="WordPressSubHeader">
-        <item name="android:textSize">14sp</item>
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginLeft">12dp</item>
-        <item name="android:textColor">#AAAAAA</item>
-        <item name="android:layout_marginBottom">-4dp</item>
-    </style>
-
-    <style name="WordPress.ToggleButton">
-        <item name="android:minWidth">@dimen/format_bar_height</item>
-        <item name="android:minHeight">@dimen/format_bar_height</item>
-        <item name="android:textOn">""</item>
-        <item name="android:textOff">""</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:textColor">@color/grey</item>
     </style>
 
     <style name="WordPressTitleAppearance" parent="@android:style/TextAppearance">
@@ -120,37 +101,6 @@
         <item name="android:textColor">#FFF6F6F6</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="DrawerText">
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textAppearance">?android:attr/textAppearance</item>
-        <item name="android:textColor">@color/drawer_text</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:clickable">false</item>
-    </style>
-
-    <style name="DrawerIcon">
-        <item name="android:layout_height">@dimen/drawer_icon_size</item>
-        <item name="android:layout_width">@dimen/drawer_icon_size</item>
-        <item name="android:scaleType">centerInside</item>
-        <item name="android:clickable">false</item>
-        <item name="android:tint">@color/drawer_icon_tint</item>
-    </style>
-
-    <style name="DrawerBadge">
-        <item name="android:background">@drawable/comment_badge_background</item>
-        <item name="android:textAppearance">?android:attr/textAppearance</item>
-        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
-        <item name="android:layout_height">@dimen/drawer_badge_size</item>
-        <item name="android:layout_width">@dimen/drawer_badge_size</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingTop">2dp</item>
-        <item name="android:paddingBottom">2dp</item>
-        <item name="android:paddingLeft">4dp</item>
-        <item name="android:paddingRight">4dp</item>
     </style>
 
     <style name="WordPressWelcomeStyle">
@@ -292,7 +242,6 @@
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:background">#d4dfe5</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
         <item name="android:gravity">center_vertical</item>
     </style>

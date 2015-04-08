@@ -21,13 +21,13 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
-import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
+import org.wordpress.android.util.helpers.ListScrollPositionManager;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
@@ -54,6 +54,7 @@ public class ManageBlogsActivity extends ActionBarActivity {
         setTitle(getString(R.string.blogs_visibility));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setElevation(0.0f);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -109,7 +110,7 @@ public class ManageBlogsActivity extends ActionBarActivity {
         for (Map<String, Object> item : mAccounts) {
             item.put("isHidden", false);
         }
-        WordPress.wpDB.setAllDotComAccountsVisibility(true);
+        WordPress.wpDB.setAllDotComBlogsVisibility(true);
         ((BlogsAdapter) getListView().getAdapter()).notifyDataSetChanged();
     }
 
@@ -117,7 +118,7 @@ public class ManageBlogsActivity extends ActionBarActivity {
         for (Map<String, Object> item : mAccounts) {
             item.put("isHidden", true);
         }
-        WordPress.wpDB.setAllDotComAccountsVisibility(false);
+        WordPress.wpDB.setAllDotComBlogsVisibility(false);
         ((BlogsAdapter) getListView().getAdapter()).notifyDataSetChanged();
     }
 
@@ -128,13 +129,13 @@ public class ManageBlogsActivity extends ActionBarActivity {
 
     private void loadAccounts() {
         ListView listView = getListView();
-        mAccounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"isHidden"});
+        mAccounts = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"isHidden"});
         listView.setAdapter(new BlogsAdapter(this, R.layout.manageblogs_listitem, mAccounts));
     }
 
     private void setItemChecked(int position, boolean checked) {
         int blogId = MapUtils.getMapInt(mAccounts.get(position), "id");
-        WordPress.wpDB.setDotComAccountsVisibility(blogId, checked);
+        WordPress.wpDB.setDotComBlogsVisibility(blogId, checked);
         Map<String, Object> item = mAccounts.get(position);
         item.put("isHidden", checked ? "0" : "1");
     }

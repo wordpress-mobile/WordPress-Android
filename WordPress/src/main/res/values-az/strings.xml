@@ -116,8 +116,6 @@
 	<string name="help_center">Yardım mərkəzi</string>
 	<string name="ssl_certificate_error">Yanlış SSL sertifikatı</string>
 	<string name="help">Yardım</string>
-	<string name="loading_posts">Yazılar yüklənir..</string>
-	<string name="loading_pages">Səhifələr yüklənir…</string>
 	<string name="reader_label_reblog_empty">Yenidən bloqlamaq üçün baxılacaq bir WordPress.com bloqunuz yoxdur.</string>
 	<string name="reader_label_reblog_empty_link">Bloq görünüşünü dəyişdir</string>
 	<string name="forgot_password">Parolunuzu itirdinizmi?</string>
@@ -235,8 +233,6 @@
 	<string name="self_hosted_blogs">Öz serverinizdə mövcud olan bloqlar</string>
 	<string name="stats_view_totals_followers_and_shares">Xülasələr, izlənmələr və paylaşmalar</string>
 	<string name="stats_view_tags_and_categories">Etiketlər və kateqoriyalar</string>
-	<string name="stats_view_top_authors">Populyar müəlliflər</string>
-	<string name="stats_view_search_engine_terms">Axtatış kriteriyaları</string>
 	<string name="stats_visitors_and_views_header_best_ever">Ən yaxşılar</string>
 	<string name="stats_visitors_and_views_header_all_time">Bütün zamanlar</string>
 	<string name="pending_review">Ön baxış üçün gözləyir</string>
@@ -323,7 +319,6 @@
 	<string name="error_refresh_media">Media kitabxanasının yenilənməsi zamanı bəzi şeylər tərs getdi. Daha sonra təkrar yoxlayın.</string>
 	<string name="reader_empty_posts_in_tag_updating">Yazılar gətirilir...</string>
 	<string name="reader_label_reply">Cavab</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="comment_spammed">Şərh spam olaraq işarələnmişdir</string>
 	<string name="video">Video</string>
 	<string name="reader_likes_multi">%,d şəxs bunu bəyənir</string>
@@ -504,7 +499,6 @@
 	<string name="version">Versiya</string>
 	<string name="app_title">Android üçün WordPress</string>
 	<string name="tos">Xidmət Şərtləri</string>
-	<string name="publisher">Nəşriyyat: Automattic, Inc</string>
 	<string name="about">Haqqında</string>
 	<string name="max_thumbnail_px_width">Mövcud təsvirin genişliyi</string>
 	<string name="image_alignment">Mövqeləndirmə</string>

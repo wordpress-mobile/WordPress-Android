@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.net.Uri;
+import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 import android.webkit.URLUtil;
 
@@ -31,12 +32,20 @@ public class UrlUtils {
         }
     }
 
+    /**
+     *
+     * @param urlString url to get domain from
+     * @return domain of uri if available. Empty string otherwise.
+     */
     public static String getDomainFromUrl(final String urlString) {
-        if (urlString == null) {
-            return "";
+        if (urlString != null) {
+            Uri uri = Uri.parse(urlString);
+            if (uri.getHost() != null) {
+                return uri.getHost();
+            }
         }
-        Uri uri = Uri.parse(urlString);
-        return uri.getHost();
+
+        return "";
     }
 
     /**
@@ -194,5 +203,15 @@ public class UrlUtils {
             return false;
         }
         return true;
+    }
+
+    // returns true if the passed url is for an image
+    public static boolean isImageUrl(String url) {
+        if (TextUtils.isEmpty(url)) return false;
+
+        String cleanedUrl = removeQuery(url.toLowerCase());
+
+        return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg") ||
+                cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
     }
 }

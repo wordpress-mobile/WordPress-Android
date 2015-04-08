@@ -25,7 +25,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
-import org.wordpress.android.ui.notifications.blocks.HeaderUserNoteBlock;
+import org.wordpress.android.ui.notifications.blocks.HeaderNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
@@ -33,12 +33,15 @@ import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+
+import de.greenrobot.event.EventBus;
 
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment, Bucket.Listener<Note> {
     private static final String KEY_NOTE_ID = "noteId";
@@ -188,6 +191,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (mNote.getParentCommentId() > 0 || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
                 // show comment detail
                 detailActivity.showCommentDetailForNote(mNote);
+            } else if (mNote.isFollowType()) {
+                detailActivity.showBlogPreviewActivity(mNote.getSiteId());
             } else {
                 // otherwise, load the post in the Reader
                 detailActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
@@ -242,9 +247,11 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             // Add the note header if one was provided
             if (mNote.getHeader() != null) {
-                HeaderUserNoteBlock headerNoteBlock = new HeaderUserNoteBlock(
+                ImageType imageType = mNote.isFollowType() ? ImageType.BLAVATAR : ImageType.AVATAR;
+                HeaderNoteBlock headerNoteBlock = new HeaderNoteBlock(
                         getActivity(),
                         mNote.getHeader(),
+                        imageType,
                         mOnNoteBlockTextClickListener,
                         mOnGravatarClickedListener
                 );
@@ -259,7 +266,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         JSONObject noteObject = bodyArray.getJSONObject(i);
                         // Determine NoteBlock type and add it to the array
                         NoteBlock noteBlock;
-                        String noteBlockTypeString = JSONUtil.queryJSON(noteObject, "type", "");
+                        String noteBlockTypeString = JSONUtils.queryJSON(noteObject, "type", "");
 
                         if (NoteBlockRangeType.fromString(noteBlockTypeString) == NoteBlockRangeType.USER) {
                             if (mNote.isCommentType()) {
@@ -395,6 +402,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 // Mark note as read since we are looking at it already
                 if (mNote.isUnread()) {
                     mNote.markAsRead();
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
                 }
 
                 if (getActivity() != null) {

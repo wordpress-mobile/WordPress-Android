@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="posts_fetching">Memuat pos...</string>
+	<string name="media_fetching">Memuat media...</string>
+	<string name="toast_err_post_uploading">Gagal membuka pos saat diunggah</string>
+	<string name="comments_fetching">Memuat komentar...</string>
+	<string name="pages_fetching">Memuat laman...</string>
+	<string name="stats_view_search_terms">Terma-terma Pencarian</string>
+	<string name="stats_view_authors">Para Penulis</string>
+	<string name="stats_entry_search_terms">Terma Pencarian</string>
+	<string name="stats_empty_search_terms_desc">Pelajari lebih lanjut mengenai trafik pencarian Anda dengan melihat terma-terma pencarian yang dipergunakan oleh pengunjung saat menemukan situs Anda.</string>
+	<string name="stats_empty_search_terms">Tak ada terma pencarian yang tercatat</string>
+	<string name="stats_search_terms_unknown_search_terms">Terma Pencarian Tak Dikenal</string>
+	<string name="stats_followers_total_wpcom_paged">Menampilkan %1$d - %2$d dari %3$s Pengikut WordPress.com</string>
+	<string name="stats_followers_total_email_paged">Menampilkan %1$d - %2$d dari %3$s Pengikut via Email</string>
+	<string name="reader_empty_posts_request_failed">Gagal memuat pos-pos</string>
+	<string name="publisher">Penerbit:</string>
+	<string name="error_notification_open">Gagal membuka notifikasi</string>
 	<string name="reader_page_recommended_blogs">Blog yang mungkin Anda sukai</string>
 	<string name="post_uploading">Mengunggah</string>
 	<string name="stats_overall">Keseluruhan</string>
@@ -187,7 +203,6 @@
 	<string name="wpcom_signin_dialog_title">Masuk ke WordPress.com</string>
 	<string name="jetpack_stats_switch_user">Akun WordPress.com (%s) ini tidak memiliki akses ke statistik untuk blog ini. Apakah Anda ingin masuk menggunakan akun lain?</string>
 	<string name="ptr_tip_message">Tip: Tarik ke bawah untuk menyegarkan</string>
-	<string name="loading_pages">Memuat laman...</string>
 	<string name="reader_label_reblog_empty_link">Ubah visibilitas blog</string>
 	<string name="help">Bantuan</string>
 	<string name="forgot_password">Lupa password Anda?</string>
@@ -195,7 +210,6 @@
 	<string name="help_center">Pusat bantuan</string>
 	<string name="ssl_certificate_error">Sertifikat SSL tidak sah</string>
 	<string name="reader_label_reblog_empty">Kelihatannya Anda tidak memiliki blog WordPress.com untuk bisa menerbitkan lagi pos ini.</string>
-	<string name="loading_posts">Memuat pos...</string>
 	<string name="ssl_certificate_ask_trust">Jika biasanya Anda bisa terhubung dengan situs ini tanpa masalah, galat ini bisa berarti seseorang sedang mencoba meniru situs, dan Anda sebaiknya tidak melanjutkannya. Apakah Anda ingin mempercayai sertifikat ini?</string>
 	<string name="no_network_message">Tidak ada jaringan yang tersedia</string>
 	<string name="could_not_remove_account">Tidak bisa menghapus blog</string>
@@ -350,8 +364,6 @@
 	<string name="self_hosted_blogs">Blog dengan hosting mandiri</string>
 	<string name="stats_view_totals_followers_and_shares">Total pengikut dan pembagi konten</string>
 	<string name="stats_view_tags_and_categories">Tag dan kategori</string>
-	<string name="stats_view_top_authors">Penulis terpopuler</string>
-	<string name="stats_view_search_engine_terms">Terma mesin pencarian</string>
 	<string name="stats_visitors_and_views_header_best_ever">Kunjungan terbanyak</string>
 	<string name="stats_visitors_and_views_header_all_time">Sepanjang waktu</string>
 	<string name="pending_review">Tinjauan tertunda</string>
@@ -401,7 +413,6 @@
 	<string name="reader_likes_multi">%,d orang menyukai ini</string>
 	<string name="reader_toast_err_get_comment">Tak bisa menampilkan komentar ini</string>
 	<string name="reader_label_reply">Balas</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">Video</string>
 	<string name="download">Mengunduh media</string>
 	<string name="share_preference_title">Bagikan ke WordPress</string>
@@ -578,7 +589,6 @@
 	<string name="uploading">Mengunggah</string>
 	<string name="version">Versi</string>
 	<string name="app_title">WordPress untuk Android</string>
-	<string name="publisher">Penerbit: Automattic, Inc</string>
 	<string name="tos">Syarat Layanan</string>
 	<string name="about">Tentang</string>
 	<string name="max_thumbnail_px_width">Lebar bawaan gambar</string>

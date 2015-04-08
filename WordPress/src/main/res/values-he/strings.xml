@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="media_fetching">מביא מדיה...</string>
+	<string name="posts_fetching">מביא פוסטים...</string>
+	<string name="pages_fetching">מביא עמודים...</string>
+	<string name="toast_err_post_uploading">אי אפשר לפתוח פוסט תוך כדי העלאה</string>
+	<string name="stats_empty_search_terms">לא נרשמו מונחי חיפוש</string>
+	<string name="stats_entry_search_terms">מונח חיפוש</string>
+	<string name="stats_view_authors">מחברים</string>
+	<string name="stats_view_search_terms">מונחי חיפוש</string>
+	<string name="comments_fetching">מביא תגובות...</string>
+	<string name="stats_empty_search_terms_desc">ניתן ללמוד עוד על תעבורת החיפוש שלך באמצעות בדיקת המונחים שאותם חיפשו המבקרים כדי למצוא את האתר שלך.</string>
+	<string name="stats_followers_total_email_paged">מציג %1$d - %2$d מתוך %3$s עוקבים באימייל</string>
+	<string name="stats_search_terms_unknown_search_terms">מונחי חיפוש לא ידועים</string>
+	<string name="stats_followers_total_wpcom_paged">מציג %1$d - %2$d מתוך %3$s עוקבי WordPress.com</string>
+	<string name="reader_empty_posts_request_failed">לא הצלחנו לאחזר פוסטים</string>
+	<string name="publisher">Publisher:</string>
+	<string name="error_notification_open">לא הצלחנו לפתוח את ההתראה</string>
 	<string name="error_copy_to_clipboard">אירעה שגיאה בעת העתקת הטקסט אל ה-clipboard</string>
 	<string name="stats_recent_weeks">שבועות אחרונים</string>
 	<string name="logs_copied_to_clipboard">הלוגים של האפליקציה הועתקו אל ה-clipboard</string>
@@ -188,8 +204,6 @@
 	<string name="jetpack_stats_switch_user">לחשבון הנוכחי ב-WordPress.com (%s) אין גישה לנתונים הסטטיסטיים של הבלוג הזה. האם ברצונך להיכנס לחשבון אחר?</string>
 	<string name="ptr_tip_message">עצה: משוך כלפי מטה כדי לרענן</string>
 	<string name="reader_label_reblog_empty">אין לך בלוגים גלויים ב-WordPress.com שניתן לפרסם בהן מחדש את הרשומה הזו</string>
-	<string name="loading_posts">טוען רשומות...</string>
-	<string name="loading_pages">טוען דפים...</string>
 	<string name="reader_label_reblog_empty_link">שנה את הנראות של הבלוג</string>
 	<string name="help">עזרה</string>
 	<string name="forgot_password">איבדת את הסיסמה שלך?</string>
@@ -351,8 +365,6 @@
 	<string name="self_hosted_blogs">בלוגים באחסון עצמי </string>
 	<string name="stats_view_totals_followers_and_shares">סיכומים, עוקבים ושיתופים</string>
 	<string name="stats_view_tags_and_categories">תגיות וקטגוריות</string>
-	<string name="stats_view_top_authors">מחברים מובילים</string>
-	<string name="stats_view_search_engine_terms">מונחים למנוע חיפוש</string>
 	<string name="stats_visitors_and_views_header_best_ever">הטוב ביותר אי פעם</string>
 	<string name="stats_visitors_and_views_header_all_time">בכל הזמנים</string>
 	<string name="pending_review">בהמתנה לבדיקה</string>
@@ -401,7 +413,6 @@
 	<string name="reader_likes_multi">%,d אנשים אוהבים את זה</string>
 	<string name="reader_toast_err_get_comment">לא ניתן לאחזר תגובה זו</string>
 	<string name="reader_label_reply">תשובה</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">וידאו</string>
 	<string name="download">מוריד מדיה</string>
 	<string name="cant_share_no_visible_blog">אינך יכול לשתף ב-WordPress בלי בלוג גלוי</string>
@@ -579,7 +590,6 @@
 	<string name="version">גרסה</string>
 	<string name="tos">תנאי שימוש</string>
 	<string name="app_title">וורדפרס עבור אנדרואיד</string>
-	<string name="publisher">מו"ל: Automattic, Inc</string>
 	<string name="about">אודות</string>
 	<string name="max_thumbnail_px_width">בררת המחדל לרוחב תמונה</string>
 	<string name="image_alignment">יישור</string>

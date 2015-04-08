@@ -1,11 +1,6 @@
 package org.wordpress.android.ui.reader;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -33,9 +27,10 @@ import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
-import org.wordpress.android.ui.suggestion.service.SuggestionService;
+import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -113,8 +108,8 @@ public class ReaderCommentListActivity extends ActionBarActivity {
 
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
-        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d", WordPress.getLoggedInUsername(this,
-                null), mPostId, mBlogId));
+        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d", AccountHelper
+                        .getCurrentUsernameForBlog(null), mPostId, mBlogId));
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
 
         if (!loadPost()) {
@@ -143,27 +138,21 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     public void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
-        LocalBroadcastManager.getInstance(this)
-                .registerReceiver(mReceiver, new IntentFilter(SuggestionService.ACTION_SUGGESTIONS_LIST_UPDATED));
     }
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int updatedBlogId = intent.getIntExtra(SuggestionService.SUGGESTIONS_LIST_UPDATED_EXTRA, 0);
-            // check if the updated suggestions are for the current blog and update the suggestions
-            if (updatedBlogId != 0 && mBlogId == updatedBlogId) {
-                List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite((int)mBlogId);
-                mSuggestionAdapter.setSuggestionList(suggestions);
-            }
+    @SuppressWarnings("unused")
+    public void onEventMainThread(SuggestionEvents.SuggestionListUpdated event) {
+        // check if the updated suggestions are for the current blog and update the suggestions
+        if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == mBlogId) {
+            List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
+            mSuggestionAdapter.setSuggestionList(suggestions);
         }
-    };
+    }
 
     @Override
     public void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
     private void setReplyToCommentId(long commentId) {
@@ -240,12 +229,6 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         }
 
         return true;
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.reader_activity_scale_in, R.anim.reader_flyout);
     }
 
     @Override

@@ -91,7 +91,15 @@ public class ReaderActivityLauncher {
     }
 
     private static void showReaderPostPager(Context context, Intent intent) {
-        context.startActivity(intent);
+        if (context instanceof Activity) {
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                    context,
+                    R.anim.reader_activity_slide_in,
+                    R.anim.do_nothing);
+            ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
+        } else {
+            context.startActivity(intent);
+        }
     }
 
     /*
@@ -226,7 +234,7 @@ public class ReaderActivityLauncher {
         }
 
         if (context instanceof Activity) {
-            // use built-in scale animation on jb+, fall back to our own animation on pre-jb
+            // use built-in scale animation on jb+, fall back to default animation on pre-jb
             Activity activity = (Activity) context;
             if (sourceView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 ActivityOptionsCompat options =
@@ -234,7 +242,6 @@ public class ReaderActivityLauncher {
                 ActivityCompat.startActivity(activity, intent, options.toBundle());
             } else {
                 activity.startActivity(intent);
-                activity.overridePendingTransition(R.anim.reader_photo_in, 0);
             }
         } else {
             context.startActivity(intent);

@@ -3,10 +3,8 @@ package org.wordpress.android.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,15 +16,14 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.w3c.dom.Text;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.WPWebChromeClient;
+import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -216,7 +213,8 @@ public class WPWebViewActivity extends WebViewActivity {
      *
      */
     protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password) {
-        String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password, WordPress.getDotComToken(this));
+        String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password,
+                AccountHelper.getDefaultAccount().getAccessToken());
 
         mWebView.postUrl(authenticationURL, postData.getBytes());
     }

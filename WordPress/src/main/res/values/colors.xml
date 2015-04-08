@@ -73,13 +73,6 @@
       we're using a shade of blue_wordpress -->
     <color name="status_bar_tint">#006b98</color>
 
-    <!-- Menu Drawer -->
-    <color name="drawer_background">@color/white</color>
-    <color name="drawer_background_selected">@color/translucent_grey_lighten_20</color>
-    <color name="drawer_icon_tint">@color/grey_darken_30</color>
-    <color name="drawer_text">@color/grey_dark</color>
-    <color name="drawer_divider">@color/grey_light</color>
-
     <!-- Media Gallery -->
     <color name="media_gallery_grid_label_bg">@color/semi_transparent_grey_dark</color>
     <color name="media_gallery_grid_label">@color/white</color>
@@ -97,23 +90,20 @@
     <color name="tab_background">@color/color_primary</color>
     <color name="tab_text_normal">@color/blue_light</color>
     <color name="tab_text_selected">@color/white</color>
-    <color name="tab_indicator">@color/blue_light</color>
+    <color name="tab_indicator">@color/white</color>
 
     <!-- Stats -->
     <color name="stats_text_color">@color/grey_dark</color>
     <color name="stats_link_text_color">@color/blue_wordpress</color>
     <color name="stats_module_content_list_header">@color/grey</color>
     <color name="stats_blue_labels">@color/grey_darken_20</color>
-    <color name="stats_bar_graph_views">@color/blue_wordpress</color>
-    <color name="stats_bar_graph_grid">@color/grey_lighten_20</color>
-    <color name="stats_bar_graph_vertical_label">@color/grey</color>
-    <color name="stats_div_color">@color/grey_lighten_10</color>
-    <color name="stats_lists_background_color">@color/grey_light</color>
+    <color name="stats_bar_graph_main_series">@color/blue_wordpress</color>
+    <color name="stats_bar_graph_main_series_highlight">@color/orange_jazzy</color>
+    <color name="stats_bar_graph_outer_highlight">#1Af0821e</color> <!-- 10% Opacity on orange_jazzy #f0821e -->
+    <color name="stats_bar_graph_secondary_series">@color/blue_dark</color>
+    <color name="stats_bar_graph_secondary_series_highlight">@color/orange_fire</color>
     <color name="stats_empty_placeholder_color">@color/translucent_grey_lighten_30</color>
 
-    <!-- TODO: Stats "custom" colors - calypso_orange_dark doesn't exist anymore -->
-    <color name="stats_bar_graph_views_inner">#004e70</color>
-    <color name="stats_bar_graph_outer_highlight">#40f0821e</color> <!-- 25% Opacity on calypso_orange_dark -->
 
     <!-- Reader  -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>
@@ -131,14 +121,17 @@
 
     <!-- NUX -->
     <color name="nux_grey_button">@color/grey_lighten_20</color>
-    <color name="nux_alert_bg">@color/grey_darken_30</color>
+    <color name="nux_alert_bg">@color/grey_dark</color>
     <color name="nux_background">@color/blue_wordpress</color>
     <color name="nux_eye_icon_color_closed">@color/grey_lighten_20</color>
     <color name="nux_eye_icon_color_open">@color/grey_lighten_10</color>
 
     <!-- Editor -->
-    <color name="image_options_label">@color/grey_lighten_20</color>
     <color name="post_detail_icon_tint">@color/grey_darken_20</color>
+    <color name="format_bar_button_selected">@color/blue_medium</color>
+    <color name="placeholder_content_text">@color/blue_wordpress</color>
+    <color name="format_bar_background">@color/grey_lighten_30</color>
+    <color name="image_options_label">@color/grey_lighten_20</color>
 
     <!-- Misc -->
     <color name="pressed_wordpress">@color/semi_transparent_blue_light</color>

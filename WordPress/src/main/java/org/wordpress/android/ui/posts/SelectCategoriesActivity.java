@@ -20,14 +20,14 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryNode;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
-import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
+import org.wordpress.android.util.helpers.ListScrollPositionManager;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -61,6 +61,7 @@ public class SelectCategoriesActivity extends ActionBarActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setElevation(0.0f);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }

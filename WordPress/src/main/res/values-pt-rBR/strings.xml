@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_notification_open">Não foi possível abrir a notificação</string>
+	<string name="publisher">Editor:</string>
+	<string name="reader_empty_posts_request_failed">Não foi possível recuperar os posts</string>
+	<string name="stats_search_terms_unknown_search_terms">Termos de busca desconhecidos</string>
+	<string name="stats_followers_total_wpcom_paged">Exibindo de %1$d a %2$d de %3$s Seguidores WordPress.com</string>
+	<string name="stats_followers_total_email_paged">Exibindo de %1$d a %2$d de %3$s seguidores de email</string>
+	<string name="stats_view_search_terms">Termos de busca</string>
+	<string name="stats_empty_search_terms_desc">Saiba mais sobre o seu tráfego de busca ao verificar os termos que seus visitantes pesquisaram para encontrar o seu site.</string>
+	<string name="stats_empty_search_terms">Nenhum termo de busca registrado</string>
+	<string name="stats_entry_search_terms">Termo de busca</string>
+	<string name="stats_view_authors">Autores</string>
+	<string name="pages_fetching">Obtendo páginas...</string>
+	<string name="comments_fetching">Obtendo comentários...</string>
+	<string name="toast_err_post_uploading">Não é possível abrir o post enquanto o upload está em andamento</string>
+	<string name="posts_fetching">Obtendo posts...</string>
+	<string name="media_fetching">Obtendo mídia…</string>
 	<string name="stats_period">Período</string>
 	<string name="post_uploading">Fazendo upload</string>
 	<string name="logs_copied_to_clipboard">O logs do aplicativo foram copiados para a área de transferência</string>
@@ -187,8 +203,6 @@
 	<string name="wpcom_signin_dialog_title">Entrar em WordPress.com</string>
 	<string name="jetpack_stats_switch_user">A conta do WordPress.com atual (%s) não tem acesso às estatísticas do blog. Deseja entrar com uma conta diferente?</string>
 	<string name="ptr_tip_message">Dica: Arraste para baixo para atualizar</string>
-	<string name="loading_posts">Carregando posts...</string>
-	<string name="loading_pages">Carregando páginas...</string>
 	<string name="help">Ajuda</string>
 	<string name="forgot_password">Perdeu a senha?</string>
 	<string name="reader_label_reblog_empty_link">Alterar visibilidade do blog</string>
@@ -311,8 +325,6 @@
 	<string name="add_new_category">Adicionar nova categoria</string>
 	<string name="share_action_post">Novo post</string>
 	<string name="share_action_media">Biblioteca de mídia</string>
-	<string name="stats_view_top_authors">Principais autores</string>
-	<string name="stats_view_search_engine_terms">Termos do mecanismo de busca</string>
 	<string name="stats_visitors_and_views_header_best_ever">Melhor de todos</string>
 	<string name="stats_visitors_and_views_header_all_time">Todo o tempo</string>
 	<string name="pending_review">Análise pendente</string>
@@ -401,7 +413,6 @@
 	<string name="reader_likes_multi">%,d pessoas curtiram isso</string>
 	<string name="reader_toast_err_get_comment">Não foi possível recuperar esse comentário</string>
 	<string name="reader_label_reply">Responder</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">Vídeo</string>
 	<string name="download">Fazendo download de mídia</string>
 	<string name="comment_spammed">Comentário marcado como spam</string>
@@ -579,7 +590,6 @@
 	<string name="version">Versão</string>
 	<string name="tos">Termos de Serviço</string>
 	<string name="app_title">WordPress para Android</string>
-	<string name="publisher">Editor: Automattic, Inc</string>
 	<string name="about">Sobre</string>
 	<string name="max_thumbnail_px_width">Largura padrão de imagem</string>
 	<string name="image_alignment">Alinhamento</string>

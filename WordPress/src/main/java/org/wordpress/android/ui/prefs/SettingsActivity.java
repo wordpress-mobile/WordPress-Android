@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AnalyticsUtils;
 
 public class SettingsActivity extends ActionBarActivity {
     public static final int RESULT_SIGNED_OUT = 1;
@@ -24,9 +25,11 @@ public class SettingsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setElevation(0.0f);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
         mCurrentBlogOnCreate = WordPress.getCurrentBlog();
         setContentView(R.layout.settings_activity);
         mSettingsFragment = new SettingsFragment();
@@ -45,19 +48,12 @@ public class SettingsActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mSettingsFragment.refreshWPComAuthCategory();
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void finish() {
+    public void checkForBlogChangeAndFinish() {
         Intent data = new Intent();
         boolean currentBlogChanged = false;
         if (mCurrentBlogOnCreate != null) {
             if (mCurrentBlogOnCreate.isDotcomFlag()) {
-                if (!WordPress.wpDB.isDotComAccountVisible(mCurrentBlogOnCreate.getRemoteBlogId())) {
+                if (!WordPress.wpDB.isDotComBlogVisible(mCurrentBlogOnCreate.getRemoteBlogId())) {
                     // dotcom blog has been hidden or removed
                     currentBlogChanged = true;
                 }
@@ -69,15 +65,23 @@ public class SettingsActivity extends ActionBarActivity {
             }
         } else {
             // no visible blogs when settings opened
-            if (WordPress.wpDB.getNumVisibleAccounts() != 0) {
+            if (WordPress.wpDB.getNumVisibleBlogs() != 0) {
                 // now at least one blog could be selected
                 currentBlogChanged = true;
             }
         }
         data.putExtra(SettingsActivity.CURRENT_BLOG_CHANGED, currentBlogChanged);
         setResult(Activity.RESULT_OK, data);
-        AnalyticsTracker.loadPrefHasUserOptedOut(true);
-        super.finish();
+        AnalyticsTracker.loadPrefHasUserOptedOut(this, true);
+        AnalyticsUtils.refreshMetadata();
+
+        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mSettingsFragment.refreshWPComAuthCategory();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

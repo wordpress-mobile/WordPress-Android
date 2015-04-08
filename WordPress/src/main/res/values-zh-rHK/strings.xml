@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="media_fetching">正在擷取媒體…</string>
+	<string name="posts_fetching">正在擷取文章…</string>
+	<string name="toast_err_post_uploading">上傳文章時無法加以開啟</string>
+	<string name="pages_fetching">正在擷取頁面…</string>
+	<string name="comments_fetching">正在擷取留言…</string>
+	<string name="stats_view_search_terms">搜尋字詞</string>
+	<string name="stats_view_authors">作者</string>
+	<string name="stats_entry_search_terms">搜尋字詞</string>
+	<string name="stats_empty_search_terms">沒有任何搜尋字詞的記錄</string>
+	<string name="stats_empty_search_terms_desc">查看訪客以哪些搜尋字詞找到你的網站，進一步瞭解搜尋流量的相關資訊。</string>
+	<string name="stats_followers_total_wpcom_paged">顯示 %1$d - %2$d 個 WordPress.com 關注者 (共 %3$s 個)</string>
+	<string name="stats_search_terms_unknown_search_terms">不明搜尋字詞</string>
+	<string name="stats_followers_total_email_paged">顯示 %1$d - %2$d 個電子郵件關注者 (共 %3$s 個)</string>
+	<string name="publisher">發佈者：</string>
+	<string name="error_notification_open">無法開啟通知</string>
+	<string name="reader_empty_posts_request_failed">無法擷取文章</string>
 	<string name="reader_page_recommended_blogs">你可能會喜歡的部落格</string>
 	<string name="stats_months_and_years">月份與年份</string>
 	<string name="stats_average_per_day">每天平均</string>
@@ -188,8 +204,6 @@
 	<string name="jetpack_stats_switch_user">目前的 WordPress.com 帳號 (%s) 沒有存取此網誌統計的權限。是否要登入其他帳號？</string>
 	<string name="ptr_tip_message">秘訣：下拉即可重新整理</string>
 	<string name="reader_label_reblog_empty">你沒有能夠轉發此文章的可見 WordPress.com 目標網誌</string>
-	<string name="loading_posts">正在載入文章…</string>
-	<string name="loading_pages">正在載入頁面…</string>
 	<string name="reader_label_reblog_empty_link">變更網誌可見度</string>
 	<string name="help">說明</string>
 	<string name="forgot_password">忘記密碼？</string>
@@ -351,8 +365,6 @@
 	<string name="self_hosted_blogs">自助託管的網誌</string>
 	<string name="stats_view_totals_followers_and_shares">總文章數、追隨者人數和分享次數</string>
 	<string name="stats_view_tags_and_categories">標籤和類別</string>
-	<string name="stats_view_top_authors">熱門作者</string>
-	<string name="stats_view_search_engine_terms">搜尋引擎字詞</string>
 	<string name="stats_visitors_and_views_header_best_ever">目前最佳</string>
 	<string name="stats_visitors_and_views_header_all_time">有史以來</string>
 	<string name="pending_review">待審中</string>
@@ -401,7 +413,6 @@
 	<string name="reader_likes_multi">%,d 人說這個讚</string>
 	<string name="reader_toast_err_get_comment">無法擷取此回應</string>
 	<string name="reader_label_reply">回覆</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">影片</string>
 	<string name="download">正在下載媒體</string>
 	<string name="cant_share_no_visible_blog">你無法在沒有可見網誌的情形下分享至 WordPress</string>
@@ -579,7 +590,6 @@
 	<string name="version">版本</string>
 	<string name="tos">服務條款</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="publisher">發行商：Automattic, Inc</string>
 	<string name="about">關於</string>
 	<string name="max_thumbnail_px_width">預設圖片寬度</string>
 	<string name="image_alignment">對齊</string>

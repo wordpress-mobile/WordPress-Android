@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_empty_search_terms_desc">訪問者があなたのサイトを見つけるために検索したキーワードを見て、検索トラフィックについてより詳しく知りましょう。</string>
+	<string name="toast_err_post_uploading">アップロード中は投稿を開けません</string>
+	<string name="stats_view_authors">投稿者</string>
+	<string name="stats_entry_search_terms">検索キーワード</string>
+	<string name="stats_view_search_terms">検索キーワード</string>
+	<string name="comments_fetching">コメントを取得中…</string>
+	<string name="stats_empty_search_terms">検索キーワードが記録されていません</string>
+	<string name="pages_fetching">ページを取得中…</string>
+	<string name="media_fetching">メディアを取得中…</string>
+	<string name="posts_fetching">投稿を取得中…</string>
+	<string name="stats_followers_total_wpcom_paged">%1$d - %2$d人目を表示中 (%3$s人の WordPress.com フォロワー中)</string>
+	<string name="stats_followers_total_email_paged">%1$d - %2$d人目を表示中 (%3$s人のメールフォロワー中)</string>
+	<string name="reader_empty_posts_request_failed">投稿を取得できません</string>
+	<string name="error_notification_open">通知を開けませんでした</string>
+	<string name="stats_search_terms_unknown_search_terms">不明な検索語</string>
+	<string name="publisher">投稿者:</string>
 	<string name="stats_months_and_years">月と年</string>
 	<string name="stats_recent_weeks">最近の週</string>
 	<string name="error_copy_to_clipboard">テキストをクリップボードにコピーする際にエラーが発生しました</string>
@@ -187,8 +203,6 @@
 	<string name="ptr_tip_message">ヒント: 再読み込みするにはプルダウン</string>
 	<string name="load_settings">設定画面でユーザー名とパスワードを変更できます。</string>
 	<string name="jetpack_stats_switch_user">現在の WordPress.com アカウント (%s) はこのブログの統計情報へのアクセス権がありません。他のアカウントにログインしますか ?</string>
-	<string name="loading_posts">投稿を読込中...</string>
-	<string name="loading_pages">ページを読込中...</string>
 	<string name="forgot_password">パスワードを忘れた場合</string>
 	<string name="forums">フォーラム</string>
 	<string name="help">ヘルプ</string>
@@ -358,9 +372,7 @@
 	<string name="show_all">すべて表示</string>
 	<string name="show_and_hide_blogs">WordPress.com ブログを表示・非表示</string>
 	<string name="site_address">インストール型 WordPress のアドレス (URL)</string>
-	<string name="stats_view_search_engine_terms">検索エンジンキーワード</string>
 	<string name="stats_view_tags_and_categories">タグとカテゴリー</string>
-	<string name="stats_view_top_authors">人気投稿者</string>
 	<string name="stats_view_totals_followers_and_shares">合計、フォロワー、共有数</string>
 	<string name="stats_visitors_and_views_header_all_time">全期間</string>
 	<string name="stats_visitors_and_views_header_best_ever">過去最高</string>
@@ -397,7 +409,6 @@
 	<string name="creating_your_account">アカウントを作成しています</string>
 	<string name="reader_empty_posts_in_tag_updating">投稿を取得中…</string>
 	<string name="error_refresh_media">メディアライブラリを再読込する際にエラーが発生しました。後ほどもう一度お試しください。</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="comment_spammed">コメントをスパムとしてマークしました</string>
 	<string name="download">メディアをダウンロード中</string>
 	<string name="reader_label_reply">返信</string>
@@ -579,7 +590,6 @@
 	<string name="version">バージョン</string>
 	<string name="tos">利用規約</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="publisher">公開者: Automattic, Inc</string>
 	<string name="about">紹介</string>
 	<string name="max_thumbnail_px_width">標準の画像幅</string>
 	<string name="image_alignment">配置</string>

@@ -26,6 +26,7 @@
     <string name="anonymous">Anonymous</string>
 
     <!-- general strings -->
+    <string name="device">Device</string>
     <string name="post">Post</string>
     <string name="page">Page</string>
     <string name="posts">Posts</string>
@@ -75,6 +76,7 @@
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
+    <string name="language">Language</string>
 
     <!-- MediaPicker -->
     <string name="add_to_post">Add to Post</string>
@@ -301,11 +303,6 @@
     <string name="signing_in">Signing in…</string>
     <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
 
-    <!-- Menu Drawer -->
-    <string name="open_drawer">Open menu drawer</string>
-    <string name="close_drawer">Close menu drawer</string>
-
-
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
@@ -355,6 +352,32 @@
     <string name="search_location">Search</string>
     <string name="edit_location">Edit</string>
 
+    <!-- Preference keys -->
+    <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
+    <string name="pref_key_wpcom" translatable="false">wp_pref_wpcom</string>
+    <string name="pref_key_self_hosted" translatable="false">wp_pref_self_hosted_blogs</string>
+    <string name="pref_key_notifications_section" translatable="false">wp_pref_notifications_category</string>
+    <string name="pref_key_notifications" translatable="false">wp_pref_manage_notifications</string>
+    <string name="pref_key_post_sig_section" translatable="false">wp_post_signature</string>
+    <string name="pref_key_post_sig_enabled" translatable="false">wp_pref_signature_enabled</string>
+    <string name="pref_key_post_sig" translatable="false">wp_pref_post_signature</string>
+    <string name="pref_key_passlock_section" translatable="false">wp_passcode_lock_category</string>
+    <string name="pref_key_passlock" translatable="false">wp_pref_passlock_enabled</string>
+    <string name="pref_key_shared_pref_section" translatable="false">wp_share_pref</string>
+    <string name="pref_key_reset_shared_pref" translatable="false">wp_reset_share_pref</string>
+    <string name="pref_key_privacy_section" translatable="false">wp_privacy</string>
+    <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
+    <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
+    <string name="pref_key_language" translatable="false">wp_pref_language</string>
+    <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
+    <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
+    <string name="pref_key_help_and_support" translatable="false">wp_pref_help_and_support</string>
+    <string name="pref_key_signout_section" translatable="false">wp_pref_app_signout_section</string>
+    <string name="pref_key_signout" translatable="false">wp_pref_sign_out</string>
+    <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
+    <string name="pref_notifications_enabled" translatable="false">wp_pref_notifications_enabled</string>
+    <string name="pref_notification_types" translatable="false">wp_pref_notification_types</string>
+
     <!-- preferences -->
     <string name="help_and_support">Help and support</string>
     <string name="open_source_licenses">Open source licenses</string>
@@ -372,13 +395,16 @@
     <string name="stats">Stats</string>
     <string name="stats_for">Stats for %s</string>
     <string name="stats_other_recent_stats_label">Other Recent Stats</string>
-    <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
     <string name="view_stats_full_site">View full site</string>
     <string name="stats_view_all">View all</string>
     <string name="stats_view">View</string>
     <string name="stats_follow">Follow</string>
     <string name="stats_unfollow">Unfollow</string>
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
+
+    <!-- stats: errors -->
+    <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
+    <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
@@ -624,6 +650,7 @@
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
+    <string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
     <string name="error_upload">An error occurred while uploading the %s</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
@@ -652,6 +679,13 @@
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_stats_unauthorized">Can\'t access stats</string>
     <string name="jetpack_stats_switch_user">The current WordPress.com account (%s) doesn\'t have access to the stats for this blog. Would you like to sign in to a different account?</string>
+
+    <!--
+       ****
+       *  strings used by the native reader
+       ***
+    -->
+
 
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="reader_timespan_now">now</string>
@@ -766,9 +800,6 @@
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
 
-    <!-- site picker -->
-    <string name="site_picker_title">Choose site</string>
-
     <!-- layout tags - do not translate -->
     <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
     <string name="fragment_tag_comment_detail" translatable="false">fragment_comment_detail</string>
@@ -856,6 +887,21 @@
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="faq_button">FAQ</string>
 
+    <!--My Site-->
+    <string name="my_site_header_admin">Admin</string>
+    <string name="my_site_header_configuration">Configuration</string>
+    <string name="my_site_header_look_and_feel">Look and Feel</string>
+    <string name="my_site_header_publish">Publish</string>
+    <string name="my_site_btn_blog_posts">Blog Posts</string>
+    <string name="my_site_btn_site_settings">Settings</string>
+    <string name="my_site_btn_comments">Comments</string>
+    <string name="my_site_btn_switch_site">Switch Site</string>
+    <string name="my_site_btn_view_admin">View Admin</string>
+    <string name="my_site_btn_view_site">View Site</string>
+
+    <!-- site picker -->
+    <string name="site_picker_title">Choose site</string>
+
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
 
@@ -868,18 +914,6 @@
     <string name="hs__conversation_header">Support chat</string>
     <string name="hs__username_blank_error">Enter a valid name</string>
     <string name="hs__invalid_email_error">Enter a valid email address</string>
-
-    <!--My Site-->
-    <string name="my_site_header_admin">Admin</string>
-    <string name="my_site_header_configuration">Configuration</string>
-    <string name="my_site_header_look_and_feel">Look and Feel</string>
-    <string name="my_site_header_publish">Publish</string>
-
-    <string name="my_site_btn_blog_posts">Blog Posts</string>
-    <string name="my_site_btn_comments">Comments</string>
-    <string name="my_site_btn_switch_site">Switch Site</string>
-    <string name="my_site_btn_view_admin">View Admin</string>
-    <string name="my_site_btn_view_site">View Site</string>
 
     <!--Me-->
     <string name="me_btn_settings">Account Settings</string>

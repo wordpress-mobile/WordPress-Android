@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="comments_fetching">Загрузка комментариев…</string>
+	<string name="pages_fetching">Загрузка страниц…</string>
+	<string name="toast_err_post_uploading">Невозможно открыть запись во время загрузки.</string>
+	<string name="posts_fetching">Загрузка записей…</string>
+	<string name="media_fetching">Загрузка медиафайлов…</string>
+	<string name="stats_empty_search_terms">Нет данных о поисковых запросах</string>
+	<string name="stats_entry_search_terms">Поисковый запрос</string>
+	<string name="stats_view_authors">Авторы</string>
+	<string name="stats_view_search_terms">Поисковые запросы</string>
+	<string name="stats_followers_total_wpcom_paged">Подписчики на WordPress.com: %1$d–%2$d из %3$s</string>
+	<string name="stats_empty_search_terms_desc">Узнав, с помощью каких поисковых запросов пользователи попадают на ваш сайт, вы сможете более эффективно анализировать поисковый трафик.</string>
+	<string name="stats_search_terms_unknown_search_terms">Неизвестные поисковые запросы</string>
+	<string name="stats_followers_total_email_paged">Подписчики по эл. почте: %1$d–%2$d из %3$s</string>
+	<string name="error_notification_open">Не удалось открыть уведомление.</string>
+	<string name="publisher">Автор:</string>
+	<string name="reader_empty_posts_request_failed">Не удалось загрузить записи.</string>
 	<string name="error_copy_to_clipboard">Произошла ошибка при копировании текста в буфер обмена.</string>
 	<string name="reader_page_recommended_blogs">Блоги, подобранные для вас</string>
 	<string name="stats_months_and_years">Месяцы и года</string>
@@ -187,8 +203,6 @@
 	<string name="jetpack_stats_switch_user">Текущий WordPress.com аккаунт (%s) не имеет доступа к статистике этого блога. Хотите войти в другую учетную запись?</string>
 	<string name="ptr_tip_message">Потяните вниз, чтобы обновить</string>
 	<string name="load_settings">Вы можете посетить настройки и изменить свое имя пользователя и пароль.</string>
-	<string name="loading_posts">Загрузка постов...</string>
-	<string name="loading_pages">Загрузка страниц...</string>
 	<string name="forgot_password">Забыли пароль?</string>
 	<string name="help">Помощь</string>
 	<string name="forums">Форумы</string>
@@ -338,7 +352,6 @@
 	<string name="share_action_post">Новая запись</string>
 	<string name="share_action_media">Медиа-библиотека</string>
 	<string name="file_error_create">Не удалось создать временный файл для выгрузки медиа. Убедитесь, что имеется достаточно свободного места на вашем устройстве.</string>
-	<string name="stats_view_top_authors">Топ авторов</string>
 	<string name="stats_view_tags_and_categories">Тэги и категории</string>
 	<string name="post_format">Формат записи</string>
 	<string name="new_post">Новая запись</string>
@@ -382,7 +395,6 @@
 	<string name="page_not_published">Неопубликовано</string>
 	<string name="http_authorization_required">Требуется авторизация</string>
 	<string name="http_credentials">Учетные данные HTTP(необязательно)</string>
-	<string name="stats_view_search_engine_terms">Условия поиска</string>
 	<string name="local_changes">Локальные изменения</string>
 	<string name="author_url">URL автора</string>
 	<string name="stats_view_totals_followers_and_shares">Общее число подписавшихся и поделившихся</string>
@@ -406,7 +418,6 @@
 	<string name="reader_toast_err_get_comment">Не удается загрузить этот комментарий</string>
 	<string name="download">Загрузить медиа</string>
 	<string name="share_preference_title">Поделиться на WordPress </string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="cant_share_no_visible_blog">Вы не можете поделиться через WordPress без видимого блога</string>
 	<string name="reset_auto_share_preference">Сбросить настройки авто-sharing</string>
 	<string name="select_time">Выберите время</string>
@@ -579,7 +590,6 @@
 	<string name="version">Версия</string>
 	<string name="tos">Условия сервиса</string>
 	<string name="app_title">WordPress для Android</string>
-	<string name="publisher">Издатель: Automattic, Inc</string>
 	<string name="about">О программе</string>
 	<string name="max_thumbnail_px_width">Ширина изображения по умолчанию</string>
 	<string name="image_alignment">Выравнивание</string>

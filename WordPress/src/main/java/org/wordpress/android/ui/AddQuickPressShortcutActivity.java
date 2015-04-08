@@ -56,7 +56,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
     }
 
     private void displayAccounts() {
-        accounts = WordPress.wpDB.getVisibleAccounts();
+        accounts = WordPress.wpDB.getVisibleBlogs();
 
         ListView listView = (ListView) findViewById(android.R.id.list);
 
@@ -86,13 +86,17 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                 accountUsers[validBlogCtr] = curHash.get("username").toString();
                 accountIDs[validBlogCtr] = (Integer)curHash.get("id");
                 String url = curHash.get("url").toString();
-                blavatars[validBlogCtr] = GravatarUtils.blavatarFromUrl(url, 60);
+                if (url != null) {
+                    blavatars[validBlogCtr] = GravatarUtils.blavatarFromUrl(url, 60);
+                } else {
+                    blavatars[validBlogCtr] = "";
+                }
                 accountNames.add(validBlogCtr, blogNames[i]);
                 validBlogCtr++;
             }
 
             if (validBlogCtr < accounts.size()){
-                accounts = WordPress.wpDB.getVisibleAccounts();
+                accounts = WordPress.wpDB.getVisibleBlogs();
             }
 
             setListAdapter(new HomeListAdapter());
@@ -170,7 +174,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
         switch (requestCode) {
             case ADD_ACCOUNT_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    accounts = WordPress.wpDB.getVisibleAccounts();
+                    accounts = WordPress.wpDB.getVisibleBlogs();
                     if (accounts.size() > 0) {
                         displayAccounts();
                         break;

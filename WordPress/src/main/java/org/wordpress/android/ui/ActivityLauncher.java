@@ -13,6 +13,10 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.accounts.HelpActivity;
+import org.wordpress.android.networking.SSLCertsViewActivity;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -21,7 +25,13 @@ import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.StatsSinglePostDetailsActivity;
+import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.util.AppLog;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
 
@@ -40,11 +50,9 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewBlogStats(Context context, Blog blog) {
-        if (blog == null) return;
-
+    public static void viewBlogStats(Context context, int blogLocalTableId) {
         Intent intent = new Intent(context, StatsActivity.class);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blog.getLocalTableBlogId());
+        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
         context.startActivity(intent);
     }
 
@@ -64,16 +72,16 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewBlogComments(Context context, Blog blog) {
-        if (blog == null) return;
-
+    public static void viewCurrentBlogComments(Context context) {
         Intent intent = new Intent(context, CommentsActivity.class);
         context.startActivity(intent);
     }
 
     public static void viewCurrentBlogThemes(Context context) {
-        Intent intent = new Intent(context, ThemeBrowserActivity.class);
-        context.startActivity(intent);
+        if (ThemeBrowserActivity.isAccessible()) {
+            Intent intent = new Intent(context, ThemeBrowserActivity.class);
+            context.startActivity(intent);
+        }
     }
 
     public static void viewBlogSettings(Context context, Blog blog) {
@@ -99,6 +107,8 @@ public class ActivityLauncher {
     }
 
     public static void addNewBlogPostOrPage(Context context, Blog blog, boolean isPage) {
+        if (blog == null) return;
+
         // Create a new post object
         Post newPost = new Post(blog.getLocalTableBlogId(), isPage);
         WordPress.wpDB.savePost(newPost);
@@ -108,6 +118,13 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         intent.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         context.startActivity(intent);
+    }
+
+    public static void editBlogPostOrPageForResult(Activity activity, long postOrPageId, boolean isPage) {
+        Intent intent = new Intent(activity.getApplicationContext(), EditPostActivity.class);
+        intent.putExtra(EditPostActivity.EXTRA_POSTID, postOrPageId);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
+        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     public static void addMedia(Context context, Blog blog) {
@@ -122,5 +139,38 @@ public class ActivityLauncher {
     public static void viewHelpAndSupport(Context context) {
         Intent intent = new Intent(context, HelpActivity.class);
         context.startActivity(intent);
+    }
+
+    public static void viewSSLCerts(Context context) {
+        try {
+            Intent intent = new Intent(context, SSLCertsViewActivity.class);
+            SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(context);
+            String lastFailureChainDescription =
+                    selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
+            intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
+            context.startActivity(intent);
+        } catch (GeneralSecurityException e) {
+            AppLog.e(AppLog.T.API, e);
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.API, e);
+        }
+    }
+
+    public static void viewSettingsForResult(Activity activity) {
+        Intent i = new Intent(activity, SettingsActivity.class);
+        activity.startActivityForResult(i, RequestCodes.SETTINGS);
+    }
+
+    public static void newAccountForResult(Activity activity) {
+        Intent intent = new Intent(activity, NewAccountActivity.class);
+        activity.startActivityForResult(intent, SignInActivity.CREATE_ACCOUNT_REQUEST);
+    }
+
+    public static void viewStatsSinglePostDetails(Context context, PostModel post) {
+        if (post == null) return;
+
+        Intent statsPostViewIntent = new Intent(context, StatsSinglePostDetailsActivity.class);
+        statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_OBJECT, post);
+        context.startActivity(statsPostViewIntent);
     }
 }

@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -20,13 +19,14 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.ui.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
-import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import de.greenrobot.event.EventBus;
 
 public class GCMIntentService extends GCMBaseIntentService {
     public static final int PUSH_NOTIFICATION_ID = 1337;
@@ -61,21 +63,13 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     protected void handleDefaultPush(Context context, Bundle extras) {
-        long wpcomUserID = AppPrefs.getCurrentUserId();
+        long wpcomUserID = AccountHelper.getDefaultAccount().getUserId();
         String userIDFromPN = extras.getString("user");
-        if (userIDFromPN != null) { //It is always populated server side, but better to double check it here.
-            if (wpcomUserID <= 0) {
-                // TODO: Do not abort the execution here, at least for this release, since there might be
-                // an issue for users that update the app.
-                // If they have never used the Reader, then they won't have a userId.
-                // Code for next release is below:
-                /* AppLog.e(T.NOTIFS, "No wpcom userId found in the app. Aborting.");
-                   return; */
-            } else {
-                if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
-                    AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
-                    return;
-                }
+        // userIDFromPN is always set server side, but better to double check it here.
+        if (userIDFromPN != null) {
+            if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
+                AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
+                return;
             }
         }
 
@@ -138,7 +132,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         NotificationCompat.Builder mBuilder;
 
-        Intent resultIntent = new Intent(this, NotificationsActivity.class);
+        Intent resultIntent = new Intent(this, WPMainActivity.class);
+        resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction("android.intent.action.MAIN");
@@ -161,7 +156,8 @@ public class GCMIntentService extends GCMBaseIntentService {
             // Add some actions if this is a comment notification
             String noteType = extras.getString("type");
             if (noteType != null && noteType.equals("c")) {
-                Intent commentReplyIntent = new Intent(this, NotificationsActivity.class);
+                Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
+                commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
                 commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 commentReplyIntent.setAction("android.intent.action.MAIN");
@@ -239,7 +235,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(PUSH_NOTIFICATION_ID, mBuilder.build());
-        broadcastNewNotification(context);
+
+        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
     @Override
@@ -263,7 +260,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (extras.containsKey("mp_message")) {
             String mpMessage = intent.getExtras().getString("mp_message");
             String title = getString(R.string.app_name);
-            Intent resultIntent = new Intent(this, NotificationsActivity.class);
+            Intent resultIntent = new Intent(this, WPMainActivity.class);
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
@@ -273,17 +270,11 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        if (!WordPress.hasDotComToken(context)) {
+        if (!AccountHelper.getDefaultAccount().hasAccessToken()) {
             return;
         }
 
         handleDefaultPush(context, extras);
-    }
-
-    public void broadcastNewNotification(Context context) {
-        Intent msgIntent = new Intent();
-        msgIntent.setAction(NotificationsListFragment.NOTIFICATION_ACTION);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
     }
 
     @Override

@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="media_fetching">Recupero file multimediali in corso…</string>
+	<string name="posts_fetching">Recupero degli articoli in corso...</string>
+	<string name="toast_err_post_uploading">Impossibile aprire l\'articolo durante il suo caricamento</string>
+	<string name="pages_fetching">Recupero pagine in corso…</string>
+	<string name="comments_fetching">Recupero commenti in corso...</string>
+	<string name="stats_empty_search_terms_desc">Ottieni maggiori informazioni sul tuo traffico di ricerca scoprendo i termini utilizzati dai visitatori per trovare il tuo sito.</string>
+	<string name="stats_followers_total_wpcom_paged">Mostra %1$d - %2$d di %3$s follower WordPress.com</string>
+	<string name="stats_followers_total_email_paged">Mostra %1$d - %2$d di %3$s follower e-mail</string>
+	<string name="error_notification_open">Impossibile aprire la notifica</string>
+	<string name="publisher">Editore:</string>
+	<string name="stats_view_authors">Autori</string>
+	<string name="stats_view_search_terms">Termini di ricerca</string>
+	<string name="stats_entry_search_terms">Termine di ricerca</string>
+	<string name="stats_empty_search_terms">Nessun termine di ricerca registrato</string>
+	<string name="stats_search_terms_unknown_search_terms">Termini di ricerca sconosciuti</string>
+	<string name="reader_empty_posts_request_failed">Impossibile recuperare gli articoli</string>
 	<string name="stats_months_and_years">Mesi ed anni</string>
 	<string name="stats_recent_weeks">Settimane recenti</string>
 	<string name="error_copy_to_clipboard">Si è verificato un errore durante la copia del testo negli appunti</string>
@@ -188,8 +204,6 @@
 	<string name="jetpack_stats_switch_user">L\'attuale account WordPress.com (%s) non consente di accedere alle statistiche per questo blog. Desideri accedere con un altro account?</string>
 	<string name="ptr_tip_message">Suggerimento: scorri il dito verso il basso per aggiornare</string>
 	<string name="reader_label_reblog_empty">Non sono presenti blog WordPress.com visibili sui quali ripubblicare questo articolo</string>
-	<string name="loading_posts">Caricamento degli articoli in corso...</string>
-	<string name="loading_pages">Caricamento delle pagine in corso...</string>
 	<string name="reader_label_reblog_empty_link">Cambia la visibilità del blog</string>
 	<string name="help">Aiuto</string>
 	<string name="forgot_password">Password dimenticata?</string>
@@ -351,8 +365,6 @@
 	<string name="self_hosted_blogs">Blog ospitati in modo indipendente</string>
 	<string name="stats_view_totals_followers_and_shares">Totali, follower e condivisioni</string>
 	<string name="stats_view_tags_and_categories">Tag e categorie</string>
-	<string name="stats_view_top_authors">Autori più seguiti</string>
-	<string name="stats_view_search_engine_terms">Termini di ricerca</string>
 	<string name="stats_visitors_and_views_header_best_ever">Il meglio</string>
 	<string name="stats_visitors_and_views_header_all_time">Sempre</string>
 	<string name="pending_review">In attesa di revisione</string>
@@ -401,7 +413,6 @@
 	<string name="reader_likes_multi">Piace a %,d persone</string>
 	<string name="reader_toast_err_get_comment">Impossibile recuperare questo commento</string>
 	<string name="reader_label_reply">Rispondi</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">Video</string>
 	<string name="download">Download file multimediale in corso</string>
 	<string name="comment_spammed">Commento contrassegnato come spam</string>
@@ -579,7 +590,6 @@
 	<string name="version">Versione</string>
 	<string name="tos">Condizioni del servizio</string>
 	<string name="app_title">WordPress per Android</string>
-	<string name="publisher">Autore: Automattic, Inc</string>
 	<string name="about">Informazioni su</string>
 	<string name="max_thumbnail_px_width">Larghezza predefinita immagine</string>
 	<string name="image_alignment">Allineamento</string>

@@ -20,8 +20,10 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.StringUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -48,6 +50,8 @@ import java.util.Map;
 
 import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLPeerUnverifiedException;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * A WordPress XMLRPC Client.
@@ -530,10 +534,10 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 // Detect login issues and broadcast a message if the error is known
                 switch (e.getFaultCode()) {
                     case 403:
-                        broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
+                        EventBus.getDefault().post(new CoreEvents.InvalidCredentialsDetected());
                         break;
                     case 425:
-                        broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
+                        EventBus.getDefault().post(new CoreEvents.TwoFactorAuthenticationDetected());
                         break;
                     //TODO: Check the login limit here
                     default:
@@ -566,7 +570,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                     AppLog.e(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected on wordpress.com");
                 } else {
                     AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
-                    broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
+                    EventBus.getDefault().post(new CoreEvents.InvalidSslCertificateDetected());
                 }
                 throw e;
             } catch (SSLPeerUnverifiedException e) {
@@ -574,7 +578,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                     AppLog.e(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected on wordpress.com");
                 } else {
                     AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
-                    broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
+                    EventBus.getDefault().post(new CoreEvents.InvalidSslCertificateDetected());
                 }
                 throw e;
             } catch (IOException e) {
@@ -601,14 +605,10 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         String errorMessage = exception.getMessage().toLowerCase();
         if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503")) &&
             (errorMessage.contains("limit reached") || errorMessage.contains("login limit"))) {
-            broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
+            EventBus.getDefault().post(new CoreEvents.LoginLimitDetected());
             return true;
         }
         return false;
-    }
-
-    private void broadcastAction(String action) {
-        WordPress.sendLocalBroadcast(WordPress.getContext(), action);
     }
 
     private void deleteTempFile(String method, File tempFile) {
@@ -624,7 +624,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         if (ctx == null) return;
 
         if (isDotComXMLRPCEndpoint(mPostMethod.getURI())) {
-            String token = WordPress.getWPComAuthToken(ctx);
+            String token = AccountHelper.getDefaultAccount().getAccessToken();
             if (!TextUtils.isEmpty(token)) {
                 setAuthorizationHeader(token);
             }

@@ -95,7 +95,7 @@
                     android:drawablePadding="@dimen/margin_medium"
                     android:textSize="@dimen/text_sz_small"
                     android:text="@string/stats_views"
-                    android:textColor="@color/grey_dark"/>
+                    android:textColor="@color/grey_darken_30"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/stats_checkbox_visitors_container"
@@ -114,7 +114,7 @@
                     android:drawablePadding="@dimen/margin_medium"
                     android:textSize="@dimen/text_sz_small"
                     android:text="@string/stats_visitors"
-                    android:textColor="@color/grey_dark"/>
+                    android:textColor="@color/grey_darken_30"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -127,6 +127,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_marginBottom="@dimen/margin_small"
-        android:textColor="@color/stats_blue_labels"
+        android:textColor="@color/grey_darken_20"
         android:text="Date"/>
 </LinearLayout>

@@ -24,6 +24,7 @@ import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +65,12 @@ public class SitePickerActivity extends ActionBarActivity {
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(ARG_VISIBLE_ONLY, mVisibleBlogsOnly);
@@ -80,7 +87,7 @@ public class SitePickerActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void onItemSelected(@NonNull SiteRecord site) {
+    private void onItemSelected(@NonNull SiteRecord site) {
         Intent data = new Intent();
         data.putExtra(KEY_LOCAL_ID, site.localId);
         data.putExtra(KEY_BLOG_ID, site.blogId);
@@ -88,27 +95,26 @@ public class SitePickerActivity extends ActionBarActivity {
         finish();
     }
 
-    private class LoadSitesTask extends AsyncTask<Void, Void, Boolean> {
-        private SiteList mSites;
-
+    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
         @Override
-        protected Boolean doInBackground(Void... params) {
-            List<Map<String, Object>> accounts;
+        protected SiteList doInBackground(Void... params) {
+            List<Map<String, Object>> blogs;
             if (mVisibleBlogsOnly) {
-                accounts = WordPress.wpDB.getVisibleDotComAccounts();
+                blogs = WordPress.wpDB.getVisibleDotComBlogs();
             } else {
-                accounts = WordPress.wpDB.getAccountsBy("dotcomFlag=1", new String[]{"isHidden"});
+                blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"isHidden"});
             }
-            mSites = new SiteList(accounts);
-            return true;
+
+            // include self-hosted, then sort all by name
+            blogs.addAll(WordPress.wpDB.getBlogsBy("dotcomFlag!=1", null));
+            Collections.sort(blogs, BlogUtils.BlogNameComparator);
+
+            return new SiteList(blogs);
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                SiteAdapter adapter = new SiteAdapter(SitePickerActivity.this, mSites);
-                mRecycler.setAdapter(adapter);
-            }
+        protected void onPostExecute(SiteList sites) {
+            mRecycler.setAdapter(new SiteAdapter(SitePickerActivity.this, sites));
         }
     }
 
@@ -196,8 +202,10 @@ public class SitePickerActivity extends ActionBarActivity {
 
     class SiteList extends ArrayList<SiteRecord> {
         SiteList(List<Map<String, Object>> accounts) {
-            for (Map<String, Object> account: accounts) {
-                add(new SiteRecord(account));
+            if (accounts != null) {
+                for (Map<String, Object> account : accounts) {
+                    add(new SiteRecord(account));
+                }
             }
         }
     }

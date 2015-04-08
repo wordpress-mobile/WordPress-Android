@@ -4,6 +4,8 @@ package org.wordpress.android.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,25 +20,23 @@ import com.google.gson.reflect.TypeToken;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.WPWebChromeClient;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.WPWebViewClient;
+import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.passcodelock.AppLockManager;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.net.URLEncoder;
 import java.util.Map;
 
 /**
  * Activity to view the WordPress blog in a WebView
  */
-public class ViewSiteActivity extends WPDrawerActivity {
+public class ViewSiteActivity extends ActionBarActivity {
     /**
      * Blog for which this activity is loading content.
      */
-    protected Blog mBlog;
-    protected WebView mWebView;
+    private Blog mBlog;
+    private WebView mWebView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,14 +48,22 @@ public class ViewSiteActivity extends WPDrawerActivity {
                     Toast.LENGTH_SHORT).show();
             finish();
         }
-        createMenuDrawer(R.layout.webview);
+
+        setContentView(R.layout.webview);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.setWebViewClient(new WPWebViewClient(mBlog));
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
-        this.setTitle(getResources().getText(R.string.view_site));
+
+        this.setTitle(mBlog.getBlogName());
         loadSiteURL();
     }
 
@@ -83,16 +91,10 @@ public class ViewSiteActivity extends WPDrawerActivity {
 
         String postData = WPWebViewActivity.getAuthenticationPostData(
                 authenticationUrl, siteURL, mBlog.getUsername(), mBlog.getPassword(),
-                WordPress.getDotComToken(this)
+                AccountHelper.getDefaultAccount().getAccessToken()
         );
 
         mWebView.postUrl(authenticationUrl, postData.getBytes());
-    }
-
-    @Override
-    public void onBlogChanged() {
-        mBlog = WordPress.currentBlog;
-        loadSiteURL();
     }
 
     @Override
@@ -109,28 +111,29 @@ public class ViewSiteActivity extends WPDrawerActivity {
             return false;
         }
 
-        int itemID = item.getItemId();
-        if (itemID == R.id.menu_refresh) {
-            mWebView.reload();
-            return true;
-        } else if (itemID == R.id.menu_share) {
-            Intent share = new Intent(Intent.ACTION_SEND);
-            share.setType("text/plain");
-            share.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
-            startActivity(Intent.createChooser(share, getResources().getText(R.string.share_link)));
-            return true;
-        } else if (itemID == R.id.menu_browser) {
-            String url = mWebView.getUrl();
-            if (url != null) {
-                Uri uri = Uri.parse(url);
-                if (uri != null) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_refresh:
+                mWebView.reload();
+                return true;
+            case R.id.menu_share:
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
+                startActivity(Intent.createChooser(share, getResources().getText(R.string.share_link)));
+                return true;
+            case R.id.menu_browser:
+                String url = mWebView.getUrl();
+                if (url != null) {
+                    Uri uri = Uri.parse(url);
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(uri);
                     startActivity(i);
                     AppLockManager.getInstance().setExtendedTimeout();
                 }
-            }
-            return true;
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

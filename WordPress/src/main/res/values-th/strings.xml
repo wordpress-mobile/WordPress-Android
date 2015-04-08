@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_empty_search_terms_desc">เรียนรู้เพิ่มเติมเกี่ยวกับการหาคนเข้าเว็บของคุณโดยดูที่เงื่อนไขที่ผู้เยี่ยมชมค้นหาสำหรับเว็บไซต์ของคุณ</string>
+	<string name="stats_followers_total_wpcom_paged">กำลังแสดง %1$d - %2$d จาก %3$s ผู้ติดตาม WordPress.com</string>
+	<string name="media_fetching">กำลังรับข้อมูลไฟล์สื่อ...</string>
+	<string name="toast_err_post_uploading">ไม่สามารถเปิดเรื่องขณะที่มันกำลังอัปโหลดได้</string>
+	<string name="posts_fetching">กำลังรับข้อมูลเรื่อง...</string>
+	<string name="pages_fetching">กำลังรับข้อมูลหน้า...</string>
+	<string name="comments_fetching">กำลังรับข้อมูลความเห็น...</string>
+	<string name="stats_view_search_terms">เงื่อนไขการค้นหา</string>
+	<string name="stats_view_authors">ผู้เขียน</string>
+	<string name="stats_entry_search_terms">เงื่อนไขการค้นหา</string>
+	<string name="stats_empty_search_terms">ไม่มีบันทึกเงื่อนไขการค้นหา</string>
+	<string name="stats_followers_total_email_paged">กำลังแสดง %1$d - %2$d จาก %3$s ผู้ติดตามอีเมล์</string>
+	<string name="stats_search_terms_unknown_search_terms">เงื่อนไขการค้นหาที่ไม่รู้จัก</string>
+	<string name="reader_empty_posts_request_failed">ไม่สามารถดึงเรื่องได้</string>
+	<string name="publisher">ผู้เผยแพร่:</string>
+	<string name="error_notification_open">ไม่สามารถเปิดคำเตือนได้</string>
+	<string name="logs_copied_to_clipboard">ปูมแอพพลิเคชั่นถูกคัดลอกลงคลิปบอร์ด</string>
 	<string name="stats_months_and_years">เดือนและปี</string>
 	<string name="reader_page_recommended_blogs">บล็อกที่คุณอาจจะชอบ</string>
 	<string name="error_copy_to_clipboard">มีความผิดพลาดเกิดขึ้นขณะกำลังคัดลอกข้อความไปยังคลิปบอร์ด</string>
@@ -11,6 +28,17 @@
 	<string name="stats_overall">ทั้งหมด</string>
 	<string name="stats_total">ทั้งหมด</string>
 	<string name="post_uploading">กำลังอัปโหลด</string>
+	<string name="stats_empty_publicize_desc">ติดตามจำนวนผู้ติดตามจากบริการโซเชียลเน็ตเวิร์คโดยใช้การเผยแพร่</string>
+	<string name="stats_empty_followers_desc">ติดตามจำนวนผู้ติดตามทั้งหมดของคุณ  และดูว่าแต่ละคนใช้เวลานานเท่าไหร่บนเว็บของคุณ</string>
+	<string name="stats_empty_geoviews_desc">ดูรายการเพื่อดูว่าประเทศไหนและทวีปไหนที่มีคนเข้าชมเว็บคุณมากที่สุด</string>
+	<string name="stats_empty_tags_and_categories_desc">ดูภาพรวมของเรื่องที่ได้รับความนิยมมากที่สุดบนเว็บไซต์ของคุณ  และผลตอบรับจากเรื่องยอดนิยมของคุณจากสัปดาห์ที่ผ่านมา</string>
+	<string name="stats_empty_top_posts_desc">ค้นหาว่าบทความไหนของคุณที่มีการดูมากที่สุด  และตรวจสอบว่าแต่ละเรื่องและหน้าถูกแสดงเท่าไหร่ตามเวลา</string>
+	<string name="stats_empty_top_authors_desc">ติดตามการดูเรื่องของแต่ละผู้เขียน  และเจาะลึกดูบทความยอดนิยมของแต่ละผู้เขียนได้</string>
+	<string name="stats_empty_video_desc">ถ้าคุณอัปโหลดไฟล์วีดีโอโดยใช้ VideoPress คุณสามารถดูได้ว่าไฟล์พวกนี้ถูกดูจำนวนเท่าไหร่</string>
+	<string name="stats_empty_comments_desc">ถ้าคุณอนุญาตการแสดงความเห็นบนเว็บไซต์ของคุณ  ติดตามผู้ให้ความเห็นสูงสุดและค้นหาว่าบทความไหนที่ทำให้เกิดการสนทนาสูงสุด  อ้างอิงจาก 1,000 ความเห็นล่าสุด</string>
+	<string name="stats_empty_publicize">ไม่มีบันทึกการเผยแพร่ผู้ติดตาม</string>
+	<string name="stats_empty_video">ไม่มีการเล่นไฟล์วีดีโอ</string>
+	<string name="stats_view_publicize">การเผยแพร่</string>
 	<string name="stats_other_recent_stats_label">สถิติที่ผ่านมาอื่น ๆ</string>
 	<string name="stats_for">สถิติสำหรับ %s</string>
 	<string name="themes_fetching">กำลังดึงข้อมูลธีม</string>
@@ -175,8 +203,6 @@
 	<string name="need_help_signin_wpcom">ต้องการความช่วยเหลือ?</string>
 	<string name="wpcom_signin_dialog_title">เข้าสู่ระบบ WordPress.com</string>
 	<string name="jetpack_stats_switch_user">บัญชี WordPress.com ปัจจุบัน (%s) ไม่สามารถเข้าถึงสถิติของบล็อกนี้ได้   คุณต้องการที่จะเข้าสู่ระบบด้วยบัญชีอื่นหรือไม่?</string>
-	<string name="loading_posts">กำลังโหลดเรื่อง...</string>
-	<string name="loading_pages">กำลังโหลดหน้า....</string>
 	<string name="reader_label_reblog_empty_link">เปลี่ยนการมองเห็นบล็อก</string>
 	<string name="help">ช่วยเหลือ</string>
 	<string name="forgot_password">จำรหัสผ่านของคุณไม่ได้?</string>
@@ -277,7 +303,6 @@
 	<string name="jetpack_stats_unauthorized">ไม่สามารถเข้าถึงสถิติ</string>
 	<string name="stats_view_totals_followers_and_shares">ทั้งหมด, ผู้ติดตามและการแบ่งปัน</string>
 	<string name="stats_view_tags_and_categories">ป้ายกำกับและหมวดหมู่</string>
-	<string name="stats_view_top_authors">ผู้เขียนยอดนิยม</string>
 	<string name="stats_visitors_and_views_header_best_ever">ดีที่สุดที่มี</string>
 	<string name="stats_visitors_and_views_header_all_time">เวลาทั้งหมด</string>
 	<string name="pending_review">รอคอยการตรวจสอบ</string>
@@ -332,7 +357,6 @@
 	<string name="site_address">ที่อยู่เว็บแบบติดตั้งบนโฮสท์เองของคุณ (URL)</string>
 	<string name="file_not_found">ไม่สามารถหาไฟล์สื่อสำหรับการอัปโหลด  มันถูกลบหรือย้ายไปแล้วหรือไม่?</string>
 	<string name="post_settings">การตั้งค่าเรื่อง</string>
-	<string name="stats_view_search_engine_terms">เงื่อนไขเสิร์ชเอ็นจิน</string>
 	<string name="themes_live_preview">ดูก่อนแบบสด</string>
 	<string name="theme_current_theme">theme ปัจจุบัน</string>
 	<string name="theme_premium_theme">theme พรีเมี่ยม</string>
@@ -394,7 +418,6 @@
 	<string name="reader_likes_you_and_multi">คุณและ %,d คนชอบสิ่งนี้</string>
 	<string name="reader_toast_err_get_comment">ไม่สามารถดึงข้อมูลความเห็นนี้</string>
 	<string name="reader_label_reply">ตอบกลับ</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">วีดีโอ</string>
 	<string name="download">กำลังดาวน์โหลดไฟล์สื่อ</string>
 	<string name="pick_photo">เลือกรูปภาพ</string>
@@ -567,7 +590,6 @@
 	<string name="version">รุ่น</string>
 	<string name="tos">เงื่อนไขบริการ</string>
 	<string name="app_title">เวิร์ดเพรสสำหรับแอนดรอยด์</string>
-	<string name="publisher">ผู้เผยแพร่: Automattic, Inc</string>
 	<string name="about">เกี่ยวกับ</string>
 	<string name="max_thumbnail_px_width">ความกว้างรูปมาตรฐาน</string>
 	<string name="image_alignment">จัดหน้า</string>

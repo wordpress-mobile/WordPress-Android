@@ -5,23 +5,24 @@
 package org.wordpress.android.ui.notifications.utils;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketNameInvalid;
 import com.simperium.client.BucketObject;
+import com.simperium.client.BucketObjectMissingException;
+import com.simperium.client.Query;
 import com.simperium.client.User;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
-public class SimperiumUtils {
-    public static final String BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED = "simperium-not-authorized";
+import de.greenrobot.event.EventBus;
 
+public class SimperiumUtils {
     private static Simperium mSimperium;
     private static Bucket<Note> mNotesBucket;
     private static Bucket<BucketObject> mMetaBucket;
@@ -56,9 +57,7 @@ public class SimperiumUtils {
                             case NOT_AUTHORIZED:
                                 mNotesBucket.stop();
                                 mMetaBucket.stop();
-                                Intent simperiumNotAuthorizedIntent = new Intent();
-                                simperiumNotAuthorizedIntent.setAction(BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
-                                LocalBroadcastManager.getInstance(context).sendBroadcast(simperiumNotAuthorizedIntent);
+                                EventBus.getDefault().post(new NotificationEvents.SimperiumNotAuthorized());
                                 break;
                             default:
                                 AppLog.d(AppLog.T.SIMPERIUM, "User not authorized yet");
@@ -124,5 +123,26 @@ public class SimperiumUtils {
         if (mSimperium != null) {
             mSimperium.getUser().setStatus(User.Status.UNKNOWN);
         }
+    }
+
+    // Returns true if we have unread notes with a timestamp greater than last_seen timestamp in the meta bucket
+    public static boolean hasUnreadNotes() {
+        if (getNotesBucket() == null || getMetaBucket() == null) return false;
+
+        try {
+            BucketObject meta = getMetaBucket().get("meta");
+            if (meta != null && meta.getProperty("last_seen") instanceof Integer) {
+                Integer lastSeenTimestamp = (Integer)meta.getProperty("last_seen");
+
+                Query<Note> query = new Query<>(getNotesBucket());
+                query.where(Note.Schema.UNREAD_INDEX, Query.ComparisonType.EQUAL_TO, true);
+                query.where(Note.Schema.TIMESTAMP_INDEX, Query.ComparisonType.GREATER_THAN, lastSeenTimestamp);
+                return query.execute().getCount() > 0;
+            }
+        } catch (BucketObjectMissingException e) {
+            return false;
+        }
+
+        return false;
     }
 }

@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="posts_fetching">Récupération des articles…</string>
+	<string name="media_fetching">Récupération des médias…</string>
+	<string name="stats_view_search_terms">Termes de Recherche</string>
+	<string name="comments_fetching">Récupération des commentaires…</string>
+	<string name="pages_fetching">Récupération des pages…</string>
+	<string name="toast_err_post_uploading">Impossible d\'ouvrir l\'article lorsqu\'il est en cours d\'upload</string>
+	<string name="stats_empty_search_terms">Pas de termes de recherche enregistré</string>
+	<string name="stats_entry_search_terms">Terme de Recherche</string>
+	<string name="stats_view_authors">Auteurs</string>
+	<string name="stats_search_terms_unknown_search_terms">Termes de recherche inconnus</string>
+	<string name="stats_followers_total_wpcom_paged">Affichage de %1$d - %2$d sur %3$s WordPress.com Followers</string>
+	<string name="stats_empty_search_terms_desc">En savoir plus sur votre trafic de recherche en regardant les termes utilisés par vos visiteurs pour trouver votre site.</string>
+	<string name="error_notification_open">Impossible d\'ouvrir la notification</string>
+	<string name="stats_followers_total_email_paged">Affichage de %1$d - %2$d sur %3$s Email Followers</string>
+	<string name="publisher">Editeur:</string>
+	<string name="reader_empty_posts_request_failed">Impossible de récupérer les articles</string>
 	<string name="stats_months_and_years">Mois et années</string>
 	<string name="reader_page_recommended_blogs">Blogs que vous aimerez</string>
 	<string name="error_copy_to_clipboard">Une erreur s\'est produite lors de la copie dans le presse papier</string>
@@ -187,8 +203,6 @@
 	<string name="load_settings">Vous pouvez visiter les paramètres et y changer votre nom d\'utilisateur et mot de passe.</string>
 	<string name="wpcom_signin_dialog_title">Connexion à WordPress.com</string>
 	<string name="jetpack_stats_switch_user">Le compte WordPress.com actuel (%s) n\'a pas accès aux statistiques pour ce blog. Voulez-vous connecter un autre compte?</string>
-	<string name="loading_posts">Chargement des articles...</string>
-	<string name="loading_pages">Chargement des pages...</string>
 	<string name="reader_label_reblog_empty_link">Changer la visibilité du blog</string>
 	<string name="help">Aide</string>
 	<string name="forgot_password">Mot de passe perdu ?</string>
@@ -330,13 +344,11 @@
 	<string name="open_source_licenses">Licences open sources</string>
 	<string name="wpcom_blogs">Blogs WordPress.com</string>
 	<string name="self_hosted_blogs">Blogs auto-hébergés</string>
-	<string name="stats_view_top_authors">Top auteurs</string>
 	<string name="dlg_confirm_trash_comments">Mettre à la corbeille ?</string>
 	<string name="post_not_published">L\'état de l\'article n\'est pas publié</string>
 	<string name="page_not_published">L\'état de la page n\'est pas publiée</string>
 	<string name="category_slug">Identifiant de la catégorie (optionnel)</string>
 	<string name="stats_view_tags_and_categories">Mots-clés et catégories</string>
-	<string name="stats_view_search_engine_terms">Termes de recherche</string>
 	<string name="stats_visitors_and_views_header_best_ever">Le meilleur</string>
 	<string name="stats_visitors_and_views_header_all_time">Tous les temps</string>
 	<string name="http_authorization_required">Autorisation requise</string>
@@ -397,7 +409,6 @@
 	<string name="creating_your_site">Création de votre site</string>
 	<string name="reader_empty_posts_in_tag_updating">Récupération des articles…</string>
 	<string name="error_refresh_media">Une erreur est survenue pendant le chargement de la bibliothèque média. Veuillez réessayer.</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="reader_likes_multi">%,d personnes aiment ça</string>
 	<string name="reader_toast_err_get_comment">Impossible de récupérer ce commentaire</string>
 	<string name="reader_label_reply">Répondre</string>
@@ -579,7 +590,6 @@
 	<string name="version">Version</string>
 	<string name="tos">Conditions d\'utilisation</string>
 	<string name="app_title">WordPress pour Android</string>
-	<string name="publisher">Éditeur : Automattic, Inc</string>
 	<string name="about">A propos</string>
 	<string name="max_thumbnail_px_width">Largeur d\'image par défaut</string>
 	<string name="image_alignment">Alignement</string>

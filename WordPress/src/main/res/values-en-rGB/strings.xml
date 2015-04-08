@@ -113,8 +113,6 @@
 	<string name="jetpack_stats_switch_user">The current WordPress.com account (%s) doesn\'t have access to the stats for this blog. Would you like to sign in to a different account?</string>
 	<string name="ptr_tip_message">Tip: Pull down to refresh</string>
 	<string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
-	<string name="loading_posts">Loading posts…</string>
-	<string name="loading_pages">Loading pages…</string>
 	<string name="reader_label_reblog_empty_link">Change blog visibility</string>
 	<string name="help">Help</string>
 	<string name="forgot_password">Lost your password?</string>
@@ -276,8 +274,6 @@
 	<string name="self_hosted_blogs">Self-hosted blogs</string>
 	<string name="stats_view_totals_followers_and_shares">Totals, followers, &amp; shares</string>
 	<string name="stats_view_tags_and_categories">Tags &amp; categories</string>
-	<string name="stats_view_top_authors">Top authors</string>
-	<string name="stats_view_search_engine_terms">Search engine terms</string>
 	<string name="stats_visitors_and_views_header_best_ever">Best ever</string>
 	<string name="stats_visitors_and_views_header_all_time">All time</string>
 	<string name="pending_review">Pending review</string>
@@ -326,7 +322,6 @@
 	<string name="reader_likes_multi">%,d people like this</string>
 	<string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
 	<string name="reader_label_reply">Reply</string>
-	<string name="copyright">© 2014 Automattic, Inc</string>
 	<string name="video">Video</string>
 	<string name="download">Downloading media</string>
 	<string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
@@ -504,7 +499,6 @@
 	<string name="version">Version</string>
 	<string name="tos">Terms of Service</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="publisher">Publisher: Automattic, Inc</string>
 	<string name="about">About</string>
 	<string name="max_thumbnail_px_width">Default image width</string>
 	<string name="image_alignment">Alignment</string>

@@ -13,6 +13,11 @@ public class LicensesActivity extends WebViewActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(getResources().getText(R.string.open_source_licenses));
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setElevation(0.0f);
+        }
+
         loadUrl("file:///android_asset/licenses.html");
     }
 }

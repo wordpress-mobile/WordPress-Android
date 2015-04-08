@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="comments_fetching">Ανάκτηση σχολίων...</string>
+	<string name="pages_fetching">Ανάκτηση σελίλδων...</string>
+	<string name="toast_err_post_uploading">Αδύνατο το άνοιγμα το άρθρου όσο αυτό φορτώνει</string>
+	<string name="stats_view_search_terms">Όροι αναζήτησης</string>
+	<string name="stats_empty_search_terms">Δεν καταχωρήθηκαν όροι αναζήτησης</string>
+	<string name="stats_entry_search_terms">Όρος αναζήτησης</string>
+	<string name="stats_view_authors">Συγγραφείς</string>
+	<string name="error_notification_open">Αδύνατον να ανοιχτεί η ειδοποίηση</string>
+	<string name="stats_followers_total_email_paged">Κατάδειξη %1$d - %2$d από %3$ς Ακόλουθοι Email</string>
+	<string name="stats_search_terms_unknown_search_terms">Άγνωστοι όροι αναζήτησης</string>
+	<string name="stats_followers_total_wpcom_paged">Κατάδειξη %1$d - %2$d από %3$ς Ακόλουθοι WordPress.com</string>
+	<string name="stats_empty_search_terms_desc">Μάθετε περισσότερα για την κίνηση στην αναζήτηση σας εξετάζοντας τους όρους αναζήτησης που χρησιμοποίησαν οι χρήστες για να βρούν το site σας.</string>
+	<string name="reader_empty_posts_request_failed">Αδυναμία φόρτωσης των άρθρων</string>
+	<string name="publisher">Εκδότης:</string>
 	<string name="contact_us">Επικοινωνήστε μαζί μας</string>
 	<string name="contact_us_pref_summary">Βρείτε βοήθεια από την υποστήριξη της Automattic</string>
 	<string name="hs__username_blank_error">Συμπληρώστε ένα έγκυρο όνομα</string>
@@ -15,12 +29,10 @@
 	<string name="reader_hint_reblog_comment">Προσθέστε τις σκέψεις σας (προαιρετικό)</string>
 	<string name="sign_in_again">Συνδεθείτε ξανά</string>
 	<string name="reader_title_blog_preview">Προεπισκόπηση Ιστολογίου</string>
-	<string name="loading_pages">Φόρτωση σελίδων...</string>
 	<string name="help_center">Κέντρο βοήθειας</string>
 	<string name="help">Βοήθεια</string>
 	<string name="forgot_password">Έχασες τον κωδικό σου;</string>
 	<string name="ssl_certificate_error">Μη έγκυρο πιστοποιητικό SSL</string>
-	<string name="loading_posts">Φόρτωση άρθρων...</string>
 	<string name="forums">Συζητήσεις</string>
 	<string name="out_of_memory">Η μνήμη της συσκευής εξαντλήθηκε</string>
 	<string name="no_network_message">Δεν υπάρχει διαθέσιμο δίκτυο</string>
@@ -46,7 +58,6 @@
 	<string name="reader_likes_you_and_multi">Αυτό αρέσει σε εσάς και σε άλλους %,d</string>
 	<string name="reader_likes_multi">Αυτό αρέσει σε %,d ανθρώπους</string>
 	<string name="reader_toast_err_get_comment">Δε στάθηκε δυνατό να ανακτηθεί αυτό το σχόλιο</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="download">Γίνεται μεταφορά πολυμέσων</string>
 	<string name="comment_spammed">Το σχόλιο αυτό έχει σημειωθεί ως ανεπιθύμητο</string>
 	<string name="cant_share_no_visible_blog">Δε μπορείτε να μοιραστείτε στο WordPress χωρίς ένα ορατό ιστολόγιο</string>
@@ -217,7 +228,6 @@
 	<string name="version">Έκδοση</string>
 	<string name="tos">Όροι Χρήσης</string>
 	<string name="app_title">WordPress για Android</string>
-	<string name="publisher">Εκδότης: Automattic, Inc</string>
 	<string name="about">Σχετικά</string>
 	<string name="max_thumbnail_px_width">Προεπιλεγμένο πλάτος εικόνας</string>
 	<string name="image_alignment">Στοίχιση</string>

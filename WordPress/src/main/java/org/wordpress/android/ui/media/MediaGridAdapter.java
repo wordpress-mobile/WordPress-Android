@@ -31,8 +31,8 @@ import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -285,7 +285,7 @@ public class MediaGridAdapter extends CursorAdapter {
             Uri uri = Uri.parse(thumbnailURL);
             String filepath = uri.getLastPathSegment();
 
-            int placeholderResId = MediaUtils.getPlaceholder(filepath);
+            int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
             imageView.setImageResource(0);
             imageView.setErrorImageResId(placeholderResId);
 
@@ -520,6 +520,9 @@ public class MediaGridAdapter extends CursorAdapter {
 
     public void setItemSelected(int position, boolean selected) {
         Cursor cursor = (Cursor) getItem(position);
+        if (cursor == null) {
+            return;
+        }
         int columnIndex = cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID);
         if (columnIndex != -1) {
             String mediaId = cursor.getString(columnIndex);

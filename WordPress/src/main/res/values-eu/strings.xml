@@ -34,8 +34,6 @@
 	<string name="blogs_visibility">Blogak</string>
 	<string name="need_help_signin_wpcom">Laguntzarik behar?</string>
 	<string name="saving">Gordetzen...</string>
-	<string name="loading_posts">Sarrerak kargatzen...</string>
-	<string name="loading_pages">Orrialdeak kargatzen...</string>
 	<string name="help">Laguntza</string>
 	<string name="forums">Foroak</string>
 	<string name="ssl_certificate_error">SSL ziurtagiri okerra</string>
@@ -179,7 +177,6 @@
 	<string name="create_a_link">Esteka sortu</string>
 	<string name="file_error_create">Ezin izan da multimedia fitzategia igotzeko behin-behineko fitxategia sortu. Ziurtatu zure gailuan nahikoa espazio edukitzeaz.</string>
 	<string name="post_not_found">Sarrera kargatzean errore bat gertatu da. Eguneratu sarrerak eta saiatu berriz.</string>
-	<string name="stats_view_top_authors">Top autoreak</string>
 	<string name="media_gallery_image_order">Irudien ordena</string>
 	<string name="local_draft">Zirriborro lokala</string>
 	<string name="view_in_browser">Nabigatzailean ikusi</string>
@@ -221,7 +218,6 @@
 	<string name="themes_live_preview">Zuzeneko aurrebista</string>
 	<string name="location_not_found">Kokaleku ezezaguna</string>
 	<string name="self_hosted_blogs">Ostatatutako blogak</string>
-	<string name="stats_view_search_engine_terms">Bilaketa motoreen terminoak</string>
 	<string name="stats_visitors_and_views_header_best_ever">Hoberenak</string>
 	<string name="stats_visitors_and_views_header_all_time">Betikoak</string>
 	<string name="pending_review">Berrikuspenaren zain</string>
@@ -248,7 +244,6 @@
 	<string name="reader_likes_multi">%,d pertsonak hau gustoko dute</string>
 	<string name="reader_toast_err_get_comment">Ezin izan da iruzkin hau berreskuratu</string>
 	<string name="reader_label_reply">Erantzun</string>
-	<string name="copyright">©2014 Automattic, Inc</string>
 	<string name="video">Bideoa</string>
 	<string name="download">Multimedia elementua deskargatzen</string>
 	<string name="cant_share_no_visible_blog">Ezin da WordPress-en partekatu blog ikusgai bat ez baduzu</string>
@@ -424,7 +419,6 @@
 	<string name="version">Bertsioa</string>
 	<string name="app_title">WordPress Androiderako</string>
 	<string name="tos">Zerbitzu terminoak</string>
-	<string name="publisher">Sortzailea: Automattic, Inc</string>
 	<string name="about">Honi buruz</string>
 	<string name="max_thumbnail_px_width">Defektuzko irudi zabalera</string>
 	<string name="image_alignment">Lerrokatzea</string>
