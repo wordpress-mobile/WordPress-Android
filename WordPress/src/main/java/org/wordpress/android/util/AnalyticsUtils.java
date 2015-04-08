@@ -87,6 +87,6 @@ public class AnalyticsUtils {
     }
 
     private static boolean hasDotComTokenAndNoMixpanelUserEmail() {
-        return (WordPress.hasDotComToken(WordPress.getContext()) && AppPrefs.getMixpanelUserEmail() == null);
+        return (AccountHelper.getDefaultAccount().hasAccessToken() && AppPrefs.getMixpanelUserEmail() == null);
     }
 }
