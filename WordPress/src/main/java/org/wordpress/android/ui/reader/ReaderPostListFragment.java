@@ -92,7 +92,7 @@ public class ReaderPostListFragment extends Fragment
     private View mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
-    private Toolbar mReaderToolbar;
+    private Toolbar mFragmentToolbar;
 
     private ViewGroup mTagInfoView;
     private ReaderBlogInfoView mBlogInfoView;
@@ -352,6 +352,9 @@ public class ReaderPostListFragment extends Fragment
             public void onClick(View view) {
                 hideNewPostsBar();
                 mRecyclerView.scrollToPosition(0);
+                if (hasFragmentToolbar()) {
+                    showFragmentToolbar(true);
+                }
             }
         });
 
@@ -461,11 +464,11 @@ public class ReaderPostListFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
 
         // configure the toolbar for posts in followed tags (shown in main viewpager activity)
-        if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
-            mReaderToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
-            mReaderToolbar.setVisibility(View.VISIBLE);
-            mReaderToolbar.inflateMenu(R.menu.reader_list);
-            mReaderToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+        if (hasFragmentToolbar()) {
+            mFragmentToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
+            mFragmentToolbar.setVisibility(View.VISIBLE);
+            mFragmentToolbar.inflateMenu(R.menu.reader_list);
+            mFragmentToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     if (menuItem.getItemId() == R.id.menu_tags) {
@@ -479,19 +482,20 @@ public class ReaderPostListFragment extends Fragment
             mRecyclerView.setScrollDirectionListener(new ScrollDirectionListener() {
                 @Override
                 public void onScrollUp() {
-                    showReaderToolbar(true);
+                    showFragmentToolbar(true);
                 }
                 @Override
                 public void onScrollDown() {
-                    showReaderToolbar(false);
+                    showFragmentToolbar(false);
                 }
                 @Override
                 public void onScrollCompleted() {
                     // noop
                 }
             });
+            // create the tag spinner in the toolbar
             if (mSpinner == null) {
-                enableTagSpinner(mReaderToolbar);
+                enableTagSpinner(mFragmentToolbar);
             }
             selectTagInSpinner(getCurrentTag());
         }
@@ -678,16 +682,24 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
+     * returns true if the fragment should have it's own toolbar - used when showing posts in
+     * followed tags so user can select a different tag from the toolbar spinner
+     */
+    private boolean hasFragmentToolbar() {
+        return (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
+    }
+
+    /*
      * animates the toolbar above the reader fragment containing the tag spinner
      */
-    public void showReaderToolbar(boolean show) {
-        if (isAdded() && mReaderToolbar != null) {
-            ReaderAnim.animateTopBar(mReaderToolbar, show);
+    public void showFragmentToolbar(boolean show) {
+        if (isAdded() && mFragmentToolbar != null) {
+            ReaderAnim.animateTopBar(mFragmentToolbar, show);
         }
     }
 
-    public boolean isReaderToolbarShowing() {
-        return mReaderToolbar != null && mReaderToolbar.getVisibility() == View.VISIBLE;
+    public boolean isFragmentToolbarShowing() {
+        return mFragmentToolbar != null && mFragmentToolbar.getVisibility() == View.VISIBLE;
     }
 
     /*
@@ -831,7 +843,7 @@ public class ReaderPostListFragment extends Fragment
             AppLog.d(T.READER, "reader post list > creating post adapter");
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
-            mPostAdapter.setHasSpacer(getPostListType() == ReaderPostListType.TAG_FOLLOWED);
+            mPostAdapter.setHasSpacer(hasFragmentToolbar());
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnTagSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);

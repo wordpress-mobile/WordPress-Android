@@ -146,10 +146,10 @@ public class WPMainActivity extends Activity
         if (position == WPMainTabAdapter.TAB_READER) {
             ReaderPostListFragment fragment = getReaderListFragment();
             if (fragment != null) {
-                if (state == ViewPager.SCROLL_STATE_DRAGGING && fragment.isReaderToolbarShowing()) {
-                    fragment.showReaderToolbar(false);
-                } else if (state == ViewPager.SCROLL_STATE_SETTLING && !fragment.isReaderToolbarShowing()) {
-                    fragment.showReaderToolbar(true);
+                if (state == ViewPager.SCROLL_STATE_DRAGGING && fragment.isFragmentToolbarShowing()) {
+                    fragment.showFragmentToolbar(false);
+                } else if (state == ViewPager.SCROLL_STATE_SETTLING && !fragment.isFragmentToolbarShowing()) {
+                    fragment.showFragmentToolbar(true);
                 }
             }
         }
