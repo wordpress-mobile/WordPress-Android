@@ -39,7 +39,7 @@ public class StatsService extends Service {
     public static final String ARG_UPDATE_GRAPH_STATS = "ARG_UPDATE_GRAPH_STATS";
     public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS,
         VIDEO_PLAYS, COMMENTS, FOLLOWERS_WPCOM, FOLLOWERS_EMAIL, COMMENT_FOLLOWERS, TAGS_AND_CATEGORIES,
-        PUBLICIZE, SEARCH_TERMS, PUBLISHED_POSTS}
+        PUBLICIZE, SEARCH_TERMS}
 
     private String mServiceBlogId;
     private StatsTimeframe mServiceRequestedTimeframe;
@@ -202,14 +202,6 @@ public class StatsService extends Service {
                     RestListener searchTermsListener = new RestListener(StatsEndpointsEnum.SEARCH_TERMS, mServiceBlogId, mServiceRequestedTimeframe);
                     final String searchTermsPath = String.format("/sites/%s/stats/search-terms?period=%s&date=%s&max=%s", mServiceBlogId, period, mServiceRequestedDate, 12);
                     mStatsNetworkRequests.add(restClientUtils.get(searchTermsPath, searchTermsListener, searchTermsListener));
-
-                    //Published section
-                    String publishedDateQueryURL = StatsUtils.getPublishedEndpointPeriodDateParameters(mServiceRequestedTimeframe, mServiceRequestedDate);
-                    if (publishedDateQueryURL!= null) {
-                        RestListener publishedPostsListener = new RestListener(StatsEndpointsEnum.PUBLISHED_POSTS, mServiceBlogId, mServiceRequestedTimeframe);
-                        final String publishedPostsPath = String.format("/sites/%s/posts?number=%s%s", mServiceBlogId, 10, publishedDateQueryURL);
-                        mStatsNetworkRequests.add(restClientUtils.get(publishedPostsPath, publishedPostsListener, publishedPostsListener));
-                    }
 
                     if (updateAlltimeStats) {
                         // Comments
