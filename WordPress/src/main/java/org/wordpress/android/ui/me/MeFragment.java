@@ -69,8 +69,15 @@ public class MeFragment extends Fragment {
             mUsernameTextView.setVisibility(View.VISIBLE);
 
             mAvatarImageView.setImageUrl(defaultAccount.getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
-            mDisplayNameTextView.setText(defaultAccount.getDisplayName());
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
+
+            String displayName = defaultAccount.getDisplayName();
+            if (displayName != null && displayName.length() > 0) {
+                mDisplayNameTextView.setText(displayName);
+            }
+            else {
+                mDisplayNameTextView.setText(defaultAccount.getUserName());
+            }
 
             mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
         }
