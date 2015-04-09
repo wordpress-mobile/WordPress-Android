@@ -15,6 +15,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ToggleButton;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -28,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class EditorFragment extends EditorFragmentAbstract {
+public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener {
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
 
@@ -38,6 +39,7 @@ public class EditorFragment extends EditorFragmentAbstract {
     private String mParamContent;
     private WebView mWebView;
 
+    private ToggleButton mBoldButton;
     public static EditorFragment newInstance(String title, String content) {
         EditorFragment fragment = new EditorFragment();
         Bundle args = new Bundle();
@@ -60,11 +62,14 @@ public class EditorFragment extends EditorFragmentAbstract {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_editor, container, false);
         mWebView = (WebView) view.findViewById(R.id.webview);
         initWebView();
+
+        mBoldButton = (ToggleButton) view.findViewById(R.id.bold);
+        mBoldButton.setOnClickListener(this);
+
         return view;
     }
 
