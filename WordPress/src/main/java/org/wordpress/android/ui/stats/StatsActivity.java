@@ -262,7 +262,6 @@ public class StatsActivity extends ActionBarActivity
         resetDatamodelForFragment(fm, StatsGeoviewsFragment.TAG);
         resetDatamodelForFragment(fm, StatsAuthorsFragment.TAG);
         resetDatamodelForFragment(fm, StatsVideoplaysFragment.TAG);
-        resetDatamodelForFragment(fm, StatsPublishedPostsFragment.TAG);
         if (resetAlltimeFragmets) {
             resetDatamodelForFragment(fm, StatsCommentsFragment.TAG);
             resetDatamodelForFragment(fm, StatsTagsAndCategoriesFragment.TAG);
@@ -320,11 +319,6 @@ public class StatsActivity extends ActionBarActivity
         if (fm.findFragmentByTag(StatsSearchTermsFragment.TAG) == null || forceRecreationOfFragments) {
             fragment = StatsAbstractFragment.newInstance(StatsViewType.SEARCH_TERMS, mLocalBlogID);
             ft.replace(R.id.stats_search_terms_container, fragment, StatsSearchTermsFragment.TAG);
-        }
-
-        if (fm.findFragmentByTag(StatsPublishedPostsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLISHED_POSTS, mLocalBlogID);
-            ft.replace(R.id.stats_published_posts_container, fragment, StatsPublishedPostsFragment.TAG);
         }
 
         if (loadAlltimeFragmets) {

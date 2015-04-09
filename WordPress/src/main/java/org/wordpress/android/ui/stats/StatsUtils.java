@@ -22,7 +22,6 @@ import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
-import org.wordpress.android.ui.stats.models.PublishedPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SearchTermsModel;
 import org.wordpress.android.ui.stats.models.TagsContainerModel;
@@ -395,9 +394,6 @@ public class StatsUtils {
                 break;
             case SEARCH_TERMS:
                 model = new SearchTermsModel(blogID, response);
-                break;
-            case PUBLISHED_POSTS:
-                model = new PublishedPostsAndPagesModel(blogID, response);
                 break;
         }
         return model;
