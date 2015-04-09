@@ -18,5 +18,4 @@ public enum StatsViewType {
     PUBLICIZE,
     FOLLOWERS,
     SEARCH_TERMS,
-    PUBLISHED_POSTS,
 }

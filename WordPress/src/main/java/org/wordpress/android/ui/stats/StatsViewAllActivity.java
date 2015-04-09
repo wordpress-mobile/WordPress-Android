@@ -132,7 +132,6 @@ public class StatsViewAllActivity extends ActionBarActivity
             case AUTHORS:
             case VIDEO_PLAYS:
             case SEARCH_TERMS:
-            case PUBLISHED_POSTS:
                 dateTextView.setText(getDateForDisplayInLabels(mDate, mTimeframe));
                 dateTextView.setVisibility(View.VISIBLE);
                 break;
@@ -217,9 +216,6 @@ public class StatsViewAllActivity extends ActionBarActivity
                 break;
             case SEARCH_TERMS:
                 fragment = new StatsSearchTermsFragment();
-                break;
-            case PUBLISHED_POSTS:
-                fragment = new StatsPublishedPostsFragment();
                 break;
         }
 
@@ -317,9 +313,6 @@ public class StatsViewAllActivity extends ActionBarActivity
                 endpointPath = "comment-followers";
                 return String.format("/sites/%s/stats/%s?period=%s&date=%s&max=%s&page=%s", blogId, endpointPath,
                     mTimeframe.getLabelForRestCall(), mDate, MAX_RESULTS_PER_PAGE, 1);
-            case PUBLISHED_POSTS:
-                String publishedDateQueryURL = StatsUtils.getPublishedEndpointPeriodDateParameters(getCurrentTimeFrame(), getCurrentDate());
-                return String.format("/sites/%s/posts?number=%s%s", blogId, MAX_RESULTS_REQUESTED, publishedDateQueryURL);
         }
 
         // All other endpoints returns 100 items in details view
