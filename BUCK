@@ -9,6 +9,13 @@ for jarfile in glob(['extlibs/*.jar']):
         binary_jar = jarfile,
     )
 
+build_config_values = ['String APP_PN_KEY = "org.wordpress.android.playstore"']
+for line in open('WordPress/gradle.properties').readlines():
+    if line.startswith('wp.'):
+        key, value = line.strip().replace(" ", "").split("=")
+        key = key.replace("wp.", "").upper().replace(".", "_")
+        build_config_values.append('String %s = "%s"' % (key, value))
+
 android_library(
     name = 'all-jars',
     exported_deps = jar_deps,
@@ -33,6 +40,39 @@ android_prebuilt_aar(
     name = 'drag-sort-listview',
     aar = 'extlibs/drag-sort-listview-0.6.1.aar',
 )
+
+android_prebuilt_aar(
+    name = 'simperium',
+    aar = 'extlibs/simperium-0.6.2.aar',
+)
+
+android_prebuilt_aar(
+    name = 'undobar',
+    aar = 'extlibs/undobar-1.6.aar',
+)
+
+android_prebuilt_aar(
+    name = 'slidinguppanel',
+    aar = 'extlibs/slidinguppanel-1.0.0.aar',
+)
+
+android_prebuilt_aar(
+    name = 'passcodelock',
+    aar = 'extlibs/android-passcodelock-0.0.6.aar',
+)
+
+android_prebuilt_aar(
+    name = 'helpshift',
+    aar = 'extlibs/helpshift-3.7.2.aar',
+)
+
+### NDK dependencies
+
+prebuilt_native_library(
+  name = 'native_libs',
+  native_libs = 'extlibs/jni/armeabi',
+)
+
 ### WordPressUtils
 
 android_build_config(
@@ -92,6 +132,24 @@ android_library(
     ]
 )
 
+### WPComRest
+
+android_library(
+    name = 'wpcomrest',
+    srcs = glob(['libs/wpcomrest/WordPressComRest/src/main/java/**/*.java']),
+    deps = [
+        ':all-jars', # volley
+    ]
+)
+
+### WPGraphView
+
+android_library(
+    name = 'wpgraphview',
+    srcs = glob(['libs/graphview/WordPressGraphView/src/main/java/**/*.java']),
+)
+
+
 ### WordPressAnalytics
 
 android_library(
@@ -100,6 +158,18 @@ android_library(
     deps = [
         ':wpandroid-utils',
         ':all-jars', # tracks needed
+    ]
+)
+
+### WordPressNetworking
+
+android_library(
+    name = 'wpnetworking',
+    srcs = glob(['libs/networking/WordPressNetworking/src/main/java/**/*.java']),
+    deps = [
+        ':wpcomrest',
+        ':wpandroid-utils',
+        ':all-jars', # volley
     ]
 )
 
@@ -131,6 +201,7 @@ android_resource(
 android_build_config(
     name = 'build-config',
     package = 'org.wordpress.android',
+    values = build_config_values,
 )
 
 android_library(
@@ -141,9 +212,20 @@ android_library(
         ':persistentedittext',
         ':wpandroid-utils',
         ':wpandroid-editor',
+        ':wpcomrest',
+        ':wpanalytics',
+        ':wpgraphview',
         ':build-config',
         ':res',
         ':drag-sort-listview',
+        ':simperium',
+        ':mediapicker',
+        ':undobar',
+        ':slidinguppanel',
+        ':passcodelock',
+        ':wpnetworking',
+        ':helpshift',
+        ':native_libs',
     ],
 )
 
