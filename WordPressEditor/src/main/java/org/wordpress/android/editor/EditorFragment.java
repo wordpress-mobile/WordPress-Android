@@ -2,12 +2,14 @@ package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
+import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -29,6 +31,8 @@ import java.io.InputStreamReader;
 public class EditorFragment extends EditorFragmentAbstract {
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
+
+    private static final String JS_CALLBACK_HANDLER = "nativeCallbackHandler";
 
     private String mParamTitle;
     private String mParamContent;
@@ -81,23 +85,29 @@ public class EditorFragment extends EditorFragmentAbstract {
         });
         mWebView.setWebChromeClient(new WebChromeClient() {
             public boolean onConsoleMessage(ConsoleMessage cm) {
-                AppLog.e(T.EDITOR, cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
+                AppLog.d(T.EDITOR, cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
                 return true;
             }
 
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                AppLog.e(T.EDITOR, message);
+                AppLog.d(T.EDITOR, message);
                 return true;
             }
 
             @Override
             public void onConsoleMessage(String message, int lineNumber, String sourceId) {
-                AppLog.e(T.EDITOR, message + " -- from line " + lineNumber + " of " + sourceId);
+                AppLog.d(T.EDITOR, message + " -- from line " + lineNumber + " of " + sourceId);
             }
         });
-        String htmlEditor = getHtmlEditor();
+
+        String htmlEditor = getHtmlFromFile("android-editor.html");
+
+        mWebView.addJavascriptInterface(new JsCallbackHandler(), JS_CALLBACK_HANDLER);
+
         mWebView.loadDataWithBaseURL("file:///android_asset/", htmlEditor, "text/html", "utf-8", "");
+
+        enableWebDebugging(true);
     }
 
     private String getStringFromAsset(String filename) throws IOException {
@@ -118,12 +128,20 @@ public class EditorFragment extends EditorFragmentAbstract {
         return sb.toString();
     }
 
-    private String getHtmlEditor() {
+    private String getHtmlFromFile(String filename) {
         try {
-            return getStringFromAsset("android-editor.html");
+            return getStringFromAsset(filename);
         } catch (IOException e) {
             AppLog.e(T.EDITOR, e.getMessage());
             return null;
+        }
+    }
+
+    @SuppressLint("NewApi")
+    private void enableWebDebugging(boolean enable) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            AppLog.i(T.EDITOR, "Enabling web debugging");
+            WebView.setWebContentsDebuggingEnabled(enable);
         }
     }
 
@@ -162,5 +180,26 @@ public class EditorFragment extends EditorFragmentAbstract {
     @Override
     public Spanned getSpannedContent() {
         return null;
+    }
+
+    class JsCallbackHandler {
+        @JavascriptInterface
+        public void executeCallback(final String callbackId) {
+            if (callbackId.equals("callback-dom-loaded")) {
+                // Run on UI thread
+                mWebView.post(new Runnable() {
+                    public void run() {
+                        String title = "I'm editing a post!";
+                        String contentHtml = getHtmlFromFile("example-content.html");
+
+                        // Load example content into editor
+                        mWebView.loadUrl("javascript:ZSSEditor.getField('zss_field_title').setHTML('" +
+                                Utils.escapeHtml(title) + "');");
+                        mWebView.loadUrl("javascript:ZSSEditor.getField('zss_field_content').setHTML('" +
+                                Utils.escapeHtml(contentHtml) + "');");
+                    }
+                });
+            }
+        }
     }
 }
