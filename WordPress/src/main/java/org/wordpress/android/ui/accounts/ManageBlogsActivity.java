@@ -92,16 +92,15 @@ public class ManageBlogsActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId) {
-            case R.id.menu_show_all:
-                selectAll();
-                return true;
-            case R.id.menu_hide_all:
-                deselectAll();
-                return true;
-            case android.R.id.home:
-                finish();
-                return true;
+        if (itemId == R.id.menu_show_all) {
+            selectAll();
+            return true;
+        } else if (itemId == R.id.menu_hide_all) {
+            deselectAll();
+            return true;
+        } else if (itemId == android.R.id.home) {
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -563,12 +563,12 @@ public class ReaderPostListFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_tags:
-                ReaderActivityLauncher.showReaderSubsForResult(getActivity());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == R.id.menu_tags) {
+            ReaderActivityLauncher.showReaderSubsForResult(getActivity());
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
