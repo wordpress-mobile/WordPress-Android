@@ -1,11 +1,15 @@
 package org.wordpress.android.ui.me;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.graphics.Outline;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Account;
@@ -56,9 +60,26 @@ public class MeFragment extends Fragment {
 
         mLoginLogoutTextView = (WPTextView) rootView.findViewById(R.id.me_login_logout_text_view);
 
+        addDropShadow(rootView.findViewById(R.id.frame_avatar));
         refreshAccountDetails();
 
         return rootView;
+    }
+
+    /*
+     * adds a circular drop shadow to the avatar's parent view (Lollipop+ only)
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void addDropShadow(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.setOutlineProvider(new ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    outline.setOval(0, 0, view.getWidth(), view.getHeight());
+                }
+            });
+            view.setElevation(view.getResources().getDimensionPixelSize(R.dimen.card_elevation));
+        }
     }
 
     private void refreshAccountDetails() {
@@ -75,8 +96,7 @@ public class MeFragment extends Fragment {
             String displayName = defaultAccount.getDisplayName();
             if (!TextUtils.isEmpty(displayName)) {
                 mDisplayNameTextView.setText(displayName);
-            }
-            else {
+            } else {
                 mDisplayNameTextView.setText(defaultAccount.getUserName());
             }
 

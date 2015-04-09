@@ -8,13 +8,19 @@
     android:paddingRight="@dimen/margin_medium"
     android:orientation="vertical">
 
-    <org.wordpress.android.widgets.WPNetworkImageView
-        android:id="@+id/me_avatar"
+    <FrameLayout
+        android:id="@+id/frame_avatar"
         android:layout_width="@dimen/avatar_sz_large"
         android:layout_height="@dimen/avatar_sz_large"
-        android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/me_avatar_margin_top"
-        android:elevation="@dimen/card_elevation" />
+        android:layout_gravity="center_horizontal">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/me_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/me_display_name"
