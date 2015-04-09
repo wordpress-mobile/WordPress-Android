@@ -12,6 +12,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
@@ -128,6 +129,16 @@ public class ActivityLauncher {
 
     public static void addMedia(Context context, Blog blog) {
         // TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/2394
+    }
+
+    public static void viewAccountSettings(Context context) {
+        Intent intent = new Intent(context, SettingsActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void viewHelpAndSupport(Context context) {
+        Intent intent = new Intent(context, HelpActivity.class);
+        context.startActivity(intent);
     }
 
     public static void viewSSLCerts(Context context) {
