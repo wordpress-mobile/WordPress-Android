@@ -1,9 +1,9 @@
 package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
-import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +23,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,7 +91,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         });
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
-            public boolean onConsoleMessage(ConsoleMessage cm) {
+            public boolean onConsoleMessage(@NonNull ConsoleMessage cm) {
                 AppLog.d(T.EDITOR, cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
                 return true;
             }
@@ -107,7 +103,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             }
         });
 
-        String htmlEditor = getHtmlFromFile("android-editor.html");
+        String htmlEditor = Utils.getHtmlFromFile(getActivity(), "android-editor.html");
 
         mWebView.addJavascriptInterface(new JsCallbackHandler(this), JS_CALLBACK_HANDLER);
 
@@ -121,33 +117,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         int id = v.getId();
         if (id == R.id.bold) {
             mWebView.execJavaScriptFromString("ZSSEditor.setBold();");
-        }
-    }
-
-    private String getStringFromAsset(String filename) throws IOException {
-        if (!isAdded()) {
-            return null;
-        }
-        AssetManager assetManager = getActivity().getAssets();
-        InputStream in = assetManager.open(filename);
-        InputStreamReader is = new InputStreamReader(in);
-        StringBuilder sb = new StringBuilder();
-        BufferedReader br = new BufferedReader(is);
-        String read = br.readLine();
-        while (read != null) {
-            sb.append(read);
-            sb.append('\n');
-            read = br.readLine();
-        }
-        return sb.toString();
-    }
-
-    private String getHtmlFromFile(String filename) {
-        try {
-            return getStringFromAsset(filename);
-        } catch (IOException e) {
-            AppLog.e(T.EDITOR, e.getMessage());
-            return null;
         }
     }
 
@@ -200,7 +169,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             public void run() {
                 String title = "I'm editing a post!";
-                String contentHtml = getHtmlFromFile("example-content.html");
+                String contentHtml = Utils.getHtmlFromFile(getActivity(), "example-content.html");
 
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setMultiline('true');");
 
