@@ -2,6 +2,7 @@ package org.wordpress.android.ui.me;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,7 @@ public class MeFragment extends Fragment {
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
 
             String displayName = defaultAccount.getDisplayName();
-            if (displayName != null && displayName.length() > 0) {
+            if (!TextUtils.isEmpty(displayName)) {
                 mDisplayNameTextView.setText(displayName);
             }
             else {
