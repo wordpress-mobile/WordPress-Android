@@ -192,6 +192,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 String title = "I'm editing a post!";
                 String contentHtml = getHtmlFromFile("example-content.html");
 
+                execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setMultiline('true');");
+
                 // Load example content into editor
                 execJavaScriptFromString("ZSSEditor.getField('zss_field_title').setHTML('" +
                         Utils.escapeHtml(title) + "');");
