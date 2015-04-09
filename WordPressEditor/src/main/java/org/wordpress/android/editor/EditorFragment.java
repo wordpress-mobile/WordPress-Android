@@ -40,7 +40,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private String mParamTitle;
     private String mParamContent;
-    private WebView mWebView;
+    private EditorWebView mWebView;
 
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
 
@@ -68,7 +68,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_editor, container, false);
-        mWebView = (WebView) view.findViewById(R.id.webview);
+        mWebView = (EditorWebView) view.findViewById(R.id.webview);
         initWebView();
 
         ToggleButton boldButton = (ToggleButton) view.findViewById(R.id.bold);
@@ -120,7 +120,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.bold) {
-            execJavaScriptFromString("ZSSEditor.setBold();");
+            mWebView.execJavaScriptFromString("ZSSEditor.setBold();");
         }
     }
 
@@ -196,22 +196,18 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         return null;
     }
 
-    private void execJavaScriptFromString(String javaScript) {
-        mWebView.loadUrl("javascript:" + javaScript);
-    }
-
     public void onDomLoaded() {
         mWebView.post(new Runnable() {
             public void run() {
                 String title = "I'm editing a post!";
                 String contentHtml = getHtmlFromFile("example-content.html");
 
-                execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setMultiline('true');");
+                mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setMultiline('true');");
 
                 // Load example content into editor
-                execJavaScriptFromString("ZSSEditor.getField('zss_field_title').setHTML('" +
+                mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_title').setHTML('" +
                         Utils.escapeHtml(title) + "');");
-                execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setHTML('" +
+                mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setHTML('" +
                         Utils.escapeHtml(contentHtml) + "');");
             }
         });

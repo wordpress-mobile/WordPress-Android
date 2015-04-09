@@ -4,7 +4,7 @@
              android:layout_height="match_parent"
              tools:context="org.wordpress.android.editor.EditorFragment">
 
-    <WebView
+    <org.wordpress.android.editor.EditorWebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/webview"/>
