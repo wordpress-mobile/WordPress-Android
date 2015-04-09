@@ -27,6 +27,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, JsCallbackListener {
     private static final String ARG_PARAM_TITLE = "param_title";
@@ -34,11 +36,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private static final String JS_CALLBACK_HANDLER = "nativeCallbackHandler";
 
+    private static final String TAG_FORMAT_BAR_BUTTON_BOLD = "bold";
+
     private String mParamTitle;
     private String mParamContent;
     private WebView mWebView;
 
-    private ToggleButton mBoldButton;
+    private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
+
     public static EditorFragment newInstance(String title, String content) {
         EditorFragment fragment = new EditorFragment();
         Bundle args = new Bundle();
@@ -66,8 +71,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView = (WebView) view.findViewById(R.id.webview);
         initWebView();
 
-        mBoldButton = (ToggleButton) view.findViewById(R.id.bold);
-        mBoldButton.setOnClickListener(this);
+        ToggleButton boldButton = (ToggleButton) view.findViewById(R.id.bold);
+        boldButton.setOnClickListener(this);
+        mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_BOLD, boldButton);
 
         return view;
     }
@@ -108,6 +114,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.loadDataWithBaseURL("file:///android_asset/", htmlEditor, "text/html", "utf-8", "");
 
         enableWebDebugging(true);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.bold) {
+            execJavaScriptFromString("ZSSEditor.setBold();");
+        }
     }
 
     private String getStringFromAsset(String filename) throws IOException {
@@ -199,6 +213,20 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         Utils.escapeHtml(title) + "');");
                 execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setHTML('" +
                         Utils.escapeHtml(contentHtml) + "');");
+            }
+        });
+    }
+
+    public void onSelectionStyleChanged(final Map<String, Boolean> changeMap) {
+        mWebView.post(new Runnable() {
+            public void run() {
+                for (Map.Entry<String, Boolean> entry : changeMap.entrySet()) {
+                    // Handle toggling format bar style buttons
+                    ToggleButton button = mTagToggleButtonMap.get(entry.getKey());
+                    if (button != null) {
+                        button.setChecked(entry.getValue());
+                    }
+                }
             }
         });
     }

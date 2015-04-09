@@ -4,7 +4,12 @@ import android.webkit.JavascriptInterface;
 
 import org.wordpress.android.util.AppLog;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class JsCallbackHandler {
+    private static final String JS_CALLBACK_DELIMITER = "~";
+
     private static final String CALLBACK_LOG = "callback-log";
 
     private static final String CALLBACK_DOM_LOADED = "callback-dom-loaded";
@@ -24,6 +29,8 @@ public class JsCallbackHandler {
 
     private final JsCallbackListener mJsCallbackListener;
 
+    private Set<String> mPreviousStyleSet = new HashSet<>();
+
     public JsCallbackHandler(EditorFragmentAbstract editorFragmentAbstract) {
         mJsCallbackListener = (JsCallbackListener) editorFragmentAbstract;
     }
@@ -33,6 +40,12 @@ public class JsCallbackHandler {
         switch (callbackId) {
             case CALLBACK_DOM_LOADED:
                 mJsCallbackListener.onDomLoaded();
+                break;
+            case CALLBACK_SELECTION_STYLE:
+                // Compare the new styles to the previous ones, and notify the JsCallbackListener of the changeset
+                Set<String> newStyleSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
+                mJsCallbackListener.onSelectionStyleChanged(Utils.getChangeMapFromSets(mPreviousStyleSet, newStyleSet));
+                mPreviousStyleSet = newStyleSet;
                 break;
             case CALLBACK_LOG:
                 // Strip 'msg=' from beginning of string

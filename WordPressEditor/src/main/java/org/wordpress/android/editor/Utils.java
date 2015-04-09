@@ -1,5 +1,11 @@
 package org.wordpress.android.editor;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 public class Utils {
     public static String escapeHtml(String html) {
         html = html.replace("\\", "\\\\");
@@ -8,5 +14,51 @@ public class Utils {
         html = html.replace("\r", "\\r");
         html = html.replace("\n", "\\n");
         return html;
+    }
+
+    /**
+     * Splits a delimited string into a set of strings.
+     * @param string the delimited string to split
+     * @param delimiter the string delimiter
+     */
+    public static Set<String> splitDelimitedString(String string, String delimiter) {
+        Set<String> splitString = new HashSet<>();
+
+        StringTokenizer stringTokenizer = new StringTokenizer(string, delimiter);
+        while (stringTokenizer.hasMoreTokens()) {
+            splitString.add(stringTokenizer.nextToken());
+        }
+
+        return splitString;
+    }
+
+    /**
+     * Compares two <code>Sets</code> and returns a <code>Map</code> of elements not contained in both
+     * <code>Sets</code>. Elements contained in <code>oldSet</code> but not in <code>newSet</code> will be marked
+     * <code>false</code> in the returned map; the converse will be marked <code>true</code>.
+     * @param oldSet the older of the two <code>Sets</code>
+     * @param newSet the newer of the two <code>Sets</code>
+     * @param <E> type of element stored in the <code>Sets</code>
+     * @return a <code>Map</code> containing the difference between <code>oldSet</code> and <code>newSet</code>, and whether the
+     * element was added (<code>true</code>) or removed (<code>false</code>) in <code>newSet</code>
+     */
+    public static <E> Map<E, Boolean> getChangeMapFromSets(Set<E> oldSet, Set<E> newSet) {
+        Map<E, Boolean> changeMap = new HashMap<>();
+
+        Set<E> additions = new HashSet<>(newSet);
+        additions.removeAll(oldSet);
+
+        Set<E> removals = new HashSet<>(oldSet);
+        removals.removeAll(newSet);
+
+        for (E s : additions) {
+            changeMap.put(s, true);
+        }
+
+        for (E s : removals) {
+            changeMap.put(s, false);
+        }
+
+        return changeMap;
     }
 }
