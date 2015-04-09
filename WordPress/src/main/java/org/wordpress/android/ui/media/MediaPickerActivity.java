@@ -244,8 +244,12 @@ public class MediaPickerActivity extends ActionBarActivity
     }
 
     @Override
-    public void onGalleryCreated(ArrayList<MediaItem> mediaContent) {
-        finishWithResults(mediaContent, ACTIVITY_RESULT_CODE_GALLERY_CREATED);
+     public boolean onMenuItemSelected(MenuItem menuItem, ArrayList<MediaItem> selectedContent) {
+        if (menuItem.getItemId() == R.id.menu_media_content_selection_gallery) {
+            finishWithResults(selectedContent, ACTIVITY_RESULT_CODE_GALLERY_CREATED);
+        }
+
+        return false;
     }
 
     @Override
@@ -358,10 +362,30 @@ public class MediaPickerActivity extends ActionBarActivity
         if (mViewPager != null) {
             mViewPager.setPagingEnabled(true);
 
-            mMediaPickerAdapter.addTab(mMediaSources[0] != null ? mMediaSources[0] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_images));
-            mMediaPickerAdapter.addTab(mMediaSources[1] != null ? mMediaSources[1] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_videos));
-            mMediaPickerAdapter.addTab(mMediaSources[2] != null ? mMediaSources[2] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_images));
-            mMediaPickerAdapter.addTab(mMediaSources[3] != null ? mMediaSources[3] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_videos));
+            mMediaPickerAdapter.addTab(mMediaSources[0] != null ? mMediaSources[0] :
+                            new ArrayList<MediaSource>(),
+                    getString(R.string.tab_title_device_images),
+                    getString(R.string.loading_images),
+                    getString(R.string.error_loading_images),
+                    getString(R.string.no_device_images));
+            mMediaPickerAdapter.addTab(mMediaSources[1] != null ? mMediaSources[1] :
+                            new ArrayList<MediaSource>(),
+                    getString(R.string.tab_title_device_videos),
+                    getString(R.string.loading_videos),
+                    getString(R.string.error_loading_videos),
+                    getString(R.string.no_device_videos));
+            mMediaPickerAdapter.addTab(mMediaSources[2] != null ? mMediaSources[2] :
+                            new ArrayList<MediaSource>(),
+                    getString(R.string.tab_title_site_images),
+                    getString(R.string.loading_blog_images),
+                    getString(R.string.error_loading_blog_images),
+                    getString(R.string.no_blog_images));
+            mMediaPickerAdapter.addTab(mMediaSources[3] != null ? mMediaSources[3] :
+                            new ArrayList<MediaSource>(),
+                    getString(R.string.tab_title_site_videos),
+                    getString(R.string.loading_blog_videos),
+                    getString(R.string.error_loading_blog_videos),
+                    getString(R.string.no_blog_videos));
 
             mViewPager.setAdapter(mMediaPickerAdapter);
 
@@ -452,10 +476,16 @@ public class MediaPickerActivity extends ActionBarActivity
      */
     public class MediaPickerAdapter extends FragmentPagerAdapter {
         private class MediaPicker {
+            public String loadingText;
+            public String errorText;
+            public String emptyText;
             public String pickerTitle;
             public ArrayList<MediaSource> mediaSources;
 
-            public MediaPicker(String name, ArrayList<MediaSource> sources) {
+            public MediaPicker(String name, String loading, String error, String empty, ArrayList<MediaSource> sources) {
+                loadingText = loading;
+                errorText = error;
+                emptyText = empty;
                 pickerTitle = name;
                 mediaSources = sources;
             }
@@ -474,6 +504,10 @@ public class MediaPickerActivity extends ActionBarActivity
             if (position < mMediaPickers.size()) {
                 MediaPicker mediaPicker = mMediaPickers.get(position);
                 MediaPickerFragment fragment = new MediaPickerFragment();
+                fragment.setLoadingText(mediaPicker.loadingText);
+                fragment.setErrorText(mediaPicker.errorText);
+                fragment.setEmptyText(mediaPicker.emptyText);
+                fragment.setActionModeMenu(R.menu.menu_media_picker_action_mode);
                 fragment.setMediaSources(mediaPicker.mediaSources);
 
                 return fragment;
@@ -492,8 +526,8 @@ public class MediaPickerActivity extends ActionBarActivity
             return mMediaPickers.get(position).pickerTitle;
         }
 
-        public void addTab(ArrayList<MediaSource> mediaSources, String tabName) {
-            mMediaPickers.add(new MediaPicker(tabName, mediaSources));
+        public void addTab(ArrayList<MediaSource> mediaSources, String tabName, String loading, String error, String empty) {
+            mMediaPickers.add(new MediaPicker(tabName, loading, error, empty, mediaSources));
         }
     }
 }

@@ -1638,7 +1638,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      */
     private ArrayList<MediaSource> imageMediaSelectionSources() {
         ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
-        imageMediaSources.add(new MediaSourceDeviceImages(getActivity().getContentResolver()));
+        imageMediaSources.add(new MediaSourceDeviceImages());
 
         return imageMediaSources;
     }
@@ -1665,7 +1665,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      */
     private ArrayList<MediaSource> videoMediaSelectionSources() {
         ArrayList<MediaSource> videoMediaSources = new ArrayList<>();
-        videoMediaSources.add(new MediaSourceDeviceVideos(getActivity().getContentResolver()));
+        videoMediaSources.add(new MediaSourceDeviceVideos());
 
         return videoMediaSources;
     }

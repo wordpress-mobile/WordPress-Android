@@ -66,7 +66,9 @@ dependencies {
     compile 'com.crashlytics.android:crashlytics:+'
 
     // Provided by maven central
-    compile 'org.wordpress:mediapicker:1.1.4'
+    compile ('org.wordpress:mediapicker:1.2.0') {
+        exclude group:'com.android.support'
+    }
     compile 'com.google.code.gson:gson:2.2.2'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
     compile 'com.android.support:support-v13:21.0.+'

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/media_empty_view"
+        style="@style/WordPress.EmptyList.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+        android:layout_marginLeft="@dimen/empty_list_title_side_margin"
+        android:layout_marginRight="@dimen/empty_list_title_side_margin"
+        android:textSize="@dimen/empty_view_text_size" />
+
+    <GridView
+        android:id="@+id/media_adapter_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:verticalSpacing="2dp"
+        android:horizontalSpacing="2dp"
+        android:numColumns="2"/>
+
+</LinearLayout>
