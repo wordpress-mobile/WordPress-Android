@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
-import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -29,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener {
+public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, JsCallbackListener {
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
 
@@ -89,6 +88,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             }
         });
         mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
             public boolean onConsoleMessage(ConsoleMessage cm) {
                 AppLog.d(T.EDITOR, cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
                 return true;
@@ -99,16 +99,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 AppLog.d(T.EDITOR, message);
                 return true;
             }
-
-            @Override
-            public void onConsoleMessage(String message, int lineNumber, String sourceId) {
-                AppLog.d(T.EDITOR, message + " -- from line " + lineNumber + " of " + sourceId);
-            }
         });
 
         String htmlEditor = getHtmlFromFile("android-editor.html");
 
-        mWebView.addJavascriptInterface(new JsCallbackHandler(), JS_CALLBACK_HANDLER);
+        mWebView.addJavascriptInterface(new JsCallbackHandler(this), JS_CALLBACK_HANDLER);
 
         mWebView.loadDataWithBaseURL("file:///android_asset/", htmlEditor, "text/html", "utf-8", "");
 
@@ -187,24 +182,22 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         return null;
     }
 
-    class JsCallbackHandler {
-        @JavascriptInterface
-        public void executeCallback(final String callbackId) {
-            if (callbackId.equals("callback-dom-loaded")) {
-                // Run on UI thread
-                mWebView.post(new Runnable() {
-                    public void run() {
-                        String title = "I'm editing a post!";
-                        String contentHtml = getHtmlFromFile("example-content.html");
+    private void execJavaScriptFromString(String javaScript) {
+        mWebView.loadUrl("javascript:" + javaScript);
+    }
 
-                        // Load example content into editor
-                        mWebView.loadUrl("javascript:ZSSEditor.getField('zss_field_title').setHTML('" +
-                                Utils.escapeHtml(title) + "');");
-                        mWebView.loadUrl("javascript:ZSSEditor.getField('zss_field_content').setHTML('" +
-                                Utils.escapeHtml(contentHtml) + "');");
-                    }
-                });
+    public void onDomLoaded() {
+        mWebView.post(new Runnable() {
+            public void run() {
+                String title = "I'm editing a post!";
+                String contentHtml = getHtmlFromFile("example-content.html");
+
+                // Load example content into editor
+                execJavaScriptFromString("ZSSEditor.getField('zss_field_title').setHTML('" +
+                        Utils.escapeHtml(title) + "');");
+                execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setHTML('" +
+                        Utils.escapeHtml(contentHtml) + "');");
             }
-        }
+        });
     }
 }
