@@ -33,7 +33,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
-import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -42,8 +41,6 @@ import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPEditTextPreference;
@@ -94,9 +91,8 @@ public class SettingsFragment extends PreferenceFragment {
         }
         findPreference(resources.getString(R.string.pref_key_notifications)).setOnPreferenceClickListener(notificationPreferenceClickListener);
         findPreference(resources.getString(R.string.pref_key_language)).setOnPreferenceClickListener(languagePreferenceClickListener);
-        findPreference(resources.getString(R.string.pref_key_app_about)).setOnPreferenceClickListener(launchActivitiyClickListener);
-        findPreference(resources.getString(R.string.pref_key_oss_licenses)).setOnPreferenceClickListener(launchActivitiyClickListener);
-        findPreference(resources.getString(R.string.pref_key_help_and_support)).setOnPreferenceClickListener(launchActivitiyClickListener);
+        findPreference(resources.getString(R.string.pref_key_app_about)).setOnPreferenceClickListener(launchActivityClickListener);
+        findPreference(resources.getString(R.string.pref_key_oss_licenses)).setOnPreferenceClickListener(launchActivityClickListener);
         findPreference(resources.getString(R.string.pref_key_passlock)).setOnPreferenceChangeListener(passcodeCheckboxChangeListener);
         findPreference(resources.getString(R.string.pref_key_reset_shared_pref)).setOnPreferenceClickListener(resetAUtoSharePreferenceClickListener);
 
@@ -432,20 +428,17 @@ public class SettingsFragment extends PreferenceFragment {
         }
     };
 
-    private final OnPreferenceClickListener launchActivitiyClickListener = new OnPreferenceClickListener() {
+    private final OnPreferenceClickListener launchActivityClickListener = new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Intent intent = new Intent(getActivity(), AboutActivity.class);
-            if (getActivity().getString(R.string.pref_key_app_about).equals(preference.getKey())) {
-                intent = new Intent(getActivity(), AboutActivity.class);
-            } else if (getActivity().getString(R.string.pref_key_oss_licenses).equals(preference.getKey())) {
-                intent = new Intent(getActivity(), LicensesActivity.class);
-            } else if (getActivity().getString(R.string.pref_key_help_and_support).equals(preference.getKey())) {
-                intent = new Intent(getActivity(), HelpActivity.class);
-                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, Tag.ORIGIN_SETTINGS_SCREEN_HELP);
+            if (getActivity().getString(R.string.pref_key_oss_licenses).equals(preference.getKey())) {
+                startActivity(new Intent(getActivity(), LicensesActivity.class));
+                return true;
+            } else if (getActivity().getString(R.string.pref_key_app_about).equals(preference.getKey())) {
+                startActivity(new Intent(getActivity(), AboutActivity.class));
+                return true;
             }
-            startActivity(intent);
-            return true;
+            return false;
         }
     };
 
