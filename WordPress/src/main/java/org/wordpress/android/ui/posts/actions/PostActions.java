@@ -67,7 +67,7 @@ public class PostActions {
                 String featuredImageURL = JSONUtils.getString(jsonObject, "featured_image");
                 if (featuredImageURL != "") {
                     post.setFeaturedImage("");
-                    updatePostFeaturedImage(post);
+                    //updatePostFeaturedImage(post);
                     AppLog.i(AppLog.T.POSTS, "Featured Image removed");
                 }
             }

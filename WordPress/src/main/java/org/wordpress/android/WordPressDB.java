@@ -162,7 +162,7 @@ public class WordPressDB {
     private static final String ADD_MEDIA_VIDEOPRESS_SHORTCODE = "alter table media add videoPressShortcode text default '';";
 
     // add featured image to post
-    private static final String ADD_FEATURED_IMAGE = "alter table posts add featuredImage text default '';";
+    private static final String ADD_FEATURED_IMAGE_ID = "alter table posts add featuredImageId integer default 0;";
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
@@ -283,7 +283,7 @@ public class WordPressDB {
                 currentVersion++;
             case 29:
                 // Add featured image field to every post
-                db.execSQL(ADD_FEATURED_IMAGE);
+                db.execSQL(ADD_FEATURED_IMAGE_ID);
                 currentVersion++;
         }
 
@@ -886,7 +886,7 @@ public class WordPressDB {
                     values.put("wp_author_display_name", MapUtils.getMapStr(postMap, "wp_author_display_name"));
                     values.put("post_status", MapUtils.getMapStr(postMap, (isPage) ? "page_status" : "post_status"));
                     values.put("userid", MapUtils.getMapStr(postMap, "userid"));
-                    values.put("featuredImage", MapUtils.getMapStr(postMap, "featuredImage"));
+                    values.put("featuredImageId", MapUtils.getMapInt(postMap, "featuredImageId"));
 
                     if (isPage) {
                         values.put("isPage", true);
@@ -984,7 +984,7 @@ public class WordPressDB {
             putPostLocation(post, values);
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
-            values.put("featuredImage", post.getFeaturedImage());
+            values.put("featuredImageId", post.getFeaturedImageID());
 
             result = db.insert(POSTS_TABLE, null, values);
 
@@ -1021,7 +1021,7 @@ public class WordPressDB {
             values.put("wp_post_format", post.getPostFormat());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
-            values.put("featuredImage", post.getFeaturedImage());
+            values.put("featuredImageId", post.getFeaturedImageID());
 
             putPostLocation(post, values);
 
@@ -1128,7 +1128,7 @@ public class WordPressDB {
                 post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
                 post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
                 post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
-                post.setFeaturedImage(c.getString(c.getColumnIndex("featuredImage")));
+                post.setFeaturedImageID(c.getInt(c.getColumnIndex("featuredImageId")));
 
                 int latColumnIndex = c.getColumnIndex("latitude");
                 int lngColumnIndex = c.getColumnIndex("longitude");

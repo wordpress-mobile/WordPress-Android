@@ -87,6 +87,7 @@
     <string name="tab_title_device_videos">Device Videos</string>
     <string name="tab_title_site_images">Site Images</string>
     <string name="tab_title_site_videos">Site Videos</string>
+    <string name="tab_title_post_images">Post Images</string>
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>

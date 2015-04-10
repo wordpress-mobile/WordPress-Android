@@ -93,14 +93,13 @@ public class MediaPickerActivity extends ActionBarActivity
 
     private static final long   TAB_ANIMATION_DURATION_MS = 250l;
 
-
     private MediaPickerAdapter     mMediaPickerAdapter;
     private ArrayList<MediaSource>[] mMediaSources;
     private SlidingTabLayout       mTabLayout;
     private WPViewPager            mViewPager;
     private ActionMode             mActionMode;
     private String                 mCapturePath;
-    private boolean mSetFeaturedImageMode = false;
+    private boolean mSetFeaturedImageMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +107,8 @@ public class MediaPickerActivity extends ActionBarActivity
 
         if (getIntent().hasExtra(SET_FEATURED_IMAGE)) {
             mSetFeaturedImageMode = true;
+        } else {
+            mSetFeaturedImageMode = false;
         }
 
         lockRotation();
@@ -380,10 +381,28 @@ public class MediaPickerActivity extends ActionBarActivity
         if (mViewPager != null) {
             mViewPager.setPagingEnabled(true);
 
-            mMediaPickerAdapter.addTab(mMediaSources[0] != null ? mMediaSources[0] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_images));
-            mMediaPickerAdapter.addTab(mMediaSources[1] != null ? mMediaSources[1] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_videos));
-            mMediaPickerAdapter.addTab(mMediaSources[2] != null ? mMediaSources[2] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_images));
-            mMediaPickerAdapter.addTab(mMediaSources[3] != null ? mMediaSources[3] : new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_videos));
+            if (mSetFeaturedImageMode) {
+                mMediaPickerAdapter.addTab(mMediaSources[0] != null ?
+                                mMediaSources[0] : new ArrayList<MediaSource>(),
+                        getResources().getString(R.string.tab_title_device_images));
+                mMediaPickerAdapter.addTab(mMediaSources[2] != null ?
+                        mMediaSources[2] :
+                        new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_images));
+
+            } else {
+                mMediaPickerAdapter.addTab(mMediaSources[0] != null ?
+                        mMediaSources[0] : new ArrayList<MediaSource>(),
+                        getResources().getString(R.string.tab_title_device_images));
+                mMediaPickerAdapter.addTab(mMediaSources[1] != null ?
+                            mMediaSources[1] :
+                            new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_device_videos));
+                mMediaPickerAdapter.addTab(mMediaSources[2] != null ?
+                        mMediaSources[2] :
+                        new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_images));
+                mMediaPickerAdapter.addTab(mMediaSources[3] != null ?
+                            mMediaSources[3] :
+                            new ArrayList<MediaSource>(), getResources().getString(R.string.tab_title_site_videos));
+            }
 
             mViewPager.setAdapter(mMediaPickerAdapter);
 

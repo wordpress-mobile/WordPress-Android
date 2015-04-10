@@ -34,7 +34,6 @@ import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.ui.posts.actions.PostActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -60,6 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -157,7 +157,6 @@ public class PostUploadService extends Service {
         private String mErrorMessage = "";
         private boolean mIsMediaError = false;
         private boolean mErrorUnavailableVideoPress = false;
-        private int featuredImageID = -1;
         private XMLRPCClientInterface mClient;
 
         // Used for analytics
@@ -173,7 +172,11 @@ public class PostUploadService extends Service {
                 WordPress.postUploaded(mPost.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
                 mPostUploadNotifier.cancelNotification();
                 if (mPost.hasFeaturedImage()) {
-                    PostActions.updatePostFeaturedImage(mPost);
+                    List<Object> args = new Vector<>();
+                    args.add(WordPress.getCurrentBlog());
+                    args.add(null);
+                    args.add(mPost);
+                    new ApiHelper.UpdatePostFeaturedImage().execute(args);
                 }
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
             } else {
@@ -364,8 +367,8 @@ public class PostUploadService extends Service {
             }
 
             // featured image
-            if (featuredImageID != -1) {
-                contentStruct.put("wp_post_thumbnail", featuredImageID);
+            if (mPost.getFeaturedImageID() != 0) {
+                contentStruct.put("post_thumbnail", mPost.getFeaturedImageID());
             }
 
             if (!TextUtils.isEmpty(mPost.getQuickPostType())) {
@@ -787,7 +790,8 @@ public class PostUploadService extends Service {
             if (mf.isFeatured()) {
                 try {
                     if (contentHash.get("id") != null) {
-                        featuredImageID = Integer.parseInt(contentHash.get("id").toString());
+                        mPost.setFeaturedImageID(
+                                Integer.parseInt(contentHash.get("id").toString()));
                         if (!mf.isFeaturedInPost())
                             return "";
                     }

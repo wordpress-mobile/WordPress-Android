@@ -31,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import org.wordpress.android.Constants;
@@ -55,7 +56,6 @@ import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.WordPressMediaUtils.RequestCode;
 import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
-import org.wordpress.android.ui.posts.actions.PostActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -85,6 +85,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import de.greenrobot.event.EventBus;
 
@@ -131,6 +132,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     private Post mPost;
     private Post mOriginalPost;
+
+    private WPImageSpan[] mPostImages;
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
@@ -236,8 +239,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                 } else if (position == PAGE_PREVIEW) {
-                    setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
                     savePost(true);
+                    setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
                     if (mEditPostPreviewFragment != null) {
                         mEditPostPreviewFragment.loadPost();
                     }
@@ -604,7 +607,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         return mMaxThumbWidth;
     }
 
-    private MediaFile createMediaFile(String blogId, final String mediaId) {
+    public MediaFile createMediaFile(String blogId, final String mediaId) {
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
 
         if (cursor == null || !cursor.moveToFirst()) {
@@ -689,11 +692,40 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         protected void onPostExecute(Spanned spanned) {
             if (spanned != null) {
                 mEditorFragment.setContent(spanned);
-                if (mPost.hasFeaturedImage()) {
-                    mEditPostSettingsFragment.setFeaturedImage(mPost.getFeaturedImage());
-                }
+            }
+
+            if (mPost.hasFeaturedImage()) {
+                ApiHelper.GetMediaItemTask task = new ApiHelper.GetMediaItemTask(mPost.getFeaturedImageID(), new ApiHelper.GetMediaItemTask.Callback() {
+                    @Override
+                    public void onSuccess(MediaFile result) {
+                        Log.i("featured image", "URL: " + result.getFileURL());
+                        mEditPostSettingsFragment.setFeaturedImage(result.getFileURL());
+                    }
+
+                    @Override
+                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                        Log.i("featured image", "Failed to get media");
+                    }
+                });
+
+                List<Object> apiArgs = new ArrayList<>();
+                apiArgs.add(WordPress.getCurrentBlog());
+                task.execute(apiArgs);
             }
         }
+    }
+
+    private void loadDraftAttachments() {
+        Spannable postContent = (Spannable) mEditorFragment.getSpannedContent();
+        mPostImages = postContent.getSpans(0, postContent.length(), WPImageSpan.class);
+    }
+
+    public WPImageSpan[] getPostImages() {
+        if (mPostImages != null) {
+            return mPostImages;
+        }
+
+        return mPostImages = new WPImageSpan[1];
     }
 
     private void fillContentEditorFields() {
@@ -708,15 +740,19 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent())) {
                 if (post.isLocalDraft()) {
-                    Log.i("featuredImage", "featured image: " + mPost.getFeaturedImage());
+                    Log.i("featuredImage", "featured image: " + mPost.getFeaturedImageID());
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                             post.getContent().replaceAll("\uFFFC", ""));
                 }
                 else {
-                    Log.i("featuredImage", "featured image: " + mPost.getFeaturedImage());
+                    Log.i("featuredImage", "featured image: " + mPost.getFeaturedImageID());
                     mEditorFragment.setContent(post.getContent().replaceAll("\uFFFC", ""));
-                    PostActions.syncFeaturedImageInSettings(post, mEditPostSettingsFragment);
+                    List<Object> args = new Vector<>();
+                    args.add(WordPress.getCurrentBlog());
+                    args.add(mEditPostSettingsFragment);
+                    args.add(mPost);
+                    new ApiHelper.SyncFeaturedImageInSettings().execute(args);
                 }
             }
             if (!TextUtils.isEmpty(post.getTitle())) {
@@ -1146,7 +1182,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         if (MediaUtils.isVideo(sourceString)) {
                             // Videos cannot be added to a gallery, insert inline instead
                             addMedia(source);
-                        } else if (sourceString.contains("wordpress.com")) {
+                        } else if (URLUtil.isNetworkUrl(sourceString)) {
                             blogMediaIds.add(id);
                             AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
                         } else if (MediaUtils.isValidImage(sourceString)) {
@@ -1196,7 +1232,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 Integer libraryMediaAdded = 0;
 
                 for (MediaItem media : selectedContent) {
-                    if (media.getSource().toString().contains("wordpress.com")) {
+                    if (URLUtil.isNetworkUrl(media.getSource().toString())) {
                         addExistingMediaToEditor(media.getTag());
                         ++libraryMediaAdded;
                     } else {

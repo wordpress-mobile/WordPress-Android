@@ -16,6 +16,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Post;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
 
@@ -224,4 +225,13 @@ public class MediaSourceWPImages implements MediaSource {
             mListener.onMediaLoading(this, !mLoading);
         }
     }
+
+    public List<MediaItem> getmVerifiedItems() {
+        return mVerifiedItems;
+    }
+
+    public List<MediaItem> getmMediaItems() {
+        return mMediaItems;
+    }
+
 }
