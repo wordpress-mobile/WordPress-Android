@@ -51,3 +51,4 @@ WordPress/src/androidTest/monkeys/settings.py
 .buckd
 buck-cache/
 buck-out/
+extlibs/

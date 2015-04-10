@@ -1,77 +1,144 @@
 import re
 
-jar_deps = []
-for jarfile in glob(['extlibs/*.jar']):
-    name = 'jars__' + re.sub(r'^.*/([^/]+)\.jar$', r'\1', jarfile)
-    jar_deps.append(':' + name)
-    prebuilt_jar(
-        name = name,
-        binary_jar = jarfile,
-    )
+### Rule to fetch dependencies
+genrule(
+  name = 'fetch_deps',
+  srcs = [
+    'tools/fetch_buck_dependencies.py',
+  ],
+  cmd = 'tools/fetch_buck_dependencies.py extlibs > $OUT',
+  out = 'dependencies.log',
+)
 
-build_config_values = ['String APP_PN_KEY = "org.wordpress.android.playstore"']
-for line in open('WordPress/gradle.properties').readlines():
-    if line.startswith('wp.'):
-        key, value = line.strip().replace(" ", "").split("=")
-        key = key.replace("wp.", "").upper().replace(".", "_")
-        build_config_values.append('String %s = "%s"' % (key, value))
+### Helper functions
+
+# List all jars matching globfile
+def get_all_jars(globfile):
+    jar_deps = []
+    for jarfile in glob([globfile]):
+        name = 'jars__' + re.sub(r'^.*/([^/]+)\.jar$', r'\1', jarfile)
+        jar_deps.append(':' + name)
+        prebuilt_jar(
+            name = name,
+            binary_jar = jarfile,
+        )
+    return jar_deps
+
+# Generate the build config values from the gradle.properties file
+def get_build_config_values(filename):
+    values = ['String APP_PN_KEY = "org.wordpress.android.playstore"']
+    for line in open(filename).readlines():
+        if line.startswith('wp.'):
+            key, value = line.strip().replace(" ", "").split("=")
+            key = key.replace("wp.", "").upper().replace(".", "_")
+            values.append('String %s = "%s"' % (key, value))
+    return values
+
+### Define jar dependencies
 
 android_library(
     name = 'all-jars',
-    exported_deps = jar_deps,
+    exported_deps = get_all_jars('extlibs/*.jar'),
+)
+
+### Define aar dependencies
+
+android_prebuilt_aar(
+    name = 'appcompat-v7',
+    aar = 'extlibs/appcompat-v7.aar',
 )
 
 android_prebuilt_aar(
-    name = 'appcompat',
-    aar = 'extlibs/appcompat-v7-21.0.3.aar',
+    name = 'android-support-v13',
+    aar = 'extlibs/android-support-v13.aar',
 )
 
 android_prebuilt_aar(
-    name = 'cardview',
-    aar = 'extlibs/cardview-v7-21.0.3.aar',
+    name = 'android-support-v4',
+    aar = 'extlibs/android-support-v4.aar',
+)
+
+android_prebuilt_aar(
+    name = 'cardview-v7',
+    aar = 'extlibs/cardview-v7.aar',
+)
+
+android_prebuilt_aar(
+    name = 'recyclerview-v7',
+    aar = 'extlibs/recyclerview-v7.aar',
+)
+
+android_prebuilt_aar(
+    name = 'mixpanel',
+    aar = 'extlibs/mixpanel.aar',
+)
+
+android_prebuilt_aar(
+    name = 'crashlytics',
+    aar = 'extlibs/crashlytics.aar',
+)
+
+android_prebuilt_aar(
+    name = 'fabric',
+    aar = 'extlibs/fabric.aar',
 )
 
 android_prebuilt_aar(
     name = 'mediapicker',
-    aar = 'extlibs/mediapicker-1.1.4.aar',
+    aar = 'extlibs/mediapicker.aar',
 )
 
 android_prebuilt_aar(
     name = 'drag-sort-listview',
-    aar = 'extlibs/drag-sort-listview-0.6.1.aar',
+    aar = 'extlibs/drag-sort-listview.aar',
 )
 
 android_prebuilt_aar(
     name = 'simperium',
-    aar = 'extlibs/simperium-0.6.2.aar',
+    aar = 'extlibs/simperium.aar',
 )
 
 android_prebuilt_aar(
     name = 'undobar',
-    aar = 'extlibs/undobar-1.6.aar',
+    aar = 'extlibs/undobar.aar',
 )
 
 android_prebuilt_aar(
     name = 'slidinguppanel',
-    aar = 'extlibs/slidinguppanel-1.0.0.aar',
+    aar = 'extlibs/slidinguppanel.aar',
 )
 
 android_prebuilt_aar(
     name = 'passcodelock',
-    aar = 'extlibs/android-passcodelock-0.0.6.aar',
+    aar = 'extlibs/passcodelock.aar',
+)
+
+android_prebuilt_aar(
+    name = 'tracks',
+    aar = 'extlibs/tracks.aar',
+)
+
+android_prebuilt_aar(
+    name = 'emailchecker',
+    aar = 'extlibs/emailchecker.aar',
 )
 
 android_prebuilt_aar(
     name = 'helpshift',
-    aar = 'extlibs/helpshift-3.7.2.aar',
+    aar = 'extlibs/helpshift.aar',
+)
+
+android_prebuilt_aar(
+    name = 'photoview',
+    aar = 'extlibs/photoview.aar',
 )
 
 ### NDK dependencies
 
-prebuilt_native_library(
-  name = 'native_libs',
-  native_libs = 'extlibs/jni/armeabi',
-)
+#prebuilt_native_library(
+#  name = 'native_libs',
+#  native_libs = 'extlibs/jni/armeabi',
+#)
 
 ### WordPressUtils
 
@@ -90,9 +157,10 @@ android_library(
     name = 'wpandroid-utils',
     srcs = glob(['libs/utils/WordPressUtils/src/main/java/**/*.java']),
     deps = [
+        ':android-support-v4',
         ':wpandroid-utils-res',
         ':build-config-utils',
-        ':all-jars', # support-v4 needed here
+        ':all-jars',
     ]
 )
 
@@ -110,10 +178,11 @@ android_library(
     srcs = glob(['libs/editor/WordPressEditor/src/main/java/**/*.java']),
     deps = [
         ':all-jars', # volley
+        ':android-support-v4',
         ':wpandroid-utils',
         ':wpanalytics',
         ':wpandroid-editor-res',
-        ':appcompat',
+        ':appcompat-v7',
     ]
 )
 
@@ -158,7 +227,8 @@ android_library(
     srcs = glob(['libs/analytics/WordPressAnalytics/src/main/java/**/*.java']),
     deps = [
         ':wpandroid-utils',
-        ':all-jars', # tracks needed
+        ':mixpanel',
+        ':tracks',
     ]
 )
 
@@ -188,21 +258,21 @@ android_resource(
     res = 'WordPress/src/main/res',
     assets = 'WordPress/src/main/assets',
     deps = [
-        ':appcompat',
+        ':appcompat-v7',
         ':wpandroid-utils',
         ':wpandroid-utils-res',
         ':persistentedittext-res',
         ':wpandroid-editor-res',
         ':drag-sort-listview',
         ':mediapicker',
-        ':cardview',
+        ':cardview-v7',
     ]
 )
 
 android_build_config(
     name = 'build-config',
     package = 'org.wordpress.android',
-    values = build_config_values,
+    values = get_build_config_values('WordPress/gradle.properties'),
 )
 
 android_library(
@@ -210,7 +280,10 @@ android_library(
     srcs = glob(['WordPress/src/main/java/org/**/*.java']),
     deps = [
         ':all-jars',
-        ':appcompat',
+        ':appcompat-v7',
+        ':android-support-v13',
+        ':android-support-v4',
+        ':recyclerview-v7',
         ':persistentedittext',
         ':wpandroid-utils',
         ':wpandroid-editor',
@@ -218,7 +291,6 @@ android_library(
         ':wpanalytics',
         ':wpgraphview',
         ':build-config',
-        ':res',
         ':drag-sort-listview',
         ':simperium',
         ':mediapicker',
@@ -227,7 +299,11 @@ android_library(
         ':passcodelock',
         ':wpnetworking',
         ':helpshift',
-        ':native_libs',
+        ':emailchecker',
+        ':crashlytics',
+        ':fabric',
+        ':photoview',
+        ':res',
     ],
 )
 
