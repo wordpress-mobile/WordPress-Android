@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.media;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -26,19 +27,38 @@ public class MediaSourceWPVideos implements MediaSource {
     private static final String VIDEO_PRESS_HOST = "https://videos.files.wordpress.com/";
     private static final String VIDEO_PRESS_THUMBNAIL_APPEND = "_hd.thumbnail.jpg";
 
-    private boolean mLoading;
     private OnMediaChange mListener;
     private List<MediaItem> mMediaItems = new ArrayList<>();
 
     public MediaSourceWPVideos() {
-        fetchVideoData();
+    }
+
+    @Override
+    public void gather(Context context) {
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (blog != null) {
+            Cursor videoCursor = WordPressMediaUtils.getWordPressMediaVideos(String.valueOf(blog.getLocalTableBlogId()));
+
+            if (videoCursor != null) {
+                addWordPressVideosFromCursor(videoCursor);
+                videoCursor.close();
+            } else if (mListener != null){
+                mListener.onMediaLoaded(false);
+            }
+        } else if (mListener != null){
+            mListener.onMediaLoaded(false);
+        }
+    }
+
+    @Override
+    public void cleanup() {
+        mMediaItems.clear();
     }
 
     @Override
     public void setListener(OnMediaChange listener) {
         mListener = listener;
-
-        notifyLoadingStatus();
     }
 
     @Override
@@ -109,45 +129,6 @@ public class MediaSourceWPVideos implements MediaSource {
         return cursorEntry;
     }
 
-    /*
-        Parcelable interface
-     */
-
-    public static final Creator<MediaSourceWPVideos> CREATOR =
-            new Creator<MediaSourceWPVideos>() {
-                public MediaSourceWPVideos createFromParcel(Parcel in) {
-                    return new MediaSourceWPVideos();
-                }
-
-                public MediaSourceWPVideos[] newArray(int size) {
-                    return new MediaSourceWPVideos[size];
-                }
-            };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
-
-    private void fetchVideoData() {
-        Blog blog = WordPress.getCurrentBlog();
-
-        if (blog != null) {
-            mLoading = true;
-            notifyLoadingStatus();
-            Cursor videoCursor = WordPressMediaUtils.getWordPressMediaVideos(
-                    String.valueOf(blog.getLocalTableBlogId()));
-            if (videoCursor != null) {
-                addWordPressVideosFromCursor(videoCursor);
-                videoCursor.close();
-            }
-        }
-    }
-
     private void addWordPressVideosFromCursor(Cursor cursor) {
         if (cursor.moveToFirst()) {
             do {
@@ -188,13 +169,32 @@ public class MediaSourceWPVideos implements MediaSource {
             } while (cursor.moveToNext());
         }
 
-        mLoading = false;
-        notifyLoadingStatus();
+        if (mListener != null) {
+            mListener.onMediaLoaded(true);
+        }
     }
 
-    private void notifyLoadingStatus() {
-        if (mListener != null) {
-            mListener.onMediaLoading(this, !mLoading);
-        }
+    /**
+     * {@link android.os.Parcelable} interface
+     */
+
+    public static final Creator<MediaSourceWPVideos> CREATOR =
+            new Creator<MediaSourceWPVideos>() {
+                public MediaSourceWPVideos createFromParcel(Parcel in) {
+                    return new MediaSourceWPVideos();
+                }
+
+                public MediaSourceWPVideos[] newArray(int size) {
+                    return new MediaSourceWPVideos[size];
+                }
+            };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
     }
 }
