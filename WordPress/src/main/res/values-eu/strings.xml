@@ -93,7 +93,6 @@
 	<string name="blog_name_cant_be_used">Ezin duzu webgune helbide hori erabili</string>
 	<string name="blog_name_exists">Webgune hori dagoeneko existitzen da</string>
 	<string name="blog_name_reserved">Webgune hori erreserbatuta dago</string>
-	<string name="stats_empty_top_authors">Ez da sarrerarik ikusi</string>
 	<string name="stats_empty_comments">Oraindik iruzkin gabe</string>
 	<string name="sdcard_message">Edukiak igotzeko muntatutako SD txartel bat beharrezkoa da</string>
 	<string name="error_upload">%s igotzean errore bat gertatu da</string>
