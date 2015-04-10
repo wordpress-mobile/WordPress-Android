@@ -24,6 +24,10 @@ Finally, update `[PROJECT_ROOT]\.git\info\exclude` to ignore the symlink locally
     # assets symlink
     WordPressEditor/src/main/assets
 
+## Testing ##
+
+Testing is done with the [Robolectric framework.](http://robolectric.org/) To run tests simply run `gradlew testDebug`. Code coverage reports can be generated via [JaCoCo.](http://www.eclemma.org/jacoco/) To generate them locally run `gradlew jacocoTestReport`.
+
 ## LICENSE ##
 
 WordPress-Editor-Android is an Open Source project covered by the [GNU General Public License version 2](LICENSE.md).
