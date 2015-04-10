@@ -38,13 +38,6 @@ BASE_DEPENDENCIES ={
 'volley': {'url': 'https://repo1.maven.org/maven2/com/mcxiaoke/volley/library/1.0.15/library-1.0.15.jar'}
 }
 
-
-#BASE_DEPENDENCIES = {
-#'android-support-v13': {
-#    'extract-jar': True,
-#    'url': os.path.join(ANDROID_SDK_PATH, 'extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar')},
-#}
-
 TEST_DEPENDENCIES = {
 
 }
@@ -88,7 +81,6 @@ def main(outdir):
         os.mkdir(outdir)
     except OSError:
         pass
-    #pprint(BASE_DEPENDENCIES)
     fetch_dependencies(outdir)
 
 if __name__ == "__main__":

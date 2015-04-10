@@ -303,6 +303,7 @@ android_library(
         ':crashlytics',
         ':fabric',
         ':photoview',
+        ':wpandroid-editor-res',
         ':res',
     ],
 )
