@@ -113,6 +113,7 @@ android_library(
         ':wpandroid-utils',
         ':wpanalytics',
         ':wpandroid-editor-res',
+        ':appcompat',
     ]
 )
 
@@ -209,6 +210,7 @@ android_library(
     srcs = glob(['WordPress/src/main/java/org/**/*.java']),
     deps = [
         ':all-jars',
+        ':appcompat',
         ':persistentedittext',
         ':wpandroid-utils',
         ':wpandroid-editor',
