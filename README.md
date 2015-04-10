@@ -4,12 +4,6 @@
 
 ## Introduction ##
 
-## Testing
-
-Testing is done with the [Robolectric framework.](http://robolectric.org/) To run tests simply run `gradlew testDebug`. Code coverage reports can be generated via [JaCoCO.](http://www.eclemma.org/jacoco/) To generate them locally run `gradlew jacocoTestReport`.
-
-## LICENSE
-
 WordPress-Editor-Android is the text editor used in the [WordPress Android app](https://github.com/wordpress-mobile/WordPress-Android) to create and edit pages & posts. In short it's a simple, straightforward way to visually edit HTML.
 
 ## Build Instructions ##
@@ -29,6 +23,10 @@ Finally, update `[PROJECT_ROOT]\.git\info\exclude` to ignore the symlink locally
 
     # assets symlink
     WordPressEditor/src/main/assets
+
+## Testing ##
+
+Testing is done with the [Robolectric framework.](http://robolectric.org/) To run tests simply run `gradlew testDebug`. Code coverage reports can be generated via [JaCoCo.](http://www.eclemma.org/jacoco/) To generate them locally run `gradlew jacocoTestReport`.
 
 ## LICENSE ##
 
