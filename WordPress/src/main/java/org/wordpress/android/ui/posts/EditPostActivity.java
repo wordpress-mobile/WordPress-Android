@@ -1213,7 +1213,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
      */
     private ArrayList<MediaSource> imageMediaSelectionSources() {
         ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
-        imageMediaSources.add(new MediaSourceDeviceImages(getContentResolver()));
+        imageMediaSources.add(new MediaSourceDeviceImages());
 
         return imageMediaSources;
     }
@@ -1240,7 +1240,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
      */
     private ArrayList<MediaSource> videoMediaSelectionSources() {
         ArrayList<MediaSource> videoMediaSources = new ArrayList<>();
-        videoMediaSources.add(new MediaSourceDeviceVideos(getContentResolver()));
+        videoMediaSources.add(new MediaSourceDeviceVideos());
 
         return videoMediaSources;
     }
