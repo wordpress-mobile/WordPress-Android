@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="auth_required">Sign in again to continue.</string>
+	<string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
+	<string name="two_step_sms_sent">Check your text messages for the verification code.</string>
+	<string name="two_step_footer_button">Send code via text message</string>
+	<string name="two_step_footer_label">Enter the code from your authenticator app.</string>
+	<string name="verify">Verify</string>
+	<string name="invalid_verification_code">Invalid verification code</string>
+	<string name="verification_code">Verification code</string>
+	<string name="editor_toast_invalid_path">Invalid file path</string>
+	<string name="editor_toast_gallery_created_formatted">Gallery created with %d items</string>
+	<string name="editor_toast_gallery_pending_formatted">Gallery creation pending %d uploads</string>
+	<string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
+	<string name="delete_from_collection">Remove media</string>
+	<string name="media_details_dimensions">Dimensions:</string>
+	<string name="media_details_file_url">File URL:</string>
+	<string name="media_details_file_type">File type:</string>
+	<string name="media_details_file_name">File name:</string>
+	<string name="media_details_uploaded_on">Uploaded on:</string>
+	<string name="media_details_added_on">Added on:</string>
+	<string name="tab_title_site_videos">Site Videos</string>
+	<string name="tab_title_site_images">Site Images</string>
+	<string name="tab_title_device_videos">Device Videos</string>
+	<string name="tab_title_device_images">Device Images</string>
+	<string name="take_video">Take a video</string>
+	<string name="take_photo">Take a photo</string>
+	<string name="media_picker_title">Select media</string>
+	<string name="add_to_post">Add to Post</string>
+	<string name="language">Language</string>
+	<string name="device">Device</string>
 	<string name="media_fetching">Fetching media…</string>
 	<string name="posts_fetching">Fetching posts…</string>
 	<string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
@@ -233,7 +262,6 @@
 	<string name="auto_sharing_preference_reset">Auto-sharing settings reset</string>
 	<string name="auto_sharing_preference_reset_caused_by_error">Previously selected blog is no longer visible</string>
 	<string name="sdcard_message">A mounted SD card is required to upload media</string>
-	<string name="stats_empty_top_authors">No posts viewed</string>
 	<string name="stats_empty_comments">No comments yet</string>
 	<string name="stats_bar_graph_empty">No stats available</string>
 	<string name="invalid_url_message">Check that the blog URL entered is valid</string>

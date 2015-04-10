@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="sign_in_jetpack">Se connecter à votre compte WordPress.com pour vous connecter à Jetpack.</string>
+	<string name="auth_required">Se reconnecter pour continuer.</string>
+	<string name="two_step_sms_sent">Vérifier que le code de vérification est dans vos SMS.</string>
+	<string name="two_step_footer_button">Code envoyé par SMS</string>
+	<string name="two_step_footer_label">Entrer le code depuis votre application d\'authentification.</string>
+	<string name="verify">Vérifier</string>
+	<string name="invalid_verification_code">Code de vérification invalide</string>
+	<string name="verification_code">Code de vérification</string>
+	<string name="editor_toast_invalid_path">Chemin de fichier invalide</string>
+	<string name="editor_toast_gallery_pending_formatted">Création de galerie, encore %d uploads</string>
+	<string name="editor_toast_gallery_created_formatted">Galerie créée avec %d éléments</string>
+	<string name="error_publish_no_network">Impossible de publier quand il n\'y a pas de connexion. Brouillon sauvegardé.</string>
+	<string name="device">Appareil</string>
+	<string name="delete_from_collection">Retirer média</string>
+	<string name="media_details_dimensions">Dimensions:</string>
+	<string name="media_details_file_url">URL du fichier</string>
+	<string name="media_details_file_type">Type de fichier:</string>
+	<string name="media_details_file_name">Nom de fichier:</string>
+	<string name="media_details_uploaded_on">Uploadé le:</string>
+	<string name="media_details_added_on">Ajouté le:</string>
+	<string name="tab_title_site_videos">Videos du site</string>
+	<string name="tab_title_site_images">Images du site</string>
+	<string name="tab_title_device_videos">Vidéos de l\'appareil</string>
+	<string name="tab_title_device_images">Images de l\'appareil</string>
+	<string name="take_video">Prendre une vidéo</string>
+	<string name="take_photo">Prendre une photo</string>
+	<string name="media_picker_title">Sélectionner un média</string>
+	<string name="add_to_post">Ajouter à l\'article</string>
+	<string name="language">Langue</string>
 	<string name="posts_fetching">Récupération des articles…</string>
 	<string name="media_fetching">Récupération des médias…</string>
 	<string name="stats_view_search_terms">Termes de Recherche</string>
@@ -231,7 +260,6 @@
 	<string name="auto_sharing_preference_reset_caused_by_error">Le blog sélectionné précédemment n\'est plus visible</string>
 	<string name="sdcard_message">Une carte SD est nécessaire pour charger les médias</string>
 	<string name="mnu_comment_edit">Modifier</string>
-	<string name="stats_empty_top_authors">Aucun article n\'a été vu </string>
 	<string name="stats_bar_graph_empty">Aucune statistique disponible</string>
 	<string name="invalid_url_message">Vérifiez que l\'URL du blog est valide</string>
 	<string name="reply_failed">Échec de la réponse</string>

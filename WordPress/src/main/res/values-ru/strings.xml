@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="two_step_sms_sent">Проверьте ваши SMS-сообщения и найдите код подтверждения.</string>
+	<string name="two_step_footer_label">Введите код из вашего приложения аутентификации.</string>
+	<string name="verify">Подтвердить</string>
+	<string name="verification_code">Код подтверждения</string>
+	<string name="invalid_verification_code">Неверный код подтверждения</string>
+	<string name="editor_toast_gallery_pending_formatted">Создаётся галерея, элементов: %d</string>
+	<string name="editor_toast_gallery_created_formatted">Создана галерея, элементов: %d</string>
+	<string name="sign_in_jetpack">Войдите в вашу учётную запись WordPress.com для подключения к Jetpack.</string>
+	<string name="media_details_dimensions">Размеры:</string>
+	<string name="delete_from_collection">Удалить файл</string>
+	<string name="media_picker_title">Выбрать файл</string>
+	<string name="media_details_added_on">Добавлено:</string>
+	<string name="media_details_uploaded_on">Загружено:</string>
+	<string name="tab_title_site_images">Изображения с сайта</string>
+	<string name="tab_title_device_images">Изображения на устройстве</string>
+	<string name="media_details_file_name">Имя файла:</string>
+	<string name="editor_toast_invalid_path">Неверный путь к файлу</string>
+	<string name="error_publish_no_network">Нельзя опубликовать без подключения к сети. Сохранено как черновик.</string>
+	<string name="auth_required">Войдите заново для продолжения.</string>
+	<string name="two_step_footer_button">Отправить код SMS-сообщением</string>
+	<string name="media_details_file_url">Ссылка на файл:</string>
+	<string name="media_details_file_type">Тип файла:</string>
+	<string name="tab_title_site_videos">Видео с сайта</string>
+	<string name="tab_title_device_videos">Видео на устройстве</string>
+	<string name="take_video">Записать видео</string>
+	<string name="take_photo">Сделать фото</string>
+	<string name="add_to_post">Добавить в запись</string>
+	<string name="language">Язык</string>
+	<string name="device">Устройство</string>
 	<string name="comments_fetching">Загрузка комментариев…</string>
 	<string name="pages_fetching">Загрузка страниц…</string>
 	<string name="toast_err_post_uploading">Невозможно открыть запись во время загрузки.</string>
@@ -267,7 +296,6 @@
 	<string name="blog_name_contains_invalid_characters">Адрес сайта не должен содержать знак подчёркивания "_"</string>
 	<string name="blog_name_cant_be_used">Вы не можете использовать этот адрес сайта</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Адрес сайта может содержать только строчные буквы (a-z) и цифры</string>
-	<string name="stats_empty_top_authors">Нет просмотренных постов</string>
 	<string name="blog_name_exists">Такой сайт уже существует</string>
 	<string name="blog_name_reserved">Этот сайт зарезервирован</string>
 	<string name="blog_name_reserved_but_may_be_available">Это имя сайта сейчас зарезервировано, но может стать доступным через пару дней</string>
