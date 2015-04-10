@@ -18,6 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -93,7 +94,10 @@ public class MeFragment extends Fragment {
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
 
-            mAvatarImageView.setImageUrl(defaultAccount.getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
+            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+            String avatarUrl = GravatarUtils.fixGravatarUrl(defaultAccount.getAvatarUrl(), avatarSz);
+            mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
 
             String displayName = defaultAccount.getDisplayName();
