@@ -7,7 +7,7 @@
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="sign_out_confirm">Sign out?</string>
+    <string name="sign_out_confirm">Sign out of WordPress.com?</string>
     <string name="sign_in_again">Sign in again</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
     <string name="visit_security_settings">Visit security settings</string>
@@ -77,6 +77,7 @@
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
     <string name="language">Language</string>
+    <string name="signout">Sign out</string>
 
     <!-- MediaPicker -->
     <string name="add_to_post">Add to Post</string>

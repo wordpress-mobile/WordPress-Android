@@ -245,7 +245,7 @@ public class WPMainActivity extends Activity
         }
     }
 
-    private void showSignIn() {
+    public void showSignIn() {
         startActivityForResult(new Intent(this, SignInActivity.class), RequestCodes.ADD_ACCOUNT);
     }
 
