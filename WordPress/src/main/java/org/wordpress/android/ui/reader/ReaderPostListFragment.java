@@ -89,6 +89,8 @@ public class ReaderPostListFragment extends Fragment
     private ReaderRecyclerView mRecyclerView;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private CustomSwipeRefreshLayout mSwipeToRefreshLayout;
+
     private View mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
@@ -384,8 +386,9 @@ public class ReaderPostListFragment extends Fragment
         mProgress.setVisibility(View.GONE);
 
         // swipe to refresh setup
+        mSwipeToRefreshLayout = (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout);
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
-                (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout),
+                mSwipeToRefreshLayout,
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -483,14 +486,16 @@ public class ReaderPostListFragment extends Fragment
                 @Override
                 public void onScrollUp() {
                     showFragmentToolbar(true);
+                    checkSwipeToRefresh();
                 }
                 @Override
                 public void onScrollDown() {
                     showFragmentToolbar(false);
+                    checkSwipeToRefresh();
                 }
                 @Override
                 public void onScrollCompleted() {
-                    // noop
+                    checkSwipeToRefresh();
                 }
             });
             // create the tag spinner in the toolbar
@@ -528,6 +533,15 @@ public class ReaderPostListFragment extends Fragment
                 animateHeaderDelayed();
                 break;
         }
+    }
+
+    /*
+     * disable swipe-to-refresh if posts can be scrolled upwards - only necessary when the fragment
+     * toolbar is enabled since it can intercept the touch event and pass it on to the swipe layout,
+     * cause a refresh to begin even though the user is simply scrolling up the posts
+     */
+    private void checkSwipeToRefresh() {
+        mSwipeToRefreshLayout.setEnabled(!mRecyclerView.canScrollUp());
     }
 
     /*

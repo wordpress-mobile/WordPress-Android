@@ -98,11 +98,9 @@ public class ReaderRecyclerView extends RecyclerView {
         }
     };
 
+    // http://stackoverflow.com/a/25227797/1673548
     public boolean canScrollUp() {
-        return canScrollVertically(-1);
-    }
-    public boolean canScrollDown() {
-        return canScrollVertically(1);
+        return super.canScrollVertically(-1) || (getChildAt(0) != null && getChildAt(0).getTop() < 0);
     }
 
     /**
