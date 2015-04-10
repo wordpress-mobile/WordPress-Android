@@ -173,4 +173,10 @@ public class ActivityLauncher {
         statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_OBJECT, post);
         context.startActivity(statsPostViewIntent);
     }
+
+    public static void addSelfHostedSiteForResult(Activity activity) {
+        Intent intent = new Intent(activity, SignInActivity.class);
+        intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.ADD_SELF_HOSTED_BLOG);
+        activity.startActivityForResult(intent, SignInActivity.CREATE_ACCOUNT_REQUEST);
+    }
 }

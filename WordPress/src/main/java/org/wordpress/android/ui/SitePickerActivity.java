@@ -13,10 +13,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MapUtils;
@@ -61,7 +63,15 @@ public class SitePickerActivity extends ActionBarActivity {
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
         mRecycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
-        new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        Button btnAddSite = (Button) findViewById(R.id.btn_add_site);
+        btnAddSite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
+            }
+        });
+
+        loadSites();
     }
 
     @Override
@@ -95,7 +105,36 @@ public class SitePickerActivity extends ActionBarActivity {
         finish();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case SignInActivity.CREATE_ACCOUNT_REQUEST:
+                if (resultCode != RESULT_CANCELED) {
+                    loadSites();
+                }
+                break;
+        }
+    }
+
+    private void loadSites() {
+        if (!mIsTaskRunning) {
+            new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    private boolean mIsTaskRunning;
     private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mIsTaskRunning = true;
+        }
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mIsTaskRunning = false;
+        }
         @Override
         protected SiteList doInBackground(Void... params) {
             List<Map<String, Object>> blogs;
@@ -115,6 +154,7 @@ public class SitePickerActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(SiteList sites) {
             mRecycler.setAdapter(new SiteAdapter(SitePickerActivity.this, sites));
+            mIsTaskRunning = false;
         }
     }
 

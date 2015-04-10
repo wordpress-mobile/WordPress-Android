@@ -3,14 +3,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
+        android:layout_above="@+id/btn_add_site"
         tools:listitem="@layout/site_picker_listitem" />
 
+    <org.wordpress.android.widgets.OpenSansButton
+        android:id="@+id/btn_add_site"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/my_site_add_button"
+        android:textColor="@drawable/my_site_add_button_text_color_selector"
+        android:text="@string/site_picker_btn_add_site" />
 </RelativeLayout>
