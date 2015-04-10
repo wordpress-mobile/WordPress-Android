@@ -31,7 +31,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -99,7 +98,6 @@ public class SettingsFragment extends PreferenceFragment {
         findPreference(resources.getString(R.string.pref_key_oss_licenses)).setOnPreferenceClickListener(launchActivitiyClickListener);
         findPreference(resources.getString(R.string.pref_key_help_and_support)).setOnPreferenceClickListener(launchActivitiyClickListener);
         findPreference(resources.getString(R.string.pref_key_passlock)).setOnPreferenceChangeListener(passcodeCheckboxChangeListener);
-        findPreference(resources.getString(R.string.pref_key_signout)).setOnPreferenceClickListener(signOutPreferenceClickListener);
         findPreference(resources.getString(R.string.pref_key_reset_shared_pref)).setOnPreferenceClickListener(resetAUtoSharePreferenceClickListener);
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -353,34 +351,6 @@ public class SettingsFragment extends PreferenceFragment {
             editor.remove(ShareIntentReceiverActivity.SHARE_TEXT_BLOG_ID_KEY);
             editor.commit();
             ToastUtils.showToast(getActivity(), R.string.auto_sharing_preference_reset, ToastUtils.Duration.SHORT);
-            return true;
-        }
-    };
-
-    private final OnPreferenceClickListener signOutPreferenceClickListener = new OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-            dialogBuilder.setMessage(getString(R.string.sign_out_confirm));
-            dialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    // set the result code so caller knows the user signed out
-                    getActivity().setResult(SettingsActivity.RESULT_SIGNED_OUT);
-                    WordPress.signOutAsyncWithProgressBar(getActivity(), new SignOutCallback() {
-                        @Override
-                        public void onSignOut() {
-                            getActivity().finish();
-                        }
-                    });
-                }
-            });
-            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    // Just close the window.
-                }
-            });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
             return true;
         }
     };

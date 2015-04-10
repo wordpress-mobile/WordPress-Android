@@ -78,11 +78,4 @@
                     android:key="@string/pref_key_language"/>
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:key="@string/pref_key_signout_section"
-        android:title="@string/sign_out">
-        <Preference
-            android:key="@string/pref_key_signout"
-            android:title="@string/sign_out"/>
-    </PreferenceCategory>
 </PreferenceScreen>
