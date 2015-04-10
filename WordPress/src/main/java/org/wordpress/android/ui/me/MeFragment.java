@@ -17,7 +17,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.WPMainActivity;
 import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
@@ -111,8 +110,7 @@ public class MeFragment extends Fragment {
                     signoutWithConfirmation();
                 }
             });
-        }
-        else {
+        } else {
             mAvatarImageView.setVisibility(View.GONE);
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
@@ -121,7 +119,7 @@ public class MeFragment extends Fragment {
             mLoginLogoutTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    signin();
+                    ActivityLauncher.showSignInForResult(getActivity());
                 }
             });
         }
@@ -148,18 +146,12 @@ public class MeFragment extends Fragment {
         WordPress.signOutAsyncWithProgressBar(getActivity(), new WordPress.SignOutAsync.SignOutCallback() {
             @Override
             public void onSignOut() {
-                // note that signing out will cause a CoreEvents.UserSignedOut() EventBus event,
+                // note that signing out sends a CoreEvents.UserSignedOut() EventBus event,
                 // which will cause the main activity to show the sign in screen
                 if (isAdded()) {
                     refreshAccountDetails();
                 }
             }
         });
-    }
-
-    private void signin() {
-        if (getActivity() instanceof WPMainActivity) {
-            ((WPMainActivity) getActivity()).showSignIn();
-        }
     }
 }

@@ -17,7 +17,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -85,7 +84,7 @@ public class WPMainActivity extends Activity
                     }
                 }
             } else {
-                showSignIn();
+                ActivityLauncher.showSignInForResult(this);
             }
         }
     }
@@ -214,7 +213,7 @@ public class WPMainActivity extends Activity
                 break;
             case RequestCodes.REAUTHENTICATE:
                 if (resultCode == RESULT_CANCELED) {
-                    showSignIn();
+                    ActivityLauncher.showSignInForResult(this);
                 } else {
                     WordPress.registerForCloudMessaging(this);
                 }
@@ -224,7 +223,7 @@ public class WPMainActivity extends Activity
                 if (AccountHelper.isSignedIn()) {
                     WordPress.registerForCloudMessaging(this);
                 } else {
-                    showSignIn();
+                    ActivityLauncher.showSignInForResult(this);
                 }
                 break;
             case RequestCodes.SITE_PICKER:
@@ -243,10 +242,6 @@ public class WPMainActivity extends Activity
                 }
                 break;
         }
-    }
-
-    public void showSignIn() {
-        startActivityForResult(new Intent(this, SignInActivity.class), RequestCodes.ADD_ACCOUNT);
     }
 
     /*
@@ -317,7 +312,7 @@ public class WPMainActivity extends Activity
 
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.UserSignedOut event) {
-        showSignIn();
+        ActivityLauncher.showSignInForResult(this);
     }
 
     @SuppressWarnings("unused")
