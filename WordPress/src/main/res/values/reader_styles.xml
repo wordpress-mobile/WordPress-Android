@@ -5,9 +5,7 @@
 -->
 <resources>
     <style name="ReaderPhotoViewerTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorPrimaryDark">@color/color_primary_dark</item>
-        <item name="colorAccent">@color/color_accent</item>
+        <item name="colorAccent">@color/accent_material_dark</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
