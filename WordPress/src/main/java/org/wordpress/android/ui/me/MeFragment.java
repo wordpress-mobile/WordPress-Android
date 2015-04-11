@@ -34,11 +34,6 @@ public class MeFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_me, container, false);
@@ -130,20 +125,16 @@ public class MeFragment extends Fragment {
     }
 
     private void signoutWithConfirmation() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setMessage(getString(R.string.sign_out_confirm));
-        dialogBuilder.setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                signout();
-            }
-        });
-        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // noop
-            }
-        });
-        dialogBuilder.setCancelable(true);
-        dialogBuilder.create().show();
+        new AlertDialog.Builder(getActivity())
+            .setMessage(getString(R.string.sign_out_confirm))
+            .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    signout();
+                }
+            })
+            .setNegativeButton(R.string.cancel, null)
+            .setCancelable(true)
+            .create().show();
     }
 
     private void signout() {
