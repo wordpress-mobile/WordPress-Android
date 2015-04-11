@@ -15,6 +15,8 @@ BASE_DEPENDENCIES ={
 'annotations': {'url': 'https://repo1.maven.org/maven2/com/google/code/findbugs/annotations/2.0.0/annotations-2.0.0.jar'},
 'support-annotations': {'url': os.path.join(ANDROID_SDK_PATH, 'extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar')},
 'appcompat-v7': {'url': os.path.join(ANDROID_SDK_PATH, 'extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar')},
+'androidasync': {'url': 'https://repo1.maven.org/maven2/com/koushikdutta/async/androidasync/1.4.1/androidasync-1.4.1.jar'},
+'androidpinning': {'url': 'https://repo1.maven.org/maven2/org/thoughtcrime/ssl/pinning/AndroidPinning/1.0.0/AndroidPinning-1.0.0.aar'},
 'cardview-v7': {'url': os.path.join(ANDROID_SDK_PATH, 'extras/android/m2repository/com/android/support/cardview-v7/21.0.3/cardview-v7-21.0.3.aar')},
 'commons-lang': {'url': 'https://repo1.maven.org/maven2/commons-lang/commons-lang/2.6/commons-lang-2.6.jar'},
 'crashlytics': {'url': 'https://maven.fabric.io/repo/com/crashlytics/sdk/android/crashlytics/2.2.3/crashlytics-2.2.3.aar'},

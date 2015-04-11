@@ -133,6 +133,11 @@ android_prebuilt_aar(
     aar = 'extlibs/photoview.aar',
 )
 
+android_prebuilt_aar(
+    name = 'androidpinning',
+    aar = 'extlibs/androidpinning.aar',
+)
+
 ### NDK dependencies
 
 #prebuilt_native_library(
@@ -306,6 +311,7 @@ android_library(
         ':crashlytics',
         ':fabric',
         ':photoview',
+        ':androidpinning'
     ],
 )
 
