@@ -253,7 +253,8 @@ keystore(
 )
 
 android_resource(
-    name = 'res',
+    name = 'zres', # when buck merge resources, it sort them by name,
+                   # the last one override previous
     package = 'org.wordpress.android',
     res = 'WordPress/src/main/res',
     assets = 'WordPress/src/main/assets',
@@ -279,6 +280,8 @@ android_library(
     name = 'main-lib',
     srcs = glob(['WordPress/src/main/java/org/**/*.java']),
     deps = [
+        ':wpandroid-editor-res',
+        ':zres',
         ':all-jars',
         ':appcompat-v7',
         ':android-support-v13',
@@ -303,8 +306,6 @@ android_library(
         ':crashlytics',
         ':fabric',
         ':photoview',
-        ':wpandroid-editor-res',
-        ':res',
     ],
 )
 
