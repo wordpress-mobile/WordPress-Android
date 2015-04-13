@@ -67,6 +67,18 @@ public class JsCallbackReceiver {
                 // TODO: Used for logging/testing purposes on iOS
                 AppLog.d(AppLog.T.EDITOR, "New field created, " + params);
                 break;
+            case CALLBACK_IMAGE_REPLACED:
+                // TODO: Notifies that image upload has finished and that the local url was replaced by the remote url in the ZSS editor
+                AppLog.d(AppLog.T.EDITOR, "Image replaced, " + params);
+                break;
+            case CALLBACK_IMAGE_TAP:
+                // TODO: Notifies that an image was tapped
+                AppLog.d(AppLog.T.EDITOR, "Image tapped, " + params);
+                break;
+            case CALLBACK_LINK_TAP:
+                // TODO: Notifies that a link was tapped
+                AppLog.d(AppLog.T.EDITOR, "Link tapped, " + params);
+                break;
             case CALLBACK_LOG:
                 // Strip 'msg=' from beginning of string
                 AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params.substring(4));
