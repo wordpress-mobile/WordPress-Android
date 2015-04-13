@@ -1,13 +1,15 @@
 import re
 
-### Rule to fetch dependencies
+### Rule to fetch dependencies, doesn't work on `android_prebuilt_aar`
+### rules (no deps)
+
 genrule(
   name = 'fetch_deps',
   srcs = [
     'tools/fetch_buck_dependencies.py',
   ],
   cmd = 'tools/fetch_buck_dependencies.py extlibs > $OUT',
-  out = 'dependencies.log',
+  out = '../../extlibs/dependencies.log',
 )
 
 ### Helper functions
@@ -39,6 +41,9 @@ def get_build_config_values(filename):
 android_library(
     name = 'all-jars',
     exported_deps = get_all_jars('extlibs/*.jar'),
+    deps = [
+      ':fetch_deps',
+    ],
 )
 
 ### Define aar dependencies
@@ -322,5 +327,6 @@ android_binary(
     keystore = ':debug_keystore',
     deps = [
         ':main-lib',
+        ':fetch_deps',
     ],
 )
