@@ -414,7 +414,7 @@ public class NotificationsListFragment extends Fragment
     @Override
     public void onScrollToTop() {
         if (isAdded() && getScrollPosition() > 0) {
-            mLinearLayoutManager.scrollToPosition(0);
+            mLinearLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
         }
     }
 

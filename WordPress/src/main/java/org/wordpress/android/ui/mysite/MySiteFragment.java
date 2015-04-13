@@ -188,7 +188,7 @@ public class MySiteFragment extends Fragment
     public void onScrollToTop() {
         if (isAdded()) {
             ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
-            scrollView.fullScroll(ScrollView.FOCUS_UP);
+            scrollView.smoothScrollTo(0, 0);
         }
     }
 }
