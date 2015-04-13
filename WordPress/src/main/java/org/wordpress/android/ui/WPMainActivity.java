@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.simperium.client.Bucket;
 
@@ -37,12 +38,22 @@ import de.greenrobot.event.EventBus;
  * Main activity which hosts sites, reader, me and notifications tabs
  */
 public class WPMainActivity extends Activity
-    implements ViewPager.OnPageChangeListener, Bucket.Listener<Note> {
+    implements ViewPager.OnPageChangeListener,
+        SlidingTabLayout.SingleTabClickListener,
+        Bucket.Listener<Note> {
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
+
+    /*
+     * tab fragments implement this if their contents can be scrolled, called when user
+     * requests to scroll to the top
+     */
+    public interface OnScrollToTopListener {
+        void onScrollToTop();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +75,7 @@ public class WPMainActivity extends Activity
                            R.drawable.main_tab_notifications};
         mTabs.setCustomTabView(R.layout.tab_icon, R.id.tab_icon, R.id.tab_badge, icons);
         mTabs.setViewPager(mViewPager);
+        mTabs.setOnSingleTabClickListener(this);
 
         // page change listener must be set on the tab layout rather than the ViewPager
         mTabs.setOnPageChangeListener(this);
@@ -157,6 +169,20 @@ public class WPMainActivity extends Activity
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         // nop
+    }
+
+    /*
+     * user tapped a tab above the viewPager - detect when the active tab is clicked and scroll
+     * the fragment to the top if available
+     */
+    @Override
+    public void onTabClick(View view, int position) {
+        if (position == mViewPager.getCurrentItem()) {
+            Fragment fragment = mTabAdapter.getFragment(position);
+            if (fragment instanceof OnScrollToTopListener) {
+                ((OnScrollToTopListener) fragment).onScrollToTop();
+            }
+        }
     }
 
     @Override

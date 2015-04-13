@@ -43,6 +43,7 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -80,7 +81,8 @@ import de.greenrobot.event.EventBus;
 public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
                    ReaderInterfaces.OnTagSelectedListener,
-                   ReaderInterfaces.OnPostPopupListener {
+                   ReaderInterfaces.OnPostPopupListener,
+                   WPMainActivity.OnScrollToTopListener {
 
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
@@ -1480,4 +1482,15 @@ public class ReaderPostListFragment extends Fragment
                 EnumSet.of(ReaderUpdateService.UpdateTask.TAGS,
                            ReaderUpdateService.UpdateTask.FOLLOWED_BLOGS));
     }
+
+    @Override
+    public void onScrollToTop() {
+        if (isAdded() && getCurrentPosition() > 0) {
+            mRecyclerView.getLayoutManager().scrollToPosition(0);
+            if (hasFragmentToolbar()) {
+                showFragmentToolbar(true);
+            }
+        }
+    }
+
 }

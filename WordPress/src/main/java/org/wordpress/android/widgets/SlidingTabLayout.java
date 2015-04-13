@@ -23,8 +23,8 @@
 package org.wordpress.android.widgets;
 
 /***
- * IMPORTANT!! this differs from the original in that it has been hacked for WordPress
- * Android to optionally support icons & badges rather than text
+ * IMPORTANT!! this differs from the original in that it has been hacked for WP Android
+ * to optionally support icons & badges rather than text, also added TabClickListener
  */
 
 import android.animation.Animator;
@@ -79,6 +79,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     }
 
+    public interface SingleTabClickListener {
+        void onTabClick(View view, int position);
+    }
+
     private static final int TITLE_OFFSET_DIPS = 24;
     private static final int TAB_VIEW_PADDING_DIPS = 16;
     private static final int TAB_VIEW_TEXT_SIZE_SP = 12;
@@ -96,6 +100,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private ViewPager mViewPager;
     private SparseArray<String> mContentDescriptions = new SparseArray<String>();
     private ViewPager.OnPageChangeListener mViewPagerPageChangeListener;
+    private SingleTabClickListener mSingleTabClickListener;
 
     private final SlidingTabStrip mTabStrip;
 
@@ -153,6 +158,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
      */
     public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {
         mViewPagerPageChangeListener = listener;
+    }
+
+    public void setOnSingleTabClickListener(SingleTabClickListener listener) {
+        mSingleTabClickListener = listener;
     }
 
     /**
@@ -400,7 +409,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 mViewPagerPageChangeListener.onPageSelected(position);
             }
         }
-
     }
 
     private class TabClickListener implements View.OnClickListener {
@@ -408,6 +416,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
         public void onClick(View v) {
             for (int i = 0; i < mTabStrip.getChildCount(); i++) {
                 if (v == mTabStrip.getChildAt(i)) {
+                    // fire the single tab click listener before changing the current item
+                    if (mSingleTabClickListener != null) {
+                        mSingleTabClickListener.onTabClick(v, i);
+                    }
                     mViewPager.setCurrentItem(i);
                     return;
                 }

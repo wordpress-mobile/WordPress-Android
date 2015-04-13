@@ -28,6 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.WPMainActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -39,7 +40,9 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import javax.annotation.Nonnull;
 
-public class NotificationsListFragment extends Fragment implements Bucket.Listener<Note> {
+public class NotificationsListFragment extends Fragment
+        implements Bucket.Listener<Note>,
+                   WPMainActivity.OnScrollToTopListener {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
@@ -407,4 +410,12 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
         //noop
     }
+
+    @Override
+    public void onScrollToTop() {
+        if (isAdded() && getScrollPosition() > 0) {
+            mLinearLayoutManager.scrollToPosition(0);
+        }
+    }
+
 }

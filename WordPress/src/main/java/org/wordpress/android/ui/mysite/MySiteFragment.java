@@ -1,24 +1,27 @@
 package org.wordpress.android.ui.mysite;
 
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.WPMainActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
-public class MySiteFragment extends Fragment {
+public class MySiteFragment extends Fragment
+        implements WPMainActivity.OnScrollToTopListener {
 
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
@@ -179,5 +182,13 @@ public class MySiteFragment extends Fragment {
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
         mBlogTitleTextView.setText(mBlog.getBlogName());
         mBlogSubtitleTextView.setText(StringUtils.getHost(mBlog.getUrl()));
+    }
+
+    @Override
+    public void onScrollToTop() {
+        if (isAdded()) {
+            ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
+            scrollView.fullScroll(ScrollView.FOCUS_UP);
+        }
     }
 }
