@@ -246,7 +246,6 @@
 	<string name="error_load_comment">لايمكن تحميل التعليق</string>
 	<string name="reply_failed">فشل الرد</string>
 	<string name="notifications_empty_list">لا تنبيهات</string>
-	<string name="stats_empty_top_authors">لم يتم عرض أي مقالات</string>
 	<string name="stats_bar_graph_empty">الإحصائيات غير متوفرة</string>
 	<string name="cat_name_required">حقل اسم التصنيف مطلوب</string>
 	<string name="blog_not_found">حدث خطأ أثناء دخول هذه المدونة </string>
