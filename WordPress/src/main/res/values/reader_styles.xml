@@ -41,7 +41,7 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
-        <item name="android:maxLines">4</item>
+        <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
     </style>
     <style name="ReaderTextView.Post.Tag" parent="ReaderTextView">
