@@ -120,6 +120,20 @@
     <string name="pick_video">Select video</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_fetching">Fetching media…</string>
+    <string name="loading_videos">Loading videos</string>
+    <string name="loading_images">Loading images</string>
+    <string name="loading_blog_images">Fetching images</string>
+    <string name="loading_blog_videos">Fetching videos</string>
+    <string name="no_media">No media</string>
+    <string name="no_media_sources">Couldn\'t fetch media</string>
+    <string name="error_loading_images">Error loading images</string>
+    <string name="error_loading_videos">Error loading videos</string>
+    <string name="error_loading_blog_images">Unable to fetch images</string>
+    <string name="error_loading_blog_videos">Unable to fetch videos</string>
+    <string name="no_device_images">No images</string>
+    <string name="no_device_videos">No videos</string>
+    <string name="no_blog_images">No images</string>
+    <string name="no_blog_videos">No videos</string>
 
     <!-- featured image management-->
     <string name="set_featured_image">Set featured image</string>
@@ -434,7 +448,6 @@
     <string name="stats_likes">Likes</string>
     <string name="stats_reblogs">Reblogs</string>
     <string name="stats_comments">Comments</string>
-
 
     <!-- stats: labels for the views -->
     <string name="stats_view_visitors_and_views">Visitors and Views</string>

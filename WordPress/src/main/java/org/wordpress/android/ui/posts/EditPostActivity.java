@@ -654,6 +654,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         if (mediaFile == null) {
             return;
         }
+
         mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.imageLoader);
     }
 
@@ -715,17 +716,12 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
     }
 
-    private void loadDraftAttachments() {
-        Spannable postContent = (Spannable) mEditorFragment.getSpannedContent();
-        mPostImages = postContent.getSpans(0, postContent.length(), WPImageSpan.class);
-    }
-
-    public WPImageSpan[] getPostImages() {
-        if (mPostImages != null) {
-            return mPostImages;
+    private class HandleMediaSelectionTask extends AsyncTask<Intent, Void, Void> {
+        @Override
+        protected Void doInBackground(Intent... params) {
+            handleMediaSelectionResult(params[0]);
+            return null;
         }
-
-        return mPostImages = new WPImageSpan[1];
     }
 
     private void fillContentEditorFields() {
@@ -1050,8 +1046,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
-
         mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
+
         return true;
     }
 
@@ -1065,7 +1061,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             switch (requestCode) {
                 case MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
                     if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_MEDIA_SELECTED) {
-                        handleMediaSelectionResult(data);
+                        new HandleMediaSelectionTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                                data);
                     } else if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_GALLERY_CREATED) {
                         handleGalleryResult(data);
                     }
@@ -1128,12 +1125,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                     break;
             }
         }
-    }
-
-    private void startMediaGalleryAddActivity() {
-        Intent intent = new Intent(this, MediaGalleryPickerActivity.class);
-        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
-        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
     }
 
     private void handleMediaGalleryPickerResult(Intent data) {
@@ -1264,7 +1255,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
      */
     private ArrayList<MediaSource> imageMediaSelectionSources() {
         ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
-        imageMediaSources.add(new MediaSourceDeviceImages(getContentResolver()));
+        imageMediaSources.add(new MediaSourceDeviceImages());
 
         return imageMediaSources;
     }
@@ -1291,7 +1282,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
      */
     private ArrayList<MediaSource> videoMediaSelectionSources() {
         ArrayList<MediaSource> videoMediaSources = new ArrayList<>();
-        videoMediaSources.add(new MediaSourceDeviceVideos(getContentResolver()));
+        videoMediaSources.add(new MediaSourceDeviceVideos());
 
         return videoMediaSources;
     }

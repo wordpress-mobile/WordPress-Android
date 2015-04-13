@@ -37,6 +37,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -215,6 +216,71 @@ public class StatsUtils {
     public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
         long diffInMillies = date2.getTime() - date1.getTime();
         return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
+
+    //Calculate the correct start/end date for the selected period
+    public static String getPublishedEndpointPeriodDateParameters(StatsTimeframe timeframe, String date) {
+        if (date == null) {
+            AppLog.w(AppLog.T.STATS, "Can't calculate start and end period without a reference date");
+            return null;
+        }
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
+            Calendar c = Calendar.getInstance();
+            c.setFirstDayOfWeek(Calendar.MONDAY);
+            Date parsedDate = sdf.parse(date);
+            c.setTime(parsedDate);
+
+
+            final String after;
+            final String before;
+            switch (timeframe) {
+                case DAY:
+                    after = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    c.add(Calendar.DAY_OF_YEAR, +1);
+                    before =  StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    break;
+                case WEEK:
+                    c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                    after = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                    c.add(Calendar.DAY_OF_YEAR, +1);
+                    before = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                break;
+                case MONTH:
+                    //first day of the next month
+                    c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+                    c.add(Calendar.DAY_OF_YEAR, +1);
+                    before =  StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+
+                    //last day of the prev month
+                    c.setTime(parsedDate);
+                    c.set(Calendar.DAY_OF_MONTH, c.getActualMinimum(Calendar.DAY_OF_MONTH));
+                    after = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    break;
+                case YEAR:
+                    //first day of the next year
+                    c.set(Calendar.MONTH, Calendar.DECEMBER);
+                    c.set(Calendar.DAY_OF_MONTH, 31);
+                    c.add(Calendar.DAY_OF_YEAR, +1);
+                    before =  StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+
+                    c.setTime(parsedDate);
+                    c.set(Calendar.MONTH, Calendar.JANUARY);
+                    c.set(Calendar.DAY_OF_MONTH, 1);
+                    after = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    break;
+                default:
+                    AppLog.w(AppLog.T.STATS, "Can't calculate start and end period without a reference timeframe");
+                    return null;
+            }
+            return "&after=" + after + "&before=" + before;
+        } catch (ParseException e) {
+            AppLog.e(AppLog.T.UTILS, e);
+            return null;
+        }
     }
 
     public static int getSmallestWidthDP() {

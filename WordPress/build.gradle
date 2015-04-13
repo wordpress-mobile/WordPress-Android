@@ -27,12 +27,12 @@ android {
     }
 
     compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.9-rc-2"
-        versionCode 172
+        versionName "3.9-rc-4"
+        versionCode 174
         minSdkVersion 14
         targetSdkVersion 21
 
@@ -67,7 +67,9 @@ dependencies {
     compile 'com.crashlytics.sdk.android:crashlytics:2.2.2'
 
     // Provided by maven central
-    compile 'org.wordpress:mediapicker:1.1.4'
+    compile ('org.wordpress:mediapicker:1.2.1') {
+        exclude group:'com.android.support'
+    }
     compile 'com.google.code.gson:gson:2.2.2'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
     compile 'com.android.support:support-v13:21.0.+'

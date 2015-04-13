@@ -81,6 +81,7 @@ import io.fabric.sdk.android.Fabric;
 public class WordPress extends Application {
     public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
     public static final String WPCOM_USERNAME_PREFERENCE="wp_pref_wpcom_username";
+    public static final String IS_SIGNED_OUT_PREFERENCE="wp_pref_is_signed_out";
 
     public static String versionName;
     public static Blog currentBlog;
@@ -98,7 +99,6 @@ public class WordPress extends Application {
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
-
 
     /**
      *  Updates Options for the current blog in background.
@@ -121,7 +121,7 @@ public class WordPress extends Application {
      */
     public static RateLimitedTask sUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
-            if (getContext() != null && isSignedIn(getContext())) {
+            if (getContext() != null && hasDotComToken(getContext())) {
                 new GenericUpdateBlogListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
             return true;
@@ -498,10 +498,12 @@ public class WordPress extends Application {
     }
 
     public static boolean isSignedIn(Context context) {
-        if (WordPress.hasDotComToken(context)) {
-            return true;
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        if (settings.contains(IS_SIGNED_OUT_PREFERENCE)) {
+            return false;
         }
-        return WordPress.wpDB.getNumVisibleAccounts() != 0;
+
+        return WordPress.hasDotComToken(context) || WordPress.wpDB.getNumVisibleAccounts() != 0;
     }
 
     public static String getLoggedInUsername(Context context, Blog blog) {
@@ -534,8 +536,6 @@ public class WordPress extends Application {
      * again
      */
     public static void signOut(Context context) {
-        removeWpComUserRelatedData(context);
-
         try {
             SelfSignedSSLCertsManager.getInstance(context).emptyLocalKeyStoreFile();
         } catch (GeneralSecurityException e) {
@@ -544,7 +544,12 @@ public class WordPress extends Application {
             AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
         }
 
-        wpDB.deleteAllAccounts();
+        // Set a shared preference to signify that this user signed out
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(IS_SIGNED_OUT_PREFERENCE, true);
+        editor.apply();
+
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
         flushHttpCache();
