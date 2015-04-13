@@ -276,7 +276,6 @@
 	<string name="blog_name_reserved_but_may_be_available">这个网址目前是保留的但可能在几天后可用</string>
 	<string name="username_or_password_incorrect">你输入的用户名或密码错误</string>
 	<string name="nux_cannot_log_in">无法登陆</string>
-	<string name="stats_empty_top_authors">没有看过的文章</string>
 	<string name="stats_empty_comments">现在没有评论</string>
 	<string name="stats_bar_graph_empty">还没有评论</string>
 	<string name="username_reserved_but_may_be_available">这个用户名现在不可用</string>

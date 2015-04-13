@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="editor_toast_gallery_pending_formatted">ギャラリーの作成は %d 個のアップロードを待機中です</string>
+	<string name="editor_toast_gallery_created_formatted">%d 個のアイテムでギャラリーが作成されました</string>
+	<string name="auth_required">続行するにはもう一度サインインしてください。</string>
+	<string name="sign_in_jetpack">Jetpack に接続するため WordPress.com アカウントにサインインしてください。</string>
+	<string name="two_step_sms_sent">テキストメッセージの認証コードを確認してください。</string>
+	<string name="two_step_footer_button">テキストメッセージでコードを送信</string>
+	<string name="two_step_footer_label">お使いの認証アプリからのコードを入力してください。</string>
+	<string name="verify">認証</string>
+	<string name="invalid_verification_code">無効な認証コード</string>
+	<string name="verification_code">認証コード</string>
+	<string name="editor_toast_invalid_path">無効なファイルパス</string>
+	<string name="error_publish_no_network">接続がないため公開できません。下書きとして保存します。</string>
+	<string name="delete_from_collection">メディアを削除</string>
+	<string name="media_details_dimensions">寸法:</string>
+	<string name="device">端末</string>
+	<string name="tab_title_site_images">サイトの画像</string>
+	<string name="tab_title_site_videos">サイトの動画</string>
+	<string name="media_details_added_on">追加日:</string>
+	<string name="media_details_uploaded_on">アップロード日:</string>
+	<string name="media_details_file_name">ファイル名:</string>
+	<string name="media_details_file_type">ファイル形式:</string>
+	<string name="media_details_file_url">ファイル URL:</string>
+	<string name="tab_title_device_images">端末の画像</string>
+	<string name="tab_title_device_videos">端末の動画</string>
+	<string name="take_video">動画を撮る</string>
+	<string name="take_photo">写真を撮る</string>
+	<string name="media_picker_title">メディアを選択</string>
+	<string name="add_to_post">投稿に追加</string>
+	<string name="language">言語</string>
 	<string name="stats_empty_search_terms_desc">訪問者があなたのサイトを見つけるために検索したキーワードを見て、検索トラフィックについてより詳しく知りましょう。</string>
 	<string name="toast_err_post_uploading">アップロード中は投稿を開けません</string>
 	<string name="stats_view_authors">投稿者</string>
@@ -260,7 +289,6 @@
 	<string name="sdcard_message">メディアをアップロードするには SD カードが必要です</string>
 	<string name="stats_bar_graph_empty">統計情報がありません</string>
 	<string name="stats_empty_comments">まだコメントがありません</string>
-	<string name="stats_empty_top_authors">表示された投稿がありません</string>
 	<string name="theme_auth_error_message">お使いのアカウントにテーマ設定を行う権限があるか確認してください</string>
 	<string name="username_contains_invalid_characters">ユーザー名に \'_\' (アンダースコア記号) を含めることはできません</string>
 	<string name="username_exists">このユーザー名はすでに使われています</string>
