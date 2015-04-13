@@ -73,7 +73,6 @@
 	<string name="comments_empty_list">कोई टिप्पणी नहीं</string>
 	<string name="stats_empty_comments">अभी तक कोई टिप्पणी नहीं</string>
 	<string name="notifications_empty_list">कोई सूचनाएं नहीं</string>
-	<string name="stats_empty_top_authors">पोस्ट नहीं देखे गए</string>
 	<string name="mnu_comment_unspam">स्पैम नहीं</string>
 	<string name="invalid_password_message">कूटशब्द कम से कम 4 अक्षर का चाहिए</string>
 	<string name="no_network_message">नेटवर्क उपलब्ध नहीं है </string>

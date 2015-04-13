@@ -94,7 +94,6 @@
 	<string name="theme_fetch_failed">A sablonok lekérdezése nem sikerült</string>
 	<string name="notifications_empty_list">Nincsenek értesítések</string>
 	<string name="stats_bar_graph_empty">Nincsenek elérhető statisztikák</string>
-	<string name="stats_empty_top_authors">Nincsenek bejegyzés megtekintések</string>
 	<string name="blog_name_not_allowed">Ez a weboldal cím nem engedélyezett</string>
 	<string name="email_invalid">Adjunk meg egy valós e-mail címet</string>
 	<string name="mnu_comment_spam">Spam</string>

@@ -158,7 +158,6 @@
 	<string name="no_network_message">Brak dostępnej sieci</string>
 	<string name="no_site_error">Nie można nawiązać połączenia ze stroną WordPressa</string>
 	<string name="auto_sharing_preference_reset_caused_by_error">Poprzednio wybrany blog nie jest już widoczny</string>
-	<string name="stats_empty_top_authors">Żadne posty nie były wyświetlone</string>
 	<string name="blog_not_found">Wystąpił błąd podczas dostępu do tego bloga</string>
 	<string name="error_refresh_pages">Strony nie mogły zostać odświeżone w tej chwili</string>
 	<string name="error_refresh_notifications">Powiadomienia nie mogły zostać odświeżone w tej chwili</string>

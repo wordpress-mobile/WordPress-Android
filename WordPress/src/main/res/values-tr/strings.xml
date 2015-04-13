@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="auth_required">Devam etmek için giriş yapın.</string>
+	<string name="sign_in_jetpack">JetPack bağlantısı için WordPress.com hesabınıza giriş yapın.</string>
+	<string name="two_step_sms_sent">Metin mesajlarınızı doğrulama kodu için kontrol edin.</string>
+	<string name="two_step_footer_button">Kodu metin mesaj olarak gönder</string>
+	<string name="two_step_footer_label">Doğrulama uygulamanızdaki kodu girin.</string>
+	<string name="verify">Doğrula</string>
+	<string name="invalid_verification_code">Geçersiz doğrulama kodu</string>
+	<string name="verification_code">Doğrulama kodu</string>
+	<string name="editor_toast_invalid_path">Geçersiz dosya yolu</string>
+	<string name="editor_toast_gallery_created_formatted">Galeri %d öge ile oluşturuldu</string>
+	<string name="editor_toast_gallery_pending_formatted">Galeri oluşturma %d yükleme bekliyor</string>
+	<string name="error_publish_no_network">Bağlantı yokken yayınlanamıyor. Taslak olarak kaydedildi.</string>
+	<string name="delete_from_collection">Ortamı kaldır</string>
+	<string name="media_details_dimensions">Boyutlar:</string>
+	<string name="media_details_file_url">Dosya adresi:</string>
+	<string name="media_details_file_type">Dosya tipi:</string>
+	<string name="media_details_file_name">Dosya adı:</string>
+	<string name="media_details_uploaded_on">Yüklenme tarihi:</string>
+	<string name="media_details_added_on">Eklenme tarihi:</string>
+	<string name="tab_title_site_images">Sitedeki görseller</string>
+	<string name="tab_title_site_videos">Sitedeki videolar</string>
+	<string name="tab_title_device_videos">Cihazdaki videolar</string>
+	<string name="tab_title_device_images">Cihazdaki görseller</string>
+	<string name="take_video">Video çek</string>
+	<string name="take_photo">Fotoğraf çek</string>
+	<string name="media_picker_title">Ortam seç</string>
+	<string name="add_to_post">Yazıya ekle</string>
+	<string name="language">Dil</string>
+	<string name="device">Cihaz</string>
 	<string name="stats_empty_search_terms">Hiç arama terimi kaydedilmedi</string>
 	<string name="stats_entry_search_terms">Arama Terimi</string>
 	<string name="stats_view_authors">Yazarlar</string>
@@ -260,7 +289,6 @@
 	<string name="mnu_comment_edit">Değiştir</string>
 	<string name="cat_name_required">Kategori ismi gereklidir</string>
 	<string name="category_automatically_renamed">Kategori ismi %1$s geçersiz. İsim %2$s olarak değiştirildi</string>
-	<string name="stats_empty_top_authors">Görüntülenen gönderi yok</string>
 	<string name="error_refresh_posts">Gönderi şuan yenilenemiyor</string>
 	<string name="error_refresh_pages">Sayfa şuan yenilenemiyor</string>
 	<string name="error_refresh_notifications">Bildirimler şuan yenilenemedi</string>
