@@ -26,7 +26,8 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, JsCallbackListener {
+public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener,
+        OnJsEditorStateChangedListener {
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
 
@@ -105,7 +106,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         String htmlEditor = Utils.getHtmlFromFile(getActivity(), "android-editor.html");
 
-        mWebView.addJavascriptInterface(new JsCallbackHandler(this), JS_CALLBACK_HANDLER);
+        mWebView.addJavascriptInterface(new JsCallbackReceiver(this), JS_CALLBACK_HANDLER);
 
         mWebView.loadDataWithBaseURL("file:///android_asset/", htmlEditor, "text/html", "utf-8", "");
 

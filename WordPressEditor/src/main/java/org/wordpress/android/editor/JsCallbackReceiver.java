@@ -7,7 +7,7 @@ import org.wordpress.android.util.AppLog;
 import java.util.HashSet;
 import java.util.Set;
 
-public class JsCallbackHandler {
+public class JsCallbackReceiver {
     private static final String JS_CALLBACK_DELIMITER = "~";
 
     private static final String CALLBACK_DOM_LOADED = "callback-dom-loaded";
@@ -26,24 +26,25 @@ public class JsCallbackHandler {
 
     private static final String CALLBACK_LOG = "callback-log";
 
-    private final JsCallbackListener mJsCallbackListener;
+    private final OnJsEditorStateChangedListener mListener;
 
     private Set<String> mPreviousStyleSet = new HashSet<>();
 
-    public JsCallbackHandler(EditorFragmentAbstract editorFragmentAbstract) {
-        mJsCallbackListener = (JsCallbackListener) editorFragmentAbstract;
+    public JsCallbackReceiver(EditorFragmentAbstract editorFragmentAbstract) {
+        mListener = (OnJsEditorStateChangedListener) editorFragmentAbstract;
     }
 
     @JavascriptInterface
     public void executeCallback(String callbackId, String params) {
         switch (callbackId) {
             case CALLBACK_DOM_LOADED:
-                mJsCallbackListener.onDomLoaded();
+                mListener.onDomLoaded();
                 break;
             case CALLBACK_SELECTION_STYLE:
                 // Compare the new styles to the previous ones, and notify the JsCallbackListener of the changeset
                 Set<String> newStyleSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
-                mJsCallbackListener.onSelectionStyleChanged(Utils.getChangeMapFromSets(mPreviousStyleSet, newStyleSet));
+                mListener.onSelectionStyleChanged(Utils.getChangeMapFromSets(mPreviousStyleSet,
+                        newStyleSet));
                 mPreviousStyleSet = newStyleSet;
                 break;
             case CALLBACK_SELECTION_CHANGED:
