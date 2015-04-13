@@ -93,7 +93,7 @@
             android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".ui.prefs.LicensesActivity"
-            android:theme="@style/CalypsoTheme"/>
+            android:theme="@style/Calypso.NoActionBar"/>
         <activity
             android:name=".ui.prefs.SettingsActivity"
             android:configChanges="locale|orientation"
@@ -102,7 +102,8 @@
             android:name=".ui.accounts.ManageBlogsActivity"
             android:theme="@style/CalypsoTheme"/>
         <activity
-            android:name=".networking.SSLCertsViewActivity"/>
+            android:name=".networking.SSLCertsViewActivity"
+            android:theme="@style/Calypso.NoActionBar" />
 
         <!-- Comments activities -->
         <activity

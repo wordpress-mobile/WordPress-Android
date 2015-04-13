@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.me;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.graphics.Outline;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,9 +14,11 @@ import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -27,11 +31,6 @@ public class MeFragment extends Fragment {
 
     public static MeFragment newInstance() {
         return new MeFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -90,7 +89,10 @@ public class MeFragment extends Fragment {
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
 
-            mAvatarImageView.setImageUrl(defaultAccount.getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
+            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+            String avatarUrl = GravatarUtils.fixGravatarUrl(defaultAccount.getAvatarUrl(), avatarSz);
+            mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
 
             String displayName = defaultAccount.getDisplayName();
@@ -101,13 +103,50 @@ public class MeFragment extends Fragment {
             }
 
             mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
-        }
-        else {
+            mLoginLogoutTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    signoutWithConfirmation();
+                }
+            });
+        } else {
             mAvatarImageView.setVisibility(View.GONE);
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
 
             mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
+            mLoginLogoutTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityLauncher.showSignInForResult(getActivity());
+                }
+            });
         }
+    }
+
+    private void signoutWithConfirmation() {
+        new AlertDialog.Builder(getActivity())
+            .setMessage(getString(R.string.sign_out_confirm))
+            .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    signout();
+                }
+            })
+            .setNegativeButton(R.string.cancel, null)
+            .setCancelable(true)
+            .create().show();
+    }
+
+    private void signout() {
+        WordPress.signOutAsyncWithProgressBar(getActivity(), new WordPress.SignOutAsync.SignOutCallback() {
+            @Override
+            public void onSignOut() {
+                // note that signing out sends a CoreEvents.UserSignedOut() EventBus event,
+                // which will cause the main activity to show the sign in screen
+                if (isAdded()) {
+                    refreshAccountDetails();
+                }
+            }
+        });
     }
 }

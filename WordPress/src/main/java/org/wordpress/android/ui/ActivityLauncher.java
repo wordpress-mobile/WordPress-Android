@@ -7,14 +7,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 
 import org.wordpress.android.R;
-
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -166,6 +165,11 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, SignInActivity.CREATE_ACCOUNT_REQUEST);
     }
 
+    public static void showSignInForResult(Activity activity) {
+        Intent intent = new Intent(activity, SignInActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
     public static void viewStatsSinglePostDetails(Context context, PostModel post) {
         if (post == null) return;
 
@@ -179,4 +183,5 @@ public class ActivityLauncher {
         intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, SignInActivity.CREATE_ACCOUNT_REQUEST);
     }
+
 }

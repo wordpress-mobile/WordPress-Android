@@ -7,7 +7,7 @@
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="sign_out_confirm">Sign out?</string>
+    <string name="sign_out_confirm">Disconnect from WordPress.com?</string>
     <string name="sign_in_again">Sign in again</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
     <string name="visit_security_settings">Visit security settings</string>
@@ -77,6 +77,7 @@
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
     <string name="language">Language</string>
+    <string name="signout">Disconnect</string>
 
     <!-- MediaPicker -->
     <string name="add_to_post">Add to Post</string>
@@ -385,15 +386,11 @@
     <string name="pref_key_language" translatable="false">wp_pref_language</string>
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
-    <string name="pref_key_help_and_support" translatable="false">wp_pref_help_and_support</string>
-    <string name="pref_key_signout_section" translatable="false">wp_pref_app_signout_section</string>
-    <string name="pref_key_signout" translatable="false">wp_pref_sign_out</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notifications_enabled" translatable="false">wp_pref_notifications_enabled</string>
     <string name="pref_notification_types" translatable="false">wp_pref_notification_types</string>
 
     <!-- preferences -->
-    <string name="help_and_support">Help and support</string>
     <string name="open_source_licenses">Open source licenses</string>
     <string name="wpcom_blogs">WordPress.com blogs</string>
     <string name="self_hosted_blogs">Self-hosted blogs</string>
