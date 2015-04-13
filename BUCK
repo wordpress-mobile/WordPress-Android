@@ -14,6 +14,21 @@ genrule(
 
 ### Helper functions
 
+# Macro to add fetch_deps as default dependency
+def r_android_library(name, srcs=[], resources=[], exported_deps=[],
+                      deps=[], visibility=[]):
+    android_library(
+        name = name,
+        srcs = srcs,
+        resources = resources,
+        exported_deps = exported_deps,
+        deps = [
+          # This assumes this is where Guava is in your project.
+          ':fetch_deps',
+        ] + deps,
+        visibility = visibility,
+    )
+
 # List all jars matching globfile
 def get_all_jars(globfile):
     jar_deps = []
@@ -38,12 +53,9 @@ def get_build_config_values(filename):
 
 ### Define jar dependencies
 
-android_library(
+r_android_library(
     name = 'all-jars',
     exported_deps = get_all_jars('extlibs/*.jar'),
-    deps = [
-      ':fetch_deps',
-    ],
 )
 
 ### Define aar dependencies
@@ -143,13 +155,6 @@ android_prebuilt_aar(
     aar = 'extlibs/androidpinning.aar',
 )
 
-### NDK dependencies
-
-#prebuilt_native_library(
-#  name = 'native_libs',
-#  native_libs = 'extlibs/jni/armeabi',
-#)
-
 ### WordPressUtils
 
 android_build_config(
@@ -163,7 +168,7 @@ android_resource(
     res = 'libs/utils/WordPressUtils/src/main/res',
 )
 
-android_library(
+r_android_library(
     name = 'wpandroid-utils',
     srcs = glob(['libs/utils/WordPressUtils/src/main/java/**/*.java']),
     deps = [
@@ -183,7 +188,7 @@ android_resource(
     assets = 'libs/editor/WordPressEditor/src/main/assets',
 )
 
-android_library(
+r_android_library(
     name = 'wpandroid-editor',
     srcs = glob(['libs/editor/WordPressEditor/src/main/java/**/*.java']),
     deps = [
@@ -204,7 +209,7 @@ android_resource(
     res = 'libs/persistentedittext/PersistentEditText/src/main/res',
 )
 
-android_library(
+r_android_library(
     name = 'persistentedittext',
     srcs = glob(['libs/persistentedittext/PersistentEditText/src/main/java/**/*.java']),
     deps = [
@@ -214,7 +219,7 @@ android_library(
 
 ### WPComRest
 
-android_library(
+r_android_library(
     name = 'wpcomrest',
     srcs = glob(['libs/wpcomrest/WordPressComRest/src/main/java/**/*.java']),
     deps = [
@@ -224,7 +229,7 @@ android_library(
 
 ### WPGraphView
 
-android_library(
+r_android_library(
     name = 'wpgraphview',
     srcs = glob(['libs/graphview/WordPressGraphView/src/main/java/**/*.java']),
 )
@@ -232,7 +237,7 @@ android_library(
 
 ### WordPressAnalytics
 
-android_library(
+r_android_library(
     name = 'wpanalytics',
     srcs = glob(['libs/analytics/WordPressAnalytics/src/main/java/**/*.java']),
     deps = [
@@ -244,7 +249,7 @@ android_library(
 
 ### WordPressNetworking
 
-android_library(
+r_android_library(
     name = 'wpnetworking',
     srcs = glob(['libs/networking/WordPressNetworking/src/main/java/**/*.java']),
     deps = [
@@ -286,7 +291,7 @@ android_build_config(
     values = get_build_config_values('WordPress/gradle.properties'),
 )
 
-android_library(
+r_android_library(
     name = 'main-lib',
     srcs = glob(['WordPress/src/main/java/org/**/*.java']),
     deps = [
@@ -326,7 +331,7 @@ android_binary(
     target = 'Google Inc.:Google APIs:21',
     keystore = ':debug_keystore',
     deps = [
-        ':main-lib',
         ':fetch_deps',
+        ':main-lib',
     ],
 )
