@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -131,7 +130,9 @@ public class MediaUtils {
                 if (bitmap == null) {
                     URL url = new URL(uri);
                     bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    WordPress.getBitmapCache().put(uri, bitmap);
+                    if (bitmap != null) {
+                        WordPress.getBitmapCache().put(uri, bitmap);
+                    }
                 }
 
                 return bitmap;
@@ -145,7 +146,7 @@ public class MediaUtils {
         protected void onPostExecute(Bitmap result) {
             ImageView imageView = mReference.get();
 
-            if (imageView != null) {
+            if (imageView != null && result != null) {
                 if (imageView.getTag() == this) {
                     imageView.setImageBitmap(result);
                     fadeInImage(imageView, result);
