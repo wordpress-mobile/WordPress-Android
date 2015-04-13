@@ -79,6 +79,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         mFragments.remove(position);
+        super.destroyItem(container, position, object);
     }
 
     public Fragment getFragment(int position) {
