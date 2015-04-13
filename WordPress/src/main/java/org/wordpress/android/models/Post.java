@@ -51,7 +51,7 @@ public class Post implements Serializable {
     private boolean isLocalChange;
     private String mediaPaths;
     private String quickPostType;
-    private String featuredImage;
+    private String featuredImagePath;
     private int featuredImageID;
     private PostLocation mPostLocation;
 
@@ -398,14 +398,14 @@ public class Post implements Serializable {
         this.localTablePostId = id;
     }
 
-    public String getFeaturedImage() {
-        return featuredImage;
+    public String getFeaturedImagePath() {
+        return featuredImagePath;
     }
 
     public int getFeaturedImageID() { return featuredImageID; }
 
-    public void setFeaturedImage(String featuredImage) {
-        this.featuredImage = featuredImage;
+    public void setFeaturedImagePath(String featuredImagePath) {
+        this.featuredImagePath = featuredImagePath;
     }
 
     public void setFeaturedImageID(int featuredImageID) {
@@ -447,7 +447,8 @@ public class Post implements Serializable {
                 StringUtils.equals(keywords, otherPost.keywords) &&
                 StringUtils.equals(categories, otherPost.categories) &&
                 StringUtils.equals(status, otherPost.status) &&
-                featuredImageID == otherPost.featuredImageID &&
+                StringUtils.equals(featuredImagePath, otherPost.featuredImagePath) &&
+                this.featuredImageID == otherPost.featuredImageID &&
                 StringUtils.equals(password, otherPost.password) &&
                 StringUtils.equals(postFormat, otherPost.postFormat) &&
                 this.dateCreatedGmt == otherPost.dateCreatedGmt &&
@@ -456,7 +457,7 @@ public class Post implements Serializable {
     }
 
     public boolean hasFeaturedImage() {
-        return featuredImageID != 0;
+        return featuredImagePath != null && !featuredImagePath.isEmpty();
     }
 
     @Override

@@ -21,6 +21,7 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+import android.webkit.URLUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +42,7 @@ import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.helpers.MediaFile;
+import org.wordpress.android.util.helpers.WPImageSpan;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -222,6 +224,38 @@ public class PostUploadService extends Service {
             mClient = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
 
+            // featured image exists
+            if (!mPost.getFeaturedImagePath().isEmpty()) {
+                // from local: upload first, then get the ID
+                if (!URLUtil.isNetworkUrl(mPost.getFeaturedImagePath())) {
+                    setFeaturedImage();
+                }
+            } else if (mPost.isPublished()) {
+                // path is empty, but id still exists = Remove FI
+                // id is still from last featured image
+                mPost.setFeaturedImageID(0);
+                List<Object> args = new Vector<>();
+                args.add(WordPress.getCurrentBlog());
+                args.add(null);
+                args.add(mPost);
+                new ApiHelper.UpdatePostFeaturedImage().execute(args);
+            }
+
+            return uploadPost();
+        }
+
+        private void setFeaturedImage() {
+            Bitmap featuredImageBitmap = ImageUtils.
+                    getWPImageSpanThumbnailFromFilePath(mContext,
+                            Uri.parse(mPost.getFeaturedImagePath()).getEncodedPath(),
+                            200);
+            WPImageSpan is = new WPImageSpan(mContext, featuredImageBitmap, Uri.parse(mPost.getFeaturedImagePath()));
+            MediaFile featuredImage = is.getMediaFile();
+            prepareMediaForUpload(featuredImage, mPost.getFeaturedImagePath());
+            uploadImage(featuredImage);
+        }
+
+        private boolean uploadPost() {
             if (TextUtils.isEmpty(mPost.getPostStatus())) {
                 mPost.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
             }
@@ -232,8 +266,6 @@ public class PostUploadService extends Service {
             if (!TextUtils.isEmpty(mPost.getMoreText())) {
                 moreContent = processPostMedia(mPost.getMoreText());
             }
-
-            mPostUploadNotifier.updateNotificationMessage(uploadingPostTitle, uploadingPostMessage);
 
             // If media file upload failed, let's stop here and prompt the user
             if (mIsMediaError) {
@@ -368,11 +400,6 @@ public class PostUploadService extends Service {
                 }
             }
 
-            // featured image
-            if (mPost.getFeaturedImageID() != 0) {
-                contentStruct.put("post_thumbnail", mPost.getFeaturedImageID());
-            }
-
             if (!TextUtils.isEmpty(mPost.getQuickPostType())) {
                 mClient.addQuickPostHeader(mPost.getQuickPostType());
             }
@@ -411,6 +438,35 @@ public class PostUploadService extends Service {
             }
 
             return false;
+        }
+
+        private void prepareMediaForUpload(MediaFile mediaFile, String path) {
+            File file = new File(path);
+            Blog blog = WordPress.getCurrentBlog();
+            long currentTime = System.currentTimeMillis();
+            String mimeType = MediaUtils.getMediaFileMimeType(file);
+            String fileName = MediaUtils.getMediaFileName(file, mimeType);
+
+            mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
+            mediaFile.setFileName(fileName);
+            mediaFile.setFilePath(path);
+            mediaFile.setUploadState("queued");
+            mediaFile.setDateCreatedGMT(currentTime);
+            mediaFile.setMediaId(String.valueOf(currentTime));
+            mediaFile.setFeatured(true);
+
+            if (mimeType != null && mimeType.startsWith("image")) {
+                // get width and height
+                BitmapFactory.Options bfo = new BitmapFactory.Options();
+                bfo.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(path, bfo);
+                mediaFile.setWidth(bfo.outWidth);
+                mediaFile.setHeight(bfo.outHeight);
+            }
+
+            if (!TextUtils.isEmpty(mimeType)) {
+                mediaFile.setMimeType(mimeType);
+            }
         }
 
         private void trackUploadAnalytics() {
@@ -503,6 +559,8 @@ public class PostUploadService extends Service {
 
             return postContent;
         }
+
+
 
         private String uploadImage(MediaFile mediaFile) {
             AppLog.d(T.POSTS, "uploadImage: " + mediaFile.getFilePath());

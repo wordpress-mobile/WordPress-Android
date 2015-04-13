@@ -150,7 +150,7 @@ public class ApiHelper {
                         if (obj.get("post_thumbnail") != null) {
                             featuredImage = obj.getJSONObject("post_thumbnail");
                             mPost.setFeaturedImageID(featuredImage.getInt("attachment_id"));
-                            mEditPostSettingsFragment.setFeaturedImage(featuredImage.getString("link"));
+                            mEditPostSettingsFragment.setFeaturedImagePath(featuredImage.getString("link"));
                         }
                     } catch (JSONException e) {
                         AppLog.d(T.API, "Post doesn't have featured image");

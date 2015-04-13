@@ -52,7 +52,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.editor.EditorFragmentAbstract;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
@@ -61,7 +60,6 @@ import org.wordpress.android.ui.media.MediaSourceWPImages;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
@@ -76,7 +74,6 @@ import org.wordpress.mediapicker.source.MediaSource;
 import org.wordpress.mediapicker.source.MediaSourceDeviceImages;
 import org.xmlrpc.android.ApiHelper;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -98,7 +95,6 @@ public class EditPostSettingsFragment extends Fragment
     private EditPostActivity mActivity;
     private EditorFragmentAbstract mEditorFragment;
     private Post mPost;
-    private String mFeaturedImageURL;
 
     private Spinner mStatusSpinner, mPostFormatSpinner;
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
@@ -108,7 +104,7 @@ public class EditPostSettingsFragment extends Fragment
     private Button mRemoveFeaturedImageButton;
     private NetworkImageView mFeaturedImageView;
     private ImageView mFeaturedImageViewLocal;
-    private CircleProgressBar mLoadingFeaturedImageIndicator;
+    private CircleProgressBar mLoadingIndicator;
 
     private ArrayList<String> mCategories;
 
@@ -175,11 +171,6 @@ public class EditPostSettingsFragment extends Fragment
             @Override
             public void onClick(View v) {
                 startMediaSelection();
-                List<Object> args = new Vector<>();
-                args.add(WordPress.getCurrentBlog());
-                args.add(mActivity);
-                args.add(mPost);
-                new ApiHelper.UpdatePostFeaturedImage().execute(args);
             }
         });
 
@@ -190,26 +181,24 @@ public class EditPostSettingsFragment extends Fragment
                 mFeaturedImageView.setVisibility(View.GONE);
                 mFeaturedImageViewLocal.setVisibility(View.GONE);
                 mRemoveFeaturedImageButton.setVisibility(View.GONE);
-                mLoadingFeaturedImageIndicator.setVisibility(View.GONE);
                 mSetFeaturedImageButton.setVisibility(View.VISIBLE);
+                mPost.setFeaturedImagePath("");
                 mPost.setFeaturedImageID(0);
-                updatePostSettingsAndSaveButton();
-                List<Object> args = new Vector<>();
-                args.add(WordPress.getCurrentBlog());
-                args.add(mActivity);
-                args.add(mPost);
-                new ApiHelper.RemovePostFeaturedImage().execute(args);
             }
         });
 
         mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.featuredImageView);
         mFeaturedImageView.setDefaultImageResId(R.drawable.media_image_placeholder);
         mFeaturedImageViewLocal = (ImageView) rootView.findViewById(R.id.featuredImageViewLocal);
-        mLoadingFeaturedImageIndicator = (CircleProgressBar) rootView.findViewById(R.id.featuredImageSettingIndicator);
-        mLoadingFeaturedImageIndicator.setColorSchemeResources(
-                R.color.color_primary,
+        mLoadingIndicator = (CircleProgressBar) rootView.findViewById(R.id.loadingIndicator);
+        mLoadingIndicator.setColorSchemeResources(
                 R.color.color_primary_dark,
-                R.color.color_accent);
+                R.color.color_primary,
+                R.color.color_accent
+        );
+
+        // show set featured button only if blog is capable AND post doesn't have a remote
+        // featured image
         if (WordPress.getCurrentBlog().isFeaturedImageCapable()) {
             mSetFeaturedImageButton.setVisibility(View.VISIBLE);
         }
@@ -235,7 +224,7 @@ public class EditPostSettingsFragment extends Fragment
                     new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status",
                             "video"};
             if (WordPress.getCurrentBlog().getPostFormats().equals("")) {
-                List<Object> args = new Vector<Object>();
+                List<Object> args = new Vector<>();
                 args.add(WordPress.getCurrentBlog());
                 args.add(mActivity);
                 new ApiHelper.GetPostFormatsTask().execute(args);
@@ -292,7 +281,7 @@ public class EditPostSettingsFragment extends Fragment
             String[] items = new String[]{getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
                     getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private)};
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, items);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, items);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mStatusSpinner.setAdapter(adapter);
             mStatusSpinner.setOnTouchListener(
@@ -311,7 +300,7 @@ public class EditPostSettingsFragment extends Fragment
                         getResources().getString(R.string.pending_review),
                         getResources().getString(R.string.post_private)
                 };
-                adapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, items);
+                adapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, items);
                 mStatusSpinner.setAdapter(adapter);
             }
 
@@ -586,6 +575,8 @@ public class EditPostSettingsFragment extends Fragment
         post.setPostStatus(status);
         post.setPassword(password);
         post.setPostFormat(postFormat);
+        post.setFeaturedImageID(mPost.getFeaturedImageID());
+        post.setFeaturedImagePath(mPost.getFeaturedImagePath());
     }
 
     /*
@@ -860,11 +851,13 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showLocationNotAvailableError() {
-        Toast.makeText(mActivity, getResources().getText(R.string.location_not_found), Toast.LENGTH_SHORT).show();
+        if (isAdded()) {
+            Toast.makeText(mActivity, getResources().getText(R.string.location_not_found), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showFeaturedImageSuccessfulySet() {
-        if (mRemoveFeaturedImageButton.getVisibility() == View.VISIBLE) {
+        if (mRemoveFeaturedImageButton.getVisibility() == View.VISIBLE && isAdded()) {
             Toast.makeText(mActivity, getResources().getText(R.string.featured_image_is_set), Toast.LENGTH_SHORT).show();
         }
     }
@@ -936,7 +929,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void populateSelectedCategories() {
         // Remove previous category buttons if any + select category button
-        List<View> viewsToRemove = new ArrayList<View>();
+        List<View> viewsToRemove = new ArrayList<>();
         for (int i = 0; i < mSectionCategories.getChildCount(); i++) {
             View v = mSectionCategories.getChildAt(i);
             if (v == null)
@@ -996,7 +989,7 @@ public class EditPostSettingsFragment extends Fragment
      */
     private ArrayList<MediaSource> imageMediaSelectionSources() {
         ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
-        imageMediaSources.add(new MediaSourceDeviceImages(mActivity.getContentResolver()));
+        imageMediaSources.add(new MediaSourceDeviceImages());
 
         return imageMediaSources;
     }
@@ -1031,16 +1024,11 @@ public class EditPostSettingsFragment extends Fragment
                     if (URLUtil.isNetworkUrl(media.getSource().toString())) {
                         mFeaturedImageView.setVisibility(View.VISIBLE);
                         mFeaturedImageViewLocal.setVisibility(View.GONE);
-                        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-                        MediaFile mediaFile = mActivity.createMediaFile(blogId, media.getTag());
-                        mPost.setFeaturedImageID(Integer.valueOf(mediaFile.getMediaId()));
-                        updatePostSettingsAndSaveButton();
-                        addRemoteMedia(media.getSource());
+                        addRemoteMedia(media);
                         ++libraryMediaAdded;
                     } else { // local images
                         mFeaturedImageView.setVisibility(View.GONE);
                         mFeaturedImageViewLocal.setVisibility(View.VISIBLE);
-                        mLoadingFeaturedImageIndicator.setVisibility(View.VISIBLE);
                         addLocalMedia(media.getSource());
                         ++localMediaAdded;
                     }
@@ -1067,7 +1055,7 @@ public class EditPostSettingsFragment extends Fragment
     /**
      * Get the maximum size a thumbnail can be to fit in either portrait or landscape orientations.
      */
-    public int maxFeaturedImageThumbnailWidth() {
+    private int maxFeaturedImageThumbnailWidth() {
         if (mFeaturedImageThumbnailWidth == 0) {
             Point size = DisplayUtils.getDisplayPixelSize(mActivity);
             int screenWidth = size.x;
@@ -1081,8 +1069,9 @@ public class EditPostSettingsFragment extends Fragment
         return mFeaturedImageThumbnailWidth;
     }
 
-    public void setFeaturedImage(String imageURL) {
-        mFeaturedImageURL = imageURL;
+    public void setFeaturedImagePath(String path) {
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+        mPost.setFeaturedImagePath(path);
         if (!mActivity.getSupportActionBar().isShowing()) {
             mActivity.getSupportActionBar().show();
         }
@@ -1094,49 +1083,38 @@ public class EditPostSettingsFragment extends Fragment
         mSetFeaturedImageButton.setVisibility(View.GONE);
         mRemoveFeaturedImageButton.setVisibility(View.VISIBLE);
 
-        if (URLUtil.isNetworkUrl(mFeaturedImageURL)) {
+        if (URLUtil.isNetworkUrl(mPost.getFeaturedImagePath())) {
             mFeaturedImageView.setVisibility(View.VISIBLE);
             mFeaturedImageViewLocal.setVisibility(View.GONE);
             mFeaturedImageView.setImageUrl(
-                    mFeaturedImageURL,
+                    mPost.getFeaturedImagePath(),
                     WordPress.imageLoader);
-
-            // Post is published, and featured image already contains URL
-            // can update featured_image field directly
-            if (mPost.isPublished()) {
-                List<Object> args = new Vector<>();
-                args.add(WordPress.getCurrentBlog());
-                args.add(mActivity);
-                args.add(mPost);
-                new ApiHelper.UpdatePostFeaturedImage().execute(args);
-                //PostActions.updatePostFeaturedImage(mPost);
-            }
         } else {
             mFeaturedImageView.setVisibility(View.GONE);
             mFeaturedImageViewLocal.setVisibility(View.VISIBLE);
-            mLoadingFeaturedImageIndicator.setVisibility(View.VISIBLE);
             Bitmap featuredImageBitmap = ImageUtils.
                     getWPImageSpanThumbnailFromFilePath(mActivity,
-                            Uri.parse(mFeaturedImageURL).getEncodedPath(),
+                            Uri.parse(mPost.getFeaturedImagePath()).getEncodedPath(),
                             maxFeaturedImageThumbnailWidth());
             mFeaturedImageViewLocal.setImageBitmap(featuredImageBitmap);
-
-            // Post is published, but featured_image has NO remote URL
-            // upload the media first, get the returned URL and set it as featured_url. Update
-            if (mPost.isPublished()) {
-                getFeaturedImageURLFromBitmap(featuredImageBitmap);
-            }
         }
+
+        mLoadingIndicator.setVisibility(View.GONE);
     }
 
-    private boolean addRemoteMedia(Uri imageUri) {
+    private boolean addRemoteMedia(MediaItem media) {
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        MediaFile mediaFile = mActivity.createMediaFile(blogId, media.getTag());
+
+        Uri imageUri = media.getSource();
         if (imageUri == null) {
             return false;
         }
 
-        mFeaturedImageURL = imageUri.toString();
-        mFeaturedImageView.setImageUrl(mFeaturedImageURL, WordPress.imageLoader);
-        mPost.setFeaturedImage(mFeaturedImageURL);
+        mPost.setFeaturedImagePath(imageUri.toString());
+        mPost.setFeaturedImageID(Integer.valueOf(mediaFile.getMediaId()));
+
+        mFeaturedImageView.setImageUrl(mPost.getFeaturedImagePath(), WordPress.imageLoader);
         showFeaturedImageSuccessfulySet();
 
         return true;
@@ -1163,9 +1141,8 @@ public class EditPostSettingsFragment extends Fragment
                 return false;
             }
             mFeaturedImageViewLocal.setImageBitmap(thumbnailBitmap);
-            mFeaturedImageURL = imageUri.getEncodedPath();
-            getFeaturedImageURLFromBitmap(thumbnailBitmap);
-            mediaTitle = ImageUtils.getTitleForWPImageSpan(mActivity, imageUri.getEncodedPath());
+            mPost.setFeaturedImagePath(imageUri.getEncodedPath());
+            mediaTitle = ImageUtils.getTitleForWPImageSpan(mActivity, mPost.getFeaturedImagePath());
         }
 
         WPImageSpan imageSpan = new WPImageSpan(mActivity, thumbnailBitmap, imageUri);
@@ -1180,90 +1157,5 @@ public class EditPostSettingsFragment extends Fragment
         mActivity.saveMediaFile(mediaFile);
 
         return true;
-    }
-
-    private void setFeaturedImageURL(final String id) {
-        List<Object> apiArgs = new ArrayList<>();
-        apiArgs.add(WordPress.getCurrentBlog());
-        ApiHelper.GetMediaItemTask task = new ApiHelper.GetMediaItemTask(Integer.valueOf(id),
-                new ApiHelper.GetMediaItemTask.Callback() {
-                    @Override
-                    public void onSuccess(MediaFile mediaFile) {
-                        updatePostSettingsAndSaveButton();
-                        mLoadingFeaturedImageIndicator.setVisibility(View.GONE);
-                        showFeaturedImageSuccessfulySet();
-                        List<Object> args = new Vector<>();
-                        args.add(WordPress.getCurrentBlog());
-                        args.add(mActivity);
-                        args.add(mPost);
-                        new ApiHelper.UpdatePostFeaturedImage().execute(args);
-
-                        //PostActions.updatePostFeaturedImage(mPost);
-                    }
-
-                    @Override
-                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                        if (errorType != ApiHelper.ErrorType.NETWORK_XMLRPC) {
-                            CrashlyticsUtils.logException(throwable, CrashlyticsUtils.ExceptionType.SPECIFIC, T.MEDIA, errorMessage);
-                        }
-                    }
-                });
-        task.execute(apiArgs);
-    }
-
-    private void getFeaturedImageURLFromBitmap(Bitmap featuredImageBitmap) {
-        WPImageSpan is = new WPImageSpan(mActivity, featuredImageBitmap, Uri.parse(mFeaturedImageURL));
-        MediaFile mediaFile = is.getMediaFile();
-        prepareMediaForUpload(mediaFile, mFeaturedImageURL);
-
-        ApiHelper.UploadMediaTask task = new ApiHelper.UploadMediaTask(mActivity, mediaFile,
-                new ApiHelper.UploadMediaTask.Callback() {
-                    @Override
-                    public void onSuccess(String id) {
-                        mPost.setFeaturedImageID(Integer.valueOf(id));
-                        updatePostSettingsAndSaveButton();
-                        setFeaturedImageURL(id);
-                    }
-
-                    @Override
-                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                        // Only log the error if it's not caused by the network (internal inconsistency)
-                        if (errorType != ApiHelper.ErrorType.NETWORK_XMLRPC) {
-                            CrashlyticsUtils.logException(throwable, CrashlyticsUtils.ExceptionType.SPECIFIC, T.MEDIA, errorMessage);
-                        }
-                    }
-                });
-
-        List<Object> apiArgs = new ArrayList<>();
-        apiArgs.add(WordPress.getCurrentBlog());
-        task.execute(apiArgs);
-    }
-
-    private void prepareMediaForUpload(MediaFile mediaFile, String path) {
-        File file = new File(path);
-        Blog blog = WordPress.getCurrentBlog();
-        long currentTime = System.currentTimeMillis();
-        String mimeType = MediaUtils.getMediaFileMimeType(file);
-        String fileName = MediaUtils.getMediaFileName(file, mimeType);
-
-        mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
-        mediaFile.setFileName(fileName);
-        mediaFile.setFilePath(path);
-        mediaFile.setUploadState("queued");
-        mediaFile.setDateCreatedGMT(currentTime);
-        mediaFile.setMediaId(String.valueOf(currentTime));
-
-        if (mimeType != null && mimeType.startsWith("image")) {
-            // get width and height
-            BitmapFactory.Options bfo = new BitmapFactory.Options();
-            bfo.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(path, bfo);
-            mediaFile.setWidth(bfo.outWidth);
-            mediaFile.setHeight(bfo.outHeight);
-        }
-
-        if (!TextUtils.isEmpty(mimeType)) {
-            mediaFile.setMimeType(mimeType);
-        }
     }
 }

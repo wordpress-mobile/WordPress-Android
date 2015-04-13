@@ -164,6 +164,9 @@ public class WordPressDB {
     // add featured image to post
     private static final String ADD_FEATURED_IMAGE_ID = "alter table posts add featuredImageId integer default 0;";
 
+    // add featured image path
+    private static final String ADD_FEATURED_IMAGE_PATH = "alter table posts add featuredImagePath text default '';";
+
     // add hidden flag to blog settings (accounts)
     private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
 
@@ -283,6 +286,7 @@ public class WordPressDB {
                 currentVersion++;
             case 29:
                 // Add featured image field to every post
+                db.execSQL(ADD_FEATURED_IMAGE_PATH);
                 db.execSQL(ADD_FEATURED_IMAGE_ID);
                 currentVersion++;
         }
@@ -897,6 +901,7 @@ public class WordPressDB {
                     values.put("post_status", MapUtils.getMapStr(postMap, (isPage) ? "page_status" : "post_status"));
                     values.put("userid", MapUtils.getMapStr(postMap, "userid"));
                     values.put("featuredImageId", MapUtils.getMapInt(postMap, "featuredImageId"));
+                    values.put("featuredImagePath", MapUtils.getMapStr(postMap, "featuredImagePath"));
 
                     if (isPage) {
                         values.put("isPage", true);
@@ -995,6 +1000,7 @@ public class WordPressDB {
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
             values.put("featuredImageId", post.getFeaturedImageID());
+            values.put("featuredImagePath", post.getFeaturedImagePath());
 
             result = db.insert(POSTS_TABLE, null, values);
 
@@ -1032,6 +1038,7 @@ public class WordPressDB {
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
             values.put("featuredImageId", post.getFeaturedImageID());
+            values.put("featuredImagePath", post.getFeaturedImagePath());
 
             putPostLocation(post, values);
 
@@ -1139,6 +1146,7 @@ public class WordPressDB {
                 post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
                 post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
                 post.setFeaturedImageID(c.getInt(c.getColumnIndex("featuredImageId")));
+                post.setFeaturedImagePath(c.getString(c.getColumnIndex("featuredImagePath")));
 
                 int latColumnIndex = c.getColumnIndex("latitude");
                 int lngColumnIndex = c.getColumnIndex("longitude");

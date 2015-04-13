@@ -26,7 +26,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -696,22 +695,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             }
 
             if (mPost.hasFeaturedImage()) {
-                ApiHelper.GetMediaItemTask task = new ApiHelper.GetMediaItemTask(mPost.getFeaturedImageID(), new ApiHelper.GetMediaItemTask.Callback() {
-                    @Override
-                    public void onSuccess(MediaFile result) {
-                        Log.i("featured image", "URL: " + result.getFileURL());
-                        mEditPostSettingsFragment.setFeaturedImage(result.getFileURL());
-                    }
-
-                    @Override
-                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                        Log.i("featured image", "Failed to get media");
-                    }
-                });
-
-                List<Object> apiArgs = new ArrayList<>();
-                apiArgs.add(WordPress.getCurrentBlog());
-                task.execute(apiArgs);
+                mEditPostSettingsFragment.setFeaturedImagePath(mPost.getFeaturedImagePath());
             }
         }
     }
@@ -734,20 +718,17 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         // Set post title and content
         Post post = getPost();
         if (post != null) {
-            if (!TextUtils.isEmpty(post.getContent())) {
+            if (!TextUtils.isEmpty(post.getTitle()) || !TextUtils.isEmpty(post.getContent())) {
                 if (post.isLocalDraft()) {
-                    Log.i("featuredImage", "featured image: " + mPost.getFeaturedImageID());
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                             post.getContent().replaceAll("\uFFFC", ""));
-                }
-                else {
-                    Log.i("featuredImage", "featured image: " + mPost.getFeaturedImageID());
+                } else {
                     mEditorFragment.setContent(post.getContent().replaceAll("\uFFFC", ""));
                     List<Object> args = new Vector<>();
                     args.add(WordPress.getCurrentBlog());
                     args.add(mEditPostSettingsFragment);
-                    args.add(mPost);
+                    args.add(post);
                     new ApiHelper.SyncFeaturedImageInSettings().execute(args);
                 }
             }
