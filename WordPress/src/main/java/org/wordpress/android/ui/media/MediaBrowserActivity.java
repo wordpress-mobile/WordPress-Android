@@ -32,7 +32,6 @@ import android.widget.Toast;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
@@ -41,6 +40,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
@@ -177,10 +177,12 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
     };
 
     private void setupBaseLayout() {
-        // hide access to the drawer when there are fragments in the back stack
+        // hide access to the drawer and keyboard when there are fragments in the back stack
         if (getDrawerToggle() != null) {
             getDrawerToggle().setDrawerIndicatorEnabled(getFragmentManager().getBackStackEntryCount() == 0);
         }
+
+        ActivityUtils.hideKeyboard(this);
     }
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
