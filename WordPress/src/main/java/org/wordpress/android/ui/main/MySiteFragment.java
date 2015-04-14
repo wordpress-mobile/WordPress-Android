@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite;
+package org.wordpress.android.ui.main;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -13,7 +13,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.WPMainActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;

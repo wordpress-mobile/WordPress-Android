@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.util.ToastUtils;
 

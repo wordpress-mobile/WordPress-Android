@@ -1,4 +1,4 @@
-package org.wordpress.android.ui;
+package org.wordpress.android.ui.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.CoreEvents;

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui;
+package org.wordpress.android.ui.main;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -7,8 +7,6 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import org.wordpress.android.ui.me.MeFragment;
-import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 

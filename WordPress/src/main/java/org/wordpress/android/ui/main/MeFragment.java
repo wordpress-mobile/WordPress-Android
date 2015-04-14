@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.me;
+package org.wordpress.android.ui.main;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;

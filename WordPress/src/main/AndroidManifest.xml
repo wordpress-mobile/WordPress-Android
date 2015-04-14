@@ -61,7 +61,7 @@
         </activity>
 
         <!-- Main tab activity -->
-        <activity android:name=".ui.WPMainActivity"
+        <activity android:name=".ui.main.WPMainActivity"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Account activities -->
@@ -265,7 +265,7 @@
             android:theme="@style/Calypso.NoActionBar" />
 
         <activity
-            android:name=".ui.SitePickerActivity"
+            android:name=".ui.main.SitePickerActivity"
             android:theme="@style/CalypsoTheme"
             android:label="@string/site_picker_title" />
 
