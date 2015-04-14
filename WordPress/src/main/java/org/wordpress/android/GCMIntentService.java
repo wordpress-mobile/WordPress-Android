@@ -248,7 +248,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     // Returns true if the note type is known to have a gravatar
-    private boolean shouldCircularizeNoteIcon(String noteType) {
+    public boolean shouldCircularizeNoteIcon(String noteType) {
         if (TextUtils.isEmpty(noteType)) return false;
 
         switch (noteType) {
