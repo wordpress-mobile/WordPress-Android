@@ -1,6 +1,7 @@
 package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,6 +38,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private String mParamTitle;
     private String mParamContent;
+
+    private Activity mActivity;
     private EditorWebView mWebView;
 
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
@@ -56,6 +59,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActivity = getActivity();
         if (getArguments() != null) {
             mParamTitle = getArguments().getString(ARG_PARAM_TITLE);
             mParamContent = getArguments().getString(ARG_PARAM_CONTENT);
@@ -104,7 +108,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             }
         });
 
-        String htmlEditor = Utils.getHtmlFromFile(getActivity(), "android-editor.html");
+        String htmlEditor = Utils.getHtmlFromFile(mActivity, "android-editor.html");
 
         mWebView.addJavascriptInterface(new JsCallbackReceiver(this), JS_CALLBACK_HANDLER);
 
@@ -170,7 +174,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             public void run() {
                 String title = "I'm editing a post!";
-                String contentHtml = Utils.getHtmlFromFile(getActivity(), "example-content.html");
+                String contentHtml = Utils.getHtmlFromFile(mActivity, "example-content.html");
 
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setMultiline('true');");
 
