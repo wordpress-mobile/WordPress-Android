@@ -20,6 +20,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
@@ -30,6 +31,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
+
 public class SitePickerActivity extends ActionBarActivity {
 
     public static final String KEY_LOCAL_ID = "local_id";
@@ -39,6 +42,7 @@ public class SitePickerActivity extends ActionBarActivity {
     private RecyclerView mRecycler;
     private int mBlavatarSz;
     private boolean mVisibleBlogsOnly;
+    private SiteList mSiteList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,12 +121,34 @@ public class SitePickerActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.BlogListChanged event) {
+        if (!isFinishing()) {
+            loadSites();
+        }
+    }
+
     private void loadSites() {
         if (!mIsTaskRunning) {
             new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
+    /*
+     * AsyncTask which loads site data from local db and populates the site list
+     */
     private boolean mIsTaskRunning;
     private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
         @Override
@@ -130,11 +156,13 @@ public class SitePickerActivity extends ActionBarActivity {
             super.onPreExecute();
             mIsTaskRunning = true;
         }
+
         @Override
         protected void onCancelled() {
             super.onCancelled();
             mIsTaskRunning = false;
         }
+
         @Override
         protected SiteList doInBackground(Void... params) {
             List<Map<String, Object>> blogs;
@@ -153,13 +181,15 @@ public class SitePickerActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(SiteList sites) {
-            mRecycler.setAdapter(new SiteAdapter(SitePickerActivity.this, sites));
+            if (mSiteList == null || !mSiteList.isSameList(sites)) {
+                mSiteList = sites;
+                mRecycler.setAdapter(new SiteAdapter(SitePickerActivity.this, mSiteList));
+            }
             mIsTaskRunning = false;
         }
     }
 
     class SiteAdapter extends RecyclerView.Adapter<SiteViewHolder> {
-
         private final SiteList mSites;
         private final LayoutInflater mInflater;
 
@@ -247,6 +277,29 @@ public class SitePickerActivity extends ActionBarActivity {
                     add(new SiteRecord(account));
                 }
             }
+        }
+
+        boolean isSameList(SiteList sites) {
+            if (sites == null || sites.size() != this.size()) {
+                return false;
+            }
+            for (SiteRecord site: sites) {
+                if (!this.containsSite(site)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        boolean containsSite(SiteRecord site) {
+            if (site != null && site.blogId != null) {
+                for (SiteRecord thisSite : this) {
+                    if (site.blogId.equals(thisSite.blogId)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
