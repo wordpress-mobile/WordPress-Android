@@ -6,7 +6,6 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
 import android.net.http.HttpResponseCache;
@@ -14,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
@@ -403,14 +401,14 @@ public class WordPress extends Application {
     public static Blog getCurrentBlog() {
         if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
             // attempt to restore the last active blog
-            setCurrentBlogToLastActive();
-
-            // fallback to just using the first blog
-            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
-            if (currentBlog == null && accounts.size() > 0) {
-                int id = Integer.valueOf(accounts.get(0).get("id").toString());
-                setCurrentBlog(id);
-                wpDB.updateLastBlogId(id);
+            if (setCurrentBlogToLastActive() == null) {
+                // fallback to just using the first blog
+                List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
+                if (accounts.size() > 0) {
+                    int id = Integer.valueOf(accounts.get(0).get("id").toString());
+                    setCurrentBlog(id);
+                    wpDB.updateLastBlogId(id);
+                }
             }
         }
 
