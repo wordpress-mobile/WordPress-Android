@@ -4,12 +4,12 @@ import re
 ### rules (no deps)
 
 genrule(
-  name = 'fetch_deps',
-  srcs = [
-    'tools/fetch_buck_dependencies.py',
-  ],
-  cmd = 'tools/fetch_buck_dependencies.py extlibs > $OUT',
-  out = '../../extlibs/dependencies.log',
+    name = 'fetch_deps',
+    srcs = [
+        'tools/fetch_buck_dependencies.py',
+    ],
+    cmd = 'tools/fetch_buck_dependencies.py extlibs > $OUT',
+    out = '../../extlibs/dependencies.log',
 )
 
 ### Helper functions
@@ -50,6 +50,19 @@ def get_build_config_values(filename):
             key = key.replace("wp.", "").upper().replace(".", "_")
             values.append('String %s = "%s"' % (key, value))
     return values
+
+### Inject versionCode and versionName in the AndroidManifest.xml file
+
+genrule(
+    name = 'processed_manifest',
+    srcs = [
+        'tools/inject_version_in_manifest.py',
+        'WordPress/src/main/AndroidManifest.xml',
+        'WordPress/build.gradle'
+        ],
+    cmd = 'tools/inject_version_in_manifest.py WordPress/src/main/AndroidManifest.xml WordPress/build.gradle > $OUT',
+    out = 'AndroidManifest.xml',
+)
 
 ### Define jar dependencies
 
@@ -327,9 +340,9 @@ r_android_library(
 
 android_binary(
     name = 'wpandroid',
-    manifest = 'WordPress/src/main/AndroidManifest.xml',
-    target = 'Google Inc.:Google APIs:21',
+    manifest = ':processed_manifest',
     keystore = ':debug_keystore',
+    package_type = 'debug',
     deps = [
         ':fetch_deps',
         ':main-lib',
