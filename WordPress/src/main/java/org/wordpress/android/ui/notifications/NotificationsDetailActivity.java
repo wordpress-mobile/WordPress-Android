@@ -51,7 +51,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         if (savedInstanceState == null) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (noteId == null) {
-                ToastUtils.showToast(this, R.string.error_notification_open);
+                showErrorToastAndFinish();
                 return;
             }
 
@@ -74,8 +74,8 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
                         getSupportActionBar().setTitle(note.getTitle());
                     }
                 } catch (BucketObjectMissingException e) {
-                    AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
-                    ToastUtils.showToast(this, R.string.error_notification_open);
+                    showErrorToastAndFinish();
+                    return;
                 }
             }
         } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
@@ -113,6 +113,12 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         }
 
         super.onSaveInstanceState(outState);
+    }
+
+    private void showErrorToastAndFinish() {
+        AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
+        ToastUtils.showToast(this, R.string.error_notification_open);
+        finish();
     }
 
     /**
