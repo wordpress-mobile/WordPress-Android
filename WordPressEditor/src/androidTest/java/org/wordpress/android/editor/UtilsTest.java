@@ -12,7 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.wordpress.android.editor.Utils.*;
+import static org.wordpress.android.editor.Utils.getChangeMapFromSets;
+import static org.wordpress.android.editor.Utils.splitDelimitedString;
 
 @Config(emulateSdk = 18)
 @RunWith(RobolectricTestRunner.class)
