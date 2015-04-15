@@ -199,7 +199,7 @@ ZSSEditor.callback = function(callbackScheme, callbackPath) {
 	if (isUsingiOS) {
         ZSSEditor.callbackThroughIFrame(url);
     } else if (isUsingAndroid) {
-        nativeCallbackHandler.executeCallback(callbackScheme);
+        nativeCallbackHandler.executeCallback(callbackScheme, callbackPath);
 	} else {
 		console.log(url);
 	}
@@ -1877,6 +1877,8 @@ ZSSField.prototype.callback = function(callbackScheme, callbackPath) {
     
     if (isUsingiOS) {
         ZSSEditor.callbackThroughIFrame(url);
+    } else if (isUsingAndroid) {
+        nativeCallbackHandler.executeCallback(callbackScheme, callbackPath);
     } else {
         console.log(url);
     }

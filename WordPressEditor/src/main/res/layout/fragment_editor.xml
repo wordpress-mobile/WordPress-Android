@@ -4,9 +4,37 @@
              android:layout_height="match_parent"
              tools:context="org.wordpress.android.editor.EditorFragment">
 
-    <WebView
+    <org.wordpress.android.editor.EditorWebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/webview"/>
+
+    <LinearLayout
+        android:id="@+id/format_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/format_bar_height"
+        android:layout_gravity="bottom"
+        android:background="@color/format_bar_background"
+        android:orientation="horizontal">
+
+        <HorizontalScrollView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ToggleButton
+                    android:id="@+id/bold"
+                    style="@style/ToggleButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/format_bar_button_bold_selector" />
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
 
 </FrameLayout>
