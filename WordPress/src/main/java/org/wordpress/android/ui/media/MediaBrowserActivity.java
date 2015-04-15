@@ -40,6 +40,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
@@ -169,6 +170,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
             if (mediaGridFragment.isVisible()) {
                 mediaGridFragment.refreshSpinnerAdapter();
             }
+            ActivityUtils.hideKeyboard(MediaBrowserActivity.this);
         }
     };
 
