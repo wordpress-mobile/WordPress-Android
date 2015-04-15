@@ -7,7 +7,27 @@ import sys
 import zipfile
 import tempfile
 
-ANDROID_SDK_PATH = '/Users/max/work/android-sdk-mac'
+def get_local_properties_location():
+    curdir = os.getcwd()
+    localprops_name= 'local.properties'
+    location = ''
+    while curdir and curdir != '/':
+        location = os.path.join(curdir, localprops_name)
+        print('trying to read local.properties from: %s' % location)
+        if os.path.exists(location):
+            return location
+        curdir = os.path.dirname(curdir)
+    return ''
+
+def get_sdk_dir_from_localproperties():
+    localprops = get_local_properties_location()
+    if not localprops:
+        sys.stderr.write('local.properties file not found')
+        sys.exit(1)
+    props = dict(line.strip().split('=') for line in open(localprops))
+    return props['sdk.dir']
+
+ANDROID_SDK_PATH = get_sdk_dir_from_localproperties()
 
 BASE_DEPENDENCIES ={
 'android-support-v13': {'url': os.path.join(ANDROID_SDK_PATH, 'extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar')},

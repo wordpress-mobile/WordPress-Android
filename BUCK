@@ -8,7 +8,7 @@ genrule(
     srcs = [
         'tools/fetch_buck_dependencies.py',
     ],
-    cmd = 'tools/fetch_buck_dependencies.py extlibs > $OUT',
+    cmd = 'tools/fetch_buck_dependencies.py ../../../extlibs > $OUT',
     out = '../../extlibs/dependencies.log',
 )
 
