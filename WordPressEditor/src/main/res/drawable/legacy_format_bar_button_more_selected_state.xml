@@ -7,6 +7,6 @@
         </shape>
     </item>
     <item>
-        <bitmap android:src="@drawable/dashicon_format_quote" android:gravity="center"/>
+        <bitmap android:src="@drawable/legacy_dashicon_editor_insertmore" android:gravity="center"/>
     </item>
 </layer-list>
