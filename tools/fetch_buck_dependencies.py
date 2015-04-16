@@ -24,7 +24,8 @@ def get_sdk_dir_from_localproperties():
     if not localprops:
         sys.stderr.write('local.properties file not found')
         sys.exit(1)
-    props = dict(line.strip().split('=') for line in open(localprops))
+    props = dict((i[0].strip(), i[1].strip()) for i in
+        (line.strip().split('=') for line in open(localprops)) if len(i) == 2)
     return props['sdk.dir']
 
 ANDROID_SDK_PATH = get_sdk_dir_from_localproperties()
