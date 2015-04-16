@@ -107,10 +107,10 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 eventName = "reader_blog_blocked";
                 break;
             case READER_BLOG_PREVIEW:
-                eventName = "reader_blog_preview";
+                eventName = "reader_blog_previewed";
                 break;
             case READER_TAG_PREVIEW:
-                eventName = "reader_tag_preview";
+                eventName = "reader_tag_previewed";
                 break;
             case EDITOR_CREATED_POST:
                 eventName = "editor_post_created";
