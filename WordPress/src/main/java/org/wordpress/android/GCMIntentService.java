@@ -48,6 +48,13 @@ public class GCMIntentService extends GCMBaseIntentService {
     private static long mPreviousNoteTime = 0L;
     private static final int mMaxInboxItems = 5;
 
+    private static final String NOTE_TYPE_COMMENT = "c";
+    private static final String NOTE_TYPE_LIKE = "like";
+    private static final String NOTE_TYPE_COMMENT_LIKE = "comment_like";
+    private static final String NOTE_TYPE_AUTOMATTCHER = "automattcher";
+    private static final String NOTE_TYPE_FOLLOW = "follow";
+    private static final String NOTE_TYPE_REBLOG = "reblog";
+
     @Override
     protected String[] getSenderIds(Context context) {
         String[] senderIds = new String[1];
@@ -163,7 +170,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
 
             // Add some actions if this is a comment notification
-            if (noteType.equals("c")) {
+            if (noteType.equals(NOTE_TYPE_COMMENT)) {
                 Intent commentReplyIntent = new Intent(this, NotificationsActivity.class);
                 commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -192,7 +199,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                     break;
                 if (wpPN.getString("msg") == null)
                     continue;
-                if (wpPN.getString("type") != null && wpPN.getString("type").equals("c")) {
+                if (wpPN.getString("type") != null && wpPN.getString("type").equals(NOTE_TYPE_COMMENT)) {
                     String pnTitle = StringEscapeUtils.unescapeHtml((wpPN.getString("title")));
                     String pnMessage = StringEscapeUtils.unescapeHtml((wpPN.getString("msg")));
                     inboxStyle.addLine(pnTitle + ": " + pnMessage);
@@ -252,12 +259,12 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (TextUtils.isEmpty(noteType)) return false;
 
         switch (noteType) {
-            case "c":
-            case "like":
-            case "comment_like":
-            case "automattcher":
-            case "follow":
-            case "reblog":
+            case NOTE_TYPE_COMMENT:
+            case NOTE_TYPE_LIKE:
+            case NOTE_TYPE_COMMENT_LIKE:
+            case NOTE_TYPE_AUTOMATTCHER:
+            case NOTE_TYPE_FOLLOW:
+            case NOTE_TYPE_REBLOG:
                 return true;
             default:
                 return false;
