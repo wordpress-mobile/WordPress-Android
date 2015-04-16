@@ -400,7 +400,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             return;
         }
 
-        if (isWordPressComUser) {
+        if (isUserConnected && isWordPressComUser) {
             mWpcomUserName = username;
             // Re-unify the user
             if (getAnonID() != null) {
