@@ -2,7 +2,7 @@
   wpandroid = //:wpandroid
 
 [android]
-  target = Google Inc.:Google APIs:21
+  target = Google Inc.:Google APIs:22
 
 [cache]
   mode = dir
@@ -10,4 +10,3 @@
 
 [project]
   ignore = .git, WordPress/build
-
