@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        tools:listitem="@layout/reader_cardview_tag" />
+        tools:listitem="@layout/reader_listitem_tag" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"

@@ -157,12 +157,12 @@ public class ReaderReblogActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_publish:
-                submitReblog();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == R.id.menu_publish) {
+            submitReblog();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

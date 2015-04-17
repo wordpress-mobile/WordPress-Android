@@ -674,22 +674,21 @@ public class CommentsListFragment extends Fragment {
             if (numSelected == 0)
                 return false;
 
-            switch (menuItem.getItemId()) {
-                case R.id.menu_approve :
-                    moderateSelectedComments(CommentStatus.APPROVED);
-                    return true;
-                case R.id.menu_unapprove :
-                    moderateSelectedComments(CommentStatus.UNAPPROVED);
-                    return true;
-                case R.id.menu_spam :
-                    moderateSelectedComments(CommentStatus.SPAM);
-                    return true;
-                case R.id.menu_trash :
-                    // unlike the other status changes, we ask the user to confirm trashing
-                    confirmDeleteComments();
-                    return true;
-                default:
-                    return false;
+            int i = menuItem.getItemId();
+            if (i == R.id.menu_approve) {
+                moderateSelectedComments(CommentStatus.APPROVED);
+                return true;
+            } else if (i == R.id.menu_unapprove) {
+                moderateSelectedComments(CommentStatus.UNAPPROVED);
+                return true;
+            } else if (i == R.id.menu_spam) {
+                moderateSelectedComments(CommentStatus.SPAM);
+                return true;
+            } else if (i == R.id.menu_trash) {// unlike the other status changes, we ask the user to confirm trashing
+                confirmDeleteComments();
+                return true;
+            } else {
+                return false;
             }
         }
 
