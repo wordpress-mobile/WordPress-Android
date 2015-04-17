@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
+import org.ccil.cowan.tagsoup.jaxp.SAXParserImpl;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -75,9 +76,14 @@ import org.wordpress.mediapicker.source.MediaSource;
 import org.wordpress.mediapicker.source.MediaSourceDeviceImages;
 import org.wordpress.mediapicker.source.MediaSourceDeviceVideos;
 import org.wordpress.passcodelock.AppLockManager;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 import org.xmlrpc.android.ApiHelper;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -131,8 +137,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     private Post mPost;
     private Post mOriginalPost;
-
-    private WPImageSpan[] mPostImages;
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
@@ -205,6 +209,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             showErrorAndFinish(R.string.blog_not_found);
             return;
         }
+
+        // set current post
+        WordPress.currentPost = mPost;
 
         // Ensure we have a valid post
         if (mPost == null) {
@@ -627,6 +634,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         MediaFile mediaFile = new MediaFile();
         mediaFile.setMediaId(mediaId);
         mediaFile.setBlogId(blogId);
+        mediaFile.setPostID(getPost().getLocalTablePostId());
         mediaFile.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
         mediaFile.setDescription(cursor.getString(cursor.getColumnIndex("description")));
         mediaFile.setTitle(cursor.getString(cursor.getColumnIndex("title")));
@@ -655,6 +663,37 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
 
         mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.imageLoader);
+    }
+
+    private boolean addMedia(Uri imageUri) {
+        if (!MediaUtils.isInMediaStore(imageUri) && !imageUri.toString().startsWith("/")) {
+            imageUri = MediaUtils.downloadExternalMedia(this, imageUri);
+        }
+
+        if (imageUri == null) {
+            return false;
+        }
+
+        String mediaTitle;
+        if (MediaUtils.isVideo(imageUri.toString())) {
+            mediaTitle = getResources().getString(R.string.video);
+        } else {
+            mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
+        }
+
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setMediaId(imageUri.toString());
+        mediaFile.setPostID(getPost().getLocalTablePostId());
+        mediaFile.setTitle(mediaTitle);
+        mediaFile.setFilePath(imageUri.toString());
+        if (imageUri.getEncodedPath() != null) {
+            mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
+        }
+        WordPress.wpDB.saveMediaFile(mediaFile);
+
+        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
+
+        return true;
     }
 
     /**
@@ -692,12 +731,63 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         protected void onPostExecute(Spanned spanned) {
             if (spanned != null) {
                 mEditorFragment.setContent(spanned);
+                loadPostImages(spanned);
             }
 
             if (mPost.hasFeaturedImage()) {
                 mEditPostSettingsFragment.setFeaturedImagePath(mPost.getFeaturedImagePath());
             }
+
         }
+    }
+
+    /**
+     * Load images found in a post's content.
+     * For images from local, then WPImageSpan parsing works correctly.
+     * However, for images from remote URL, then Editor cannot convert them
+     * into imagespans, thus parsing is required.
+     *
+     * @param postContent
+     */
+    public void loadPostImages(Spanned postContent) {
+        WPImageSpan[] imageSpans = postContent.getSpans(0, postContent.length(), WPImageSpan.class);
+
+        // local images
+        if (imageSpans.length > 0) {
+            for (WPImageSpan imageSpan : imageSpans) {
+                MediaFile file = imageSpan.getMediaFile();
+                mPost.getPostImages().add(file.getFilePath());
+            }
+        }
+
+        // remote images
+        try {
+            SAXParserImpl.newInstance(null).parse(
+                    new ByteArrayInputStream(mPost.getContent().getBytes("UTF-8")),
+                    new DefaultHandler() {
+                        public void startElement(String uri, String localName,
+                                                 String name, Attributes a) {
+                            if (name.equalsIgnoreCase("img")) {
+                                String postImage = a.getValue("src");
+                                if (postImage != null) {
+                                    String[] cleanPostImage = postImage.split("[\\?]");
+                                    if (cleanPostImage.length > 1) {
+                                        mPost.getPostImages().add(cleanPostImage[0]);
+                                    } else { // postImage is already a clean URL
+                                        mPost.getPostImages().add(postImage);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+            );
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private class HandleMediaSelectionTask extends AsyncTask<Intent, Void, Void> {
@@ -725,6 +815,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                             post.getContent().replaceAll("\uFFFC", ""));
                 } else {
                     mEditorFragment.setContent(post.getContent().replaceAll("\uFFFC", ""));
+                    Spannable postContent = new SpannableStringBuilder(mEditorFragment.getContent());
+                    loadPostImages(postContent);
                     List<Object> args = new Vector<>();
                     args.add(WordPress.getCurrentBlog());
                     args.add(mEditPostSettingsFragment);
@@ -1003,35 +1095,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         task.execute(apiArgs);
     }
 
-    private boolean addMedia(Uri imageUri) {
-        if (!MediaUtils.isInMediaStore(imageUri) && !imageUri.toString().startsWith("/")) {
-            imageUri = MediaUtils.downloadExternalMedia(this, imageUri);
-        }
-
-        if (imageUri == null) {
-            return false;
-        }
-
-        String mediaTitle;
-        if (MediaUtils.isVideo(imageUri.toString())) {
-            mediaTitle = getResources().getString(R.string.video);
-        } else {
-            mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
-        }
-
-        MediaFile mediaFile = new MediaFile();
-        mediaFile.setPostID(getPost().getLocalTablePostId());
-        mediaFile.setTitle(mediaTitle);
-        mediaFile.setFilePath(imageUri.toString());
-        if (imageUri.getEncodedPath() != null) {
-            mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
-        }
-        WordPress.wpDB.saveMediaFile(mediaFile);
-        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
-
-        return true;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1204,12 +1267,17 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 Integer libraryMediaAdded = 0;
 
                 for (MediaItem media : selectedContent) {
-                    if (URLUtil.isNetworkUrl(media.getSource().toString())) {
+                    String postImage = media.getSource().toString();
+                    if (URLUtil.isNetworkUrl(postImage)) {
                         addExistingMediaToEditor(media.getTag());
                         ++libraryMediaAdded;
                     } else {
                         addMedia(media.getSource());
                         ++localMediaAdded;
+                    }
+
+                    if (!mPost.getPostImages().contains(postImage)) {
+                        mPost.getPostImages().add(postImage);
                     }
                 }
 

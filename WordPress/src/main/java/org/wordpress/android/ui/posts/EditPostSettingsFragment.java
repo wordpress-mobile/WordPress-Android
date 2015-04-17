@@ -56,6 +56,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.media.MediaPickerActivity;
+import org.wordpress.android.ui.media.MediaSourcePostImages;
 import org.wordpress.android.ui.media.MediaSourceWPImages;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.util.AppLog;
@@ -976,6 +977,7 @@ public class EditPostSettingsFragment extends Fragment
         intent.putExtra(MediaPickerActivity.ACTIVITY_TITLE_KEY, getString(R.string.set_featured_image));
         intent.putParcelableArrayListExtra(MediaPickerActivity.DEVICE_IMAGE_MEDIA_SOURCES_KEY, imageMediaSelectionSources());
         if (mActivity.getBlogMediaStatus() != 0) {
+            intent.putParcelableArrayListExtra(MediaPickerActivity.POST_IMAGE_MEDIA_SOURCES_KEY, postImageSelectionSources());
             intent.putParcelableArrayListExtra(MediaPickerActivity.BLOG_IMAGE_MEDIA_SOURCES_KEY, blogImageMediaSelectionSources());
         }
 
@@ -999,6 +1001,13 @@ public class EditPostSettingsFragment extends Fragment
     private ArrayList<MediaSource> blogImageMediaSelectionSources() {
         ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
         imageMediaSources.add(new MediaSourceWPImages());
+
+        return imageMediaSources;
+    }
+
+    private ArrayList<MediaSource> postImageSelectionSources() {
+        ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
+        imageMediaSources.add(new MediaSourcePostImages());
 
         return imageMediaSources;
     }

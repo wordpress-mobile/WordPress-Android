@@ -18,7 +18,6 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
@@ -31,6 +30,7 @@ import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -690,8 +690,8 @@ public class WordPressDB {
     }
 
     public List<String> loadStatsLogin(int id) {
-        Cursor c = db.query(BLOGS_TABLE, new String[] { "dotcom_username",
-                "dotcom_password" }, "id=" + id, null, null, null, null);
+        Cursor c = db.query(BLOGS_TABLE, new String[]{"dotcom_username",
+                "dotcom_password"}, "id=" + id, null, null, null, null);
 
         c.moveToFirst();
 
@@ -1077,9 +1077,9 @@ public class WordPressDB {
 
             result = db.update(POSTS_TABLE, values, "blogID=? AND id=? AND isPage=?",
                     new String[]{
-                        String.valueOf(post.getLocalTableBlogId()),
-                        String.valueOf(post.getLocalTablePostId()),
-                        String.valueOf(SqlUtils.boolToSql(post.isPage()))
+                            String.valueOf(post.getLocalTableBlogId()),
+                            String.valueOf(post.getLocalTablePostId()),
+                            String.valueOf(SqlUtils.boolToSql(post.isPage()))
                     });
         }
 
@@ -1410,7 +1410,7 @@ public class WordPressDB {
         Cursor c = db
                 .rawQuery(
                         "select count(*) from comments where blogID=? AND status='hold'",
-                        new String[] { String.valueOf(blogID) });
+                        new String[]{String.valueOf(blogID)});
         int numRows = c.getCount();
         c.moveToFirst();
 
@@ -1460,16 +1460,18 @@ public class WordPressDB {
                     cursor.close();
                 }
 
-                if (!isMarkedForDelete)
+                if (!isMarkedForDelete) {
                     result = db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?",
                             new String[]{StringUtils.notNullStr(mf.getBlogId()), StringUtils.notNullStr(mf.getMediaId())});
+                }
             }
 
             if (result == 0 && !isMarkedForDelete) {
                 result = db.update(MEDIA_TABLE, values, "postID=? AND filePath=?",
                         new String[]{String.valueOf(mf.getPostID()), StringUtils.notNullStr(mf.getFilePath())});
-                if (result == 0)
+                if (result == 0) {
                     db.insert(MEDIA_TABLE, null, values);
+                }
             }
         }
 
@@ -1513,6 +1515,15 @@ public class WordPressDB {
     public Cursor getMediaImagesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
                 + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "image%", "uploading" });
+    }
+
+    public Cursor getMediaImagesForPost(long postID) {
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE postID=" + postID + " AND mediaId <> '' AND "
+                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { "image%", "uploading" });
+    }
+
+    public Cursor getMediaImages() {
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE, null);
     }
 
     /** Ids in the filteredIds will not be selected **/

@@ -221,4 +221,8 @@ public class WordPressMediaUtils {
     public static Cursor getWordPressMediaVideos(String blogId) {
         return WordPress.wpDB.getMediaFilesForBlog(blogId);
     }
+
+    public static Cursor getWordPressMediaImages() {
+        return WordPress.wpDB.getMediaImages();
+    }
 }

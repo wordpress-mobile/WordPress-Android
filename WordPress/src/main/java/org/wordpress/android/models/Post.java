@@ -10,6 +10,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Post implements Serializable {
     // Increment this value if this model changes
@@ -54,6 +56,7 @@ public class Post implements Serializable {
     private String featuredImagePath;
     private int featuredImageID;
     private PostLocation mPostLocation;
+    private List<String> postImages;
 
     public Post() {
     }
@@ -418,6 +421,14 @@ public class Post implements Serializable {
 
     public String getQuickPostType() {
         return StringUtils.notNullStr(quickPostType);
+    }
+
+    public List<String> getPostImages() {
+        if (postImages == null) {
+            postImages = new ArrayList<>();
+        }
+
+        return postImages;
     }
 
     /**

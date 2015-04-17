@@ -83,6 +83,8 @@ public class MediaPickerActivity extends ActionBarActivity
     public static final String DEVICE_VIDEO_MEDIA_SOURCES_KEY = "device- video=media-sources";
     public static final String BLOG_IMAGE_MEDIA_SOURCES_KEY = "blog-image-media-sources";
     public static final String BLOG_VIDEO_MEDIA_SOURCES_KEY = "blog-video-media-sources";
+    public static final String POST_IMAGE_MEDIA_SOURCES_KEY = "post-image-media-sources";
+
     /**
      * Key to extract the {@link java.util.ArrayList} of {@link org.wordpress.mediapicker.MediaItem}'s
      * that were selected by the user.
@@ -318,7 +320,7 @@ public class MediaPickerActivity extends ActionBarActivity
         final Intent intent = getIntent();
 
         if (intent != null) {
-            mMediaSources = new ArrayList[4];
+            mMediaSources = new ArrayList[5];
 
             List<MediaSource> mediaSources = intent.getParcelableArrayListExtra(DEVICE_IMAGE_MEDIA_SOURCES_KEY);
             if (mediaSources != null) {
@@ -343,6 +345,13 @@ public class MediaPickerActivity extends ActionBarActivity
                 mMediaSources[3] = new ArrayList<>();
                 mMediaSources[3].addAll(mediaSources);
             }
+
+            mediaSources = intent.getParcelableArrayListExtra(POST_IMAGE_MEDIA_SOURCES_KEY);
+            if (mediaSources != null) {
+                mMediaSources[4] = new ArrayList<>();
+                mMediaSources[4].addAll(mediaSources);
+            }
+
         }
     }
 
@@ -402,6 +411,12 @@ public class MediaPickerActivity extends ActionBarActivity
                         getString(R.string.loading_blog_images),
                         getString(R.string.error_loading_blog_images),
                         getString(R.string.no_blog_images));
+                mMediaPickerAdapter.addTab(mMediaSources[4] != null ? mMediaSources[4] :
+                                new ArrayList<MediaSource>(),
+                        getString(R.string.tab_title_post_images),
+                        getString(R.string.loading_images),
+                        getString(R.string.error_loading_images),
+                        getString(R.string.no_device_images));
             } else {
                 mMediaPickerAdapter.addTab(mMediaSources[0] != null ? mMediaSources[0] :
                                 new ArrayList<MediaSource>(),
