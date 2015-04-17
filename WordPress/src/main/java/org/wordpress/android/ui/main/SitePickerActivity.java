@@ -231,6 +231,7 @@ public class SitePickerActivity extends ActionBarActivity {
             holder.txtTitle.setTextColor(textColor);
             holder.txtDomain.setTextColor(textColor);
             holder.txtTitle.setTypeface(holder.txtTitle.getTypeface(), site.isHidden ? Typeface.NORMAL : Typeface.BOLD);
+            holder.imgBlavatar.setAlpha(site.isHidden ? 0.5f : 1f);
         }
     }
 
