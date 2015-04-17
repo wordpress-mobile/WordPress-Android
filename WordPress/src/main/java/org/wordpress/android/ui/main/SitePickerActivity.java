@@ -2,6 +2,7 @@ package org.wordpress.android.ui.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +31,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -38,12 +41,13 @@ public class SitePickerActivity extends ActionBarActivity {
 
     public static final String KEY_LOCAL_ID = "local_id";
     private static final String KEY_BLOG_ID = "blog_id";
-    public static final String ARG_VISIBLE_ONLY = "visible_blogs_only";
 
     private RecyclerView mRecycler;
     private int mBlavatarSz;
-    private boolean mVisibleBlogsOnly;
     private SiteList mSiteList;
+
+    private int mColorNormal;
+    private int mColorHidden;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,17 +56,14 @@ public class SitePickerActivity extends ActionBarActivity {
         setContentView(R.layout.site_picker_activity);
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
 
-        if (savedInstanceState != null) {
-            mVisibleBlogsOnly = savedInstanceState.getBoolean(ARG_VISIBLE_ONLY);
-        } else {
-            mVisibleBlogsOnly = getIntent().getBooleanExtra(ARG_VISIBLE_ONLY, false);
-        }
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        mColorNormal = getResources().getColor(R.color.grey_dark);
+        mColorHidden = getResources().getColor(R.color.grey);
 
         mRecycler = (RecyclerView) findViewById(R.id.recycler_view);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -83,12 +84,6 @@ public class SitePickerActivity extends ActionBarActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(ARG_VISIBLE_ONLY, mVisibleBlogsOnly);
     }
 
     @Override
@@ -166,18 +161,16 @@ public class SitePickerActivity extends ActionBarActivity {
 
         @Override
         protected SiteList doInBackground(Void... params) {
-            List<Map<String, Object>> blogs;
-            if (mVisibleBlogsOnly) {
-                blogs = WordPress.wpDB.getVisibleDotComBlogs();
-            } else {
-                blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"isHidden"});
-            }
+            // get wp.com blogs
+            List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"isHidden"});
 
-            // include self-hosted, then sort all by name
+            // include self-hosted
             blogs.addAll(WordPress.wpDB.getBlogsBy("dotcomFlag!=1", null));
-            Collections.sort(blogs, BlogUtils.BlogNameComparator);
 
-            return new SiteList(blogs);
+            SiteList sites = new SiteList(blogs);
+            Collections.sort(sites, SiteComparator);
+
+            return sites;
         }
 
         @Override
@@ -233,6 +226,11 @@ public class SitePickerActivity extends ActionBarActivity {
                     onItemSelected(getItem(position));
                 }
             });
+
+            int textColor = (site.isHidden ? mColorHidden : mColorNormal);
+            holder.txtTitle.setTextColor(textColor);
+            holder.txtDomain.setTextColor(textColor);
+            holder.txtTitle.setTypeface(holder.txtTitle.getTypeface(), site.isHidden ? Typeface.NORMAL : Typeface.BOLD);
         }
     }
 
@@ -260,6 +258,7 @@ public class SitePickerActivity extends ActionBarActivity {
         final String hostName;
         final String url;
         final String blavatarUrl;
+        final boolean isHidden;
 
         SiteRecord(Map<String, Object> account) {
             localId = MapUtils.getMapInt(account, "id");
@@ -268,6 +267,14 @@ public class SitePickerActivity extends ActionBarActivity {
             hostName = BlogUtils.getHostNameFromAccountMap(account);
             url = MapUtils.getMapStr(account, "url");
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
+            isHidden = MapUtils.getMapBool(account, "isHidden");
+        }
+
+        String getBlogNameOrHostName() {
+            if (TextUtils.isEmpty(blogName)) {
+                return hostName;
+            }
+            return blogName;
         }
     }
 
@@ -303,4 +310,18 @@ public class SitePickerActivity extends ActionBarActivity {
             return false;
         }
     }
+
+    /*
+     * sorts sites based on their name/host and visibility - hidden blogs are sorted
+     * below visible ones
+     */
+    private static final Comparator<SiteRecord> SiteComparator = new Comparator<SiteRecord>() {
+        public int compare(SiteRecord site1, SiteRecord site2) {
+            if (site1.isHidden != site2.isHidden) {
+                return (site1.isHidden ? 1 : -1);
+            } else {
+                return site1.getBlogNameOrHostName().compareToIgnoreCase(site2.getBlogNameOrHostName());
+            }
+        }
+    };
 }
