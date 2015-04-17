@@ -67,6 +67,20 @@ public class Utils {
     }
 
     /**
+     * Accepts a set of strings, each string being a key-value pair (<code>id=5</code>,
+     * <code>name=content-filed</code>). Returns a map of all the key-value pairs in the set.
+     * @param keyValueSet the set of key-value pair strings
+     */
+    public static Map<String, String> buildMapFromKeyValuePairs(Set<String> keyValueSet) {
+        Map<String, String> selectionArgs = new HashMap<>();
+        for (String pair : keyValueSet) {
+            String[] splitString = pair.split("=");
+            selectionArgs.put(splitString[0], splitString[1]);
+        }
+        return selectionArgs;
+    }
+
+    /**
      * Compares two <code>Sets</code> and returns a <code>Map</code> of elements not contained in both
      * <code>Sets</code>. Elements contained in <code>oldSet</code> but not in <code>newSet</code> will be marked
      * <code>false</code> in the returned map; the converse will be marked <code>true</code>.
