@@ -18,7 +18,7 @@
 
     <Spinner
         android:id="@+id/reader_spinner"
-        android:layout_marginLeft="@dimen/reader_card_spacing"
+        android:layout_marginLeft="@dimen/content_margin"
         style="?android:actionDropDownStyle"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />

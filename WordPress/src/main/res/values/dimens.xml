@@ -37,12 +37,12 @@
     <dimen name="post_editor_content_side_margin">20dp</dimen>
     <dimen name="post_detail_button_size">48dp</dimen>
 
-    <!-- left/right margin for fragments such as Me and My Sites -->
-    <dimen name="fragment_margin_normal">@dimen/margin_medium</dimen>
-    <dimen name="fragment_margin_normal_landscape">48dp</dimen>
-    <dimen name="fragment_margin_tablet">48dp</dimen>
-    <dimen name="fragment_margin_tablet_landscape">96dp</dimen>
-    <dimen name="fragment_margin">@dimen/fragment_margin_normal</dimen>
+    <!-- left/right margin for content such as Me fragment, My Site fragment, reader posts -->
+    <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
+    <dimen name="content_margin_normal_landscape">48dp</dimen>
+    <dimen name="content_margin_tablet">48dp</dimen>
+    <dimen name="content_margin_tablet_landscape">96dp</dimen>
+    <dimen name="content_margin">@dimen/content_margin_normal</dimen>
 
     <!--
         native reader dimens
@@ -59,13 +59,6 @@
     <dimen name="reader_detail_margin_tablet">48dp</dimen>
     <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
-
-    <!-- left/right spacing between posts in the card view -->
-    <dimen name="reader_card_spacing_normal">8dp</dimen>
-    <dimen name="reader_card_spacing_landscape">48dp</dimen>
-    <dimen name="reader_card_spacing_tablet">48dp</dimen>
-    <dimen name="reader_card_spacing_tablet_landscape">96dp</dimen>
-    <dimen name="reader_card_spacing">@dimen/reader_card_spacing_normal</dimen>
 
     <!-- height of divider between cards -->
     <dimen name="reader_card_gutters">8dp</dimen>
@@ -149,7 +142,7 @@
     <dimen name="my_site_blog_name_margin_top">11dp</dimen>
     <dimen name="my_site_list_row_height">48dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
-    <dimen name="my_site_list_row_padding_left">16dp</dimen>
+    <dimen name="my_site_list_row_padding_left">8dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
 
