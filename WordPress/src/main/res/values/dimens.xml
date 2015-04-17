@@ -37,6 +37,13 @@
     <dimen name="post_editor_content_side_margin">20dp</dimen>
     <dimen name="post_detail_button_size">48dp</dimen>
 
+    <!-- left/right margin for fragments such as Me and My Sites -->
+    <dimen name="fragment_margin_normal">@dimen/margin_medium</dimen>
+    <dimen name="fragment_margin_normal_landscape">48dp</dimen>
+    <dimen name="fragment_margin_tablet">48dp</dimen>
+    <dimen name="fragment_margin_tablet_landscape">96dp</dimen>
+    <dimen name="fragment_margin">@dimen/fragment_margin_normal</dimen>
+
     <!--
         native reader dimens
     -->
