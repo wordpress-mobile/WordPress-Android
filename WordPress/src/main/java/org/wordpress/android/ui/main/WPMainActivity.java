@@ -312,6 +312,13 @@ public class WPMainActivity extends Activity
         if (mIsCheckingNoteBadge) {
             AppLog.v(AppLog.T.NOTIFS, "already checking note badge");
             return;
+        } else if (isViewingNotificationsTab()) {
+            // Don't show the badge if the notifications tab is active
+            if (mTabs.isBadged(WPMainTabAdapter.TAB_NOTIFS)) {
+                mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, false);
+            }
+
+            return;
         }
 
         mIsCheckingNoteBadge = true;
@@ -333,6 +340,10 @@ public class WPMainActivity extends Activity
                 }
             }
         }.start();
+    }
+
+    private boolean isViewingNotificationsTab() {
+        return mViewPager.getCurrentItem() == WPMainTabAdapter.TAB_NOTIFS;
     }
 
     // Events
