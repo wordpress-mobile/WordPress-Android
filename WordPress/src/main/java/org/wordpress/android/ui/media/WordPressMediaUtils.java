@@ -123,7 +123,7 @@ public class WordPressMediaUtils {
         } else if (MediaUtils.isSpreadsheet(url)) {
             return R.drawable.media_spreadsheet;
         } else if (MediaUtils.isVideo(url)) {
-            return R.drawable.media_movieclip;
+            return org.wordpress.android.editor.R.drawable.media_movieclip;
         }
         return 0;
     }

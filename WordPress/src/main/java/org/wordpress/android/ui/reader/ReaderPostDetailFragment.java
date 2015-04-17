@@ -228,18 +228,18 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_browse:
-                if (hasPost()) {
-                    ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
-                }
-                return true;
-            case R.id.menu_share:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.SHARED_ITEM);
-                sharePage();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == R.id.menu_browse) {
+            if (hasPost()) {
+                ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
+            }
+            return true;
+        } else if (i == R.id.menu_share) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SHARED_ITEM);
+            sharePage();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

@@ -805,7 +805,7 @@ class HtmlToSpannedConverter implements ContentHandler {
             resizedBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(ctx, src, mMaxImageWidth);
             if (resizedBitmap == null && src != null) {
                 if (src.contains("video")) {
-                    resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_movieclip);
+                    resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), org.wordpress.android.editor.R.drawable.media_movieclip);
                 } else {
                     resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_image_placeholder);
                 }
