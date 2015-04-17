@@ -31,6 +31,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -46,6 +47,13 @@ public class GCMIntentService extends GCMBaseIntentService {
     private static String mPreviousNoteId = null;
     private static long mPreviousNoteTime = 0L;
     private static final int mMaxInboxItems = 5;
+
+    private static final String NOTE_TYPE_COMMENT = "c";
+    private static final String NOTE_TYPE_LIKE = "like";
+    private static final String NOTE_TYPE_COMMENT_LIKE = "comment_like";
+    private static final String NOTE_TYPE_AUTOMATTCHER = "automattcher";
+    private static final String NOTE_TYPE_FOLLOW = "follow";
+    private static final String NOTE_TYPE_REBLOG = "reblog";
 
     @Override
     protected String[] getSenderIds(Context context) {
@@ -115,6 +123,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         }
 
         String iconUrl = extras.getString("icon");
+        String noteType = StringUtils.notNullStr(extras.getString("type"));
         Bitmap largeIconBitmap = null;
         if (iconUrl != null) {
             try {
@@ -123,6 +132,9 @@ public class GCMIntentService extends GCMBaseIntentService {
                         android.R.dimen.notification_large_icon_height);
                 String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
                 largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
+                if (largeIconBitmap != null && shouldCircularizeNoteIcon(noteType)) {
+                    largeIconBitmap = ImageUtils.getCircularBitmap(largeIconBitmap);
+                }
             } catch (UnsupportedEncodingException e) {
                 AppLog.e(T.NOTIFS, e);
             }
@@ -158,8 +170,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
 
             // Add some actions if this is a comment notification
-            String noteType = extras.getString("type");
-            if (noteType != null && noteType.equals("c")) {
+            if (noteType.equals(NOTE_TYPE_COMMENT)) {
                 Intent commentReplyIntent = new Intent(this, NotificationsActivity.class);
                 commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -188,7 +199,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                     break;
                 if (wpPN.getString("msg") == null)
                     continue;
-                if (wpPN.getString("type") != null && wpPN.getString("type").equals("c")) {
+                if (wpPN.getString("type") != null && wpPN.getString("type").equals(NOTE_TYPE_COMMENT)) {
                     String pnTitle = StringEscapeUtils.unescapeHtml((wpPN.getString("title")));
                     String pnMessage = StringEscapeUtils.unescapeHtml((wpPN.getString("msg")));
                     inboxStyle.addLine(pnTitle + ": " + pnMessage);
@@ -232,12 +243,32 @@ public class GCMIntentService extends GCMBaseIntentService {
             mBuilder.setLights(0xff0000ff, 1000, 5000);
         }
 
+        mBuilder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
+
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(PUSH_NOTIFICATION_ID, mBuilder.build());
+    }
+
+    // Returns true if the note type is known to have a gravatar
+    public boolean shouldCircularizeNoteIcon(String noteType) {
+        if (TextUtils.isEmpty(noteType)) return false;
+
+        switch (noteType) {
+            case NOTE_TYPE_COMMENT:
+            case NOTE_TYPE_LIKE:
+            case NOTE_TYPE_COMMENT_LIKE:
+            case NOTE_TYPE_AUTOMATTCHER:
+            case NOTE_TYPE_FOLLOW:
+            case NOTE_TYPE_REBLOG:
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override
@@ -288,7 +319,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 uuid = UUID.randomUUID().toString();
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid);
-                editor.commit();
+                editor.apply();
             }
 
             NotificationsUtils.registerDeviceForPushNotifications(context, regId);
