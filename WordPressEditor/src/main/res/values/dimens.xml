@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="format_bar_height">40dp</dimen>
-    <dimen name="format_bar_button_underline_top">37dp</dimen>
-    <dimen name="format_bar_button_underline_width">2dp</dimen>
+
+    <dimen name="format_bar_button_highlighted_underline_top">37dp</dimen>
+    <dimen name="format_bar_button_highlighted_underline_width">2dp</dimen>
+
     <dimen name="post_editor_content_side_margin">20dp</dimen>
-
-
     <dimen name="margin_extra_small">2dp</dimen>
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
