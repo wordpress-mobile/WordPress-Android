@@ -1,22 +1,18 @@
 package org.wordpress.android.ui.main;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -27,7 +23,6 @@ import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,11 +38,10 @@ public class SitePickerActivity extends ActionBarActivity {
     private static final String KEY_BLOG_ID = "blog_id";
 
     private RecyclerView mRecycler;
-    private int mBlavatarSz;
-    private SiteList mSiteList;
+    private static int mBlavatarSz;
 
-    private int mColorNormal;
-    private int mColorHidden;
+    private SitePickerAdapter mSiteAdapter;
+    private ActionMode mActionMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,9 +55,6 @@ public class SitePickerActivity extends ActionBarActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        mColorNormal = getResources().getColor(R.color.grey_dark);
-        mColorHidden = getResources().getColor(R.color.grey);
 
         mRecycler = (RecyclerView) findViewById(R.id.recycler_view);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -142,6 +133,39 @@ public class SitePickerActivity extends ActionBarActivity {
         }
     }
 
+    private boolean hasAdapter() {
+        return mSiteAdapter != null;
+    }
+
+    private SitePickerAdapter newAdapter(SiteList sites) {
+        mSiteAdapter = new SitePickerAdapter(this, sites);
+        mSiteAdapter.setOnSelectedItemsChangeListener(new SitePickerAdapter.OnSelectedItemsChangeListener() {
+            @Override
+            public void onSelectedItemsChanged() {
+                if (mActionMode != null) {
+                    if (mSiteAdapter.getSelectionCount() == 0) {
+                        mActionMode.finish();
+                    } else {
+                        updateActionModeTitle();
+                        mActionMode.invalidate();
+                    }
+                }
+            }
+        });
+        return mSiteAdapter;
+    }
+
+    private void updateActionModeTitle() {
+        if (mActionMode == null || !hasAdapter()) return;
+
+        int numSelected = mSiteAdapter.getSelectionCount();
+        if (numSelected > 0) {
+            mActionMode.setTitle(Integer.toString(numSelected));
+        } else {
+            mActionMode.setTitle("");
+        }
+    }
+
     /*
      * AsyncTask which loads site data from local db and populates the site list
      */
@@ -175,90 +199,18 @@ public class SitePickerActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(SiteList sites) {
-            if (mSiteList == null || !mSiteList.isSameList(sites)) {
-                mSiteList = sites;
-                mRecycler.setAdapter(new SiteAdapter(SitePickerActivity.this, mSiteList));
+            if (!hasAdapter() || !mSiteAdapter.isSameList(sites)) {
+                mRecycler.setAdapter(newAdapter(sites));
             }
             mIsTaskRunning = false;
         }
     }
 
-    class SiteAdapter extends RecyclerView.Adapter<SiteViewHolder> {
-        private final SiteList mSites;
-        private final LayoutInflater mInflater;
-
-        public SiteAdapter(Context context, @NonNull SiteList sites) {
-            super();
-            setHasStableIds(true);
-            mInflater = LayoutInflater.from(context);
-            mSites = sites;
-        }
-
-        @Override
-        public int getItemCount() {
-            return mSites.size();
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return getItem(position).localId;
-        }
-
-        SiteRecord getItem(int position) {
-            return mSites.get(position);
-        }
-
-        @Override
-        public SiteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = mInflater.inflate(R.layout.site_picker_listitem, parent, false);
-            return new SiteViewHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(SiteViewHolder holder, final int position) {
-            SiteRecord site = getItem(position);
-            holder.txtTitle.setText(site.blogName);
-            holder.txtDomain.setText(site.hostName);
-            holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onItemSelected(getItem(position));
-                }
-            });
-
-            // different styling for visible/hidden sites
-            if (holder.isSiteHidden == null || holder.isSiteHidden != site.isHidden) {
-                holder.isSiteHidden = site.isHidden;
-                int textColor = (site.isHidden ? mColorHidden : mColorNormal);
-                holder.txtTitle.setTextColor(textColor);
-                holder.txtDomain.setTextColor(textColor);
-                holder.txtTitle.setTypeface(holder.txtTitle.getTypeface(), site.isHidden ? Typeface.NORMAL : Typeface.BOLD);
-                holder.imgBlavatar.setAlpha(site.isHidden ? 0.5f : 1f);
-            }
-        }
-    }
-
-    static class SiteViewHolder extends RecyclerView.ViewHolder {
-        private final TextView txtTitle;
-        private final TextView txtDomain;
-        private final WPNetworkImageView imgBlavatar;
-        private Boolean isSiteHidden;
-
-        public SiteViewHolder(View view) {
-            super(view);
-            txtTitle = (TextView) view.findViewById(R.id.text_title);
-            txtDomain = (TextView) view.findViewById(R.id.text_domain);
-            imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
-            isSiteHidden = null;
-        }
-    }
 
     /**
-     * SiteRecord is a simplified version of the full account record optimized for use
-     * with the above site adapter
+     * SiteRecord is a simplified version of the full account record
      */
-    class SiteRecord {
+    static class SiteRecord {
         final int localId;
         final String blogId;
         final String blogName;
@@ -285,7 +237,8 @@ public class SitePickerActivity extends ActionBarActivity {
         }
     }
 
-    class SiteList extends ArrayList<SiteRecord> {
+    static class SiteList extends ArrayList<SiteRecord> {
+        SiteList() { }
         SiteList(List<Map<String, Object>> accounts) {
             if (accounts != null) {
                 for (Map<String, Object> account : accounts) {
