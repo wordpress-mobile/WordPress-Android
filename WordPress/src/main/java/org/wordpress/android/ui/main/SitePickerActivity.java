@@ -3,13 +3,13 @@ package org.wordpress.android.ui.main;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -32,7 +32,10 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-public class SitePickerActivity extends ActionBarActivity {
+public class SitePickerActivity extends ActionBarActivity
+        implements SitePickerAdapter.OnSiteClickListener,
+                   SitePickerAdapter.OnSiteLongClickListener,
+                   SitePickerAdapter.OnSelectionCountChangeListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
     private static final String KEY_BLOG_ID = "blog_id";
@@ -88,14 +91,6 @@ public class SitePickerActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void onItemSelected(@NonNull SiteRecord site) {
-        Intent data = new Intent();
-        data.putExtra(KEY_LOCAL_ID, site.localId);
-        data.putExtra(KEY_BLOG_ID, site.blogId);
-        setResult(RESULT_OK, data);
-        finish();
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -139,30 +134,51 @@ public class SitePickerActivity extends ActionBarActivity {
 
     private SitePickerAdapter newAdapter(SiteList sites) {
         mSiteAdapter = new SitePickerAdapter(this, sites);
-        mSiteAdapter.setOnSelectedItemsChangeListener(new SitePickerAdapter.OnSelectedItemsChangeListener() {
-            @Override
-            public void onSelectedItemsChanged() {
-                if (mActionMode != null) {
-                    if (mSiteAdapter.getSelectionCount() == 0) {
-                        mActionMode.finish();
-                    } else {
-                        updateActionModeTitle();
-                        mActionMode.invalidate();
-                    }
-                }
-            }
-        });
+        mSiteAdapter.setOnSiteClickListener(this);
+        mSiteAdapter.setOnSiteLongClickListener(this);
+        mSiteAdapter.setOnSelectionCountChangeListener(this);
         return mSiteAdapter;
     }
 
-    private void updateActionModeTitle() {
-        if (mActionMode == null || !hasAdapter()) return;
+    @Override
+    public void onSelectedCountChanged(int numSelected) {
+        if (mActionMode != null) {
+            if (numSelected == 0) {
+                mActionMode.finish();
+            } else {
+                updateActionModeTitle();
+                mActionMode.invalidate();
+            }
+        }
+    }
 
-        int numSelected = mSiteAdapter.getSelectionCount();
-        if (numSelected > 0) {
-            mActionMode.setTitle(Integer.toString(numSelected));
-        } else {
-            mActionMode.setTitle("");
+    @Override
+    public void onSiteClick(SiteRecord site) {
+        if (mActionMode == null) {
+            Intent data = new Intent();
+            data.putExtra(KEY_LOCAL_ID, site.localId);
+            data.putExtra(KEY_BLOG_ID, site.blogId);
+            setResult(RESULT_OK, data);
+            finish();
+        }
+    }
+
+    @Override
+    public void onSiteLongClick(SiteRecord site) {
+        if (mActionMode == null) {
+            startSupportActionMode(new ActionModeCallback());
+            updateActionModeTitle();
+        }
+    }
+
+    private void updateActionModeTitle() {
+        if (mActionMode != null && hasAdapter()) {
+            int numSelected = mSiteAdapter.getSelectionCount();
+            if (numSelected > 0) {
+                mActionMode.setTitle(Integer.toString(numSelected));
+            } else {
+                mActionMode.setTitle("");
+            }
         }
     }
 
@@ -284,4 +300,33 @@ public class SitePickerActivity extends ActionBarActivity {
             }
         }
     };
+
+    private final class ActionModeCallback implements ActionMode.Callback {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            mActionMode = actionMode;
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            int numSelected = mSiteAdapter.getSelectionCount();
+            if (numSelected == 0) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode) {
+            mSiteAdapter.setEnableSelection(false);
+            mActionMode = null;
+        }
+    }
 }

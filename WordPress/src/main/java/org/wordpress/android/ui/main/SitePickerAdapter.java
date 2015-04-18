@@ -2,6 +2,8 @@ package org.wordpress.android.ui.main;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,26 +18,31 @@ import java.util.HashSet;
 
 class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewHolder> {
 
-    interface OnSiteSelectedListener {
-        void onSiteSelected(SitePickerActivity.SiteRecord site);
+    interface OnSiteClickListener {
+        void onSiteClick(SitePickerActivity.SiteRecord site);
+    }
+    interface OnSiteLongClickListener {
+        void onSiteLongClick(SitePickerActivity.SiteRecord site);
+    }
+    interface OnSelectionCountChangeListener {
+        void onSelectedCountChanged(int numSelected);
     }
 
-    interface OnSelectedItemsChangeListener {
-        void onSelectedItemsChanged();
-    }
-
-    private final int mColorNormal;
-    private final int mColorHidden;
+    private final int mTextColorNormal;
+    private final int mTextColorHidden;
+    private final Drawable mSelectedItemBackground;
 
     private final SitePickerActivity.SiteList mSites;
     private final LayoutInflater mInflater;
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
     private boolean mEnableSelection;
 
-    private OnSiteSelectedListener mSiteSelectedListener;
-    private OnSelectedItemsChangeListener mSelectionListener;
+    private OnSiteClickListener mSiteSelectedListener;
+    private OnSiteLongClickListener mSiteLongPressListener;
+    private OnSelectionCountChangeListener mSelectionListener;
 
     static class SiteViewHolder extends RecyclerView.ViewHolder {
+        private final ViewGroup layoutContainer;
         private final TextView txtTitle;
         private final TextView txtDomain;
         private final WPNetworkImageView imgBlavatar;
@@ -43,6 +50,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         public SiteViewHolder(View view) {
             super(view);
+            layoutContainer = (ViewGroup) view.findViewById(R.id.layout_container);
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtDomain = (TextView) view.findViewById(R.id.text_domain);
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
@@ -55,9 +63,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         setHasStableIds(true);
         mInflater = LayoutInflater.from(context);
         mSites = sites;
-        mColorNormal = context.getResources().getColor(R.color.grey_dark);
-        mColorHidden = context.getResources().getColor(R.color.grey);
-
+        mTextColorNormal = context.getResources().getColor(R.color.grey_dark);
+        mTextColorHidden = context.getResources().getColor(R.color.grey);
+        mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_10));
     }
 
     @Override
@@ -74,12 +82,16 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return mSites.get(position);
     }
 
-    void setOnSelectedItemsChangeListener(OnSelectedItemsChangeListener listener) {
+    void setOnSelectionCountChangeListener(OnSelectionCountChangeListener listener) {
         mSelectionListener = listener;
     }
 
-    void setOnSiteSelectedListener(OnSiteSelectedListener listener) {
+    void setOnSiteClickListener(OnSiteClickListener listener) {
         mSiteSelectedListener = listener;
+    }
+
+    void setOnSiteLongClickListener(OnSiteLongClickListener listener) {
+        mSiteLongPressListener = listener;
     }
 
     boolean isSameList(SitePickerActivity.SiteList sites) {
@@ -98,21 +110,41 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         holder.txtTitle.setText(site.blogName);
         holder.txtDomain.setText(site.hostName);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mSiteSelectedListener != null) {
-                    mSiteSelectedListener.onSiteSelected(getItem(position));
+                    mSiteSelectedListener.onSiteClick(getItem(position));
+                }
+                if (mEnableSelection) {
+                    toggleSelection(position);
                 }
             }
         });
 
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mSiteLongPressListener != null) {
+                    mSiteLongPressListener.onSiteLongClick(getItem(position));
+                }
+                if (!mEnableSelection) {
+                    setEnableSelection(true);
+                    setItemSelected(position, true);
+                }
+                return true;
+            }
+        });
+
+        boolean isSelected = mEnableSelection && isItemSelected(position);
+        holder.layoutContainer.setBackgroundDrawable(isSelected ? mSelectedItemBackground : null);
+
         // different styling for visible/hidden sites
         if (holder.isSiteHidden == null || holder.isSiteHidden != site.isHidden) {
             holder.isSiteHidden = site.isHidden;
-            int textColor = (site.isHidden ? mColorHidden : mColorNormal);
-            holder.txtTitle.setTextColor(textColor);
-            holder.txtDomain.setTextColor(textColor);
+            holder.txtTitle.setTextColor(site.isHidden ? mTextColorHidden : mTextColorNormal);
+            holder.txtDomain.setTextColor(site.isHidden ? mTextColorHidden : mTextColorNormal);
             holder.txtTitle.setTypeface(holder.txtTitle.getTypeface(), site.isHidden ? Typeface.NORMAL : Typeface.BOLD);
             holder.imgBlavatar.setAlpha(site.isHidden ? 0.5f : 1f);
         }
@@ -139,7 +171,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             mSelectedPositions.clear();
             notifyDataSetChanged();
             if (mSelectionListener != null)
-                mSelectionListener.onSelectedItemsChanged();
+                mSelectionListener.onSelectedCountChanged(getSelectionCount());
         }
     }
 
@@ -147,10 +179,37 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return mSelectedPositions.size();
     }
 
+    void toggleSelection(int position) {
+        setItemSelected(position, !isItemSelected(position));
+    }
+
+    private boolean isItemSelected(int position) {
+        return mSelectedPositions.contains(position);
+    }
+
+    void setItemSelected(int position, boolean isSelected) {
+        if (isItemSelected(position) == isSelected) {
+            return;
+        }
+
+        if (isSelected) {
+            mSelectedPositions.add(position);
+        } else {
+            mSelectedPositions.remove(position);
+        }
+
+        notifyItemChanged(position);
+
+        if (mSelectionListener != null) {
+            mSelectionListener.onSelectedCountChanged(getSelectionCount());
+        }
+    }
+
     SitePickerActivity.SiteList getSelectedSites() {
         SitePickerActivity.SiteList sites = new SitePickerActivity.SiteList();
-        if (!mEnableSelection)
+        if (!mEnableSelection) {
             return sites;
+        }
 
         for (Integer position : mSelectedPositions) {
             if (isValidPosition(position))
