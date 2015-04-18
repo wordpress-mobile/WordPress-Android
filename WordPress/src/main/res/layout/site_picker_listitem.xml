@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:background="?android:selectableItemBackground">
 
     <RelativeLayout
@@ -43,4 +44,19 @@
             tools:text="text_domain" />
     </RelativeLayout>
 
-</FrameLayout>
+    <org.wordpress.android.widgets.WPTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_footer"
+        android:background="@color/grey_darken_10"
+        android:textColor="@color/grey_lighten_30"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_small"
+        android:paddingBottom="@dimen/margin_small"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_sz_small"
+        android:text="@string/site_picker_hidden_sites"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</LinearLayout>

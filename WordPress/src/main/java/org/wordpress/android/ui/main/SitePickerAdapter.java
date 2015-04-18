@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,19 +12,25 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.main.SitePickerActivity.SiteRecord;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewHolder> {
 
     interface OnSiteClickListener {
-        void onSiteClick(SitePickerActivity.SiteRecord site);
+        void onSiteClick(SiteRecord site);
     }
-    interface OnSiteLongClickListener {
-        void onSiteLongClick(SitePickerActivity.SiteRecord site);
-    }
-    interface OnSelectionCountChangeListener {
+
+    interface OnMultiSelectListener {
+        void onMultiSelectEnabled();
         void onSelectedCountChanged(int numSelected);
     }
 
@@ -32,17 +38,19 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private final int mTextColorHidden;
     private final Drawable mSelectedItemBackground;
 
-    private final SitePickerActivity.SiteList mSites;
+    private SiteList mSites = new SiteList();
     private final LayoutInflater mInflater;
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
-    private boolean mEnableSelection;
+
+    private boolean mIsMultiSelectEnabled;
+    private boolean mShowHiddenSites = true;
 
     private OnSiteClickListener mSiteSelectedListener;
-    private OnSiteLongClickListener mSiteLongPressListener;
-    private OnSelectionCountChangeListener mSelectionListener;
+    private OnMultiSelectListener mMultiSelectListener;
 
     static class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup layoutContainer;
+        private final TextView txtFooter;
         private final TextView txtTitle;
         private final TextView txtDomain;
         private final WPNetworkImageView imgBlavatar;
@@ -51,6 +59,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         public SiteViewHolder(View view) {
             super(view);
             layoutContainer = (ViewGroup) view.findViewById(R.id.layout_container);
+            txtFooter = (TextView) view.findViewById(R.id.text_footer);
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtDomain = (TextView) view.findViewById(R.id.text_domain);
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
@@ -58,14 +67,14 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    public SitePickerAdapter(Context context, @NonNull SitePickerActivity.SiteList sites) {
+    public SitePickerAdapter(Context context) {
         super();
         setHasStableIds(true);
         mInflater = LayoutInflater.from(context);
-        mSites = sites;
         mTextColorNormal = context.getResources().getColor(R.color.grey_dark);
         mTextColorHidden = context.getResources().getColor(R.color.grey);
         mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_10));
+        loadSites();
     }
 
     @Override
@@ -82,20 +91,12 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return mSites.get(position);
     }
 
-    void setOnSelectionCountChangeListener(OnSelectionCountChangeListener listener) {
-        mSelectionListener = listener;
+    void setOnMultiSelectedListener(OnMultiSelectListener listener) {
+        mMultiSelectListener = listener;
     }
 
     void setOnSiteClickListener(OnSiteClickListener listener) {
         mSiteSelectedListener = listener;
-    }
-
-    void setOnSiteLongClickListener(OnSiteLongClickListener listener) {
-        mSiteLongPressListener = listener;
-    }
-
-    boolean isSameList(SitePickerActivity.SiteList sites) {
-        return (mSites != null && mSites.isSameList(sites));
     }
 
     @Override
@@ -107,6 +108,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     @Override
     public void onBindViewHolder(SiteViewHolder holder, final int position) {
         SitePickerActivity.SiteRecord site = getItem(position);
+
         holder.txtTitle.setText(site.blogName);
         holder.txtDomain.setText(site.hostName);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
@@ -117,7 +119,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                 if (mSiteSelectedListener != null) {
                     mSiteSelectedListener.onSiteClick(getItem(position));
                 }
-                if (mEnableSelection) {
+                if (mIsMultiSelectEnabled) {
                     toggleSelection(position);
                 }
             }
@@ -126,19 +128,34 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (mSiteLongPressListener != null) {
-                    mSiteLongPressListener.onSiteLongClick(getItem(position));
-                }
-                if (!mEnableSelection) {
-                    setEnableSelection(true);
+                if (!mIsMultiSelectEnabled) {
+                    if (mMultiSelectListener != null) {
+                        mMultiSelectListener.onMultiSelectEnabled();
+                    }
+                    setEnableMultiSelect(true);
                     setItemSelected(position, true);
                 }
                 return true;
             }
         });
 
-        boolean isSelected = mEnableSelection && isItemSelected(position);
+        boolean isSelected = mIsMultiSelectEnabled && isItemSelected(position);
         holder.layoutContainer.setBackgroundDrawable(isSelected ? mSelectedItemBackground : null);
+
+        // footer only appears to separate visible/hidden sites
+        boolean showFooter = mShowHiddenSites
+                && !site.isHidden
+                && isValidPosition(position + 1)
+                && mSites.get(position + 1).isHidden;
+        holder.txtFooter.setVisibility(showFooter ? View.VISIBLE : View.GONE);
+        if (showFooter) {
+            holder.txtFooter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // noop - eat the click so the user can't tap footer to select a site
+                }
+            });
+        }
 
         // different styling for visible/hidden sites
         if (holder.isSiteHidden == null || holder.isSiteHidden != site.isHidden) {
@@ -154,12 +171,11 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return (position >= 0 && position < mSites.size());
     }
 
+    void setEnableMultiSelect(boolean enable) {
+        if (enable == mIsMultiSelectEnabled) return;
 
-    void setEnableSelection(boolean enable) {
-        if (enable == mEnableSelection) return;
-
-        mEnableSelection = enable;
-        if (mEnableSelection) {
+        mIsMultiSelectEnabled = enable;
+        if (mIsMultiSelectEnabled) {
             notifyDataSetChanged();
         } else {
             clearSelection();
@@ -170,8 +186,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         if (mSelectedPositions.size() > 0) {
             mSelectedPositions.clear();
             notifyDataSetChanged();
-            if (mSelectionListener != null)
-                mSelectionListener.onSelectedCountChanged(getSelectionCount());
+            if (mMultiSelectListener != null) {
+                mMultiSelectListener.onSelectedCountChanged(getSelectionCount());
+            }
         }
     }
 
@@ -179,7 +196,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return mSelectedPositions.size();
     }
 
-    void toggleSelection(int position) {
+    private void toggleSelection(int position) {
         setItemSelected(position, !isItemSelected(position));
     }
 
@@ -187,7 +204,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return mSelectedPositions.contains(position);
     }
 
-    void setItemSelected(int position, boolean isSelected) {
+    private void setItemSelected(int position, boolean isSelected) {
         if (isItemSelected(position) == isSelected) {
             return;
         }
@@ -200,14 +217,14 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         notifyItemChanged(position);
 
-        if (mSelectionListener != null) {
-            mSelectionListener.onSelectedCountChanged(getSelectionCount());
+        if (mMultiSelectListener != null) {
+            mMultiSelectListener.onSelectedCountChanged(getSelectionCount());
         }
     }
 
-    SitePickerActivity.SiteList getSelectedSites() {
-        SitePickerActivity.SiteList sites = new SitePickerActivity.SiteList();
-        if (!mEnableSelection) {
+    SiteList getSelectedSites() {
+        SiteList sites = new SiteList();
+        if (!mIsMultiSelectEnabled) {
             return sites;
         }
 
@@ -218,4 +235,105 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         return sites;
     }
+
+    void loadSites() {
+        if (!mIsTaskRunning) {
+            new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    /*
+     * AsyncTasks which loads sites from database and populates the adapter
+     */
+    private boolean mIsTaskRunning;
+    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mIsTaskRunning = true;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mIsTaskRunning = false;
+        }
+
+        @Override
+        protected SiteList doInBackground(Void... params) {
+            // get wp.com blogs
+            List<Map<String, Object>> blogs;
+            if (mShowHiddenSites) {
+                blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"isHidden"});
+            } else {
+                blogs = WordPress.wpDB.getVisibleDotComBlogs();
+            }
+
+            // include self-hosted
+            blogs.addAll(WordPress.wpDB.getBlogsBy("dotcomFlag!=1", null));
+
+            SiteList sites = new SiteList(blogs);
+            Collections.sort(sites, SiteComparator);
+
+            return sites;
+        }
+
+        @Override
+        protected void onPostExecute(SiteList sites) {
+            if (mSites == null || !mSites.isSameList(sites)) {
+                mSites = sites;
+                notifyDataSetChanged();
+            }
+            mIsTaskRunning = false;
+        }
+    }
+
+    static class SiteList extends ArrayList<SiteRecord> {
+        SiteList() { }
+        SiteList(List<Map<String, Object>> accounts) {
+            if (accounts != null) {
+                for (Map<String, Object> account : accounts) {
+                    add(new SiteRecord(account));
+                }
+            }
+        }
+
+        boolean isSameList(SiteList sites) {
+            if (sites == null || sites.size() != this.size()) {
+                return false;
+            }
+            for (SiteRecord site: sites) {
+                if (!this.containsSite(site)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        boolean containsSite(SiteRecord site) {
+            if (site != null && site.blogId != null) {
+                for (SiteRecord thisSite : this) {
+                    if (site.blogId.equals(thisSite.blogId)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+    /*
+     * sorts sites based on their name/host and visibility - hidden blogs are sorted
+     * below visible ones
+     */
+    private static final Comparator<SiteRecord> SiteComparator = new Comparator<SiteRecord>() {
+        public int compare(SiteRecord site1, SiteRecord site2) {
+            if (site1.isHidden != site2.isHidden) {
+                return (site1.isHidden ? 1 : -1);
+            } else {
+                return site1.getBlogNameOrHostName().compareToIgnoreCase(site2.getBlogNameOrHostName());
+            }
+        }
+    };
 }

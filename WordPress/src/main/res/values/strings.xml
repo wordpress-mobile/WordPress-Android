@@ -912,6 +912,7 @@
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_btn_add_site">Add a site</string>
+    <string name="site_picker_hidden_sites">Hidden sites</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>

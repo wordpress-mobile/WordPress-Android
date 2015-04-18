@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.main;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.util.BlogUtils;
@@ -24,18 +22,13 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
 public class SitePickerActivity extends ActionBarActivity
         implements SitePickerAdapter.OnSiteClickListener,
-                   SitePickerAdapter.OnSiteLongClickListener,
-                   SitePickerAdapter.OnSelectionCountChangeListener {
+                   SitePickerAdapter.OnMultiSelectListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
     private static final String KEY_BLOG_ID = "blog_id";
@@ -43,7 +36,7 @@ public class SitePickerActivity extends ActionBarActivity
     private RecyclerView mRecycler;
     private static int mBlavatarSz;
 
-    private SitePickerAdapter mSiteAdapter;
+    private SitePickerAdapter mAdapter;
     private ActionMode mActionMode;
 
     @Override
@@ -71,7 +64,7 @@ public class SitePickerActivity extends ActionBarActivity
             }
         });
 
-        loadSites();
+        mRecycler.setAdapter(getAdapter());
     }
 
     @Override
@@ -97,7 +90,7 @@ public class SitePickerActivity extends ActionBarActivity
         switch (requestCode) {
             case SignInActivity.CREATE_ACCOUNT_REQUEST:
                 if (resultCode != RESULT_CANCELED) {
-                    loadSites();
+                    getAdapter().loadSites();
                 }
                 break;
         }
@@ -118,26 +111,29 @@ public class SitePickerActivity extends ActionBarActivity
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.BlogListChanged event) {
         if (!isFinishing()) {
-            loadSites();
-        }
-    }
-
-    private void loadSites() {
-        if (!mIsTaskRunning) {
-            new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            getAdapter().loadSites();
         }
     }
 
     private boolean hasAdapter() {
-        return mSiteAdapter != null;
+        return mAdapter != null;
     }
 
-    private SitePickerAdapter newAdapter(SiteList sites) {
-        mSiteAdapter = new SitePickerAdapter(this, sites);
-        mSiteAdapter.setOnSiteClickListener(this);
-        mSiteAdapter.setOnSiteLongClickListener(this);
-        mSiteAdapter.setOnSelectionCountChangeListener(this);
-        return mSiteAdapter;
+    private SitePickerAdapter getAdapter() {
+        if (mAdapter == null) {
+            mAdapter = new SitePickerAdapter(this);
+            mAdapter.setOnSiteClickListener(this);
+            mAdapter.setOnMultiSelectedListener(this);
+        }
+        return mAdapter;
+    }
+
+    @Override
+    public void onMultiSelectEnabled() {
+        if (mActionMode == null) {
+            startSupportActionMode(new ActionModeCallback());
+            updateActionModeTitle();
+        }
     }
 
     @Override
@@ -163,17 +159,9 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    public void onSiteLongClick(SiteRecord site) {
-        if (mActionMode == null) {
-            startSupportActionMode(new ActionModeCallback());
-            updateActionModeTitle();
-        }
-    }
-
     private void updateActionModeTitle() {
         if (mActionMode != null && hasAdapter()) {
-            int numSelected = mSiteAdapter.getSelectionCount();
+            int numSelected = getAdapter().getSelectionCount();
             if (numSelected > 0) {
                 mActionMode.setTitle(Integer.toString(numSelected));
             } else {
@@ -182,49 +170,8 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
-    /*
-     * AsyncTask which loads site data from local db and populates the site list
-     */
-    private boolean mIsTaskRunning;
-    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mIsTaskRunning = true;
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            mIsTaskRunning = false;
-        }
-
-        @Override
-        protected SiteList doInBackground(Void... params) {
-            // get wp.com blogs
-            List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"isHidden"});
-
-            // include self-hosted
-            blogs.addAll(WordPress.wpDB.getBlogsBy("dotcomFlag!=1", null));
-
-            SiteList sites = new SiteList(blogs);
-            Collections.sort(sites, SiteComparator);
-
-            return sites;
-        }
-
-        @Override
-        protected void onPostExecute(SiteList sites) {
-            if (!hasAdapter() || !mSiteAdapter.isSameList(sites)) {
-                mRecycler.setAdapter(newAdapter(sites));
-            }
-            mIsTaskRunning = false;
-        }
-    }
-
-
     /**
-     * SiteRecord is a simplified version of the full account record
+     * SiteRecord is a simplified version of the full account (blog) record
      */
     static class SiteRecord {
         final int localId;
@@ -253,54 +200,6 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
-    static class SiteList extends ArrayList<SiteRecord> {
-        SiteList() { }
-        SiteList(List<Map<String, Object>> accounts) {
-            if (accounts != null) {
-                for (Map<String, Object> account : accounts) {
-                    add(new SiteRecord(account));
-                }
-            }
-        }
-
-        boolean isSameList(SiteList sites) {
-            if (sites == null || sites.size() != this.size()) {
-                return false;
-            }
-            for (SiteRecord site: sites) {
-                if (!this.containsSite(site)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        boolean containsSite(SiteRecord site) {
-            if (site != null && site.blogId != null) {
-                for (SiteRecord thisSite : this) {
-                    if (site.blogId.equals(thisSite.blogId)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-    }
-
-    /*
-     * sorts sites based on their name/host and visibility - hidden blogs are sorted
-     * below visible ones
-     */
-    private static final Comparator<SiteRecord> SiteComparator = new Comparator<SiteRecord>() {
-        public int compare(SiteRecord site1, SiteRecord site2) {
-            if (site1.isHidden != site2.isHidden) {
-                return (site1.isHidden ? 1 : -1);
-            } else {
-                return site1.getBlogNameOrHostName().compareToIgnoreCase(site2.getBlogNameOrHostName());
-            }
-        }
-    };
-
     private final class ActionModeCallback implements ActionMode.Callback {
 
         @Override
@@ -316,7 +215,7 @@ public class SitePickerActivity extends ActionBarActivity
 
         @Override
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            int numSelected = mSiteAdapter.getSelectionCount();
+            int numSelected = getAdapter().getSelectionCount();
             if (numSelected == 0) {
                 return false;
             }
@@ -325,7 +224,7 @@ public class SitePickerActivity extends ActionBarActivity
 
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
-            mSiteAdapter.setEnableSelection(false);
+            getAdapter().setEnableMultiSelect(false);
             mActionMode = null;
         }
     }
