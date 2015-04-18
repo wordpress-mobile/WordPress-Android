@@ -227,11 +227,15 @@ public class SitePickerActivity extends ActionBarActivity {
                 }
             });
 
-            int textColor = (site.isHidden ? mColorHidden : mColorNormal);
-            holder.txtTitle.setTextColor(textColor);
-            holder.txtDomain.setTextColor(textColor);
-            holder.txtTitle.setTypeface(holder.txtTitle.getTypeface(), site.isHidden ? Typeface.NORMAL : Typeface.BOLD);
-            holder.imgBlavatar.setAlpha(site.isHidden ? 0.5f : 1f);
+            // different styling for visible/hidden sites
+            if (holder.isSiteHidden == null || holder.isSiteHidden != site.isHidden) {
+                holder.isSiteHidden = site.isHidden;
+                int textColor = (site.isHidden ? mColorHidden : mColorNormal);
+                holder.txtTitle.setTextColor(textColor);
+                holder.txtDomain.setTextColor(textColor);
+                holder.txtTitle.setTypeface(holder.txtTitle.getTypeface(), site.isHidden ? Typeface.NORMAL : Typeface.BOLD);
+                holder.imgBlavatar.setAlpha(site.isHidden ? 0.5f : 1f);
+            }
         }
     }
 
@@ -239,12 +243,14 @@ public class SitePickerActivity extends ActionBarActivity {
         private final TextView txtTitle;
         private final TextView txtDomain;
         private final WPNetworkImageView imgBlavatar;
+        private Boolean isSiteHidden;
 
         public SiteViewHolder(View view) {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtDomain = (TextView) view.findViewById(R.id.text_domain);
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
+            isSiteHidden = null;
         }
     }
 
