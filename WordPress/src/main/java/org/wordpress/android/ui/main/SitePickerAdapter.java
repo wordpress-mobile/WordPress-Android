@@ -50,7 +50,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     static class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup layoutContainer;
-        private final TextView txtFooter;
         private final TextView txtTitle;
         private final TextView txtDomain;
         private final WPNetworkImageView imgBlavatar;
@@ -59,7 +58,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         public SiteViewHolder(View view) {
             super(view);
             layoutContainer = (ViewGroup) view.findViewById(R.id.layout_container);
-            txtFooter = (TextView) view.findViewById(R.id.text_footer);
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtDomain = (TextView) view.findViewById(R.id.text_domain);
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
@@ -101,7 +99,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     @Override
     public SiteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.site_picker_listitem, parent, false);
+        View itemView = mInflater.inflate(R.layout.site_picker_card, parent, false);
         return new SiteViewHolder(itemView);
     }
 
@@ -128,40 +126,25 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (!mIsMultiSelectEnabled) {
+                /*if (!mIsMultiSelectEnabled) {
                     if (mMultiSelectListener != null) {
                         mMultiSelectListener.onMultiSelectEnabled();
                     }
                     setEnableMultiSelect(true);
                     setItemSelected(position, true);
-                }
+                }*/
                 return true;
             }
         });
 
-        boolean isSelected = mIsMultiSelectEnabled && isItemSelected(position);
-        holder.layoutContainer.setBackgroundDrawable(isSelected ? mSelectedItemBackground : null);
-
-        // footer only appears to separate visible/hidden sites
-        boolean showFooter = mShowHiddenSites
-                && !site.isHidden
-                && isValidPosition(position + 1)
-                && mSites.get(position + 1).isHidden;
-        holder.txtFooter.setVisibility(showFooter ? View.VISIBLE : View.GONE);
-        if (showFooter) {
-            holder.txtFooter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // noop - eat the click so the user can't tap footer to select a site
-                }
-            });
+        if (mIsMultiSelectEnabled) {
+            holder.layoutContainer.setBackgroundDrawable(isItemSelected(position) ? mSelectedItemBackground : null);
         }
 
         // different styling for visible/hidden sites
         if (holder.isSiteHidden == null || holder.isSiteHidden != site.isHidden) {
             holder.isSiteHidden = site.isHidden;
             holder.txtTitle.setTextColor(site.isHidden ? mTextColorHidden : mTextColorNormal);
-            holder.txtDomain.setTextColor(site.isHidden ? mTextColorHidden : mTextColorNormal);
             holder.txtTitle.setTypeface(holder.txtTitle.getTypeface(), site.isHidden ? Typeface.NORMAL : Typeface.BOLD);
             holder.imgBlavatar.setAlpha(site.isHidden ? 0.5f : 1f);
         }
