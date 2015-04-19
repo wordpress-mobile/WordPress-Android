@@ -10,8 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -55,15 +53,6 @@ public class SitePickerActivity extends ActionBarActivity
         mRecycler = (RecyclerView) findViewById(R.id.recycler_view);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
         mRecycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-
-        Button btnAddSite = (Button) findViewById(R.id.btn_add_site);
-        btnAddSite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
-            }
-        });
-
         mRecycler.setAdapter(getAdapter());
     }
 
@@ -74,11 +63,21 @@ public class SitePickerActivity extends ActionBarActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.site_picker, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.menu_add_site:
+                ActivityLauncher.addSelfHostedSiteForResult(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);

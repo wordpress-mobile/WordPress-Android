@@ -11,6 +11,7 @@
     android:layout_marginLeft="@dimen/content_margin"
     android:layout_marginRight="@dimen/content_margin"
     android:layout_marginTop="@dimen/margin_small"
+    android:layout_marginBottom="@dimen/margin_extra_small"
     card_view:cardCornerRadius="@dimen/cardview_default_radius"
     card_view:cardElevation="@dimen/card_elevation">
 
