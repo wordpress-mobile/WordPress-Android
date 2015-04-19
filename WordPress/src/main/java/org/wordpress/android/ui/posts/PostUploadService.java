@@ -225,7 +225,7 @@ public class PostUploadService extends Service {
                     mBlog.getHttppassword());
 
             // featured image exists
-            if (!mPost.getFeaturedImagePath().isEmpty()) {
+            if (!TextUtils.isEmpty(mPost.getFeaturedImagePath())) {
                 // from local: upload first, then get the ID
                 if (!URLUtil.isNetworkUrl(mPost.getFeaturedImagePath())) {
                     setFeaturedImage();
