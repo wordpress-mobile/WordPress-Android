@@ -192,53 +192,47 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
         mAllowCheckChanged = false;
 
         int numColumnsContainerVisible = View.GONE;
-        switch (button.getId()) {
-            case R.id.media_gallery_type_thumbnail_grid:
-                numColumnsContainerVisible = View.VISIBLE;
+        int i = button.getId();
+        if (i == R.id.media_gallery_type_thumbnail_grid) {
+            numColumnsContainerVisible = View.VISIBLE;
 
-                mType = GalleryType.DEFAULT;
-                mThumbnailCheckbox.setChecked(true);
-                mSquaresCheckbox.setChecked(false);
-                mTiledCheckbox.setChecked(false);
-                mCirclesCheckbox.setChecked(false);
-                mSlideshowCheckbox.setChecked(false);
-                break;
-            case R.id.media_gallery_type_tiled:
-                mType = GalleryType.TILED;
-                mThumbnailCheckbox.setChecked(false);
-                mTiledCheckbox.setChecked(true);
-                mSquaresCheckbox.setChecked(false);
-                mCirclesCheckbox.setChecked(false);
-                mSlideshowCheckbox.setChecked(false);
-                break;
-            case R.id.media_gallery_type_squares:
-                mType = GalleryType.SQUARES;
-                mThumbnailCheckbox.setChecked(false);
-                mTiledCheckbox.setChecked(false);
-                mSquaresCheckbox.setChecked(true);
-                mCirclesCheckbox.setChecked(false);
-                mSlideshowCheckbox.setChecked(false);
-                break;
-            case R.id.media_gallery_type_circles:
-                mType = GalleryType.CIRCLES;
-                mThumbnailCheckbox.setChecked(false);
-                mSquaresCheckbox.setChecked(false);
-                mTiledCheckbox.setChecked(false);
-                mCirclesCheckbox.setChecked(true);
-                mSlideshowCheckbox.setChecked(false);
-                break;
-            case R.id.media_gallery_type_slideshow:
-                mType = GalleryType.SLIDESHOW;
-                mThumbnailCheckbox.setChecked(false);
-                mSquaresCheckbox.setChecked(false);
-                mTiledCheckbox.setChecked(false);
-                mCirclesCheckbox.setChecked(false);
-                mSlideshowCheckbox.setChecked(true);
-                break;
-            case R.id.media_gallery_random_checkbox:
-                numColumnsContainerVisible = mNumColumnsContainer.getVisibility();
-                mIsRandomOrder = checked;
-                break;
+            mType = GalleryType.DEFAULT;
+            mThumbnailCheckbox.setChecked(true);
+            mSquaresCheckbox.setChecked(false);
+            mTiledCheckbox.setChecked(false);
+            mCirclesCheckbox.setChecked(false);
+            mSlideshowCheckbox.setChecked(false);
+        } else if (i == R.id.media_gallery_type_tiled) {
+            mType = GalleryType.TILED;
+            mThumbnailCheckbox.setChecked(false);
+            mTiledCheckbox.setChecked(true);
+            mSquaresCheckbox.setChecked(false);
+            mCirclesCheckbox.setChecked(false);
+            mSlideshowCheckbox.setChecked(false);
+        } else if (i == R.id.media_gallery_type_squares) {
+            mType = GalleryType.SQUARES;
+            mThumbnailCheckbox.setChecked(false);
+            mTiledCheckbox.setChecked(false);
+            mSquaresCheckbox.setChecked(true);
+            mCirclesCheckbox.setChecked(false);
+            mSlideshowCheckbox.setChecked(false);
+        } else if (i == R.id.media_gallery_type_circles) {
+            mType = GalleryType.CIRCLES;
+            mThumbnailCheckbox.setChecked(false);
+            mSquaresCheckbox.setChecked(false);
+            mTiledCheckbox.setChecked(false);
+            mCirclesCheckbox.setChecked(true);
+            mSlideshowCheckbox.setChecked(false);
+        } else if (i == R.id.media_gallery_type_slideshow) {
+            mType = GalleryType.SLIDESHOW;
+            mThumbnailCheckbox.setChecked(false);
+            mSquaresCheckbox.setChecked(false);
+            mTiledCheckbox.setChecked(false);
+            mCirclesCheckbox.setChecked(false);
+            mSlideshowCheckbox.setChecked(true);
+        } else if (i == R.id.media_gallery_random_checkbox) {
+            numColumnsContainerVisible = mNumColumnsContainer.getVisibility();
+            mIsRandomOrder = checked;
         }
 
         mNumColumnsContainer.setVisibility(numColumnsContainerVisible);

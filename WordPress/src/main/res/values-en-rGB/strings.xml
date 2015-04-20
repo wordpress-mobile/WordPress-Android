@@ -141,7 +141,6 @@
 	<string name="auto_sharing_preference_reset">Auto-sharing settings reset</string>
 	<string name="auto_sharing_preference_reset_caused_by_error">Previously selected blog is no longer visible</string>
 	<string name="sdcard_message">A mounted SD card is required to upload media</string>
-	<string name="stats_empty_top_authors">No posts viewed</string>
 	<string name="stats_empty_comments">No comments yet</string>
 	<string name="stats_bar_graph_empty">No stats available</string>
 	<string name="invalid_url_message">Check that the blog URL entered is valid</string>

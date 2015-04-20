@@ -23,13 +23,14 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
-import org.wordpress.android.ui.media.MediaUtils.RequestCode;
+import org.wordpress.android.ui.media.WordPressMediaUtils.LaunchCameraCallback;
+import org.wordpress.android.ui.media.WordPressMediaUtils.RequestCode;
 import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
 import java.util.List;
@@ -132,7 +133,8 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO) {
+        if (data != null || requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
+                requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO) {
             String path;
 
             switch (requestCode) {
@@ -155,7 +157,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
                     }
                     break;
             }
-
         }
     }
 
@@ -214,8 +215,9 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         Blog blog = WordPress.getCurrentBlog();
 
         File file = new File(path);
-        if (!file.exists())
+        if (!file.exists()) {
             return;
+        }
 
         String mimeType = MediaUtils.getMediaFileMimeType(file);
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
@@ -236,10 +238,10 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             mediaFile.setHeight(bfo.outHeight);
         }
 
-        if (!TextUtils.isEmpty(mimeType))
+        if (!TextUtils.isEmpty(mimeType)) {
             mediaFile.setMimeType(mimeType);
-        mediaFile.save();
-
+        }
+        WordPress.wpDB.saveMediaFile(mediaFile);
         mCallback.onMediaAdded(mediaFile.getMediaId());
 
         startMediaUploadService();
@@ -260,20 +262,28 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         mMediaCapturePath = mediaCapturePath;
     }
 
-    public void launchCamera(){
-        MediaUtils.launchCamera(this, this);
+    public void launchCamera() {
+        if (isAdded()) {
+            WordPressMediaUtils.launchCamera(getActivity(), this);
+        }
     }
 
     public void launchVideoCamera() {
-        MediaUtils.launchVideoCamera(this);
+        if (isAdded()) {
+            WordPressMediaUtils.launchVideoCamera(getActivity());
+        }
     }
 
     public void launchVideoLibrary() {
-        MediaUtils.launchVideoLibrary(this);
+        if (isAdded()) {
+            WordPressMediaUtils.launchVideoLibrary(getActivity());
+        }
     }
 
     public void launchPictureLibrary() {
-        MediaUtils.launchPictureLibrary(this);
+        if (isAdded()) {
+            WordPressMediaUtils.launchPictureLibrary(getActivity());
+        }
     }
 
     public void addToQueue(String mediaId) {

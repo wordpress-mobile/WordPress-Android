@@ -9,8 +9,8 @@ import android.os.IBinder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;

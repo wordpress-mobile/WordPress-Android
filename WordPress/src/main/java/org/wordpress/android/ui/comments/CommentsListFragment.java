@@ -30,9 +30,9 @@ import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
@@ -674,22 +674,21 @@ public class CommentsListFragment extends Fragment {
             if (numSelected == 0)
                 return false;
 
-            switch (menuItem.getItemId()) {
-                case R.id.menu_approve :
-                    moderateSelectedComments(CommentStatus.APPROVED);
-                    return true;
-                case R.id.menu_unapprove :
-                    moderateSelectedComments(CommentStatus.UNAPPROVED);
-                    return true;
-                case R.id.menu_spam :
-                    moderateSelectedComments(CommentStatus.SPAM);
-                    return true;
-                case R.id.menu_trash :
-                    // unlike the other status changes, we ask the user to confirm trashing
-                    confirmDeleteComments();
-                    return true;
-                default:
-                    return false;
+            int i = menuItem.getItemId();
+            if (i == R.id.menu_approve) {
+                moderateSelectedComments(CommentStatus.APPROVED);
+                return true;
+            } else if (i == R.id.menu_unapprove) {
+                moderateSelectedComments(CommentStatus.UNAPPROVED);
+                return true;
+            } else if (i == R.id.menu_spam) {
+                moderateSelectedComments(CommentStatus.SPAM);
+                return true;
+            } else if (i == R.id.menu_trash) {// unlike the other status changes, we ask the user to confirm trashing
+                confirmDeleteComments();
+                return true;
+            } else {
+                return false;
             }
         }
 

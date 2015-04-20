@@ -214,8 +214,8 @@ public class StringUtils {
             final int codepoint = inputString.codePointAt(offset);
             final char current = inputString.charAt(offset);
             if (Character.isHighSurrogate(current) || Character.isLowSurrogate(current)) {
-                if (Emoticons.wpSmiliesCodePointToText.get(codepoint) != null) {
-                    out.append(Emoticons.wpSmiliesCodePointToText.get(codepoint));
+                if (EmoticonsUtils.wpSmiliesCodePointToText.get(codepoint) != null) {
+                    out.append(EmoticonsUtils.wpSmiliesCodePointToText.get(codepoint));
                 } else {
                     final String htmlEscapedChar = "&#x" + Integer.toHexString(codepoint) + ";";
                     out.append(htmlEscapedChar);

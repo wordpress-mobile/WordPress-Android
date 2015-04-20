@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="media_details_dimensions">Maße:</string>
+	<string name="two_step_sms_sent">Der Überprüfungscode kommt per Textnachricht.</string>
+	<string name="two_step_footer_label">Gib den Code aus der Authenticator-App ein.</string>
+	<string name="editor_toast_gallery_created_formatted">Galerie erstellt mit %d Objekten</string>
+	<string name="editor_toast_gallery_pending_formatted">Erstellung Galerie ausstehend %d Uploads</string>
+	<string name="error_publish_no_network">Kann ohne Verbindung nicht veröffentlichen. Als Entwurf gespeichert.</string>
+	<string name="auth_required">Nochmal anmelden, um fortzufahren.</string>
+	<string name="sign_in_jetpack">Melde dich in deinem WordPress.com-Konto an, um dich mit Jetpack zu verbinden.</string>
+	<string name="two_step_footer_button">Sende Code via Textnachricht</string>
+	<string name="invalid_verification_code">Ungültiger Überprüfungscode</string>
+	<string name="verify">Überprüfen</string>
+	<string name="verification_code">Überprüfungscode</string>
+	<string name="editor_toast_invalid_path">Ungültiger Dateipfad</string>
+	<string name="delete_from_collection">Medien entfernen</string>
+	<string name="media_details_file_type">Dateityp:</string>
+	<string name="media_details_file_name">Dateiname:</string>
+	<string name="media_details_uploaded_on">Hochgeladen am:</string>
+	<string name="media_details_added_on">Hinzugefügt am:</string>
+	<string name="tab_title_site_videos">Website-Videos</string>
+	<string name="tab_title_device_videos">Videos vom Gerät</string>
+	<string name="tab_title_site_images">Website-Bilder</string>
+	<string name="tab_title_device_images">Bilder vom Gerät</string>
+	<string name="take_video">Mache ein Video</string>
+	<string name="take_photo">Schieße ein Foto</string>
+	<string name="media_picker_title">Medien auswählen</string>
+	<string name="add_to_post">Zum Beitrag hinzufügen</string>
+	<string name="language">Sprache</string>
+	<string name="media_details_file_url">Datei-URL:</string>
+	<string name="device">Gerät</string>
 	<string name="posts_fetching">Beiträge werden abgerufen...</string>
 	<string name="media_fetching">Medien werden abgerufen…</string>
 	<string name="comments_fetching">Kommentare werden abgerufen...</string>
@@ -279,7 +308,6 @@
 	<string name="blog_name_required">Gib eine Webseiten-Adresse ein</string>
 	<string name="blog_name_not_allowed">Diese Webseiten-Adresse ist nicht erlaubt</string>
 	<string name="blog_name_contains_invalid_characters">Webseiten-Adresse darf das Zeichen "_" nicht enthalten</string>
-	<string name="stats_empty_top_authors">Keine Beiträge angesehen</string>
 	<string name="show_all">Alle anzeigen</string>
 	<string name="hide_all">Alle verstecken</string>
 	<string name="edit_page">Seite bearbeiten</string>

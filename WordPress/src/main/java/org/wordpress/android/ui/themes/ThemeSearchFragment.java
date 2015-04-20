@@ -92,9 +92,14 @@ public class ThemeSearchFragment extends ThemeTabFragment implements SearchView.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         super.onItemClick(parent, view, position, id);
-        mSearchView.clearFocus();
+        clearFocus(mSearchView);
     }
 
+    private void clearFocus(View view) {
+        if (view != null) {
+            view.clearFocus();;
+        }
+    }
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
@@ -113,7 +118,7 @@ public class ThemeSearchFragment extends ThemeTabFragment implements SearchView.
     @Override
     public boolean onQueryTextSubmit(String query) {
         search(query);
-        mSearchView.clearFocus();
+        clearFocus(mSearchView);
         return true;
     }
 

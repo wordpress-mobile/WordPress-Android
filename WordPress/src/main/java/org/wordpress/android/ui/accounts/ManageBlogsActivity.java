@@ -21,13 +21,13 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper.RefreshListener;
-import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
+import org.wordpress.android.util.helpers.ListScrollPositionManager;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
@@ -92,16 +92,15 @@ public class ManageBlogsActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId) {
-            case R.id.menu_show_all:
-                selectAll();
-                return true;
-            case R.id.menu_hide_all:
-                deselectAll();
-                return true;
-            case android.R.id.home:
-                finish();
-                return true;
+        if (itemId == R.id.menu_show_all) {
+            selectAll();
+            return true;
+        } else if (itemId == R.id.menu_hide_all) {
+            deselectAll();
+            return true;
+        } else if (itemId == android.R.id.home) {
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -24,8 +25,8 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ptr.CustomSwipeRefreshLayout;
-import org.wordpress.android.util.ptr.SwipeToRefreshHelper;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -104,17 +105,21 @@ public class StatsViewAllActivity extends ActionBarActivity
             }
             mTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
             mDate = savedInstanceState.getString(StatsAbstractFragment.ARGS_START_DATE);
-            int ordinal = savedInstanceState.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, 0);
-            mStatsViewType = StatsViewType.values()[ordinal];
+            mStatsViewType = (StatsViewType) savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE);
             mOuterPagerSelectedButtonIndex = savedInstanceState.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mLocalBlogID = extras.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
             mTimeframe = (StatsTimeframe) extras.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
             mDate = extras.getString(StatsAbstractFragment.ARGS_START_DATE);
-            int ordinal = extras.getInt(StatsAbstractFragment.ARGS_VIEW_TYPE, 0);
-            mStatsViewType = StatsViewType.values()[ordinal];
+            mStatsViewType = (StatsViewType) extras.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE);
             mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
+        }
+
+        if (mStatsViewType == null || mTimeframe == null || mDate == null) {
+            Toast.makeText(this, getResources().getText(R.string.stats_generic_error),
+                    Toast.LENGTH_SHORT).show();
+            finish();
         }
 
         // Setup the top date label. It's available on those fragments that are affected by the top date selector.
@@ -151,7 +156,8 @@ public class StatsViewAllActivity extends ActionBarActivity
         String prefix = getString(R.string.stats_for);
         switch (timeframe) {
             case DAY:
-                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT, "MMMM d"));
+                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
             case WEEK:
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
@@ -215,7 +221,7 @@ public class StatsViewAllActivity extends ActionBarActivity
 
         Bundle args = new Bundle();
         args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
-        args.putInt(StatsAbstractFragment.ARGS_VIEW_TYPE, mStatsViewType.ordinal());
+        args.putSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE, mStatsViewType);
         args.putSerializable(StatsAbstractFragment.ARGS_TIMEFRAME, mTimeframe);
         args.putBoolean(StatsAbstractListFragment.ARGS_IS_SINGLE_VIEW, true); // Always true here
         args.putString(StatsAbstractFragment.ARGS_START_DATE, mDate);
@@ -231,7 +237,7 @@ public class StatsViewAllActivity extends ActionBarActivity
         outState.putSerializable(StatsAbstractFragment.ARG_REST_RESPONSE, mRestResponse);
         outState.putSerializable(StatsAbstractFragment.ARGS_TIMEFRAME, mTimeframe);
         outState.putString(StatsAbstractFragment.ARGS_START_DATE, mDate);
-        outState.putInt(StatsAbstractFragment.ARGS_VIEW_TYPE, mStatsViewType.ordinal());
+        outState.putSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE, mStatsViewType);
         outState.putInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mOuterPagerSelectedButtonIndex);
         super.onSaveInstanceState(outState);
     }

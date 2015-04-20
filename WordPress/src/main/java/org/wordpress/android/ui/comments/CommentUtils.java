@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.Emoticons;
+import org.wordpress.android.util.EmoticonsUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.WPImageGetter;
+import org.wordpress.android.util.helpers.WPImageGetter;
 
 public class CommentUtils {
     /*
@@ -43,13 +43,13 @@ public class CommentUtils {
         }
 
         // convert emoticons first (otherwise they'll be downloaded)
-        content = Emoticons.replaceEmoticonsWithEmoji(content);
+        content = EmoticonsUtils.replaceEmoticonsWithEmoji(content);
 
         // now convert to HTML with an image getter that enforces a max image size
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
             Drawable loading = textView.getContext().getResources().getDrawable(
-                    R.drawable.dashicon_format_image_big_grey);
+                org.wordpress.android.editor.R.drawable.dashicon_format_image_big_grey);
             Drawable failed = textView.getContext().getResources().getDrawable(R.drawable.noticon_warning_big_grey);
             html = HtmlUtils.fromHtml(content, new WPImageGetter(textView, maxImageSize, WordPress.imageLoader, loading,
                     failed));

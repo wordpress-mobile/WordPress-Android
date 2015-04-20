@@ -36,9 +36,9 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.WPImageGetter;
+import org.wordpress.android.util.helpers.WPImageGetter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -284,7 +284,8 @@ public class NotificationsUtils {
             return;
         }
 
-        Drawable loading = context.getResources().getDrawable(R.drawable.dashicon_format_image_big_grey);
+        Drawable loading = context.getResources().getDrawable(
+            org.wordpress.android.editor.R.drawable.dashicon_format_image_big_grey);
         Drawable failed = context.getResources().getDrawable(R.drawable.noticon_warning_big_grey);
         // Note: notifications_max_image_size seems to be the max size an ImageSpan can handle,
         // otherwise it would load blank white
@@ -306,8 +307,8 @@ public class NotificationsUtils {
 
             final Drawable remoteDrawable = imageGetter.getDrawable(mediaObject.optString("url", ""));
             ImageSpan noteImageSpan = new ImageSpan(remoteDrawable, mediaObject.optString("url", ""));
-            int startIndex = JSONUtil.queryJSON(mediaObject, "indices[0]", -1);
-            int endIndex = JSONUtil.queryJSON(mediaObject, "indices[1]", -1);
+            int startIndex = JSONUtils.queryJSON(mediaObject, "indices[0]", -1);
+            int endIndex = JSONUtils.queryJSON(mediaObject, "indices[1]", -1);
             if (startIndex >= 0) {
                 startIndex += indexAdjustment;
                 endIndex += indexAdjustment;

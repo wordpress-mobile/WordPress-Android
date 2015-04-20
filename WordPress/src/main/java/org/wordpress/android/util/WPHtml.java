@@ -21,8 +21,6 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -53,13 +51,13 @@ import org.ccil.cowan.tagsoup.Parser;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.MediaGallery;
+import org.wordpress.android.util.helpers.MediaFile;
+import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.widgets.MediaGalleryImageSpan;
-import org.wordpress.android.widgets.WPImageSpan;
-import org.wordpress.android.widgets.WPUnderlineSpan;
+import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
+import org.wordpress.android.util.helpers.WPImageSpan;
+import org.wordpress.android.util.helpers.WPUnderlineSpan;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -798,6 +796,8 @@ class HtmlToSpannedConverter implements ContentHandler {
     }
 
     private void startImg(SpannableStringBuilder text, Attributes attributes, WPHtml.ImageGetter img) {
+        if (ctx == null) return;
+
         String src = attributes.getValue("android-uri");
 
         Bitmap resizedBitmap = null;
@@ -805,7 +805,7 @@ class HtmlToSpannedConverter implements ContentHandler {
             resizedBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(ctx, src, mMaxImageWidth);
             if (resizedBitmap == null && src != null) {
                 if (src.contains("video")) {
-                    resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_movieclip);
+                    resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), org.wordpress.android.editor.R.drawable.media_movieclip);
                 } else {
                     resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_image_placeholder);
                 }

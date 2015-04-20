@@ -17,7 +17,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.util.WPWebChromeClient;
+import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.util.WPWebViewClient;
 
 /**
@@ -182,12 +182,12 @@ public class ThemePreviewFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_activate:
-                mCallback.onActivateThemeClicked(getThemeId(), ThemePreviewFragment.this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == R.id.menu_activate) {
+            mCallback.onActivateThemeClicked(getThemeId(), ThemePreviewFragment.this);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

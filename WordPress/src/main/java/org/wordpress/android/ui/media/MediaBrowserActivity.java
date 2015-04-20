@@ -40,6 +40,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
@@ -55,8 +56,8 @@ import java.util.Set;
  * Accessible via the menu drawer as "Media"
  */
 public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridListener,
-        MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback,
-        MediaAddFragmentCallback {
+        MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
+        MediaEditFragmentCallback, MediaAddFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
 
     private MediaGridFragment mMediaGridFragment;
@@ -74,17 +75,15 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
                 // Coming from zero connection. Continue what's pending for delete
-                String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-                if (WordPress.wpDB.getMediaDeleteQueueItems(blogId).getCount() > 0) {
+                int blogId = WordPress.getCurrentLocalTableBlogId();
+                if (blogId != -1 && WordPress.wpDB.hasMediaDeleteQueueItems(blogId)) {
                     startMediaDeleteService();
                 }
             }
         }
     };
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -178,10 +177,12 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
     };
 
     private void setupBaseLayout() {
-        // hide access to the drawer when there are fragments in the back stack
+        // hide access to the drawer and keyboard when there are fragments in the back stack
         if (getDrawerToggle() != null) {
             getDrawerToggle().setDrawerIndicatorEnabled(getFragmentManager().getBackStackEntryCount() == 0);
         }
+
+        ActivityUtils.hideKeyboard(this);
     }
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
@@ -564,7 +565,7 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
 
         // Make sure there are no media in "uploading"
         for (String currentID : ids) {
-            if (MediaUtils.canDeleteMedia(blogId, currentID)) {
+            if (WordPressMediaUtils.canDeleteMedia(blogId, currentID)) {
                 sanitizedIds.add(currentID);
             }
         }

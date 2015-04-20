@@ -1,0 +1,12 @@
+[alias]
+  wpandroid = //:wpandroid
+
+[android]
+  target = Google Inc.:Google APIs:22
+
+[cache]
+  mode = dir
+  dir_max_size = 5GB
+
+[project]
+  ignore = .git, WordPress/build
