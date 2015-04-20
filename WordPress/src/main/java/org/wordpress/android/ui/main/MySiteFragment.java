@@ -178,7 +178,9 @@ public class MySiteFragment extends Fragment
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 
+        mBlavatarImageView.setErrorImageResId(mBlog.isDotcomFlag() ? R.drawable.blavatar_placeholder_com : R.drawable.blavatar_placeholder_org);
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
+
         mBlogTitleTextView.setText(mBlog.getBlogName());
         mBlogSubtitleTextView.setText(StringUtils.getHost(mBlog.getUrl()));
     }

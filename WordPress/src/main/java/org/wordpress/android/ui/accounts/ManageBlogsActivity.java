@@ -191,7 +191,7 @@ public class ManageBlogsActivity extends ActionBarActivity {
                 nameView = (TextView) rowView.findViewById(R.id.blog_name);
                 urlView = (TextView) rowView.findViewById(R.id.blog_url);
                 imgBlavatar = (WPNetworkImageView) rowView.findViewById(R.id.image_blavatar);
-                imgBlavatar.setErrorImageResId(R.drawable.blavatar_placeholder);
+                imgBlavatar.setErrorImageResId(R.drawable.blavatar_placeholder_com);
                 checkBox = (CheckBox) rowView.findViewById(R.id.checkbox);
                 checkBox.setClickable(false);
             }

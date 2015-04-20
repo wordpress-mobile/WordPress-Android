@@ -116,6 +116,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         holder.txtTitle.setText(site.blogName);
         holder.txtDomain.setText(site.hostName);
+        holder.imgBlavatar.setErrorImageResId(site.isDotCom ? R.drawable.blavatar_placeholder_com : R.drawable.blavatar_placeholder_org);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -242,16 +243,18 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         @Override
         protected SiteList doInBackground(Void... params) {
-            // get wp.com blogs
             List<Map<String, Object>> blogs;
+            String[] extraFields = {"isHidden", "dotcomFlag"};
+
+            // add wp.com blogs
             if (mShowHiddenSites) {
-                blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"isHidden"});
+                blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
             } else {
-                blogs = WordPress.wpDB.getVisibleDotComBlogs();
+                blogs = WordPress.wpDB.getBlogsBy("isHidden=0 AND dotcomFlag=1", extraFields);
             }
 
-            // include self-hosted
-            blogs.addAll(WordPress.wpDB.getBlogsBy("dotcomFlag!=1", null));
+            // add self-hosted
+            blogs.addAll(WordPress.wpDB.getBlogsBy("dotcomFlag=0", extraFields));
 
             SiteList sites = new SiteList(blogs);
             Collections.sort(sites, SiteComparator);
@@ -280,6 +283,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         final String url;
         final String blavatarUrl;
         final boolean isHidden;
+        final boolean isDotCom;
 
         SiteRecord(Map<String, Object> account) {
             localId = MapUtils.getMapInt(account, "id");
@@ -289,6 +293,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             url = MapUtils.getMapStr(account, "url");
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
             isHidden = MapUtils.getMapBool(account, "isHidden");
+            isDotCom = MapUtils.getMapBool(account, "dotcomFlag");
         }
 
         String getBlogNameOrHostName() {
