@@ -99,6 +99,8 @@ public class WPWebViewClient extends WebViewClient {
                 URL url = new URL(stringUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestProperty("Authorization", "Bearer " + mToken);
+                urlConnection.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);
+                urlConnection.setConnectTimeout(WPRestClient.REST_TIMEOUT_MS);
                 WebResourceResponse response = new WebResourceResponse(urlConnection.getContentType(),
                         urlConnection.getContentEncoding(),
                         urlConnection.getInputStream());
