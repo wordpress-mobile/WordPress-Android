@@ -93,7 +93,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
         private final List<ReferrerGroupModel> groups;
-        private final List<List<MyChildModel>> childs;
+        private final List<List<MyChildModel>> children;
 
         public MyExpandableListAdapter(Context context, List<ReferrerGroupModel> groups) {
             this.groups = groups;
@@ -101,10 +101,10 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             // The code below flattens the 3-levels tree of children to a 2-levels structure
             // that will be used later to populate the UI
-            this.childs = new ArrayList<>(groups.size());
+            this.children = new ArrayList<>(groups.size());
             // pre-populate the structure with null values
             for (int i = 0; i < groups.size(); i++) {
-                this.childs.add(null);
+                this.children.add(null);
             }
             for (int i = 0; i < groups.size(); i++) {
                 ReferrerGroupModel currentGroup = groups.get(i);
@@ -112,7 +112,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
                 if (referrals != null) {
                     // Children available for the current group
                     // Children could be a 2-levels or a 3-levels structure
-                    List<MyChildModel> currentGroupChilds = new ArrayList<>();
+                    List<MyChildModel> currentGroupChildren = new ArrayList<>();
                     for (ReferrerResultModel refResult : referrals) {
                         List<SingleItemModel> thirdLevelChildren = refResult.getChildren();
                         if (thirdLevelChildren != null && thirdLevelChildren.size() > 0 ) {
@@ -126,7 +126,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
                                 myChild.url = currentThirdLevelChild.getUrl();
                                 myChild.name = currentThirdLevelChild.getTitle();
                                 myChild.views = currentThirdLevelChild.getTotals();
-                                currentGroupChilds.add(myChild);
+                                currentGroupChildren.add(myChild);
                             }
                         } else {
                             MyChildModel myChild = new MyChildModel();
@@ -134,10 +134,10 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
                             myChild.url = refResult.getUrl();
                             myChild.name = refResult.getName();
                             myChild.views = refResult.getViews();
-                            currentGroupChilds.add(myChild);
+                            currentGroupChildren.add(myChild);
                         }
                     }
-                    this.childs.set(i, currentGroupChilds);
+                    this.children.set(i, currentGroupChildren);
                 }
             }
         }
@@ -151,8 +151,8 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            List<MyChildModel> currentGroupChilds = childs.get(groupPosition);
-            return currentGroupChilds.get(childPosition);
+            List<MyChildModel> currentGroupChildren = children.get(groupPosition);
+            return currentGroupChildren.get(childPosition);
         }
 
         @Override
@@ -204,11 +204,11 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            List<MyChildModel> currentGroupChilds = childs.get(groupPosition);
-            if (currentGroupChilds == null) {
+            List<MyChildModel> currentGroupChildren = children.get(groupPosition);
+            if (currentGroupChildren == null) {
                 return 0;
             } else {
-                return currentGroupChilds.size();
+                return currentGroupChildren.size();
             }
         }
 
