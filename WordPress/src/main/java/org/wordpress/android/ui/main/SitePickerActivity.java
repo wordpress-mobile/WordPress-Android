@@ -7,20 +7,15 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.util.CoreEvents;
-import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
-
-import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -31,9 +26,6 @@ public class SitePickerActivity extends ActionBarActivity
     public static final String KEY_LOCAL_ID = "local_id";
     private static final String KEY_BLOG_ID = "blog_id";
 
-    private RecyclerView mRecycler;
-    private static int mBlavatarSz;
-
     private SitePickerAdapter mAdapter;
     private ActionMode mActionMode;
 
@@ -42,7 +34,6 @@ public class SitePickerActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.site_picker_activity);
-        mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -50,10 +41,10 @@ public class SitePickerActivity extends ActionBarActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mRecycler = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mRecycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-        mRecycler.setAdapter(getAdapter());
+        RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler_view);
+        recycler.setLayoutManager(new LinearLayoutManager(this));
+        recycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        recycler.setAdapter(getAdapter());
     }
 
     @Override
@@ -166,36 +157,6 @@ public class SitePickerActivity extends ActionBarActivity
             } else {
                 mActionMode.setTitle("");
             }
-        }
-    }
-
-    /**
-     * SiteRecord is a simplified version of the full account (blog) record
-     */
-    static class SiteRecord {
-        final int localId;
-        final String blogId;
-        final String blogName;
-        final String hostName;
-        final String url;
-        final String blavatarUrl;
-        final boolean isHidden;
-
-        SiteRecord(Map<String, Object> account) {
-            localId = MapUtils.getMapInt(account, "id");
-            blogId = MapUtils.getMapStr(account, "blogId");
-            blogName = BlogUtils.getBlogNameFromAccountMap(account);
-            hostName = BlogUtils.getHostNameFromAccountMap(account);
-            url = MapUtils.getMapStr(account, "url");
-            blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
-            isHidden = MapUtils.getMapBool(account, "isHidden");
-        }
-
-        String getBlogNameOrHostName() {
-            if (TextUtils.isEmpty(blogName)) {
-                return hostName;
-            }
-            return blogName;
         }
     }
 

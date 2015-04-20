@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,10 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.main.SitePickerActivity.SiteRecord;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -37,13 +41,15 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private final int mTextColorNormal;
     private final int mTextColorHidden;
     private final Drawable mSelectedItemBackground;
+    private static int mBlavatarSz;
 
     private SiteList mSites = new SiteList();
     private final LayoutInflater mInflater;
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
 
     private boolean mIsMultiSelectEnabled;
-    private boolean mShowHiddenSites = true;
+    private boolean mShowHiddenSites = false;
+    private boolean mCanEnableMultiSelect = false;
 
     private OnSiteClickListener mSiteSelectedListener;
     private OnMultiSelectListener mMultiSelectListener;
@@ -71,7 +77,8 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         mInflater = LayoutInflater.from(context);
         mTextColorNormal = context.getResources().getColor(R.color.grey_dark);
         mTextColorHidden = context.getResources().getColor(R.color.grey);
-        mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_10));
+        mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
+        mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_20));
         loadSites();
     }
 
@@ -85,7 +92,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return getItem(position).localId;
     }
 
-    private SitePickerActivity.SiteRecord getItem(int position) {
+    private SiteRecord getItem(int position) {
         return mSites.get(position);
     }
 
@@ -105,7 +112,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     @Override
     public void onBindViewHolder(SiteViewHolder holder, final int position) {
-        SitePickerActivity.SiteRecord site = getItem(position);
+        SiteRecord site = getItem(position);
 
         holder.txtTitle.setText(site.blogName);
         holder.txtDomain.setText(site.hostName);
@@ -126,13 +133,14 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                /*if (!mIsMultiSelectEnabled) {
+                // enable multi-select on long press
+                if (!mIsMultiSelectEnabled && mCanEnableMultiSelect) {
                     if (mMultiSelectListener != null) {
                         mMultiSelectListener.onMultiSelectEnabled();
                     }
                     setEnableMultiSelect(true);
                     setItemSelected(position, true);
-                }*/
+                }
                 return true;
             }
         });
@@ -158,21 +166,8 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         if (enable == mIsMultiSelectEnabled) return;
 
         mIsMultiSelectEnabled = enable;
-        if (mIsMultiSelectEnabled) {
-            notifyDataSetChanged();
-        } else {
-            clearSelection();
-        }
-    }
-
-    private void clearSelection() {
-        if (mSelectedPositions.size() > 0) {
-            mSelectedPositions.clear();
-            notifyDataSetChanged();
-            if (mMultiSelectListener != null) {
-                mMultiSelectListener.onSelectedCountChanged(getSelectionCount());
-            }
-        }
+        mSelectedPositions.clear();
+        notifyDataSetChanged();
     }
 
     int getSelectionCount() {
@@ -220,7 +215,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     }
 
     void loadSites() {
-        if (!mIsTaskRunning) {
+        if (mIsTaskRunning) {
+            AppLog.w(AppLog.T.UTILS, "site picker > already loading sites");
+        } else {
             new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -272,7 +269,37 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    static class SiteList extends ArrayList<SiteRecord> {
+    /**
+     * SiteRecord is a simplified version of the full account (blog) record
+     */
+    static class SiteRecord {
+        final int localId;
+        final String blogId;
+        final String blogName;
+        final String hostName;
+        final String url;
+        final String blavatarUrl;
+        final boolean isHidden;
+
+        SiteRecord(Map<String, Object> account) {
+            localId = MapUtils.getMapInt(account, "id");
+            blogId = MapUtils.getMapStr(account, "blogId");
+            blogName = BlogUtils.getBlogNameFromAccountMap(account);
+            hostName = BlogUtils.getHostNameFromAccountMap(account);
+            url = MapUtils.getMapStr(account, "url");
+            blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
+            isHidden = MapUtils.getMapBool(account, "isHidden");
+        }
+
+        String getBlogNameOrHostName() {
+            if (TextUtils.isEmpty(blogName)) {
+                return hostName;
+            }
+            return blogName;
+        }
+    }
+
+    private static class SiteList extends ArrayList<SiteRecord> {
         SiteList() { }
         SiteList(List<Map<String, Object>> accounts) {
             if (accounts != null) {
