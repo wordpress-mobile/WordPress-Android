@@ -52,6 +52,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private Activity mActivity;
     private EditorWebView mWebView;
 
+    private ToggleButton mHtmlButton;
+
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
 
     public static EditorFragment newInstance(String title, String content) {
@@ -103,8 +105,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         ToggleButton linkButton = (ToggleButton) view.findViewById(R.id.format_bar_button_link);
         mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_LINK, linkButton);
 
-        ToggleButton htmlButton = (ToggleButton) view.findViewById(R.id.format_bar_button_html);
-        mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_HTML, htmlButton);
+        mHtmlButton = (ToggleButton) view.findViewById(R.id.format_bar_button_html);
+        mHtmlButton.setOnClickListener(this);
 
         for (ToggleButton button : mTagToggleButtonMap.values()) {
             button.setOnClickListener(this);
@@ -154,8 +156,25 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.bold) {
+        if (id == R.id.format_bar_button_bold) {
             mWebView.execJavaScriptFromString("ZSSEditor.setBold();");
+        } else if (id == R.id.format_bar_button_italic) {
+            mWebView.execJavaScriptFromString("ZSSEditor.setItalic();");
+        } else if (id == R.id.format_bar_button_quote) {
+            mWebView.execJavaScriptFromString("ZSSEditor.setBlockquote();");
+        } else if (id == R.id.format_bar_button_ul) {
+            mWebView.execJavaScriptFromString("ZSSEditor.setUnorderedList();");
+        } else if (id == R.id.format_bar_button_ol) {
+            mWebView.execJavaScriptFromString("ZSSEditor.setOrderedList();");
+        } else if (id == R.id.format_bar_button_media) {
+            // TODO: Handle inserting media
+            ((ToggleButton) v).setChecked(false);
+        } else if (id == R.id.format_bar_button_link) {
+            // TODO: Handle inserting a link
+            ((ToggleButton) v).setChecked(false);
+        } else if (id == R.id.format_bar_button_html) {
+            // TODO: Handle HTML mode toggling
+            ((ToggleButton) v).setChecked(false);
         }
     }
 
