@@ -75,7 +75,9 @@ public class Utils {
         Map<String, String> selectionArgs = new HashMap<>();
         for (String pair : keyValueSet) {
             String[] splitString = pair.split("=");
-            selectionArgs.put(splitString[0], splitString[1]);
+            if (splitString.length == 2) {
+                selectionArgs.put(splitString[0], splitString[1]);
+            }
         }
         return selectionArgs;
     }
