@@ -35,9 +35,8 @@ import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
 
-    public static void showSitePickerForResult(Activity activity, boolean visibleAccountsOnly) {
+    public static void showSitePickerForResult(Activity activity) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
-        intent.putExtra(SitePickerActivity.ARG_VISIBLE_ONLY, visibleAccountsOnly);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
                 R.anim.activity_slide_in_from_left,

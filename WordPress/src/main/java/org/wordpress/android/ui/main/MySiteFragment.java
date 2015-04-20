@@ -64,7 +64,7 @@ public class MySiteFragment extends Fragment
         switchSiteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.showSitePickerForResult(getActivity(), true);
+                ActivityLauncher.showSitePickerForResult(getActivity());
             }
         });
 
