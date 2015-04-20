@@ -141,7 +141,7 @@
     <string name="remove_featured_image">Remove featured image</string>
     <string name="featured_image">Featured Image</string>
     <string name="featured_image_is_set">Featured image is set successfully</string>
-    <string name="featured_image_only_one">Only one image can be selected as featured image</string>
+    <string name="featured_image_only_one">Multi-select mode is disabled. Only one image can be selected as featured image</string>
 
     <!-- Upload Media -->
     <string name="media_no_video_title">VideoPress unavailable</string>

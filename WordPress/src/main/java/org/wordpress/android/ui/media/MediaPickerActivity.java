@@ -223,7 +223,9 @@ public class MediaPickerActivity extends ActionBarActivity
         mViewPager.setPagingEnabled(false);
         mActionMode = mode;
 
-        animateTabGone();
+        if (!mSetFeaturedImageMode) {
+            animateTabGone();
+        }
     }
 
     @Override
@@ -233,7 +235,9 @@ public class MediaPickerActivity extends ActionBarActivity
         mViewPager.setPagingEnabled(true);
         mActionMode = null;
 
-        animateTabAppear();
+        if (!mSetFeaturedImageMode) {
+            animateTabAppear();
+        }
     }
 
     /*
@@ -246,6 +250,11 @@ public class MediaPickerActivity extends ActionBarActivity
 
     @Override
     public void onMediaSelected(MediaItem mediaContent, boolean selected) {
+        if (mSetFeaturedImageMode && mActionMode != null) {
+            mActionMode.finish();
+            showFeaturedImageOnlyOne();
+            mActionMode = null;
+        }
     }
 
     @Override
@@ -260,12 +269,7 @@ public class MediaPickerActivity extends ActionBarActivity
     @Override
     public void onMediaSelectionConfirmed(ArrayList<MediaItem> mediaContent) {
         if (mediaContent != null) {
-            if (mSetFeaturedImageMode && mediaContent.size() > 1) {
-                showFeaturedImageOnlyOne();
-                finish();
-            } else {
-                finishWithResults(mediaContent, ACTIVITY_RESULT_CODE_MEDIA_SELECTED);
-            }
+            finishWithResults(mediaContent, ACTIVITY_RESULT_CODE_MEDIA_SELECTED);
         } else {
             finish();
         }
