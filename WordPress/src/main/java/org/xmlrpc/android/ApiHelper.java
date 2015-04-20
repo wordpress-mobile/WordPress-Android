@@ -4,11 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Xml;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.ServerError;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
 import org.wordpress.android.WordPress;
@@ -28,20 +23,21 @@ import org.wordpress.android.util.MapUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1051,46 +1047,30 @@ public class ApiHelper {
     }
 
     /**
-     * Synchronous method to fetch the String content at the specified URL.
+     * Synchronous method to fetch the String content at the specified HTTP URL.
      *
-     * @param url                     URL to fetch contents for.
+     * @param stringUrl URL to fetch contents for.
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
-    public static String getResponse(final String url) throws SSLHandshakeException {
-        return getResponse(url, 3);
-    }
-
-    private static String getResponse(final String url, int maxRedirection)
-            throws SSLHandshakeException {
-        RequestFuture<String> requestFuture = RequestFuture.newFuture();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, requestFuture, requestFuture);
-        WordPress.requestQueue.add(stringRequest);
+    public static String getResponse(final String stringUrl) throws SSLHandshakeException {
         try {
-            // Wait for the response
-            return requestFuture.get(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            AppLog.e(T.API, e);
-            return null;
-        } catch (ExecutionException e) {
-            if (e.getCause() instanceof ServerError) {
-                NetworkResponse networkResponse = ((ServerError) e.getCause()).networkResponse;
-                if ((networkResponse != null) && (networkResponse.statusCode == HttpURLConnection.HTTP_MOVED_PERM ||
-                                                  networkResponse.statusCode == HttpURLConnection.HTTP_MOVED_TEMP)) {
-                    String newUrl = networkResponse.headers.get("Location");
-                    if (maxRedirection > 0) {
-                        return getResponse(newUrl, maxRedirection - 1);
-                    }
-                }
+            URL url = new URL(stringUrl);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setInstanceFollowRedirects(true);
+            InputStream inputStream = urlConnection.getInputStream();
+            BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = r.readLine()) != null) {
+                sb.append(line);
             }
-            if (e.getCause() != null && e.getCause().getCause() instanceof SSLHandshakeException) {
-                throw (SSLHandshakeException) e.getCause().getCause();
-            }
+            return sb.toString();
+        } catch (SSLHandshakeException e) {
+            throw e;
+        } catch (IOException e) {
             AppLog.e(T.API, e);
-            return null;
-        } catch (TimeoutException e) {
-            AppLog.e(T.API, e);
-            return null;
         }
+        return null;
     }
 
     /**
