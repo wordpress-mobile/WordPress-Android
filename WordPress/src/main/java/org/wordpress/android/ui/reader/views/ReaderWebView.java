@@ -20,9 +20,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPRestClient;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -217,22 +215,20 @@ public class ReaderWebView extends WebView {
                 try {
                     URL imageUrl = new URL(url);
                     HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
+                    conn.setRequestProperty("Authorization", "Bearer " + mToken);
                     conn.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);
                     conn.setConnectTimeout(WPRestClient.REST_TIMEOUT_MS);
-                    conn.setRequestProperty("Authorization", "Bearer " + mToken);
                     conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
                     conn.setRequestProperty("Connection", "Keep-Alive");
-                    conn.connect();
-                    if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        InputStream inputStream = new BufferedInputStream(conn.getInputStream());
-                        return new WebResourceResponse(conn.getContentType(), "UTF-8", inputStream);
-                    }
+                    return new WebResourceResponse(conn.getContentType(),
+                            conn.getContentEncoding(),
+                            conn.getInputStream());
                 } catch (IOException e) {
                     AppLog.e(AppLog.T.READER, e);
                 }
             }
 
-            return null;
+            return super.shouldInterceptRequest(view, url);
         }
     }
 
