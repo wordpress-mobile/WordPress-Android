@@ -212,7 +212,7 @@ public class EditPostSettingsFragment extends Fragment
         ((TextView) rootView.findViewById(R.id.postFormatLabel)).setText(getResources().getString(R.string.post_format).toUpperCase());
         ((TextView) rootView.findViewById(R.id.pubDateLabel)).setText(getResources().getString(R.string.publish_date).toUpperCase());
 
-        if (mPost.isPage()) { // remove post specific views
+        if (mActivity.getPost().isPage()) { // remove post specific views
             mExcerptEditText.setVisibility(View.GONE);
             (rootView.findViewById(R.id.sectionTags)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
@@ -249,7 +249,8 @@ public class EditPostSettingsFragment extends Fragment
                 }
             }
             mPostFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
-            ArrayAdapter<String> pfAdapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, mPostFormatTitles);
+
+            ArrayAdapter<String> pfAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, mPostFormatTitles);
             pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mPostFormatSpinner.setAdapter(pfAdapter);
             String activePostFormat = "standard";
@@ -281,7 +282,7 @@ public class EditPostSettingsFragment extends Fragment
             String[] items = new String[]{getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
                     getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private)};
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, items);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, items);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mStatusSpinner.setAdapter(adapter);
             mStatusSpinner.setOnTouchListener(
@@ -300,7 +301,8 @@ public class EditPostSettingsFragment extends Fragment
                         getResources().getString(R.string.pending_review),
                         getResources().getString(R.string.post_private)
                 };
-                adapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, items);
+
+                adapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, items);
                 mStatusSpinner.setAdapter(adapter);
             }
 

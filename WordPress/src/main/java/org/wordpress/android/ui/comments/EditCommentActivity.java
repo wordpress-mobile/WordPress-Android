@@ -159,15 +159,15 @@ public class EditCommentActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.menu_save_comment:
-                saveComment();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (i == R.id.menu_save_comment) {
+            saveComment();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="auth_required">Masuk lagi untuk melanjutkan.</string>
+	<string name="sign_in_jetpack">Masuk ke akun WordPress.com Anda untuk menyambungkan dengan Jetpack.</string>
+	<string name="two_step_sms_sent">Periksa pesan teks Anda untuk melihat kode verifikasi.</string>
+	<string name="two_step_footer_button">Kirimkan kode via pesan teks</string>
+	<string name="verify">Verifikasikan</string>
+	<string name="two_step_footer_label">Masukkan kode dari authenticator app.</string>
+	<string name="invalid_verification_code">Kode verifikasi tidak valid</string>
+	<string name="verification_code">Kode verifikasi</string>
+	<string name="editor_toast_invalid_path">Lokasi file tidak valid</string>
+	<string name="editor_toast_gallery_created_formatted">Galeri jadi dengan %d item</string>
+	<string name="editor_toast_gallery_pending_formatted">Pembuatan galeri menunggu %d unggahan</string>
+	<string name="error_publish_no_network">Tak bisa menerbitkan tanpa koneksi internet. Tersimpan sebagai draf.</string>
+	<string name="delete_from_collection">Hapus media</string>
+	<string name="media_details_dimensions">Dimensi:</string>
+	<string name="media_details_file_url">URL file:</string>
+	<string name="media_details_file_name">Nama file:</string>
+	<string name="media_details_file_type">Tipe file:</string>
+	<string name="media_details_added_on">Ditambahkan pada:</string>
+	<string name="media_details_uploaded_on">Diunggah pada:</string>
+	<string name="tab_title_device_videos">Video Perangkat</string>
+	<string name="tab_title_device_images">Gambar Perangkat</string>
+	<string name="tab_title_site_images">Gambar Situs</string>
+	<string name="tab_title_site_videos">Video Situs</string>
+	<string name="take_video">Ambil video</string>
+	<string name="take_photo">Ambil foto</string>
+	<string name="media_picker_title">Pilih media</string>
+	<string name="add_to_post">Tambahkan ke Pos</string>
+	<string name="language">Bahasa</string>
+	<string name="device">Perangkat</string>
 	<string name="posts_fetching">Memuat pos...</string>
 	<string name="media_fetching">Memuat media...</string>
 	<string name="toast_err_post_uploading">Gagal membuka pos saat diunggah</string>
@@ -233,7 +262,6 @@
 	<string name="auto_sharing_preference_reset">Atur ulang pengaturan berbagi-otomatis</string>
 	<string name="auto_sharing_preference_reset_caused_by_error">Blog yang dipilih sebelumnya tak lagi terlihat</string>
 	<string name="sdcard_message">Kartu SD tambahan diperlukan untuk mengunggah media</string>
-	<string name="stats_empty_top_authors">Tak ada pos yang telah ditampilkan</string>
 	<string name="stats_empty_comments">Belum ada tanggapan</string>
 	<string name="stats_bar_graph_empty">Belum ada statistik</string>
 	<string name="invalid_url_message">Pastikan URL blog yang dimasukkan itu benar</string>

@@ -49,7 +49,7 @@ public class CommentUtils {
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
             Drawable loading = textView.getContext().getResources().getDrawable(
-                    R.drawable.dashicon_format_image_big_grey);
+                org.wordpress.android.editor.R.drawable.dashicon_format_image_big_grey);
             Drawable failed = textView.getContext().getResources().getDrawable(R.drawable.noticon_warning_big_grey);
             html = HtmlUtils.fromHtml(content, new WPImageGetter(textView, maxImageSize, WordPress.imageLoader, loading,
                     failed));

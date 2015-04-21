@@ -5,12 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
+
     <org.wordpress.android.widgets.SlidingTabLayout
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/tab_background"
-        android:elevation="@dimen/tabs_elevation" />
+        android:background="@color/tab_background" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/theme_browser_pager"

@@ -18,8 +18,19 @@
  * limitations under the License.
  */
 
+
+
 package org.wordpress.android.widgets;
 
+/***
+ * IMPORTANT!! this differs from the original in that it has been hacked for WP Android
+ * to optionally support icons & badges rather than text, also added TabClickListener
+ */
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
@@ -31,7 +42,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -65,6 +79,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     }
 
+    public interface SingleTabClickListener {
+        void onTabClick(View view, int position);
+    }
+
     private static final int TITLE_OFFSET_DIPS = 24;
     private static final int TAB_VIEW_PADDING_DIPS = 16;
     private static final int TAB_VIEW_TEXT_SIZE_SP = 12;
@@ -75,9 +93,14 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private int mTabViewTextViewId;
     private boolean mDistributeEvenly;
 
+    private Integer[] mIcons;
+    private int mTabViewIconViewId;
+    private int mTabBadgeViewId;
+
     private ViewPager mViewPager;
     private SparseArray<String> mContentDescriptions = new SparseArray<String>();
     private ViewPager.OnPageChangeListener mViewPagerPageChangeListener;
+    private SingleTabClickListener mSingleTabClickListener;
 
     private final SlidingTabStrip mTabStrip;
 
@@ -137,6 +160,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
         mViewPagerPageChangeListener = listener;
     }
 
+    public void setOnSingleTabClickListener(SingleTabClickListener listener) {
+        mSingleTabClickListener = listener;
+    }
+
     /**
      * Set the custom layout to be inflated for the tab views.
      *
@@ -146,6 +173,71 @@ public class SlidingTabLayout extends HorizontalScrollView {
     public void setCustomTabView(int layoutResId, int textViewId) {
         mTabViewLayoutId = layoutResId;
         mTabViewTextViewId = textViewId;
+    }
+
+    /*
+     * use this version to display icons rather than text
+     */
+    public void setCustomTabView(int layoutResId, int imageViewId, int badgeViewId, Integer[] icons) {
+        mTabViewLayoutId = layoutResId;
+        mTabViewIconViewId = imageViewId;
+        mTabBadgeViewId = badgeViewId;
+        mIcons = icons;
+    }
+
+    public boolean isBadged(int position) {
+        final View badgeView = mTabStrip.findViewWithTag(makeBadgeTag(position));
+        return badgeView != null && badgeView.getVisibility() == View.VISIBLE;
+    }
+
+    /*
+     * adds or removes a badge for the tab at the passed index - only enabled when showing icons
+     */
+    public void setBadge(int position, boolean isBadged) {
+        final View badgeView = mTabStrip.findViewWithTag(makeBadgeTag(position));
+        if (badgeView == null) {
+            return;
+        }
+        boolean wasBadged = (badgeView.getVisibility() == View.VISIBLE);
+        if (isBadged == wasBadged) {
+            return;
+        }
+
+        float start = isBadged ? 0f : 1f;
+        float end = isBadged ? 1f : 0f;
+
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, start, end);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, start, end);
+        ObjectAnimator animScale = ObjectAnimator.ofPropertyValuesHolder(badgeView, scaleX, scaleY);
+
+        if (isBadged) {
+            animScale.setInterpolator(new BounceInterpolator());
+            animScale.setDuration(getContext().getResources().getInteger(android.R.integer.config_longAnimTime));
+            animScale.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    badgeView.setVisibility(View.VISIBLE);
+                }
+            });
+        } else {
+            animScale.setInterpolator(new AccelerateInterpolator());
+            animScale.setDuration(getContext().getResources().getInteger(android.R.integer.config_shortAnimTime));
+            animScale.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    badgeView.setVisibility(View.GONE);
+                }
+            });
+        }
+
+        animScale.start();
+    }
+
+    /*
+     * creates a unique string to use as a tag for tab-specific badges
+     */
+    private static String makeBadgeTag(int position) {
+        return "slidingtablayout-badgeview-" + Integer.toString(position);
     }
 
     /**
@@ -189,24 +281,35 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private void populateTabStrip() {
         final PagerAdapter adapter = mViewPager.getAdapter();
         final View.OnClickListener tabClickListener = new TabClickListener();
+        boolean showIcons = (mIcons != null && mIcons.length == adapter.getCount() && mTabViewIconViewId != 0);
 
         for (int i = 0; i < adapter.getCount(); i++) {
             View tabView = null;
-            TextView tabTitleView = null;
+            if (showIcons) {
+                tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip, false);
+                ImageView imgIcon = (ImageView) tabView.findViewById(mTabViewIconViewId);
+                imgIcon.setImageDrawable(getContext().getResources().getDrawable(mIcons[i]));
+                // tag the badge for this tab so it can be found by setBadge()
+                if (mTabBadgeViewId != 0) {
+                    View badgeView = tabView.findViewById(mTabBadgeViewId);
+                    if (badgeView != null) {
+                        badgeView.setTag(makeBadgeTag(i));
+                    }
+                }
+            } else {
+                TextView tabTitleView = null;
 
-            if (mTabViewLayoutId != 0) {
-                // If there is a custom tab view layout id set, try and inflate it
-                tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip,
-                        false);
-                tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
-            }
+                if (mTabViewLayoutId != 0) {
+                    tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip, false);
+                    tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
+                } else {
+                    tabView = createDefaultTabView(getContext());
+                    tabTitleView = (TextView) tabView;
+                }
 
-            if (tabView == null) {
-                tabView = createDefaultTabView(getContext());
-            }
-
-            if (tabTitleView == null && TextView.class.isInstance(tabView)) {
-                tabTitleView = (TextView) tabView;
+                if (tabTitleView != null) {
+                    tabTitleView.setText(adapter.getPageTitle(i));
+                }
             }
 
             if (mDistributeEvenly) {
@@ -215,7 +318,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 lp.weight = 1;
             }
 
-            tabTitleView.setText(adapter.getPageTitle(i));
             tabView.setOnClickListener(tabClickListener);
             String desc = mContentDescriptions.get(i, null);
             if (desc != null) {
@@ -307,7 +409,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 mViewPagerPageChangeListener.onPageSelected(position);
             }
         }
-
     }
 
     private class TabClickListener implements View.OnClickListener {
@@ -315,6 +416,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
         public void onClick(View v) {
             for (int i = 0; i < mTabStrip.getChildCount(); i++) {
                 if (v == mTabStrip.getChildAt(i)) {
+                    // fire the single tab click listener before changing the current item
+                    if (mSingleTabClickListener != null) {
+                        mSingleTabClickListener.onTabClick(v, i);
+                    }
                     mViewPager.setCurrentItem(i);
                     return;
                 }
