@@ -3,6 +3,7 @@ package org.wordpress.android.ui.media;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Parcel;
@@ -94,7 +95,7 @@ public class MediaSourceWPImages implements MediaSource {
                     }
 
                     if (imageBitmap == null) {
-                        imageView.setImageResource(R.color.grey_darken_10);
+                        imageView.setImageDrawable(placeholderDrawable(convertView.getContext()));
                         MediaUtils.BackgroundDownloadWebImage bgDownload = new MediaUtils.BackgroundDownloadWebImage(imageView);
                         imageView.setTag(bgDownload);
                         bgDownload.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mediaItem.getPreviewSource());
@@ -114,6 +115,14 @@ public class MediaSourceWPImages implements MediaSource {
     @Override
     public boolean onMediaItemSelected(MediaItem mediaItem, boolean selected) {
         return !selected;
+    }
+
+    private Drawable placeholderDrawable(Context context) {
+        if (context != null && context.getResources() != null) {
+            return context.getResources().getDrawable(R.drawable.media_item_placeholder);
+        }
+
+        return null;
     }
 
     private void addWordPressImagesFromCursor(Cursor cursor) {
