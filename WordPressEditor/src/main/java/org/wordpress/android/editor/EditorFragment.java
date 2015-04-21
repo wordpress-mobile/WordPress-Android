@@ -41,7 +41,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private static final String TAG_FORMAT_BAR_BUTTON_UL = "unorderedList";
     private static final String TAG_FORMAT_BAR_BUTTON_OL = "orderedList";
     private static final String TAG_FORMAT_BAR_BUTTON_LINK = "link";
-    private static final String TAG_FORMAT_BAR_BUTTON_HTML = "html";
 
     private static final float TOOLBAR_ALPHA_ENABLED = 1;
     private static final float TOOLBAR_ALPHA_DISABLED = 0.5f;
@@ -51,8 +50,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private Activity mActivity;
     private EditorWebView mWebView;
-
-    private ToggleButton mHtmlButton;
 
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
 
@@ -105,8 +102,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         ToggleButton linkButton = (ToggleButton) view.findViewById(R.id.format_bar_button_link);
         mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_LINK, linkButton);
 
-        mHtmlButton = (ToggleButton) view.findViewById(R.id.format_bar_button_html);
-        mHtmlButton.setOnClickListener(this);
+        ToggleButton htmlButton = (ToggleButton) view.findViewById(R.id.format_bar_button_html);
+        htmlButton.setOnClickListener(this);
 
         for (ToggleButton button : mTagToggleButtonMap.values()) {
             button.setOnClickListener(this);
