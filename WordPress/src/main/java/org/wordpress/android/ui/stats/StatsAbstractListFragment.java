@@ -70,7 +70,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract int getTotalsLabelResId();
     protected abstract int getEmptyLabelTitleResId();
     protected abstract int getEmptyLabelDescResId();
-    protected abstract StatsService.StatsEndpointsEnum[] getSectionsToUpdate();
     protected abstract void updateUI();
     protected abstract boolean isExpandableList();
     protected abstract boolean isViewAllOptionAvailable();
@@ -183,7 +182,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         } else {
             //showHideNoResultsUI(true);
             showEmptyUI();
-            mMoreDataListener.onRefreshRequested(getSectionsToUpdate());
+            refreshStats();
         }
     }
 
@@ -330,7 +329,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 viewAllIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, getTimeframe());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, getViewType());
-                viewAllIntent.putExtra(StatsAbstractFragment.ARGS_START_DATE, getStartDate());
+                viewAllIntent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, getDate());
                 viewAllIntent.putExtra(ARGS_IS_SINGLE_VIEW, true);
                 if (mTopPagerContainer.getVisibility() == View.VISIBLE) {
                     viewAllIntent.putExtra(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
@@ -413,6 +412,18 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             return;
         }
 
+        if (!getDate().equals(event.mDate)) {
+            return;
+        }
+
+        if (!event.mRequestBlogId.equals(StatsUtils.getBlogId(getLocalTableBlogID()))) {
+            return;
+        }
+
+        if (event.mTimeframe != getTimeframe()) {
+            return;
+        }
+
         StatsService.StatsEndpointsEnum sectionToUpdate = event.mEndPointName;
         StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionsToUpdate();
         int indexOfDatamodelMatch = -1;
@@ -435,10 +446,5 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
         mDatamodels[indexOfDatamodelMatch] = event.mResponseObjectModel;
         updateUI();
-    }
-
-    @Override
-    protected void resetDataModel() {
-        mDatamodels = null;
     }
 }

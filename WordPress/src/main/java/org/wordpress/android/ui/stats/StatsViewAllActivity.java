@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -43,14 +42,11 @@ import de.greenrobot.event.EventBus;
  *  Single item details activity.
  */
 public class StatsViewAllActivity extends ActionBarActivity
-        implements StatsAbstractListFragment.OnRequestDataListener,
-        StatsAbstractFragment.TimeframeDateProvider {
+        implements StatsAbstractListFragment.OnRequestDataListener {
 
     private boolean mIsInFront;
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-
-    private final Handler mHandler = new Handler();
 
     private StatsAbstractListFragment mFragment;
 
@@ -104,14 +100,14 @@ public class StatsViewAllActivity extends ActionBarActivity
                 mRestResponse = (Serializable[]) oldData;
             }
             mTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
-            mDate = savedInstanceState.getString(StatsAbstractFragment.ARGS_START_DATE);
+            mDate = savedInstanceState.getString(StatsAbstractFragment.ARGS_SELECTED_DATE);
             mStatsViewType = (StatsViewType) savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE);
             mOuterPagerSelectedButtonIndex = savedInstanceState.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mLocalBlogID = extras.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
             mTimeframe = (StatsTimeframe) extras.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
-            mDate = extras.getString(StatsAbstractFragment.ARGS_START_DATE);
+            mDate = extras.getString(StatsAbstractFragment.ARGS_SELECTED_DATE);
             mStatsViewType = (StatsViewType) extras.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE);
             mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
         }
@@ -219,12 +215,13 @@ public class StatsViewAllActivity extends ActionBarActivity
                 break;
         }
 
+        fragment.setTimeframe(mTimeframe);
+        fragment.setDate(mDate);
+
         Bundle args = new Bundle();
         args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         args.putSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE, mStatsViewType);
-        args.putSerializable(StatsAbstractFragment.ARGS_TIMEFRAME, mTimeframe);
         args.putBoolean(StatsAbstractListFragment.ARGS_IS_SINGLE_VIEW, true); // Always true here
-        args.putString(StatsAbstractFragment.ARGS_START_DATE, mDate);
         args.putInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mOuterPagerSelectedButtonIndex);
         args.putSerializable(StatsAbstractFragment.ARG_REST_RESPONSE, mRestResponse);
         fragment.setArguments(args);
@@ -236,7 +233,7 @@ public class StatsViewAllActivity extends ActionBarActivity
         outState.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putSerializable(StatsAbstractFragment.ARG_REST_RESPONSE, mRestResponse);
         outState.putSerializable(StatsAbstractFragment.ARGS_TIMEFRAME, mTimeframe);
-        outState.putString(StatsAbstractFragment.ARGS_START_DATE, mDate);
+        outState.putString(StatsAbstractFragment.ARGS_SELECTED_DATE, mDate);
         outState.putSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE, mStatsViewType);
         outState.putInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mOuterPagerSelectedButtonIndex);
         super.onSaveInstanceState(outState);
@@ -377,16 +374,6 @@ public class StatsViewAllActivity extends ActionBarActivity
         AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + singlePostRestPath);
     }
 
-    @Override
-    public void onRefreshRequested(StatsService.StatsEndpointsEnum[] endPointsNeedUpdate) {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshStats();
-            }
-        }, 75L);
-    }
-
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
         private final String mRequestBlogId;
         private final StatsTimeframe mTimeframe;
@@ -419,7 +406,8 @@ public class StatsViewAllActivity extends ActionBarActivity
                         try {
                             //AppLog.d(AppLog.T.STATS, response.toString());
                             final Serializable resp = StatsUtils.parseResponse(mEndpointName, mRequestBlogId, response);
-                            EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, resp));
+                            EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName,
+                                    mRequestBlogId, mTimeframe, mDate, resp));
                         } catch (JSONException e) {
                             AppLog.e(AppLog.T.STATS, e);
                         }
@@ -453,16 +441,5 @@ public class StatsViewAllActivity extends ActionBarActivity
 
     private void resetModelVariables() {
         mRestResponse = null;
-    }
-
-    // Fragments call these two methods below to access the current timeframe/date selected by the user.
-    @Override
-    public String getCurrentDate() {
-        return mDate;
-    }
-
-    @Override
-    public StatsTimeframe getCurrentTimeFrame() {
-        return mTimeframe;
     }
 }

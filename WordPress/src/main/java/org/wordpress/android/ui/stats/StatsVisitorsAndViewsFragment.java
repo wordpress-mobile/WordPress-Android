@@ -299,7 +299,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             updateUI();
         } else {
             setupNoResultsUI(true);
-            mMoreDataListener.onRefreshRequested(new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.VISITS});
+            refreshStats();
         }
     }
 
@@ -579,7 +579,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         return "";
     }
 
-
     /**
      * Return the date string that is displayed under each bar in the graph
      */
@@ -653,6 +652,18 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.SectionUpdated event) {
         if (!isAdded()) {
+            return;
+        }
+
+        if (!getDate().equals(event.mDate)) {
+            return;
+        }
+
+        if (!event.mRequestBlogId.equals(StatsUtils.getBlogId(getLocalTableBlogID()))) {
+            return;
+        }
+
+        if (event.mTimeframe != getTimeframe()) {
             return;
         }
 
@@ -786,7 +797,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     @Override
-    protected void resetDataModel() {
-        mVisitsData = null;
+    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.VISITS
+        };
     }
 }

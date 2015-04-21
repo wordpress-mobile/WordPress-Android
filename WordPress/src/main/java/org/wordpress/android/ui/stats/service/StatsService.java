@@ -20,6 +20,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -28,26 +29,21 @@ import de.greenrobot.event.EventBus;
 
 /**
  * Background service to retrieve Stats.
- * Parsing of response(s) is done by using a ThreadPoolExecutor with a single thread.
+ * Parsing of response(s) and submission of new network calls are done by using a ThreadPoolExecutor with a single thread.
  */
 
 public class StatsService extends Service {
     public static final String ARG_BLOG_ID = "blog_id";
     public static final String ARG_PERIOD = "stats_period";
     public static final String ARG_DATE = "stats_date";
-    public static final String ARG_UPDATE_ALLTIME_STATS = "ARG_UPDATE_ALLTIME_STATS";
-    public static final String ARG_UPDATE_GRAPH_STATS = "ARG_UPDATE_GRAPH_STATS";
+    public static final String ARG_SECTION = "stats_section";
+
     public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS,
         VIDEO_PLAYS, COMMENTS, FOLLOWERS_WPCOM, FOLLOWERS_EMAIL, COMMENT_FOLLOWERS, TAGS_AND_CATEGORIES,
         PUBLICIZE, SEARCH_TERMS}
 
-    private String mServiceBlogId;
-    private StatsTimeframe mServiceRequestedTimeframe;
-    private String mServiceRequestedDate;
     private int mServiceStartId;
     private final LinkedList<Request<JSONObject>> mStatsNetworkRequests = new LinkedList<>();
-    private int mNumberOfNetworkCalls = 0; // The number of networks calls made by Stats.
-    private int mNumberOfFinishedNetworkCalls = 0; // The number of networks calls made by Stats.
     protected ThreadPoolExecutor parseResponseExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
 
     @Override
@@ -87,48 +83,41 @@ public class StatsService extends Service {
             return START_NOT_STICKY;
         }
 
-        StatsTimeframe period = StatsTimeframe.DAY;
+        final StatsTimeframe period;
         if (intent.hasExtra(ARG_PERIOD)) {
             period = (StatsTimeframe) intent.getSerializableExtra(ARG_PERIOD);
+        } else {
+            period = StatsTimeframe.DAY;
         }
 
-        String requestedDate = intent.getStringExtra(ARG_DATE);
-        if (requestedDate == null) {
+        final String requestedDate;
+        if (intent.getStringExtra(ARG_DATE) == null) {
             AppLog.w(T.STATS, "StatsService is started with a NULL date on this blogID - "
                     + blogId + ". Using current date!!!");
             int parsedBlogID = Integer.parseInt(blogId);
             int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
             requestedDate = StatsUtils.getCurrentDateTZ(localTableBlogId);
-        }
-
-        // True when the network call to update the graph is needed
-        boolean updateAlltimeStats = intent.getBooleanExtra(ARG_UPDATE_ALLTIME_STATS, true);
-        boolean updateGraphStats = intent.getBooleanExtra(ARG_UPDATE_GRAPH_STATS, true);
-
-        if (mServiceBlogId == null) {
-            startTasks(blogId, period, requestedDate, updateGraphStats, updateAlltimeStats, startId);
-        } else if (blogId.equals(mServiceBlogId) && mServiceRequestedTimeframe == period
-                && requestedDate.equals(mServiceRequestedDate)) {
-            // already running on the same blogID, same period
-            // Do nothing
-            AppLog.i(T.STATS, "StatsService is already running on this blogID - " + mServiceBlogId
-                    + " for the same period and the same date.");
         } else {
-            // stats is running on a different blogID
-            stopRefresh();
-            startTasks(blogId, period, requestedDate, updateGraphStats, updateAlltimeStats, startId);
+            requestedDate = intent.getStringExtra(ARG_DATE);
         }
-        // Always update the startId. Always.
+
+        StatsEndpointsEnum[] sectionsToUpdate = (StatsEndpointsEnum[]) intent.getSerializableExtra(ARG_SECTION);
+
         this.mServiceStartId = startId;
+        for (final StatsEndpointsEnum sectionToUpdate : sectionsToUpdate) {
+            parseResponseExecutor.submit(new Thread() {
+                @Override
+                public void run() {
+                    startTasks(blogId, period, requestedDate, sectionToUpdate);
+                }
+            });
+        }
 
         return START_NOT_STICKY;
     }
 
     private void stopRefresh() {
         synchronized (mStatsNetworkRequests) {
-            this.mServiceBlogId = null;
-            this.mServiceRequestedTimeframe = StatsTimeframe.DAY;
-            this.mServiceRequestedDate = null;
             this.mServiceStartId = 0;
             for (Request<JSONObject> req : mStatsNetworkRequests) {
                 if (req != null && !req.hasHadResponseDelivered() && !req.isCanceled()) {
@@ -136,108 +125,74 @@ public class StatsService extends Service {
                 }
             }
             mStatsNetworkRequests.clear();
-            mNumberOfFinishedNetworkCalls = 0;
-            mNumberOfNetworkCalls = 0;
         }
     }
 
-    private void startTasks(final String blogId, final StatsTimeframe timeframe, final String date,
-                            final boolean updateGraphStats, final boolean updateAlltimeStats, final int startId) {
-        this.mServiceBlogId = blogId;
-        this.mServiceRequestedTimeframe = timeframe;
-        this.mServiceRequestedDate = date;
-        this.mServiceStartId = startId;
+    private void startTasks(final String blogId, final StatsTimeframe timeframe, final String date, final StatsEndpointsEnum sectionToUpdate) {
 
-        new Thread() {
-            @Override
-            public void run() {
-                final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
+        final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
 
-                String period = timeframe.getLabelForRestCall();
+        String period = timeframe.getLabelForRestCall();
 
-                AppLog.i(T.STATS, "Update started for blogID - " + blogId + " with the following period: " + period
-                        + " on the following date: " + mServiceRequestedDate);
+        AppLog.i(T.STATS, "Update started for blogID - " + blogId + " with the following period: " + period
+                + " on the following date: " + date + " for the following section: " + sectionToUpdate.name());
 
-                EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(true));
+        EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(true));
 
-                synchronized (mStatsNetworkRequests) {
-                    if (updateGraphStats) {
-                        // Visits call: The Graph and the section just below the graph
-                        RestListener vListener = new RestListener(StatsEndpointsEnum.VISITS, mServiceBlogId, mServiceRequestedTimeframe);
-                        final String visitsPath = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", mServiceBlogId, period, mServiceRequestedDate);
-                        mStatsNetworkRequests.add(restClientUtils.get(visitsPath, vListener, vListener));
-                    }
-
-                    // Posts & Pages
-                    RestListener topPostsAndPagesListener = new RestListener(StatsEndpointsEnum.TOP_POSTS, mServiceBlogId, mServiceRequestedTimeframe);
-                    final String topPostsAndPagesPath = String.format("/sites/%s/stats/top-posts?period=%s&date=%s&max=%s", mServiceBlogId, period, mServiceRequestedDate, 12);
-                    mStatsNetworkRequests.add(restClientUtils.get(topPostsAndPagesPath, topPostsAndPagesListener, topPostsAndPagesListener));
-
-                    // Referrers
-                    RestListener referrersListener = new RestListener(StatsEndpointsEnum.REFERRERS, mServiceBlogId, mServiceRequestedTimeframe);
-                    final String referrersPath = String.format("/sites/%s/stats/referrers?period=%s&date=%s&max=%s", mServiceBlogId, period, mServiceRequestedDate, 12);
-                    mStatsNetworkRequests.add(restClientUtils.get(referrersPath, referrersListener, referrersListener));
-
-                    // Clicks
-                    RestListener clicksListener = new RestListener(StatsEndpointsEnum.CLICKS, mServiceBlogId, mServiceRequestedTimeframe);
-                    final String clicksPath = String.format("/sites/%s/stats/clicks?period=%s&date=%s&max=%s", mServiceBlogId, period, mServiceRequestedDate, 12);
-                    mStatsNetworkRequests.add(restClientUtils.get(clicksPath, clicksListener, clicksListener));
-
-                    // Geoviews
-                    RestListener countriesListener = new RestListener(StatsEndpointsEnum.GEO_VIEWS, mServiceBlogId, mServiceRequestedTimeframe);
-                    final String countriesPath = String.format("/sites/%s/stats/country-views?period=%s&date=%s&max=%s", mServiceBlogId, period, mServiceRequestedDate, 12);
-                    mStatsNetworkRequests.add(restClientUtils.get(countriesPath, countriesListener, countriesListener));
-
-                    // Authors
-                    RestListener authorsListener = new RestListener(StatsEndpointsEnum.AUTHORS, mServiceBlogId, mServiceRequestedTimeframe);
-                    final String authorsPath = String.format("/sites/%s/stats/top-authors?period=%s&date=%s&max=%s", mServiceBlogId, period, mServiceRequestedDate, 12);
-                    mStatsNetworkRequests.add(restClientUtils.get(authorsPath, authorsListener, authorsListener));
-
-                    // Video plays
-                    RestListener videoPlaysListener = new RestListener(StatsEndpointsEnum.VIDEO_PLAYS, mServiceBlogId, mServiceRequestedTimeframe);
-                    final String videoPlaysPath = String.format("/sites/%s/stats/video-plays?period=%s&date=%s&max=%s", mServiceBlogId, period, mServiceRequestedDate, 12);
-                    mStatsNetworkRequests.add(restClientUtils.get(videoPlaysPath, videoPlaysListener, videoPlaysListener));
-
-                    // Video plays
-                    RestListener searchTermsListener = new RestListener(StatsEndpointsEnum.SEARCH_TERMS, mServiceBlogId, mServiceRequestedTimeframe);
-                    final String searchTermsPath = String.format("/sites/%s/stats/search-terms?period=%s&date=%s&max=%s", mServiceBlogId, period, mServiceRequestedDate, 12);
-                    mStatsNetworkRequests.add(restClientUtils.get(searchTermsPath, searchTermsListener, searchTermsListener));
-
-                    if (updateAlltimeStats) {
-                        // Comments
-                        RestListener commentsListener = new RestListener(StatsEndpointsEnum.COMMENTS, mServiceBlogId, mServiceRequestedTimeframe);
-                        final String commentsPath = String.format("/sites/%s/stats/comments", mServiceBlogId); // No max parameter available
-                        mStatsNetworkRequests.add(restClientUtils.get(commentsPath, commentsListener, commentsListener));
-
-                        // Comments Followers
-                        RestListener commentFollowersListener = new RestListener(StatsEndpointsEnum.COMMENT_FOLLOWERS, mServiceBlogId, mServiceRequestedTimeframe);
-                        final String commentFollowersPath = String.format("/sites/%s/stats/comment-followers?max=%s", mServiceBlogId, 12);
-                        mStatsNetworkRequests.add(restClientUtils.get(commentFollowersPath, commentFollowersListener, commentFollowersListener));
-
-                        // Followers WPCOM
-                        RestListener followersListener = new RestListener(StatsEndpointsEnum.FOLLOWERS_WPCOM, mServiceBlogId, mServiceRequestedTimeframe);
-                        final String followersPath = String.format("/sites/%s/stats/followers?type=wpcom&max=%s", mServiceBlogId, 12);
-                        mStatsNetworkRequests.add(restClientUtils.get(followersPath, followersListener, followersListener));
-
-                        // Followers EMAIL
-                        RestListener followersEmailListener = new RestListener(StatsEndpointsEnum.FOLLOWERS_EMAIL, mServiceBlogId, mServiceRequestedTimeframe);
-                        final String followersEmailPath = String.format("/sites/%s/stats/followers?type=email&max=%s", mServiceBlogId, 12);
-                        mStatsNetworkRequests.add(restClientUtils.get(followersEmailPath, followersEmailListener, followersEmailListener));
-
-                        // Tags and Categories
-                        RestListener tagsListener = new RestListener(StatsEndpointsEnum.TAGS_AND_CATEGORIES, mServiceBlogId, mServiceRequestedTimeframe);
-                        final String tagsPath = String.format("/sites/%s/stats/tags?max=%s", mServiceBlogId, 12);
-                        mStatsNetworkRequests.add(restClientUtils.get(tagsPath, tagsListener, tagsListener));
-
-                        // Publicize
-                        RestListener publicizeListener = new RestListener(StatsEndpointsEnum.PUBLICIZE, mServiceBlogId, mServiceRequestedTimeframe);
-                        final String publicizePath = String.format("/sites/%s/stats/publicize?max=%s", mServiceBlogId, 12);
-                        mStatsNetworkRequests.add(restClientUtils.get(publicizePath, publicizeListener, publicizeListener));
-                    }
-                    mNumberOfNetworkCalls = mStatsNetworkRequests.size();
-                 }
-            } // end run
-        } .start();
+        RestListener vListener = new RestListener(sectionToUpdate, blogId, timeframe, date);
+        final String path;
+        synchronized (mStatsNetworkRequests) {
+            switch (sectionToUpdate) {
+                case VISITS:
+                    path = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", blogId, period, date);
+                    break;
+                case TOP_POSTS:
+                    path = String.format("/sites/%s/stats/top-posts?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    break;
+                case REFERRERS:
+                    path = String.format("/sites/%s/stats/referrers?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    break;
+                case CLICKS:
+                    path = String.format("/sites/%s/stats/clicks?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    break;
+                case GEO_VIEWS:
+                    path = String.format("/sites/%s/stats/country-views?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    break;
+                case AUTHORS:
+                    path = String.format("/sites/%s/stats/top-authors?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    break;
+                case VIDEO_PLAYS:
+                    path = String.format("/sites/%s/stats/video-plays?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    break;
+                case COMMENTS:
+                    path = String.format("/sites/%s/stats/comments", blogId); // No max parameter available
+                    break;
+                case FOLLOWERS_WPCOM:
+                    path = String.format("/sites/%s/stats/followers?type=wpcom&max=%s", blogId, 12);
+                    break;
+                case FOLLOWERS_EMAIL:
+                    path = String.format("/sites/%s/stats/followers?type=email&max=%s", blogId, 12);
+                    break;
+                case COMMENT_FOLLOWERS:
+                    path = String.format("/sites/%s/stats/comment-followers?max=%s", blogId, 12);
+                    break;
+                case TAGS_AND_CATEGORIES:
+                    path = String.format("/sites/%s/stats/tags?max=%s", blogId, 12);
+                    break;
+                case PUBLICIZE:
+                    path = String.format("/sites/%s/stats/publicize?max=%s", blogId, 12);
+                    break;
+                case SEARCH_TERMS:
+                    path = String.format("/sites/%s/stats/search-terms?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    break;
+                default:
+                    AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());
+                    return;
+            }
+            Request<JSONObject> currentRequest = restClientUtils.get(path, vListener, vListener);
+            currentRequest.setTag("StatsCall");
+            mStatsNetworkRequests.add(currentRequest);
+        }
     }
 
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
@@ -245,27 +200,20 @@ public class StatsService extends Service {
         private final StatsTimeframe mTimeframe;
         protected Serializable mResponseObjectModel;
         final StatsEndpointsEnum mEndpointName;
+        private final String mDate;
 
-        public RestListener(StatsEndpointsEnum endpointName, String blogId, StatsTimeframe timeframe) {
+        public RestListener(StatsEndpointsEnum endpointName, String blogId, StatsTimeframe timeframe, String date) {
             mRequestBlogId = blogId;
             mTimeframe = timeframe;
             mEndpointName = endpointName;
+            mDate = date;
         }
 
         @Override
         public void onResponse(final JSONObject response) {
-            if (mServiceBlogId == null || mServiceRequestedTimeframe == null
-            || !mServiceBlogId.equals(mRequestBlogId) || mServiceRequestedTimeframe != mTimeframe ) {
-                return;
-            }
             parseResponseExecutor.submit(new Thread() {
                 @Override
                 public void run() {
-                    // Re-check here that the use has not changed the blog
-                    if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
-                        return;
-                    }
-                    mNumberOfFinishedNetworkCalls++;
                     // do other stuff here
                     if (response != null) {
                         try {
@@ -275,7 +223,7 @@ public class StatsService extends Service {
                             AppLog.e(AppLog.T.STATS, e);
                         }
                     }
-                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mResponseObjectModel));
+                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate, mResponseObjectModel));
                     checkAllRequestsFinished();
                 }
             });
@@ -283,21 +231,13 @@ public class StatsService extends Service {
 
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
-            if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
-                return;
-            }
             parseResponseExecutor.submit(new Thread() {
                 @Override
                 public void run() {
-                    // Re-check here that the use has not changed the blog
-                    if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
-                        return;
-                    }
-                    mNumberOfFinishedNetworkCalls++;
                     AppLog.e(T.STATS, this.getClass().getName() + " responded with an Error");
                     StatsUtils.logVolleyErrorDetails(volleyError);
                     mResponseObjectModel = volleyError;
-                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mResponseObjectModel));
+                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate, mResponseObjectModel));
                     checkAllRequestsFinished();
                 }
             });
@@ -314,19 +254,19 @@ public class StatsService extends Service {
         stopSelf(mServiceStartId);
     }
 
-    /*
-     * called when either (a) the response has been received and parsed, or (b) the request failed
-     *
-     * Only one Thread access this method at the same time
-     *
-     */
-    private void checkAllRequestsFinished() {
-        if (isNetworkingDone()) {
-            stopService();
-        }
-    }
 
-    boolean isNetworkingDone() {
-        return mNumberOfFinishedNetworkCalls == mNumberOfNetworkCalls;
+    void checkAllRequestsFinished() {
+        synchronized (mStatsNetworkRequests) {
+            Iterator<Request<JSONObject>> it = mStatsNetworkRequests.iterator();
+            while (it.hasNext()) {
+                Request<JSONObject> req = it.next();
+                if (req.hasHadResponseDelivered() || req.isCanceled()) {
+                    it.remove();
+                }
+            }
+            if (mStatsNetworkRequests.size() == 0) {
+                EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(false));
+            }
+        }
     }
 }
