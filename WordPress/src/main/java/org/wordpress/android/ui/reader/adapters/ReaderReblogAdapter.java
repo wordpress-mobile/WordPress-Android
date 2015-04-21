@@ -105,7 +105,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         final ReblogHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.reader_spinner_dropdown_item, parent, false);
+            convertView = mInflater.inflate(R.layout.toolbar_spinner_dropdown_item, parent, false);
             holder = new ReblogHolder(convertView, mIsLandscape);
             convertView.setTag(holder);
         } else {
@@ -146,7 +146,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
         @Override
         protected Boolean doInBackground(Void... voids) {
             // only .com blogs support reblogging
-            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleDotComAccounts();
+            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleDotComBlogs();
             if (accounts == null || accounts.size() == 0) {
                 return false;
             }

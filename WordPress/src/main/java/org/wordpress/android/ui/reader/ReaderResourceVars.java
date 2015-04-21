@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 
@@ -59,13 +58,6 @@ class ReaderResourceVars {
         // full-size image width must take margin and padding into account
         int listPadding = resources.getDimensionPixelOffset(R.dimen.margin_large);
         int imageWidth = displayWidthPx - (detailMarginWidthPx * 2) - (listPadding * 2);
-        boolean hasStaticMenuDrawer =
-                (context instanceof WPDrawerActivity)
-                        && (((WPDrawerActivity) context).isStaticMenuDrawer());
-        if (hasStaticMenuDrawer) {
-            int drawerWidth = resources.getDimensionPixelOffset(R.dimen.drawer_width_static);
-            imageWidth -= drawerWidth;
-        }
         fullSizeImageWidthPx = imageWidth;
 
         // 16:9 ratio (YouTube standard)

@@ -10,6 +10,8 @@ import com.simperium.Simperium;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketNameInvalid;
 import com.simperium.client.BucketObject;
+import com.simperium.client.BucketObjectMissingException;
+import com.simperium.client.Query;
 import com.simperium.client.User;
 
 import org.wordpress.android.BuildConfig;
@@ -121,5 +123,26 @@ public class SimperiumUtils {
         if (mSimperium != null) {
             mSimperium.getUser().setStatus(User.Status.UNKNOWN);
         }
+    }
+
+    // Returns true if we have unread notes with a timestamp greater than last_seen timestamp in the meta bucket
+    public static boolean hasUnreadNotes() {
+        if (getNotesBucket() == null || getMetaBucket() == null) return false;
+
+        try {
+            BucketObject meta = getMetaBucket().get("meta");
+            if (meta != null && meta.getProperty("last_seen") instanceof Integer) {
+                Integer lastSeenTimestamp = (Integer)meta.getProperty("last_seen");
+
+                Query<Note> query = new Query<>(getNotesBucket());
+                query.where(Note.Schema.UNREAD_INDEX, Query.ComparisonType.EQUAL_TO, true);
+                query.where(Note.Schema.TIMESTAMP_INDEX, Query.ComparisonType.GREATER_THAN, lastSeenTimestamp);
+                return query.execute().getCount() > 0;
+            }
+        } catch (BucketObjectMissingException e) {
+            return false;
+        }
+
+        return false;
     }
 }

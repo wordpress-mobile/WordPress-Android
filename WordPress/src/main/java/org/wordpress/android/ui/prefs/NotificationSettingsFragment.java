@@ -215,6 +215,8 @@ public class NotificationSettingsFragment extends PreferenceFragment {
 
 
     private void enabledButtonClick(View v) {
+        if (!isAdded()) return;
+
         StringMap<String> muteUntilMap = (StringMap<String>) mNotificationSettings.get("mute_until");
         if (muteUntilMap != null) {
             if (v.getId() == R.id.notificationsOff) {
@@ -224,8 +226,8 @@ public class NotificationSettingsFragment extends PreferenceFragment {
             } else if (v.getId() == R.id.notifications8Hours) {
                 muteUntilMap.put("value", String.valueOf((System.currentTimeMillis() / 1000) + (3600 * 8)));
             }
-            CheckBoxPreference enabledCheckBoxPreference = (CheckBoxPreference) findPreference(getString(R.string
-                    .pref_notifications_enabled));
+            String prefKey = getActivity().getString(R.string.pref_notifications_enabled);
+            CheckBoxPreference enabledCheckBoxPreference = (CheckBoxPreference) findPreference(prefKey);
             enabledCheckBoxPreference.setChecked(false);
             mNotificationSettings.put("mute_until", muteUntilMap);
             mNotificationSettingsChanged = true;

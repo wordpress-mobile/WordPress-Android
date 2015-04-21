@@ -2,9 +2,7 @@ package org.wordpress.android.ui.reader.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -17,13 +15,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPRestClient;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -62,7 +59,7 @@ public class ReaderWebView extends WebView {
 
     public ReaderWebView(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
     @Override
@@ -77,19 +74,18 @@ public class ReaderWebView extends WebView {
 
     public ReaderWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init();
     }
 
     public ReaderWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context);
+        init();
     }
 
     @SuppressLint("NewApi")
-    private void init(Context context) {
+    private void init() {
         if (!isInEditMode()) {
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-            mToken = settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, "");
+            mToken = AccountHelper.getDefaultAccount().getAccessToken();
 
             mReaderChromeClient = new ReaderWebChromeClient(this);
             this.setWebChromeClient(mReaderChromeClient);
@@ -219,22 +215,20 @@ public class ReaderWebView extends WebView {
                 try {
                     URL imageUrl = new URL(url);
                     HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
+                    conn.setRequestProperty("Authorization", "Bearer " + mToken);
                     conn.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);
                     conn.setConnectTimeout(WPRestClient.REST_TIMEOUT_MS);
-                    conn.setRequestProperty("Authorization", "Bearer " + mToken);
                     conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
                     conn.setRequestProperty("Connection", "Keep-Alive");
-                    conn.connect();
-                    if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        InputStream inputStream = new BufferedInputStream(conn.getInputStream());
-                        return new WebResourceResponse(conn.getContentType(), "UTF-8", inputStream);
-                    }
+                    return new WebResourceResponse(conn.getContentType(),
+                            conn.getContentEncoding(),
+                            conn.getInputStream());
                 } catch (IOException e) {
                     AppLog.e(AppLog.T.READER, e);
                 }
             }
 
-            return null;
+            return super.shouldInterceptRequest(view, url);
         }
     }
 

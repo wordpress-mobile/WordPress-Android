@@ -6,7 +6,6 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
 import android.net.http.HttpResponseCache;
@@ -14,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
@@ -48,6 +46,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -79,10 +78,6 @@ import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
 public class WordPress extends Application {
-    public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
-    public static final String WPCOM_USERNAME_PREFERENCE="wp_pref_wpcom_username";
-    public static final String IS_SIGNED_OUT_PREFERENCE="wp_pref_is_signed_out";
-
     public static String versionName;
     public static Blog currentBlog;
     public static Post currentPost;
@@ -121,7 +116,7 @@ public class WordPress extends Application {
      */
     public static RateLimitedTask sUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
-            if (getContext() != null && hasDotComToken(getContext())) {
+            if (AccountHelper.getDefaultAccount().isWordPressComUser()) {
                 new GenericUpdateBlogListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
             return true;
@@ -171,6 +166,11 @@ public class WordPress extends Application {
         // Volley networking setup
         setupVolleyQueue();
 
+        // Refresh account informations
+        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+            AccountHelper.getDefaultAccount().fetchAccountDetails();
+        }
+
         ABTestingUtils.init();
 
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
@@ -199,9 +199,9 @@ public class WordPress extends Application {
 
     // Configure Simperium and start buckets if we are signed in to WP.com
     private void configureSimperium() {
-        if (!TextUtils.isEmpty(getWPComAuthToken(this))) {
+        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
             AppLog.i(T.NOTIFS, "Configuring Simperium");
-            SimperiumUtils.configureSimperium(this, getWPComAuthToken(this));
+            SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
         }
     }
 
@@ -216,11 +216,7 @@ public class WordPress extends Application {
     private void initWpDb() {
         if (!createAndVerifyWpDb()) {
             AppLog.e(T.DB, "Invalid database, sign out user and delete database");
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
             currentBlog = null;
-            editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
-            editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
-            editor.commit();
             if (wpDB != null) {
                 wpDB.updateLastBlogId(-1);
             }
@@ -234,7 +230,7 @@ public class WordPress extends Application {
         try {
             wpDB = new WordPressDB(this);
             // verify account data
-            List<Map<String, Object>> accounts = wpDB.getAllAccounts();
+            List<Map<String, Object>> accounts = wpDB.getAllBlogs();
             for (Map<String, Object> account : accounts) {
                 if (account == null || account.get("blogName") == null || account.get("url") == null) {
                     return false;
@@ -344,7 +340,7 @@ public class WordPress extends Application {
         String regId = gcmRegisterIfNot(context);
 
         // Register to WordPress.com notifications
-        if (WordPress.hasDotComToken(context)) {
+        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
             if (!TextUtils.isEmpty(regId)) {
                 // Send the token to WP.com in case it was invalidated
                 NotificationsUtils.registerDeviceForPushNotifications(context, regId);
@@ -403,16 +399,16 @@ public class WordPress extends Application {
      * select the first one.
      */
     public static Blog getCurrentBlog() {
-        if (currentBlog == null || !wpDB.isDotComAccountVisible(currentBlog.getRemoteBlogId())) {
+        if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
             // attempt to restore the last active blog
-            setCurrentBlogToLastActive();
-
-            // fallback to just using the first blog
-            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
-            if (currentBlog == null && accounts.size() > 0) {
-                int id = Integer.valueOf(accounts.get(0).get("id").toString());
-                setCurrentBlog(id);
-                wpDB.updateLastBlogId(id);
+            if (setCurrentBlogToLastActive() == null) {
+                // fallback to just using the first blog
+                List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
+                if (accounts.size() > 0) {
+                    int id = Integer.valueOf(accounts.get(0).get("id").toString());
+                    setCurrentBlog(id);
+                    wpDB.updateLastBlogId(id);
+                }
             }
         }
 
@@ -439,7 +435,7 @@ public class WordPress extends Application {
      * @return the current blog
      */
     public static Blog setCurrentBlogToLastActive() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
 
         int lastBlogId = WordPress.wpDB.getLastBlogId();
         if (lastBlogId != -1) {
@@ -477,56 +473,6 @@ public class WordPress extends Application {
     public static int getCurrentLocalTableBlogId() {
         return (getCurrentBlog() != null ? getCurrentBlog().getLocalTableBlogId() : -1);
     }
-
-    /**
-     * Checks for WordPress.com credentials
-     *
-     * @return true if we have credentials or false if not
-     */
-    public static boolean hasDotComToken(Context context) {
-        if (context == null) return false;
-
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        return !TextUtils.isEmpty(settings.getString(ACCESS_TOKEN_PREFERENCE, null));
-    }
-
-    public static String getDotComToken(Context context) {
-        if (context == null) return null;
-
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        return settings.getString(ACCESS_TOKEN_PREFERENCE, null);
-    }
-
-    public static boolean isSignedIn(Context context) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        if (settings.contains(IS_SIGNED_OUT_PREFERENCE)) {
-            return false;
-        }
-
-        return WordPress.hasDotComToken(context) || WordPress.wpDB.getNumVisibleAccounts() != 0;
-    }
-
-    public static String getLoggedInUsername(Context context, Blog blog) {
-        if (hasDotComToken(context)) {
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-            return settings.getString(WPCOM_USERNAME_PREFERENCE, null);
-        } else if (blog != null) {
-            return blog.getUsername();
-        }
-        return "";
-    }
-
-    /**
-     * Returns WordPress.com Auth Token
-     *
-     * @return String - The wpcom Auth token, or null if not authenticated.
-     */
-    public static String getWPComAuthToken(Context context) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        return settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null);
-
-    }
-
     public static void signOutAsyncWithProgressBar(Context context, SignOutCallback callback) {
         new SignOutAsync(context, callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -544,11 +490,8 @@ public class WordPress extends Application {
             AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
         }
 
-        // Set a shared preference to signify that this user signed out
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean(IS_SIGNED_OUT_PREFERENCE, true);
-        editor.apply();
+        // Save that this user signed out
+        AccountHelper.getDefaultAccount().setUserTappedSignedOutButton(true);
 
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
@@ -564,8 +507,7 @@ public class WordPress extends Application {
             appLock.setPassword(null);
         }
 
-        // send broadcast that user is signing out - this is received by WPDrawerActivity
-        // descendants
+        // send broadcast that user is signing out
         EventBus.getDefault().post(new CoreEvents.UserSignedOut());
     }
 
@@ -626,10 +568,7 @@ public class WordPress extends Application {
             AppLog.v(T.NOTIFS, "Could not unregister for GCM: " + e.getMessage());
         }
 
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
-        editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
-        editor.commit();
+        AccountHelper.getDefaultAccount().signout();
 
         // reset all reader-related prefs & data
         AppPrefs.reset();
@@ -786,7 +725,7 @@ public class WordPress extends Application {
          */
         private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
-            if (isPushNotificationPingNeeded() && WordPress.hasDotComToken(mContext)) {
+            if (isPushNotificationPingNeeded() && AccountHelper.getDefaultAccount().hasAccessToken()) {
                 String token = null;
                 try {
                     // Register for Google Cloud Messaging

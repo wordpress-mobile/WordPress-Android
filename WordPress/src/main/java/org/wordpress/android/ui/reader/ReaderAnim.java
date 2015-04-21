@@ -17,11 +17,11 @@ import android.view.animation.TranslateAnimation;
 
 public class ReaderAnim {
 
-    public static interface AnimationEndListener {
-        public void onAnimationEnd();
+    public interface AnimationEndListener {
+        void onAnimationEnd();
     }
 
-    public static enum Duration {
+    public enum Duration {
         SHORT,
         MEDIUM,
         LONG;
@@ -131,7 +131,7 @@ public class ReaderAnim {
     /*
      * animation when user taps a like/reblog button
      */
-    private static enum ReaderButton { LIKE_ON, LIKE_OFF, REBLOG}
+    private enum ReaderButton { LIKE_ON, LIKE_OFF, REBLOG}
     public static void animateLikeButton(final View target, boolean isAskingToLike) {
         animateButton(target, isAskingToLike ? ReaderButton.LIKE_ON : ReaderButton.LIKE_OFF);
     }
@@ -207,7 +207,7 @@ public class ReaderAnim {
                 Animation.RELATIVE_TO_SELF, fromY,
                 Animation.RELATIVE_TO_SELF, toY);
 
-        long durationMillis = Duration.MEDIUM.toMillis(view.getContext());
+        long durationMillis = Duration.SHORT.toMillis(view.getContext());
         animation.setDuration(durationMillis);
 
         if (show) {

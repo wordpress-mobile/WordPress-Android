@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-    layout for comments
--->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_fragment_container"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/fragment_comment_list"
-        android:tag="@string/fragment_tag_comment_list"
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
+
+    <FrameLayout
+        android:id="@+id/layout_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="org.wordpress.android.ui.comments.CommentsListFragment" />
-</RelativeLayout>
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/fragment_comment_list"
+            android:tag="@string/fragment_tag_comment_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="org.wordpress.android.ui.comments.CommentsListFragment" />
+    </FrameLayout>
+</LinearLayout>

@@ -11,9 +11,6 @@ import org.wordpress.android.ui.ActivityId;
 
 public class AppPrefs {
     public enum PrefKey {
-        // id of the current user
-        USER_ID,
-
         // name of last shown activity
         LAST_ACTIVITY_STR,
 
@@ -26,6 +23,9 @@ public class AppPrefs {
 
         // email retrieved and attached to mixpanel profile
         MIXPANEL_EMAIL_ADDRESS,
+
+        // index of the last active tab in main activity
+        MAIN_TAB_INDEX,
     }
 
     private static SharedPreferences prefs() {
@@ -98,17 +98,6 @@ public class AppPrefs {
         editor.apply();
     }
 
-    public static long getCurrentUserId() {
-        return getLong(PrefKey.USER_ID);
-    }
-    public static void setCurrentUserId(long userId) {
-        if (userId == 0) {
-            remove(PrefKey.USER_ID);
-        } else {
-            setLong(PrefKey.USER_ID, userId);
-        }
-    }
-
     public static ReaderTag getReaderTag() {
         String tagName = getString(PrefKey.READER_TAG_NAME);
         if (TextUtils.isEmpty(tagName)) {
@@ -163,5 +152,12 @@ public class AppPrefs {
 
     public static void setMixpanelUserEmail(String email) {
         setString(PrefKey.MIXPANEL_EMAIL_ADDRESS, email);
+    }
+
+    public static int getMainTabIndex() {
+        return getInt(PrefKey.MAIN_TAB_INDEX);
+    }
+    public static void setMainTabIndex(int index) {
+        setInt(PrefKey.MAIN_TAB_INDEX, index);
     }
 }

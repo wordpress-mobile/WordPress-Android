@@ -7,11 +7,10 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,10 +29,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -54,15 +53,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The native stats activity, accessible via the menu drawer.
+ * The native stats activity
  * <p>
  * By pressing a spinner on the action bar, the user can select which timeframe they wish to see.
  * </p>
  */
-public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.ScrollViewListener,
-        StatsVisitorsAndViewsFragment.OnDateChangeListener,
-        StatsAbstractListFragment.OnRequestDataListener,
-        StatsAbstractFragment.TimeframeDateProvider {
+public class StatsActivity extends ActionBarActivity
+        implements ScrollViewExt.ScrollViewListener,
+                StatsVisitorsAndViewsFragment.OnDateChangeListener,
+                StatsAbstractListFragment.OnRequestDataListener,
+                StatsAbstractFragment.TimeframeDateProvider {
+
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
@@ -72,15 +73,12 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
     private static final int REQUEST_JETPACK = 7000;
 
-    public static final String ARG_NO_MENU_DRAWER = "no_menu_drawer";
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
-
-    private Dialog mSignInDialog;
     private int mNavPosition = 0;
+    private Dialog mSignInDialog;
 
     private int mResultCode = -1;
     private boolean mIsInFront;
-    private boolean mNoMenuDrawer = false;
     private int mLocalBlogID = -1;
     private StatsTimeframe mCurrentTimeframe = StatsTimeframe.DAY;
     private String mRequestedDate;
@@ -88,7 +86,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
 
-    private ArrayList<StatsService.StatsEndpointsEnum> fragmentsRefreshList = new ArrayList<>();
+    private final ArrayList<StatsService.StatsEndpointsEnum> fragmentsRefreshList = new ArrayList<>();
     private final Object fragmentsRefreshListSynchObj = new Object();
     private final Handler mUpdateStatsHandler = new Handler();
 
@@ -106,18 +104,15 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
         }
 
-        mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
+        setContentView(R.layout.stats_activity);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         ActionBar actionBar = getSupportActionBar();
-        createMenuDrawer(R.layout.stats_activity);
-        if (mNoMenuDrawer) {
-            getDrawerToggle().setDrawerIndicatorEnabled(false);
-            // Override the default NavigationOnClickListener
-            getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
@@ -176,47 +171,43 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             scrollView.setScrollViewListener(this);
         }
 
-        if (!mNoMenuDrawer && actionBar != null && mSpinner == null) {
-            final Toolbar toolbar = getToolbar();
-            if (toolbar != null) {
-                View view = View.inflate(this, R.layout.reader_spinner, toolbar);
-                mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
+        if (mSpinner == null && toolbar != null) {
+            View view = View.inflate(this, R.layout.toolbar_spinner, toolbar);
+            mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
 
-                StatsTimeframe[] timeframes = {StatsTimeframe.DAY, StatsTimeframe.WEEK,
-                        StatsTimeframe.MONTH, StatsTimeframe.YEAR};
-                mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, timeframes);
+            StatsTimeframe[] timeframes = {StatsTimeframe.DAY, StatsTimeframe.WEEK,
+                    StatsTimeframe.MONTH, StatsTimeframe.YEAR};
+            mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, timeframes);
 
-                actionBar.setDisplayShowTitleEnabled(false);
-                mSpinner.setAdapter(mTimeframeSpinnerAdapter);
-                mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        if (isFinishing() || isActivityDestroyed()) {
-                            return;
-                        }
-                        final StatsTimeframe selectedTimeframe =  (StatsTimeframe) mTimeframeSpinnerAdapter.getItem(position);
-
-                        if (mCurrentTimeframe == selectedTimeframe) {
-                            AppLog.d(T.STATS, "The selected TIME FRAME is already active: " + selectedTimeframe.getLabel());
-                            return;
-                        }
-
-                        AppLog.d(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
-                        mCurrentTimeframe = selectedTimeframe;
-                        if (NetworkUtils.isNetworkAvailable(StatsActivity.this)) {
-                            String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                            mSwipeToRefreshHelper.setRefreshing(true);
-                            refreshStats(selectedTimeframe, date, true, true);
-                            emptyDataModelInFragments(true, false);
-                            loadStatsFragments(false, true, false); // This is here just for a security check
-                        }
+            mSpinner.setAdapter(mTimeframeSpinnerAdapter);
+            mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (isFinishing()) {
+                        return;
                     }
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        // nop
+                    final StatsTimeframe selectedTimeframe =  (StatsTimeframe) mTimeframeSpinnerAdapter.getItem(position);
+
+                    if (mCurrentTimeframe == selectedTimeframe) {
+                        AppLog.d(T.STATS, "The selected TIME FRAME is already active: " + selectedTimeframe.getLabel());
+                        return;
                     }
-                });
-            }
+
+                    AppLog.d(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
+                    mCurrentTimeframe = selectedTimeframe;
+                    if (NetworkUtils.isNetworkAvailable(StatsActivity.this)) {
+                        String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                        mSwipeToRefreshHelper.setRefreshing(true);
+                        refreshStats(selectedTimeframe, date, true, true);
+                        emptyDataModelInFragments(true, false);
+                        loadStatsFragments(false, true, false); // This is here just for a security check
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    // nop
+                }
+            });
         }
 
         selectCurrentTimeframeInActionBar();
@@ -280,7 +271,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
     }
 
     private void loadStatsFragments(boolean forceRecreationOfFragments, boolean loadGraphFragment, boolean loadAlltimeFragmets) {
-        if (isFinishing() || isActivityDestroyed()) {
+        if (isFinishing()) {
             return;
         }
         FragmentManager fm = getFragmentManager();
@@ -370,8 +361,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         // fragments that needs an update require it at almost the same time. Keep a list of fragments
         // that require the update and call the service with the right parameters.
         synchronized (fragmentsRefreshListSynchObj) {
-            for (int i = 0; i < endPointsNeedUpdate.length; i++) {
-                StatsService.StatsEndpointsEnum current = endPointsNeedUpdate[i];
+            for (StatsService.StatsEndpointsEnum current : endPointsNeedUpdate) {
                 if (!fragmentsRefreshList.contains(current)) {
                     fragmentsRefreshList.add(current);
                 }
@@ -542,24 +532,28 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_view_stats_full_site) {
-            final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-            if (blogId == null) {
-                showJetpackMissingAlert();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
                 return true;
-            }
+            case R.id.menu_view_stats_full_site:
+                final String blogId = StatsUtils.getBlogId(mLocalBlogID);
+                if (blogId == null) {
+                    showJetpackMissingAlert();
+                    return true;
+                }
 
-            String statsAuthenticatedUser = StatsUtils.getBlogStatsUsername(mLocalBlogID);
-            if (statsAuthenticatedUser == null) {
-                Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
+                String statsAuthenticatedUser = StatsUtils.getBlogStatsUsername(mLocalBlogID);
+                if (statsAuthenticatedUser == null) {
+                    Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
+                    return true;
+                }
+
+                String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
+
+                WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
                 return true;
-            }
-
-            String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
-
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
-            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -571,23 +565,10 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
     }
 
-    @Override
-    public void onBlogChanged() {
-        stopStatsService();
-        mLocalBlogID = WordPress.getCurrentBlog().getLocalTableBlogId();
-        mCurrentTimeframe = StatsTimeframe.DAY;
-        mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-        selectCurrentTimeframeInActionBar();
-        scrollToTop();
-        mSwipeToRefreshHelper.setRefreshing(true);
-        refreshStats(mCurrentTimeframe, mRequestedDate, true, true);
-        loadStatsFragments(true, true, true);
-    }
-
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
     @Override
     public void onDateChanged(String blogID, StatsTimeframe timeframe, String date) {
-        if (isFinishing() || isActivityDestroyed()) {
+        if (isFinishing()) {
             return;
         }
         mRequestedDate = date;
@@ -629,10 +610,9 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             // for self-hosted sites; launch the user into an activity where they can provide their credentials
             if (!currentBlog.isDotcomFlag()
                     && !currentBlog.hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
-                if (WordPress.hasDotComToken(this)) {
+                if (AccountHelper.getDefaultAccount().hasAccessToken()) {
                     // Let's try the global wpcom credentials them first
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-                    String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+                    String username = AccountHelper.getDefaultAccount().getUserName();
                     currentBlog.setDotcom_username(username);
                     WordPress.wpDB.saveBlog(currentBlog);
                     mSwipeToRefreshHelper.setRefreshing(true);
@@ -656,9 +636,8 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
 
         // check again that we've valid credentials for a Jetpack site
-        if (!currentBlog.isDotcomFlag()
-                && !currentBlog.hasValidJetpackCredentials()
-                && !WordPress.hasDotComToken(this)) {
+        if (!currentBlog.isDotcomFlag() && !currentBlog.hasValidJetpackCredentials() &&
+                !AccountHelper.getDefaultAccount().hasAccessToken()) {
             mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
             return;
@@ -713,8 +692,8 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
      * adapter used by the timeframe spinner
      */
     private class TimeframeSpinnerAdapter extends BaseAdapter {
-        private StatsTimeframe[] mTimeframes;
-        private LayoutInflater mInflater;
+        private final StatsTimeframe[] mTimeframes;
+        private final LayoutInflater mInflater;
 
         TimeframeSpinnerAdapter(Context context, StatsTimeframe[] timeframeNames) {
             super();
@@ -743,7 +722,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         public View getView(int position, View convertView, ViewGroup parent) {
             final View view;
             if (convertView == null) {
-                view = mInflater.inflate(R.layout.reader_spinner_item, parent, false);
+                view = mInflater.inflate(R.layout.toolbar_spinner_item, parent, false);
             } else {
                 view = convertView;
             }
@@ -760,7 +739,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
             final TagViewHolder holder;
 
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.reader_spinner_dropdown_item, parent, false);
+                convertView = mInflater.inflate(R.layout.toolbar_spinner_dropdown_item, parent, false);
                 holder = new TagViewHolder(convertView);
                 convertView.setTag(holder);
             } else {
@@ -805,7 +784,7 @@ public class StatsActivity extends WPDrawerActivity implements ScrollViewExt.Scr
         }
     }
 
-    private static RateLimitedTask sTrackBottomReachedStats = new RateLimitedTask(2) {
+    private static final RateLimitedTask sTrackBottomReachedStats = new RateLimitedTask(2) {
         protected boolean run() {
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SCROLLED_TO_BOTTOM);
             return true;

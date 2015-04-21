@@ -7,7 +7,8 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.cocosw.undobar.UndoBarController;
@@ -18,7 +19,6 @@ import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
@@ -27,7 +27,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
 
-public class CommentsActivity extends WPDrawerActivity
+public class CommentsActivity extends ActionBarActivity
         implements OnCommentSelectedListener,
                    NotificationFragment.OnPostClickListener,
                    CommentActions.OnCommentActionListener,
@@ -42,15 +42,13 @@ public class CommentsActivity extends WPDrawerActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
 
-        createMenuDrawer(R.layout.comment_activity);
+        setContentView(R.layout.comment_activity);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(getString(R.string.tab_comments));
-        }
-
-        getFragmentManager().addOnBackStackChangedListener(mOnBackStackChangedListener);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.tab_comments));
 
         restoreSavedInstance(savedInstanceState);
     }
@@ -81,40 +79,6 @@ public class CommentsActivity extends WPDrawerActivity
             super.onBackPressed();
         }
     }
-
-    @Override
-    public void onBlogChanged() {
-        // clear the backstack
-        FragmentManager fm = getFragmentManager();
-        fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-        // clear and update the comment list
-        if (hasListFragment()) {
-            getListFragment().onBlogChanged();
-            getListFragment().clear();
-            reloadCommentList();
-            updateCommentList();
-        }
-
-        // clear comment detail
-        if (hasDetailFragment()) {
-            getDetailFragment().clear();
-        }
-    }
-
-    private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
-            new FragmentManager.OnBackStackChangedListener() {
-                public void onBackStackChanged() {
-                    if (getDrawerToggle() != null) {
-                        int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
-                        if (backStackEntryCount == 0) {
-                            getDrawerToggle().setDrawerIndicatorEnabled(true);
-                        } else {
-                            getDrawerToggle().setDrawerIndicatorEnabled(false);
-                        }
-                    }
-                }
-            };
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -149,7 +113,7 @@ public class CommentsActivity extends WPDrawerActivity
         return (getListFragment() != null);
     }
 
-    void showReaderFragment(long remoteBlogId, long postId) {
+    private void showReaderFragment(long remoteBlogId, long postId) {
         FragmentManager fm = getFragmentManager();
         fm.executePendingTransactions();
 
@@ -187,10 +151,6 @@ public class CommentsActivity extends WPDrawerActivity
             ft.hide(listFragment);
         }
         ft.commitAllowingStateLoss();
-
-        if (getDrawerToggle() != null) {
-            getDrawerToggle().setDrawerIndicatorEnabled(false);
-        }
     }
 
     /*
@@ -270,7 +230,6 @@ public class CommentsActivity extends WPDrawerActivity
                     getListFragment().setCommentIsModerating(comment.commentID, false);
 
                     if (succeeded) {
-                        updateMenuDrawer();
                         getListFragment().updateComments(false);
                     } else {
                         ToastUtils.showToast(CommentsActivity.this,
@@ -307,8 +266,6 @@ public class CommentsActivity extends WPDrawerActivity
                                                 R.string.error_moderate_comment,
                                                 ToastUtils.Duration.LONG
                                         );
-                                    } else {
-                                        updateMenuDrawer();
                                     }
                                 }
                             });
@@ -327,8 +284,6 @@ public class CommentsActivity extends WPDrawerActivity
                         }
                     }).show();
         }
-
-
     }
 
     @Override
@@ -337,5 +292,14 @@ public class CommentsActivity extends WPDrawerActivity
                 && changeType == CommentActions.ChangeType.EDITED) {
             reloadCommentList();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -20,9 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
-import org.wordpress.android.ui.WPDrawerActivity;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -80,7 +77,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private void signoutAndFinish() {
         if (mSignoutOnCancelMode) {
             WordPress.signOut(getActivity());
-            getActivity().setResult(WPDrawerActivity.NEW_BLOG_CANCELED);
+            getActivity().setResult(Activity.RESULT_CANCELED);
             getActivity().finish();
         }
     }
@@ -199,8 +196,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
                     String xmlRpcUrl = details.getString("xmlrpc");
                     String homeUrl = details.getString("url");
                     String blogId = details.getString("blogid");
-                    final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
+                    String username = AccountHelper.getDefaultAccount().getUserName();
                     BlogUtils.addOrUpdateBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, null, null, null,
                             true, true);
                     ToastUtils.showToast(getActivity(), R.string.new_blog_wpcom_created);
