@@ -21,6 +21,7 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
+import org.wordpress.mediapicker.MediaUtils.LimitedBackgroundOperation;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -180,11 +181,12 @@ public class MediaSourceWPImages implements MediaSource {
         for (MediaItem mediaItem : existingItems) {
             final boolean callLoaded = existingItems.indexOf(mediaItem) == existingItems.size() - 1;
 
-            AsyncTask<MediaItem, Void, MediaItem> backgroundCheck = new AsyncTask<MediaItem, Void, MediaItem>() {
+            LimitedBackgroundOperation<MediaItem, Void, MediaItem> backgroundCheck =
+                    new LimitedBackgroundOperation<MediaItem, Void, MediaItem>() {
                 int responseCode;
 
                 @Override
-                protected MediaItem doInBackground(MediaItem[] params) {
+                protected MediaItem performBackgroundOperation(MediaItem[] params) {
                     MediaItem mediaItem = params[0];
                     try {
                         URL mediaUrl = new URL(mediaItem.getSource().toString());
@@ -203,7 +205,7 @@ public class MediaSourceWPImages implements MediaSource {
                 }
 
                 @Override
-                public void onPostExecute(MediaItem result) {
+                public void performPostExecute(MediaItem result) {
                     if (mListener != null && result != null) {
                         List<MediaItem> resultList = new ArrayList<>();
                         resultList.add(result);
@@ -217,8 +219,16 @@ public class MediaSourceWPImages implements MediaSource {
                         }
                     }
                 }
+
+                @Override
+                public void performExecution(Object params) {
+                    if (!(params instanceof MediaItem)) {
+                        throw new IllegalArgumentException("Params must be of type MediaItem");
+                    }
+                    executeOnExecutor(THREAD_POOL_EXECUTOR, (MediaItem) params);
+                }
             };
-            backgroundCheck.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaItem);
+            backgroundCheck.executeWithLimit(mediaItem);
         }
     }
 
