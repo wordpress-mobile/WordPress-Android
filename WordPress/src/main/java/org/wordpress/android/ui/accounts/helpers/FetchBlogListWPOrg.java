@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.helpers;
 
+import android.os.AsyncTask;
 import android.webkit.URLUtil;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -64,67 +65,8 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         }
     }
 
-    private void getBlogList(URI xmlrpcUri, final Callback callback) {
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(xmlrpcUri, mHttpUsername, mHttpPassword);
-        Object[] params = {mUsername, mPassword};
-        try {
-            Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
-            if (userBlogs == null) {
-                // Could happen if the returned server response is truncated
-                mErrorMsgId = org.wordpress.android.R.string.xmlrpc_error;
-                callback.onError(mErrorMsgId, false, false, false, client.getResponse());
-                return;
-            }
-            Arrays.sort(userBlogs, BlogUtils.BlogNameComparator);
-            List<Map<String, Object>> userBlogList = new ArrayList<Map<String, Object>>();
-            for (Object blog : userBlogs) {
-                try {
-                    userBlogList.add((Map<String, Object>) blog);
-                } catch (ClassCastException e) {
-                    AppLog.e(T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs");
-                }
-            }
-            callback.onSuccess(userBlogList);
-            return;
-        } catch (XmlPullParserException parserException) {
-            mErrorMsgId = org.wordpress.android.R.string.xmlrpc_error;
-            AppLog.e(T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs", parserException);
-        } catch (XMLRPCFault xmlRpcFault) {
-            handleXmlRpcFault(xmlRpcFault);
-        } catch (XMLRPCException xmlRpcException) {
-            AppLog.e(T.NUX, "XMLRPCException received from XMLRPC call wp.getUsersBlogs", xmlRpcException);
-            mErrorMsgId = org.wordpress.android.R.string.no_site_error;
-        } catch (SSLHandshakeException e) {
-            if (xmlrpcUri.getHost().endsWith("wordpress.com")) {
-                mErroneousSslCertificate = true;
-            }
-            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
-        } catch (IOException e) {
-            AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
-            mErrorMsgId = org.wordpress.android.R.string.no_site_error;
-        }
-        callback.onError(mErrorMsgId, false, mHttpAuthRequired, mErroneousSslCertificate, client.getResponse());
-    }
-
     public void fetchBlogList(Callback callback) {
-        String xmlrpcUrl = null;
-        if (mSelfHostedUrl != null && mSelfHostedUrl.length() != 0) {
-            xmlrpcUrl = getSelfHostedXmlrpcUrl(mSelfHostedUrl);
-        }
-
-        if (xmlrpcUrl == null) {
-            if (!mHttpAuthRequired && mErrorMsgId == 0) {
-                mErrorMsgId = org.wordpress.android.R.string.no_site_error;
-            }
-            callback.onError(mErrorMsgId, false, mHttpAuthRequired, mErroneousSslCertificate, "");
-            return;
-        }
-
-        // Validate the URL found before calling the client. Prevent a crash that can occur
-        // during the setup of self-hosted sites.
-        URI xmlrpcUri;
-        xmlrpcUri = URI.create(xmlrpcUrl);
-        getBlogList(xmlrpcUri, callback);
+        (new FetchBlogListTask(callback)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private String getRsdUrl(String baseUrl) throws SSLHandshakeException {
@@ -278,5 +220,85 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         }
 
         return xmlrpcUrl;
+    }
+
+    public class FetchBlogListTask extends AsyncTask<Void, Void, List<Map<String, Object>>> {
+        private final Callback mCallback;
+        private String mClientResponse = "";
+
+        public FetchBlogListTask(Callback callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected List<Map<String, Object>> doInBackground(Void... notUsed) {
+            String xmlrpcUrl = null;
+            if (mSelfHostedUrl != null && mSelfHostedUrl.length() != 0) {
+                xmlrpcUrl = getSelfHostedXmlrpcUrl(mSelfHostedUrl);
+            }
+
+            if (xmlrpcUrl == null) {
+                if (!mHttpAuthRequired && mErrorMsgId == 0) {
+                    mErrorMsgId = org.wordpress.android.R.string.no_site_error;
+                }
+                return null;
+            }
+
+            // Validate the URL found before calling the client. Prevent a crash that can occur
+            // during the setup of self-hosted sites.
+            URI xmlrpcUri;
+            xmlrpcUri = URI.create(xmlrpcUrl);
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(xmlrpcUri, mHttpUsername, mHttpPassword);
+            Object[] params = {mUsername, mPassword};
+            try {
+                Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
+                if (userBlogs == null) {
+                    // Could happen if the returned server response is truncated
+                    mErrorMsgId = org.wordpress.android.R.string.xmlrpc_error;
+                    mClientResponse = client.getResponse();
+                    return null;
+                }
+                Arrays.sort(userBlogs, BlogUtils.BlogNameComparator);
+                List<Map<String, Object>> userBlogList = new ArrayList<Map<String, Object>>();
+                for (Object blog : userBlogs) {
+                    try {
+                        userBlogList.add((Map<String, Object>) blog);
+                    } catch (ClassCastException e) {
+                        AppLog.e(T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs");
+                    }
+                }
+                return userBlogList;
+            } catch (XmlPullParserException parserException) {
+                mErrorMsgId = org.wordpress.android.R.string.xmlrpc_error;
+                AppLog.e(T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs", parserException);
+            } catch (XMLRPCFault xmlRpcFault) {
+                handleXmlRpcFault(xmlRpcFault);
+            } catch (XMLRPCException xmlRpcException) {
+                AppLog.e(T.NUX, "XMLRPCException received from XMLRPC call wp.getUsersBlogs", xmlRpcException);
+                mErrorMsgId = org.wordpress.android.R.string.no_site_error;
+            } catch (SSLHandshakeException e) {
+                if (xmlrpcUri.getHost() != null && xmlrpcUri.getHost().endsWith("wordpress.com")) {
+                    mErroneousSslCertificate = true;
+                }
+                AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+            } catch (IOException e) {
+                AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
+                mErrorMsgId = org.wordpress.android.R.string.no_site_error;
+            }
+            mClientResponse = client.getResponse();
+            return null;
+        }
+
+        protected void onPostExecute(List<Map<String, Object>> userBlogList) {
+            if (userBlogList == null) {
+                mCallback.onError(mErrorMsgId, false, mHttpAuthRequired, mErroneousSslCertificate, mClientResponse);
+            } else {
+                mCallback.onSuccess(userBlogList);
+            }
+        }
+
+        protected void onCancelled() {
+            mCallback.onError(mErrorMsgId, false, mHttpAuthRequired, mErroneousSslCertificate, mClientResponse);
+        }
     }
 }
