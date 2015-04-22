@@ -221,7 +221,7 @@ public class MediaSourceWPImages implements MediaSource {
                 }
 
                 @Override
-                public void performExecution(Object params) {
+                public void startExecution(Object params) {
                     if (!(params instanceof MediaItem)) {
                         throw new IllegalArgumentException("Params must be of type MediaItem");
                     }
