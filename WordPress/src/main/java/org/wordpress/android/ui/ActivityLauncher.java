@@ -35,8 +35,9 @@ import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
 
-    public static void showSitePickerForResult(Activity activity) {
+    public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
+        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, blogLocalTableId);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
                 R.anim.activity_slide_in_from_left,

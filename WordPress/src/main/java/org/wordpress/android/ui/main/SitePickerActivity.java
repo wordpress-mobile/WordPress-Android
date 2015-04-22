@@ -8,13 +8,13 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.widgets.DividerItemDecoration;
@@ -25,14 +25,13 @@ public class SitePickerActivity extends ActionBarActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener {
 
-    // TODO: call saveHiddenSites when user taps done
-    // TODO: change done icon from arrow default
+    // TODO: remove show/hide blogs from settings
 
     public static final String KEY_LOCAL_ID = "local_id";
-    private static final String KEY_BLOG_ID = "blog_id";
 
     private SitePickerAdapter mAdapter;
     private ActionMode mActionMode;
+    private int mCurrentLocalId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,10 +45,22 @@ public class SitePickerActivity extends ActionBarActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        if (savedInstanceState != null) {
+            mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);
+        } else if (getIntent() != null) {
+            mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
+        }
+
         RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler_view);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
         recycler.setAdapter(getAdapter());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_LOCAL_ID, mCurrentLocalId);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -133,7 +144,7 @@ public class SitePickerActivity extends ActionBarActivity
 
     private SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new SitePickerAdapter(this);
+            mAdapter = new SitePickerAdapter(this, mCurrentLocalId);
             mAdapter.setOnSiteClickListener(this);
             mAdapter.setOnSelectedCountChangedListener(this);
         }
@@ -148,16 +159,19 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
-    void saveHiddenSites() {
+    private void saveHiddenSites() {
         WordPress.wpDB.getDatabase().beginTransaction();
         try {
             // make all sites visible...
             WordPress.wpDB.setAllDotComBlogsVisibility(true);
 
             // ...then update ones marked hidden in the adapter
-            SitePickerAdapter.SiteList hiddenSites = getAdapter().getHiddenSites();
+            SiteList hiddenSites = getAdapter().getHiddenSites();
             for (SiteRecord site : hiddenSites) {
-                WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
+                // don't allow hiding the current site
+                if (site.localId != mCurrentLocalId) {
+                    WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
+                }
             }
 
             WordPress.wpDB.getDatabase().setTransactionSuccessful();
@@ -171,7 +185,6 @@ public class SitePickerActivity extends ActionBarActivity
         if (mActionMode == null) {
             Intent data = new Intent();
             data.putExtra(KEY_LOCAL_ID, site.localId);
-            data.putExtra(KEY_BLOG_ID, site.blogId);
             setResult(RESULT_OK, data);
             finish();
         }
@@ -179,40 +192,39 @@ public class SitePickerActivity extends ActionBarActivity
 
     private void updateActionModeTitle() {
         if (mActionMode != null && hasAdapter()) {
-            int numSelected = getAdapter().getSelectionCount();
+            int numSelected = getAdapter().getNumSelected();
             if (numSelected > 0) {
                 mActionMode.setTitle(Integer.toString(numSelected));
             } else {
-                mActionMode.setTitle("");
+                mActionMode.setTitle(getString(R.string.site_picker_title_action_mode));
             }
         }
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
+        private boolean mHasChanges;
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
-            MenuInflater inflater = actionMode.getMenuInflater();
-            inflater.inflate(R.menu.site_picker_action_mode, menu);
+            mHasChanges = false;
+            actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
         }
 
         @Override
         public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            boolean anySelected = (getAdapter().getSelectionCount() > 0);
-
             MenuItem mnuShow = menu.findItem(R.id.menu_show);
-            mnuShow.setEnabled(anySelected);
+            mnuShow.setEnabled(getAdapter().getNumHiddenSelected() > 0);
 
             MenuItem mnuHide = menu.findItem(R.id.menu_hide);
-            mnuHide.setEnabled(anySelected);
+            mnuHide.setEnabled(getAdapter().getNumVisibleSelected() > 0);
 
             MenuItem mnuSelectAll = menu.findItem(R.id.menu_select_all);
-            mnuSelectAll.setEnabled(!getAdapter().areAllSitesSelected());
+            mnuSelectAll.setEnabled(getAdapter().getNumSelected() != getAdapter().getItemCount());
 
             MenuItem mnuDeselectAll = menu.findItem(R.id.menu_deselect_all);
-            mnuDeselectAll.setEnabled(anySelected);
+            mnuDeselectAll.setEnabled(getAdapter().getNumSelected() > 0);
 
             return true;
         }
@@ -222,9 +234,11 @@ public class SitePickerActivity extends ActionBarActivity
             int itemId = menuItem.getItemId();
             if (itemId == R.id.menu_show) {
                 getAdapter().setVisibilityForSelectedSites(true);
+                mHasChanges = true;
                 mActionMode.finish();
             } else if (itemId == R.id.menu_hide) {
                 getAdapter().setVisibilityForSelectedSites(false);
+                mHasChanges = true;
                 mActionMode.finish();
             } else if (itemId == R.id.menu_select_all) {
                 getAdapter().selectAll();
@@ -236,6 +250,9 @@ public class SitePickerActivity extends ActionBarActivity
 
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
+            if (mHasChanges) {
+                saveHiddenSites();
+            }
             getAdapter().setEnableEditMode(false);
             mActionMode = null;
         }

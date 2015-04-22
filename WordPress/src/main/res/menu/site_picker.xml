@@ -5,12 +5,12 @@
     <item
         android:id="@+id/menu_add"
         android:icon="@drawable/ic_add_white_24dp"
-        android:title="@string/add_self_hosted_blog"
+        android:title="@string/site_picker_add_self_hosted"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_edit"
-        android:title="@string/show_and_hide_blogs"
+        android:title="@string/site_picker_edit_visibility"
         app:showAsAction="never" />
 
 </menu>

@@ -39,10 +39,15 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     private final int mTextColorNormal;
     private final int mTextColorHidden;
-    private final Drawable mSelectedItemBackground;
+
     private static int mBlavatarSz;
 
     private SiteList mSites = new SiteList();
+    private final int mCurrentLocalId;
+
+    private final Drawable mSelectedItemBackground;
+    private final Drawable mCurrentItemBackground;
+
     private final LayoutInflater mInflater;
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
 
@@ -70,14 +75,21 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    public SitePickerAdapter(Context context) {
+    public SitePickerAdapter(Context context, int currentLocalBlogId) {
         super();
+
         setHasStableIds(true);
+
+        mCurrentLocalId = currentLocalBlogId;
         mInflater = LayoutInflater.from(context);
+
+        mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
         mTextColorNormal = context.getResources().getColor(R.color.grey_dark);
         mTextColorHidden = context.getResources().getColor(R.color.grey);
-        mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
+
         mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_20));
+        mCurrentItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_30));
+
         loadSites();
     }
 
@@ -129,8 +141,12 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             }
         });
 
-        if (mIsMultiSelectEnabled) {
-            holder.layoutContainer.setBackgroundDrawable(isItemSelected(position) ? mSelectedItemBackground : null);
+        if (site.localId == mCurrentLocalId) {
+            holder.layoutContainer.setBackgroundDrawable(mCurrentItemBackground);
+        } else if (mIsMultiSelectEnabled && isItemSelected(position)) {
+            holder.layoutContainer.setBackgroundDrawable(mSelectedItemBackground);
+        } else {
+            holder.layoutContainer.setBackgroundDrawable(null);
         }
 
         // different styling for visible/hidden sites
@@ -166,8 +182,28 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         loadSites();
     }
 
-    int getSelectionCount() {
+    int getNumSelected() {
         return mSelectedPositions.size();
+    }
+
+    int getNumHiddenSelected() {
+        int numHidden = 0;
+        for (Integer i: mSelectedPositions) {
+            if (mSites.get(i).isHidden) {
+                numHidden++;
+            }
+        }
+        return numHidden;
+    }
+
+    int getNumVisibleSelected() {
+        int numVisible = 0;
+        for (Integer i: mSelectedPositions) {
+            if (!mSites.get(i).isHidden) {
+                numVisible++;
+            }
+        }
+        return numVisible;
     }
 
     private void toggleSelection(int position) {
@@ -188,28 +224,24 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         } else {
             mSelectedPositions.remove(position);
         }
-
         notifyItemChanged(position);
 
         if (mSelectedCountListener != null) {
-            mSelectedCountListener.onSelectedCountChanged(getSelectionCount());
+            mSelectedCountListener.onSelectedCountChanged(getNumSelected());
         }
     }
 
-    boolean areAllSitesSelected() {
-        return mSelectedPositions.size() == mSites.size();
-    }
-
     void selectAll() {
-        if (areAllSitesSelected()) return;
+        if (mSelectedPositions.size() == mSites.size()) return;
 
         mSelectedPositions.clear();
         for (int i = 0; i < mSites.size(); i++) {
             mSelectedPositions.add(i);
         }
         notifyDataSetChanged();
+
         if (mSelectedCountListener != null) {
-            mSelectedCountListener.onSelectedCountChanged(getSelectionCount());
+            mSelectedCountListener.onSelectedCountChanged(getNumSelected());
         }
     }
 
@@ -218,8 +250,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         mSelectedPositions.clear();
         notifyDataSetChanged();
+
         if (mSelectedCountListener != null) {
-            mSelectedCountListener.onSelectedCountChanged(getSelectionCount());
+            mSelectedCountListener.onSelectedCountChanged(getNumSelected());
         }
     }
 
@@ -275,7 +308,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     }
 
     /*
-     * AsyncTasks which loads sites from database and populates the adapter
+     * AsyncTask which loads sites from database and populates the adapter
      */
     private boolean mIsTaskRunning;
     private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {

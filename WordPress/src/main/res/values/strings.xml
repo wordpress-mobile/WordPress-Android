@@ -915,6 +915,9 @@
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
+    <string name="site_picker_title_action_mode">Visibility</string>
+    <string name="site_picker_edit_visibility">Edit visibility</string>
+    <string name="site_picker_add_self_hosted">Add self-hosted blog</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
