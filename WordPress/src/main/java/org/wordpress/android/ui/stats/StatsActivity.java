@@ -32,7 +32,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -48,7 +47,6 @@ import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -127,7 +125,7 @@ public class StatsActivity extends ActionBarActivity
                         }
 
                         mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                        createFragments(true);
+                        updateTimeframeAndDateAndStartRefreshOfFragments(true);
                     }
                 });
 
@@ -249,15 +247,6 @@ public class StatsActivity extends ActionBarActivity
         super.onSaveInstanceState(outState);
     }
 
-    private void updateTimeFrameAndDateInFragment(FragmentManager fm , String fragmentTAG,
-                                                  StatsTimeframe newTimeframe, String newDate) {
-        StatsAbstractFragment fragment = (StatsAbstractFragment) fm.findFragmentByTag(fragmentTAG);
-        if (fragment != null) {
-            fragment.setDate(newDate);
-            fragment.setTimeframe(newTimeframe);
-        }
-    }
-
     private void createFragments(boolean forceRecreationOfFragments) {
         if (isFinishing()) {
             return;
@@ -330,40 +319,38 @@ public class StatsActivity extends ActionBarActivity
         ft.commitAllowingStateLoss();
     }
 
-    // Reload the fragments that depend on the date / timeline selected in the activity
-    private void reloadTimeDependantFragments() {
+    private void updateTimeframeAndDateAndStartRefreshOfFragments(boolean includeGraphAndTimelessFragments) {
         if (isFinishing()) {
             return;
         }
         FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
 
-        StatsAbstractFragment fragment;
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTopPostsAndPagesFragment.TAG);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsReferrersFragment.TAG);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsClicksFragment.TAG);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsGeoviewsFragment.TAG);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsAuthorsFragment.TAG);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVideoplaysFragment.TAG);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsSearchTermsFragment.TAG);
 
-        updateTimeFrameAndDateInFragment(fm, StatsVisitorsAndViewsFragment.TAG, mCurrentTimeframe, mRequestedDate);
+        if (includeGraphAndTimelessFragments) {
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVisitorsAndViewsFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsCommentsFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTagsAndCategoriesFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsPublicizeFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsFollowersFragment.TAG);
+        }
+    }
 
-        fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-        ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
-
-        fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-        ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
-
-        fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-        ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
-
-        fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-        ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
-
-        fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-        ft.replace(R.id.stats_top_authors_container, fragment, StatsAuthorsFragment.TAG);
-
-        fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-        ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
-
-        fragment = StatsAbstractFragment.newInstance(StatsViewType.SEARCH_TERMS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-        ft.replace(R.id.stats_search_terms_container, fragment, StatsSearchTermsFragment.TAG);
-
-        ft.commitAllowingStateLoss();
+    private boolean updateTimeframeAndDateAndStartRefreshInFragment(FragmentManager fm , String fragmentTAG) {
+        StatsAbstractFragment fragment = (StatsAbstractFragment) fm.findFragmentByTag(fragmentTAG);
+        if (fragment != null) {
+            fragment.setDate(mRequestedDate);
+            fragment.setTimeframe(mCurrentTimeframe);
+            fragment.refreshStats();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -556,7 +543,7 @@ public class StatsActivity extends ActionBarActivity
             return;
         }
         mRequestedDate = date;
-        reloadTimeDependantFragments();
+        updateTimeframeAndDateAndStartRefreshOfFragments(false);
     }
 
     private void refreshStats(StatsTimeframe timeframe, String date, boolean updateGraph, boolean updateAlltimeStats) {
