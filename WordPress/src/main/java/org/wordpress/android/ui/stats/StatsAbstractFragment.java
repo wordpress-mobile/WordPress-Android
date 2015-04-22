@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,22 +19,28 @@ public abstract class StatsAbstractFragment extends Fragment {
     public static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
     protected static final String ARGS_SELECTED_DATE = "ARGS_SELECTED_DATE";
     protected static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
+    protected static final String ARGS_IS_SINGLE_VIEW = "ARGS_IS_SINGLE_VIEW";
 
-    protected OnRequestDataListener mMoreDataListener;
+    // The number of results to return for NON Paged REST endpoints.
+    private static final int MAX_RESULTS_REQUESTED = 100;
+
     protected String mDate;
     protected StatsTimeframe mStatsTimeframe = StatsTimeframe.DAY;
 
-    // Container Activity must implement this interface
-    public interface OnRequestDataListener {
-        public void onMoreDataRequested(StatsService.StatsEndpointsEnum endPointNeedUpdate, int pageNumber);
-    }
-
     protected abstract StatsService.StatsEndpointsEnum[] getSectionsToUpdate();
 
-    // call an update for the stats shown in the fragment
     public void refreshStats() {
+        refreshStats(-1, null);
+    }
+    // call an update for the stats shown in the fragment
+    public void refreshStats(int pageNumberRequested, StatsService.StatsEndpointsEnum[] sections) {
         if (!isAdded()) {
             return;
+        }
+
+        // if no sections to update is passed to the method, default to fragment
+        if (sections == null) {
+            sections = getSectionsToUpdate();
         }
 
         AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > refreshStats");
@@ -71,14 +76,20 @@ public abstract class StatsAbstractFragment extends Fragment {
         intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
         intent.putExtra(StatsService.ARG_PERIOD, mStatsTimeframe);
         intent.putExtra(StatsService.ARG_DATE, mDate);
-        intent.putExtra(StatsService.ARG_SECTION, getSectionsToUpdate());
+        if (isSingleView()) {
+            intent.putExtra(StatsService.ARG_MAX_RESULTS, MAX_RESULTS_REQUESTED);
+        }
+        if (pageNumberRequested  != -1) {
+            intent.putExtra(StatsService.ARG_PAGE_REQUESTED, pageNumberRequested);
+        }
+        intent.putExtra(StatsService.ARG_SECTION, sections);
         getActivity().startService(intent);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > onCreate");
+       // AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > onCreate");
 
         if (savedInstanceState != null) {
             AppLog.d(AppLog.T.STATS, "savedInstanceState != null");
@@ -90,15 +101,15 @@ public abstract class StatsAbstractFragment extends Fragment {
             }
         }
 
-        AppLog.d(AppLog.T.STATS, "mStatsTimeframe: " + mStatsTimeframe.getLabel());
-        AppLog.d(AppLog.T.STATS, "mDate: " + mDate);
+      //  AppLog.d(AppLog.T.STATS, "mStatsTimeframe: " + mStatsTimeframe.getLabel());
+      //  AppLog.d(AppLog.T.STATS, "mDate: " + mDate);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > saving instance state");
+       /* AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > saving instance state");
         AppLog.d(AppLog.T.STATS, "mStatsTimeframe: " + mStatsTimeframe.getLabel());
-        AppLog.d(AppLog.T.STATS, "mDate: " + mDate);
+        AppLog.d(AppLog.T.STATS, "mDate: " + mDate); */
         outState.putString(ARGS_SELECTED_DATE, mDate);
         outState.putSerializable(ARGS_TIMEFRAME, mStatsTimeframe);
         super.onSaveInstanceState(outState);
@@ -161,16 +172,6 @@ public abstract class StatsAbstractFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mMoreDataListener = (OnRequestDataListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnRequestMoreDataListener");
-        }
-    }
-
     public void setDate(String newDate) {
         mDate = newDate;
     }
@@ -193,6 +194,10 @@ public abstract class StatsAbstractFragment extends Fragment {
 
     protected int getLocalTableBlogID() {
         return getArguments().getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID);
+    }
+
+    protected boolean isSingleView() {
+        return getArguments().getBoolean(ARGS_IS_SINGLE_VIEW, false);
     }
 
     protected abstract String getTitle();

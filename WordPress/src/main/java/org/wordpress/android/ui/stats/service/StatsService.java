@@ -37,6 +37,12 @@ public class StatsService extends Service {
     public static final String ARG_PERIOD = "stats_period";
     public static final String ARG_DATE = "stats_date";
     public static final String ARG_SECTION = "stats_section";
+    public static final String ARG_MAX_RESULTS = "stats_max_results";
+    public static final String ARG_PAGE_REQUESTED = "stats_page_requested";
+
+    public static final int DEFAULT_NUMBER_OF_RESULTS = 12;
+    // The number of results to return per page for Paged REST endpoints. Numbers larger than 20 will default to 20 on the server.
+    public static final int MAX_RESULTS_REQUESTED_PER_PAGE = 20;
 
     public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS,
         VIDEO_PLAYS, COMMENTS, FOLLOWERS_WPCOM, FOLLOWERS_EMAIL, COMMENT_FOLLOWERS, TAGS_AND_CATEGORIES,
@@ -101,6 +107,9 @@ public class StatsService extends Service {
             requestedDate = intent.getStringExtra(ARG_DATE);
         }
 
+        final int maxResultsRequested = intent.getIntExtra(ARG_MAX_RESULTS, DEFAULT_NUMBER_OF_RESULTS);
+        final int pageRequested = intent.getIntExtra(ARG_PAGE_REQUESTED, -1);
+
         StatsEndpointsEnum[] sectionsToUpdate = (StatsEndpointsEnum[]) intent.getSerializableExtra(ARG_SECTION);
 
         this.mServiceStartId = startId;
@@ -108,7 +117,7 @@ public class StatsService extends Service {
             parseResponseExecutor.submit(new Thread() {
                 @Override
                 public void run() {
-                    startTasks(blogId, period, requestedDate, sectionToUpdate);
+                    startTasks(blogId, period, requestedDate, sectionToUpdate, maxResultsRequested, pageRequested);
                 }
             });
         }
@@ -128,7 +137,8 @@ public class StatsService extends Service {
         }
     }
 
-    private void startTasks(final String blogId, final StatsTimeframe timeframe, final String date, final StatsEndpointsEnum sectionToUpdate) {
+    private void startTasks(final String blogId, final StatsTimeframe timeframe, final String date, final StatsEndpointsEnum sectionToUpdate,
+                            final int maxResultsRequested, final int pageRequested) {
 
         final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
 
@@ -147,48 +157,64 @@ public class StatsService extends Service {
                     path = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", blogId, period, date);
                     break;
                 case TOP_POSTS:
-                    path = String.format("/sites/%s/stats/top-posts?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    path = String.format("/sites/%s/stats/top-posts?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
                     break;
                 case REFERRERS:
-                    path = String.format("/sites/%s/stats/referrers?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    path = String.format("/sites/%s/stats/referrers?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
                     break;
                 case CLICKS:
-                    path = String.format("/sites/%s/stats/clicks?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    path = String.format("/sites/%s/stats/clicks?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
                     break;
                 case GEO_VIEWS:
-                    path = String.format("/sites/%s/stats/country-views?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    path = String.format("/sites/%s/stats/country-views?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
                     break;
                 case AUTHORS:
-                    path = String.format("/sites/%s/stats/top-authors?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    path = String.format("/sites/%s/stats/top-authors?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
                     break;
                 case VIDEO_PLAYS:
-                    path = String.format("/sites/%s/stats/video-plays?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    path = String.format("/sites/%s/stats/video-plays?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
                     break;
                 case COMMENTS:
                     path = String.format("/sites/%s/stats/comments", blogId); // No max parameter available
                     break;
                 case FOLLOWERS_WPCOM:
-                    path = String.format("/sites/%s/stats/followers?type=wpcom&max=%s", blogId, 12);
+                    if (pageRequested == -1) {
+                        path = String.format("/sites/%s/stats/followers?type=wpcom&max=%s", blogId, maxResultsRequested);
+                    } else {
+                        path = String.format("/sites/%s/stats/followers?type=wpcom&period=%s&date=%s&max=%s&page=%s", blogId,
+                                period, date, MAX_RESULTS_REQUESTED_PER_PAGE, pageRequested);
+                    }
                     break;
                 case FOLLOWERS_EMAIL:
-                    path = String.format("/sites/%s/stats/followers?type=email&max=%s", blogId, 12);
+                    if (pageRequested == -1) {
+                        path = String.format("/sites/%s/stats/followers?type=email&max=%s", blogId, maxResultsRequested);
+                    } else {
+                        path = String.format("/sites/%s/stats/followers?type=email&period=%s&date=%s&max=%s&page=%s", blogId,
+                                period, date, MAX_RESULTS_REQUESTED_PER_PAGE, pageRequested);
+                    }
                     break;
                 case COMMENT_FOLLOWERS:
-                    path = String.format("/sites/%s/stats/comment-followers?max=%s", blogId, 12);
+                    if (pageRequested == -1) {
+                        path = String.format("/sites/%s/stats/comment-followers?max=%s", blogId, maxResultsRequested);
+                    } else {
+                        path = String.format("/sites/%s/stats/comment-followers?period=%s&date=%s&max=%s&page=%s", blogId, period,
+                                date, MAX_RESULTS_REQUESTED_PER_PAGE, pageRequested);
+                    }
                     break;
                 case TAGS_AND_CATEGORIES:
-                    path = String.format("/sites/%s/stats/tags?max=%s", blogId, 12);
+                    path = String.format("/sites/%s/stats/tags?max=%s", blogId, maxResultsRequested);
                     break;
                 case PUBLICIZE:
-                    path = String.format("/sites/%s/stats/publicize?max=%s", blogId, 12);
+                    path = String.format("/sites/%s/stats/publicize?max=%s", blogId, maxResultsRequested);
                     break;
                 case SEARCH_TERMS:
-                    path = String.format("/sites/%s/stats/search-terms?period=%s&date=%s&max=%s", blogId, period, date, 12);
+                    path = String.format("/sites/%s/stats/search-terms?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
                     break;
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());
                     return;
             }
+            AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + path);
             Request<JSONObject> currentRequest = restClientUtils.get(path, vListener, vListener);
             currentRequest.setTag("StatsCall");
             mStatsNetworkRequests.add(currentRequest);

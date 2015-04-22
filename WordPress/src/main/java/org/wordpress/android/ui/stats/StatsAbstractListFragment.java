@@ -19,10 +19,13 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
@@ -30,8 +33,6 @@ import java.io.Serializable;
 import de.greenrobot.event.EventBus;
 
 public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
-
-    protected static final String ARGS_IS_SINGLE_VIEW = "ARGS_IS_SINGLE_VIEW";
 
     // Used when the fragment has 2 pages/kind of stats in it. Not meaning the bottom pagination.
     protected static final String ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX = "ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX";
@@ -73,7 +74,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract void updateUI();
     protected abstract boolean isExpandableList();
     protected abstract boolean isViewAllOptionAvailable();
-
 
     protected StatsResourceVars mResourceVars;
 
@@ -300,10 +300,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected boolean isErrorResponse(int index) {
         return mDatamodels != null && mDatamodels[index] != null
                 && (mDatamodels[index] instanceof VolleyError || mDatamodels[index] instanceof StatsError);
-    }
-
-    protected boolean isSingleView() {
-        return getArguments().getBoolean(ARGS_IS_SINGLE_VIEW, false);
     }
 
     private void configureViewAllButton() {

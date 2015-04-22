@@ -61,8 +61,7 @@ import de.greenrobot.event.EventBus;
  */
 public class StatsActivity extends ActionBarActivity
         implements ScrollViewExt.ScrollViewListener,
-                StatsVisitorsAndViewsFragment.OnDateChangeListener,
-                StatsAbstractListFragment.OnRequestDataListener {
+                StatsVisitorsAndViewsFragment.OnDateChangeListener {
 
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
@@ -364,11 +363,6 @@ public class StatsActivity extends ActionBarActivity
         return false;
     }
 
-    @Override
-    public void onMoreDataRequested(StatsService.StatsEndpointsEnum endPointNeedUpdate, int pageNumber) {
-        // nope
-    }
-
     private void startWPComLoginActivity() {
         mResultCode = RESULT_CANCELED;
         Intent signInIntent = new Intent(this, SignInActivity.class);
@@ -609,6 +603,9 @@ public class StatsActivity extends ActionBarActivity
 
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
         mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
         mIsUpdatingStats = event.mUpdating;
     }
