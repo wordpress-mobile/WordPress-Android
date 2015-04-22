@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 
 import org.apache.http.HttpEntity;
@@ -405,13 +406,17 @@ public class ImageUtils {
         String filePath = null;
         if (imageUri.toString().contains("content:")) {
             String[] projection = new String[] { MediaStore.Images.Media.DATA };
-            Cursor cur = context.getContentResolver().query(imageUri, projection, null, null, null);
-            if (cur != null) {
-                if (cur.moveToFirst()) {
-                    int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
-                    filePath = cur.getString(dataColumn);
+            try {
+                Cursor cur = context.getContentResolver().query(imageUri, projection, null, null, null);
+                if (cur != null) {
+                    if (cur.moveToFirst()) {
+                        int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
+                        filePath = cur.getString(dataColumn);
+                    }
+                    cur.close();
                 }
-                cur.close();
+            } catch (IllegalStateException stateException) {
+                Log.d(ImageUtils.class.getName(), "IllegalStateException querying content:" + imageUri);
             }
         }
 
