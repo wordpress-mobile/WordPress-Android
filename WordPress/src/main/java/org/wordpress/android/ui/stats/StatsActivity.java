@@ -32,6 +32,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -125,6 +126,7 @@ public class StatsActivity extends ActionBarActivity
                         }
 
                         mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                        checkCredentials();
                         updateTimeframeAndDateAndStartRefreshOfFragments(true);
                     }
                 });
@@ -192,7 +194,11 @@ public class StatsActivity extends ActionBarActivity
                     AppLog.d(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
                     mCurrentTimeframe = selectedTimeframe;
                     mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                    mSwipeToRefreshHelper.setRefreshing(true);
+                    if (NetworkUtils.checkConnection(StatsActivity.this)) {
+                        mSwipeToRefreshHelper.setRefreshing(true);
+                    } else {
+                        mSwipeToRefreshHelper.setRefreshing(false);
+                    }
                     createFragments(true); // Need to recreate fragment here, since a new timeline was selected.
                 }
                 @Override
@@ -227,6 +233,11 @@ public class StatsActivity extends ActionBarActivity
     protected void onResume() {
         super.onResume();
         mIsInFront = true;
+        if (NetworkUtils.checkConnection(this)) {
+            checkCredentials();
+        } else {
+            mSwipeToRefreshHelper.setRefreshing(false);
+        }
     }
 
     @Override
@@ -392,7 +403,8 @@ public class StatsActivity extends ActionBarActivity
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
                                     mSwipeToRefreshHelper.setRefreshing(true);
-                                    refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDateTZ(mLocalBlogID), true, true);
+                                    mRequestedDate =  StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                                    createFragments(true); // Recreate the fragment and start a refresh od Stats
                                 }
                             }
                         }
@@ -414,7 +426,8 @@ public class StatsActivity extends ActionBarActivity
                         }
                     }, "wp.getOptions", params);
                 } else {
-                    refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID), true, true);
+                    mRequestedDate =  StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                    createFragments(true); // Recreate the fragment and start a refresh od Stats
                 }
                 mSwipeToRefreshHelper.setRefreshing(true);
             }
@@ -422,31 +435,17 @@ public class StatsActivity extends ActionBarActivity
     }
 
     private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
+        // AsyncTasks are bound to the Activity that launched it. If the user rotate the device StatsActivity is restarted.
+        // Use the event bus to fix this issue.
+
         @Override
         public void onSuccess() {
-            if (isFinishing() || !mIsInFront) {
-                return;
-            }
-
-            if (StatsUtils.getBlogId(mLocalBlogID) == null) {
-                // Blog has not returned a jetpack_client_id
-                stopStatsService();
-                mSwipeToRefreshHelper.setRefreshing(false);
-                showJetpackMissingAlert();
-            }
+            EventBus.getDefault().post(new StatsEvents.JetpackSettingsCompleted(false));
         }
 
         @Override
         public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-            mSwipeToRefreshHelper.setRefreshing(false);
-            if (isFinishing() || !mIsInFront) {
-                return;
-            }
-            if (mSignInDialog != null && mSignInDialog.isShowing()) {
-                return;
-            }
-            stopStatsService();
-            Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
+            EventBus.getDefault().post(new StatsEvents.JetpackSettingsCompleted(true));
         }
     }
 
@@ -481,7 +480,8 @@ public class StatsActivity extends ActionBarActivity
             });
             builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog
+                    // User cancelled the dialog. Hide Stats.
+                    finish();
                 }
             });
         } else {
@@ -544,26 +544,23 @@ public class StatsActivity extends ActionBarActivity
         }
         mRequestedDate = date;
         updateTimeframeAndDateAndStartRefreshOfFragments(false);
+        if (NetworkUtils.checkConnection(StatsActivity.this)) {
+            mSwipeToRefreshHelper.setRefreshing(true);
+        } else {
+            mSwipeToRefreshHelper.setRefreshing(false);
+        }
     }
 
-    private void refreshStats(StatsTimeframe timeframe, String date, boolean updateGraph, boolean updateAlltimeStats) {
-   /*     final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-
-        if (currentBlog == null) {
-            AppLog.w(T.STATS, "Current blog is null. This should never happen here.");
-            mSwipeToRefreshHelper.setRefreshing(false);
-            return;
-        }
-
+    private void checkCredentials() {
         if (!NetworkUtils.checkConnection(this)) {
-            mSwipeToRefreshHelper.setRefreshing(false);
-            AppLog.w(AppLog.T.STATS, "StatsActivity > no connection, update canceled");
+            AppLog.w(AppLog.T.STATS, "StatsActivity > cannot validate credentials since no connection");
             return;
         }
 
         final String blogId = StatsUtils.getBlogId(mLocalBlogID);
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
-        // Make sure the blogId is available.
+        // blogId is always available for dotcom blogs. It could be null on Jetpack blogs...
         if (blogId != null) {
             // for self-hosted sites; launch the user into an activity where they can provide their credentials
             if (!currentBlog.isDotcomFlag()
@@ -573,7 +570,7 @@ public class StatsActivity extends ActionBarActivity
                     String username = AccountHelper.getDefaultAccount().getUserName();
                     currentBlog.setDotcom_username(username);
                     WordPress.wpDB.saveBlog(currentBlog);
-                    mSwipeToRefreshHelper.setRefreshing(true);
+                    createFragments(true);
                 } else {
                     startWPComLoginActivity();
                     return;
@@ -582,35 +579,24 @@ public class StatsActivity extends ActionBarActivity
         } else {
             // blogId is null at this point.
             if (!currentBlog.isDotcomFlag()) {
-                // Refresh blog settings/options that includes 'jetpack_client_id'needed here
+                // Refresh blog settings/options that includes 'jetpack_client_id' needed here
+                mSwipeToRefreshHelper.setRefreshing(true);
                 new ApiHelper.RefreshBlogContentTask(currentBlog,
                         new VerifyJetpackSettingsCallback()).execute(false);
             } else {
                 // blodID cannot be null on dotcom blogs.
                 Toast.makeText(this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
                 AppLog.e(T.STATS, "blogID is null for a wpcom blog!! " + currentBlog.getHomeURL());
+                finish();
             }
-            return;
         }
 
         // check again that we've valid credentials for a Jetpack site
         if (!currentBlog.isDotcomFlag() && !currentBlog.hasValidJetpackCredentials() &&
                 !AccountHelper.getDefaultAccount().hasAccessToken()) {
-            mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
             return;
         }
-
-        mIsUpdatingStats = true;
-
-        // start service to get stats
-        Intent intent = new Intent(this, StatsService.class);
-        intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
-        intent.putExtra(StatsService.ARG_PERIOD, timeframe);
-        intent.putExtra(StatsService.ARG_DATE, date);
-        intent.putExtra(StatsService.ARG_UPDATE_ALLTIME_STATS, updateAlltimeStats);
-        intent.putExtra(StatsService.ARG_UPDATE_GRAPH_STATS, updateGraph);
-        startService(intent);*/
     }
 
     private void stopStatsService() {
@@ -625,6 +611,28 @@ public class StatsActivity extends ActionBarActivity
     public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
         mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
         mIsUpdatingStats = event.mUpdating;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.JetpackSettingsCompleted event) {
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
+        mSwipeToRefreshHelper.setRefreshing(false);
+
+        if (!event.isError) {
+            if (StatsUtils.getBlogId(mLocalBlogID) == null) {
+                // Blog has not returned a jetpack_client_id
+                showJetpackMissingAlert();
+            } else {
+                createFragments(true); // recreate fragments and force a refresh not that we have a valid blog_id
+            }
+        } else {
+            if (mSignInDialog != null && mSignInDialog.isShowing()) {
+                return;
+            }
+            Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
+        }
     }
 
     /*

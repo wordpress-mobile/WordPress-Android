@@ -188,7 +188,7 @@ public class ApiHelper {
         private GenericCallback mCallback;
 
         public RefreshBlogContentTask(Blog blog, GenericCallback callback) {
-            if ( blog == null) {
+            if (blog == null) {
                 cancel(true);
                 return;
             }

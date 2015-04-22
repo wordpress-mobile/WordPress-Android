@@ -40,22 +40,29 @@ public abstract class StatsAbstractFragment extends Fragment {
 
         AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > refreshStats");
 
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            AppLog.w(AppLog.T.STATS, this.getClass().getCanonicalName() + "--> no connection, update canceled");
+            return;
+        }
+
+        final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
         final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
+
+        // Make sure the blogId is available.
+        if (blogId == null) {
+            AppLog.e(AppLog.T.STATS, "remote blogID is null: " + currentBlog.getHomeURL());
+            return;
+        }
+
         if (currentBlog == null) {
             AppLog.w(AppLog.T.STATS, "Current blog is null. This should never happen here.");
             return;
         }
 
-        if (!NetworkUtils.checkConnection(getActivity())) {
-            AppLog.w(AppLog.T.STATS, " no connection, update canceled");
-            return;
-        }
-
-        final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
-
-        // Make sure the blogId is available.
-        if (blogId == null) {
-            AppLog.e(AppLog.T.STATS, "remote blogID is null: " + currentBlog.getHomeURL());
+        // Check credentials for jetpack blogs first
+        if (!currentBlog.isDotcomFlag()
+                && !currentBlog.hasValidJetpackCredentials()) {
+            AppLog.w(AppLog.T.STATS, "Current blog is a Jetpack blog without valid .com credentials stored");
             return;
         }
 

@@ -28,4 +28,10 @@ public class StatsEvents {
             mTimeframe = timeframe;
         }
     }
+    public static class JetpackSettingsCompleted {
+        public final boolean isError;
+        public JetpackSettingsCompleted(boolean isError) {
+            this.isError = isError;
+        }
+    }
 }
