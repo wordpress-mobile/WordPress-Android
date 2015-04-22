@@ -162,6 +162,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         mIsMultiSelectEnabled = enable;
         mSelectedPositions.clear();
+
         loadSites();
     }
 
@@ -222,7 +223,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    SiteList getSelectedSites() {
+    private SiteList getSelectedSites() {
         SiteList sites = new SiteList();
         if (!mIsMultiSelectEnabled) {
             return sites;
@@ -234,6 +235,17 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
 
         return sites;
+    }
+
+    SiteList getHiddenSites() {
+        SiteList hiddenSites = new SiteList();
+        for (SiteRecord site: mSites) {
+            if (site.isHidden) {
+                hiddenSites.add(site);
+            }
+        }
+
+        return hiddenSites;
     }
 
     private void setVisibilityForSite(SiteRecord site, boolean makeVisible) {
@@ -267,7 +279,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
      */
     private boolean mIsTaskRunning;
     private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -339,8 +350,8 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             hostName = BlogUtils.getHostNameFromAccountMap(account);
             url = MapUtils.getMapStr(account, "url");
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
-            isHidden = MapUtils.getMapBool(account, "isHidden");
             isDotCom = MapUtils.getMapBool(account, "dotcomFlag");
+            isHidden = MapUtils.getMapBool(account, "isHidden");
         }
 
         String getBlogNameOrHostName() {
@@ -351,7 +362,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    private static class SiteList extends ArrayList<SiteRecord> {
+    static class SiteList extends ArrayList<SiteRecord> {
         SiteList() { }
         SiteList(List<Map<String, Object>> accounts) {
             if (accounts != null) {

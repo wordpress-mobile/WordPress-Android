@@ -25,6 +25,9 @@ public class SitePickerActivity extends ActionBarActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener {
 
+    // TODO: call saveHiddenSites when user taps done
+    // TODO: change done icon from arrow default
+
     public static final String KEY_LOCAL_ID = "local_id";
     private static final String KEY_BLOG_ID = "blog_id";
 
@@ -77,18 +80,17 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.menu_add:
-                ActivityLauncher.addSelfHostedSiteForResult(this);
-                return true;
-            case R.id.menu_edit:
-                getAdapter().setEnableEditMode(true);
-                startSupportActionMode(new ActionModeCallback());
-                updateActionModeTitle();
-                return true;
+        if (itemId == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (itemId == R.id.menu_add) {
+            ActivityLauncher.addSelfHostedSiteForResult(this);
+            return true;
+        } else if (itemId == R.id.menu_edit) {
+            getAdapter().setEnableEditMode(true);
+            startSupportActionMode(new ActionModeCallback());
+            updateActionModeTitle();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -146,6 +148,24 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
+    void saveHiddenSites() {
+        WordPress.wpDB.getDatabase().beginTransaction();
+        try {
+            // make all sites visible...
+            WordPress.wpDB.setAllDotComBlogsVisibility(true);
+
+            // ...then update ones marked hidden in the adapter
+            SitePickerAdapter.SiteList hiddenSites = getAdapter().getHiddenSites();
+            for (SiteRecord site : hiddenSites) {
+                WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
+            }
+
+            WordPress.wpDB.getDatabase().setTransactionSuccessful();
+        } finally {
+            WordPress.wpDB.getDatabase().endTransaction();
+        }
+    }
+
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
@@ -199,23 +219,18 @@ public class SitePickerActivity extends ActionBarActivity
 
         @Override
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.menu_show:
-                    getAdapter().setVisibilityForSelectedSites(true);
-                    mActionMode.finish();
-                    break;
-                case R.id.menu_hide:
-                    getAdapter().setVisibilityForSelectedSites(false);
-                    mActionMode.finish();
-                    break;
-                case R.id.menu_select_all:
-                    getAdapter().selectAll();
-                    break;
-                case R.id.menu_deselect_all:
-                    getAdapter().deselectAll();
-                    break;
+            int itemId = menuItem.getItemId();
+            if (itemId == R.id.menu_show) {
+                getAdapter().setVisibilityForSelectedSites(true);
+                mActionMode.finish();
+            } else if (itemId == R.id.menu_hide) {
+                getAdapter().setVisibilityForSelectedSites(false);
+                mActionMode.finish();
+            } else if (itemId == R.id.menu_select_all) {
+                getAdapter().selectAll();
+            } else if (itemId == R.id.menu_deselect_all) {
+                getAdapter().deselectAll();
             }
-
             return true;
         }
 
@@ -223,7 +238,6 @@ public class SitePickerActivity extends ActionBarActivity
         public void onDestroyActionMode(ActionMode actionMode) {
             getAdapter().setEnableEditMode(false);
             mActionMode = null;
-            // TODO: update db with changes to visibility
         }
     }
 }
