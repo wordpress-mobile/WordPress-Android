@@ -3,9 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_add_site"
+        android:id="@+id/menu_add"
         android:icon="@drawable/ic_add_white_24dp"
         android:title="@string/site_picker_add_site"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_edit"
+        android:title="@string/show_and_hide_blogs"
+        app:showAsAction="never" />
 
 </menu>

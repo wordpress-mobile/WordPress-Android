@@ -33,8 +33,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         void onSiteClick(SiteRecord site);
     }
 
-    interface OnMultiSelectListener {
-        void onMultiSelectEnabled();
+    interface OnSelectedCountChangedListener {
         void onSelectedCountChanged(int numSelected);
     }
 
@@ -49,10 +48,10 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     private boolean mIsMultiSelectEnabled;
     private boolean mShowHiddenSites = false;
-    private boolean mCanEnableMultiSelect = false;
+    private boolean mShowSelfHostedSites = true;
 
     private OnSiteClickListener mSiteSelectedListener;
-    private OnMultiSelectListener mMultiSelectListener;
+    private OnSelectedCountChangedListener mSelectedCountListener;
 
     static class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup layoutContainer;
@@ -96,8 +95,8 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return mSites.get(position);
     }
 
-    void setOnMultiSelectedListener(OnMultiSelectListener listener) {
-        mMultiSelectListener = listener;
+    void setOnSelectedCountChangedListener(OnSelectedCountChangedListener listener) {
+        mSelectedCountListener = listener;
     }
 
     void setOnSiteClickListener(OnSiteClickListener listener) {
@@ -122,27 +121,11 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mSiteSelectedListener != null) {
-                    mSiteSelectedListener.onSiteClick(getItem(position));
-                }
                 if (mIsMultiSelectEnabled) {
                     toggleSelection(position);
+                } else if (mSiteSelectedListener != null) {
+                    mSiteSelectedListener.onSiteClick(getItem(position));
                 }
-            }
-        });
-
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                // enable multi-select on long press
-                if (!mIsMultiSelectEnabled && mCanEnableMultiSelect) {
-                    if (mMultiSelectListener != null) {
-                        mMultiSelectListener.onMultiSelectEnabled();
-                    }
-                    setEnableMultiSelect(true);
-                    setItemSelected(position, true);
-                }
-                return true;
             }
         });
 
@@ -163,12 +146,23 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return (position >= 0 && position < mSites.size());
     }
 
-    void setEnableMultiSelect(boolean enable) {
-        if (enable == mIsMultiSelectEnabled) return;
+    /*
+     * called when the user chooses to edit the visibility of wp.com blogs
+     */
+    void setEnableEditMode(boolean enable) {
+        if (mIsMultiSelectEnabled == enable) return;
+
+        if (enable) {
+            mShowHiddenSites = true;
+            mShowSelfHostedSites = false;
+        } else {
+            mShowHiddenSites = false;
+            mShowSelfHostedSites = true;
+        }
 
         mIsMultiSelectEnabled = enable;
         mSelectedPositions.clear();
-        notifyDataSetChanged();
+        loadSites();
     }
 
     int getSelectionCount() {
@@ -196,8 +190,35 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         notifyItemChanged(position);
 
-        if (mMultiSelectListener != null) {
-            mMultiSelectListener.onSelectedCountChanged(getSelectionCount());
+        if (mSelectedCountListener != null) {
+            mSelectedCountListener.onSelectedCountChanged(getSelectionCount());
+        }
+    }
+
+    boolean areAllSitesSelected() {
+        return mSelectedPositions.size() == mSites.size();
+    }
+
+    void selectAll() {
+        if (areAllSitesSelected()) return;
+
+        mSelectedPositions.clear();
+        for (int i = 0; i < mSites.size(); i++) {
+            mSelectedPositions.add(i);
+        }
+        notifyDataSetChanged();
+        if (mSelectedCountListener != null) {
+            mSelectedCountListener.onSelectedCountChanged(getSelectionCount());
+        }
+    }
+
+    void deselectAll() {
+        if (mSelectedPositions.size() == 0) return;
+
+        mSelectedPositions.clear();
+        notifyDataSetChanged();
+        if (mSelectedCountListener != null) {
+            mSelectedCountListener.onSelectedCountChanged(getSelectionCount());
         }
     }
 
@@ -213,6 +234,24 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
 
         return sites;
+    }
+
+    private void setVisibilityForSite(SiteRecord site, boolean makeVisible) {
+        boolean newIsHidden = !makeVisible;
+        int index = mSites.indexOfSite(site);
+        if (index > -1 && mSites.get(index).isHidden != newIsHidden) {
+            mSites.get(index).isHidden = newIsHidden;
+            notifyItemChanged(index);
+        }
+    }
+
+    void setVisibilityForSelectedSites(boolean makeVisible) {
+        SiteList sites = getSelectedSites();
+        if (sites != null && sites.size() > 0) {
+            for (SiteRecord site: sites) {
+                setVisibilityForSite(site, makeVisible);
+            }
+        }
     }
 
     void loadSites() {
@@ -254,10 +293,18 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             }
 
             // add self-hosted
-            blogs.addAll(WordPress.wpDB.getBlogsBy("dotcomFlag=0", extraFields));
+            if (mShowSelfHostedSites) {
+                blogs.addAll(WordPress.wpDB.getBlogsBy("dotcomFlag=0", extraFields));
+            }
 
             SiteList sites = new SiteList(blogs);
-            Collections.sort(sites, SiteComparator);
+
+            // sort by blog/host
+            Collections.sort(sites, new Comparator<SiteRecord>() {
+                public int compare(SiteRecord site1, SiteRecord site2) {
+                    return site1.getBlogNameOrHostName().compareToIgnoreCase(site2.getBlogNameOrHostName());
+                }
+            });
 
             return sites;
         }
@@ -282,8 +329,8 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         final String hostName;
         final String url;
         final String blavatarUrl;
-        final boolean isHidden;
         final boolean isDotCom;
+        boolean isHidden;
 
         SiteRecord(Map<String, Object> account) {
             localId = MapUtils.getMapInt(account, "id");
@@ -318,37 +365,25 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             if (sites == null || sites.size() != this.size()) {
                 return false;
             }
+            int i;
             for (SiteRecord site: sites) {
-                if (!this.containsSite(site)) {
+                i = indexOfSite(site);
+                if (i == -1 || this.get(i).isHidden != site.isHidden) {
                     return false;
                 }
             }
             return true;
         }
 
-        boolean containsSite(SiteRecord site) {
+        int indexOfSite(SiteRecord site) {
             if (site != null && site.blogId != null) {
-                for (SiteRecord thisSite : this) {
-                    if (site.blogId.equals(thisSite.blogId)) {
-                        return true;
+                for (int i = 0; i < size(); i++) {
+                    if (site.blogId.equals(this.get(i).blogId)) {
+                        return i;
                     }
                 }
             }
-            return false;
+            return -1;
         }
     }
-
-    /*
-     * sorts sites based on their name/host and visibility - hidden blogs are sorted
-     * below visible ones
-     */
-    private static final Comparator<SiteRecord> SiteComparator = new Comparator<SiteRecord>() {
-        public int compare(SiteRecord site1, SiteRecord site2) {
-            if (site1.isHidden != site2.isHidden) {
-                return (site1.isHidden ? 1 : -1);
-            } else {
-                return site1.getBlogNameOrHostName().compareToIgnoreCase(site2.getBlogNameOrHostName());
-            }
-        }
-    };
 }

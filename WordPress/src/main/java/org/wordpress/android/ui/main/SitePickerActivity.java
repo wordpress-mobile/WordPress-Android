@@ -8,9 +8,11 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
@@ -21,7 +23,7 @@ import de.greenrobot.event.EventBus;
 
 public class SitePickerActivity extends ActionBarActivity
         implements SitePickerAdapter.OnSiteClickListener,
-                   SitePickerAdapter.OnMultiSelectListener {
+        SitePickerAdapter.OnSelectedCountChangedListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
     private static final String KEY_BLOG_ID = "blog_id";
@@ -61,14 +63,31 @@ public class SitePickerActivity extends ActionBarActivity
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        // don't allow editing visibility unless there are multiple wp.com blogs
+        int numSites = WordPress.wpDB.getNumDotComBlogs();
+        MenuItem mnuEdit = menu.findItem(R.id.menu_edit);
+        mnuEdit.setVisible(numSites > 1);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.menu_add_site:
+            case R.id.menu_add:
                 ActivityLauncher.addSelfHostedSiteForResult(this);
+                return true;
+            case R.id.menu_edit:
+                getAdapter().setEnableEditMode(true);
+                startSupportActionMode(new ActionModeCallback());
+                updateActionModeTitle();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -77,6 +96,7 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         switch (requestCode) {
             case SignInActivity.CREATE_ACCOUNT_REQUEST:
                 if (resultCode != RESULT_CANCELED) {
@@ -113,28 +133,16 @@ public class SitePickerActivity extends ActionBarActivity
         if (mAdapter == null) {
             mAdapter = new SitePickerAdapter(this);
             mAdapter.setOnSiteClickListener(this);
-            mAdapter.setOnMultiSelectedListener(this);
+            mAdapter.setOnSelectedCountChangedListener(this);
         }
         return mAdapter;
     }
 
     @Override
-    public void onMultiSelectEnabled() {
-        if (mActionMode == null) {
-            startSupportActionMode(new ActionModeCallback());
-            updateActionModeTitle();
-        }
-    }
-
-    @Override
     public void onSelectedCountChanged(int numSelected) {
         if (mActionMode != null) {
-            if (numSelected == 0) {
-                mActionMode.finish();
-            } else {
-                updateActionModeTitle();
-                mActionMode.invalidate();
-            }
+            updateActionModeTitle();
+            mActionMode.invalidate();
         }
     }
 
@@ -165,27 +173,57 @@ public class SitePickerActivity extends ActionBarActivity
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
+            MenuInflater inflater = actionMode.getMenuInflater();
+            inflater.inflate(R.menu.site_picker_action_mode, menu);
             return true;
         }
 
         @Override
         public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            boolean anySelected = (getAdapter().getSelectionCount() > 0);
+
+            MenuItem mnuShow = menu.findItem(R.id.menu_show);
+            mnuShow.setEnabled(anySelected);
+
+            MenuItem mnuHide = menu.findItem(R.id.menu_hide);
+            mnuHide.setEnabled(anySelected);
+
+            MenuItem mnuSelectAll = menu.findItem(R.id.menu_select_all);
+            mnuSelectAll.setEnabled(!getAdapter().areAllSitesSelected());
+
+            MenuItem mnuDeselectAll = menu.findItem(R.id.menu_deselect_all);
+            mnuDeselectAll.setEnabled(anySelected);
+
             return true;
         }
 
         @Override
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            int numSelected = getAdapter().getSelectionCount();
-            if (numSelected == 0) {
-                return false;
+            switch (menuItem.getItemId()) {
+                case R.id.menu_show:
+                    getAdapter().setVisibilityForSelectedSites(true);
+                    mActionMode.finish();
+                    break;
+                case R.id.menu_hide:
+                    getAdapter().setVisibilityForSelectedSites(false);
+                    mActionMode.finish();
+                    break;
+                case R.id.menu_select_all:
+                    getAdapter().selectAll();
+                    break;
+                case R.id.menu_deselect_all:
+                    getAdapter().deselectAll();
+                    break;
             }
+
             return true;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
-            getAdapter().setEnableMultiSelect(false);
+            getAdapter().setEnableEditMode(false);
             mActionMode = null;
+            // TODO: update db with changes to visibility
         }
     }
 }
