@@ -33,7 +33,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
-import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -218,7 +217,6 @@ public class SettingsFragment extends PreferenceFragment {
         PreferenceCategory wpComCategory = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_wpcom));
         wpComCategory.removeAll();
         addWpComSignIn(wpComCategory, 0);
-        addWpComShowHideButton(wpComCategory, 5);
         List<Map<String, Object>> accounts = WordPress.wpDB.getBlogsBy("dotcomFlag = 1 AND isHidden = 0", null);
         addAccounts(wpComCategory, accounts, 10);
     }
@@ -287,17 +285,6 @@ public class SettingsFragment extends PreferenceFragment {
             if (notificationsGroup != null) {
                 rootScreen.removePreference(notificationsGroup);
             }
-        }
-    }
-
-    private void addWpComShowHideButton(PreferenceCategory wpComCategory, int order) {
-        if (WordPress.wpDB.getNumDotComBlogs() > 0) {
-            Preference manageBlogPreference = new Preference(getActivity());
-            manageBlogPreference.setTitle(R.string.show_and_hide_blogs);
-            Intent intentManage = new Intent(getActivity(), ManageBlogsActivity.class);
-            manageBlogPreference.setIntent(intentManage);
-            manageBlogPreference.setOrder(order);
-            wpComCategory.addPreference(manageBlogPreference);
         }
     }
 
