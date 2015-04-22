@@ -63,13 +63,12 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.menu_add_site:
-                ActivityLauncher.addSelfHostedSiteForResult(this);
-                return true;
+        if (itemId == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (itemId == R.id.menu_add_site) {
+            ActivityLauncher.addSelfHostedSiteForResult(this);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

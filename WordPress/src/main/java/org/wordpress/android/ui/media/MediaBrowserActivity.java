@@ -308,62 +308,62 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.menu_new_media:
-                View view = findViewById(R.id.menu_new_media);
-                if (view != null) {
-                    int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
-                    int[] loc = new int[2];
-                    view.getLocationOnScreen(loc);
-                    mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.LEFT, loc[0],
-                            loc[1] + view.getHeight() + y_offset);
-                } else {
-                    // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
-                    View gridView = findViewById(R.id.media_gridview);
-                    mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
-                }
-                return true;
-            case R.id.menu_search:
-                mSearchMenuItem = item;
-                mSearchMenuItem.setOnActionExpandListener(this);
-                mSearchMenuItem.expandActionView();
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (i == R.id.menu_new_media) {
+            View view = findViewById(R.id.menu_new_media);
+            if (view != null) {
+                int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
+                int[] loc = new int[2];
+                view.getLocationOnScreen(loc);
+                mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.LEFT, loc[0],
+                        loc[1] + view.getHeight() + y_offset);
+            } else {
+                // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
+                View gridView = findViewById(R.id.media_gridview);
+                mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
+            }
+            return true;
+        } else if (i == R.id.menu_search) {
+            mSearchMenuItem = item;
+            mSearchMenuItem.setOnActionExpandListener(this);
+            mSearchMenuItem.expandActionView();
 
-                mSearchView = (SearchView) item.getActionView();
-                mSearchView.setOnQueryTextListener(this);
+            mSearchView = (SearchView) item.getActionView();
+            mSearchView.setOnQueryTextListener(this);
 
-                // load last saved query
-                if (!TextUtils.isEmpty(mQuery)) {
-                    onQueryTextSubmit(mQuery);
-                    mSearchView.setQuery(mQuery, true);
-                }
-                return true;
-            case R.id.menu_edit_media:
-                String mediaId = mMediaItemFragment.getMediaId();
-                FragmentManager fm = getFragmentManager();
+            // load last saved query
+            if (!TextUtils.isEmpty(mQuery)) {
+                onQueryTextSubmit(mQuery);
+                mSearchView.setQuery(mQuery, true);
+            }
+            return true;
+        } else if (i == R.id.menu_edit_media) {
+            String mediaId = mMediaItemFragment.getMediaId();
+            FragmentManager fm = getFragmentManager();
 
-                if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
-                    // phone layout: hide item details, show and update edit fragment
-                    FragmentTransaction ft = fm.beginTransaction();
+            if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
+                // phone layout: hide item details, show and update edit fragment
+                FragmentTransaction ft = fm.beginTransaction();
 
-                    if (mMediaItemFragment.isVisible())
-                        ft.hide(mMediaItemFragment);
+                if (mMediaItemFragment.isVisible())
+                    ft.hide(mMediaItemFragment);
 
-                    mMediaEditFragment = MediaEditFragment.newInstance(mediaId);
-                    ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
-                    ft.addToBackStack(null);
-                    ft.commit();
-                } else {
-                    // tablet layout: update edit fragment
-                    mMediaEditFragment.loadMedia(mediaId);
-                }
+                mMediaEditFragment = MediaEditFragment.newInstance(mediaId);
+                ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
+                ft.addToBackStack(null);
+                ft.commit();
+            } else {
+                // tablet layout: update edit fragment
+                mMediaEditFragment.loadMedia(mediaId);
+            }
 
-                if (mSearchView != null) {
-                    mSearchView.clearFocus();
-                }
-                return true;
+            if (mSearchView != null) {
+                mSearchView.clearFocus();
+            }
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
