@@ -532,28 +532,28 @@ public class StatsActivity extends ActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (i == R.id.menu_view_stats_full_site) {
+            final String blogId = StatsUtils.getBlogId(mLocalBlogID);
+            if (blogId == null) {
+                showJetpackMissingAlert();
                 return true;
-            case R.id.menu_view_stats_full_site:
-                final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-                if (blogId == null) {
-                    showJetpackMissingAlert();
-                    return true;
-                }
+            }
 
-                String statsAuthenticatedUser = StatsUtils.getBlogStatsUsername(mLocalBlogID);
-                if (statsAuthenticatedUser == null) {
-                    Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
-                    return true;
-                }
-
-                String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
-
-                WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
+            String statsAuthenticatedUser = StatsUtils.getBlogStatsUsername(mLocalBlogID);
+            if (statsAuthenticatedUser == null) {
+                Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
                 return true;
+            }
+
+            String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
+
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

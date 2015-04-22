@@ -235,20 +235,20 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.menu_search:
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                if (mSearchFragment == null) {
-                    mSearchFragment = ThemeSearchFragment.newInstance();
-                }
-                ft.add(R.id.theme_browser_container, mSearchFragment, ThemeSearchFragment.TAG);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack(null);
-                ft.commit();
-                return true;
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (i == R.id.menu_search) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            if (mSearchFragment == null) {
+                mSearchFragment = ThemeSearchFragment.newInstance();
+            }
+            ft.add(R.id.theme_browser_container, mSearchFragment, ThemeSearchFragment.TAG);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.addToBackStack(null);
+            ft.commit();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
