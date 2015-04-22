@@ -21,12 +21,7 @@ public abstract class FetchBlogListAbstract {
 
     public void execute(final Callback callback) {
         mCallback = callback;
-        new Thread() {
-            @Override
-            public void run() {
-                fetchBlogList(callback);
-            }
-        }.start();
+        fetchBlogList(callback);
     }
 
     protected abstract void fetchBlogList(final Callback callback);
