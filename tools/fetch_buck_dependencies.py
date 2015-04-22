@@ -48,7 +48,7 @@ BASE_DEPENDENCIES ={
 'gcm': {'url': 'http://wordpress-mobile.github.io/WordPress-Android/org/wordpress/gcm/1.0.0/gcm-1.0.0.jar'},
 'gson': {'url': 'https://repo1.maven.org/maven2/com/google/code/gson/gson/2.2.2/gson-2.2.2.jar'},
 'helpshift': {'url': 'https://repo1.maven.org/maven2/com/helpshift/android-aar/3.7.2/android-aar-3.7.2.aar'},
-'mediapicker': {'url': 'https://repo1.maven.org/maven2/org/wordpress/mediapicker/1.2.1/mediapicker-1.2.1.aar'},
+'mediapicker': {'url': 'https://repo1.maven.org/maven2/org/wordpress/mediapicker/1.2.2/mediapicker-1.2.2.aar'},
 'mixpanel': {'url': 'https://repo1.maven.org/maven2/com/mixpanel/android/mixpanel-android/4.3.0/mixpanel-android-4.3.0.aar'},
 'passcodelock': {'url': 'http://wordpress-mobile.github.io/WordPress-Android/org/wordpress/android-passcodelock/0.0.6/android-passcodelock-0.0.6.aar'},
 'photoview': {'url': 'https://repo1.maven.org/maven2/com/github/chrisbanes/photoview/library/1.2.3/library-1.2.3.aar'},
