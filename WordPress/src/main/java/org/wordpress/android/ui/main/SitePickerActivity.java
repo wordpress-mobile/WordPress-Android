@@ -100,7 +100,6 @@ public class SitePickerActivity extends ActionBarActivity
         } else if (itemId == R.id.menu_edit) {
             getAdapter().setEnableEditMode(true);
             startSupportActionMode(new ActionModeCallback());
-            updateActionModeTitle();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -154,7 +153,6 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public void onSelectedCountChanged(int numSelected) {
         if (mActionMode != null) {
-            updateActionModeTitle();
             mActionMode.invalidate();
         }
     }
@@ -190,17 +188,6 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
-    private void updateActionModeTitle() {
-        if (mActionMode != null && hasAdapter()) {
-            int numSelected = getAdapter().getNumSelected();
-            if (numSelected > 0) {
-                mActionMode.setTitle(Integer.toString(numSelected));
-            } else {
-                mActionMode.setTitle(getString(R.string.site_picker_title_action_mode));
-            }
-        }
-    }
-
     private final class ActionModeCallback implements ActionMode.Callback {
         private boolean mHasChanges;
 
@@ -208,7 +195,10 @@ public class SitePickerActivity extends ActionBarActivity
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
             mHasChanges = false;
+
+            actionMode.setTitle(getString(R.string.site_picker_title_action_mode));
             actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
+
             return true;
         }
 
