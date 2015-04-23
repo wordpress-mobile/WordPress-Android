@@ -9,13 +9,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.widgets.DividerItemDecoration;
 
@@ -93,7 +97,28 @@ public class SitePickerActivity extends ActionBarActivity
             onBackPressed();
             return true;
         } else if (itemId == R.id.menu_add) {
-            ActivityLauncher.addSelfHostedSiteForResult(this);
+            // if user is signed into wp.com, show a popup menu which enables choosing between creating
+            // a new wp.com blog or adding a self-hosted one
+            if (AccountHelper.isSignedIn()) {
+                View menuView = findViewById(item.getItemId());
+                PopupMenu popup = new PopupMenu(this, menuView);
+                popup.inflate(R.menu.site_picker_popup);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == R.id.menu_add_self_hosted) {
+                            ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
+                        } else if (item.getItemId() == R.id.menu_create_dotcom) {
+                            ActivityLauncher.newBlogForResult(SitePickerActivity.this);
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
+            } else {
+                // user isn't signed into wp.com, so simply enable adding self-hosted
+                ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
+            }
             return true;
         } else if (itemId == R.id.menu_edit) {
             getAdapter().setEnableEditMode(true);
@@ -109,6 +134,7 @@ public class SitePickerActivity extends ActionBarActivity
 
         switch (requestCode) {
             case SignInActivity.CREATE_ACCOUNT_REQUEST:
+            case RequestCodes.CREATE_BLOG:
                 if (resultCode != RESULT_CANCELED) {
                     getAdapter().loadSites();
                 }
