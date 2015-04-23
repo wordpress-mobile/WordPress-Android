@@ -53,14 +53,14 @@ public abstract class StatsAbstractFragment extends Fragment {
         final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
         final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
 
-        // Make sure the blogId is available.
-        if (blogId == null) {
-            AppLog.e(AppLog.T.STATS, "remote blogID is null: " + currentBlog.getHomeURL());
+        if (currentBlog == null) {
+            AppLog.w(AppLog.T.STATS, "Current blog is null. This should never happen here.");
             return;
         }
 
-        if (currentBlog == null) {
-            AppLog.w(AppLog.T.STATS, "Current blog is null. This should never happen here.");
+        // Make sure the blogId is available.
+        if (blogId == null) {
+            AppLog.e(AppLog.T.STATS, "remote blogID is null: " + currentBlog.getHomeURL());
             return;
         }
 

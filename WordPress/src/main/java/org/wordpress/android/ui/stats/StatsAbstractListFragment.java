@@ -19,13 +19,10 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;

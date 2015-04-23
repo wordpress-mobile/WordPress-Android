@@ -65,8 +65,15 @@ public class StatsViewAllActivity extends ActionBarActivity {
                     public void onRefreshStarted() {
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
+                            mIsUpdatingStats = false;
                             return;
                         }
+
+                        if (mIsUpdatingStats) {
+                            AppLog.w(AppLog.T.STATS, "stats are already updating, refresh cancelled");
+                            return;
+                        }
+
                         refreshStats();
                     }
                 }
@@ -243,7 +250,7 @@ public class StatsViewAllActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         mIsInFront = true;
-        NetworkUtils.checkConnection(this); // show the error toast if the nextwork is offline
+        NetworkUtils.checkConnection(this); // show the error toast if the network is offline
     }
 
     @Override
@@ -278,6 +285,5 @@ public class StatsViewAllActivity extends ActionBarActivity {
         if (mFragment != null) {
             mFragment.refreshStats();
         }
-
     }
 }

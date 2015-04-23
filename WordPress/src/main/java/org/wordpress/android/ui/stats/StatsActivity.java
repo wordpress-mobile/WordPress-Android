@@ -114,6 +114,7 @@ public class StatsActivity extends ActionBarActivity
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
+
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
@@ -125,8 +126,9 @@ public class StatsActivity extends ActionBarActivity
                         }
 
                         mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                        checkCredentials();
-                        updateTimeframeAndDateAndStartRefreshOfFragments(true);
+                        if (checkCredentials()) {
+                            updateTimeframeAndDateAndStartRefreshOfFragments(true);
+                        }
                     }
                 });
 
@@ -396,9 +398,18 @@ public class StatsActivity extends ActionBarActivity
                                 AnalyticsTracker.track(
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
-                                    mSwipeToRefreshHelper.setRefreshing(true);
-                                    mRequestedDate =  StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                                    createFragments(true); // Recreate the fragment and start a refresh od Stats
+                                    return;
+                                }
+                                // We have the blogID now, but we need to re-check if the network connection is available
+                                if (NetworkUtils.checkConnection(StatsActivity.this)) {
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mSwipeToRefreshHelper.setRefreshing(true);
+                                            mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                                            createFragments(true); // Recreate the fragment and start a refresh od Stats
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -545,10 +556,10 @@ public class StatsActivity extends ActionBarActivity
         }
     }
 
-    private void checkCredentials() {
-        if (!NetworkUtils.checkConnection(this)) {
-            AppLog.w(AppLog.T.STATS, "StatsActivity > cannot validate credentials since no connection");
-            return;
+    private boolean checkCredentials() {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            AppLog.w(AppLog.T.STATS, "StatsActivity > cannot check credentials since no internet connection available");
+            return false;
         }
 
         final String blogId = StatsUtils.getBlogId(mLocalBlogID);
@@ -567,7 +578,7 @@ public class StatsActivity extends ActionBarActivity
                     createFragments(true);
                 } else {
                     startWPComLoginActivity();
-                    return;
+                    return false;
                 }
             }
         } else {
@@ -577,6 +588,7 @@ public class StatsActivity extends ActionBarActivity
                 mSwipeToRefreshHelper.setRefreshing(true);
                 new ApiHelper.RefreshBlogContentTask(currentBlog,
                         new VerifyJetpackSettingsCallback()).execute(false);
+                return false;
             } else {
                 // blodID cannot be null on dotcom blogs.
                 Toast.makeText(this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
@@ -589,8 +601,10 @@ public class StatsActivity extends ActionBarActivity
         if (!currentBlog.isDotcomFlag() && !currentBlog.hasValidJetpackCredentials() &&
                 !AccountHelper.getDefaultAccount().hasAccessToken()) {
             AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
-            return;
+            return false;
         }
+
+        return true;
     }
 
     private void stopStatsService() {

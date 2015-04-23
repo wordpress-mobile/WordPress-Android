@@ -50,7 +50,7 @@ public class StatsService extends Service {
 
     private int mServiceStartId;
     private final LinkedList<Request<JSONObject>> mStatsNetworkRequests = new LinkedList<>();
-    protected ThreadPoolExecutor parseResponseExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
+    protected ThreadPoolExecutor singleThreadNetworkHandler = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
 
     @Override
     public void onCreate() {
@@ -114,7 +114,7 @@ public class StatsService extends Service {
 
         this.mServiceStartId = startId;
         for (final StatsEndpointsEnum sectionToUpdate : sectionsToUpdate) {
-            parseResponseExecutor.submit(new Thread() {
+            singleThreadNetworkHandler.submit(new Thread() {
                 @Override
                 public void run() {
                     startTasks(blogId, period, requestedDate, sectionToUpdate, maxResultsRequested, pageRequested);
@@ -143,72 +143,71 @@ public class StatsService extends Service {
         final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
 
         String period = timeframe.getLabelForRestCall();
-
-        AppLog.i(T.STATS, "Update started for blogID - " + blogId + " with the following period: " + period
-                + " on the following date: " + date + " for the following section: " + sectionToUpdate.name());
-
+        /*AppLog.i(T.STATS, "A new Stats network request is required for blogID: " + blogId + " - period: " + period
+                + " - date: " + date + " - StatsType: " + sectionToUpdate.name());
+*/
         EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(true));
 
         RestListener vListener = new RestListener(sectionToUpdate, blogId, timeframe, date);
-        final String path;
+        String path = String.format("/sites/%s/stats/", blogId);
         synchronized (mStatsNetworkRequests) {
             switch (sectionToUpdate) {
                 case VISITS:
-                    path = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", blogId, period, date);
+                    path = String.format(path + "visits?unit=%s&quantity=10&date=%s", period, date);
                     break;
                 case TOP_POSTS:
-                    path = String.format("/sites/%s/stats/top-posts?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
+                    path = String.format(path + "top-posts?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
                     break;
                 case REFERRERS:
-                    path = String.format("/sites/%s/stats/referrers?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
+                    path = String.format(path + "referrers?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
                     break;
                 case CLICKS:
-                    path = String.format("/sites/%s/stats/clicks?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
+                    path = String.format(path + "clicks?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
                     break;
                 case GEO_VIEWS:
-                    path = String.format("/sites/%s/stats/country-views?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
+                    path = String.format(path + "country-views?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
                     break;
                 case AUTHORS:
-                    path = String.format("/sites/%s/stats/top-authors?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
+                    path = String.format(path + "top-authors?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
                     break;
                 case VIDEO_PLAYS:
-                    path = String.format("/sites/%s/stats/video-plays?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
+                    path = String.format(path + "video-plays?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
                     break;
                 case COMMENTS:
-                    path = String.format("/sites/%s/stats/comments", blogId); // No max parameter available
+                    path = String.format(path + "comments"); // No max parameter available
                     break;
                 case FOLLOWERS_WPCOM:
                     if (pageRequested == -1) {
-                        path = String.format("/sites/%s/stats/followers?type=wpcom&max=%s", blogId, maxResultsRequested);
+                        path = String.format(path + "followers?type=wpcom&max=%s", maxResultsRequested);
                     } else {
-                        path = String.format("/sites/%s/stats/followers?type=wpcom&period=%s&date=%s&max=%s&page=%s", blogId,
+                        path = String.format(path + "followers?type=wpcom&period=%s&date=%s&max=%s&page=%s",
                                 period, date, MAX_RESULTS_REQUESTED_PER_PAGE, pageRequested);
                     }
                     break;
                 case FOLLOWERS_EMAIL:
                     if (pageRequested == -1) {
-                        path = String.format("/sites/%s/stats/followers?type=email&max=%s", blogId, maxResultsRequested);
+                        path = String.format(path + "followers?type=email&max=%s", maxResultsRequested);
                     } else {
-                        path = String.format("/sites/%s/stats/followers?type=email&period=%s&date=%s&max=%s&page=%s", blogId,
+                        path = String.format(path + "followers?type=email&period=%s&date=%s&max=%s&page=%s",
                                 period, date, MAX_RESULTS_REQUESTED_PER_PAGE, pageRequested);
                     }
                     break;
                 case COMMENT_FOLLOWERS:
                     if (pageRequested == -1) {
-                        path = String.format("/sites/%s/stats/comment-followers?max=%s", blogId, maxResultsRequested);
+                        path = String.format(path + "comment-followers?max=%s", maxResultsRequested);
                     } else {
-                        path = String.format("/sites/%s/stats/comment-followers?period=%s&date=%s&max=%s&page=%s", blogId, period,
+                        path = String.format(path + "comment-followers?period=%s&date=%s&max=%s&page=%s", period,
                                 date, MAX_RESULTS_REQUESTED_PER_PAGE, pageRequested);
                     }
                     break;
                 case TAGS_AND_CATEGORIES:
-                    path = String.format("/sites/%s/stats/tags?max=%s", blogId, maxResultsRequested);
+                    path = String.format(path + "tags?max=%s", maxResultsRequested);
                     break;
                 case PUBLICIZE:
-                    path = String.format("/sites/%s/stats/publicize?max=%s", blogId, maxResultsRequested);
+                    path = String.format(path + "publicize?max=%s", maxResultsRequested);
                     break;
                 case SEARCH_TERMS:
-                    path = String.format("/sites/%s/stats/search-terms?period=%s&date=%s&max=%s", blogId, period, date, maxResultsRequested);
+                    path = String.format(path + "search-terms?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
                     break;
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());
@@ -237,7 +236,7 @@ public class StatsService extends Service {
 
         @Override
         public void onResponse(final JSONObject response) {
-            parseResponseExecutor.submit(new Thread() {
+            singleThreadNetworkHandler.submit(new Thread() {
                 @Override
                 public void run() {
                     // do other stuff here
@@ -257,7 +256,7 @@ public class StatsService extends Service {
 
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
-            parseResponseExecutor.submit(new Thread() {
+            singleThreadNetworkHandler.submit(new Thread() {
                 @Override
                 public void run() {
                     AppLog.e(T.STATS, this.getClass().getName() + " responded with an Error");
