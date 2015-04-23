@@ -289,9 +289,8 @@ public class StatsService extends Service {
                     it.remove();
                 }
             }
-            if (mStatsNetworkRequests.size() == 0) {
-                EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(false));
-            }
+            boolean isStillWorking = mStatsNetworkRequests.size() > 0 ;
+            EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(isStillWorking));
         }
     }
 }

@@ -226,7 +226,11 @@ public class StatsActivity extends ActionBarActivity
 
     @Override
     protected void onDestroy() {
-        stopStatsService();
+       // stopService(new Intent(this, StatsService.class));
+        if (mIsUpdatingStats) {
+            mIsUpdatingStats = false;
+            mSwipeToRefreshHelper.setRefreshing(false);
+        }
         super.onDestroy();
     }
 
@@ -610,14 +614,6 @@ public class StatsActivity extends ActionBarActivity
         }
 
         return true;
-    }
-
-    private void stopStatsService() {
-        stopService(new Intent(this, StatsService.class));
-        if (mIsUpdatingStats) {
-            mIsUpdatingStats = false;
-            mSwipeToRefreshHelper.setRefreshing(false);
-        }
     }
 
     @SuppressWarnings("unused")

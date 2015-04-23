@@ -122,11 +122,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //AppLog.d(AppLog.T.STATS, this.getTag() + " > onCreate");
         mGroupIdToExpandedMap = new SparseBooleanArray();
 
         if (savedInstanceState != null) {
-            AppLog.d(AppLog.T.STATS, this.getTag() + " > restoring instance state");
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
                 Serializable oldData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
                 if (oldData != null && oldData instanceof Serializable[]) {

@@ -43,7 +43,7 @@ public abstract class StatsAbstractFragment extends Fragment {
             sections = getSectionsToUpdate();
         }
 
-        AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > refreshStats");
+        //AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > refreshStats");
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             AppLog.w(AppLog.T.STATS, this.getClass().getCanonicalName() + "--> no connection, update canceled");
@@ -92,7 +92,6 @@ public abstract class StatsAbstractFragment extends Fragment {
        // AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > onCreate");
 
         if (savedInstanceState != null) {
-            AppLog.d(AppLog.T.STATS, "savedInstanceState != null");
             if (savedInstanceState.containsKey(ARGS_TIMEFRAME)) {
                 mStatsTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(ARGS_TIMEFRAME);
             }
