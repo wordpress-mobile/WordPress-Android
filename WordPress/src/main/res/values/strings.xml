@@ -911,8 +911,8 @@
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
-    <string name="site_picker_title_action_mode">Site visibility</string>
-    <string name="site_picker_edit_visibility">Show/hide WordPress.com sites</string>
+    <string name="site_picker_title_action_mode">Visibility</string>
+    <string name="site_picker_edit_visibility">Toggle WordPress.com sites</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
 
     <!-- Application logs view -->
