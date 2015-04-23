@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
@@ -213,11 +214,45 @@ public class StatsService extends Service {
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());
                     return;
             }
-            AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + path);
-            Request<JSONObject> currentRequest = restClientUtils.get(path, vListener, vListener);
-            currentRequest.setTag("StatsCall");
-            mStatsNetworkRequests.add(currentRequest);
+
+            // We need to check if we already have the same request in the queue
+            if (checkIfRequestShouldBeEnqueued(restClientUtils, path)) {
+                AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + path);
+                Request<JSONObject> currentRequest = restClientUtils.get(path, vListener, vListener);
+                currentRequest.setTag("StatsCall");
+                mStatsNetworkRequests.add(currentRequest);
+            } else {
+                AppLog.d(AppLog.T.STATS, "Stats request is already there:" + path);
+            }
         }
+    }
+
+    /**
+     *  This method checks if we already have the same request in the Queue. No need to re-enqueue a new request
+     *  if one with the same parameters is there.
+     *
+     *  This method is a kind of tricky, since it does the comparison by checking the origin URL of requests.
+     *  To do that we had to get the fullURL of the new request by calling a method of the REST client `getAbsoluteURL`.
+     *  That's good for now, but could lead to errors if the RestClient changes the way the URL is constructed internally,
+     *  by calling `getAbsoluteURL`.
+     *
+     *  - Another approach would involve the get of the requests ErrorListener and the check Listener's parameters.
+     *  - Cleanest approach is for sure to create a new class that extends Request<JSONObject> and stores parameters for later comparison,
+     *  unfortunately we have to change the REST Client and RestClientUtils a lot if we want follow this way...
+     *
+     */
+    private boolean checkIfRequestShouldBeEnqueued(final RestClientUtils restClientUtils, String path) {
+        String absoluteRequestPath = restClientUtils.getRestClient().getAbsoluteURL(path);
+        Iterator<Request<JSONObject>> it = mStatsNetworkRequests.iterator();
+        while (it.hasNext()) {
+            Request<JSONObject> req = it.next();
+            if (!req.hasHadResponseDelivered() && !req.isCanceled() &&
+                    absoluteRequestPath.equals(req.getOriginUrl())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
