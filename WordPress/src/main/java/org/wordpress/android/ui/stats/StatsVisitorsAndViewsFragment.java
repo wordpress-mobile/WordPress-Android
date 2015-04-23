@@ -469,8 +469,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
         double largest = Integer.MIN_VALUE;
 
-        for (int i = 0; i < dataToShowOnGraph.length; i++) {
-            int currentItemValue = dataToShowOnGraph[i].getViews();
+        for (VisitModel aDataToShowOnGraph : dataToShowOnGraph) {
+            int currentItemValue = aDataToShowOnGraph.getViews();
             if (currentItemValue > largest) {
                 largest = currentItemValue;
             }

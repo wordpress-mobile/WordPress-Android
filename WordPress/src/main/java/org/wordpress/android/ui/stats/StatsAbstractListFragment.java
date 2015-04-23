@@ -394,7 +394,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             mTopPagerSelectedButtonIndex = checkedId;
 
             TextView entryLabel = (TextView) getView().findViewById(R.id.stats_list_entry_label);
-            entryLabel.setText(getEntryLabelResId());
+            if (entryLabel != null) {
+                entryLabel.setText(getEntryLabelResId());
+            }
             updateUI();
         }
     };

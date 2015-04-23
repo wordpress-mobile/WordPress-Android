@@ -565,6 +565,11 @@ public class StatsActivity extends ActionBarActivity
         final String blogId = StatsUtils.getBlogId(mLocalBlogID);
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
+        if (currentBlog == null) {
+            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+            return false;
+        }
+
         // blogId is always available for dotcom blogs. It could be null on Jetpack blogs...
         if (blogId != null) {
             // for self-hosted sites; launch the user into an activity where they can provide their credentials

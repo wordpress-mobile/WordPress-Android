@@ -72,7 +72,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                 String label = getResources().getString(getTotalsLabelResId());
 
                 // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
-                StringBuilder htmlPage = new StringBuilder().append("<html>")
+                String htmlPage = new StringBuilder().append("<html>")
                         .append("<head>")
                         .append("<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>")
                         .append("<script type=\"text/javascript\">")
@@ -93,7 +93,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                         .append("<body>")
                         .append("<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>")
                         .append("</body>")
-                        .append("</html>");
+                        .append("</html>").toString();
 
 
                 WebView webView = new WebView(getActivity());
@@ -111,7 +111,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                 webView.setWebViewClient(new MyWebViewClient()); // Hide map in case of unrecoverable errors
                 webView.getSettings().setJavaScriptEnabled(true);
                 webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-                webView.loadData(htmlPage.toString(), "text/html", "UTF-8");
+                webView.loadData(htmlPage, "text/html", "UTF-8");
 
             }
         });

@@ -14,6 +14,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
@@ -47,7 +48,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
     private List<TagsModel> getTags() {
         if (!hasTags()) {
-            return null;
+            return new ArrayList<TagsModel>(0);
         }
         return ((TagsContainerModel) mDatamodels[0]).getTags();
     }

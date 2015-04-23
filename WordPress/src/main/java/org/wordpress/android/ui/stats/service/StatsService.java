@@ -174,7 +174,7 @@ public class StatsService extends Service {
                     path = String.format(path + "video-plays?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
                     break;
                 case COMMENTS:
-                    path = String.format(path + "comments"); // No max parameter available
+                    path = path + "comments"; // No max parameter available
                     break;
                 case FOLLOWERS_WPCOM:
                     if (pageRequested == -1) {
