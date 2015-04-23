@@ -111,29 +111,29 @@ public class ViewSiteActivity extends ActionBarActivity {
             return false;
         }
 
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.menu_refresh:
-                mWebView.reload();
-                return true;
-            case R.id.menu_share:
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
-                startActivity(Intent.createChooser(share, getResources().getText(R.string.share_link)));
-                return true;
-            case R.id.menu_browser:
-                String url = mWebView.getUrl();
-                if (url != null) {
-                    Uri uri = Uri.parse(url);
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(uri);
-                    startActivity(i);
-                    AppLockManager.getInstance().setExtendedTimeout();
-                }
-                return true;
+        int i1 = item.getItemId();
+        if (i1 == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (i1 == R.id.menu_refresh) {
+            mWebView.reload();
+            return true;
+        } else if (i1 == R.id.menu_share) {
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
+            startActivity(Intent.createChooser(share, getResources().getText(R.string.share_link)));
+            return true;
+        } else if (i1 == R.id.menu_browser) {
+            String url = mWebView.getUrl();
+            if (url != null) {
+                Uri uri = Uri.parse(url);
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(uri);
+                startActivity(i);
+                AppLockManager.getInstance().setExtendedTimeout();
+            }
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
