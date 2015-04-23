@@ -42,13 +42,17 @@ public class ImageUtils {
 
         if (uri.toString().contains("content:")) {
             String[] projection = new String[] { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
-            Cursor cur = context.getContentResolver().query(uri, projection, null, null, null);
-            if (cur != null) {
-                if (cur.moveToFirst()) {
+            Cursor cur = null;
+            try {
+                cur = context.getContentResolver().query(uri, projection, null, null, null);
+                if (cur != null && cur.moveToFirst()) {
                     int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
                     path = cur.getString(dataColumn);
                 }
-                cur.close();
+            } catch (IllegalStateException stateException) {
+                Log.d(ImageUtils.class.getName(), "IllegalStateException querying content:" + uri);
+            } finally {
+                SqlUtils.closeCursor(cur);
             }
         }
 
