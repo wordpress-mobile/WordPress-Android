@@ -406,17 +406,17 @@ public class ImageUtils {
         String filePath = null;
         if (imageUri.toString().contains("content:")) {
             String[] projection = new String[] { MediaStore.Images.Media.DATA };
+            Cursor cur = null;
             try {
-                Cursor cur = context.getContentResolver().query(imageUri, projection, null, null, null);
-                if (cur != null) {
-                    if (cur.moveToFirst()) {
-                        int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
-                        filePath = cur.getString(dataColumn);
-                    }
-                    cur.close();
+                cur = context.getContentResolver().query(imageUri, projection, null, null, null);
+                if (cur != null && cur.moveToFirst()) {
+                    int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
+                    filePath = cur.getString(dataColumn);
                 }
             } catch (IllegalStateException stateException) {
                 Log.d(ImageUtils.class.getName(), "IllegalStateException querying content:" + imageUri);
+            } finally {
+                SqlUtils.closeCursor(cur);
             }
         }
 
