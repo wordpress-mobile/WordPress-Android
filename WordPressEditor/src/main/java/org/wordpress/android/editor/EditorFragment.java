@@ -40,7 +40,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private String mParamContent;
 
     private Activity mActivity;
-    private EditorWebView mWebView;
+    private EditorWebViewAbstract mWebView;
 
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
 
@@ -69,7 +69,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_editor, container, false);
-        mWebView = (EditorWebView) view.findViewById(R.id.webview);
+        mWebView = (EditorWebViewAbstract) view.findViewById(R.id.webview);
         initWebView();
 
         ToggleButton boldButton = (ToggleButton) view.findViewById(R.id.bold);
