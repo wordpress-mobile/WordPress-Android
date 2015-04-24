@@ -10,6 +10,7 @@ import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.R;
 
@@ -49,12 +50,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
             mPostId = JSONUtils.queryJSON(mBlockData, "post_id", 0);
             mRangeType = NoteBlockRangeType.fromString(JSONUtils.queryJSON(mBlockData, "type", ""));
             mUrl = JSONUtils.queryJSON(mBlockData, "url", "");
-            mIndices = new int[]{0,0};
-            JSONArray indicesArray = mBlockData.optJSONArray("indices");
-            if (indicesArray != null) {
-                mIndices[0] = indicesArray.optInt(0);
-                mIndices[1] = indicesArray.optInt(1);
-            }
+            mIndices = NotificationsUtils.getIndicesForRange(mBlockData);
 
             // Don't link certain range types, or unknown ones, unless we have a URL
             mShouldLink = mShouldLink && mRangeType != NoteBlockRangeType.BLOCKQUOTE &&

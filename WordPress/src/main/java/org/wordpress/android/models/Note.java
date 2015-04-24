@@ -140,7 +140,7 @@ public class Note extends Syncable {
     }
 
     public Spannable getFormattedSubject() {
-        return NotificationsUtils.getSpannableContentForRanges(getSubject(), null, null);
+        return NotificationsUtils.getSpannableContentForRanges(getSubject());
     }
 
     public String getTitle() {

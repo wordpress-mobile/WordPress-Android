@@ -14,6 +14,8 @@ import android.text.TextUtils;
 import android.text.style.AlignmentSpan;
 import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
+import android.text.style.TypefaceSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -32,6 +34,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
+import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -39,6 +42,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.helpers.WPImageGetter;
+import org.wordpress.android.widgets.NoticonTypefaceSpan;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +53,7 @@ public class NotificationsUtils {
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
+    public static final String NOTICON_FONT_NAME = "Noticons-Regular.otf";
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
@@ -221,9 +226,14 @@ public class NotificationsUtils {
         return "org.wordpress.android.playstore";
     }
 
+    public static Spannable getSpannableContentForRanges(JSONObject subject) {
+        return getSpannableContentForRanges(subject, null, null, false);
+    }
+
     // Builds a Spannable with range objects found in the note JSON
     public static Spannable getSpannableContentForRanges(JSONObject subject, TextView textView,
-                                                         final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+                                                         final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                                                         boolean shouldAddNoticons) {
         if (subject == null) {
             return new SpannableStringBuilder();
         }
@@ -239,9 +249,19 @@ public class NotificationsUtils {
         // Process Ranges to add links and text formatting
         JSONArray rangesArray = subject.optJSONArray("ranges");
         if (rangesArray != null) {
+            JSONObject noticonRange = null;
             for (int i = 0; i < rangesArray.length(); i++) {
                 JSONObject rangeObject = rangesArray.optJSONObject(i);
                 if (rangeObject == null) {
+                    continue;
+                }
+
+                // We'll add noticons after the rest of the string has been styled
+                if (NoteBlockRangeType.fromString(rangeObject.optString("type")) == NoteBlockRangeType.NOTICON) {
+                    if (shouldAddNoticons) {
+                        noticonRange = rangeObject;
+                    }
+
                     continue;
                 }
 
@@ -260,16 +280,41 @@ public class NotificationsUtils {
                         indices[1] <= spannableStringBuilder.length()) {
                     spannableStringBuilder.setSpan(clickableSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
-                    // Add additional styling if the id wants it
+                    // Add additional styling if the range wants it
                     if (clickableSpan.getSpanStyle() != Typeface.NORMAL) {
                         StyleSpan styleSpan = new StyleSpan(clickableSpan.getSpanStyle());
                         spannableStringBuilder.setSpan(styleSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                     }
                 }
             }
+
+            if (noticonRange != null) {
+                NoticonTypefaceSpan noticonSpan = new NoticonTypefaceSpan(WordPress.getContext());
+                int[] indices = getIndicesForRange(noticonRange);
+                // Add a space to the glyph to separate it from the other content
+                String noticonGlyph = noticonRange.optString("value", " ") + " ";
+                spannableStringBuilder.insert(indices[0], noticonGlyph);
+
+                spannableStringBuilder.setSpan(noticonSpan, indices[0], indices[0] + 2, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            }
         }
 
         return spannableStringBuilder;
+    }
+
+    public static int[] getIndicesForRange(JSONObject rangeObject) {
+        int[] indices = new int[]{0,0};
+        if (rangeObject == null) {
+            return indices;
+        }
+
+        JSONArray indicesArray = rangeObject.optJSONArray("indices");
+        if (indicesArray != null && indicesArray.length() >= 2) {
+            indices[0] = indicesArray.optInt(0);
+            indices[1] = indicesArray.optInt(1);
+        }
+
+        return indices;
     }
 
     /**
@@ -363,29 +408,6 @@ public class NotificationsUtils {
         }
     }
 
-    public static Spannable getClickableTextForIdUrl(JSONObject idBlock, String text,
-                                                     final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
-        if (idBlock == null || TextUtils.isEmpty(text)) {
-            return new SpannableStringBuilder("");
-        }
-
-        boolean shouldLink = onNoteBlockTextClickListener != null;
-
-        NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(WordPress.getContext(), idBlock, shouldLink) {
-            @Override
-            public void onClick(View widget) {
-                if (onNoteBlockTextClickListener != null) {
-                    onNoteBlockTextClickListener.onNoteBlockTextClicked(this);
-                }
-            }
-        };
-
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
-        spannableStringBuilder.setSpan(clickableSpan, 0, spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-
-        return spannableStringBuilder;
-    }
-
     public static void handleNoteBlockSpanClick(NotificationsDetailActivity activity, NoteBlockClickableSpan clickedSpan) {
         switch (clickedSpan.getRangeType()) {
             case SITE:
@@ -401,8 +423,8 @@ public class NotificationsUtils {
                 activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
                 break;
             case COMMENT:
-                // For now, show post detail for comments
-                activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getPostId());
+                // Show reader comment list
+                activity.showReaderCommentList(clickedSpan.getSiteId(), clickedSpan.getPostId(), clickedSpan.getId());
                 break;
             case STAT:
             case FOLLOW:

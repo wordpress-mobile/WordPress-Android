@@ -148,15 +148,6 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         return fragment;
     }
 
-    public void showCommentDetailForNote(Note note) {
-        if (isFinishing() || note == null) return;
-
-        Intent intent = new Intent(this, CommentDetailActivity.class);
-        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_IS_REMOTE, true);
-        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_NOTE_ID, note.getId());
-        startActivity(intent);
-    }
-
     public void showBlogPreviewActivity(long siteId) {
         if (isFinishing()) return;
 
@@ -187,6 +178,12 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         if (isFinishing() || url == null) return;
 
         WPWebViewActivity.openURL(this, url);
+    }
+
+    public void showReaderCommentList(long blogId, long postId, long commentId) {
+        if (isFinishing()) return;
+
+        ReaderActivityLauncher.showReaderComments(this, blogId, postId, commentId);
     }
 
     @Override

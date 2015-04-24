@@ -191,8 +191,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
             if (mNote.getParentCommentId() > 0 || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
-                // show comment detail
-                detailActivity.showCommentDetailForNote(mNote);
+                // show comments list for the post
+                detailActivity.showReaderCommentList(mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId());
             } else if (mNote.isFollowType()) {
                 detailActivity.showBlogPreviewActivity(mNote.getSiteId());
             } else {

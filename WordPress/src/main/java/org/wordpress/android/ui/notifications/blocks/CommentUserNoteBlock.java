@@ -87,7 +87,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 NotificationsUtils.getSpannableContentForRanges(
                         getNoteData().optJSONObject("comment_text"),
                         noteBlockHolder.commentTextView,
-                        getOnNoteBlockTextClickListener())
+                        getOnNoteBlockTextClickListener(),
+                        true)
         );
 
         // Change display based on comment status and type:

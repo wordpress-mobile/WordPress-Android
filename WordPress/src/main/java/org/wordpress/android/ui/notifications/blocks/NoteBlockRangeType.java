@@ -13,6 +13,7 @@ public enum NoteBlockRangeType {
     STAT,
     BLOCKQUOTE,
     FOLLOW,
+    NOTICON,
     UNKNOWN;
 
     public static NoteBlockRangeType fromString(String value) {
@@ -32,6 +33,8 @@ public enum NoteBlockRangeType {
             return BLOCKQUOTE;
         } else if (value.equals("follow")) {
             return FOLLOW;
+        } else if (value.equals("noticon")) {
+            return NOTICON;
         } else {
             return UNKNOWN;
         }
