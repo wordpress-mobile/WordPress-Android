@@ -152,16 +152,23 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+
     /*
-     * show comments for the passed post
+     * show comments for the passed Ids
      */
-    public static void showReaderComments(Context context, ReaderPost post) {
-        if (post == null) {
-            return;
-        }
+    public static void showReaderComments(Context context, long blogId, long postId) {
+        showReaderComments(context, blogId, postId, 0);
+    }
+
+
+    /*
+     * Show comments for passed Ids. Passing a commentId will scroll that comment into view
+     */
+    public static void showReaderComments(Context context, long blogId, long postId, long commentId) {
         Intent intent = new Intent(context, ReaderCommentListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, post.blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, post.postId);
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
 
         if (context instanceof Activity) {
             Activity activity = (Activity) context;

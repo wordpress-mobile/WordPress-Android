@@ -68,6 +68,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     private boolean mHasUpdatedComments;
     private boolean mIsSubmittingComment;
     private long mReplyToCommentId;
+    private long mCommentId;
     private int mRestorePosition;
 
     @Override
@@ -94,6 +95,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+            mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             // remove all but the first page of comments for this post if there's an active
             // connection - infinite scroll will take care of filling in subsequent pages
             if (NetworkUtils.isNetworkAvailable(this)) {
@@ -264,6 +266,10 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                             updateComments(isEmpty, false);
                         } else if (mRestorePosition > 0) {
                             mRecyclerView.scrollToPosition(mRestorePosition);
+                        } else if (mCommentId > 0) {
+                            // Scroll to the commentId once if it was passed to this activity
+                            scrollToCommentId(mCommentId);
+                            mCommentId = 0;
                         }
                         mRestorePosition = 0;
                         checkEmptyView();
