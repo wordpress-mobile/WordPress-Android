@@ -356,6 +356,7 @@ public class ReaderPostListFragment extends Fragment
             public void onClick(View view) {
                 hideNewPostsBar();
                 mRecyclerView.scrollToPosition(0);
+                refreshPosts();
                 if (hasFragmentToolbar()) {
                     showFragmentToolbar(true);
                 }
@@ -538,12 +539,13 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * disable swipe-to-refresh if posts can be scrolled upwards - only necessary when the fragment
-     * toolbar is enabled since it can intercept the touch event and pass it on to the swipe layout,
-     * cause a refresh to begin even though the user is simply scrolling up the posts
+     * disable swipe-to-refresh if "new posts" bar is showing or posts can be scrolled up
+     * because otherwise it can intercept the touch event and pass it on to the swipe layout,
+     * causing a refresh to begin even though the user is simply scrolling up the posts.
+     * note that this problem only applies when the fragment toolbar is enabled.
      */
     private void checkSwipeToRefresh() {
-        mSwipeToRefreshLayout.setEnabled(!mRecyclerView.canScrollUp());
+        mSwipeToRefreshLayout.setEnabled(!mRecyclerView.canScrollUp() && !isNewPostsBarShowing());
     }
 
     /*
@@ -800,6 +802,7 @@ public class ReaderPostListFragment extends Fragment
                     mRecyclerView.scrollToPosition(mRestorePosition);
                 }
             }
+            checkSwipeToRefresh();
             mRestorePosition = 0;
         }
     };
@@ -1052,7 +1055,6 @@ public class ReaderPostListFragment extends Fragment
 
         if (showNewPostsBar) {
             showNewPostsBar();
-            refreshPosts();
         } else if (event.getResult().isNewOrChanged()) {
             refreshPosts();
         } else {
@@ -1132,14 +1134,6 @@ public class ReaderPostListFragment extends Fragment
 
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
-
-        // hide after a short delay
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideNewPostsBar();
-            }
-        }, 3000);
     }
 
     private void hideNewPostsBar() {
