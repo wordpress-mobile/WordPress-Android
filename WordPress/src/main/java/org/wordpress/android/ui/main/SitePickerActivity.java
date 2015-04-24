@@ -1,7 +1,12 @@
 package org.wordpress.android.ui.main;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
@@ -10,7 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.PopupMenu;
+import android.widget.Button;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -52,6 +57,14 @@ public class SitePickerActivity extends ActionBarActivity
         } else if (getIntent() != null) {
             mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
         }
+
+        Button btnAddSite = (Button) findViewById(R.id.btn_add);
+        btnAddSite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addSite();
+            }
+        });
 
         RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler_view);
         recycler.setLayoutManager(new LinearLayoutManager(this));
@@ -95,30 +108,6 @@ public class SitePickerActivity extends ActionBarActivity
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             onBackPressed();
-            return true;
-        } else if (itemId == R.id.menu_add) {
-            // if user is signed into wp.com, show a popup menu which enables choosing between creating
-            // a new wp.com blog or adding a self-hosted one
-            if (AccountHelper.isSignedIn()) {
-                View menuView = findViewById(item.getItemId());
-                PopupMenu popup = new PopupMenu(this, menuView);
-                popup.inflate(R.menu.site_picker_popup);
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.menu_add_self_hosted) {
-                            ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
-                        } else if (item.getItemId() == R.id.menu_create_dotcom) {
-                            ActivityLauncher.newBlogForResult(SitePickerActivity.this);
-                        }
-                        return true;
-                    }
-                });
-                popup.show();
-            } else {
-                // user isn't signed into wp.com, so simply enable adding self-hosted
-                ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
-            }
             return true;
         } else if (itemId == R.id.menu_edit) {
             getAdapter().setEnableEditMode(true);
@@ -199,6 +188,18 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
+    private void addSite() {
+        // if user is signed into wp.com use the dialog to enable choosing whether to
+        // create a new wp.com blog or add a self-hosted one
+        if (AccountHelper.isSignedIn()) {
+            DialogFragment dialog = new AddSiteDialog();
+            dialog.show(getSupportFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
+        } else {
+            // user isn't signed into wp.com, so simply enable adding self-hosted
+            ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
+        }
+    }
+
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
@@ -271,6 +272,35 @@ public class SitePickerActivity extends ActionBarActivity
             }
             getAdapter().setEnableEditMode(false);
             mActionMode = null;
+        }
+    }
+
+    /*
+     * dialog which appears after user taps "Add site" - enables choosing whether to create
+     * a new wp.com blog or add an existing self-hosted one
+     */
+    public static class AddSiteDialog extends DialogFragment {
+        static final String ADD_SITE_DIALOG_TAG = "add_site_dialog";
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            CharSequence[] items =
+                    {getString(R.string.site_picker_create_dotcom),
+                     getString(R.string.site_picker_add_self_hosted)};
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.site_picker_add_site);
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == 0) {
+                        ActivityLauncher.newBlogForResult(getActivity());
+                    } else {
+                        ActivityLauncher.addSelfHostedSiteForResult(getActivity());
+                    }
+                }
+            });
+            return builder.create();
         }
     }
 }
