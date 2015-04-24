@@ -77,9 +77,14 @@ public abstract class StatsAbstractFragment extends Fragment {
         intent.putExtra(StatsService.ARG_PERIOD, mStatsTimeframe);
         intent.putExtra(StatsService.ARG_DATE, mDate);
         if (isSingleView()) {
-            intent.putExtra(StatsService.ARG_MAX_RESULTS, MAX_RESULTS_REQUESTED);
+            if (pageNumberRequested > 0) {
+                // request 20 items per page. It's the maximum number returned by the server in paged mode
+                intent.putExtra(StatsService.ARG_MAX_RESULTS, StatsService.MAX_RESULTS_REQUESTED_PER_PAGE);
+            } else {
+                intent.putExtra(StatsService.ARG_MAX_RESULTS, MAX_RESULTS_REQUESTED);
+            }
         }
-        if (pageNumberRequested  != -1) {
+        if (pageNumberRequested > 0) {
             intent.putExtra(StatsService.ARG_PAGE_REQUESTED, pageNumberRequested);
         }
         intent.putExtra(StatsService.ARG_SECTION, sections);

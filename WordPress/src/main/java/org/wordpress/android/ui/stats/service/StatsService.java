@@ -150,65 +150,54 @@ public class StatsService extends Service {
         EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(true));
 
         RestListener vListener = new RestListener(sectionToUpdate, blogId, timeframe, date);
-        String path = String.format("/sites/%s/stats/", blogId);
+
+        final String periodDateMaxPlaceholder =  "?period=%s&date=%s&max=%s";
+
+        String path = String.format("/sites/%s/stats/" + getRestEndpointPath(sectionToUpdate), blogId);
         synchronized (mStatsNetworkRequests) {
             switch (sectionToUpdate) {
                 case VISITS:
-                    path = String.format(path + "visits?unit=%s&quantity=10&date=%s", period, date);
+                    path = String.format(path + "?unit=%s&quantity=10&date=%s", period, date);
                     break;
                 case TOP_POSTS:
-                    path = String.format(path + "top-posts?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
-                    break;
                 case REFERRERS:
-                    path = String.format(path + "referrers?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
-                    break;
                 case CLICKS:
-                    path = String.format(path + "clicks?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
-                    break;
                 case GEO_VIEWS:
-                    path = String.format(path + "country-views?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
-                    break;
                 case AUTHORS:
-                    path = String.format(path + "top-authors?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
-                    break;
                 case VIDEO_PLAYS:
-                    path = String.format(path + "video-plays?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
+                case SEARCH_TERMS:
+                    path = String.format(path + periodDateMaxPlaceholder, period, date, maxResultsRequested);
+                    break;
+                case TAGS_AND_CATEGORIES:
+                case PUBLICIZE:
+                    path = String.format(path + "?max=%s", maxResultsRequested);
                     break;
                 case COMMENTS:
-                    path = path + "comments"; // No max parameter available
+                    // No parameters
                     break;
                 case FOLLOWERS_WPCOM:
-                    if (pageRequested == -1) {
-                        path = String.format(path + "followers?type=wpcom&max=%s", maxResultsRequested);
+                    if (pageRequested < 1) {
+                        path = String.format(path + "&max=%s", maxResultsRequested);
                     } else {
-                        path = String.format(path + "followers?type=wpcom&period=%s&date=%s&max=%s&page=%s",
-                                period, date, MAX_RESULTS_REQUESTED_PER_PAGE, pageRequested);
+                        path = String.format(path + "&period=%s&date=%s&max=%s&page=%s",
+                                period, date, maxResultsRequested, pageRequested);
                     }
                     break;
                 case FOLLOWERS_EMAIL:
-                    if (pageRequested == -1) {
-                        path = String.format(path + "followers?type=email&max=%s", maxResultsRequested);
+                    if (pageRequested < 1) {
+                        path = String.format(path + "&max=%s", maxResultsRequested);
                     } else {
-                        path = String.format(path + "followers?type=email&period=%s&date=%s&max=%s&page=%s",
-                                period, date, MAX_RESULTS_REQUESTED_PER_PAGE, pageRequested);
+                        path = String.format(path + "&period=%s&date=%s&max=%s&page=%s",
+                                period, date, maxResultsRequested, pageRequested);
                     }
                     break;
                 case COMMENT_FOLLOWERS:
-                    if (pageRequested == -1) {
-                        path = String.format(path + "comment-followers?max=%s", maxResultsRequested);
+                    if (pageRequested < 1) {
+                        path = String.format(path + "?max=%s", maxResultsRequested);
                     } else {
-                        path = String.format(path + "comment-followers?period=%s&date=%s&max=%s&page=%s", period,
-                                date, MAX_RESULTS_REQUESTED_PER_PAGE, pageRequested);
+                        path = String.format(path + "?period=%s&date=%s&max=%s&page=%s", period,
+                                date, maxResultsRequested, pageRequested);
                     }
-                    break;
-                case TAGS_AND_CATEGORIES:
-                    path = String.format(path + "tags?max=%s", maxResultsRequested);
-                    break;
-                case PUBLICIZE:
-                    path = String.format(path + "publicize?max=%s", maxResultsRequested);
-                    break;
-                case SEARCH_TERMS:
-                    path = String.format(path + "search-terms?period=%s&date=%s&max=%s", period, date, maxResultsRequested);
                     break;
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());
@@ -224,6 +213,43 @@ public class StatsService extends Service {
             } else {
                 AppLog.d(AppLog.T.STATS, "Stats request is already there:" + path);
             }
+        }
+    }
+
+
+    private String getRestEndpointPath(final StatsEndpointsEnum sectionToUpdate) {
+        switch (sectionToUpdate) {
+            case VISITS:
+                return "visits";
+            case TOP_POSTS:
+                return "top-posts";
+            case REFERRERS:
+                return "referrers";
+            case CLICKS:
+                return "clicks";
+            case GEO_VIEWS:
+                return "country-views";
+            case AUTHORS:
+                return "top-authors";
+            case VIDEO_PLAYS:
+                return "video-plays";
+            case COMMENTS:
+                return "comments";
+            case FOLLOWERS_WPCOM:
+               return "followers?type=wpcom";
+            case FOLLOWERS_EMAIL:
+                return "followers?type=email";
+            case COMMENT_FOLLOWERS:
+               return "comment-followers";
+            case TAGS_AND_CATEGORIES:
+                return "tags";
+            case PUBLICIZE:
+                return "publicize";
+            case SEARCH_TERMS:
+                return "search-terms";
+            default:
+                AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());
+                return "";
         }
     }
 
