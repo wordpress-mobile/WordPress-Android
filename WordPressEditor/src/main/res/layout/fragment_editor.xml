@@ -28,9 +28,9 @@
             android:layout_width="fill_parent"
             android:layout_height="@dimen/format_bar_height"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="@dimen/format_bar_left_margin"
             android:layout_marginRight="@dimen/format_bar_right_margin"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded">
 
             <HorizontalScrollView
                 android:layout_width="0dp"
@@ -40,7 +40,9 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_marginLeft="@dimen/format_bar_left_margin"
+                    android:orientation="horizontal"
+                    tools:ignore="RtlHardcoded">
 
                     <ToggleButton
                         android:id="@+id/format_bar_button_media"
