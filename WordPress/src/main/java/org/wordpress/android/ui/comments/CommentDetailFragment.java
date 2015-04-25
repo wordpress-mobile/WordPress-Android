@@ -265,7 +265,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnSpamComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moderateComment(CommentStatus.SPAM);
+                if (mBtnSpamComment.getText().equals(
+                        getString(R.string.mnu_comment_unspam))) {
+                    moderateComment(CommentStatus.APPROVED);
+                } else {
+                    moderateComment(CommentStatus.SPAM);
+                }
             }
         });
 
