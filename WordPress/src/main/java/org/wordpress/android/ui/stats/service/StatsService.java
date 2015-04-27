@@ -211,7 +211,7 @@ public class StatsService extends Service {
                 currentRequest.setTag("StatsCall");
                 mStatsNetworkRequests.add(currentRequest);
             } else {
-                AppLog.d(AppLog.T.STATS, "Stats request is already there:" + path);
+                AppLog.d(AppLog.T.STATS, "Stats request is already in the queue:" + path);
             }
         }
     }

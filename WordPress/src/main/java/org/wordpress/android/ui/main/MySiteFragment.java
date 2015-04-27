@@ -55,7 +55,7 @@ public class MySiteFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class) ) {
+        if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
     }
