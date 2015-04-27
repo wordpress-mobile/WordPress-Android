@@ -230,6 +230,18 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             txtCommentsClosed.setVisibility(View.VISIBLE);
         }
 
+        if (mCommentId > 0) {
+            txtTitle.setBackgroundResource(R.drawable.selectable_background_wordpress);
+            txtTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isFinishing()) return;
+
+                    ReaderActivityLauncher.showReaderPostDetail(ReaderCommentListActivity.this, mBlogId, mPostId);
+                }
+            });
+        }
+
         return true;
     }
 
