@@ -71,6 +71,13 @@ public class MediaUtils {
                 url.endsWith(".3g2");
     }
 
+    public static boolean isAudio(String url) {
+        if (url == null) {
+            return false;
+        }
+        return url.endsWith(".mp3") || url.endsWith(".ogg") || url.endsWith(".wav");
+    }
+
     /**
      * E.g. Jul 2, 2013 @ 21:57
      */
