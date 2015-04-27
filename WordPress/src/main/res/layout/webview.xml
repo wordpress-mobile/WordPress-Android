@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/webview_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
+
     <WebView
         android:id="@+id/webView"
+        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -17,6 +21,6 @@
         android:layout_height="@dimen/progress_bar_height"
         android:indeterminate="false"
         android:layout_alignTop="@+id/webView"
-        android:progressDrawable="@drawable/progressbar_horizontal"/>
+        android:progressDrawable="@drawable/progressbar_horizontal" />
 
 </RelativeLayout>

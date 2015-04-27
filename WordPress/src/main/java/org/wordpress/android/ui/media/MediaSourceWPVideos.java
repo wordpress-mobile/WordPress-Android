@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.media;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Parcel;
 import android.view.LayoutInflater;
@@ -26,19 +28,38 @@ public class MediaSourceWPVideos implements MediaSource {
     private static final String VIDEO_PRESS_HOST = "https://videos.files.wordpress.com/";
     private static final String VIDEO_PRESS_THUMBNAIL_APPEND = "_hd.thumbnail.jpg";
 
-    private boolean mLoading;
     private OnMediaChange mListener;
     private List<MediaItem> mMediaItems = new ArrayList<>();
 
     public MediaSourceWPVideos() {
-        fetchVideoData();
+    }
+
+    @Override
+    public void gather(Context context) {
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (blog != null) {
+            Cursor videoCursor = WordPressMediaUtils.getWordPressMediaVideos(String.valueOf(blog.getLocalTableBlogId()));
+
+            if (videoCursor != null) {
+                addWordPressVideosFromCursor(videoCursor);
+                videoCursor.close();
+            } else if (mListener != null){
+                mListener.onMediaLoaded(false);
+            }
+        } else if (mListener != null){
+            mListener.onMediaLoaded(false);
+        }
+    }
+
+    @Override
+    public void cleanup() {
+        mMediaItems.clear();
     }
 
     @Override
     public void setListener(OnMediaChange listener) {
         mListener = listener;
-
-        notifyLoadingStatus();
     }
 
     @Override
@@ -70,7 +91,7 @@ public class MediaSourceWPVideos implements MediaSource {
 
                     imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     if (imageBitmap == null) {
-                        imageView.setImageResource(R.color.grey_darken_10);
+                        imageView.setImageDrawable(placeholderDrawable(convertView.getContext()));
                         WordPressMediaUtils.BackgroundDownloadWebImage bgDownload =
                                 new WordPressMediaUtils.BackgroundDownloadWebImage(imageView);
                         imageView.setTag(bgDownload);
@@ -94,6 +115,14 @@ public class MediaSourceWPVideos implements MediaSource {
         return !selected;
     }
 
+    private Drawable placeholderDrawable(Context context) {
+        if (context != null && context.getResources() != null) {
+            return context.getResources().getDrawable(R.drawable.media_item_placeholder);
+        }
+
+        return null;
+    }
+
     /**
      * Helper method; removes unnecessary characters from videoPressShortcode cursor value
      *
@@ -107,45 +136,6 @@ public class MediaSourceWPVideos implements MediaSource {
         cursorEntry = cursorEntry.substring(0, cursorEntry.length() - 1);
 
         return cursorEntry;
-    }
-
-    /*
-        Parcelable interface
-     */
-
-    public static final Creator<MediaSourceWPVideos> CREATOR =
-            new Creator<MediaSourceWPVideos>() {
-                public MediaSourceWPVideos createFromParcel(Parcel in) {
-                    return new MediaSourceWPVideos();
-                }
-
-                public MediaSourceWPVideos[] newArray(int size) {
-                    return new MediaSourceWPVideos[size];
-                }
-            };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
-
-    private void fetchVideoData() {
-        Blog blog = WordPress.getCurrentBlog();
-
-        if (blog != null) {
-            mLoading = true;
-            notifyLoadingStatus();
-            Cursor videoCursor = WordPressMediaUtils.getWordPressMediaVideos(
-                    String.valueOf(blog.getLocalTableBlogId()));
-            if (videoCursor != null) {
-                addWordPressVideosFromCursor(videoCursor);
-                videoCursor.close();
-            }
-        }
     }
 
     private void addWordPressVideosFromCursor(Cursor cursor) {
@@ -188,13 +178,32 @@ public class MediaSourceWPVideos implements MediaSource {
             } while (cursor.moveToNext());
         }
 
-        mLoading = false;
-        notifyLoadingStatus();
+        if (mListener != null) {
+            mListener.onMediaLoaded(true);
+        }
     }
 
-    private void notifyLoadingStatus() {
-        if (mListener != null) {
-            mListener.onMediaLoading(this, !mLoading);
-        }
+    /**
+     * {@link android.os.Parcelable} interface
+     */
+
+    public static final Creator<MediaSourceWPVideos> CREATOR =
+            new Creator<MediaSourceWPVideos>() {
+                public MediaSourceWPVideos createFromParcel(Parcel in) {
+                    return new MediaSourceWPVideos();
+                }
+
+                public MediaSourceWPVideos[] newArray(int size) {
+                    return new MediaSourceWPVideos[size];
+                }
+            };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
     }
 }

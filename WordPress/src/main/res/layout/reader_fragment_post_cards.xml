@@ -17,11 +17,21 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/frame_header">
 
-        <org.wordpress.android.ui.reader.views.ReaderRecyclerView
-            android:id="@+id/recycler_view"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
+            android:layout_height="match_parent">
+
+            <org.wordpress.android.ui.reader.views.ReaderRecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+
+            <include
+                android:id="@+id/toolbar_reader"
+                layout="@layout/toolbar_reader" />
+
+        </RelativeLayout>
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 

@@ -13,8 +13,10 @@ import android.util.Base64;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
+import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.Post;
@@ -72,13 +74,13 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 29;
+    private static final int DATABASE_VERSION = 30;
 
-    private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
+    private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
     private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
             + "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
-    public static final String SETTINGS_TABLE = "accounts";
+    public static final String BLOGS_TABLE = "accounts";
     private static final String DATABASE_NAME = "wordpress";
     private static final String MEDIA_TABLE = "media";
 
@@ -150,7 +152,7 @@ public class WordPressDB {
     private static final String ADD_PARENTID_IN_CATEGORIES = "alter table cats add parent_id integer default 0;";
 
     // add admin flag to blog settings
-    private static final String ADD_ACCOUNTS_ADMIN_FLAG = "alter table accounts add isAdmin boolean default false;";
+    private static final String ADD_BLOGS_ADMIN_FLAG = "alter table accounts add isAdmin boolean default false;";
 
     // add thumbnailURL, thumbnailPath and fileURL to media
     private static final String ADD_MEDIA_THUMBNAIL_URL = "alter table media add thumbnailURL text default '';";
@@ -162,7 +164,11 @@ public class WordPressDB {
     private static final String ADD_MEDIA_VIDEOPRESS_SHORTCODE = "alter table media add videoPressShortcode text default '';";
 
     // add hidden flag to blog settings (accounts)
-    private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
+    private static final String ADD_BLOGS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
+
+    // used for migration
+    private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
+    private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
 
     private SQLiteDatabase db;
 
@@ -174,7 +180,7 @@ public class WordPressDB {
         db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
         // Create tables if they don't exist
-        db.execSQL(CREATE_TABLE_SETTINGS);
+        db.execSQL(CREATE_TABLE_BLOGS);
         db.execSQL(CREATE_TABLE_POSTS);
         db.execSQL(CREATE_TABLE_CATEGORIES);
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
@@ -235,7 +241,7 @@ public class WordPressDB {
                 db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 currentVersion++;
             case 18:
-                db.execSQL(ADD_ACCOUNTS_ADMIN_FLAG);
+                db.execSQL(ADD_BLOGS_ADMIN_FLAG);
                 db.execSQL(ADD_MEDIA_FILE_URL);
                 db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
                 db.execSQL(ADD_MEDIA_UNIQUE_ID);
@@ -247,7 +253,7 @@ public class WordPressDB {
                 // revision 20: create table "notes"
                 currentVersion++;
             case 20:
-                db.execSQL(ADD_ACCOUNTS_HIDDEN_FLAG);
+                db.execSQL(ADD_BLOGS_HIDDEN_FLAG);
                 currentVersion++;
             case 21:
                 db.execSQL(ADD_MEDIA_VIDEOPRESS_SHORTCODE);
@@ -278,9 +284,32 @@ public class WordPressDB {
                 // Remove WordPress.com credentials
                 removeDotComCredentials();
                 currentVersion++;
+            case 29:
+                // Migrate WordPress.com token and infos to the DB
+                AccountTable.createTables(db);
+                migratePreferencesToAccountTable(context);
+                currentVersion++;
         }
-
         db.setVersion(DATABASE_VERSION);
+    }
+
+    private void migratePreferencesToAccountTable(Context context) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        String oldAccessToken = settings.getString(DEPRECATED_ACCESS_TOKEN_PREFERENCE, null);
+        String oldUsername = settings.getString(DEPRECATED_WPCOM_USERNAME_PREFERENCE, null);
+        Account account = new Account();
+        account.setUserName(oldUsername);
+        if (oldAccessToken != null) {
+            account.setAccessToken(oldAccessToken);
+            account.setIsWordPressComUser(true);
+        }
+        AccountTable.save(account, db);
+
+        // Remove preferences
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.remove(DEPRECATED_WPCOM_USERNAME_PREFERENCE);
+        editor.remove(DEPRECATED_ACCESS_TOKEN_PREFERENCE);
+        editor.apply();
     }
 
     public SQLiteDatabase getDatabase() {
@@ -292,7 +321,7 @@ public class WordPressDB {
     }
 
     private void migrateWPComAccount() {
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "username" }, "dotcomFlag=1", null, null,
+        Cursor c = db.query(BLOGS_TABLE, new String[] { "username" }, "dotcomFlag=1", null, null,
                 null, null);
 
         if (c.getCount() > 0) {
@@ -300,7 +329,7 @@ public class WordPressDB {
             String username = c.getString(0);
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, username);
+            editor.putString(DEPRECATED_WPCOM_USERNAME_PREFERENCE, username);
             editor.commit();
         }
 
@@ -330,11 +359,11 @@ public class WordPressDB {
         }
         values.put("isAdmin", blog.isAdmin());
         values.put("isHidden", blog.isHidden());
-        return db.insert(SETTINGS_TABLE, null, values) > -1;
+        return db.insert(BLOGS_TABLE, null, values) > -1;
     }
 
-    public List<Integer> getAllAccountIDs() {
-        Cursor c = db.rawQuery("SELECT DISTINCT id FROM " + SETTINGS_TABLE, null);
+    public List<Integer> getAllBlogsIDs() {
+        Cursor c = db.rawQuery("SELECT DISTINCT id FROM " + BLOGS_TABLE, null);
         try {
             List<Integer> ids = new ArrayList<Integer>();
             if (c.moveToFirst()) {
@@ -348,11 +377,11 @@ public class WordPressDB {
         }
     }
 
-    public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields) {
-        return getAccountsBy(byString, extraFields, 0);
+    public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields) {
+        return getBlogsBy(byString, extraFields, 0);
     }
 
-    public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields, int limit) {
+    public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields, int limit) {
         if (db == null) {
             return new Vector<Map<String, Object>>();
         }
@@ -365,10 +394,10 @@ public class WordPressDB {
         if (extraFields != null) {
             allFields = (String[]) ArrayUtils.addAll(baseFields, extraFields);
         }
-        Cursor c = db.query(SETTINGS_TABLE, allFields, byString, null, null, null, null, limitStr);
+        Cursor c = db.query(BLOGS_TABLE, allFields, byString, null, null, null, null, limitStr);
         int numRows = c.getCount();
         c.moveToFirst();
-        List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
+        List<Map<String, Object>> blogs = new Vector<Map<String, Object>>();
         for (int i = 0; i < numRows; i++) {
             int id = c.getInt(0);
             String blogName = c.getString(1);
@@ -388,29 +417,29 @@ public class WordPressDB {
                         thisHash.put(extraFields[j], c.getString(extraFieldsIndex + j));
                     }
                 }
-                accounts.add(thisHash);
+                blogs.add(thisHash);
             }
             c.moveToNext();
         }
         c.close();
-        Collections.sort(accounts, BlogUtils.BlogNameComparator);
-        return accounts;
+        Collections.sort(blogs, BlogUtils.BlogNameComparator);
+        return blogs;
     }
 
-    public List<Map<String, Object>> getVisibleAccounts() {
-        return getAccountsBy("isHidden = 0", null);
+    public List<Map<String, Object>> getVisibleBlogs() {
+        return getBlogsBy("isHidden = 0", null);
     }
 
-    public List<Map<String, Object>> getVisibleDotComAccounts() {
-        return getAccountsBy("isHidden = 0 AND dotcomFlag = 1", null);
+    public List<Map<String, Object>> getVisibleDotComBlogs() {
+        return getBlogsBy("isHidden = 0 AND dotcomFlag = 1", null);
     }
 
-    public int getNumVisibleAccounts() {
-        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + SETTINGS_TABLE + " WHERE isHidden = 0", null);
+    public int getNumVisibleBlogs() {
+        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE + " WHERE isHidden = 0", null);
     }
 
-    public int getNumDotComAccounts() {
-        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + SETTINGS_TABLE + " WHERE dotcomFlag = 1", null);
+    public int getNumDotComBlogs() {
+        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE + " WHERE dotcomFlag = 1", null);
     }
 
     // Removes stored DotCom credentials. As of March 2015 only the OAuth token is used
@@ -418,13 +447,13 @@ public class WordPressDB {
         // First clear out the password for all WP.com sites
         ContentValues dotComValues = new ContentValues();
         dotComValues.put("password", "");
-        db.update(SETTINGS_TABLE, dotComValues, "dotcomFlag=1", null);
+        db.update(BLOGS_TABLE, dotComValues, "dotcomFlag=1", null);
 
         // Next, we'll clear out the credentials stored for Jetpack sites
         ContentValues jetPackValues = new ContentValues();
         jetPackValues.put("dotcom_username", "");
         jetPackValues.put("dotcom_password", "");
-        db.update(SETTINGS_TABLE, jetPackValues, null, null);
+        db.update(BLOGS_TABLE, jetPackValues, null, null);
 
         // Lastly we'll remove the preference that previously stored the WP.com password
         if (this.context != null) {
@@ -435,30 +464,30 @@ public class WordPressDB {
         }
     }
 
-    public List<Map<String, Object>> getAllAccounts() {
-        return getAccountsBy(null, null);
+    public List<Map<String, Object>> getAllBlogs() {
+        return getBlogsBy(null, null);
     }
 
-    public int setAllDotComAccountsVisibility(boolean visible) {
+    public int setAllDotComBlogsVisibility(boolean visible) {
         ContentValues values = new ContentValues();
         values.put("isHidden", !visible);
-        return db.update(SETTINGS_TABLE, values, "dotcomFlag=1", null);
+        return db.update(BLOGS_TABLE, values, "dotcomFlag=1", null);
     }
 
-    public int setDotComAccountsVisibility(int id, boolean visible) {
+    public int setDotComBlogsVisibility(int id, boolean visible) {
         ContentValues values = new ContentValues();
         values.put("isHidden", !visible);
-        return db.update(SETTINGS_TABLE, values, "dotcomFlag=1 AND id=" + id, null);
+        return db.update(BLOGS_TABLE, values, "dotcomFlag=1 AND id=" + id, null);
     }
 
-    public boolean isDotComAccountVisible(int blogId) {
+    public boolean isDotComBlogVisible(int blogId) {
         String[] args = {Integer.toString(blogId)};
-        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE +
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE +
                 " WHERE isHidden = 0 AND blogId=?", args);
     }
 
     public boolean isBlogInDatabase(int blogId, String xmlRpcUrl) {
-        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "blogId=? AND url=?",
+        Cursor c = db.query(BLOGS_TABLE, new String[]{"id"}, "blogId=? AND url=?",
                 new String[]{Integer.toString(blogId), xmlRpcUrl}, null, null, null, null);
         boolean result =  c.getCount() > 0;
         c.close();
@@ -467,7 +496,7 @@ public class WordPressDB {
 
     public boolean isLocalBlogIdInDatabase(int localBlogId) {
         String[] args = {Integer.toString(localBlogId)};
-        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE + " WHERE id=?", args);
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE + " WHERE id=?", args);
     }
 
     public boolean saveBlog(Blog blog) {
@@ -504,7 +533,7 @@ public class WordPressDB {
         } else {
             values.putNull("wpVersion");
         }
-        boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + blog.getLocalTableBlogId(),
+        boolean returnValue = db.update(BLOGS_TABLE, values, "id=" + blog.getLocalTableBlogId(),
                 null) > 0;
         if (blog.isDotcomFlag()) {
             returnValue = updateWPComCredentials(blog.getUsername(), blog.getPassword());
@@ -518,30 +547,39 @@ public class WordPressDB {
         ContentValues userPass = new ContentValues();
         userPass.put("username", username);
         userPass.put("password", encryptPassword(password));
-        return db.update(SETTINGS_TABLE, userPass, "username=\""
+        return db.update(BLOGS_TABLE, userPass, "username=\""
                 + username + "\" AND dotcomFlag=1", null) > 0;
     }
 
-    public boolean deleteAccount(Context ctx, int id) {
-        // TODO: should this also delete posts and other related info?
-        int rowsAffected = db.delete(SETTINGS_TABLE, "id=?", new String[]{Integer.toString(id)});
-        deleteQuickPressShortcutsForAccount(ctx, id);
+    public boolean deleteBlog(Context ctx, int id) {
+        int rowsAffected = db.delete(BLOGS_TABLE, "id=?", new String[]{Integer.toString(id)});
+        deleteQuickPressShortcutsForBlog(ctx, id);
+        deleteAllPostsForLocalTableBlogId(id);
         return (rowsAffected > 0);
     }
 
-    public void deleteAllAccounts() {
-        List<Integer> ids = getAllAccountIDs();
-        if (ids.size() == 0)
-            return;
+    /**
+     * Deletes all the things! Use wisely.
+     */
+    public void dangerouslyDeleteAllContent() {
+        db.delete(BLOGS_TABLE, null, null);
+        db.delete(POSTS_TABLE, null, null);
+        db.delete(MEDIA_TABLE, null, null);
+        db.delete(CATEGORIES_TABLE, null, null);
+        db.delete(CommentTable.COMMENTS_TABLE, null, null);
+    }
 
-        db.beginTransaction();
+    public boolean hasDotOrgBlogForUsernameAndUrl(String username, String url) {
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(url)) {
+            return false;
+        }
+
+        Cursor c = db.query(BLOGS_TABLE, new String[]{"id"}, "username=? AND url=?", new String[]{username, url}, null,
+                null, null);
         try {
-            for (int id: ids) {
-                deleteAccount(context, id);
-            }
-            db.setTransactionSuccessful();
+            return c.getCount() > 0;
         } finally {
-            db.endTransaction();
+            SqlUtils.closeCursor(c);
         }
     }
 
@@ -558,7 +596,7 @@ public class WordPressDB {
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden"};
-        Cursor c = db.query(SETTINGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
+        Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
         if (c.moveToFirst()) {
@@ -630,7 +668,7 @@ public class WordPressDB {
     }
 
     public Blog getBlogForDotComBlogId(String dotComBlogId) {
-        Cursor c = db.query(SETTINGS_TABLE, new String[]{"id"}, "api_blogid=? OR (blogId=? AND dotcomFlag=1)",
+        Cursor c = db.query(BLOGS_TABLE, new String[]{"id"}, "api_blogid=? OR (blogId=? AND dotcomFlag=1)",
                 new String[]{dotComBlogId, dotComBlogId}, null, null, null);
         Blog blog = null;
         if (c.moveToFirst()) {
@@ -641,7 +679,7 @@ public class WordPressDB {
     }
 
     public List<String> loadStatsLogin(int id) {
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "dotcom_username",
+        Cursor c = db.query(BLOGS_TABLE, new String[] { "dotcom_username",
                 "dotcom_password" }, "id=" + id, null, null, null, null);
 
         c.moveToFirst();
@@ -664,11 +702,11 @@ public class WordPressDB {
      */
     private int getLocalTableBlogIdForJetpackRemoteID(int remoteBlogId, String xmlRpcUrl) {
         if (TextUtils.isEmpty(xmlRpcUrl)) {
-            String sql = "SELECT id FROM " + SETTINGS_TABLE + " WHERE dotcomFlag=0 AND api_blogid=?";
+            String sql = "SELECT id FROM " + BLOGS_TABLE + " WHERE dotcomFlag=0 AND api_blogid=?";
             String[] args = {Integer.toString(remoteBlogId)};
             return SqlUtils.intForQuery(db, sql, args);
         } else {
-            String sql = "SELECT id FROM " + SETTINGS_TABLE + " WHERE dotcomFlag=0 AND api_blogid=? AND url=?";
+            String sql = "SELECT id FROM " + BLOGS_TABLE + " WHERE dotcomFlag=0 AND api_blogid=? AND url=?";
             String[] args = {Integer.toString(remoteBlogId), xmlRpcUrl};
             return SqlUtils.intForQuery(db, sql, args);
         }
@@ -695,10 +733,10 @@ public class WordPressDB {
     public int getRemoteBlogIdForLocalTableBlogId(int localBlogId) {
         int remoteBlogID = SqlUtils.intForQuery(db, "SELECT blogId FROM accounts WHERE id=?", new String[]{Integer.toString(localBlogId)});
         if (remoteBlogID<=1) { //Make sure we're not returning a wrong ID for jetpack blog.
-            List<Map<String,Object>> allAccounts = this.getAccountsBy("dotcomFlag=0", new String[]{"api_blogid"});
-            for (Map<String, Object> currentAccount : allAccounts) {
-                if (MapUtils.getMapInt(currentAccount, "id")==localBlogId) {
-                    remoteBlogID = MapUtils.getMapInt(currentAccount, "api_blogid");
+            List<Map<String,Object>> allBlogs = this.getBlogsBy("dotcomFlag=0", new String[]{"api_blogid"});
+            for (Map<String, Object> currentBlog : allBlogs) {
+                if (MapUtils.getMapInt(currentBlog, "id")==localBlogId) {
+                    remoteBlogID = MapUtils.getMapInt(currentBlog, "api_blogid");
                     break;
                 }
             }
@@ -785,6 +823,11 @@ public class WordPressDB {
                 new String[]{String.valueOf(post.getLocalTableBlogId()), String.valueOf(post.getLocalTablePostId())});
 
         return (result == 1);
+    }
+
+    // Deletes all posts for the given blogId
+    private void deleteAllPostsForLocalTableBlogId(int localBlogId) {
+        db.delete(POSTS_TABLE, "blogID=?", new String[]{String.valueOf(localBlogId)});
     }
 
     public Object[] arrayListToArray(Object array) {
@@ -1207,9 +1250,9 @@ public class WordPressDB {
 
     }
 
-    public boolean addQuickPressShortcut(int accountId, String name) {
+    public boolean addQuickPressShortcut(int blogId, String name) {
         ContentValues values = new ContentValues();
-        values.put("accountId", accountId);
+        values.put("accountId", blogId);
         values.put("name", name);
         boolean returnValue = false;
         synchronized (this) {
@@ -1220,16 +1263,17 @@ public class WordPressDB {
     }
 
     /*
-     * return all QuickPress shortcuts connected with the passed account
+     * return all QuickPress shortcuts connected with the passed blog
+     *
      */
-    public List<Map<String, Object>> getQuickPressShortcuts(int accountId) {
+    public List<Map<String, Object>> getQuickPressShortcuts(int blogId) {
         Cursor c = db.query(QUICKPRESS_SHORTCUTS_TABLE, new String[] { "id",
-                "accountId", "name" }, "accountId = " + accountId, null, null,
+                "accountId", "name" }, "accountId = " + blogId, null, null,
                 null, null);
         String id, name;
         int numRows = c.getCount();
         c.moveToFirst();
-        List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
+        List<Map<String, Object>> blogs = new Vector<Map<String, Object>>();
         for (int i = 0; i < numRows; i++) {
             id = c.getString(0);
             name = c.getString(2);
@@ -1238,20 +1282,20 @@ public class WordPressDB {
 
                 thisHash.put("id", id);
                 thisHash.put("name", name);
-                accounts.add(thisHash);
+                blogs.add(thisHash);
             }
             c.moveToNext();
         }
         c.close();
 
-        return accounts;
+        return blogs;
     }
 
     /*
-     * delete QuickPress home screen shortcuts connected with the passed account
+     * delete QuickPress home screen shortcuts connected with the passed blog
      */
-    private void deleteQuickPressShortcutsForAccount(Context ctx, int accountId) {
-        List<Map<String, Object>> shortcuts = getQuickPressShortcuts(accountId);
+    private void deleteQuickPressShortcutsForBlog(Context ctx, int blogId) {
+        List<Map<String, Object>> shortcuts = getQuickPressShortcuts(blogId);
         if (shortcuts.size() == 0)
             return;
 
@@ -1314,7 +1358,7 @@ public class WordPressDB {
     }
 
     private void migratePasswords() {
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "password",
+        Cursor c = db.query(BLOGS_TABLE, new String[] { "id", "password",
                 "httppassword", "dotcom_password" }, null, null, null, null,
                 null);
         int numRows = c.getCount();
@@ -1333,7 +1377,7 @@ public class WordPressDB {
                 values.put("dotcom_password", encryptPassword(c.getString(3)));
             }
 
-            db.update(SETTINGS_TABLE, values, "id=" + c.getInt(0), null);
+            db.update(BLOGS_TABLE, values, "id=" + c.getInt(0), null);
 
             c.moveToNext();
         }
@@ -1656,7 +1700,7 @@ public class WordPressDB {
 
     public int getWPCOMBlogID() {
         int id = -1;
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id" },
+        Cursor c = db.query(BLOGS_TABLE, new String[] { "id" },
                 "dotcomFlag=1", null, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
@@ -1818,6 +1862,6 @@ public class WordPressDB {
     }
 
     public boolean hasAnyJetpackBlogs() {
-        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
     }
 }

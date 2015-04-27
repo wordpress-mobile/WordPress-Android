@@ -232,7 +232,6 @@
 	<string name="blog_name_contains_invalid_characters">Веб адресата не треба да содржи знак  “_”</string>
 	<string name="auto_sharing_preference_reset_caused_by_error">Претходно избраниот блог повеќе не е видлив</string>
 	<string name="blog_name_cant_be_used">Вие не може да ја користите оваа веб адреса</string>
-	<string name="stats_empty_top_authors">Не се прегледани написи</string>
 	<string name="blog_name_exists">Оваа веб адреса веќе постои</string>
 	<string name="blog_name_reserved">Оваа веб адреса е резервирана</string>
 	<string name="username_or_password_incorrect">Корисничкото име или лозинката се неточни</string>

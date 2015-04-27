@@ -749,16 +749,16 @@ public class MediaGridFragment extends Fragment
         }
 
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.media_multiselect_actionbar_post:
-                    handleNewPost();
-                    return true;
-                case R.id.media_multiselect_actionbar_gallery:
-                    handleMultiSelectPost();
-                    return true;
-                case R.id.media_multiselect_actionbar_trash:
-                    handleMultiSelectDelete();
-                    return true;
+            int i = item.getItemId();
+            if (i == R.id.media_multiselect_actionbar_post) {
+                handleNewPost();
+                return true;
+            } else if (i == R.id.media_multiselect_actionbar_gallery) {
+                handleMultiSelectPost();
+                return true;
+            } else if (i == R.id.media_multiselect_actionbar_trash) {
+                handleMultiSelectDelete();
+                return true;
             }
             return true;
         }

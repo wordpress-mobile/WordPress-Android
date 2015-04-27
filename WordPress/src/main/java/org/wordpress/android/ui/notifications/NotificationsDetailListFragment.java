@@ -41,6 +41,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import de.greenrobot.event.EventBus;
+
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment, Bucket.Listener<Note> {
     private static final String KEY_NOTE_ID = "noteId";
     private static final String KEY_LIST_POSITION = "listPosition";
@@ -400,6 +402,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 // Mark note as read since we are looking at it already
                 if (mNote.isUnread()) {
                     mNote.markAsRead();
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
                 }
 
                 if (getActivity() != null) {

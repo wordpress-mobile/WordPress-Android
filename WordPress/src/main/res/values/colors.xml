@@ -73,13 +73,6 @@
       we're using a shade of blue_wordpress -->
     <color name="status_bar_tint">#006b98</color>
 
-    <!-- Menu Drawer -->
-    <color name="drawer_background">@color/white</color>
-    <color name="drawer_background_selected">@color/translucent_grey_lighten_20</color>
-    <color name="drawer_icon_tint">@color/grey_darken_30</color>
-    <color name="drawer_text">@color/grey_dark</color>
-    <color name="drawer_divider">@color/grey_light</color>
-
     <!-- Media Gallery -->
     <color name="media_gallery_grid_label_bg">@color/semi_transparent_grey_dark</color>
     <color name="media_gallery_grid_label">@color/white</color>
@@ -97,7 +90,7 @@
     <color name="tab_background">@color/color_primary</color>
     <color name="tab_text_normal">@color/blue_light</color>
     <color name="tab_text_selected">@color/white</color>
-    <color name="tab_indicator">@color/blue_light</color>
+    <color name="tab_indicator">@color/white</color>
 
     <!-- Stats -->
     <color name="stats_text_color">@color/grey_dark</color>
@@ -143,4 +136,7 @@
     <!-- Misc -->
     <color name="pressed_wordpress">@color/semi_transparent_blue_light</color>
     <color name="background_grey">@color/grey_lighten_30</color>
+
+    <!--Me-->
+    <color name="me_list_row_border">#D8E3EA</color>
 </resources>

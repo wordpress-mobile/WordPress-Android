@@ -43,7 +43,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     private final int mAvatarSz;
     private final int mMarginLarge;
 
-    private boolean mCanRequestMorePosts = false;
+    private boolean mCanRequestMorePosts;
+    private boolean mHasSpacer;
 
     private final ReaderTypes.ReaderPostListType mPostListType;
     private final ReaderPostList mPosts = new ReaderPostList();
@@ -77,6 +78,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         private final WPNetworkImageView imgAvatar;
 
         private final ViewGroup layoutPostHeader;
+        private final View spacerToolbar;
 
         public ReaderPostViewHolder(View itemView) {
             super(itemView);
@@ -96,6 +98,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
+            spacerToolbar = itemView.findViewById(R.id.spacer_autohide_toolbar);
 
             imgBtnReblog = (ImageView) itemView.findViewById(R.id.image_reblog_btn);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -114,6 +117,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     public void onBindViewHolder(final ReaderPostViewHolder holder, final int position) {
         final ReaderPost post = mPosts.get(position);
         ReaderTypes.ReaderPostListType postListType = getPostListType();
+
+        // spacer for auto-hide toolbar
+        if (mHasSpacer) {
+            holder.spacerToolbar.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
+        }
 
         holder.txtTitle.setText(post.getTitle());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
@@ -293,11 +301,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.reader_card_spacing);
+        int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mPhotonWidth = displayWidth - (cardSpacing * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         setHasStableIds(true);
+    }
+
+    public void setHasSpacer(boolean hasSpacer) {
+        mHasSpacer = hasSpacer;
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
@@ -324,7 +336,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         mOnPostPopupListener = onPostPopupListener;
     }
 
-    ReaderTypes.ReaderPostListType getPostListType() {
+    private ReaderTypes.ReaderPostListType getPostListType() {
         return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
@@ -362,19 +374,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     /*
      * same as refresh() above but first clears the existing posts
      */
-    void reload() {
+    private void reload() {
         clear();
         loadPosts();
     }
 
-    void removeItem(int position) {
+    private void removeItem(int position) {
         if (isValidPosition(position)) {
             mPosts.remove(position);
             notifyItemRemoved(position);
         }
     }
 
-    void removePost(ReaderPost post) {
+    private void removePost(ReaderPost post) {
         removeItem(indexOfPost(post));
     }
 
@@ -401,7 +413,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         }
     }
 
-    int indexOfPost(ReaderPost post) {
+    private int indexOfPost(ReaderPost post) {
         return mPosts.indexOfPost(post);
     }
 
@@ -467,7 +479,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         return (getItemCount() == 0);
     }
 
-    boolean isValidPosition(int position) {
+    private boolean isValidPosition(int position) {
         return (position >= 0 && position < getItemCount());
     }
 

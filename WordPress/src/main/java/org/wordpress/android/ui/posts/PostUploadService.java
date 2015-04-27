@@ -53,7 +53,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -184,9 +183,12 @@ public class PostUploadService extends Service {
         @Override
         protected void onCancelled(Boolean aBoolean) {
             super.onCancelled(aBoolean);
-            mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
-                    mErrorUnavailableVideoPress);
-            WordPress.postUploadFailed(mPost.getLocalTableBlogId());
+            // mPostUploadNotifier and mPost can be null if onCancelled is called before doInBackground
+            if (mPostUploadNotifier != null && mPost != null) {
+                mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
+                        mErrorUnavailableVideoPress);
+                WordPress.postUploadFailed(mPost.getLocalTableBlogId());
+            }
         }
 
         @Override
@@ -796,8 +798,6 @@ public class PostUploadService extends Service {
         }
 
         private Object uploadFileHelper(Object[] params, final File tempFile) {
-            AppLog.d(T.POSTS, "uploadFileHelper: " + Arrays.toString(params));
-
             // Create listener for tracking upload progress in the notification
             if (mClient instanceof XMLRPCClient) {
                 XMLRPCClient xmlrpcClient = (XMLRPCClient) mClient;

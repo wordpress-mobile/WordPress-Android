@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 
 /**
@@ -51,9 +52,7 @@ public class AuthErrorDialogFragment extends DialogFragment {
         b.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent settingsIntent = new Intent(getActivity(), BlogPreferencesActivity.class);
-                settingsIntent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
-                getActivity().startActivity(settingsIntent);
+                ActivityLauncher.viewBlogSettings(getActivity(), WordPress.getCurrentBlog());
             }
         });
         b.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

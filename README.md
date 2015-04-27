@@ -30,7 +30,7 @@ test the project:
     $ ./gradlew assembleVanillaDebug # assemble the debug .apk
     $ ./gradlew installVanillaDebug  # install the debug .apk if you have an
                                      # emulator or an Android device connected
-    $ ./gradlew WordPress:cAT        # assemble, install and run unit tests
+    $ ./gradlew cAT                  # assemble, install and run unit tests
 
 You can use [Android Studio][3] by importing the project as a Gradle project.
 
@@ -80,7 +80,33 @@ how we're organizing branches in our repository in the
 
 Say hello on our [Slack][4] channel: `#mobile`.
 
-## License
+## Alternative Build Instructions ##
+
+WordPress-Android can be compiled with [Buck][8], an alternative to Gradle,
+that makes the build process much faster. Due to current Buck limitation, you
+need to bootstrap the project by running the following command:
+
+    $ ./tools/fetch_buck_dependencies.py extlibs
+
+This command will fetch all dependencies (`.aar` and `.jar`) needed to build
+the project. Then you can run buck to build the apk:
+
+    $ buck build wpandroid
+
+You can build, install and run the project if you have a device or an emulator
+connected by running the following:
+
+    $ buck install --run wpandroid
+
+It's recommended to install [watchman][9] to take advantage of the Buck
+daemon: `buckd`.
+
+## FAQ ##
+
+* Q: I can't build/test/package the project because of a `PermGen space` error.
+* A: Create a `build.properties` file in the project root directory with the following: `org.gradle.jvmargs=-XX:MaxPermSize=1024m`.
+
+## License ##
 
 WordPress for Android is an Open Source project covered by the
 [GNU General Public License version 2](LICENSE.md). Note: code
@@ -94,3 +120,5 @@ be covered by a different license compatible with the GPLv2.
 [5]: https://developer.wordpress.com/apps/
 [6]: https://developer.wordpress.com/docs/oauth2/
 [7]: https://developer.wordpress.com/docs/api/
+[8]: https://facebook.github.io/buck
+[9]: https://facebook.github.io/watchman/docs/install.html

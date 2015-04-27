@@ -44,11 +44,12 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.widgets.ScrollDirectionListener;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 
 public class ReaderPostDetailFragment extends Fragment
-        implements WPScrollView.OnScrollDirectionListener,
+        implements ScrollDirectionListener,
         ReaderCustomViewListener,
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener {
@@ -130,7 +131,7 @@ public class ReaderPostDetailFragment extends Fragment
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
-        mScrollView.setOnScrollDirectionListener(this);
+        mScrollView.setScrollDirectionListener(this);
 
         mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
@@ -228,18 +229,18 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_browse:
-                if (hasPost()) {
-                    ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
-                }
-                return true;
-            case R.id.menu_share:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.SHARED_ITEM);
-                sharePage();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == R.id.menu_browse) {
+            if (hasPost()) {
+                ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
+            }
+            return true;
+        } else if (i == R.id.menu_share) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SHARED_ITEM);
+            sharePage();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

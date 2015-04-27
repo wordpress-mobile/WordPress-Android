@@ -225,7 +225,6 @@
 	<string name="mnu_comment_edit">Editar</string>
 	<string name="no_site_error">Não foi possível se conectar ao site do WordPress</string>
 	<string name="adding_cat_failed">Problema ao adicionar categoria</string>
-	<string name="stats_empty_top_authors">Nenhum post visualizado</string>
 	<string name="stats_bar_graph_empty">Nenhuma estatística disponível</string>
 	<string name="invalid_url_message">Verifique se a URL do blog inserida é válida</string>
 	<string name="error_generic">Ocorreu um erro</string>

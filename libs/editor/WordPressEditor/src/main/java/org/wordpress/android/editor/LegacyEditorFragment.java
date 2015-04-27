@@ -966,53 +966,58 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     @Override
-    public void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader) {
-        WPEditImageSpan imageSpan = createWPEditImageSpan(getActivity(), mediaFile);
+    public void appendMediaFile(final MediaFile mediaFile, final String imageUrl, final ImageLoader imageLoader) {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                WPEditImageSpan imageSpan = createWPEditImageSpan(mActivity, mediaFile);
 
-        // Insert the WPImageSpan in the content field
-        int selectionStart = mContentEditText.getSelectionStart();
-        int selectionEnd = mContentEditText.getSelectionEnd();
+                // Insert the WPImageSpan in the content field
+                int selectionStart = mContentEditText.getSelectionStart();
+                int selectionEnd = mContentEditText.getSelectionEnd();
 
-        if (selectionStart > selectionEnd) {
-            int temp = selectionEnd;
-            selectionEnd = selectionStart;
-            selectionStart = temp;
-        }
+                if (selectionStart > selectionEnd) {
+                    int temp = selectionEnd;
+                    selectionEnd = selectionStart;
+                    selectionStart = temp;
+                }
 
-        int line, column = 0;
-        if (mContentEditText.getLayout() != null) {
-            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
-            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-        }
+                int line, column = 0;
+                if (mContentEditText.getLayout() != null) {
+                    line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+                    column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+                }
 
-        Editable s = mContentEditText.getText();
-        if (s == null) {
-            return;
-        }
+                Editable s = mContentEditText.getText();
+                if (s == null) {
+                    return;
+                }
 
-        WPImageSpan[] imageSpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
-        if (imageSpans.length != 0) {
-            // insert a few line breaks if the cursor is already on an image
-            s.insert(selectionEnd, "\n\n");
-            selectionStart = selectionStart + 2;
-            selectionEnd = selectionEnd + 2;
-        } else if (column != 0) {
-            // insert one line break if the cursor is not at the first column
-            s.insert(selectionEnd, "\n");
-            selectionStart = selectionStart + 1;
-            selectionEnd = selectionEnd + 1;
-        }
+                WPImageSpan[] imageSpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
+                if (imageSpans.length != 0) {
+                    // insert a few line breaks if the cursor is already on an image
+                    s.insert(selectionEnd, "\n\n");
+                    selectionStart = selectionStart + 2;
+                    selectionEnd = selectionEnd + 2;
+                } else if (column != 0) {
+                    // insert one line break if the cursor is not at the first column
+                    s.insert(selectionEnd, "\n");
+                    selectionStart = selectionStart + 1;
+                    selectionEnd = selectionEnd + 1;
+                }
 
-        s.insert(selectionStart, " ");
-        s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-        s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        s.insert(selectionEnd + 1, "\n\n");
+                s.insert(selectionStart, " ");
+                s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+                s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                s.insert(selectionEnd + 1, "\n\n");
 
-        // Fetch and replace the WPImageSpan if it's a remote media
-        if (mediaFile.getFileURL() != null) {
-            loadWPImageSpanThumbnail(mediaFile, imageUrl, imageLoader);
-        }
+                // Fetch and replace the WPImageSpan if it's a remote media
+                if (mediaFile.getFileURL() != null) {
+                    loadWPImageSpanThumbnail(mediaFile, imageUrl, imageLoader);
+                }
+            }
+        });
     }
 
     @Override

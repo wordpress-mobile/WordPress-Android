@@ -84,7 +84,7 @@ public class ReaderTagSpinnerAdapter extends BaseAdapter {
         final TagViewHolder holder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.reader_spinner_item, parent, false);
+            convertView = mInflater.inflate(R.layout.toolbar_spinner_item, parent, false);
             holder = new TagViewHolder(convertView);
             convertView.setTag(holder);
         } else {
@@ -101,7 +101,7 @@ public class ReaderTagSpinnerAdapter extends BaseAdapter {
         final TagViewHolder holder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.reader_spinner_dropdown_item, parent, false);
+            convertView = mInflater.inflate(R.layout.toolbar_spinner_dropdown_item, parent, false);
             holder = new TagViewHolder(convertView);
             convertView.setTag(holder);
         } else {

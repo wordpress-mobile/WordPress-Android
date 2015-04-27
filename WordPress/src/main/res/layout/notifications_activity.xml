@@ -1,6 +1,17 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/notifications_container"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context="org.wordpress.android.ui.notifications.NewNotificationsActivity"
-    tools:ignore="MergeRootFrame" />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
+
+    <FrameLayout
+        android:id="@+id/notifications_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="org.wordpress.android.ui.notifications.NewNotificationsActivity"
+        tools:ignore="MergeRootFrame" />
+</LinearLayout>

@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.media;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Parcel;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +21,10 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
+import org.wordpress.mediapicker.MediaUtils.LimitedBackgroundOperation;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,18 +33,39 @@ public class MediaSourceWPImages implements MediaSource {
     private final List<MediaItem> mVerifiedItems = new ArrayList<>();
     private final List<MediaItem> mMediaItems = new ArrayList<>();
 
-    private boolean mLoading;
     private OnMediaChange mListener;
 
     public MediaSourceWPImages() {
-        fetchImageData();
+    }
+
+    @Override
+    public void gather(Context context) {
+        mMediaItems.clear();
+
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (blog != null) {
+            Cursor imageCursor = WordPressMediaUtils.getWordPressMediaImages(String.valueOf(blog.getLocalTableBlogId()));
+
+            if (imageCursor != null) {
+                addWordPressImagesFromCursor(imageCursor);
+                imageCursor.close();
+            } else if (mListener != null){
+                mListener.onMediaLoaded(false);
+            }
+        } else if (mListener != null){
+            mListener.onMediaLoaded(false);
+        }
+    }
+
+    @Override
+    public void cleanup() {
+        mMediaItems.clear();
     }
 
     @Override
     public void setListener(OnMediaChange listener) {
         mListener = listener;
-
-        notifyLoadingStatus();
     }
 
     @Override
@@ -72,10 +96,11 @@ public class MediaSourceWPImages implements MediaSource {
                     }
 
                     if (imageBitmap == null) {
-                        imageView.setImageResource(R.color.grey_darken_10);
-                        WordPressMediaUtils.BackgroundDownloadWebImage bgDownload = new WordPressMediaUtils.BackgroundDownloadWebImage(imageView);
+                        imageView.setImageDrawable(placeholderDrawable(convertView.getContext()));
+                        WordPressMediaUtils.BackgroundDownloadWebImage bgDownload =
+                                new WordPressMediaUtils.BackgroundDownloadWebImage(imageView);
                         imageView.setTag(bgDownload);
-                        bgDownload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaItem.getPreviewSource());
+                        bgDownload.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mediaItem.getPreviewSource());
                     } else {
                         imageView.setImageBitmap(imageBitmap);
                     }
@@ -94,40 +119,12 @@ public class MediaSourceWPImages implements MediaSource {
         return !selected;
     }
 
-    public static final Creator<MediaSourceWPImages> CREATOR =
-            new Creator<MediaSourceWPImages>() {
-                public MediaSourceWPImages createFromParcel(Parcel in) {
-                    return new MediaSourceWPImages();
-                }
-
-                public MediaSourceWPImages[] newArray(int size) {
-                    return new MediaSourceWPImages[size];
-                }
-            };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
-
-    private void fetchImageData() {
-        Blog blog = WordPress.getCurrentBlog();
-
-        if (blog != null) {
-            mLoading = true;
-            notifyLoadingStatus();
-
-            Cursor imageCursor = WordPressMediaUtils.getWordPressMediaImages(String.valueOf(blog.getLocalTableBlogId()));
-
-            if (imageCursor != null) {
-                addWordPressImagesFromCursor(imageCursor);
-                imageCursor.close();
-            }
+    private Drawable placeholderDrawable(Context context) {
+        if (context != null && context.getResources() != null) {
+            return context.getResources().getDrawable(R.drawable.media_item_placeholder);
         }
+
+        return null;
     }
 
     private void addWordPressImagesFromCursor(Cursor cursor) {
@@ -174,54 +171,89 @@ public class MediaSourceWPImages implements MediaSource {
             } while (cursor.moveToNext());
 
             removeDeletedEntries();
-        } else {
-            mLoading = false;
-            notifyLoadingStatus();
+        } else if (mListener != null) {
+            mListener.onMediaLoaded(true);
         }
     }
 
     private void removeDeletedEntries() {
-        AsyncTask<List<MediaItem>, Void, Void> backgroundCheck = new AsyncTask<List<MediaItem>, Void, Void>() {
-            @Override
-            protected Void doInBackground(List<MediaItem>[] params) {
-                for (MediaItem mediaItem : params[0]) {
-                    try {
-                        URL mediaUrl = new URL(mediaItem.getSource().toString());
-                        HttpURLConnection connection = (HttpURLConnection) mediaUrl.openConnection();
-                        connection.setRequestMethod("GET");
-                        connection.connect();
-                        int responseCode = connection.getResponseCode();
-
-                        if (responseCode == 200) {
-                            mVerifiedItems.add(mediaItem);
-                        }
-                    } catch (MalformedURLException e) {
-                    } catch (IOException ioException) {
-                    }
-
-                    Thread.yield();
-                }
-
-                return null;
-            }
-
-            @Override
-            public void onPostExecute(Void result) {
-                mLoading = false;
-                notifyLoadingStatus();
-                if (mVerifiedItems.size() > 0 && mListener != null) {
-                    mListener.onMediaAdded(MediaSourceWPImages.this, mVerifiedItems);
-                }
-            }
-        };
-
         List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
-        backgroundCheck.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, existingItems);
+
+        for (MediaItem mediaItem : existingItems) {
+            final boolean callLoaded = existingItems.indexOf(mediaItem) == existingItems.size() - 1;
+
+            LimitedBackgroundOperation<MediaItem, Void, MediaItem> backgroundCheck =
+                    new LimitedBackgroundOperation<MediaItem, Void, MediaItem>() {
+                int responseCode;
+
+                @Override
+                protected MediaItem performBackgroundOperation(MediaItem[] params) {
+                    MediaItem mediaItem = params[0];
+                        try {
+                            URL mediaUrl = new URL(mediaItem.getSource().toString());
+                            HttpURLConnection connection = (HttpURLConnection) mediaUrl.openConnection();
+                            connection.setRequestMethod("GET");
+                            connection.connect();
+                            responseCode = connection.getResponseCode();
+
+                        } catch (IOException ioException) {
+                            Log.e("", "Error reading from " + mediaItem.getSource() + "\nexception:" + ioException);
+
+                            return null;
+                        }
+
+                    return mediaItem;
+                }
+
+                @Override
+                public void performPostExecute(MediaItem result) {
+                    if (mListener != null && result != null) {
+                        List<MediaItem> resultList = new ArrayList<>();
+                        resultList.add(result);
+                        if (responseCode == 200) {
+                            mVerifiedItems.add(result);
+                            mListener.onMediaAdded(MediaSourceWPImages.this, resultList);
+                        }
+
+                        if (callLoaded) {
+                            mListener.onMediaLoaded(true);
+                        }
+                    }
+                }
+
+                @Override
+                public void startExecution(Object params) {
+                    if (!(params instanceof MediaItem)) {
+                        throw new IllegalArgumentException("Params must be of type MediaItem");
+                    }
+                    executeOnExecutor(THREAD_POOL_EXECUTOR, (MediaItem) params);
+                }
+            };
+            backgroundCheck.executeWithLimit(mediaItem);
+        }
     }
 
-    private void notifyLoadingStatus() {
-        if (mListener != null) {
-            mListener.onMediaLoading(this, !mLoading);
-        }
+    /**
+     * {@link android.os.Parcelable} interface
+     */
+
+    public static final Creator<MediaSourceWPImages> CREATOR =
+            new Creator<MediaSourceWPImages>() {
+                public MediaSourceWPImages createFromParcel(Parcel in) {
+                    return new MediaSourceWPImages();
+                }
+
+                public MediaSourceWPImages[] newArray(int size) {
+                    return new MediaSourceWPImages[size];
+                }
+            };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
     }
 }

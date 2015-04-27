@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spanned;
@@ -25,12 +24,14 @@ import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -126,7 +127,7 @@ public class ViewPostFragment extends Fragment {
         mEditComment.setHint(R.string.reader_hint_comment_on_post);
         if (WordPress.currentPost != null && WordPress.getCurrentRemoteBlogId() != -1) {
             mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%s",
-                    WordPress.getLoggedInUsername(getActivity(), WordPress.getCurrentBlog()),
+                    AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
                     WordPress.getCurrentRemoteBlogId(), WordPress.currentPost.getRemotePostId()));
         }
 
@@ -136,10 +137,9 @@ public class ViewPostFragment extends Fragment {
             public void onClick(View v) {
                 if (WordPress.currentPost != null && !mParentActivity.isRefreshing()) {
                     mOnDetailPostActionListener.onDetailPostAction(PostsActivity.POST_EDIT, WordPress.currentPost);
-                    Intent i = new Intent(getActivity().getApplicationContext(), EditPostActivity.class);
-                    i.putExtra(EditPostActivity.EXTRA_IS_PAGE, WordPress.currentPost.isPage());
-                    i.putExtra(EditPostActivity.EXTRA_POSTID, WordPress.currentPost.getLocalTablePostId());
-                    getActivity().startActivityForResult(i, PostsActivity.ACTIVITY_EDIT_POST);
+                    long postId = WordPress.currentPost.getLocalTablePostId();
+                    boolean isPage = WordPress.currentPost.isPage();
+                    ActivityLauncher.editBlogPostOrPageForResult(getActivity(), postId, isPage);
                 }
             }
         });
@@ -250,7 +250,7 @@ public class ViewPostFragment extends Fragment {
         // important when using WPHtml.fromHtml() for drafts that contain images since
         // thumbnails may take some time to create
         final WebView webView = (WebView) getView().findViewById(R.id.viewPostWebView);
-        webView.setWebViewClient(new WPWebViewClient(getActivity(), WordPress.getCurrentBlog()));
+        webView.setWebViewClient(new WPWebViewClient(WordPress.getCurrentBlog()));
         new Thread() {
             @Override
             public void run() {
