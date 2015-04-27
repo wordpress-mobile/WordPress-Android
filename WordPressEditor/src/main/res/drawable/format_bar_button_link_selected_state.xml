@@ -2,11 +2,15 @@
 <layer-list
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <shape>
-            <solid android:color="@color/format_bar_button_selected"/>
-        </shape>
+        <bitmap
+            android:src="@drawable/format_bar_button_link_highlighted"
+            android:gravity="center"/>
     </item>
-    <item>
-        <bitmap android:src="@drawable/dashicon_admin_links" android:gravity="center"/>
+    <item android:top="@dimen/format_bar_button_highlighted_underline_top">
+        <shape android:shape="line">
+            <stroke
+                android:width="@dimen/format_bar_button_highlighted_underline_width"
+                android:color="@color/format_bar_button_highlighted_color"/>
+        </shape>
     </item>
 </layer-list>

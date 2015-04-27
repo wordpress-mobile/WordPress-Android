@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.wordpress.android.editor.Utils.buildMapFromKeyValuePairs;
 import static org.wordpress.android.editor.Utils.getChangeMapFromSets;
 import static org.wordpress.android.editor.Utils.splitDelimitedString;
 
@@ -32,6 +33,40 @@ public class UtilsTest {
 
         // Test empty string
         assertEquals(Collections.emptySet(), splitDelimitedString("", "~"));
+    }
+
+    @Test
+    public void testBuildMapFromKeyValuePairs() {
+        Set<String> keyValueSet = new HashSet<>();
+        Map<String, String> expectedMap = new HashMap<>();
+
+        // Test normal usage
+        keyValueSet.add("id=test");
+        keyValueSet.add("name=example");
+
+        expectedMap.put("id", "test");
+        expectedMap.put("name", "example");
+
+        assertEquals(expectedMap, buildMapFromKeyValuePairs(keyValueSet));
+
+        // Test mixed valid and invalid entries
+        keyValueSet.clear();
+        keyValueSet.add("test");
+        keyValueSet.add("name=example");
+
+        expectedMap.clear();
+        expectedMap.put("name", "example");
+
+        assertEquals(expectedMap, buildMapFromKeyValuePairs(keyValueSet));
+
+        // Test invalid entry
+        keyValueSet.clear();
+        keyValueSet.add("test");
+
+        assertEquals(Collections.emptyMap(), buildMapFromKeyValuePairs(keyValueSet));
+
+        // Test empty sets
+        assertEquals(Collections.emptyMap(), buildMapFromKeyValuePairs(Collections.<String>emptySet()));
     }
 
     @Test

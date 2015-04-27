@@ -443,7 +443,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     private WPEditImageSpan createWPEditImageSpanRemote(Context context, MediaFile mediaFile) {
-        int drawable = mediaFile.isVideo() ? R.drawable.media_movieclip : R.drawable.dashicon_format_image_big_grey;
+        int drawable = mediaFile.isVideo() ? R.drawable.media_movieclip : R.drawable.legacy_dashicon_format_image_big_grey;
         Uri uri = Uri.parse(mediaFile.getFileURL());
         WPEditImageSpan imageSpan = new WPEditImageSpan(context, drawable, uri);
         imageSpan.setMediaFile(mediaFile);
@@ -1046,7 +1046,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
         editableText.insert(selectionStart, " ");
         MediaGalleryImageSpan is = new MediaGalleryImageSpan(getActivity(), mediaGallery,
-                R.drawable.icon_mediagallery_placeholder);
+                R.drawable.legacy_icon_mediagallery_placeholder);
         editableText.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
         editableText.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

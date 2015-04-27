@@ -34,7 +34,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private static final String JS_CALLBACK_HANDLER = "nativeCallbackHandler";
 
+    private static final String TAG_FORMAT_BAR_BUTTON_MEDIA = "media";
     private static final String TAG_FORMAT_BAR_BUTTON_BOLD = "bold";
+    private static final String TAG_FORMAT_BAR_BUTTON_ITALIC = "italic";
+    private static final String TAG_FORMAT_BAR_BUTTON_QUOTE = "blockquote";
+    private static final String TAG_FORMAT_BAR_BUTTON_UL = "unorderedList";
+    private static final String TAG_FORMAT_BAR_BUTTON_OL = "orderedList";
+    private static final String TAG_FORMAT_BAR_BUTTON_LINK = "link";
+
+    private static final float TOOLBAR_ALPHA_ENABLED = 1;
+    private static final float TOOLBAR_ALPHA_DISABLED = 0.5f;
 
     private String mParamTitle;
     private String mParamContent;
@@ -72,9 +81,33 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView = (EditorWebView) view.findViewById(R.id.webview);
         initWebView();
 
-        ToggleButton boldButton = (ToggleButton) view.findViewById(R.id.bold);
-        boldButton.setOnClickListener(this);
+        ToggleButton mediaButton = (ToggleButton) view.findViewById(R.id.format_bar_button_media);
+        mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_MEDIA, mediaButton);
+
+        ToggleButton boldButton = (ToggleButton) view.findViewById(R.id.format_bar_button_bold);
         mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_BOLD, boldButton);
+
+        ToggleButton italicButton = (ToggleButton) view.findViewById(R.id.format_bar_button_italic);
+        mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_ITALIC, italicButton);
+
+        ToggleButton quoteButton = (ToggleButton) view.findViewById(R.id.format_bar_button_quote);
+        mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_QUOTE, quoteButton);
+
+        ToggleButton ulButton = (ToggleButton) view.findViewById(R.id.format_bar_button_ul);
+        mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_UL, ulButton);
+
+        ToggleButton olButton = (ToggleButton) view.findViewById(R.id.format_bar_button_ol);
+        mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_OL, olButton);
+
+        ToggleButton linkButton = (ToggleButton) view.findViewById(R.id.format_bar_button_link);
+        mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_LINK, linkButton);
+
+        ToggleButton htmlButton = (ToggleButton) view.findViewById(R.id.format_bar_button_html);
+        htmlButton.setOnClickListener(this);
+
+        for (ToggleButton button : mTagToggleButtonMap.values()) {
+            button.setOnClickListener(this);
+        }
 
         return view;
     }
@@ -120,8 +153,25 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.bold) {
+        if (id == R.id.format_bar_button_bold) {
             mWebView.execJavaScriptFromString("ZSSEditor.setBold();");
+        } else if (id == R.id.format_bar_button_italic) {
+            mWebView.execJavaScriptFromString("ZSSEditor.setItalic();");
+        } else if (id == R.id.format_bar_button_quote) {
+            mWebView.execJavaScriptFromString("ZSSEditor.setBlockquote();");
+        } else if (id == R.id.format_bar_button_ul) {
+            mWebView.execJavaScriptFromString("ZSSEditor.setUnorderedList();");
+        } else if (id == R.id.format_bar_button_ol) {
+            mWebView.execJavaScriptFromString("ZSSEditor.setOrderedList();");
+        } else if (id == R.id.format_bar_button_media) {
+            // TODO: Handle inserting media
+            ((ToggleButton) v).setChecked(false);
+        } else if (id == R.id.format_bar_button_link) {
+            // TODO: Handle inserting a link
+            ((ToggleButton) v).setChecked(false);
+        } else if (id == R.id.format_bar_button_html) {
+            // TODO: Handle HTML mode toggling
+            ((ToggleButton) v).setChecked(false);
         }
     }
 
@@ -199,5 +249,32 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 }
             }
         });
+    }
+
+    public void onSelectionChanged(final Map<String, String> selectionArgs) {
+        final String id = selectionArgs.get("id"); // The field currently in focus
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (!id.isEmpty()) {
+                    switch(id) {
+                        case "zss_field_title":
+                            updateToolbarEnabledState(false);
+                            break;
+                        case "zss_field_content":
+                            updateToolbarEnabledState(true);
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    void updateToolbarEnabledState(boolean enabled) {
+        float alpha = (enabled ? TOOLBAR_ALPHA_ENABLED : TOOLBAR_ALPHA_DISABLED);
+        for(ToggleButton button : mTagToggleButtonMap.values()) {
+            button.setEnabled(enabled);
+            button.setAlpha(alpha);
+        }
     }
 }

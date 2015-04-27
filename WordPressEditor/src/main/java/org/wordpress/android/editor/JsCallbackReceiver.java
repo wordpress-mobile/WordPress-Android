@@ -48,8 +48,11 @@ public class JsCallbackReceiver {
                 mPreviousStyleSet = newStyleSet;
                 break;
             case CALLBACK_SELECTION_CHANGED:
-                // Called when changes are made to selection (includes moving the caret without selecting text)
+                // Called for changes to the field in current focus and for changes made to selection
+                // (includes moving the caret without selecting text)
                 // TODO: Possibly needed for handling WebView scrolling when caret moves (from iOS)
+                Set<String> selectionKeyValueSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
+                mListener.onSelectionChanged(Utils.buildMapFromKeyValuePairs(selectionKeyValueSet));
                 break;
             case CALLBACK_INPUT:
                 // Called on key press
