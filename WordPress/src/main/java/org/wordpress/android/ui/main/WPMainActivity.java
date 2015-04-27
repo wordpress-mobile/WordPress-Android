@@ -226,9 +226,8 @@ public class WPMainActivity extends Activity
             case RequestCodes.READER_SUBS:
             case RequestCodes.READER_REBLOG:
                 ReaderPostListFragment readerFragment = getReaderListFragment();
-                // TODO:
                 if (readerFragment != null) {
-                    //readerFragment.handleActivityResult(requestCode, resultCode, data);
+                    readerFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.ADD_ACCOUNT:

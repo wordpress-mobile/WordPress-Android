@@ -43,6 +43,7 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -1409,7 +1410,7 @@ public class ReaderPostListFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             // user just returned from the tags/subs activity
-            case ReaderConstants.INTENT_READER_SUBS:
+            case RequestCodes.READER_SUBS:
                 if (data != null) {
                     boolean tagsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false);
                     boolean blogsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false);
@@ -1430,7 +1431,7 @@ public class ReaderPostListFragment extends Fragment
 
             // user just returned from reblogging activity, reload the displayed post if reblogging
             // succeeded
-            case ReaderConstants.INTENT_READER_REBLOG:
+            case RequestCodes.READER_REBLOG:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
