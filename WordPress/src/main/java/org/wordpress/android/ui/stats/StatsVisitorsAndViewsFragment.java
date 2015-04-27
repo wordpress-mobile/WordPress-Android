@@ -245,7 +245,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > restoring instance state");
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
                 mVisitsData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             }
