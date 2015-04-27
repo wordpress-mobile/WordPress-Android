@@ -274,7 +274,7 @@ public class MediaGridAdapter extends CursorAdapter {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
 
         // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
-        if (mIsCurrentBlogPhotonCapable){
+        if (mIsCurrentBlogPhotonCapable) {
             String imageURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
             if (imageURL != null) {
                 thumbnailURL = PhotonUtils.getPhotonImageUrl(imageURL, mGridItemWidth, 0);
