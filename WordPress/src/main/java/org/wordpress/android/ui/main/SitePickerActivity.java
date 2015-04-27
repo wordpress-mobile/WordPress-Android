@@ -26,6 +26,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
 
 import de.greenrobot.event.EventBus;
@@ -173,13 +174,24 @@ public class SitePickerActivity extends ActionBarActivity
             // make all sites visible...
             WordPress.wpDB.setAllDotComBlogsVisibility(true);
 
-            // ...then update ones marked hidden in the adapter
+            // ...then update ones marked hidden in the adapter, but don't hide the current site
+            boolean skippedCurrentSite = false;
+            String currentSiteName = null;
             SiteList hiddenSites = getAdapter().getHiddenSites();
             for (SiteRecord site : hiddenSites) {
-                // don't allow hiding the current site
-                if (site.localId != mCurrentLocalId) {
+                if (site.localId == mCurrentLocalId) {
+                    skippedCurrentSite = true;
+                    currentSiteName = site.getBlogNameOrHostName();
+                } else {
                     WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
                 }
+            }
+
+            // let user know the current site wasn't hidden
+            if (skippedCurrentSite) {
+                ToastUtils.showToast(this,
+                        getString(R.string.site_picker_cant_hide_current_site, currentSiteName),
+                        ToastUtils.Duration.LONG);
             }
 
             WordPress.wpDB.getDatabase().setTransactionSuccessful();
