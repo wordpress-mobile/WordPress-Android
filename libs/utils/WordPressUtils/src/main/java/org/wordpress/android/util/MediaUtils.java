@@ -75,7 +75,8 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-        return url.endsWith(".mp3") || url.endsWith(".ogg") || url.endsWith(".wav");
+        return url.endsWith(".mp3") || url.endsWith(".ogg") || url.endsWith(".wav") || url.endsWith(".wma") ||
+                url.endsWith(".aiff") || url.endsWith(".aif") || url.endsWith(".aac") || url.endsWith(".m4a");
     }
 
     /**
