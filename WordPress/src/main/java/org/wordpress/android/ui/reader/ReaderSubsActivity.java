@@ -352,8 +352,6 @@ public class ReaderSubsActivity extends ActionBarActivity
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
 
         if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
-            showInfoToast(getString(R.string.reader_label_added_tag, tagName));
-            getPageAdapter().refreshTagFragments();
             onTagAction(tag, TagAction.ADD);
         }
     }
@@ -456,7 +454,7 @@ public class ReaderSubsActivity extends ActionBarActivity
                 mLastAddedTagName = tag.getTagName();
                 // user added from recommended tags, make sure addition is reflected on followed tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.FOLLOWED);
-                showInfoToast(getString(R.string.reader_label_added_tag, tag.getTagName()));
+                showInfoToast(getString(R.string.reader_label_added_tag, tag.getCapitalizedTagName()));
                 break;
 
             case DELETE:
@@ -466,7 +464,7 @@ public class ReaderSubsActivity extends ActionBarActivity
                 }
                 // user deleted from followed tags, make sure deletion is reflected on recommended tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.RECOMMENDED);
-                showInfoToast(getString(R.string.reader_label_removed_tag, tag.getTagName()));
+                showInfoToast(getString(R.string.reader_label_removed_tag, tag.getCapitalizedTagName()));
                 break;
         }
     }
