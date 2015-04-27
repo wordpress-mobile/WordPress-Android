@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -145,9 +146,9 @@ public class PostViewsModel implements Serializable {
             // Keys could not be ordered fine. Reordering them.
             String[] orderedKeys = orderKeys(yearsJSON.keys(), yearsJSON.length());
 
-            for (int j = 0; j < orderedKeys.length; j++) {
+            for (String orderedKey : orderedKeys) {
                 Year currentYear = new Year();
-                String currentYearKey = orderedKeys[j];
+                String currentYearKey = orderedKey;
                 currentYear.setLabel(currentYearKey);
 
                 JSONObject currentYearObj = yearsJSON.getJSONObject(currentYearKey);
@@ -163,7 +164,7 @@ public class PostViewsModel implements Serializable {
                     monthsList.add(new Month(currentMonthKey, currentMonthVisits));
                 }
 
-                Collections.sort(monthsList, new java.util.Comparator<Month>() {
+                Collections.sort(monthsList, new Comparator<Month>() {
                     public int compare(Month o1, Month o2) {
                         int v1 = Integer.parseInt(o1.getMonth());
                         int v2 = Integer.parseInt(o2.getMonth());

@@ -31,8 +31,6 @@ import de.greenrobot.event.EventBus;
 
 public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
-    protected static final String ARGS_IS_SINGLE_VIEW = "ARGS_IS_SINGLE_VIEW";
-
     // Used when the fragment has 2 pages/kind of stats in it. Not meaning the bottom pagination.
     protected static final String ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX = "ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX";
     protected static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST = 1000;
@@ -70,11 +68,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract int getTotalsLabelResId();
     protected abstract int getEmptyLabelTitleResId();
     protected abstract int getEmptyLabelDescResId();
-    protected abstract StatsService.StatsEndpointsEnum[] getSectionsToUpdate();
     protected abstract void updateUI();
     protected abstract boolean isExpandableList();
     protected abstract boolean isViewAllOptionAvailable();
-
 
     protected StatsResourceVars mResourceVars;
 
@@ -126,11 +122,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //AppLog.d(AppLog.T.STATS, this.getTag() + " > onCreate");
         mGroupIdToExpandedMap = new SparseBooleanArray();
 
         if (savedInstanceState != null) {
-            AppLog.d(AppLog.T.STATS, this.getTag() + " > restoring instance state");
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
                 Serializable oldData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
                 if (oldData != null && oldData instanceof Serializable[]) {
@@ -183,7 +177,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         } else {
             //showHideNoResultsUI(true);
             showEmptyUI();
-            mMoreDataListener.onRefreshRequested(getSectionsToUpdate());
+            refreshStats();
         }
     }
 
@@ -303,10 +297,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 && (mDatamodels[index] instanceof VolleyError || mDatamodels[index] instanceof StatsError);
     }
 
-    protected boolean isSingleView() {
-        return getArguments().getBoolean(ARGS_IS_SINGLE_VIEW, false);
-    }
-
     private void configureViewAllButton() {
         if (isSingleView()) {
             // No view all button if you're already in single view
@@ -330,7 +320,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 viewAllIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, getTimeframe());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, getViewType());
-                viewAllIntent.putExtra(StatsAbstractFragment.ARGS_START_DATE, getStartDate());
+                viewAllIntent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, getDate());
                 viewAllIntent.putExtra(ARGS_IS_SINGLE_VIEW, true);
                 if (mTopPagerContainer.getVisibility() == View.VISIBLE) {
                     viewAllIntent.putExtra(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
@@ -402,7 +392,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             mTopPagerSelectedButtonIndex = checkedId;
 
             TextView entryLabel = (TextView) getView().findViewById(R.id.stats_list_entry_label);
-            entryLabel.setText(getEntryLabelResId());
+            if (entryLabel != null) {
+                entryLabel.setText(getEntryLabelResId());
+            }
             updateUI();
         }
     };
@@ -410,6 +402,18 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.SectionUpdated event) {
         if (!isAdded()) {
+            return;
+        }
+
+        if (!getDate().equals(event.mDate)) {
+            return;
+        }
+
+        if (!event.mRequestBlogId.equals(StatsUtils.getBlogId(getLocalTableBlogID()))) {
+            return;
+        }
+
+        if (event.mTimeframe != getTimeframe()) {
             return;
         }
 
@@ -435,10 +439,5 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
         mDatamodels[indexOfDatamodelMatch] = event.mResponseObjectModel;
         updateUI();
-    }
-
-    @Override
-    protected void resetDataModel() {
-        mDatamodels = null;
     }
 }

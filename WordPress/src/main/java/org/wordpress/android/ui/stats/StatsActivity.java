@@ -48,9 +48,10 @@ import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * The native stats activity
@@ -60,9 +61,7 @@ import java.util.Map;
  */
 public class StatsActivity extends ActionBarActivity
         implements ScrollViewExt.ScrollViewListener,
-                StatsVisitorsAndViewsFragment.OnDateChangeListener,
-                StatsAbstractListFragment.OnRequestDataListener,
-                StatsAbstractFragment.TimeframeDateProvider {
+                StatsVisitorsAndViewsFragment.OnDateChangeListener {
 
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
@@ -85,10 +84,6 @@ public class StatsActivity extends ActionBarActivity
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
-
-    private final ArrayList<StatsService.StatsEndpointsEnum> fragmentsRefreshList = new ArrayList<>();
-    private final Object fragmentsRefreshListSynchObj = new Object();
-    private final Handler mUpdateStatsHandler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +114,7 @@ public class StatsActivity extends ActionBarActivity
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
+
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
@@ -130,9 +126,9 @@ public class StatsActivity extends ActionBarActivity
                         }
 
                         mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                        loadStatsFragments(false, true, true); // This is here just for a security check
-                        emptyDataModelInFragments(true, true);
-                        refreshStats(mCurrentTimeframe, mRequestedDate, true, true);
+                        if (checkCredentials()) {
+                            updateTimeframeAndDateAndStartRefreshOfFragments(true);
+                        }
                     }
                 });
 
@@ -164,7 +160,10 @@ public class StatsActivity extends ActionBarActivity
             return;
         }
 
-        loadStatsFragments(false, true, true);
+        // create the fragments without forcing the re-creation. If the activity is restarted fragments can already
+        // be there, and ready to be displayed without making any network connections. A fragment calls the stats service
+        // if its internal datamodel is empty.
+        createFragments(false);
 
         ScrollViewExt scrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
         if (scrollView != null) {
@@ -195,13 +194,13 @@ public class StatsActivity extends ActionBarActivity
 
                     AppLog.d(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
                     mCurrentTimeframe = selectedTimeframe;
-                    if (NetworkUtils.isNetworkAvailable(StatsActivity.this)) {
-                        String date = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                    mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                    if (NetworkUtils.checkConnection(StatsActivity.this)) {
                         mSwipeToRefreshHelper.setRefreshing(true);
-                        refreshStats(selectedTimeframe, date, true, true);
-                        emptyDataModelInFragments(true, false);
-                        loadStatsFragments(false, true, false); // This is here just for a security check
+                    } else {
+                        mSwipeToRefreshHelper.setRefreshing(false);
                     }
+                    createFragments(true); // Need to recreate fragment here, since a new timeline was selected.
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -214,8 +213,19 @@ public class StatsActivity extends ActionBarActivity
     }
 
     @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     protected void onDestroy() {
-        stopStatsService();
         super.onDestroy();
     }
 
@@ -223,6 +233,11 @@ public class StatsActivity extends ActionBarActivity
     protected void onResume() {
         super.onResume();
         mIsInFront = true;
+        if (NetworkUtils.checkConnection(this)) {
+            checkCredentials();
+        } else {
+            mSwipeToRefreshHelper.setRefreshing(false);
+        }
     }
 
     @Override
@@ -231,7 +246,6 @@ public class StatsActivity extends ActionBarActivity
         mIsInFront = false;
         mIsUpdatingStats = false;
         mSwipeToRefreshHelper.setRefreshing(false);
-        mUpdateStatsHandler.removeCallbacks(mUpdateStatsRequestedRunnable);
     }
 
     @Override
@@ -244,33 +258,7 @@ public class StatsActivity extends ActionBarActivity
         super.onSaveInstanceState(outState);
     }
 
-    private void resetDatamodelForFragment( FragmentManager fm , String fragmentTAG) {
-        StatsAbstractFragment fragment = (StatsAbstractFragment) fm.findFragmentByTag(fragmentTAG);
-        if (fragment != null) {
-            fragment.resetDataModel();
-        }
-    }
-
-    private void emptyDataModelInFragments(boolean resetGraphData, boolean resetAlltimeFragmets) {
-        FragmentManager fm = getFragmentManager();
-        if (resetGraphData) {
-            resetDatamodelForFragment(fm, StatsVisitorsAndViewsFragment.TAG);
-        }
-        resetDatamodelForFragment(fm, StatsTopPostsAndPagesFragment.TAG);
-        resetDatamodelForFragment(fm, StatsReferrersFragment.TAG);
-        resetDatamodelForFragment(fm, StatsClicksFragment.TAG);
-        resetDatamodelForFragment(fm, StatsGeoviewsFragment.TAG);
-        resetDatamodelForFragment(fm, StatsAuthorsFragment.TAG);
-        resetDatamodelForFragment(fm, StatsVideoplaysFragment.TAG);
-        if (resetAlltimeFragmets) {
-            resetDatamodelForFragment(fm, StatsCommentsFragment.TAG);
-            resetDatamodelForFragment(fm, StatsTagsAndCategoriesFragment.TAG);
-            resetDatamodelForFragment(fm, StatsPublicizeFragment.TAG);
-            resetDatamodelForFragment(fm, StatsFollowersFragment.TAG);
-        }
-    }
-
-    private void loadStatsFragments(boolean forceRecreationOfFragments, boolean loadGraphFragment, boolean loadAlltimeFragmets) {
+    private void createFragments(boolean forceRecreationOfFragments) {
         if (isFinishing()) {
             return;
         }
@@ -279,113 +267,102 @@ public class StatsActivity extends ActionBarActivity
 
         StatsAbstractFragment fragment;
 
-        if (loadGraphFragment) {
-            if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID);
-                ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
-            }
+        if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+            ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsAuthorsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_top_authors_container, fragment, StatsAuthorsFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsVideoplaysFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsSearchTermsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.SEARCH_TERMS, mLocalBlogID);
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.SEARCH_TERMS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
             ft.replace(R.id.stats_search_terms_container, fragment, StatsSearchTermsFragment.TAG);
         }
 
-        if (loadAlltimeFragmets) {
-            if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID);
-                ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
-            }
+        if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+            ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
+        }
 
-            if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID);
-                ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
-            }
+        if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+            ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
+        }
 
-            if (fm.findFragmentByTag(StatsPublicizeFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID);
-                ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
-            }
+        if (fm.findFragmentByTag(StatsPublicizeFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+            ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
+        }
 
-            if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID);
-                ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
-            }
+        if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || forceRecreationOfFragments) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+            ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
         }
 
         ft.commitAllowingStateLoss();
     }
 
-    @Override
-    public void onMoreDataRequested(StatsService.StatsEndpointsEnum endPointNeedUpdate, int pageNumber) {
-        // nope
-    }
-
-    @Override
-    public void onRefreshRequested(StatsService.StatsEndpointsEnum[] endPointsNeedUpdate) {
-        mSwipeToRefreshHelper.setRefreshing(mIsUpdatingStats);
-        if (mIsUpdatingStats) {
+    private void updateTimeframeAndDateAndStartRefreshOfFragments(boolean includeGraphAndTimelessFragments) {
+        if (isFinishing()) {
             return;
         }
+        FragmentManager fm = getFragmentManager();
 
-        // fragments that needs an update require it at almost the same time. Keep a list of fragments
-        // that require the update and call the service with the right parameters.
-        synchronized (fragmentsRefreshListSynchObj) {
-            for (StatsService.StatsEndpointsEnum current : endPointsNeedUpdate) {
-                if (!fragmentsRefreshList.contains(current)) {
-                    fragmentsRefreshList.add(current);
-                }
-            }
-            mUpdateStatsHandler.removeCallbacks(mUpdateStatsRequestedRunnable);
-            mUpdateStatsHandler.postDelayed(mUpdateStatsRequestedRunnable, 500);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTopPostsAndPagesFragment.TAG);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsReferrersFragment.TAG);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsClicksFragment.TAG);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsGeoviewsFragment.TAG);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsAuthorsFragment.TAG);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVideoplaysFragment.TAG);
+        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsSearchTermsFragment.TAG);
+
+        if (includeGraphAndTimelessFragments) {
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVisitorsAndViewsFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsCommentsFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTagsAndCategoriesFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsPublicizeFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsFollowersFragment.TAG);
         }
     }
 
-    private final Runnable mUpdateStatsRequestedRunnable = new Runnable() {
-        @Override
-        public void run() {
-            synchronized (fragmentsRefreshListSynchObj) {
-                if (fragmentsRefreshList.contains(StatsService.StatsEndpointsEnum.VISITS)) {
-                    // update stats with graph data
-                    refreshStats(mCurrentTimeframe, mRequestedDate, true, true);
-                } else {
-                    refreshStats(mCurrentTimeframe, mRequestedDate, false, true);
-                }
-                mSwipeToRefreshHelper.setRefreshing(mIsUpdatingStats);
-                fragmentsRefreshList.clear();
-            }
+    private boolean updateTimeframeAndDateAndStartRefreshInFragment(FragmentManager fm , String fragmentTAG) {
+        StatsAbstractFragment fragment = (StatsAbstractFragment) fm.findFragmentByTag(fragmentTAG);
+        if (fragment != null) {
+            fragment.setDate(mRequestedDate);
+            fragment.setTimeframe(mCurrentTimeframe);
+            fragment.refreshStats();
+            return true;
         }
-    };
+        return false;
+    }
 
     private void startWPComLoginActivity() {
         mResultCode = RESULT_CANCELED;
@@ -420,8 +397,18 @@ public class StatsActivity extends ActionBarActivity
                                 AnalyticsTracker.track(
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
-                                    mSwipeToRefreshHelper.setRefreshing(true);
-                                    refreshStats(StatsTimeframe.DAY, StatsUtils.getCurrentDateTZ(mLocalBlogID), true, true);
+                                    return;
+                                }
+                                // We have the blogID now, but we need to re-check if the network connection is available
+                                if (NetworkUtils.checkConnection(StatsActivity.this)) {
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mSwipeToRefreshHelper.setRefreshing(true);
+                                            mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                                            createFragments(true); // Recreate the fragment and start a refresh of Stats
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -443,7 +430,8 @@ public class StatsActivity extends ActionBarActivity
                         }
                     }, "wp.getOptions", params);
                 } else {
-                    refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDateTZ(mLocalBlogID), true, true);
+                    mRequestedDate =  StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                    createFragments(true); // Recreate the fragment and start a refresh od Stats
                 }
                 mSwipeToRefreshHelper.setRefreshing(true);
             }
@@ -451,31 +439,17 @@ public class StatsActivity extends ActionBarActivity
     }
 
     private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
+        // AsyncTasks are bound to the Activity that launched it. If the user rotate the device StatsActivity is restarted.
+        // Use the event bus to fix this issue.
+
         @Override
         public void onSuccess() {
-            if (isFinishing() || !mIsInFront) {
-                return;
-            }
-
-            if (StatsUtils.getBlogId(mLocalBlogID) == null) {
-                // Blog has not returned a jetpack_client_id
-                stopStatsService();
-                mSwipeToRefreshHelper.setRefreshing(false);
-                showJetpackMissingAlert();
-            }
+            EventBus.getDefault().post(new StatsEvents.JetpackSettingsCompleted(false));
         }
 
         @Override
         public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-            mSwipeToRefreshHelper.setRefreshing(false);
-            if (isFinishing() || !mIsInFront) {
-                return;
-            }
-            if (mSignInDialog != null && mSignInDialog.isShowing()) {
-                return;
-            }
-            stopStatsService();
-            Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
+            EventBus.getDefault().post(new StatsEvents.JetpackSettingsCompleted(true));
         }
     }
 
@@ -510,7 +484,8 @@ public class StatsActivity extends ActionBarActivity
             });
             builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog
+                    // User cancelled the dialog. Hide Stats.
+                    finish();
                 }
             });
         } else {
@@ -572,40 +547,29 @@ public class StatsActivity extends ActionBarActivity
             return;
         }
         mRequestedDate = date;
-        refreshStats(timeframe, date, false, false);
-        emptyDataModelInFragments(false, false);
-        loadStatsFragments(false, false, false); // This is here just for a security check
-    }
-
-    // Fragments call these two methods below to access the current timeframe/date selected by the user.
-    @Override
-    public String getCurrentDate() {
-        return mRequestedDate;
-    }
-
-    @Override
-    public StatsTimeframe getCurrentTimeFrame() {
-        return mCurrentTimeframe;
-    }
-
-    private void refreshStats(StatsTimeframe timeframe, String date, boolean updateGraph, boolean updateAlltimeStats) {
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-
-        if (currentBlog == null) {
-            AppLog.w(T.STATS, "Current blog is null. This should never happen here.");
+        updateTimeframeAndDateAndStartRefreshOfFragments(false);
+        if (NetworkUtils.checkConnection(StatsActivity.this)) {
+            mSwipeToRefreshHelper.setRefreshing(true);
+        } else {
             mSwipeToRefreshHelper.setRefreshing(false);
-            return;
         }
+    }
 
-        if (!NetworkUtils.checkConnection(this)) {
-            mSwipeToRefreshHelper.setRefreshing(false);
-            AppLog.w(AppLog.T.STATS, "StatsActivity > no connection, update canceled");
-            return;
+    private boolean checkCredentials() {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            AppLog.w(AppLog.T.STATS, "StatsActivity > cannot check credentials since no internet connection available");
+            return false;
         }
 
         final String blogId = StatsUtils.getBlogId(mLocalBlogID);
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
-        // Make sure the blogId is available.
+        if (currentBlog == null) {
+            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+            return false;
+        }
+
+        // blogId is always available for dotcom blogs. It could be null on Jetpack blogs...
         if (blogId != null) {
             // for self-hosted sites; launch the user into an activity where they can provide their credentials
             if (!currentBlog.isDotcomFlag()
@@ -615,58 +579,67 @@ public class StatsActivity extends ActionBarActivity
                     String username = AccountHelper.getDefaultAccount().getUserName();
                     currentBlog.setDotcom_username(username);
                     WordPress.wpDB.saveBlog(currentBlog);
-                    mSwipeToRefreshHelper.setRefreshing(true);
+                    createFragments(true);
                 } else {
                     startWPComLoginActivity();
-                    return;
+                    return false;
                 }
             }
         } else {
             // blogId is null at this point.
             if (!currentBlog.isDotcomFlag()) {
-                // Refresh blog settings/options that includes 'jetpack_client_id'needed here
+                // Refresh blog settings/options that includes 'jetpack_client_id' needed here
+                mSwipeToRefreshHelper.setRefreshing(true);
                 new ApiHelper.RefreshBlogContentTask(currentBlog,
                         new VerifyJetpackSettingsCallback()).execute(false);
+                return false;
             } else {
                 // blodID cannot be null on dotcom blogs.
                 Toast.makeText(this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
                 AppLog.e(T.STATS, "blogID is null for a wpcom blog!! " + currentBlog.getHomeURL());
+                finish();
             }
-            return;
         }
 
         // check again that we've valid credentials for a Jetpack site
         if (!currentBlog.isDotcomFlag() && !currentBlog.hasValidJetpackCredentials() &&
                 !AccountHelper.getDefaultAccount().hasAccessToken()) {
-            mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
-            return;
+            return false;
         }
 
-        mIsUpdatingStats = true;
-
-        // start service to get stats
-        Intent intent = new Intent(this, StatsService.class);
-        intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
-        intent.putExtra(StatsService.ARG_PERIOD, timeframe);
-        intent.putExtra(StatsService.ARG_DATE, date);
-        intent.putExtra(StatsService.ARG_UPDATE_ALLTIME_STATS, updateAlltimeStats);
-        intent.putExtra(StatsService.ARG_UPDATE_GRAPH_STATS, updateGraph);
-        startService(intent);
-    }
-
-    private void stopStatsService() {
-        stopService(new Intent(this, StatsService.class));
-        if (mIsUpdatingStats) {
-            mIsUpdatingStats = false;
-            mSwipeToRefreshHelper.setRefreshing(false);
-        }
+        return true;
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
         mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
         mIsUpdatingStats = event.mUpdating;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.JetpackSettingsCompleted event) {
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
+        mSwipeToRefreshHelper.setRefreshing(false);
+
+        if (!event.isError) {
+            if (StatsUtils.getBlogId(mLocalBlogID) == null) {
+                // Blog has not returned a jetpack_client_id
+                showJetpackMissingAlert();
+            } else {
+                createFragments(true); // recreate fragments and force a refresh not that we have a valid blog_id
+            }
+        } else {
+            if (mSignInDialog != null && mSignInDialog.isShowing()) {
+                return;
+            }
+            Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
+        }
     }
 
     /*

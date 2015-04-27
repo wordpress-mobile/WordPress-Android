@@ -8,6 +8,7 @@ import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,7 +42,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
 
     private List<PostModel> getTopPostsAndPages() {
         if (!hasTopPostsAndPages()) {
-            return null;
+            return new ArrayList<PostModel>(0);
         }
         return ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages();
     }
