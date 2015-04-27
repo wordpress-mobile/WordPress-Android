@@ -8,11 +8,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="@string/pref_key_self_hosted"
-        android:title="@string/self_hosted_blogs">
-    </PreferenceCategory>
-
-    <PreferenceCategory
         android:title="@string/notifications"
         android:key="@string/pref_key_notifications_section">
         <Preference

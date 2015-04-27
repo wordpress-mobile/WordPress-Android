@@ -40,18 +40,18 @@
     <string name="save">Save</string>
     <string name="add">Add</string>
     <string name="add_self_hosted_blog">Add self-hosted blog</string>
-    <string name="show_and_hide_blogs">Show/hide WordPress.com blogs</string>
-    <string name="blogs_visibility">Blogs</string>
-    <string name="show_all">Show all</string>
-    <string name="hide_all">Hide all</string>
+    <string name="show">Show</string>
+    <string name="hide">Hide</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect all</string>
     <string name="notification_sound">Play notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_blink">Blink notification light</string>
-    <string name="sure_to_remove_account">Remove this blog?</string>
+    <string name="sure_to_remove_account">Remove this site?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="error">Error</string>
-    <string name="could_not_remove_account">Couldn\'t remove blog</string>
+    <string name="could_not_remove_account">Couldn\'t remove site</string>
     <string name="edit_page">Edit page</string>
     <string name="edit_post">Edit post</string>
     <string name="add_comment">Add comment</string>
@@ -279,8 +279,8 @@
     <string name="toast_comment_unedited">Comment hasn\'t changed</string>
 
     <!-- context menu -->
-    <string name="remove_account">Remove blog</string>
-    <string name="blog_removed_successfully">Blog removed successfully</string>
+    <string name="remove_account">Remove site</string>
+    <string name="blog_removed_successfully">Site removed successfully</string>
 
     <!-- draft actions -->
     <string name="delete_draft">Delete draft</string>
@@ -370,7 +370,6 @@
     <!-- Preference keys -->
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
     <string name="pref_key_wpcom" translatable="false">wp_pref_wpcom</string>
-    <string name="pref_key_self_hosted" translatable="false">wp_pref_self_hosted_blogs</string>
     <string name="pref_key_notifications_section" translatable="false">wp_pref_notifications_category</string>
     <string name="pref_key_notifications" translatable="false">wp_pref_manage_notifications</string>
     <string name="pref_key_post_sig_section" translatable="false">wp_post_signature</string>
@@ -392,8 +391,7 @@
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
-    <string name="wpcom_blogs">WordPress.com blogs</string>
-    <string name="self_hosted_blogs">Self-hosted blogs</string>
+    <string name="wpcom_blogs">WordPress.com</string>
     <string name="preference_privacy">Privacy</string>
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
@@ -911,7 +909,11 @@
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
+    <string name="site_picker_edit_visibility">Show/hide sites</string>
     <string name="site_picker_add_site">Add site</string>
+    <string name="site_picker_add_self_hosted">Add self-hosted site</string>
+    <string name="site_picker_create_dotcom">Create WordPress.com site</string>
+    <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>

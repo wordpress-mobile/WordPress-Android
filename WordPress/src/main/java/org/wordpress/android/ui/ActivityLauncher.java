@@ -15,6 +15,7 @@ import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -35,8 +36,9 @@ import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
 
-    public static void showSitePickerForResult(Activity activity) {
+    public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
+        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, blogLocalTableId);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
                 R.anim.activity_slide_in_from_left,
@@ -163,6 +165,12 @@ public class ActivityLauncher {
     public static void newAccountForResult(Activity activity) {
         Intent intent = new Intent(activity, NewAccountActivity.class);
         activity.startActivityForResult(intent, SignInActivity.CREATE_ACCOUNT_REQUEST);
+    }
+
+    public static void newBlogForResult(Activity activity) {
+        Intent intent = new Intent(activity, NewBlogActivity.class);
+        intent.putExtra(NewBlogActivity.KEY_START_MODE, NewBlogActivity.CREATE_BLOG);
+        activity.startActivityForResult(intent, RequestCodes.CREATE_BLOG);
     }
 
     public static void showSignInForResult(Activity activity) {
