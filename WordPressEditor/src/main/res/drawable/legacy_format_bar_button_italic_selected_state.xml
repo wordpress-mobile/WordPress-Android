@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/format_bar_button_selected"/>
+            <solid android:color="@color/legacy_format_bar_button_selected"/>
         </shape>
     </item>
     <item>
-        <bitmap android:src="@drawable/dashicon_editor_insertmore" android:gravity="center"/>
+        <bitmap android:src="@drawable/legacy_dashicon_editor_italic" android:gravity="center"/>
     </item>
 </layer-list>
