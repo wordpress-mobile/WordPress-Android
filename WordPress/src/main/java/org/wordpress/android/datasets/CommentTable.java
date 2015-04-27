@@ -235,9 +235,9 @@ public class CommentTable {
         String[] args = {Integer.toString(localBlogId),
                          Long.toString(commentId)};
         getWritableDb().update(COMMENTS_TABLE,
-                               values,
-                               "blog_id=? AND comment_id=?",
-                               args);
+                values,
+                "blog_id=? AND comment_id=?",
+                args);
     }
 
     /**
@@ -341,5 +341,22 @@ public class CommentTable {
                 authorUrl,
                 authorEmail,
                 profileImageUrl);
+    }
+
+    /**
+     * Make sure that localdb only contains valid comments. That is, comment that is not present
+     * in the server (deleted permanently) should be removed from the localdb.
+     *
+     * @param localBlogId
+     * @param remoteComments
+     */
+    public static void synchronizeDb(int localBlogId, CommentList remoteComments) {
+        for (Comment comment : CommentTable.getCommentsForBlog(localBlogId)) {
+            if (!remoteComments.contains(comment)) {
+                CommentTable.deleteComment(localBlogId, comment.commentID);
+            }
+        }
+
+        CommentTable.saveComments(localBlogId, remoteComments);
     }
 }

@@ -13,13 +13,13 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -273,6 +273,7 @@ public class ApiHelper {
             hPost.put("number", 30);
             Object[] commentParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
                     mBlog.getPassword(), hPost};
+
             try {
                 ApiHelper.refreshComments(mBlog, commentParams);
             } catch (Exception e) {
@@ -354,11 +355,6 @@ public class ApiHelper {
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                 blog.getHttppassword());
         Object[] result;
-        result = (Object[]) client.call("wp.getComments", commentParams);
-
-        if (result.length == 0) {
-            return null;
-        }
 
         Map<?, ?> contentHash;
         long commentID, postID;
@@ -366,36 +362,83 @@ public class ApiHelper {
         java.util.Date date;
         CommentList comments = new CommentList();
 
-        for (int ctr = 0; ctr < result.length; ctr++) {
-            contentHash = (Map<?, ?>) result[ctr];
-            content = contentHash.get("content").toString();
-            status = contentHash.get("status").toString();
-            postID = Long.parseLong(contentHash.get("post_id").toString());
-            commentID = Long.parseLong(contentHash.get("comment_id").toString());
-            authorName = contentHash.get("author").toString();
-            authorURL = contentHash.get("author_url").toString();
-            authorEmail = contentHash.get("author_email").toString();
-            postTitle = contentHash.get("post_title").toString();
-            date = (java.util.Date) contentHash.get("date_created_gmt");
-            pubDate = DateTimeUtils.javaDateToIso8601(date);
+        result = (Object[]) client.call("wp.getComments", commentParams);
 
-            Comment comment = new Comment(
-                    postID,
-                    commentID,
-                    authorName,
-                    pubDate,
-                    content,
-                    status,
-                    postTitle,
-                    authorURL,
-                    authorEmail,
-                    null);
+        if (result.length > 0) {
+            for (int ctr = 0; ctr < result.length; ctr++) {
+                contentHash = (Map<?, ?>) result[ctr];
+                content = contentHash.get("content").toString();
+                status = contentHash.get("status").toString();
+                postID = Long.parseLong(contentHash.get("post_id").toString());
+                commentID = Long.parseLong(contentHash.get("comment_id").toString());
+                authorName = contentHash.get("author").toString();
+                authorURL = contentHash.get("author_url").toString();
+                authorEmail = contentHash.get("author_email").toString();
+                postTitle = contentHash.get("post_title").toString();
+                date = (java.util.Date) contentHash.get("date_created_gmt");
+                pubDate = DateTimeUtils.javaDateToIso8601(date);
 
-            comments.add(comment);
+                Comment comment = new Comment(
+                        postID,
+                        commentID,
+                        authorName,
+                        pubDate,
+                        content,
+                        status,
+                        postTitle,
+                        authorURL,
+                        authorEmail,
+                        null);
+
+                comments.add(comment);
+            }
+        }
+
+        // get existing spams, if any
+        // Possible bug in wp.getComments. Comment that is moderated as Spam
+        // from the website, then it will NOT be included in wp.getComments
+        // thus we have to get it in a rather specific manner.
+        HashMap<String, Object> withSpam = new HashMap<>();
+        withSpam.put("status", "spam");
+        Object[] commentParamsWithSpam = {blog.getRemoteBlogId(), blog.getUsername(),
+                blog.getPassword(), withSpam};
+        result = (Object[]) client.call("wp.getComments", commentParamsWithSpam);
+
+        if (result.length > 0) {
+            for (int ctr = 0; ctr < result.length; ctr++) {
+                contentHash = (Map<?, ?>) result[ctr];
+                content = contentHash.get("content").toString();
+                status = contentHash.get("status").toString();
+                postID = Long.parseLong(contentHash.get("post_id").toString());
+                commentID = Long.parseLong(contentHash.get("comment_id").toString());
+                authorName = contentHash.get("author").toString();
+                authorURL = contentHash.get("author_url").toString();
+                authorEmail = contentHash.get("author_email").toString();
+                postTitle = contentHash.get("post_title").toString();
+                date = (java.util.Date) contentHash.get("date_created_gmt");
+                pubDate = DateTimeUtils.javaDateToIso8601(date);
+
+                Comment comment = new Comment(
+                        postID,
+                        commentID,
+                        authorName,
+                        pubDate,
+                        content,
+                        status,
+                        postTitle,
+                        authorURL,
+                        authorEmail,
+                        null);
+
+                comments.add(comment);
+            }
         }
 
         int localBlogId = blog.getLocalTableBlogId();
-        CommentTable.saveComments(localBlogId, comments);
+
+        if (comments.size() > 0) {
+            CommentTable.synchronizeDb(localBlogId, comments);
+        }
 
         return comments;
     }
