@@ -226,11 +226,6 @@ public class StatsActivity extends ActionBarActivity
 
     @Override
     protected void onDestroy() {
-       // stopService(new Intent(this, StatsService.class));
-        if (mIsUpdatingStats) {
-            mIsUpdatingStats = false;
-            mSwipeToRefreshHelper.setRefreshing(false);
-        }
         super.onDestroy();
     }
 
@@ -411,7 +406,7 @@ public class StatsActivity extends ActionBarActivity
                                         public void run() {
                                             mSwipeToRefreshHelper.setRefreshing(true);
                                             mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                                            createFragments(true); // Recreate the fragment and start a refresh od Stats
+                                            createFragments(true); // Recreate the fragment and start a refresh of Stats
                                         }
                                     });
                                 }
