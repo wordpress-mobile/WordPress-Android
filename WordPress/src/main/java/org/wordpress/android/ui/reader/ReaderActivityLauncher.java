@@ -68,7 +68,7 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
-        intent.putExtra(ReaderConstants.ARG_TITLE, tag.getTagName());
+        intent.putExtra(ReaderConstants.ARG_TITLE, tag.getCapitalizedTagName());
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
