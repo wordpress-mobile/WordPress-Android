@@ -203,7 +203,7 @@ public class SitePickerActivity extends ActionBarActivity
     private void addSite() {
         // if user is signed into wp.com use the dialog to enable choosing whether to
         // create a new wp.com blog or add a self-hosted one
-        if (AccountHelper.isSignedIn()) {
+        if (AccountHelper.getDefaultAccount().isWordPressComUser()) {
             DialogFragment dialog = new AddSiteDialog();
             dialog.show(getSupportFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
         } else {
