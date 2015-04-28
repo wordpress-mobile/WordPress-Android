@@ -138,7 +138,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     private boolean mIsNewPost;
 
-    private boolean test;
+    private boolean mHasSetPostContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,9 +203,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             }
             mEditorFragment = (EditorFragmentAbstract) fragmentManager.getFragment(savedInstanceState, STATE_KEY_EDITOR_FRAGMENT);
         }
-        test = mEditorFragment == null;
 
-        if (!test) {
+        if (mHasSetPostContent = mEditorFragment != null) {
             mEditorFragment.setImageLoader(WordPress.imageLoader);
         }
 
@@ -547,7 +546,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    // TODO: switch between legacy and new editor here (AB test?)
+                    // TODO: switch between legacy and new editor here (AB mHasSetPostContent?)
                     return new LegacyEditorFragment();
                 case 1:
                     return new EditPostSettingsFragment();
@@ -707,8 +706,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         // Set post title and content
         Post post = getPost();
         if (post != null) {
-            if (!TextUtils.isEmpty(post.getContent()) && test) {
-                test = false;
+            if (!TextUtils.isEmpty(post.getContent()) && !mHasSetPostContent) {
+                mHasSetPostContent = true;
                 if (post.isLocalDraft()) {
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,

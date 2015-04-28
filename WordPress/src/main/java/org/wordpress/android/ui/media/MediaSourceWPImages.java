@@ -177,14 +177,12 @@ public class MediaSourceWPImages implements MediaSource {
     }
 
     private void removeDeletedEntries() {
-        List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
+        final List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
 
-        for (MediaItem mediaItem : existingItems) {
-            final boolean callLoaded = existingItems.indexOf(mediaItem) == existingItems.size() - 1;
-
+        for (final MediaItem mediaItem : existingItems) {
             LimitedBackgroundOperation<MediaItem, Void, MediaItem> backgroundCheck =
                     new LimitedBackgroundOperation<MediaItem, Void, MediaItem>() {
-                int responseCode;
+                private int responseCode;
 
                 @Override
                 protected MediaItem performBackgroundOperation(MediaItem[] params) {
@@ -212,10 +210,13 @@ public class MediaSourceWPImages implements MediaSource {
                         resultList.add(result);
                         if (responseCode == 200) {
                             mVerifiedItems.add(result);
-                            mListener.onMediaAdded(MediaSourceWPImages.this, resultList);
+
+                            if ((existingItems.size() - mVerifiedItems.size()) % 3 == 0) {
+                                mListener.onMediaAdded(MediaSourceWPImages.this, resultList);
+                            }
                         }
 
-                        if (callLoaded) {
+                        if (existingItems.indexOf(mediaItem) == existingItems.size() - 1) {
                             mListener.onMediaLoaded(true);
                         }
                     }

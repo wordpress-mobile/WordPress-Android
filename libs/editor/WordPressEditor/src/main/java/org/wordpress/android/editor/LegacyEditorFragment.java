@@ -39,6 +39,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -90,7 +91,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     private ActionBarActivity mActivity;
     private View mRootView;
     private WPEditText mContentEditText;
-    private Button mAddPictureButton;
     private EditText mTitleEditText;
     private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
@@ -197,11 +197,11 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         mBquoteToggleButton = (ToggleButton) rootView.findViewById(R.id.bquote);
         mUnderlineToggleButton = (ToggleButton) rootView.findViewById(R.id.underline);
         mStrikeToggleButton = (ToggleButton) rootView.findViewById(R.id.strike);
-        mAddPictureButton = (Button) rootView.findViewById(R.id.addPictureButton);
+        Button addPictureButton = (Button) rootView.findViewById(R.id.addPictureButton);
         Button linkButton = (Button) rootView.findViewById(R.id.link);
         Button moreButton = (Button) rootView.findViewById(R.id.more);
 
-        registerForContextMenu(mAddPictureButton);
+        registerForContextMenu(addPictureButton);
         mContentEditText = (WPEditText) rootView.findViewById(R.id.post_content);
         mContentEditText.setOnSelectionChangedListener(this);
         mContentEditText.setOnTouchListener(this);
@@ -217,7 +217,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 }
             }
         });
-        mAddPictureButton.setOnClickListener(mFormatBarButtonClickListener);
+        addPictureButton.setOnClickListener(mFormatBarButtonClickListener);
         mBoldToggleButton.setOnClickListener(mFormatBarButtonClickListener);
         linkButton.setOnClickListener(mFormatBarButtonClickListener);
         mEmToggleButton.setOnClickListener(mFormatBarButtonClickListener);
@@ -476,7 +476,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     private WPEditImageSpan createWPEditImageSpan(Context context, MediaFile mediaFile) {
-        if (mediaFile.getFileURL() == null) {
+        if (!URLUtil.isNetworkUrl(mediaFile.getFileURL())) {
             return createWPEditImageSpanLocal(context, mediaFile);
         } else {
             return createWPEditImageSpanRemote(context, mediaFile);
@@ -982,7 +982,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                             imageSpan.setNetworkImageLoaded(true);
                             imageSpan.setPosition(spanStart, spanEnd);
                             s.removeSpan(is);
-                            s.setSpan(imageSpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            s.setSpan(imageSpan, spanStart, spanEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             break;
                         }
                     }
@@ -1007,6 +1007,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     public void addMediaFile(final MediaFile mediaFile, final String imageUrl, final ImageLoader imageLoader, final int start, final int end) {
+        mediaFile.setFileURL(imageUrl);
+        mediaFile.setFilePath(imageUrl);
         final WPEditImageSpan imageSpan = createWPEditImageSpan(mActivity, mediaFile);
         mEditorFragmentListener.saveMediaFile(mediaFile);
         imageSpan.setMediaFile(mediaFile);
@@ -1058,7 +1060,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 s.insert(selectionEnd + 1, "\n\n");
 
                 // Fetch and replace the WPImageSpan if it's a remote media
-                if (mediaFile.getFileURL() != null && imageLoader != null) {
+                if (imageLoader != null) {
                     loadWPImageSpanThumbnail(mediaFile, imageUrl, imageLoader);
                 }
             }
