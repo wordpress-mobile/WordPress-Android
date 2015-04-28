@@ -91,6 +91,6 @@
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/margin_extra_large"
             android:layout_marginRight="@dimen/margin_extra_large"
-            android:background="@color/grey_light" />
+            android:background="@color/grey_lighten_30" />
     </LinearLayout>
 </LinearLayout>
