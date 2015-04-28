@@ -1037,11 +1037,12 @@ public class ReaderPostListFragment extends Fragment
         // determine whether to show the "new posts" bar - when this is shown, the newly
         // downloaded posts aren't displayed until the user taps the bar - only appears
         // when there are new posts in a followed tag and the user has scrolled the list
+        // beyond the first post
         if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW
                 && event.getAction() == UpdateAction.REQUEST_NEWER
                 && getPostListType() == ReaderPostListType.TAG_FOLLOWED
                 && !isPostAdapterEmpty()
-                && mRecyclerView.canScrollUp()) {
+                && !isFirstPostVisible()) {
             showNewPostsBar();
         } else if (event.getResult().isNewOrChanged()) {
             refreshPosts();
@@ -1049,6 +1050,21 @@ public class ReaderPostListFragment extends Fragment
             boolean requestFailed = (event.getResult() == ReaderActions.UpdateResult.FAILED);
             setEmptyTitleAndDescription(requestFailed);
         }
+    }
+
+    /*
+     * returns true if the first post is still visible in the RecyclerView - will return
+     * false if the first post is scrolled out of view, or if the list is empty
+     */
+    private boolean isFirstPostVisible() {
+        if (!isAdded()
+                || mRecyclerView == null
+                || mRecyclerView.getLayoutManager() == null) {
+            return false;
+        }
+
+        View child = mRecyclerView.getLayoutManager().getChildAt(0);
+        return (child != null && mRecyclerView.getLayoutManager().getPosition(child) == 0);
     }
 
     /*
