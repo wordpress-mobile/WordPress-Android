@@ -10,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -26,7 +28,6 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -68,8 +69,6 @@ import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.helpers.WPUnderlineSpan;
 import org.wordpress.android.util.widgets.WPEditText;
 
-import java.util.ArrayList;
-
 public class LegacyEditorFragment extends EditorFragmentAbstract implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
     public static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
@@ -78,6 +77,10 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
     private static final int MIN_THUMBNAIL_WIDTH = 200;
     private static final int CONTENT_ANIMATION_DURATION = 250;
+    private static final String KEY_IMAGE_SPANS = "image-spans";
+    private static final String KEY_START = "start";
+    private static final String KEY_END = "end";
+    private static final String KEY_CONTENT = "content";
     private static final String TAG_FORMAT_BAR_BUTTON_STRONG = "strong";
     private static final String TAG_FORMAT_BAR_BUTTON_EM = "em";
     private static final String TAG_FORMAT_BAR_BUTTON_UNDERLINE = "u";
@@ -142,7 +145,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     @Override
     public void setContent(CharSequence text) {
         mContent = text;
-        Log.e("", "xyz setContent(text=" + text + ")");
         if (mContentEditText != null) {
             mContentEditText.setText(text);
             mContentEditText.setSelection(mSelectionStart, mSelectionEnd);
@@ -180,31 +182,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 return false;
             }
         });
-        mContentEditText = (WPEditText) rootView.findViewById(R.id.post_content);
-
-        Parcelable[] spans = null;
-        if (savedInstanceState != null) {
-            spans = savedInstanceState.getParcelableArray("image-spans");
-
-            mContent = savedInstanceState.getString("content");
-            mContentEditText.setText(mContent);
-            mContentEditText.setSelection(savedInstanceState.getInt("start"), savedInstanceState.getInt("end"));
-
-            if (spans != null && spans.length > 0) {
-                Log.e("", "xyz onCreateView(mContent=" + mContent + ", start;end=" + mContentEditText.getSelectionStart() + ";" + mContentEditText.getSelectionEnd() + "), spans=" + spans.length);
-                for (Parcelable s : spans) {
-                    WPImageSpan editSpan = (WPImageSpan)s;
-                    addMediaFile(editSpan.getMediaFile(), editSpan.getMediaFile().getFilePath(), mImageLoader, editSpan.getStartPosition(), editSpan.getEndPosition());
-//                    Log.e("", "xyz start;end=" + editSpan.getStartPosition() + ";" + editSpan.getEndPosition() + ")");
-//                    WPImageSpan newSpan = createWPEditImageSpan(getActivity(), editSpan.getMediaFile());
-//                    newSpan.setMediaFile(editSpan.getMediaFile());
-//                    newSpan.setPosition(editSpan.getStartPosition(), editSpan.getEndPosition());
-//                    Editable editable = mContentEditText.getText();
-//                    editable.insert(newSpan.getEndPosition(), " ");
-//                    mContentEditText.getText().setSpan(newSpan, newSpan.getStartPosition(), newSpan.getEndPosition() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-            }
-        }
 
         mPostContentLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_content_wrapper);
         mPostSettingsLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_settings_wrapper);
@@ -225,6 +202,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         Button moreButton = (Button) rootView.findViewById(R.id.more);
 
         registerForContextMenu(mAddPictureButton);
+        mContentEditText = (WPEditText) rootView.findViewById(R.id.post_content);
         mContentEditText.setOnSelectionChangedListener(this);
         mContentEditText.setOnTouchListener(this);
         mContentEditText.addTextChangedListener(this);
@@ -248,6 +226,23 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         mBquoteToggleButton.setOnClickListener(mFormatBarButtonClickListener);
         moreButton.setOnClickListener(mFormatBarButtonClickListener);
         mEditorFragmentListener.onEditorFragmentInitialized();
+
+        Parcelable[] spans = null;
+        if (savedInstanceState != null) {
+            spans = savedInstanceState.getParcelableArray(KEY_IMAGE_SPANS);
+
+            mContent = savedInstanceState.getString(KEY_CONTENT);
+            mContentEditText.setText(mContent);
+            mContentEditText.setSelection(savedInstanceState.getInt(KEY_START), savedInstanceState.getInt(KEY_END));
+
+            if (spans != null && spans.length > 0) {
+                for (Parcelable s : spans) {
+                    WPImageSpan editSpan = (WPImageSpan)s;
+                    addMediaFile(editSpan.getMediaFile(), editSpan.getMediaFile().getFilePath(), mImageLoader, editSpan.getStartPosition(), editSpan.getEndPosition());
+                }
+            }
+        }
+
         return rootView;
     }
 
@@ -1003,22 +998,23 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         WPImageSpan[] spans = mContentEditText.getText().getSpans(0, mContentEditText.getText().length(), WPEditImageSpan.class);
 
         if (spans != null && spans.length > 0) {
-            outState.putParcelableArray("image-spans", spans);
+            outState.putParcelableArray(KEY_IMAGE_SPANS, spans);
         }
 
-        outState.putInt("start", mContentEditText.getSelectionStart());
-        outState.putInt("end", mContentEditText.getSelectionEnd());
-        outState.putString("content", mContentEditText.getText().toString());
+        outState.putInt(KEY_START, mContentEditText.getSelectionStart());
+        outState.putInt(KEY_END, mContentEditText.getSelectionEnd());
+        outState.putString(KEY_CONTENT, mContentEditText.getText().toString());
     }
 
     public void addMediaFile(final MediaFile mediaFile, final String imageUrl, final ImageLoader imageLoader, final int start, final int end) {
-        mActivity.runOnUiThread(new Runnable() {
+        final WPEditImageSpan imageSpan = createWPEditImageSpan(mActivity, mediaFile);
+        mEditorFragmentListener.saveMediaFile(mediaFile);
+        imageSpan.setMediaFile(mediaFile);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        final Runnable r = new Runnable() {
             @Override
             public void run() {
-                WPEditImageSpan imageSpan = createWPEditImageSpan(mActivity, mediaFile);
-
-                Log.e("", "xyz appendMediaFile(mContent=" + mContent + ", start;end=" + start + ";" + end + ")");
-
                 // Insert the WPImageSpan in the content field
                 int selectionStart = start;
                 int selectionEnd = end;
@@ -1055,26 +1051,19 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                     selectionEnd = selectionEnd + 1;
                 }
 
-                if (mediaFile.getFileURL() == null) {
-                    mediaFile.setFileURL(imageUrl);
-                }
-
-                imageSpan.setMediaFile(mediaFile);
-
                 s.insert(selectionStart, " ");
                 s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
                 s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 s.insert(selectionEnd + 1, "\n\n");
 
-                mEditorFragmentListener.saveMediaFile(mediaFile);
-
                 // Fetch and replace the WPImageSpan if it's a remote media
                 if (mediaFile.getFileURL() != null && imageLoader != null) {
                     loadWPImageSpanThumbnail(mediaFile, imageUrl, imageLoader);
                 }
             }
-        });
+        };
+        handler.postDelayed(r, 1);
     }
 
     @Override

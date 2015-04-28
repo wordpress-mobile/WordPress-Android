@@ -26,7 +26,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -96,6 +95,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
+    public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
 
     private static final String ANALYTIC_PROP_NUM_LOCAL_PHOTOS_ADDED = "number_of_local_photos_added";
     private static final String ANALYTIC_PROP_NUM_WP_PHOTOS_ADDED = "number_of_wp_library_photos_added";
@@ -201,7 +201,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                     mPost = null;
                 }
             }
-            mEditorFragment = (EditorFragmentAbstract) fragmentManager.getFragment(savedInstanceState, "test-fragment");
+            mEditorFragment = (EditorFragmentAbstract) fragmentManager.getFragment(savedInstanceState, STATE_KEY_EDITOR_FRAGMENT);
         }
         test = mEditorFragment == null;
 
@@ -309,7 +309,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
 
-        getFragmentManager().putFragment(outState, "test-fragment", mEditorFragment);
+        getFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
     }
 
     @Override
@@ -684,7 +684,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         @Override
         protected void onPostExecute(Spanned spanned) {
             if (spanned != null) {
-                Log.e("", "xyz LoadPostContentTask#onPostExecute(spanned=" + spanned + ")");
                 mEditorFragment.setContent(spanned);
             }
         }
