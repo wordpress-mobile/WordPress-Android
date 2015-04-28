@@ -77,7 +77,7 @@
                 android:contentDescription="@string/me_btn_support"
                 android:src="@drawable/me_icon_support" />
 
-            <org.wordpress.android.widgets.WPTextView
+            <org.wordpress.android.widgets.WPAutoResizeTextView
                 android:id="@+id/me_support_text_view"
                 style="@style/MeListRowTextView"
                 android:text="@string/me_btn_support" />
@@ -92,7 +92,7 @@
                 android:contentDescription="@string/me_btn_login_logout"
                 android:src="@drawable/me_icon_login_logout" />
 
-            <org.wordpress.android.widgets.WPTextView
+            <org.wordpress.android.widgets.WPAutoResizeTextView
                 android:id="@+id/me_login_logout_text_view"
                 style="@style/MeListRowTextView"
                 tools:text="@string/me_btn_login_logout" />
