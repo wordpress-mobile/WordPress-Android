@@ -1034,33 +1034,14 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        // determine whether we want to show the "new posts" bar - when this is shown, the
-        // newly downloaded posts aren't displayed until the user taps the new posts bar
-        boolean showNewPostsBar;
-        if (isPostAdapterEmpty()) {
-            // post list is empty, so show the new posts right away
-            showNewPostsBar = false;
-        } else if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW
+        // determine whether to show the "new posts" bar - when this is shown, the newly
+        // downloaded posts aren't displayed until the user taps the bar - only appears
+        // when there are new posts in a followed tag and the user has scrolled the list
+        if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW
                 && event.getAction() == UpdateAction.REQUEST_NEWER
-                && getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            // always show new posts bar if user has scrolled the post list, otherwise only
-            // show it if these posts will actually appear at the top of the list - we don't
-            // want to show it if the new posts are older ones since the user expects to see
-            // the new posts at the top of the list. we do this by getting the id of the
-            // newest post in the database (which will contain the newly downloaded posts)
-            // and comparing it to the id of the first post in the adapter
-            if (mRecyclerView.canScrollUp()) {
-                showNewPostsBar = true;
-            } else {
-                long newestPostId = ReaderPostTable.getNewestPostIdWithTag(getCurrentTag());
-                ReaderPost post = getPostAdapter().getItem(0);
-                showNewPostsBar = (post != null && post.postId != newestPostId);
-            }
-        } else {
-            showNewPostsBar = false;
-        }
-
-        if (showNewPostsBar) {
+                && getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                && !isPostAdapterEmpty()
+                && mRecyclerView.canScrollUp()) {
             showNewPostsBar();
         } else if (event.getResult().isNewOrChanged()) {
             refreshPosts();
