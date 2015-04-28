@@ -1141,6 +1141,7 @@ public class ReaderPostListFragment extends Fragment
 
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
+        checkSwipeToRefresh();
     }
 
     private void hideNewPostsBar() {
@@ -1155,8 +1156,11 @@ public class ReaderPostListFragment extends Fragment
             public void onAnimationStart(Animation animation) { }
             @Override
             public void onAnimationEnd(Animation animation) {
-                mNewPostsBar.setVisibility(View.GONE);
-                mIsAnimatingOutNewPostsBar = false;
+                if (isAdded()) {
+                    mNewPostsBar.setVisibility(View.GONE);
+                    mIsAnimatingOutNewPostsBar = false;
+                    checkSwipeToRefresh();
+                }
             }
             @Override
             public void onAnimationRepeat(Animation animation) { }
