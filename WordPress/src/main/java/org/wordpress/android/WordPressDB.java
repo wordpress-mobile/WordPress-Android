@@ -442,6 +442,10 @@ public class WordPressDB {
         return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE + " WHERE dotcomFlag = 1", null);
     }
 
+    public int getNumBlogs() {
+        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE, null);
+    }
+
     // Removes stored DotCom credentials. As of March 2015 only the OAuth token is used
     private void removeDotComCredentials() {
         // First clear out the password for all WP.com sites
