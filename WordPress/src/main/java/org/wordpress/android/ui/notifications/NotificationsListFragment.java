@@ -28,6 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
@@ -47,7 +48,6 @@ public class NotificationsListFragment extends Fragment
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
-    private static final int NOTE_DETAIL_REQUEST_CODE = 0;
 
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
 
@@ -197,7 +197,7 @@ public class NotificationsListFragment extends Fragment
                 activity,
                 R.anim.reader_activity_slide_in,
                 R.anim.do_nothing);
-        ActivityCompat.startActivityForResult(activity, detailIntent, NOTE_DETAIL_REQUEST_CODE, options.toBundle());
+        ActivityCompat.startActivityForResult(activity, detailIntent, RequestCodes.NOTE_DETAIL, options.toBundle());
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
@@ -295,7 +295,7 @@ public class NotificationsListFragment extends Fragment
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == NOTE_DETAIL_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == RequestCodes.NOTE_DETAIL && resultCode == Activity.RESULT_OK && data != null) {
             if (SimperiumUtils.getNotesBucket() == null) return;
 
             try {
