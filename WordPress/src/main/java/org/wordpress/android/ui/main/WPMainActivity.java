@@ -252,6 +252,12 @@ public class WPMainActivity extends Activity
                     ActivityLauncher.showSignInForResult(this);
                 }
                 break;
+            case RequestCodes.NOTE_DETAIL:
+                // Pass activity result on to the notifications list fragment
+                if (getNotificationListFragment() != null) {
+                    getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
+                }
+                break;
             case RequestCodes.SITE_PICKER:
                 if (resultCode == RESULT_OK && data != null) {
                     int localId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, 0);
