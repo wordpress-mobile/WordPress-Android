@@ -4,10 +4,9 @@
              android:layout_height="match_parent"
              tools:context="org.wordpress.android.editor.EditorFragment">
 
-    <org.wordpress.android.editor.EditorWebView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/webview"/>
+    <include
+        layout="@layout/editor_webview"
+        android:id="@+id/webview" />
 
     <LinearLayout
         android:id="@+id/format_bar"

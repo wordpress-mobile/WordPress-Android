@@ -4,17 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.ConsoleMessage;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ToggleButton;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -49,7 +43,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private String mParamContent;
 
     private Activity mActivity;
-    private EditorWebView mWebView;
+    private EditorWebViewAbstract mWebView;
 
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
 
@@ -78,8 +72,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_editor, container, false);
-        mWebView = (EditorWebView) view.findViewById(R.id.webview);
-        initWebView();
+        mWebView = (EditorWebViewAbstract) view.findViewById(R.id.webview);
+        initJsEditor();
 
         ToggleButton mediaButton = (ToggleButton) view.findViewById(R.id.format_bar_button_media);
         mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_MEDIA, mediaButton);
@@ -117,30 +111,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         super.onDetach();
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private void initWebView() {
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setDefaultTextEncodingName("utf-8");
-        mWebView.setWebViewClient(new WebViewClient() {
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                AppLog.e(T.EDITOR, description);
-            }
-        });
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public boolean onConsoleMessage(@NonNull ConsoleMessage cm) {
-                AppLog.d(T.EDITOR, cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
-                return true;
-            }
-
-            @Override
-            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                AppLog.d(T.EDITOR, message);
-                return true;
-            }
-        });
-
+    private void initJsEditor() {
         String htmlEditor = Utils.getHtmlFromFile(mActivity, "android-editor.html");
 
         mWebView.addJavascriptInterface(new JsCallbackReceiver(this), JS_CALLBACK_HANDLER);

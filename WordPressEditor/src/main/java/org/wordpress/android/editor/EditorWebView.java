@@ -1,30 +1,23 @@
 package org.wordpress.android.editor;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
-import android.webkit.WebView;
 
-public class EditorWebView extends WebView {
-
-    public EditorWebView(Context context) {
-        super(context);
-    }
+public class EditorWebView extends EditorWebViewAbstract {
 
     public EditorWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public EditorWebView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-    @Override
-    public boolean onCheckIsTextEditor() {
-        return true;
-    }
-
+    @SuppressLint("NewApi")
     public void execJavaScriptFromString(String javaScript) {
-        this.loadUrl("javascript:" + javaScript);
+        if (Build.VERSION.SDK_INT >= 19) {
+            this.evaluateJavascript(javaScript, null);
+        } else {
+            this.loadUrl("javascript:" + javaScript);
+        }
     }
 
 }
