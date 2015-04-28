@@ -98,6 +98,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
+    public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
 
     // Context menu positioning
     private static final int SELECT_PHOTO_MENU_POSITION = 0;
@@ -212,7 +213,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                     mPost = null;
                 }
             }
-            mEditorFragment = (EditorFragmentAbstract) fragmentManager.getFragment(savedInstanceState, "test-fragment");
+            mEditorFragment = (EditorFragmentAbstract) fragmentManager.getFragment(savedInstanceState, STATE_KEY_EDITOR_FRAGMENT);
         }
         test = mEditorFragment == null;
 
@@ -320,7 +321,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
 
-        getFragmentManager().putFragment(outState, "test-fragment", mEditorFragment);
+        getFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
     }
 
     @Override
@@ -755,7 +756,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         @Override
         protected void onPostExecute(Spanned spanned) {
             if (spanned != null) {
-                AppLog.d(T.EDITOR, "xyz LoadPostContentTask#onPostExecute(spanned=" + spanned + ")");
                 mEditorFragment.setContent(spanned);
             }
         }
