@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -17,6 +18,8 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
+import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -138,8 +141,33 @@ public class StatsService extends Service {
         }
     }
 
+    // Check if we already have Stats
+    private String getCachedStats(final String blogId, final StatsTimeframe timeframe, final String date, final StatsEndpointsEnum sectionToUpdate,
+                                  final int maxResultsRequested, final int pageRequested) {
+        int parsedBlogID = Integer.parseInt(blogId);
+        int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
+        String result = StatsTable.getStats(this, localTableBlogId, timeframe, date, sectionToUpdate, -1, -1);
+        return result;
+    }
+
     private void startTasks(final String blogId, final StatsTimeframe timeframe, final String date, final StatsEndpointsEnum sectionToUpdate,
                             final int maxResultsRequested, final int pageRequested) {
+
+        String cachedStats = getCachedStats(blogId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
+
+        if (cachedStats != null) {
+            AppLog.d(AppLog.T.STATS, "Stats read from the DB");
+            Serializable mResponseObjectModel;
+                try {
+                    JSONObject response = new JSONObject(cachedStats);
+                    mResponseObjectModel = StatsUtils.parseResponse(sectionToUpdate, blogId, response);
+                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(sectionToUpdate, blogId, timeframe, date, mResponseObjectModel));
+                    checkAllRequestsFinished();
+                    return;
+                } catch (JSONException e) {
+                    AppLog.e(AppLog.T.STATS, e);
+                }
+        }
 
         final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
 
@@ -305,6 +333,11 @@ public class StatsService extends Service {
                         try {
                             //AppLog.d(T.STATS, response.toString());
                             mResponseObjectModel = StatsUtils.parseResponse(mEndpointName, mRequestBlogId, response);
+
+                            int parsedBlogID = Integer.parseInt(mRequestBlogId);
+                            int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
+                            StatsTable.insertStats(StatsService.this, localTableBlogId, mTimeframe, mDate, mEndpointName, -1, -1, // TODO set the correct number here
+                                    response.toString(), System.currentTimeMillis());
                         } catch (JSONException e) {
                             AppLog.e(AppLog.T.STATS, e);
                         }
