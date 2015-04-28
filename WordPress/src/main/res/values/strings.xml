@@ -322,6 +322,7 @@
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
     <string name="select_from_media_library">Select from media library</string>
+    <string name="select_from_new_picker">Multi-select with the new picker</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
