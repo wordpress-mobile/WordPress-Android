@@ -149,6 +149,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     private boolean mIsNewPost;
 
+    private boolean test;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,6 +163,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        FragmentManager fragmentManager = getFragmentManager();
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
@@ -200,13 +203,21 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 showErrorAndFinish(R.string.post_not_found);
                 return;
             }
-        } else if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
-            try {
-                mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
-                mOriginalPost = (Post) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
-            } catch (ClassCastException e) {
-                mPost = null;
+        } else {
+            if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
+                try {
+                    mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
+                    mOriginalPost = (Post) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
+                } catch (ClassCastException e) {
+                    mPost = null;
+                }
             }
+            mEditorFragment = (EditorFragmentAbstract) fragmentManager.getFragment(savedInstanceState, "test-fragment");
+        }
+        test = mEditorFragment == null;
+
+        if (!test) {
+            mEditorFragment.setImageLoader(WordPress.imageLoader);
         }
 
         // Ensure we have a valid blog
@@ -227,7 +238,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
         setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()));
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (WPViewPager) findViewById(R.id.pager);
@@ -308,6 +319,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         savePost(true);
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
+
+        getFragmentManager().putFragment(outState, "test-fragment", mEditorFragment);
     }
 
     @Override
@@ -742,6 +755,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         @Override
         protected void onPostExecute(Spanned spanned) {
             if (spanned != null) {
+                AppLog.d(T.EDITOR, "xyz LoadPostContentTask#onPostExecute(spanned=" + spanned + ")");
                 mEditorFragment.setContent(spanned);
             }
         }
@@ -765,7 +779,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         // Set post title and content
         Post post = getPost();
         if (post != null) {
-            if (!TextUtils.isEmpty(post.getContent())) {
+            if (!TextUtils.isEmpty(post.getContent()) && test) {
+                test = false;
                 if (post.isLocalDraft()) {
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -1081,7 +1096,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
         if (data != null || ((requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
                 requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
-            Bundle extras;
             switch (requestCode) {
                 case MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
                     if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_MEDIA_SELECTED) {
