@@ -255,7 +255,9 @@ public class WPMainActivity extends Activity
                 break;
             case RequestCodes.NOTE_DETAIL:
                 // Pass activity result on to the notifications list fragment
-                getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
+                if (getNotificationListFragment() != null) {
+                    getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
+                }
                 break;
             case RequestCodes.SITE_PICKER:
                 if (resultCode == RESULT_OK && data != null) {
