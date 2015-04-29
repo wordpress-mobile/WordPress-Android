@@ -355,7 +355,6 @@ public class ReaderPostListFragment extends Fragment
         mNewPostsBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hideNewPostsBar();
                 mRecyclerView.scrollToPosition(0);
                 refreshPosts();
                 if (hasFragmentToolbar()) {
@@ -987,6 +986,7 @@ public class ReaderPostListFragment extends Fragment
      * refresh adapter so latest posts appear
      */
     private void refreshPosts() {
+        hideNewPostsBar();
         if (hasPostAdapter()) {
             getPostAdapter().refresh();
         }
