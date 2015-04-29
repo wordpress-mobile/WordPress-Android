@@ -344,19 +344,13 @@ public class CommentTable {
     }
 
     /**
-     * Make sure that localdb only contains valid comments. That is, comment that is not present
-     * in the server (deleted permanently) should be removed from the localdb.
+     * Make sure that localdb only contains valid comments that are present in the remote server.
      *
      * @param localBlogId
      * @param remoteComments
      */
     public static void synchronizeDb(int localBlogId, CommentList remoteComments) {
-        for (Comment comment : CommentTable.getCommentsForBlog(localBlogId)) {
-            if (!remoteComments.contains(comment)) {
-                CommentTable.deleteComment(localBlogId, comment.commentID);
-            }
-        }
-
+        CommentTable.deleteCommentsForBlog(localBlogId);
         CommentTable.saveComments(localBlogId, remoteComments);
     }
 }
