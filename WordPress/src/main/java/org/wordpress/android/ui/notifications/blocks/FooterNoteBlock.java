@@ -56,7 +56,7 @@ public class FooterNoteBlock extends NoteBlock {
     @Override
     public Spannable getNoteText() {
         return NotificationsUtils.getSpannableContentForRanges(getNoteData(), null,
-                getOnNoteBlockTextClickListener(), false, true);
+                getOnNoteBlockTextClickListener(), true, true);
     }
 
     public Object getViewHolder(View view) {
