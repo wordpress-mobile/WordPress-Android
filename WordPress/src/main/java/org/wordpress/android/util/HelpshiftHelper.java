@@ -15,6 +15,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
