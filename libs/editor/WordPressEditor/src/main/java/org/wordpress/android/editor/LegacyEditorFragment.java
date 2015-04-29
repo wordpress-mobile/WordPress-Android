@@ -227,18 +227,19 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         moreButton.setOnClickListener(mFormatBarButtonClickListener);
         mEditorFragmentListener.onEditorFragmentInitialized();
 
-        Parcelable[] spans = null;
         if (savedInstanceState != null) {
-            spans = savedInstanceState.getParcelableArray(KEY_IMAGE_SPANS);
+            Parcelable[] spans = savedInstanceState.getParcelableArray(KEY_IMAGE_SPANS);
 
-            mContent = savedInstanceState.getString(KEY_CONTENT);
+            mContent = savedInstanceState.getString(KEY_CONTENT, "");
             mContentEditText.setText(mContent);
-            mContentEditText.setSelection(savedInstanceState.getInt(KEY_START), savedInstanceState.getInt(KEY_END));
+            mContentEditText.setSelection(savedInstanceState.getInt(KEY_START, 0),
+                                          savedInstanceState.getInt(KEY_END, 0));
 
             if (spans != null && spans.length > 0) {
                 for (Parcelable s : spans) {
                     WPImageSpan editSpan = (WPImageSpan)s;
-                    addMediaFile(editSpan.getMediaFile(), editSpan.getMediaFile().getFilePath(), mImageLoader, editSpan.getStartPosition(), editSpan.getEndPosition());
+                    addMediaFile(editSpan.getMediaFile(), editSpan.getMediaFile().getFilePath(),
+                            mImageLoader, editSpan.getStartPosition(), editSpan.getEndPosition());
                 }
             }
         }
@@ -1060,7 +1061,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 s.insert(selectionEnd + 1, "\n\n");
 
                 // Fetch and replace the WPImageSpan if it's a remote media
-                if (imageLoader != null) {
+                if (imageLoader != null && URLUtil.isNetworkUrl(imageUrl)) {
                     loadWPImageSpanThumbnail(mediaFile, imageUrl, imageLoader);
                 }
             }
