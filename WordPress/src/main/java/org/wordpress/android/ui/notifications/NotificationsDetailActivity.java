@@ -167,7 +167,6 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
             Intent intent = new Intent(this, StatsViewAllActivity.class);
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
             intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
-            intent.putExtra(StatsAbstractFragment.ARGS_START_DATE, "");
             intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableSiteId);
             startActivity(intent);
         } else {
@@ -181,13 +180,10 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         WPWebViewActivity.openURL(this, url);
     }
 
-    public void showCommentDetailForNote(Note note) {
-        if (isFinishing() || note == null) return;
+    public void showReaderCommentList(long blogId, long postId, long commentId) {
+        if (isFinishing()) return;
 
-        Intent intent = new Intent(this, CommentDetailActivity.class);
-        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_IS_REMOTE, true);
-        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_NOTE_ID, note.getId());
-        startActivity(intent);
+        ReaderActivityLauncher.showReaderComments(this, blogId, postId, commentId);
     }
 
     @Override

@@ -33,6 +33,7 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -190,8 +191,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
             if (mNote.getParentCommentId() > 0 || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
-                // show comment detail
-                detailActivity.showCommentDetailForNote(mNote);
+                // show comments list for the post
+                detailActivity.showReaderCommentList(mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId());
             } else if (mNote.isFollowType()) {
                 detailActivity.showBlogPreviewActivity(mNote.getSiteId());
             } else {
@@ -309,6 +310,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             noteBlock = new FooterNoteBlock(noteObject, mOnNoteBlockTextClickListener);
                             ((FooterNoteBlock)noteBlock).setClickableSpan(
                                     JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()));
+
+                            // Request the post for the reader tables, so loading reader activities will work.
+                            ReaderPostActions.requestPost(mNote.getSiteId(), mNote.getPostId(), null);
                         } else {
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }
@@ -365,7 +369,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                     mNote.getCommentReplyId() == JSONUtils.queryJSON(blockObject, "ranges[1].id", 0));
         } else if (mNote.isFollowType() || mNote.isLikeType() ||
                 mNote.isCommentLikeType() || mNote.isReblogType()) {
-            // User list notifications have a footer if they have 10 or more users in the body
+            // Like and Follow notifications have a footer if they have 10 or more users in the body
             // The last block will not have a type, so we can use that to determine if it is the footer
             return JSONUtils.queryJSON(blockObject, "type", null) == null;
         }
