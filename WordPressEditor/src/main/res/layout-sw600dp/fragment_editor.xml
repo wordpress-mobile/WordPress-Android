@@ -1,0 +1,129 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="org.wordpress.android.editor.EditorFragment">
+
+    <include
+        layout="@layout/editor_webview"
+        android:id="@+id/webview" />
+
+    <LinearLayout
+        android:id="@+id/format_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/format_bar_height"
+        android:layout_gravity="bottom"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/format_bar_horizontal_divider"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/format_bar_horizontal_divider_height"
+            style="@style/Divider"/>
+
+        <LinearLayout
+            android:id="@+id/format_bar_buttons"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/format_bar_height"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded">
+
+            <LinearLayout
+                style="@style/FormatBarTabletGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent">
+
+                <ToggleButton
+                    android:id="@+id/format_bar_button_media"
+                    style="@style/FormatBarButtonTablet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/format_bar_button_media_selector"/>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/FormatBarTabletGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent">
+
+                <ToggleButton
+                    android:id="@+id/format_bar_button_bold"
+                    style="@style/FormatBarButtonTablet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/format_bar_button_bold_selector"/>
+
+                <ToggleButton
+                    android:id="@+id/format_bar_button_italic"
+                    style="@style/FormatBarButtonTablet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/format_bar_button_italic_selector"/>
+
+                <ToggleButton
+                    android:id="@+id/format_bar_button_strikethrough"
+                    style="@style/FormatBarButtonTablet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/format_bar_button_strikethrough_selector"/>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/FormatBarTabletGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent">
+
+                <ToggleButton
+                    android:id="@+id/format_bar_button_link"
+                    style="@style/FormatBarButtonTablet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/format_bar_button_link_selector"/>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/FormatBarTabletGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent">
+
+                <ToggleButton
+                    android:id="@+id/format_bar_button_ul"
+                    style="@style/FormatBarButtonTablet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/format_bar_button_ul_selector"/>
+
+                <ToggleButton
+                    android:id="@+id/format_bar_button_ol"
+                    style="@style/FormatBarButtonTablet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/format_bar_button_ol_selector"/>
+
+                <ToggleButton
+                    android:id="@+id/format_bar_button_quote"
+                    style="@style/FormatBarButtonTablet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/format_bar_button_quote_selector"/>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/FormatBarTabletGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent">
+
+                <ToggleButton
+                    android:id="@+id/format_bar_button_html"
+                    style="@style/FormatBarButtonTablet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/format_bar_button_html_selector"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

@@ -14,6 +14,11 @@
         <item name="android:textOff">""</item>
     </style>
 
+    <style name="FormatBarButtonTablet" parent="FormatBarButton">
+        <item name="android:layout_marginRight">@dimen/format_bar_button_margin_tablet</item>
+        <item name="android:layout_marginLeft">@dimen/format_bar_button_margin_tablet</item>
+    </style>
+
     <style name="FormatBarScrollViewButton" parent="FormatBarButton">
         <item name="android:layout_marginRight">@dimen/format_bar_button_right_margin</item>
     </style>
@@ -25,5 +30,10 @@
     <style name="Divider">
         <item name="android:background">@color/wp_gray</item>
         <item name="android:alpha">0.5</item>
+    </style>
+
+    <style name="FormatBarTabletGroup">
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
     </style>
 </resources>
