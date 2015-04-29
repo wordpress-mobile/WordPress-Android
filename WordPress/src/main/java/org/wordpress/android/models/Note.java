@@ -35,6 +35,7 @@ public class Note extends Syncable {
     private static final String NOTE_COMMENT_TYPE = "comment";
     private static final String NOTE_MATCHER_TYPE = "automattcher";
     private static final String NOTE_FOLLOW_TYPE = "follow";
+    private static final String NOTE_LIKE_TYPE = "like";
 
     // JSON action keys
     private static final String ACTION_KEY_REPLY = "replyto-comment";
@@ -114,6 +115,10 @@ public class Note extends Syncable {
 
     public Boolean isFollowType() {
         return isType(NOTE_FOLLOW_TYPE);
+    }
+
+    public Boolean isLikeType() {
+        return isType(NOTE_LIKE_TYPE);
     }
 
     public String getLocalStatus() {

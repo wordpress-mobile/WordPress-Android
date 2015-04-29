@@ -30,7 +30,6 @@ import org.wordpress.android.ui.notifications.blocks.FooterNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.HeaderNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
-import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -309,7 +308,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         } else if (isFooterBlock(noteObject)) {
                             noteBlock = new FooterNoteBlock(noteObject, mOnNoteBlockTextClickListener);
                             ((FooterNoteBlock)noteBlock).setClickableSpan(
-                                    JSONUtils.queryJSON(noteObject, "body[last].ranges[1]", new JSONObject()));
+                                    JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()));
                         } else {
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }
@@ -360,8 +359,14 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         if (mNote == null || blockObject == null) return false;
 
         if (mNote.isCommentType()) {
-            return (TextUtils.isEmpty(JSONUtils.queryJSON(blockObject, "type", "")) &&
+            // Check if this is a comment notification that has been replied to
+            // The block will not have a type, and its id will match the comment reply id in the Note.
+            return (JSONUtils.queryJSON(blockObject, "type", null) == null &&
                     mNote.getCommentReplyId() == JSONUtils.queryJSON(blockObject, "ranges[1].id", 0));
+        } else if (mNote.isFollowType() || mNote.isLikeType()) {
+            // Like and Follow notifications have a footer if they have 10 or more users in the body
+            // The last block will not have a type, so we can use that to determine if it is the footer
+            return JSONUtils.queryJSON(blockObject, "type", null) == null;
         }
 
         return false;

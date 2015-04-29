@@ -88,7 +88,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                         getNoteData().optJSONObject("comment_text"),
                         noteBlockHolder.commentTextView,
                         getOnNoteBlockTextClickListener(),
-                        true)
+                        true,
+                        false)
         );
 
         // Change display based on comment status and type:

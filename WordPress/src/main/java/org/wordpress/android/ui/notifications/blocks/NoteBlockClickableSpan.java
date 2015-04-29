@@ -29,15 +29,17 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private int[] mIndices;
     private boolean mPressed;
     private boolean mShouldLink;
+    private boolean mIsFooter;
     private Context mContext;
     private int mTextColor;
 
     private final JSONObject mBlockData;
 
-    public NoteBlockClickableSpan(Context context, JSONObject idData, boolean shouldLink) {
-        mBlockData = idData;
-        mShouldLink = shouldLink;
+    public NoteBlockClickableSpan(Context context, JSONObject blockData, boolean shouldLink, boolean isFooter) {
         mContext = context;
+        mBlockData = blockData;
+        mShouldLink = shouldLink;
+        mIsFooter = isFooter;
         mTextColor = context.getResources().getColor(R.color.grey_dark);
         processRangeData();
     }
@@ -57,7 +59,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
                     (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
 
             // Apply grey color to some types
-            if (getRangeType() == NoteBlockRangeType.BLOCKQUOTE || getRangeType() == NoteBlockRangeType.POST) {
+            if (mIsFooter || getRangeType() == NoteBlockRangeType.BLOCKQUOTE || getRangeType() == NoteBlockRangeType.POST) {
                 mTextColor = mContext.getResources().getColor(R.color.grey);
             }
         }
@@ -68,9 +70,9 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         // Set background color
         textPaint.bgColor = mPressed && !isBlockquoteType() ?
                 mContext.getResources().getColor(R.color.grey_lighten_20) : Color.TRANSPARENT;
-        textPaint.setColor(mShouldLink ? mContext.getResources().getColor(R.color.blue_medium) : mTextColor);
+        textPaint.setColor(mShouldLink && !mIsFooter ? mContext.getResources().getColor(R.color.blue_medium) : mTextColor);
         // No underlines
-        textPaint.setUnderlineText(false);
+        textPaint.setUnderlineText(mIsFooter);
     }
 
     private boolean isBlockquoteType() {
@@ -79,6 +81,10 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     // return the desired style for this id type
     public int getSpanStyle() {
+        if (mIsFooter) {
+            return Typeface.BOLD;
+        }
+
         switch (getRangeType()) {
             case USER:
                 return Typeface.BOLD;

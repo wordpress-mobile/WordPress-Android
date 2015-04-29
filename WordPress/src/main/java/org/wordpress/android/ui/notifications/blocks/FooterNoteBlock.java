@@ -25,7 +25,8 @@ public class FooterNoteBlock extends NoteBlock {
         mClickableSpan = new NoteBlockClickableSpan(
                 WordPress.getContext(),
                 rangeObject,
-                false
+                false,
+                true
         );
     }
 
@@ -50,6 +51,12 @@ public class FooterNoteBlock extends NoteBlock {
         }
 
         return view;
+    }
+
+    @Override
+    public Spannable getNoteText() {
+        return NotificationsUtils.getSpannableContentForRanges(getNoteData(), null,
+                getOnNoteBlockTextClickListener(), false, true);
     }
 
     public Object getViewHolder(View view) {

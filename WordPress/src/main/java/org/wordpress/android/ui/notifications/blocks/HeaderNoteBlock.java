@@ -54,12 +54,7 @@ public class HeaderNoteBlock extends NoteBlock {
     public View configureView(View view) {
         final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder)view.getTag();
 
-        Spannable spannable = NotificationsUtils.getSpannableContentForRanges(
-                mHeaderArray.optJSONObject(0),
-                null,
-                null,
-                true
-        );
+        Spannable spannable = NotificationsUtils.getSpannableContentForRanges(mHeaderArray.optJSONObject(0));
         noteBlockHolder.nameTextView.setText(spannable);
 
         noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), mImageType);

@@ -67,8 +67,9 @@ public class NoteBlock {
         return mNoteData;
     }
 
-    Spannable getNoteText() {
-        return NotificationsUtils.getSpannableContentForRanges(mNoteData, null, mOnNoteBlockTextClickListener, true);
+    public Spannable getNoteText() {
+        return NotificationsUtils.getSpannableContentForRanges(mNoteData, null,
+                mOnNoteBlockTextClickListener, true, false);
     }
 
     public String getMetaHomeTitle() {

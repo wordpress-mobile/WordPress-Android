@@ -227,27 +227,35 @@ public class NotificationsUtils {
     }
 
     public static Spannable getSpannableContentForRanges(JSONObject subject) {
-        return getSpannableContentForRanges(subject, null, null, false);
+        return getSpannableContentForRanges(subject, null, null, false, false);
     }
 
-    // Builds a Spannable with range objects found in the note JSON
-    public static Spannable getSpannableContentForRanges(JSONObject subject, TextView textView,
+    /**
+     * Returns a spannable with formatted content based on WP.com note content 'range' data
+     * @param blockObject
+     * @param textView
+     * @param onNoteBlockTextClickListener - click listener for ClickableSpans in the spannable
+     * @param shouldAddNoticons - Set if spannable should process noticon font ranges
+     * @param isFooter - Set if spannable should apply special
+     * @return
+     */
+    public static Spannable getSpannableContentForRanges(JSONObject blockObject, TextView textView,
                                                          final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                                                         boolean shouldAddNoticons) {
-        if (subject == null) {
+                                                         boolean shouldAddNoticons, boolean isFooter) {
+        if (blockObject == null) {
             return new SpannableStringBuilder();
         }
 
-        String text = subject.optString("text", "");
+        String text = blockObject.optString("text", "");
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
         boolean shouldLink = onNoteBlockTextClickListener != null;
 
         // Add ImageSpans for note media
-        addImageSpansForBlockMedia(textView, subject, spannableStringBuilder);
+        addImageSpansForBlockMedia(textView, blockObject, spannableStringBuilder);
 
         // Process Ranges to add links and text formatting
-        JSONArray rangesArray = subject.optJSONArray("ranges");
+        JSONArray rangesArray = blockObject.optJSONArray("ranges");
         if (rangesArray != null) {
             JSONObject noticonRange = null;
             for (int i = 0; i < rangesArray.length(); i++) {
@@ -266,7 +274,7 @@ public class NotificationsUtils {
                 }
 
                 NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(WordPress.getContext(), rangeObject,
-                        shouldLink) {
+                        shouldLink, isFooter) {
                     @Override
                     public void onClick(View widget) {
                         if (onNoteBlockTextClickListener != null) {
