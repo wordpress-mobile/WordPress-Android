@@ -44,27 +44,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="24dp"
         android:background="@drawable/reader_new_posts_bar_background"
         android:elevation="@dimen/message_bar_elevation"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="@dimen/margin_extra_large"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="@dimen/margin_large"
         android:visibility="gone"
         tools:visibility="visible">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_arrow_up_white_24dp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="@dimen/margin_medium"
             android:text="@string/reader_label_new_posts"
             android:textColor="@color/grey_lighten_30"
             android:textSize="@dimen/text_sz_large" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_label_new_posts_subtitle"
+            android:textColor="@color/grey_lighten_30"
+            android:textSize="@dimen/text_sz_small" />
     </LinearLayout>
 
     <ProgressBar

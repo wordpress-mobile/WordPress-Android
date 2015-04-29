@@ -101,7 +101,6 @@
     <color name="stats_bar_graph_main_series_highlight">@color/orange_jazzy</color>
     <color name="stats_bar_graph_outer_highlight">#1Af0821e</color> <!-- 10% Opacity on orange_jazzy #f0821e -->
     <color name="stats_bar_graph_secondary_series">@color/blue_dark</color>
-    <color name="stats_bar_graph_secondary_series_highlight">@color/orange_fire</color>
     <color name="stats_empty_placeholder_color">@color/translucent_grey_lighten_30</color>
 
 
@@ -116,7 +115,6 @@
     <!-- Notification Status -->
     <color name="notification_status_unapproved">@color/alert_yellow</color>
     <color name="notification_status_unapproved_dark">#eeac31</color>
-    <color name="notification_status_unapproved_darker">#6d1818</color>
     <color name="notification_status_unapproved_background">#fef8ee</color>
 
     <!-- NUX -->
