@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -31,6 +30,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -108,8 +108,8 @@ public class ReaderCommentListActivity extends ActionBarActivity {
 
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
-        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d", WordPress.getLoggedInUsername(this,
-                null), mPostId, mBlogId));
+        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d", AccountHelper
+                        .getCurrentUsernameForBlog(null), mPostId, mBlogId));
         mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
 
         if (!loadPost()) {
@@ -229,12 +229,6 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         }
 
         return true;
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.reader_activity_scale_in, R.anim.reader_flyout);
     }
 
     @Override

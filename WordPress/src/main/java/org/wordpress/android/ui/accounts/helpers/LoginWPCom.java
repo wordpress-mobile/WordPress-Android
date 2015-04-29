@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.accounts.helpers;
 
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -13,11 +11,15 @@ import com.wordpress.rest.Oauth.Listener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.*;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 public class LoginWPCom extends LoginAbstract {
@@ -80,30 +82,27 @@ public class LoginWPCom extends LoginAbstract {
                     WordPress.wpDB.saveBlog(mJetpackBlog);
                 }
 
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-                SharedPreferences.Editor editor = settings.edit();
+                Account account = AccountHelper.getDefaultAccount();
 
-                String existingUsername = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-                if (settings.contains(WordPress.IS_SIGNED_OUT_PREFERENCE) && existingUsername != null &&
-                        !existingUsername.equals(mUsername)) {
-                    // If user has signed out and back in with a different username, we must clear the old data
+                // If user has signed out and back in with a different username, we must clear the old data
+                if (StringUtils.equals(account.getUserName(), mUsername) && account.isUserTappedSignedOutButton()) {
+                    account.setUserTappedSignedOutButton(false);
+                    account.save();
                     WordPress.wpDB.dangerouslyDeleteAllContent();
                     WordPress.removeWpComUserRelatedData(WordPress.getContext());
-                    existingUsername = null;
                     WordPress.currentBlog = null;
+                }
+
+                if (mJetpackBlog == null) {
+                    // Store token in global account
+                    account.setAccessToken(token.toString());
+                    account.setUserName(mUsername);
+                    account.save();
+                    account.fetchAccountDetails();
                 }
 
                 // Once we have a token, start up Simperium
                 SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
-
-                if (mJetpackBlog == null || TextUtils.isEmpty(existingUsername)) {
-                    // Store token in global account
-                    editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
-                    editor.putString(WordPress.ACCESS_TOKEN_PREFERENCE, token.toString());
-                }
-
-                editor.remove(WordPress.IS_SIGNED_OUT_PREFERENCE);
-                editor.apply();
 
                 mCallback.onSuccess();
             }

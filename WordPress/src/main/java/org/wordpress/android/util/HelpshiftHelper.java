@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.helpshift.Helpshift;
@@ -17,7 +15,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,8 +43,7 @@ public class HelpshiftHelper {
     public enum Tag {
         ORIGIN_UNKNOWN("origin:unknown"),
         ORIGIN_LOGIN_SCREEN_HELP("origin:login-screen-help"),
-        ORIGIN_LOGIN_SCREEN_ERROR("origin:login-screen-error"),
-        ORIGIN_SETTINGS_SCREEN_HELP("origin:settings-screen-help");
+        ORIGIN_LOGIN_SCREEN_ERROR("origin:login-screen-error");
 
         private final String mStringValue;
 
@@ -201,16 +197,14 @@ public class HelpshiftHelper {
 
         // List blogs name and url
         int counter = 1;
-        for (Map<String, Object> account : WordPress.wpDB.getAllAccounts()) {
+        for (Map<String, Object> account : WordPress.wpDB.getAllBlogs()) {
             mMetadata.put("blog-name-" + counter, MapUtils.getMapStr(account, "blogName"));
             mMetadata.put("blog-url-" + counter, MapUtils.getMapStr(account, "url"));
             counter += 1;
         }
 
         // wpcom user
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-        mMetadata.put("wpcom-username", username);
+        mMetadata.put("wpcom-username", AccountHelper.getDefaultAccount().getUserName());
     }
 
     private HashMap getHelpshiftConfig(Context context) {

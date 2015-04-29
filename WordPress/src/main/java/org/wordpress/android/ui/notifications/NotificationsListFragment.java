@@ -28,6 +28,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -39,12 +41,13 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import javax.annotation.Nonnull;
 
-public class NotificationsListFragment extends Fragment implements Bucket.Listener<Note> {
+public class NotificationsListFragment extends Fragment
+        implements Bucket.Listener<Note>,
+                   WPMainActivity.OnScrollToTopListener {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
-    private static final int NOTE_DETAIL_REQUEST_CODE = 0;
 
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
 
@@ -58,8 +61,9 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
 
     private Bucket<Note> mBucket;
 
-    public NotificationsListFragment() {
-    }
+    public static NotificationsListFragment newInstance() {
+        return new NotificationsListFragment();
+   }
 
     /**
      * For responding to tapping of notes
@@ -92,7 +96,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
                         // open the latest version of this note just in case it has changed - this can
                         // happen if the note was tapped from the list fragment after it was updated
                         // by another fragment (such as NotificationCommentLikeFragment)
-                        openNote(noteId, getActivity(), false);
+                        openNote(getActivity(), noteId, false);
                     }
                 });
             }
@@ -180,7 +184,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     /**
      * Open a note fragment based on the type of note
      */
-    public void openNote(final String noteId, Activity activity, boolean shouldShowKeyboard) {
+    public static void openNote(Activity activity, final String noteId, boolean shouldShowKeyboard) {
         if (noteId == null || activity == null) {
             return;
         }
@@ -192,8 +196,8 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
                 R.anim.reader_activity_slide_in,
-                R.anim.reader_activity_scale_out);
-        ActivityCompat.startActivityForResult(activity, detailIntent, NOTE_DETAIL_REQUEST_CODE, options.toBundle());
+                R.anim.do_nothing);
+        ActivityCompat.startActivityForResult(activity, detailIntent, RequestCodes.NOTE_DETAIL, options.toBundle());
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
@@ -225,7 +229,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
         }
     }
 
-    void updateLastSeenTime() {
+    public void updateLastSeenTime() {
         // set the timestamp to now
         try {
             if (mNotesAdapter != null && mNotesAdapter.getCount() > 0 && SimperiumUtils.getMetaBucket() != null) {
@@ -250,10 +254,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
             @Override
             public void run() {
                 mNotesAdapter.reloadNotes();
-                updateLastSeenTime();
-
                 restoreListScrollPosition();
-
                 mEmptyTextView.setVisibility(mNotesAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
             }
         });
@@ -294,7 +295,7 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == NOTE_DETAIL_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == RequestCodes.NOTE_DETAIL && resultCode == Activity.RESULT_OK && data != null) {
             if (SimperiumUtils.getNotesBucket() == null) return;
 
             try {
@@ -409,4 +410,12 @@ public class NotificationsListFragment extends Fragment implements Bucket.Listen
     public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
         //noop
     }
+
+    @Override
+    public void onScrollToTop() {
+        if (isAdded() && getScrollPosition() > 0) {
+            mLinearLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
+        }
+    }
+
 }

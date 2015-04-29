@@ -60,7 +60,7 @@ public class WordPressMediaUtils {
 
         AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.pick_video)),
-                RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+                RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
     }
 
     public static void launchVideoCamera(Activity activity) {
@@ -124,8 +124,11 @@ public class WordPressMediaUtils {
             return R.drawable.media_spreadsheet;
         } else if (MediaUtils.isVideo(url)) {
             return org.wordpress.android.editor.R.drawable.media_movieclip;
+        } else if (MediaUtils.isAudio(url)) {
+            return R.drawable.media_audio;
+        } else {
+            return 0;
         }
-        return 0;
     }
 
     /**

@@ -19,13 +19,14 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
-import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -40,10 +41,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import de.greenrobot.event.EventBus;
+
 public class GCMIntentService extends GCMBaseIntentService {
     public static final int PUSH_NOTIFICATION_ID = 1337;
 
-    private static final Map<String, Bundle> mActiveNotificationsMap = new HashMap<String, Bundle>();
+    private static final Map<String, Bundle> mActiveNotificationsMap = new HashMap<>();
     private static String mPreviousNoteId = null;
     private static long mPreviousNoteTime = 0L;
     private static final int mMaxInboxItems = 5;
@@ -67,22 +70,14 @@ public class GCMIntentService extends GCMBaseIntentService {
         AppLog.e(T.NOTIFS, "GCM Error: " + errorId);
     }
 
-    protected void handleDefaultPush(Context context, Bundle extras) {
-        long wpcomUserID = AppPrefs.getCurrentUserId();
+    private void handleDefaultPush(Context context, Bundle extras) {
+        long wpcomUserID = AccountHelper.getDefaultAccount().getUserId();
         String userIDFromPN = extras.getString("user");
-        if (userIDFromPN != null) { //It is always populated server side, but better to double check it here.
-            if (wpcomUserID <= 0) {
-                // TODO: Do not abort the execution here, at least for this release, since there might be
-                // an issue for users that update the app.
-                // If they have never used the Reader, then they won't have a userId.
-                // Code for next release is below:
-                /* AppLog.e(T.NOTIFS, "No wpcom userId found in the app. Aborting.");
-                   return; */
-            } else {
-                if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
-                    AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
-                    return;
-                }
+        // userIDFromPN is always set server side, but better to double check it here.
+        if (userIDFromPN != null) {
+            if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
+                AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
+                return;
             }
         }
 
@@ -149,7 +144,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         NotificationCompat.Builder mBuilder;
 
-        Intent resultIntent = new Intent(this, NotificationsActivity.class);
+        Intent resultIntent = new Intent(this, WPMainActivity.class);
+        resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction("android.intent.action.MAIN");
@@ -171,7 +167,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             // Add some actions if this is a comment notification
             if (noteType.equals(NOTE_TYPE_COMMENT)) {
-                Intent commentReplyIntent = new Intent(this, NotificationsActivity.class);
+                Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
+                commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
                 commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 commentReplyIntent.setAction("android.intent.action.MAIN");
@@ -248,27 +245,11 @@ public class GCMIntentService extends GCMBaseIntentService {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
-
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(PUSH_NOTIFICATION_ID, mBuilder.build());
-    }
 
-    // Returns true if the note type is known to have a gravatar
-    public boolean shouldCircularizeNoteIcon(String noteType) {
-        if (TextUtils.isEmpty(noteType)) return false;
-
-        switch (noteType) {
-            case NOTE_TYPE_COMMENT:
-            case NOTE_TYPE_LIKE:
-            case NOTE_TYPE_COMMENT_LIKE:
-            case NOTE_TYPE_AUTOMATTCHER:
-            case NOTE_TYPE_FOLLOW:
-            case NOTE_TYPE_REBLOG:
-                return true;
-            default:
-                return false;
-        }
+        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
     @Override
@@ -292,7 +273,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (extras.containsKey("mp_message")) {
             String mpMessage = intent.getExtras().getString("mp_message");
             String title = getString(R.string.app_name);
-            Intent resultIntent = new Intent(this, NotificationsActivity.class);
+            Intent resultIntent = new Intent(this, WPMainActivity.class);
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
@@ -302,7 +283,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        if (!WordPress.hasDotComToken(context)) {
+        if (!AccountHelper.getDefaultAccount().hasAccessToken()) {
             return;
         }
 
@@ -334,6 +315,23 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onUnregistered(Context context, String regId) {
         AppLog.v(T.NOTIFS, "GCM Unregistered ID: " + regId);
+    }
+
+    // Returns true if the note type is known to have a gravatar
+    public boolean shouldCircularizeNoteIcon(String noteType) {
+        if (TextUtils.isEmpty(noteType)) return false;
+
+        switch (noteType) {
+            case NOTE_TYPE_COMMENT:
+            case NOTE_TYPE_LIKE:
+            case NOTE_TYPE_COMMENT_LIKE:
+            case NOTE_TYPE_AUTOMATTCHER:
+            case NOTE_TYPE_FOLLOW:
+            case NOTE_TYPE_REBLOG:
+                return true;
+            default:
+                return false;
+        }
     }
 
     public static void clearNotificationsMap() {

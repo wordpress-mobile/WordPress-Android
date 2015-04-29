@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/content_margin"
+        android:paddingRight="@dimen/content_margin">
+
+        <FrameLayout
+            android:id="@+id/frame_avatar"
+            android:layout_width="@dimen/avatar_sz_large"
+            android:layout_height="@dimen/avatar_sz_large"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/me_avatar_margin_top">
+
+            <org.wordpress.android.widgets.WPNetworkImageView
+                android:id="@+id/me_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/me_display_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_large"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
+            app:fontVariation="light"
+            tools:text="Full Name" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/me_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="username" />
+
+        <LinearLayout
+            style="@style/MeListRowLayout"
+            android:layout_marginTop="@dimen/me_list_margin_top">
+
+            <ImageView
+                android:id="@+id/me_settings_icon"
+                style="@style/MeListRowIcon"
+                android:contentDescription="@string/me_btn_settings"
+                android:src="@drawable/me_icon_settings" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/me_settings_text_view"
+                style="@style/MeListRowTextView"
+                android:text="@string/me_btn_settings" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/MeListRowLayout">
+
+            <ImageView
+                android:id="@+id/me_support_icon"
+                style="@style/MeListRowIcon"
+                android:contentDescription="@string/me_btn_support"
+                android:src="@drawable/me_icon_support" />
+
+            <org.wordpress.android.widgets.WPAutoResizeTextView
+                android:id="@+id/me_support_text_view"
+                style="@style/MeListRowTextView"
+                android:text="@string/me_btn_support" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/MeListRowLayout">
+
+            <ImageView
+                android:id="@+id/me_login_logout_icon"
+                style="@style/MeListRowIcon"
+                android:contentDescription="@string/me_btn_login_logout"
+                android:src="@drawable/me_icon_login_logout" />
+
+            <org.wordpress.android.widgets.WPAutoResizeTextView
+                android:id="@+id/me_login_logout_text_view"
+                style="@style/MeListRowTextView"
+                tools:text="@string/me_btn_login_logout" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

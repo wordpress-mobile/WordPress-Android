@@ -7,7 +7,7 @@
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="sign_out_confirm">Sign out?</string>
+    <string name="sign_out_confirm">Disconnect from WordPress.com?</string>
     <string name="sign_in_again">Sign in again</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
     <string name="visit_security_settings">Visit security settings</string>
@@ -40,18 +40,18 @@
     <string name="save">Save</string>
     <string name="add">Add</string>
     <string name="add_self_hosted_blog">Add self-hosted blog</string>
-    <string name="show_and_hide_blogs">Show/hide WordPress.com blogs</string>
-    <string name="blogs_visibility">Blogs</string>
-    <string name="show_all">Show all</string>
-    <string name="hide_all">Hide all</string>
+    <string name="show">Show</string>
+    <string name="hide">Hide</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect all</string>
     <string name="notification_sound">Play notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_blink">Blink notification light</string>
-    <string name="sure_to_remove_account">Remove this blog?</string>
+    <string name="sure_to_remove_account">Remove this site?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="error">Error</string>
-    <string name="could_not_remove_account">Couldn\'t remove blog</string>
+    <string name="could_not_remove_account">Couldn\'t remove site</string>
     <string name="edit_page">Edit page</string>
     <string name="edit_post">Edit post</string>
     <string name="add_comment">Add comment</string>
@@ -77,6 +77,7 @@
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
     <string name="language">Language</string>
+    <string name="signout">Disconnect</string>
 
     <!-- MediaPicker -->
     <string name="add_to_post">Add to Post</string>
@@ -278,8 +279,8 @@
     <string name="toast_comment_unedited">Comment hasn\'t changed</string>
 
     <!-- context menu -->
-    <string name="remove_account">Remove blog</string>
-    <string name="blog_removed_successfully">Blog removed successfully</string>
+    <string name="remove_account">Remove site</string>
+    <string name="blog_removed_successfully">Site removed successfully</string>
 
     <!-- draft actions -->
     <string name="delete_draft">Delete draft</string>
@@ -317,15 +318,11 @@
     <string name="signing_in">Signing in…</string>
     <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
 
-    <!-- Menu Drawer -->
-    <string name="open_drawer">Open menu drawer</string>
-    <string name="close_drawer">Close menu drawer</string>
-
-
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
     <string name="select_from_media_library">Select from media library</string>
+    <string name="select_from_new_picker">Multi-select with the new picker</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
@@ -374,7 +371,6 @@
     <!-- Preference keys -->
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
     <string name="pref_key_wpcom" translatable="false">wp_pref_wpcom</string>
-    <string name="pref_key_self_hosted" translatable="false">wp_pref_self_hosted_blogs</string>
     <string name="pref_key_notifications_section" translatable="false">wp_pref_notifications_category</string>
     <string name="pref_key_notifications" translatable="false">wp_pref_manage_notifications</string>
     <string name="pref_key_post_sig_section" translatable="false">wp_post_signature</string>
@@ -390,18 +386,13 @@
     <string name="pref_key_language" translatable="false">wp_pref_language</string>
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
-    <string name="pref_key_help_and_support" translatable="false">wp_pref_help_and_support</string>
-    <string name="pref_key_signout_section" translatable="false">wp_pref_app_signout_section</string>
-    <string name="pref_key_signout" translatable="false">wp_pref_sign_out</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notifications_enabled" translatable="false">wp_pref_notifications_enabled</string>
     <string name="pref_notification_types" translatable="false">wp_pref_notification_types</string>
 
     <!-- preferences -->
-    <string name="help_and_support">Help and support</string>
     <string name="open_source_licenses">Open source licenses</string>
-    <string name="wpcom_blogs">WordPress.com blogs</string>
-    <string name="self_hosted_blogs">Self-hosted blogs</string>
+    <string name="wpcom_blogs">WordPress.com</string>
     <string name="preference_privacy">Privacy</string>
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
@@ -905,6 +896,26 @@
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="faq_button">FAQ</string>
 
+    <!--My Site-->
+    <string name="my_site_header_admin">Admin</string>
+    <string name="my_site_header_configuration">Configuration</string>
+    <string name="my_site_header_look_and_feel">Look and Feel</string>
+    <string name="my_site_header_publish">Publish</string>
+    <string name="my_site_btn_blog_posts">Blog Posts</string>
+    <string name="my_site_btn_site_settings">Settings</string>
+    <string name="my_site_btn_comments">Comments</string>
+    <string name="my_site_btn_switch_site">Switch Site</string>
+    <string name="my_site_btn_view_admin">View Admin</string>
+    <string name="my_site_btn_view_site">View Site</string>
+
+    <!-- site picker -->
+    <string name="site_picker_title">Choose site</string>
+    <string name="site_picker_edit_visibility">Show/hide sites</string>
+    <string name="site_picker_add_site">Add site</string>
+    <string name="site_picker_add_self_hosted">Add self-hosted site</string>
+    <string name="site_picker_create_dotcom">Create WordPress.com site</string>
+    <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
+
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
 
@@ -917,5 +928,12 @@
     <string name="hs__conversation_header">Support chat</string>
     <string name="hs__username_blank_error">Enter a valid name</string>
     <string name="hs__invalid_email_error">Enter a valid email address</string>
+
+    <!--Me-->
+    <string name="me_btn_settings">Account Settings</string>
+    <string name="me_btn_support">Help &amp; Support</string>
+    <string name="me_btn_login_logout">Login/Logout</string>
+    <string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>
+    <string name="me_disconnect_from_wordpress_com">Disconnect from WordPress.com</string>
 
 </resources>

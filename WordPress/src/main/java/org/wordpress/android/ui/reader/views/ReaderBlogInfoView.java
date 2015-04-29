@@ -15,6 +15,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -109,7 +110,6 @@ public class ReaderBlogInfoView extends FrameLayout {
             txtDescription.setVisibility(View.GONE);
         }
 
-        int imageResId = (blogInfo.isExternal() ? R.drawable.gravatar_placeholder : R.drawable.blavatar_placeholder);
         int imageSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         String imageUrl = "";
         if (blogInfo.hasImageUrl()) {
@@ -119,7 +119,7 @@ public class ReaderBlogInfoView extends FrameLayout {
                 imageUrl = GravatarUtils.blavatarFromUrl(blogInfo.getUrl(), imageSz);
             }
         }
-        imgBlavatar.setErrorImageResId(imageResId);
+        imgBlavatar.setErrorImageResId(ReaderUtils.getDefaultBlavatarResId(blogInfo));
         imgBlavatar.setImageUrl(imageUrl, ImageType.BLAVATAR);
 
         // layout is invisible at design time

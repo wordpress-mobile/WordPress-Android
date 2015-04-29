@@ -30,7 +30,7 @@ test the project:
     $ ./gradlew assembleVanillaDebug # assemble the debug .apk
     $ ./gradlew installVanillaDebug  # install the debug .apk if you have an
                                      # emulator or an Android device connected
-    $ ./gradlew WordPress:cAT        # assemble, install and run unit tests
+    $ ./gradlew cAT                  # assemble, install and run unit tests
 
 You can use [Android Studio][3] by importing the project as a Gradle project.
 
@@ -101,7 +101,12 @@ connected by running the following:
 It's recommended to install [watchman][9] to take advantage of the Buck
 daemon: `buckd`.
 
-## License
+## FAQ ##
+
+* Q: I can't build/test/package the project because of a `PermGen space` error.
+* A: Create a `build.properties` file in the project root directory with the following: `org.gradle.jvmargs=-XX:MaxPermSize=1024m`.
+
+## License ##
 
 WordPress for Android is an Open Source project covered by the
 [GNU General Public License version 2](LICENSE.md). Note: code

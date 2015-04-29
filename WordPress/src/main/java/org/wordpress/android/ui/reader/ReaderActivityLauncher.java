@@ -17,6 +17,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.ToastUtils;
@@ -67,7 +68,7 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
-        intent.putExtra(ReaderConstants.ARG_TITLE, tag.getTagName());
+        intent.putExtra(ReaderConstants.ARG_TITLE, tag.getCapitalizedTagName());
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
@@ -94,13 +95,12 @@ public class ReaderActivityLauncher {
             ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                     context,
                     R.anim.reader_activity_slide_in,
-                    R.anim.reader_activity_scale_out);
+                    R.anim.do_nothing);
             ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
         } else {
             context.startActivity(intent);
         }
     }
-
 
     /*
      * show a list of posts in a specific blog
@@ -207,7 +207,7 @@ public class ReaderActivityLauncher {
      */
     public static void showReaderSubsForResult(Activity activity) {
         Intent intent = new Intent(activity, ReaderSubsActivity.class);
-        activity.startActivityForResult(intent, ReaderConstants.INTENT_READER_SUBS);
+        activity.startActivityForResult(intent, RequestCodes.READER_SUBS);
     }
 
     /*
@@ -234,7 +234,7 @@ public class ReaderActivityLauncher {
         }
 
         if (context instanceof Activity) {
-            // use built-in scale animation on jb+, fall back to our own animation on pre-jb
+            // use built-in scale animation on jb+, fall back to default animation on pre-jb
             Activity activity = (Activity) context;
             if (sourceView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 ActivityOptionsCompat options =
@@ -242,7 +242,6 @@ public class ReaderActivityLauncher {
                 ActivityCompat.startActivity(activity, intent, options.toBundle());
             } else {
                 activity.startActivity(intent);
-                activity.overridePendingTransition(R.anim.reader_photo_in, 0);
             }
         } else {
             context.startActivity(intent);
@@ -267,7 +266,7 @@ public class ReaderActivityLauncher {
         } else {
             options = ActivityOptionsCompat.makeCustomAnimation(activity, R.anim.reader_flyin, 0);
         }
-        ActivityCompat.startActivityForResult(activity, intent, ReaderConstants.INTENT_READER_REBLOG, options.toBundle());
+        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.READER_REBLOG, options.toBundle());
 
     }
 

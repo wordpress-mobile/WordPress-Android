@@ -8,11 +8,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="@string/pref_key_self_hosted"
-        android:title="@string/self_hosted_blogs">
-    </PreferenceCategory>
-
-    <PreferenceCategory
         android:title="@string/notifications"
         android:key="@string/pref_key_notifications_section">
         <Preference
@@ -72,17 +67,8 @@
                     android:key="@string/pref_key_app_about"/>
         <Preference android:title="@string/open_source_licenses"
                     android:key="@string/pref_key_oss_licenses"/>
-        <Preference android:title="@string/help_and_support"
-                    android:key="@string/pref_key_help_and_support"/>
         <Preference android:title="@string/language"
                     android:key="@string/pref_key_language"/>
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:key="@string/pref_key_signout_section"
-        android:title="@string/sign_out">
-        <Preference
-            android:key="@string/pref_key_signout"
-            android:title="@string/sign_out"/>
-    </PreferenceCategory>
 </PreferenceScreen>

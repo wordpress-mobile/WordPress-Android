@@ -26,9 +26,11 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.Toast;
@@ -58,6 +60,7 @@ import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -95,6 +98,15 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
+
+    // Context menu positioning
+    private static final int SELECT_PHOTO_MENU_POSITION = 0;
+    private static final int CAPTURE_PHOTO_MENU_POSITION = 1;
+    private static final int SELECT_VIDEO_MENU_POSITION = 2;
+    private static final int CAPTURE_VIDEO_MENU_POSITION = 3;
+    private static final int ADD_GALLERY_MENU_POSITION = 4;
+    private static final int SELECT_LIBRARY_MENU_POSITION = 5;
+    private static final int NEW_PICKER_MENU_POSITION = 6;
 
     private static final String ANALYTIC_PROP_NUM_LOCAL_PHOTOS_ADDED = "number_of_local_photos_added";
     private static final String ANALYTIC_PROP_NUM_WP_PHOTOS_ADDED = "number_of_wp_library_photos_added";
@@ -415,6 +427,66 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add(0, SELECT_PHOTO_MENU_POSITION, 0, getResources().getText(R.string.select_photo));
+        if (DeviceUtils.getInstance().hasCamera(this)) {
+            menu.add(0, CAPTURE_PHOTO_MENU_POSITION, 0, getResources().getText(R.string.media_add_popup_capture_photo));
+        }
+        menu.add(0, SELECT_VIDEO_MENU_POSITION, 0, getResources().getText(R.string.select_video));
+        if (DeviceUtils.getInstance().hasCamera(this)) {
+            menu.add(0, CAPTURE_VIDEO_MENU_POSITION, 0, getResources().getText(R.string.media_add_popup_capture_video));
+        }
+
+        menu.add(0, ADD_GALLERY_MENU_POSITION, 0, getResources().getText(R.string.media_add_new_media_gallery));
+        menu.add(0, SELECT_LIBRARY_MENU_POSITION, 0, getResources().getText(R.string.select_from_media_library));
+        menu.add(0, NEW_PICKER_MENU_POSITION, 0, getResources().getText(R.string.select_from_new_picker));
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case SELECT_PHOTO_MENU_POSITION:
+                launchPictureLibrary();
+                return true;
+            case CAPTURE_PHOTO_MENU_POSITION:
+                launchCamera();
+                return true;
+            case SELECT_VIDEO_MENU_POSITION:
+                launchVideoLibrary();
+                return true;
+            case CAPTURE_VIDEO_MENU_POSITION:
+                launchVideoCamera();
+                return true;
+            case ADD_GALLERY_MENU_POSITION:
+                startMediaGalleryActivity(null);
+                return true;
+            case SELECT_LIBRARY_MENU_POSITION:
+                startMediaGalleryAddActivity();
+                return true;
+            case NEW_PICKER_MENU_POSITION:
+                startMediaSelection();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private void launchPictureLibrary() {
+        WordPressMediaUtils.launchPictureLibrary(this);
+        AppLockManager.getInstance().setExtendedTimeout();
+    }
+
+    private void launchVideoLibrary() {
+        WordPressMediaUtils.launchVideoLibrary(this);
+        AppLockManager.getInstance().setExtendedTimeout();
+    }
+
+    private void launchVideoCamera() {
+        WordPressMediaUtils.launchVideoCamera(this);
+        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void showErrorAndFinish(int errorMessageId) {
@@ -905,7 +977,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
      */
 
     private void fetchMedia(Uri mediaUri) {
-        if (!MediaUtils.isInMediaStore(mediaUri)) {
+        if (URLUtil.isNetworkUrl(mediaUri.toString())) {
             // Create an AsyncTask to download the file
             new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
@@ -1380,7 +1452,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
      * @param path
      *  local path of the media file to upload
      * @param mediaIdOut
-     *  the new {@link org.wordpress.android.models.MediaFile} ID is added if non-null
+     *  the new {@link org.wordpress.android.util.helpers.MediaFile} ID is added if non-null
      */
     private void queueFileForUpload(String path, ArrayList<String> mediaIdOut) {
         // Invalid file path
@@ -1441,7 +1513,11 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     @Override
     public void onAddMediaClicked() {
-        startMediaSelection();
+        View addView = findViewById(R.id.addPictureButton);
+
+        if (addView != null) {
+            openContextMenu(addView);
+        }
     }
 
     @Override
