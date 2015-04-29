@@ -41,7 +41,7 @@ public class WPImageSpan extends ImageSpan implements Parcelable {
     }
 
     public int getEndPosition() {
-        return mEndPosition < mStartPosition ? mStartPosition : mEndPosition;
+        return mEndPosition < getStartPosition() ? getStartPosition() : mEndPosition;
     }
 
     public MediaFile getMediaFile() {

@@ -149,7 +149,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     private EditPostPreviewFragment mEditPostPreviewFragment;
 
     private boolean mIsNewPost;
-
     private boolean mHasSetPostContent;
 
     @Override
@@ -618,7 +617,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    // TODO: switch between legacy and new editor here (AB mHasSetPostContent?)
+                    // TODO: switch between legacy and new editor here (AB test?)
                     return new LegacyEditorFragment();
                 case 1:
                     return new EditPostSettingsFragment();
