@@ -59,8 +59,6 @@ public class MySiteFragment extends Fragment
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
-        StatsTable.deleteOldStats(this.getActivity(), mBlog.getLocalTableBlogId(), System.currentTimeMillis());
-
     }
 
     @Override

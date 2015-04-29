@@ -13,6 +13,8 @@ import org.wordpress.android.util.SqlUtils;
 public class StatsTable {
 
     private static final String TABLE_NAME = "tbl_stats";
+    private static final int CACHE_TTL_MINUTES = 10;
+
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_NAME + " ("
@@ -69,9 +71,21 @@ public class StatsTable {
 
         try {
             if (cursor != null && cursor.moveToFirst()) {
-                int timestamp  = cursor.getInt(cursor.getColumnIndex("timestamp"));
+                long timestamp  = cursor.getLong(cursor.getColumnIndex("timestamp"));
+                long currentTime = System.currentTimeMillis();
+                long deltaMS = currentTime - timestamp;
+                if (deltaMS < 0) {
+                    // current date is in the past respect to stats date?? Uhhh!
+                    return null;
+                }
+
+                deltaMS = deltaMS / 1000; // seconds
+                // check if the cache is fresh
+                if ((deltaMS / 60) > CACHE_TTL_MINUTES) {
+                    return null; // cache is expired
+                }
+
                 String jsonData =(cursor.getString(cursor.getColumnIndex("jsonData")));
-                // TODO: check the timestamp here
                 return jsonData;
             } else {
                 return null;
@@ -119,7 +133,7 @@ public class StatsTable {
 
     public static boolean deleteOldStats(final Context ctx, final int blogId, final long timestamp) {
         if (ctx == null) {
-            AppLog.e(AppLog.T.STATS, "Cannot delete a null stats since the passed context is null. Context is required " +
+            AppLog.e(AppLog.T.STATS, "Cannot delete stats since the passed context is null. Context is required " +
                     "to access the DB.");
             return false;
         }
@@ -129,7 +143,26 @@ public class StatsTable {
             db.beginTransaction();
             int rowDeleted = db.delete(TABLE_NAME, "blogID=? AND timestamp < ?", new String[] { Integer.toString(blogId), Long.toString(timestamp) });
             db.setTransactionSuccessful();
-            AppLog.d(AppLog.T.STATS, "Old stats deleted");
+            AppLog.d(AppLog.T.STATS, "Old stats for localBlogID " + blogId);
+            return rowDeleted > 1;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public static boolean deleteStats(final Context ctx, final int blogId) {
+        if (ctx == null) {
+            AppLog.e(AppLog.T.STATS, "Cannot delete stats since the passed context is null. Context is required " +
+                    "to access the DB.");
+            return false;
+        }
+
+        SQLiteDatabase db = StatsDatabaseHelper.getWritableDb(ctx);
+        try {
+            db.beginTransaction();
+            int rowDeleted = db.delete(TABLE_NAME, "blogID=?", new String[] {Integer.toString(blogId)});
+            db.setTransactionSuccessful();
+            AppLog.d(AppLog.T.STATS, "Stats deleted for localBlogID " + blogId);
             return rowDeleted > 1;
         } finally {
             db.endTransaction();

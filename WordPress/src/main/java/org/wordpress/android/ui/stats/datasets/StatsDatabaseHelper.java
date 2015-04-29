@@ -63,7 +63,8 @@ public class StatsDatabaseHelper extends SQLiteOpenHelper {
     /*
      * drop & recreate all tables (essentially clears the db of all data)
      */
-    public void reset(SQLiteDatabase db) {
+    public void reset() {
+        SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
         try {
             dropAllTables(db);
@@ -84,14 +85,14 @@ public class StatsDatabaseHelper extends SQLiteOpenHelper {
         // for now just reset the db when upgrading, future versions may want to avoid this
         // and modify table structures, etc., on upgrade while preserving data
         AppLog.i(AppLog.T.STATS, "Upgrading database from version " + oldVersion + " to version " + newVersion);
-        reset(db);
+        reset();
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // IMPORTANT: do NOT call super() here - doing so throws a SQLiteException
         AppLog.w(AppLog.T.STATS, "Downgrading database from version " + oldVersion + " to version " + newVersion);
-        reset(db);
+        reset();
     }
 
     private void createAllTables(SQLiteDatabase db) {

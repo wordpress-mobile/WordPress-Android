@@ -20,6 +20,7 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -252,14 +253,16 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+                int localTableBlogID = blog.getLocalTableBlogId();
                 boolean deleteSuccess =
-                        WordPress.wpDB.deleteBlog(BlogPreferencesActivity.this, blog.getLocalTableBlogId());
+                        WordPress.wpDB.deleteBlog(BlogPreferencesActivity.this,localTableBlogID);
                 if (deleteSuccess) {
                     AnalyticsUtils.refreshMetadata();
                     Toast.makeText(activity, getResources().getText(R.string.blog_removed_successfully),
                             Toast.LENGTH_SHORT)
                             .show();
                     WordPress.wpDB.deleteLastBlogId();
+                    StatsTable.deleteStats(BlogPreferencesActivity.this,localTableBlogID); // Remove stats data
                     WordPress.currentBlog = null;
                     mBlogDeleted = true;
                     activity.finish();

@@ -141,12 +141,22 @@ public class StatsService extends Service {
         }
     }
 
+    // A fast way to disable caching during develop or when we want to disable it
+    // under some circumstances. Always true for now.
+    private boolean isCacheEnabled() {
+        return true;
+    }
+
     // Check if we already have Stats
     private String getCachedStats(final String blogId, final StatsTimeframe timeframe, final String date, final StatsEndpointsEnum sectionToUpdate,
                                   final int maxResultsRequested, final int pageRequested) {
+        if (!isCacheEnabled()) {
+            return null;
+        }
+
         int parsedBlogID = Integer.parseInt(blogId);
         int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
-        String result = StatsTable.getStats(this, localTableBlogId, timeframe, date, sectionToUpdate, -1, -1);
+        String result = StatsTable.getStats(this, localTableBlogId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
         return result;
     }
 
@@ -161,7 +171,8 @@ public class StatsService extends Service {
                 try {
                     JSONObject response = new JSONObject(cachedStats);
                     mResponseObjectModel = StatsUtils.parseResponse(sectionToUpdate, blogId, response);
-                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(sectionToUpdate, blogId, timeframe, date, mResponseObjectModel));
+                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(sectionToUpdate, blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, mResponseObjectModel));
                     checkAllRequestsFinished();
                     return;
                 } catch (JSONException e) {
@@ -177,7 +188,7 @@ public class StatsService extends Service {
 */
         EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(true));
 
-        RestListener vListener = new RestListener(sectionToUpdate, blogId, timeframe, date);
+        RestListener vListener = new RestListener(sectionToUpdate, blogId, timeframe, date, maxResultsRequested, pageRequested);
 
         final String periodDateMaxPlaceholder =  "?period=%s&date=%s&max=%s";
 
@@ -315,12 +326,16 @@ public class StatsService extends Service {
         protected Serializable mResponseObjectModel;
         final StatsEndpointsEnum mEndpointName;
         private final String mDate;
+        private final int mMaxResultsRequested, mPageRequested;
 
-        public RestListener(StatsEndpointsEnum endpointName, String blogId, StatsTimeframe timeframe, String date) {
+        public RestListener(StatsEndpointsEnum endpointName, String blogId, StatsTimeframe timeframe, String date,
+                            final int maxResultsRequested, final int pageRequested) {
             mRequestBlogId = blogId;
             mTimeframe = timeframe;
             mEndpointName = endpointName;
             mDate = date;
+            mMaxResultsRequested = maxResultsRequested;
+            mPageRequested = pageRequested;
         }
 
         @Override
@@ -333,16 +348,19 @@ public class StatsService extends Service {
                         try {
                             //AppLog.d(T.STATS, response.toString());
                             mResponseObjectModel = StatsUtils.parseResponse(mEndpointName, mRequestBlogId, response);
-
-                            int parsedBlogID = Integer.parseInt(mRequestBlogId);
-                            int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
-                            StatsTable.insertStats(StatsService.this, localTableBlogId, mTimeframe, mDate, mEndpointName, -1, -1, // TODO set the correct number here
-                                    response.toString(), System.currentTimeMillis());
+                            if (isCacheEnabled()) {
+                                int parsedBlogID = Integer.parseInt(mRequestBlogId);
+                                int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
+                                StatsTable.insertStats(StatsService.this, localTableBlogId, mTimeframe, mDate, mEndpointName,
+                                        mMaxResultsRequested, mPageRequested,
+                                        response.toString(), System.currentTimeMillis());
+                            }
                         } catch (JSONException e) {
                             AppLog.e(AppLog.T.STATS, e);
                         }
                     }
-                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate, mResponseObjectModel));
+                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
+                            mMaxResultsRequested, mPageRequested, mResponseObjectModel));
                     checkAllRequestsFinished();
                 }
             });
@@ -356,7 +374,8 @@ public class StatsService extends Service {
                     AppLog.e(T.STATS, this.getClass().getName() + " responded with an Error");
                     StatsUtils.logVolleyErrorDetails(volleyError);
                     mResponseObjectModel = volleyError;
-                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate, mResponseObjectModel));
+                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
+                            mMaxResultsRequested, mPageRequested, mResponseObjectModel));
                     checkAllRequestsFinished();
                 }
             });
