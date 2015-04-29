@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 
@@ -130,8 +131,8 @@ public class ReaderPostListActivity extends ActionBarActivity {
                 break;
 
             // pass reader-related results to the fragment
-            case ReaderConstants.INTENT_READER_SUBS:
-            case ReaderConstants.INTENT_READER_REBLOG:
+            case RequestCodes.READER_SUBS:
+            case RequestCodes.READER_REBLOG:
                 ReaderPostListFragment listFragment = getListFragment();
                 if (listFragment != null) {
                     listFragment.onActivityResult(requestCode, resultCode, data);
