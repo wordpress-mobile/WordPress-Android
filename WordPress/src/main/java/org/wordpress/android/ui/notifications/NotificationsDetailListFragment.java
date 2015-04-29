@@ -190,8 +190,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
             if (mNote.getParentCommentId() > 0 || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
-                // show comments list for the post
-                detailActivity.showReaderCommentList(mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId());
+                // show comment detail
+                detailActivity.showCommentDetailForNote(mNote);
             } else if (mNote.isFollowType()) {
                 detailActivity.showBlogPreviewActivity(mNote.getSiteId());
             } else {
@@ -363,8 +363,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             // The block will not have a type, and its id will match the comment reply id in the Note.
             return (JSONUtils.queryJSON(blockObject, "type", null) == null &&
                     mNote.getCommentReplyId() == JSONUtils.queryJSON(blockObject, "ranges[1].id", 0));
-        } else if (mNote.isFollowType() || mNote.isLikeType()) {
-            // Like and Follow notifications have a footer if they have 10 or more users in the body
+        } else if (mNote.isFollowType() || mNote.isLikeType() ||
+                mNote.isCommentLikeType() || mNote.isReblogType()) {
+            // User list notifications have a footer if they have 10 or more users in the body
             // The last block will not have a type, so we can use that to determine if it is the footer
             return JSONUtils.queryJSON(blockObject, "type", null) == null;
         }

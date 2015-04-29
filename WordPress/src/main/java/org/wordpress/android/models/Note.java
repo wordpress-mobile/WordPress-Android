@@ -31,11 +31,14 @@ public class Note extends Syncable {
     // Maximum character length for a comment preview
     static private final int MAX_COMMENT_PREVIEW_LENGTH = 200;
 
+    // Note types
     private static final String NOTE_UNKNOWN_TYPE = "unknown";
     private static final String NOTE_COMMENT_TYPE = "comment";
     private static final String NOTE_MATCHER_TYPE = "automattcher";
     private static final String NOTE_FOLLOW_TYPE = "follow";
     private static final String NOTE_LIKE_TYPE = "like";
+    private static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
+    private static final String NOTE_REBLOG_TYPE = "reblog";
 
     // JSON action keys
     private static final String ACTION_KEY_REPLY = "replyto-comment";
@@ -119,6 +122,13 @@ public class Note extends Syncable {
 
     public Boolean isLikeType() {
         return isType(NOTE_LIKE_TYPE);
+    }
+
+    public Boolean isCommentLikeType() {
+        return isType(NOTE_COMMENT_LIKE_TYPE);
+    }
+    public Boolean isReblogType() {
+        return isType(NOTE_REBLOG_TYPE);
     }
 
     public String getLocalStatus() {

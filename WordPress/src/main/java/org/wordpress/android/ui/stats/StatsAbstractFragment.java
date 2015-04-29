@@ -13,7 +13,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     public static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
     public static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
     
-    protected static final String ARGS_START_DATE = "ARGS_START_DATE";
+    public static final String ARGS_START_DATE = "ARGS_START_DATE";
     protected static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
 
     protected TimeframeDateProvider mTimelineProvider;
