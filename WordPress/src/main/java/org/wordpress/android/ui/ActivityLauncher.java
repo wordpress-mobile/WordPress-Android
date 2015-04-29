@@ -30,6 +30,8 @@ import org.wordpress.android.ui.stats.StatsSinglePostDetailsActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -139,6 +141,7 @@ public class ActivityLauncher {
 
     public static void viewHelpAndSupport(Context context) {
         Intent intent = new Intent(context, HelpActivity.class);
+        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, Tag.ORIGIN_ME_SCREEN_HELP);
         context.startActivity(intent);
     }
 
