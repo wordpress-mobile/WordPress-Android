@@ -170,7 +170,7 @@
                     android:gravity="center_horizontal"
                     android:hint="@string/verification_code"
                     android:inputType="number"
-                    android:maxLength="7" />
+                    android:maxLength="8" />
             </RelativeLayout>
 
             <RelativeLayout
