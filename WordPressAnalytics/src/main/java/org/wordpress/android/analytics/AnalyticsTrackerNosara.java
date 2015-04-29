@@ -286,6 +286,9 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case SUPPORT_OPENED_HELPSHIFT_SCREEN:
                 eventName = "support_helpshift_screen_opened";
                 break;
+            case SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE:
+                eventName = "support_sent_reply_to_support_message";
+                break;
             case LOGIN_FAILED:
                 eventName = "login_failed_to_login";
                 break;
