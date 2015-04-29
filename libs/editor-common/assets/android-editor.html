@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>ZSSRichTextEditor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <script src="jquery-2.1.3.min.js"></script>
     <script src="js-beautifier.js"></script>
     <script src="underscore-min.js"></script>
@@ -15,22 +15,22 @@
     <script src="rangy-cssclassapplier.js"></script>
     <script src="rangy-selectionsaverestore.js"></script>
     <script src="rangy-serializer.js"></script>
-	<script>
-		// DRM: onLoad does not get called when offline, if there's remote content in the editor
-		// (such as remote images).  We use the 'ready' event for this reason.
-		//
-		$(document).ready(function() {
+    <script>
+        // DRM: onLoad does not get called when offline, if there's remote content in the editor
+        // (such as remote images).  We use the 'ready' event for this reason.
+        //
+        $(document).ready(function() {
             ZSSEditor.init();
             ZSSEditor.domLoadedCallback();
-		});
-	</script>
-    <link rel="stylesheet" type="text/css" href="editor.css">
+        });
+    </script>
+    <link rel="stylesheet" href="editor.css">
   </head>
   <body>
       <div contenteditable="true" id="zss_field_title" class="field" nostyle>
       </div>
       <div contenteditable="false" id="separatorDiv" >
-          <hr/>
+          <hr>
       </div>
       <div contenteditable="true" id="zss_field_content" class="field">
       </div>
