@@ -139,9 +139,9 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewHelpAndSupport(Context context) {
+    public static void viewHelpAndSupport(Context context, Tag origin) {
         Intent intent = new Intent(context, HelpActivity.class);
-        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, Tag.ORIGIN_ME_SCREEN_HELP);
+        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
         context.startActivity(intent);
     }
 
