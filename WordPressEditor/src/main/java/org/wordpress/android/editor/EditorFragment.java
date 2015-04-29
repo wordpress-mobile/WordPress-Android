@@ -35,6 +35,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private static final String TAG_FORMAT_BAR_BUTTON_UL = "unorderedList";
     private static final String TAG_FORMAT_BAR_BUTTON_OL = "orderedList";
     private static final String TAG_FORMAT_BAR_BUTTON_LINK = "link";
+    private static final String TAG_FORMAT_BAR_BUTTON_STRIKETHROUGH = "strikeThrough";
 
     private static final float TOOLBAR_ALPHA_ENABLED = 1;
     private static final float TOOLBAR_ALPHA_DISABLED = 0.5f;
@@ -96,6 +97,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         ToggleButton linkButton = (ToggleButton) view.findViewById(R.id.format_bar_button_link);
         mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_LINK, linkButton);
 
+        // Tablet-only
+        ToggleButton strikethroughButton = (ToggleButton) view.findViewById(R.id.format_bar_button_strikethrough);
+        if (strikethroughButton != null) {
+            mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_STRIKETHROUGH, strikethroughButton);
+        }
+
         ToggleButton htmlButton = (ToggleButton) view.findViewById(R.id.format_bar_button_html);
         htmlButton.setOnClickListener(this);
 
@@ -128,6 +135,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             mWebView.execJavaScriptFromString("ZSSEditor.setBold();");
         } else if (id == R.id.format_bar_button_italic) {
             mWebView.execJavaScriptFromString("ZSSEditor.setItalic();");
+        } else if (id == R.id.format_bar_button_strikethrough) {
+            mWebView.execJavaScriptFromString("ZSSEditor.setStrikeThrough();");
         } else if (id == R.id.format_bar_button_quote) {
             mWebView.execJavaScriptFromString("ZSSEditor.setBlockquote();");
         } else if (id == R.id.format_bar_button_ul) {
