@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
+import org.ccil.cowan.tagsoup.jaxp.SAXParserImpl;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -78,15 +79,21 @@ import org.wordpress.mediapicker.source.MediaSource;
 import org.wordpress.mediapicker.source.MediaSourceDeviceImages;
 import org.wordpress.mediapicker.source.MediaSourceDeviceVideos;
 import org.wordpress.passcodelock.AppLockManager;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 import org.xmlrpc.android.ApiHelper;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import de.greenrobot.event.EventBus;
 
@@ -215,6 +222,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             return;
         }
 
+        // set current post
+        WordPress.currentPost = mPost;
+
         // Ensure we have a valid post
         if (mPost == null) {
             showErrorAndFinish(R.string.post_not_found);
@@ -247,8 +257,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                 } else if (position == PAGE_PREVIEW) {
-                    setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
                     savePost(true);
+                    setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
                     if (mEditPostPreviewFragment != null) {
                         mEditPostPreviewFragment.loadPost();
                     }
@@ -632,6 +642,16 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
 
         @Override
+        public int getItemPosition(Object object) {
+            if (object instanceof EditPostSettingsFragment) {
+                EditPostSettingsFragment f = (EditPostSettingsFragment) object;
+                f.updateFragment();
+            }
+
+            return super.getItemPosition(object);
+        }
+
+        @Override
         public int getCount() {
             // Show 3 total pages.
             return 3;
@@ -640,6 +660,14 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     public boolean isEditingPostContent() {
         return (mViewPager.getCurrentItem() == PAGE_CONTENT);
+    }
+
+    public EditorFragmentAbstract getEditorFragment() {
+        return mEditorFragment;
+    }
+
+    public EditPostSettingsFragment getEditPostSettingsFragment() {
+        return mEditPostSettingsFragment;
     }
 
     // Moved from EditPostContentFragment
@@ -657,7 +685,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         return mMaxThumbWidth;
     }
 
-    private MediaFile createMediaFile(String blogId, final String mediaId) {
+    public MediaFile createMediaFile(String blogId, final String mediaId) {
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
 
         if (cursor == null || !cursor.moveToFirst()) {
@@ -678,6 +706,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         MediaFile mediaFile = new MediaFile();
         mediaFile.setMediaId(mediaId);
         mediaFile.setBlogId(blogId);
+        mediaFile.setPostID(getPost().getLocalTablePostId());
         mediaFile.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
         mediaFile.setDescription(cursor.getString(cursor.getColumnIndex("description")));
         mediaFile.setTitle(cursor.getString(cursor.getColumnIndex("title")));
@@ -708,6 +737,37 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.imageLoader);
     }
 
+    private boolean addMedia(Uri imageUri) {
+        if (!MediaUtils.isInMediaStore(imageUri) && !imageUri.toString().startsWith("/")) {
+            imageUri = MediaUtils.downloadExternalMedia(this, imageUri);
+        }
+
+        if (imageUri == null) {
+            return false;
+        }
+
+        String mediaTitle;
+        if (MediaUtils.isVideo(imageUri.toString())) {
+            mediaTitle = getResources().getString(R.string.video);
+        } else {
+            mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
+        }
+
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setMediaId(imageUri.toString());
+        mediaFile.setPostID(getPost().getLocalTablePostId());
+        mediaFile.setTitle(mediaTitle);
+        mediaFile.setFilePath(imageUri.toString());
+        if (imageUri.getEncodedPath() != null) {
+            mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
+        }
+        WordPress.wpDB.saveMediaFile(mediaFile);
+
+        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
+
+        return true;
+    }
+
     /**
      * Get media url from a MediaFile, returns a photon URL if the selected blog is Photon capable.
      */
@@ -731,7 +791,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
         @Override
         protected Spanned doInBackground(String... params) {
-            if (params.length < 1 || getPost() == null) {
+            if (getPost() == null || params.length < 1) {
                 return null;
             }
 
@@ -743,8 +803,63 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         protected void onPostExecute(Spanned spanned) {
             if (spanned != null) {
                 mEditorFragment.setContent(spanned);
+                loadPostImages(spanned);
+            }
+
+            if (mPost.hasFeaturedImage()) {
+                mEditPostSettingsFragment.setFeaturedImagePath(mPost.getFeaturedImagePath());
+            }
+
+        }
+    }
+
+    /**
+     * Load images found in a post's content.
+     * For images from local, then WPImageSpan parsing works correctly.
+     * However, for images from remote URL, then Editor cannot convert them
+     * into imagespans, thus parsing is required.
+     *
+     * @param postContent
+     */
+    public void loadPostImages(Spanned postContent) {
+        WPImageSpan[] imageSpans = postContent.getSpans(0, postContent.length(), WPImageSpan.class);
+
+        // local images
+        if (imageSpans.length > 0) {
+            for (WPImageSpan imageSpan : imageSpans) {
+                MediaFile file = imageSpan.getMediaFile();
+                mPost.getPostImages().add(file.getFilePath());
             }
         }
+
+        // remote images
+        try {
+            SAXParserImpl.newInstance(null).parse(
+                    new ByteArrayInputStream(mPost.getContent().getBytes("UTF-8")),
+                    new DefaultHandler() {
+                        public void startElement(String uri, String localName,
+                                                 String name, Attributes a) {
+                            if (name.equalsIgnoreCase("img")) {
+                                String postImage = a.getValue("src");
+                                if (postImage != null) {
+                                    String[] cleanPostImage = postImage.split("[\\?]");
+                                    if (cleanPostImage.length > 1) {
+                                        mPost.getPostImages().add(cleanPostImage[0]);
+                                    } else { // postImage is already a clean URL
+                                        mPost.getPostImages().add(postImage);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+            );
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private class HandleMediaSelectionTask extends AsyncTask<Intent, Void, Void> {
@@ -765,14 +880,20 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         // Set post title and content
         Post post = getPost();
         if (post != null) {
-            if (!TextUtils.isEmpty(post.getContent())) {
+            if (!TextUtils.isEmpty(post.getTitle()) || !TextUtils.isEmpty(post.getContent())) {
                 if (post.isLocalDraft()) {
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                             post.getContent().replaceAll("\uFFFC", ""));
-                }
-                else {
+                } else {
                     mEditorFragment.setContent(post.getContent().replaceAll("\uFFFC", ""));
+                    Spannable postContent = new SpannableStringBuilder(mEditorFragment.getContent());
+                    loadPostImages(postContent);
+                    List<Object> args = new Vector<>();
+                    args.add(WordPress.getCurrentBlog());
+                    args.add(mEditPostSettingsFragment);
+                    args.add(post);
+                    new ApiHelper.SyncFeaturedImageInSettings().execute(args);
                 }
             }
             if (!TextUtils.isEmpty(post.getTitle())) {
@@ -1046,35 +1167,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         task.execute(apiArgs);
     }
 
-    private boolean addMedia(Uri imageUri) {
-        if (!MediaUtils.isInMediaStore(imageUri) && !imageUri.toString().startsWith("/")) {
-            imageUri = MediaUtils.downloadExternalMedia(this, imageUri);
-        }
-
-        if (imageUri == null) {
-            return false;
-        }
-
-        String mediaTitle;
-        if (MediaUtils.isVideo(imageUri.toString())) {
-            mediaTitle = getResources().getString(R.string.video);
-        } else {
-            mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
-        }
-
-        MediaFile mediaFile = new MediaFile();
-        mediaFile.setPostID(getPost().getLocalTablePostId());
-        mediaFile.setTitle(mediaTitle);
-        mediaFile.setFilePath(imageUri.toString());
-        if (imageUri.getEncodedPath() != null) {
-            mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
-        }
-        WordPress.wpDB.saveMediaFile(mediaFile);
-        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
-
-        return true;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1149,12 +1241,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                     break;
             }
         }
-    }
-
-    private void startMediaGalleryAddActivity() {
-        Intent intent = new Intent(this, MediaGalleryPickerActivity.class);
-        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
-        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
     }
 
     private void handleMediaGalleryPickerResult(Intent data) {
@@ -1253,12 +1339,17 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 Integer libraryMediaAdded = 0;
 
                 for (MediaItem media : selectedContent) {
-                    if (URLUtil.isNetworkUrl(media.getSource().toString())) {
+                    String postImage = media.getSource().toString();
+                    if (URLUtil.isNetworkUrl(postImage)) {
                         addExistingMediaToEditor(media.getTag());
                         ++libraryMediaAdded;
                     } else {
                         addMedia(media.getSource());
                         ++localMediaAdded;
+                    }
+
+                    if (!mPost.getPostImages().contains(postImage)) {
+                        mPost.getPostImages().add(postImage);
                     }
                 }
 
@@ -1528,5 +1619,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     @Override
     public void saveMediaFile(MediaFile mediaFile) {
         WordPress.wpDB.saveMediaFile(mediaFile);
+    }
+
+    public int getBlogMediaStatus() {
+        return mBlogMediaStatus;
     }
 }

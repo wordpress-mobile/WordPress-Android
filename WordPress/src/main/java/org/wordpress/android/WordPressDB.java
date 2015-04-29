@@ -18,7 +18,6 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
@@ -31,6 +30,7 @@ import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -163,6 +163,12 @@ public class WordPressDB {
     private static final String ADD_MEDIA_UPLOAD_STATE = "alter table media add uploadState default '';";
     private static final String ADD_MEDIA_VIDEOPRESS_SHORTCODE = "alter table media add videoPressShortcode text default '';";
 
+    // add featured image to post
+    private static final String ADD_FEATURED_IMAGE_ID = "alter table posts add featuredImageId integer default 0;";
+
+    // add featured image path
+    private static final String ADD_FEATURED_IMAGE_PATH = "alter table posts add featuredImagePath text default '';";
+
     // add hidden flag to blog settings (accounts)
     private static final String ADD_BLOGS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
 
@@ -288,6 +294,11 @@ public class WordPressDB {
                 // Migrate WordPress.com token and infos to the DB
                 AccountTable.createTables(db);
                 migratePreferencesToAccountTable(context);
+
+                // Add featured-image related fields to every post
+                db.execSQL(ADD_FEATURED_IMAGE_PATH);
+                db.execSQL(ADD_FEATURED_IMAGE_ID);
+
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -599,7 +610,7 @@ public class WordPressDB {
                              "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId",
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
-                             "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden"};
+                        "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden"};
         Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
@@ -683,8 +694,8 @@ public class WordPressDB {
     }
 
     public List<String> loadStatsLogin(int id) {
-        Cursor c = db.query(BLOGS_TABLE, new String[] { "dotcom_username",
-                "dotcom_password" }, "id=" + id, null, null, null, null);
+        Cursor c = db.query(BLOGS_TABLE, new String[]{"dotcom_username",
+                "dotcom_password"}, "id=" + id, null, null, null, null);
 
         c.moveToFirst();
 
@@ -736,7 +747,7 @@ public class WordPressDB {
 
     public int getRemoteBlogIdForLocalTableBlogId(int localBlogId) {
         int remoteBlogID = SqlUtils.intForQuery(db, "SELECT blogId FROM accounts WHERE id=?", new String[]{Integer.toString(localBlogId)});
-        if (remoteBlogID<=1) { //Make sure we're not returning a wrong ID for jetpack blog.
+        if (remoteBlogID <= 1) { //Make sure we're not returning a wrong ID for jetpack blog.
             List<Map<String,Object>> allBlogs = this.getBlogsBy("dotcomFlag=0", new String[]{"api_blogid"});
             for (Map<String, Object> currentBlog : allBlogs) {
                 if (MapUtils.getMapInt(currentBlog, "id")==localBlogId) {
@@ -926,6 +937,8 @@ public class WordPressDB {
                     values.put("wp_author_display_name", MapUtils.getMapStr(postMap, "wp_author_display_name"));
                     values.put("post_status", MapUtils.getMapStr(postMap, (isPage) ? "page_status" : "post_status"));
                     values.put("userid", MapUtils.getMapStr(postMap, "userid"));
+                    values.put("featuredImageId", MapUtils.getMapInt(postMap, "featuredImageId"));
+                    values.put("featuredImagePath", MapUtils.getMapStr(postMap, "featuredImagePath"));
 
                     if (isPage) {
                         values.put("isPage", true);
@@ -1023,6 +1036,8 @@ public class WordPressDB {
             putPostLocation(post, values);
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
+            values.put("featuredImageId", post.getFeaturedImageID());
+            values.put("featuredImagePath", post.getFeaturedImagePath());
 
             result = db.insert(POSTS_TABLE, null, values);
 
@@ -1059,13 +1074,16 @@ public class WordPressDB {
             values.put("wp_post_format", post.getPostFormat());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
+            values.put("featuredImageId", post.getFeaturedImageID());
+            values.put("featuredImagePath", post.getFeaturedImagePath());
+
             putPostLocation(post, values);
 
             result = db.update(POSTS_TABLE, values, "blogID=? AND id=? AND isPage=?",
                     new String[]{
-                        String.valueOf(post.getLocalTableBlogId()),
-                        String.valueOf(post.getLocalTablePostId()),
-                        String.valueOf(SqlUtils.boolToSql(post.isPage()))
+                            String.valueOf(post.getLocalTableBlogId()),
+                            String.valueOf(post.getLocalTablePostId()),
+                            String.valueOf(SqlUtils.boolToSql(post.isPage()))
                     });
         }
 
@@ -1164,6 +1182,8 @@ public class WordPressDB {
                 post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
                 post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
                 post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
+                post.setFeaturedImageID(c.getInt(c.getColumnIndex("featuredImageId")));
+                post.setFeaturedImagePath(c.getString(c.getColumnIndex("featuredImagePath")));
 
                 int latColumnIndex = c.getColumnIndex("latitude");
                 int lngColumnIndex = c.getColumnIndex("longitude");
@@ -1394,7 +1414,7 @@ public class WordPressDB {
         Cursor c = db
                 .rawQuery(
                         "select count(*) from comments where blogID=? AND status='hold'",
-                        new String[] { String.valueOf(blogID) });
+                        new String[]{String.valueOf(blogID)});
         int numRows = c.getCount();
         c.moveToFirst();
 
@@ -1444,16 +1464,18 @@ public class WordPressDB {
                     cursor.close();
                 }
 
-                if (!isMarkedForDelete)
+                if (!isMarkedForDelete) {
                     result = db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?",
                             new String[]{StringUtils.notNullStr(mf.getBlogId()), StringUtils.notNullStr(mf.getMediaId())});
+                }
             }
 
             if (result == 0 && !isMarkedForDelete) {
                 result = db.update(MEDIA_TABLE, values, "postID=? AND filePath=?",
                         new String[]{String.valueOf(mf.getPostID()), StringUtils.notNullStr(mf.getFilePath())});
-                if (result == 0)
+                if (result == 0) {
                     db.insert(MEDIA_TABLE, null, values);
+                }
             }
         }
 
@@ -1497,6 +1519,15 @@ public class WordPressDB {
     public Cursor getMediaImagesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
                 + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "image%", "uploading" });
+    }
+
+    public Cursor getMediaImagesForPost(long postID) {
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE postID=" + postID + " AND mediaId <> '' AND "
+                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { "image%", "uploading" });
+    }
+
+    public Cursor getMediaImages() {
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE, null);
     }
 
     /** Ids in the filteredIds will not be selected **/

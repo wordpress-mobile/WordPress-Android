@@ -62,20 +62,15 @@
             android:singleLine="true"
             android:inputType="number"/>
 
-        <CheckBox
-            android:layout_gravity="left"
+        <Button
+            android:id="@+id/setFeaturedImageButtonInDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/featured"
-            android:id="@+id/featuredImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-        <CheckBox
-            android:layout_gravity="left"
-            android:text="@string/featured_in_post"
-            android:id="@+id/featuredInPost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:paddingLeft="@dimen/margin_medium"
+            android:paddingRight="@dimen/margin_medium"
             android:visibility="gone"/>
     </LinearLayout>
 </ScrollView>

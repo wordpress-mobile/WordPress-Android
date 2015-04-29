@@ -10,6 +10,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Post implements Serializable {
     // Increment this value if this model changes
@@ -51,7 +53,10 @@ public class Post implements Serializable {
     private boolean isLocalChange;
     private String mediaPaths;
     private String quickPostType;
+    private String featuredImagePath;
+    private int featuredImageID;
     private PostLocation mPostLocation;
+    private List<String> postImages;
 
     public Post() {
     }
@@ -207,7 +212,7 @@ public class Post implements Serializable {
     }
 
     public String getKeywords() {
-            return StringUtils.notNullStr(keywords);
+        return StringUtils.notNullStr(keywords);
     }
 
     public void setKeywords(String mtKeywords) {
@@ -396,12 +401,34 @@ public class Post implements Serializable {
         this.localTablePostId = id;
     }
 
+    public String getFeaturedImagePath() {
+        return featuredImagePath;
+    }
+
+    public int getFeaturedImageID() { return featuredImageID; }
+
+    public void setFeaturedImagePath(String featuredImagePath) {
+        this.featuredImagePath = featuredImagePath;
+    }
+
+    public void setFeaturedImageID(int featuredImageID) {
+        this.featuredImageID = featuredImageID;
+    }
+
     public void setQuickPostType(String type) {
         this.quickPostType = type;
     }
 
     public String getQuickPostType() {
         return StringUtils.notNullStr(quickPostType);
+    }
+
+    public List<String> getPostImages() {
+        if (postImages == null) {
+            postImages = new ArrayList<>();
+        }
+
+        return postImages;
     }
 
     /**
@@ -426,16 +453,22 @@ public class Post implements Serializable {
      */
     public boolean hasChanges(Post otherPost) {
         return otherPost == null || !(StringUtils.equals(title, otherPost.title) &&
-                                      StringUtils.equals(description, otherPost.description) &&
-                                      StringUtils.equals(excerpt, otherPost.excerpt) &&
-                                      StringUtils.equals(keywords, otherPost.keywords) &&
-                                      StringUtils.equals(categories, otherPost.categories) &&
-                                      StringUtils.equals(status, otherPost.status) &&
-                                      StringUtils.equals(password, otherPost.password) &&
-                                      StringUtils.equals(postFormat, otherPost.postFormat) &&
-                                      this.dateCreatedGmt == otherPost.dateCreatedGmt &&
-                                      PostLocation.equals(this.mPostLocation, otherPost.mPostLocation)
+                StringUtils.equals(description, otherPost.description) &&
+                StringUtils.equals(excerpt, otherPost.excerpt) &&
+                StringUtils.equals(keywords, otherPost.keywords) &&
+                StringUtils.equals(categories, otherPost.categories) &&
+                StringUtils.equals(status, otherPost.status) &&
+                StringUtils.equals(featuredImagePath, otherPost.featuredImagePath) &&
+                this.featuredImageID == otherPost.featuredImageID &&
+                StringUtils.equals(password, otherPost.password) &&
+                StringUtils.equals(postFormat, otherPost.postFormat) &&
+                this.dateCreatedGmt == otherPost.dateCreatedGmt &&
+                PostLocation.equals(this.mPostLocation, otherPost.mPostLocation)
         );
+    }
+
+    public boolean hasFeaturedImage() {
+        return featuredImagePath != null && !featuredImagePath.isEmpty();
     }
 
     @Override

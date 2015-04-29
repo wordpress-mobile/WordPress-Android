@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -62,6 +63,11 @@ public class MediaPickerActivity extends ActionBarActivity
     public static final int ACTIVITY_RESULT_CODE_GALLERY_CREATED  = 6002;
 
     /**
+     * Setting featured image flag
+     */
+    public static final String SET_FEATURED_IMAGE = "set-featured-image";
+
+    /**
      * Pass a {@link String} with this key in the {@link android.content.Intent} to set the title.
      */
     public static final String ACTIVITY_TITLE_KEY           = "activity-title";
@@ -77,6 +83,8 @@ public class MediaPickerActivity extends ActionBarActivity
     public static final String DEVICE_VIDEO_MEDIA_SOURCES_KEY = "device- video=media-sources";
     public static final String BLOG_IMAGE_MEDIA_SOURCES_KEY = "blog-image-media-sources";
     public static final String BLOG_VIDEO_MEDIA_SOURCES_KEY = "blog-video-media-sources";
+    public static final String POST_IMAGE_MEDIA_SOURCES_KEY = "post-image-media-sources";
+
     /**
      * Key to extract the {@link java.util.ArrayList} of {@link org.wordpress.mediapicker.MediaItem}'s
      * that were selected by the user.
@@ -93,10 +101,17 @@ public class MediaPickerActivity extends ActionBarActivity
     private WPViewPager            mViewPager;
     private ActionMode             mActionMode;
     private String                 mCapturePath;
+    private boolean mSetFeaturedImageMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().hasExtra(SET_FEATURED_IMAGE)) {
+            mSetFeaturedImageMode = true;
+        } else {
+            mSetFeaturedImageMode = false;
+        }
 
         lockRotation();
         addMediaSources();
@@ -107,7 +122,11 @@ public class MediaPickerActivity extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.media_picker, menu);
+        if (mSetFeaturedImageMode) {
+            inflater.inflate(R.menu.featured_image_picker, menu);
+        } else {
+            inflater.inflate(R.menu.media_picker, menu);
+        }
 
         return true;
     }
@@ -206,7 +225,9 @@ public class MediaPickerActivity extends ActionBarActivity
         mViewPager.setPagingEnabled(false);
         mActionMode = mode;
 
-        animateTabGone();
+        if (!mSetFeaturedImageMode) {
+            animateTabGone();
+        }
     }
 
     @Override
@@ -216,7 +237,9 @@ public class MediaPickerActivity extends ActionBarActivity
         mViewPager.setPagingEnabled(true);
         mActionMode = null;
 
-        animateTabAppear();
+        if (!mSetFeaturedImageMode) {
+            animateTabAppear();
+        }
     }
 
     /*
@@ -229,6 +252,20 @@ public class MediaPickerActivity extends ActionBarActivity
 
     @Override
     public void onMediaSelected(MediaItem mediaContent, boolean selected) {
+        if (mSetFeaturedImageMode && mActionMode != null) {
+            mActionMode.finish();
+            showFeaturedImageOnlyOne();
+            mActionMode = null;
+        }
+    }
+
+    @Override
+    public boolean onMenuItemSelected(MenuItem menuItem, ArrayList<MediaItem> selectedContent) {
+        if (menuItem.getItemId() == R.id.menu_media_content_selection_gallery) {
+            finishWithResults(selectedContent, ACTIVITY_RESULT_CODE_GALLERY_CREATED);
+        }
+
+        return false;
     }
 
     @Override
@@ -242,15 +279,6 @@ public class MediaPickerActivity extends ActionBarActivity
 
     @Override
     public void onMediaSelectionCancelled() {
-    }
-
-    @Override
-    public boolean onMenuItemSelected(MenuItem menuItem, ArrayList<MediaItem> selectedContent) {
-        if (menuItem.getItemId() == R.id.menu_media_content_selection_gallery) {
-            finishWithResults(selectedContent, ACTIVITY_RESULT_CODE_GALLERY_CREATED);
-        }
-
-        return false;
     }
 
     @Override
@@ -292,7 +320,7 @@ public class MediaPickerActivity extends ActionBarActivity
         final Intent intent = getIntent();
 
         if (intent != null) {
-            mMediaSources = new ArrayList[4];
+            mMediaSources = new ArrayList[5];
 
             List<MediaSource> mediaSources = intent.getParcelableArrayListExtra(DEVICE_IMAGE_MEDIA_SOURCES_KEY);
             if (mediaSources != null) {
@@ -317,6 +345,13 @@ public class MediaPickerActivity extends ActionBarActivity
                 mMediaSources[3] = new ArrayList<>();
                 mMediaSources[3].addAll(mediaSources);
             }
+
+            mediaSources = intent.getParcelableArrayListExtra(POST_IMAGE_MEDIA_SOURCES_KEY);
+            if (mediaSources != null) {
+                mMediaSources[4] = new ArrayList<>();
+                mMediaSources[4].addAll(mediaSources);
+            }
+
         }
     }
 
@@ -363,30 +398,51 @@ public class MediaPickerActivity extends ActionBarActivity
         if (mViewPager != null) {
             mViewPager.setPagingEnabled(true);
 
-            mMediaPickerAdapter.addTab(mMediaSources[0] != null ? mMediaSources[0] :
-                    new ArrayList<MediaSource>(),
-                    getString(R.string.tab_title_device_images),
-                    getString(R.string.loading_images),
-                    getString(R.string.error_loading_images),
-                    getString(R.string.no_device_images));
-            mMediaPickerAdapter.addTab(mMediaSources[1] != null ? mMediaSources[1] :
-                    new ArrayList<MediaSource>(),
-                    getString(R.string.tab_title_device_videos),
-                    getString(R.string.loading_videos),
-                    getString(R.string.error_loading_videos),
-                    getString(R.string.no_device_videos));
-            mMediaPickerAdapter.addTab(mMediaSources[2] != null ? mMediaSources[2] :
-                    new ArrayList<MediaSource>(),
-                    getString(R.string.tab_title_site_images),
-                    getString(R.string.loading_blog_images),
-                    getString(R.string.error_loading_blog_images),
-                    getString(R.string.no_blog_images));
-            mMediaPickerAdapter.addTab(mMediaSources[3] != null ? mMediaSources[3] :
-                    new ArrayList<MediaSource>(),
-                    getString(R.string.tab_title_site_videos),
-                    getString(R.string.loading_blog_videos),
-                    getString(R.string.error_loading_blog_videos),
-                    getString(R.string.no_blog_videos));
+            if (mSetFeaturedImageMode) {
+                mMediaPickerAdapter.addTab(mMediaSources[0] != null ? mMediaSources[0] :
+                                new ArrayList<MediaSource>(),
+                        getString(R.string.tab_title_device_images),
+                        getString(R.string.loading_images),
+                        getString(R.string.error_loading_images),
+                        getString(R.string.no_device_images));
+                mMediaPickerAdapter.addTab(mMediaSources[2] != null ? mMediaSources[2] :
+                                new ArrayList<MediaSource>(),
+                        getString(R.string.tab_title_site_images),
+                        getString(R.string.loading_blog_images),
+                        getString(R.string.error_loading_blog_images),
+                        getString(R.string.no_blog_images));
+                mMediaPickerAdapter.addTab(mMediaSources[4] != null ? mMediaSources[4] :
+                                new ArrayList<MediaSource>(),
+                        getString(R.string.tab_title_post_images),
+                        getString(R.string.loading_images),
+                        getString(R.string.error_loading_images),
+                        getString(R.string.no_device_images));
+            } else {
+                mMediaPickerAdapter.addTab(mMediaSources[0] != null ? mMediaSources[0] :
+                                new ArrayList<MediaSource>(),
+                        getString(R.string.tab_title_device_images),
+                        getString(R.string.loading_images),
+                        getString(R.string.error_loading_images),
+                        getString(R.string.no_device_images));
+                mMediaPickerAdapter.addTab(mMediaSources[1] != null ? mMediaSources[1] :
+                                new ArrayList<MediaSource>(),
+                        getString(R.string.tab_title_device_videos),
+                        getString(R.string.loading_videos),
+                        getString(R.string.error_loading_videos),
+                        getString(R.string.no_device_videos));
+                mMediaPickerAdapter.addTab(mMediaSources[2] != null ? mMediaSources[2] :
+                                new ArrayList<MediaSource>(),
+                        getString(R.string.tab_title_site_images),
+                        getString(R.string.loading_blog_images),
+                        getString(R.string.error_loading_blog_images),
+                        getString(R.string.no_blog_images));
+                mMediaPickerAdapter.addTab(mMediaSources[3] != null ? mMediaSources[3] :
+                                new ArrayList<MediaSource>(),
+                        getString(R.string.tab_title_site_videos),
+                        getString(R.string.loading_blog_videos),
+                        getString(R.string.error_loading_blog_videos),
+                        getString(R.string.no_blog_videos));
+            }
 
             mViewPager.setAdapter(mMediaPickerAdapter);
 
@@ -530,5 +586,9 @@ public class MediaPickerActivity extends ActionBarActivity
         public void addTab(ArrayList<MediaSource> mediaSources, String tabName, String loading, String error, String empty) {
             mMediaPickers.add(new MediaPicker(tabName, loading, error, empty, mediaSources));
         }
+    }
+
+    private void showFeaturedImageOnlyOne() {
+        Toast.makeText(this, getResources().getText(R.string.featured_image_only_one), Toast.LENGTH_SHORT).show();
     }
 }

@@ -3,7 +3,6 @@ package org.wordpress.android.ui.media;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Parcel;
@@ -11,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ImageView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -18,11 +18,9 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
-import org.wordpress.mediapicker.MediaUtils.LimitedBackgroundOperation;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -30,31 +28,32 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MediaSourceWPImages implements MediaSource {
+public class MediaSourcePostImages implements MediaSource {
     private final List<MediaItem> mVerifiedItems = new ArrayList<>();
     private final List<MediaItem> mMediaItems = new ArrayList<>();
 
     private OnMediaChange mListener;
 
-    public MediaSourceWPImages() {
+    List<String> mDuplicateChecker = new ArrayList<>();
+
+    public MediaSourcePostImages() {
     }
 
     @Override
     public void gather(Context context) {
         mMediaItems.clear();
+        mDuplicateChecker.clear();
 
-        Blog blog = WordPress.getCurrentBlog();
+        Cursor allImages = WordPressMediaUtils.getWordPressMediaImages();
 
-        if (blog != null) {
-            Cursor imageCursor = WordPressMediaUtils.getWordPressMediaImages(String.valueOf(blog.getLocalTableBlogId()));
+        // Todo: It would be much better if we can get images from the following cursor
+        // Cursor allImages = WordPress.wpDB.getMediaImagesForPost(WordPress.currentPost.getLocalTablePostId());
+        // Log.i("media", "postimages: " + postImages);
 
-            if (imageCursor != null) {
-                addWordPressImagesFromCursor(imageCursor);
-                imageCursor.close();
-            } else if (mListener != null){
-                mListener.onMediaLoaded(false);
-            }
-        } else if (mListener != null){
+        if (allImages != null) {
+            addWordPressImagesFromCursor(allImages);
+            allImages.close();
+        } else if (mListener != null) {
             mListener.onMediaLoaded(false);
         }
     }
@@ -97,9 +96,8 @@ public class MediaSourceWPImages implements MediaSource {
                     }
 
                     if (imageBitmap == null) {
-                        imageView.setImageDrawable(placeholderDrawable(convertView.getContext()));
-                        WordPressMediaUtils.BackgroundDownloadWebImage bgDownload =
-                                new WordPressMediaUtils.BackgroundDownloadWebImage(imageView);
+                        imageView.setImageResource(R.color.grey_darken_10);
+                        WordPressMediaUtils.BackgroundDownloadWebImage bgDownload = new WordPressMediaUtils.BackgroundDownloadWebImage(imageView);
                         imageView.setTag(bgDownload);
                         bgDownload.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mediaItem.getPreviewSource());
                     } else {
@@ -118,14 +116,6 @@ public class MediaSourceWPImages implements MediaSource {
     @Override
     public boolean onMediaItemSelected(MediaItem mediaItem, boolean selected) {
         return !selected;
-    }
-
-    private Drawable placeholderDrawable(Context context) {
-        if (context != null && context.getResources() != null) {
-            return context.getResources().getDrawable(R.drawable.media_item_placeholder);
-        }
-
-        return null;
     }
 
     private void addWordPressImagesFromCursor(Cursor cursor) {
@@ -171,66 +161,77 @@ public class MediaSourceWPImages implements MediaSource {
                 mMediaItems.add(newContent);
             } while (cursor.moveToNext());
 
-            removeDeletedEntries();
+            getVerifiedEntries();
         } else if (mListener != null) {
             mListener.onMediaLoaded(true);
         }
     }
 
-    private void removeDeletedEntries() {
+    private void getVerifiedEntries() {
         List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
 
         for (MediaItem mediaItem : existingItems) {
             final boolean callLoaded = existingItems.indexOf(mediaItem) == existingItems.size() - 1;
 
-            LimitedBackgroundOperation<MediaItem, Void, MediaItem> backgroundCheck =
-                    new LimitedBackgroundOperation<MediaItem, Void, MediaItem>() {
+            AsyncTask<MediaItem, Void, MediaItem> backgroundCheck = new AsyncTask<MediaItem, Void, MediaItem>() {
                 int responseCode;
 
                 @Override
-                protected MediaItem performBackgroundOperation(MediaItem[] params) {
+                protected MediaItem doInBackground(MediaItem[] params) {
                     MediaItem mediaItem = params[0];
-                        try {
-                            URL mediaUrl = new URL(mediaItem.getSource().toString());
-                            HttpURLConnection connection = (HttpURLConnection) mediaUrl.openConnection();
-                            connection.setRequestMethod("GET");
-                            connection.connect();
-                            responseCode = connection.getResponseCode();
+                    Post post = WordPress.currentPost;
+                    String path = mediaItem.getSource().toString();
+                    String noHttpsPath = path.replace("https", "http");
 
-                        } catch (IOException ioException) {
-                            Log.e("", "Error reading from " + mediaItem.getSource() + "\nexception:" + ioException);
+                    if (post.getPostImages().contains(path) || post.getPostImages().contains(noHttpsPath)) {
+                        if (URLUtil.isNetworkUrl(path)) {
+                            try {
+                                URL mediaUrl = new URL(path);
+                                HttpURLConnection connection = (HttpURLConnection) mediaUrl.openConnection();
+                                connection.setRequestMethod("GET");
+                                connection.connect();
+                                responseCode = connection.getResponseCode();
+                            } catch (IOException ioException) {
+                                Log.e("", "Error reading from " + mediaItem.getSource() + "\nexception:" + ioException);
 
-                            return null;
+                                return null;
+                            }
                         }
 
-                    return mediaItem;
+                        return mediaItem;
+                    }
+
+                    return null;
                 }
 
                 @Override
-                public void performPostExecute(MediaItem result) {
+                public void onPostExecute(MediaItem result) {
                     if (mListener != null && result != null) {
                         List<MediaItem> resultList = new ArrayList<>();
+                        String path = result.getSource().toString();
                         resultList.add(result);
-                        if (responseCode == 200) {
-                            mVerifiedItems.add(result);
-                            mListener.onMediaAdded(MediaSourceWPImages.this, resultList);
+
+                        if (URLUtil.isNetworkUrl(path)) {
+                            if (responseCode == 200 && !mDuplicateChecker.contains(path)) {
+                                mVerifiedItems.add(result);
+                                mDuplicateChecker.add(path);
+                            }
+                        } else {
+                            if (!mDuplicateChecker.contains(path)) {
+                                mVerifiedItems.add(result);
+                                mDuplicateChecker.add(path);
+                            }
                         }
+
+                        mListener.onMediaAdded(MediaSourcePostImages.this, mVerifiedItems);
 
                         if (callLoaded) {
                             mListener.onMediaLoaded(true);
                         }
                     }
                 }
-
-                @Override
-                public void startExecution(Object params) {
-                    if (!(params instanceof MediaItem)) {
-                        throw new IllegalArgumentException("Params must be of type MediaItem");
-                    }
-                    executeOnExecutor(THREAD_POOL_EXECUTOR, (MediaItem) params);
-                }
             };
-            backgroundCheck.executeWithLimit(mediaItem);
+            backgroundCheck.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaItem);
         }
     }
 
@@ -238,14 +239,14 @@ public class MediaSourceWPImages implements MediaSource {
      * {@link android.os.Parcelable} interface
      */
 
-    public static final Creator<MediaSourceWPImages> CREATOR =
-            new Creator<MediaSourceWPImages>() {
-                public MediaSourceWPImages createFromParcel(Parcel in) {
-                    return new MediaSourceWPImages();
+    public static final Creator<MediaSourcePostImages> CREATOR =
+            new Creator<MediaSourcePostImages>() {
+                public MediaSourcePostImages createFromParcel(Parcel in) {
+                    return new MediaSourcePostImages();
                 }
 
-                public MediaSourceWPImages[] newArray(int size) {
-                    return new MediaSourceWPImages[size];
+                public MediaSourcePostImages[] newArray(int size) {
+                    return new MediaSourcePostImages[size];
                 }
             };
 
@@ -257,13 +258,4 @@ public class MediaSourceWPImages implements MediaSource {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
     }
-
-    public List<MediaItem> getmVerifiedItems() {
-        return mVerifiedItems;
-    }
-
-    public List<MediaItem> getmMediaItems() {
-        return mMediaItems;
-    }
-
 }

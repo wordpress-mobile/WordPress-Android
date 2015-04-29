@@ -135,6 +135,9 @@
     <dimen name="media_item_frame_padding_right">8dp</dimen>
     <dimen name="media_item_frame_padding_bottom">8dp</dimen>
 
+    <!-- Featured Image Settings -->
+    <dimen name="featured_image_width_default">200dp</dimen>
+    <dimen name="featured_image_height_default">@dimen/reader_featured_image_height_default</dimen>
     <!-- my site -->
     <dimen name="my_site_add_button_padding_bottom">5dp</dimen>
     <dimen name="my_site_blog_name_margin_top">11dp</dimen>

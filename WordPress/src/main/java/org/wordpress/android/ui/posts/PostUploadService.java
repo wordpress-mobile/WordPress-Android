@@ -21,6 +21,7 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+import android.webkit.URLUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +42,7 @@ import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.helpers.MediaFile;
+import org.wordpress.android.util.helpers.WPImageSpan;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -58,6 +60,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -155,7 +158,6 @@ public class PostUploadService extends Service {
         private String mErrorMessage = "";
         private boolean mIsMediaError = false;
         private boolean mErrorUnavailableVideoPress = false;
-        private int featuredImageID = -1;
         private XMLRPCClientInterface mClient;
 
         // Used for analytics
@@ -170,6 +172,13 @@ public class PostUploadService extends Service {
             if (postUploadedSuccessfully) {
                 WordPress.postUploaded(mPost.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
                 mPostUploadNotifier.cancelNotification();
+                if (mPost.hasFeaturedImage()) {
+                    List<Object> args = new Vector<>();
+                    args.add(WordPress.getCurrentBlog());
+                    args.add(null);
+                    args.add(mPost);
+                    new ApiHelper.UpdatePostFeaturedImage().execute(args);
+                }
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
             } else {
                 WordPress.postUploadFailed(mPost.getLocalTableBlogId());
@@ -215,6 +224,38 @@ public class PostUploadService extends Service {
             mClient = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
 
+            // featured image exists
+            if (!TextUtils.isEmpty(mPost.getFeaturedImagePath())) {
+                // from local: upload first, then get the ID
+                if (!URLUtil.isNetworkUrl(mPost.getFeaturedImagePath())) {
+                    setFeaturedImage();
+                }
+            } else if (mPost.isPublished()) {
+                // path is empty, but id still exists = Remove FI
+                // id is still from last featured image
+                mPost.setFeaturedImageID(0);
+                List<Object> args = new Vector<>();
+                args.add(WordPress.getCurrentBlog());
+                args.add(null);
+                args.add(mPost);
+                new ApiHelper.UpdatePostFeaturedImage().execute(args);
+            }
+
+            return uploadPost();
+        }
+
+        private void setFeaturedImage() {
+            Bitmap featuredImageBitmap = ImageUtils.
+                    getWPImageSpanThumbnailFromFilePath(mContext,
+                            Uri.parse(mPost.getFeaturedImagePath()).getEncodedPath(),
+                            200);
+            WPImageSpan is = new WPImageSpan(mContext, featuredImageBitmap, Uri.parse(mPost.getFeaturedImagePath()));
+            MediaFile featuredImage = is.getMediaFile();
+            prepareMediaForUpload(featuredImage, mPost.getFeaturedImagePath());
+            uploadImage(featuredImage);
+        }
+
+        private boolean uploadPost() {
             if (TextUtils.isEmpty(mPost.getPostStatus())) {
                 mPost.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
             }
@@ -225,8 +266,6 @@ public class PostUploadService extends Service {
             if (!TextUtils.isEmpty(mPost.getMoreText())) {
                 moreContent = processPostMedia(mPost.getMoreText());
             }
-
-            mPostUploadNotifier.updateNotificationMessage(uploadingPostTitle, uploadingPostMessage);
 
             // If media file upload failed, let's stop here and prompt the user
             if (mIsMediaError) {
@@ -361,11 +400,6 @@ public class PostUploadService extends Service {
                 }
             }
 
-            // featured image
-            if (featuredImageID != -1) {
-                contentStruct.put("wp_post_thumbnail", featuredImageID);
-            }
-
             if (!TextUtils.isEmpty(mPost.getQuickPostType())) {
                 mClient.addQuickPostHeader(mPost.getQuickPostType());
             }
@@ -404,6 +438,35 @@ public class PostUploadService extends Service {
             }
 
             return false;
+        }
+
+        private void prepareMediaForUpload(MediaFile mediaFile, String path) {
+            File file = new File(path);
+            Blog blog = WordPress.getCurrentBlog();
+            long currentTime = System.currentTimeMillis();
+            String mimeType = MediaUtils.getMediaFileMimeType(file);
+            String fileName = MediaUtils.getMediaFileName(file, mimeType);
+
+            mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
+            mediaFile.setFileName(fileName);
+            mediaFile.setFilePath(path);
+            mediaFile.setUploadState("queued");
+            mediaFile.setDateCreatedGMT(currentTime);
+            mediaFile.setMediaId(String.valueOf(currentTime));
+            mediaFile.setFeatured(true);
+
+            if (mimeType != null && mimeType.startsWith("image")) {
+                // get width and height
+                BitmapFactory.Options bfo = new BitmapFactory.Options();
+                bfo.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(path, bfo);
+                mediaFile.setWidth(bfo.outWidth);
+                mediaFile.setHeight(bfo.outHeight);
+            }
+
+            if (!TextUtils.isEmpty(mimeType)) {
+                mediaFile.setMimeType(mimeType);
+            }
         }
 
         private void trackUploadAnalytics() {
@@ -496,6 +559,8 @@ public class PostUploadService extends Service {
 
             return postContent;
         }
+
+
 
         private String uploadImage(MediaFile mediaFile) {
             AppLog.d(T.POSTS, "uploadImage: " + mediaFile.getFilePath());
@@ -785,7 +850,8 @@ public class PostUploadService extends Service {
             if (mf.isFeatured()) {
                 try {
                     if (contentHash.get("id") != null) {
-                        featuredImageID = Integer.parseInt(contentHash.get("id").toString());
+                        mPost.setFeaturedImageID(
+                                Integer.parseInt(contentHash.get("id").toString()));
                         if (!mf.isFeaturedInPost())
                             return "";
                     }

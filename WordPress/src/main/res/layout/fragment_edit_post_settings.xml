@@ -64,6 +64,58 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/featuredImageLabel"
+                style="@style/WordPressSubHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="@string/categories" />
+
+            <Button
+                android:id="@+id/setFeaturedImageButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/set_featured_image"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"/>
+
+            <Button
+                android:id="@+id/removeFeaturedImageButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/remove_featured_image"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                android:visibility="gone"/>
+
+            <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/featuredImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minWidth="@dimen/featured_image_width_default"
+                    android:minHeight="@dimen/featured_image_height_default"
+                    android:padding="@dimen/margin_medium"
+                    android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/featuredImageViewLocal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/margin_medium"
+                android:visibility="gone"/>
+
+            <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+                android:id="@+id/loadingIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/categoryLabel"
                 style="@style/WordPressSubHeader"
