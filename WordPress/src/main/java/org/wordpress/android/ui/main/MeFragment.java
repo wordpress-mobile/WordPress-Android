@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -20,14 +21,13 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
-import org.wordpress.android.widgets.WPTextView;
 
 public class MeFragment extends Fragment {
 
     private WPNetworkImageView mAvatarImageView;
-    private WPTextView mDisplayNameTextView;
-    private WPTextView mUsernameTextView;
-    private WPTextView mLoginLogoutTextView;
+    private TextView mDisplayNameTextView;
+    private TextView mUsernameTextView;
+    private TextView mLoginLogoutTextView;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -38,10 +38,10 @@ public class MeFragment extends Fragment {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_me, container, false);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
-        mDisplayNameTextView = (WPTextView) rootView.findViewById(R.id.me_display_name);
-        mUsernameTextView = (WPTextView) rootView.findViewById(R.id.me_username);
+        mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
+        mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
 
-        WPTextView settingsTextView = (WPTextView) rootView.findViewById(R.id.me_settings_text_view);
+        TextView settingsTextView = (TextView) rootView.findViewById(R.id.me_settings_text_view);
         settingsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,7 +49,7 @@ public class MeFragment extends Fragment {
             }
         });
 
-        WPTextView supportTextView = (WPTextView) rootView.findViewById(R.id.me_support_text_view);
+        TextView supportTextView = (TextView) rootView.findViewById(R.id.me_support_text_view);
         supportTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +57,7 @@ public class MeFragment extends Fragment {
             }
         });
 
-        mLoginLogoutTextView = (WPTextView) rootView.findViewById(R.id.me_login_logout_text_view);
+        mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
 
         addDropShadow(rootView.findViewById(R.id.frame_avatar));
         refreshAccountDetails();
