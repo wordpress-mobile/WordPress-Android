@@ -20,6 +20,7 @@ import org.wordpress.android.models.Account;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class MeFragment extends Fragment {
@@ -53,7 +54,7 @@ public class MeFragment extends Fragment {
         supportTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewHelpAndSupport(getActivity());
+                ActivityLauncher.viewHelpAndSupport(getActivity(), Tag.ORIGIN_ME_SCREEN_HELP);
             }
         });
 
