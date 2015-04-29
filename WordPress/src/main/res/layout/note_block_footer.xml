@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/note_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_medium"
+        android:orientation="vertical"
+        android:background="@drawable/selectable_background_wordpress"
+        android:clickable="true">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/note_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/grey"
+            android:textColorLink="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            app:fixWidowWords="true" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/notifications_list_divider" />
+</LinearLayout>

@@ -67,7 +67,7 @@ public class NoteBlock {
         return mNoteData;
     }
 
-    Spannable getNoteText() {
+    public Spannable getNoteText() {
         return NotificationsUtils.getSpannableContentForRanges(mNoteData, null, mOnNoteBlockTextClickListener);
     }
 
