@@ -460,7 +460,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             thumbnailBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(context, imageUri.getEncodedPath(),
                     ImageUtils.getMaximumThumbnailWidthForEditor(context));
             if (thumbnailBitmap == null) {
-                return null;
+                // Use a placeholder in case thumbnail can't be decoded (OOM for instance)
+                thumbnailBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.dashicon_format_image_big_grey);
             }
         }
         WPEditImageSpan imageSpan = new WPEditImageSpan(context, thumbnailBitmap, imageUri);
