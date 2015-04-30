@@ -13,8 +13,7 @@ import org.wordpress.android.util.SqlUtils;
 public class StatsTable {
 
     private static final String TABLE_NAME = "tbl_stats";
-    private static final int CACHE_TTL_MINUTES = 10;
-
+    public static final int CACHE_TTL_MINUTES = 10;
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_NAME + " ("
@@ -131,7 +130,10 @@ public class StatsTable {
         }
     }
 
-    public static boolean deleteOldStats(final Context ctx, final int blogId, final long timestamp) {
+    /**
+     *  Delete expired Stats data from StatsDB
+     */
+    public static boolean deleteOldStats(final Context ctx, final long timestamp) {
         if (ctx == null) {
             AppLog.e(AppLog.T.STATS, "Cannot delete stats since the passed context is null. Context is required " +
                     "to access the DB.");
@@ -141,16 +143,16 @@ public class StatsTable {
         SQLiteDatabase db = StatsDatabaseHelper.getWritableDb(ctx);
         try {
             db.beginTransaction();
-            int rowDeleted = db.delete(TABLE_NAME, "blogID=? AND timestamp < ?", new String[] { Integer.toString(blogId), Long.toString(timestamp) });
+            int rowDeleted = db.delete(TABLE_NAME, "timestamp <= ?", new String[] { Long.toString(timestamp) });
             db.setTransactionSuccessful();
-            AppLog.d(AppLog.T.STATS, "Old stats for localBlogID " + blogId);
+            AppLog.d(AppLog.T.STATS, "Number of old stats deleted : " + rowDeleted);
             return rowDeleted > 1;
         } finally {
             db.endTransaction();
         }
     }
 
-    public static boolean deleteStats(final Context ctx, final int blogId) {
+    public static boolean deleteStatsForBlog(final Context ctx, final int blogId) {
         if (ctx == null) {
             AppLog.e(AppLog.T.STATS, "Cannot delete stats since the passed context is null. Context is required " +
                     "to access the DB.");

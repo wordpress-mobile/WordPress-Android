@@ -41,7 +41,7 @@ public class BlogUtils {
         for (Map<String, Object> blog : allBlogs) {
             if (!newBlogURLs.contains(blog.get("url").toString() + blog.get("blogId"))) {
                 WordPress.wpDB.deleteBlog(context, Integer.parseInt(blog.get("id").toString()));
-                StatsTable.deleteStats(context,  Integer.parseInt(blog.get("id").toString())); // Remove stats data
+                StatsTable.deleteStatsForBlog(context, Integer.parseInt(blog.get("id").toString())); // Remove stats data
                 retValue = true;
             }
         }

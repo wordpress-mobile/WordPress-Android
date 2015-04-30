@@ -185,7 +185,7 @@ public class SitePickerActivity extends ActionBarActivity
                     currentSiteName = site.getBlogNameOrHostName();
                 } else {
                     WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
-                    StatsTable.deleteStats(this, site.localId); // Remove stats data for hidden sites
+                    StatsTable.deleteStatsForBlog(this, site.localId); // Remove stats data for hidden sites
                 }
             }
 

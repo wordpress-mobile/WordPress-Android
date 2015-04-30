@@ -262,7 +262,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
                             Toast.LENGTH_SHORT)
                             .show();
                     WordPress.wpDB.deleteLastBlogId();
-                    StatsTable.deleteStats(BlogPreferencesActivity.this,localTableBlogID); // Remove stats data
+                    StatsTable.deleteStatsForBlog(BlogPreferencesActivity.this, localTableBlogID); // Remove stats data
                     WordPress.currentBlog = null;
                     mBlogDeleted = true;
                     activity.finish();
