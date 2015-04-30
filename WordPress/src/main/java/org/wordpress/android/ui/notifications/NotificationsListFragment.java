@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.cocosw.undobar.UndoBarController;
@@ -46,7 +47,7 @@ import javax.annotation.Nonnull;
 
 public class NotificationsListFragment extends Fragment
         implements Bucket.Listener<Note>,
-        WPMainActivity.OnScrollToTopListener {
+                   WPMainActivity.OnScrollToTopListener {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
@@ -58,7 +59,7 @@ public class NotificationsListFragment extends Fragment
     private NotesAdapter mNotesAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
-    private TextView mEmptyTextView;
+    private ViewGroup mEmptyView;
 
     private int mRestoredScrollPosition;
 
@@ -80,7 +81,7 @@ public class NotificationsListFragment extends Fragment
         View view = inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notes);
-        mEmptyTextView = (TextView) view.findViewById(R.id.empty_view);
+        mEmptyView = (ViewGroup) view.findViewById(R.id.empty_view);
 
         RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
         animator.setSupportsChangeAnimations(true);
@@ -110,18 +111,10 @@ public class NotificationsListFragment extends Fragment
         } else {
             if (!AccountHelper.getDefaultAccount().isWordPressComUser()) {
                 // let user know that notifications require a wp.com account and enable sign-in
-                showEmptyView(R.string.notifications_account_required);
-                int color = view.getResources().getColor(R.color.reader_hyperlink);
-                mEmptyTextView.setTextColor(color);
-                mEmptyTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ActivityLauncher.showSignInForResult(getActivity());
-                    }
-                });
+                showEmptyView(R.string.notifications_account_required, true);
             } else {
                 // failed for some other reason
-                showEmptyView(R.string.error_refresh_notifications);
+                showEmptyView(R.string.error_refresh_notifications, false);
             }
         }
 
@@ -262,16 +255,26 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
-    private void showEmptyView(@StringRes int stringResId) {
-        if (isAdded() && mEmptyTextView != null) {
-            mEmptyTextView.setText(stringResId);
-            mEmptyTextView.setVisibility(View.VISIBLE);
+    private void showEmptyView(@StringRes int stringResId, boolean showSignIn) {
+        if (isAdded() && mEmptyView != null) {
+            ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(stringResId);
+            mEmptyView.setVisibility(View.VISIBLE);
+            Button btnSignIn = (Button) mEmptyView.findViewById(R.id.button_sign_in);
+            btnSignIn.setVisibility(showSignIn ? View.VISIBLE : View.GONE);
+            if (showSignIn) {
+                btnSignIn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ActivityLauncher.showSignInForResult(getActivity());
+                    }
+                });
+            }
         }
     }
 
     private void hideEmptyView() {
-        if (isAdded() && mEmptyTextView != null) {
-            mEmptyTextView.setVisibility(View.GONE);
+        if (isAdded() && mEmptyView != null) {
+            mEmptyView.setVisibility(View.GONE);
         }
     }
 
@@ -288,7 +291,7 @@ public class NotificationsListFragment extends Fragment
                 if (mNotesAdapter.getCount() > 0) {
                     hideEmptyView();
                 } else {
-                    showEmptyView(R.string.notifications_empty_list);
+                    showEmptyView(R.string.notifications_empty_list, false);
                 }
             }
         });
