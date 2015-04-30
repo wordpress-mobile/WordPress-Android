@@ -469,6 +469,8 @@ public class CommentsListFragment extends Fragment {
                 int numExisting = getCommentAdapter().getCount();
                 hPost.put("offset", numExisting);
                 hPost.put("number", COMMENTS_PER_PAGE);
+            } else if (!mCanLoadMoreComments) {
+                hPost.put("number", getCommentAdapter().getCount());
             } else {
                 hPost.put("number", COMMENTS_PER_PAGE);
             }

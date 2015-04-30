@@ -352,6 +352,11 @@ public class ApiHelper {
         if (blog == null) {
             return null;
         }
+
+        int paramsPosition = commentParams.length - 1; // params is in the last argument
+        int offset = 0; // no table offset
+        int limit = -1; // no table return limit
+
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                 blog.getHttppassword());
         Object[] result;
@@ -362,83 +367,55 @@ public class ApiHelper {
         java.util.Date date;
         CommentList comments = new CommentList();
 
+        HashMap <String, Object> hPost = (HashMap<String, Object>) commentParams[paramsPosition];
+        if (!hPost.containsKey("status")) {
+            hPost.put("status", "approve, hold, spam");
+        }
+        if (hPost.containsKey("number")) {
+            limit = (int) hPost.get("number");
+        }
+        if (hPost.containsKey("offset")) {
+            offset = (int) hPost.get("offset");
+        }
+        commentParams[paramsPosition] = hPost;
+
         result = (Object[]) client.call("wp.getComments", commentParams);
 
-        if (result.length > 0) {
-            for (int ctr = 0; ctr < result.length; ctr++) {
-                contentHash = (Map<?, ?>) result[ctr];
-                content = contentHash.get("content").toString();
-                status = contentHash.get("status").toString();
-                postID = Long.parseLong(contentHash.get("post_id").toString());
-                commentID = Long.parseLong(contentHash.get("comment_id").toString());
-                authorName = contentHash.get("author").toString();
-                authorURL = contentHash.get("author_url").toString();
-                authorEmail = contentHash.get("author_email").toString();
-                postTitle = contentHash.get("post_title").toString();
-                date = (java.util.Date) contentHash.get("date_created_gmt");
-                pubDate = DateTimeUtils.javaDateToIso8601(date);
-
-                Comment comment = new Comment(
-                        postID,
-                        commentID,
-                        authorName,
-                        pubDate,
-                        content,
-                        status,
-                        postTitle,
-                        authorURL,
-                        authorEmail,
-                        null);
-
-                comments.add(comment);
-            }
+        if (result.length == 0) {
+            return null;
         }
 
-        // get existing spams, if any
-        // Possible bug in wp.getComments. Comment that is moderated as Spam
-        // from the website, then it will NOT be included in wp.getComments
-        // thus we have to get it in a rather specific manner.
-        HashMap<String, Object> withSpam = new HashMap<>();
-        withSpam.put("status", "spam");
-        Object[] commentParamsWithSpam = {blog.getRemoteBlogId(), blog.getUsername(),
-                blog.getPassword(), withSpam};
-        result = (Object[]) client.call("wp.getComments", commentParamsWithSpam);
+        for (int ctr = 0; ctr < result.length; ctr++) {
+            contentHash = (Map<?, ?>) result[ctr];
+            content = contentHash.get("content").toString();
+            status = contentHash.get("status").toString();
+            postID = Long.parseLong(contentHash.get("post_id").toString());
+            commentID = Long.parseLong(contentHash.get("comment_id").toString());
+            authorName = contentHash.get("author").toString();
+            authorURL = contentHash.get("author_url").toString();
+            authorEmail = contentHash.get("author_email").toString();
+            postTitle = contentHash.get("post_title").toString();
+            date = (java.util.Date) contentHash.get("date_created_gmt");
+            pubDate = DateTimeUtils.javaDateToIso8601(date);
 
-        if (result.length > 0) {
-            for (int ctr = 0; ctr < result.length; ctr++) {
-                contentHash = (Map<?, ?>) result[ctr];
-                content = contentHash.get("content").toString();
-                status = contentHash.get("status").toString();
-                postID = Long.parseLong(contentHash.get("post_id").toString());
-                commentID = Long.parseLong(contentHash.get("comment_id").toString());
-                authorName = contentHash.get("author").toString();
-                authorURL = contentHash.get("author_url").toString();
-                authorEmail = contentHash.get("author_email").toString();
-                postTitle = contentHash.get("post_title").toString();
-                date = (java.util.Date) contentHash.get("date_created_gmt");
-                pubDate = DateTimeUtils.javaDateToIso8601(date);
+            Comment comment = new Comment(
+                    postID,
+                    commentID,
+                    authorName,
+                    pubDate,
+                    content,
+                    status,
+                    postTitle,
+                    authorURL,
+                    authorEmail,
+                    null);
 
-                Comment comment = new Comment(
-                        postID,
-                        commentID,
-                        authorName,
-                        pubDate,
-                        content,
-                        status,
-                        postTitle,
-                        authorURL,
-                        authorEmail,
-                        null);
-
-                comments.add(comment);
-            }
+            comments.add(comment);
         }
 
         int localBlogId = blog.getLocalTableBlogId();
 
-        if (comments.size() > 0) {
-            CommentTable.synchronizeDb(localBlogId, comments);
-        }
+        CommentTable.syncCommentsForBlog(localBlogId, limit, offset, comments);
 
         return comments;
     }
