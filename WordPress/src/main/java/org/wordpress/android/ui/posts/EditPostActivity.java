@@ -98,6 +98,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
+    public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
 
     // Context menu positioning
     private static final int SELECT_PHOTO_MENU_POSITION = 0;
@@ -148,6 +149,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     private EditPostPreviewFragment mEditPostPreviewFragment;
 
     private boolean mIsNewPost;
+    private boolean mHasSetPostContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +163,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        FragmentManager fragmentManager = getFragmentManager();
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
@@ -200,13 +203,20 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 showErrorAndFinish(R.string.post_not_found);
                 return;
             }
-        } else if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
-            try {
-                mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
-                mOriginalPost = (Post) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
-            } catch (ClassCastException e) {
-                mPost = null;
+        } else {
+            if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
+                try {
+                    mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
+                    mOriginalPost = (Post) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
+                } catch (ClassCastException e) {
+                    mPost = null;
+                }
             }
+            mEditorFragment = (EditorFragmentAbstract) fragmentManager.getFragment(savedInstanceState, STATE_KEY_EDITOR_FRAGMENT);
+        }
+
+        if (mHasSetPostContent = mEditorFragment != null) {
+            mEditorFragment.setImageLoader(WordPress.imageLoader);
         }
 
         // Ensure we have a valid blog
@@ -227,7 +237,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
         setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()));
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (WPViewPager) findViewById(R.id.pager);
@@ -308,6 +318,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         savePost(true);
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
+
+        getFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
     }
 
     @Override
@@ -765,7 +777,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         // Set post title and content
         Post post = getPost();
         if (post != null) {
-            if (!TextUtils.isEmpty(post.getContent())) {
+            if (!TextUtils.isEmpty(post.getContent()) && !mHasSetPostContent) {
+                mHasSetPostContent = true;
                 if (post.isLocalDraft()) {
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -1081,7 +1094,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
         if (data != null || ((requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
                 requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
-            Bundle extras;
             switch (requestCode) {
                 case MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
                     if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_MEDIA_SELECTED) {

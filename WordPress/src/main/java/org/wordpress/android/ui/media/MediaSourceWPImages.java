@@ -177,14 +177,13 @@ public class MediaSourceWPImages implements MediaSource {
     }
 
     private void removeDeletedEntries() {
-        List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
+        final List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
+        final List<MediaItem> failedItems = new ArrayList<>();
 
-        for (MediaItem mediaItem : existingItems) {
-            final boolean callLoaded = existingItems.indexOf(mediaItem) == existingItems.size() - 1;
-
+        for (final MediaItem mediaItem : existingItems) {
             LimitedBackgroundOperation<MediaItem, Void, MediaItem> backgroundCheck =
                     new LimitedBackgroundOperation<MediaItem, Void, MediaItem>() {
-                int responseCode;
+                private int responseCode;
 
                 @Override
                 protected MediaItem performBackgroundOperation(MediaItem[] params) {
@@ -195,7 +194,6 @@ public class MediaSourceWPImages implements MediaSource {
                             connection.setRequestMethod("GET");
                             connection.connect();
                             responseCode = connection.getResponseCode();
-
                         } catch (IOException ioException) {
                             Log.e("", "Error reading from " + mediaItem.getSource() + "\nexception:" + ioException);
 
@@ -208,14 +206,21 @@ public class MediaSourceWPImages implements MediaSource {
                 @Override
                 public void performPostExecute(MediaItem result) {
                     if (mListener != null && result != null) {
-                        List<MediaItem> resultList = new ArrayList<>();
-                        resultList.add(result);
                         if (responseCode == 200) {
                             mVerifiedItems.add(result);
-                            mListener.onMediaAdded(MediaSourceWPImages.this, resultList);
+                            List<MediaItem> resultList = new ArrayList<>();
+                            resultList.add(result);
+
+                            // Only signal newly loaded data every 3 images
+                            if ((existingItems.size() - mVerifiedItems.size()) % 3 == 0) {
+                                mListener.onMediaAdded(MediaSourceWPImages.this, resultList);
+                            }
+                        } else {
+                            failedItems.add(result);
                         }
 
-                        if (callLoaded) {
+                        // Notify of all media loaded if all have been processed
+                        if ((failedItems.size() + mVerifiedItems.size()) == existingItems.size()) {
                             mListener.onMediaLoaded(true);
                         }
                     }
