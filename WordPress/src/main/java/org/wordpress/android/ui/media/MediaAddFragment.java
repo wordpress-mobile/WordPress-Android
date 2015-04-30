@@ -23,6 +23,7 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.WordPressMediaUtils.RequestCode;
 import org.wordpress.android.ui.media.services.MediaUploadEvents;
@@ -64,10 +65,14 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        try {
-            mCallback = (MediaAddFragmentCallback) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + MediaAddFragmentCallback.class.getSimpleName());
+        if (activity instanceof WPMainActivity) {
+            mCallback = ((WPMainActivity) activity).getMySiteFragment();
+        } else {
+            try {
+                mCallback = (MediaAddFragmentCallback) activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString() + " must extend " + MediaAddFragmentCallback.class.getSimpleName());
+            }
         }
     }
 

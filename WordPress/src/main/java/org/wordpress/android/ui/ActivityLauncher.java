@@ -20,6 +20,7 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
@@ -130,8 +131,8 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void addMedia(Context context, Blog blog) {
-        // TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/2394
+    public static void addMedia(Activity activity, Blog blog) {
+        WordPressMediaUtils.launchPictureLibrary(activity);
     }
 
     public static void viewAccountSettings(Context context) {

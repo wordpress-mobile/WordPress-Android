@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.media.MediaAddFragment;
+import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
@@ -20,7 +24,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
 public class MySiteFragment extends Fragment
-        implements WPMainActivity.OnScrollToTopListener {
+        implements WPMainActivity.OnScrollToTopListener, MediaAddFragment.MediaAddFragmentCallback {
+    private static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
 
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
@@ -52,6 +57,9 @@ public class MySiteFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_my_site, container, false);
+
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().add(new MediaAddFragment(), ADD_MEDIA_FRAGMENT_TAG).commit();
 
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
         mBlavatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.my_site_blavatar);
@@ -170,6 +178,23 @@ public class MySiteFragment extends Fragment
         return rootView;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case WordPressMediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+                FragmentManager fm = getFragmentManager();
+                Fragment addFragment = fm.getFragment(null, ADD_MEDIA_FRAGMENT_TAG);
+                if (addFragment != null) {
+                    addFragment.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     private void refreshBlogDetails() {
         if (!isAdded() || mBlog == null) {
             return;
@@ -192,5 +217,9 @@ public class MySiteFragment extends Fragment
             ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
             scrollView.smoothScrollTo(0, 0);
         }
+    }
+
+    @Override
+    public void onMediaAdded(String mediaId) {
     }
 }
