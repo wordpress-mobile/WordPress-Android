@@ -12,13 +12,11 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
-import org.wordpress.android.ui.comments.CommentDetailActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -31,7 +29,6 @@ import org.wordpress.android.ui.stats.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 

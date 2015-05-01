@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.JSONUtils;
