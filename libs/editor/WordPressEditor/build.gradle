@@ -4,10 +4,13 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'org.robolectric:robolectric-gradle-plugin:0.14.1'
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'robolectric'
+apply plugin: 'jacoco'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
@@ -19,7 +22,7 @@ android {
     publishNonDefault true
 
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         versionCode 1
@@ -39,14 +42,18 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.+'
     compile 'com.android.support:support-v4:21.0.+'
     compile 'org.wordpress:analytics:1.0.0'
-    releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
-    debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
-}
+    compile 'org.wordpress:utils:1.5.0'
 
-configurations.all {
-    // Exclude packaged wordpress sub projects, force the use of the source project
-    // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
-    exclude group: 'org.wordpress', module: 'utils'
+    // Test libraries
+    testCompile 'junit:junit:4.10'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'org.robolectric:robolectric:2.4'
+
+    // Workaround for IDE bug
+    // http://stackoverflow.com/questions/22246183/android-studio-doesnt-recognize-espresso-classes
+    provided 'junit:junit:4.10'
+    provided 'org.mockito:mockito-core:1.10.19'
+    provided 'org.robolectric:robolectric:2.4'
 }
 
 signing {
@@ -102,5 +109,47 @@ uploadArchives {
                 }
             }
         }
+    }
+}
+
+//
+// Testing and code coverage
+//
+
+robolectric {
+    include '**/*Test.class'
+    exclude '**/ApplicationTest.class'
+}
+
+jacoco {
+    toolVersion = "0.7.1.201405082137"
+}
+
+// Use these to define which classes to include and exclude from code coverage analysis
+def coverageSourceDirs = [ 'src/main/java' ]
+def coverageExclusions = [ '**/R.class',
+                           '**/R$*.class',
+                           '**/*$ViewInjector*.*',
+                           '**/BuildConfig.*',
+                           '**/Manifest*.*',
+                           '**/Legacy**.class',
+                           '**/legacy/**/*.class' ]
+
+task jacocoTestReport(type: JacocoReport, dependsOn: "testDebug") {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports"
+
+    classDirectories = fileTree(
+            dir: 'build/intermediates/classes/debug',
+            excludes: coverageExclusions
+    )
+
+    additionalSourceDirs = files(coverageSourceDirs)
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files('build/jacoco/testDebug.exec')
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
     }
 }
