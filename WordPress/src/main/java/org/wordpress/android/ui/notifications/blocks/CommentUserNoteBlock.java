@@ -88,7 +88,6 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                         getNoteData().optJSONObject("comment_text"),
                         noteBlockHolder.commentTextView,
                         getOnNoteBlockTextClickListener(),
-                        true,
                         false)
         );
 

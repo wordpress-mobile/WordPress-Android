@@ -14,8 +14,6 @@ import android.text.TextUtils;
 import android.text.style.AlignmentSpan;
 import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -35,7 +33,6 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
-import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -43,7 +40,6 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.helpers.WPImageGetter;
-import org.wordpress.android.widgets.NoticonTypefaceSpan;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -228,7 +224,7 @@ public class NotificationsUtils {
     }
 
     public static Spannable getSpannableContentForRanges(JSONObject subject) {
-        return getSpannableContentForRanges(subject, null, null, false, false);
+        return getSpannableContentForRanges(subject, null, null, false);
     }
 
     /**
@@ -236,13 +232,12 @@ public class NotificationsUtils {
      * @param blockObject
      * @param textView
      * @param onNoteBlockTextClickListener - click listener for ClickableSpans in the spannable
-     * @param shouldAddNoticons - Set if spannable should process noticon font ranges
-     * @param isFooter - Set if spannable should apply special
-     * @return
+     * @param isFooter - Set if spannable should apply special formatting
+     * @return Spannable string with formatted content
      */
     public static Spannable getSpannableContentForRanges(JSONObject blockObject, TextView textView,
                                                          final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                                                         boolean shouldAddNoticons, boolean isFooter) {
+                                                         boolean isFooter) {
         if (blockObject == null) {
             return new SpannableStringBuilder();
         }
@@ -258,19 +253,9 @@ public class NotificationsUtils {
         // Process Ranges to add links and text formatting
         JSONArray rangesArray = blockObject.optJSONArray("ranges");
         if (rangesArray != null) {
-            JSONObject noticonRange = null;
             for (int i = 0; i < rangesArray.length(); i++) {
                 JSONObject rangeObject = rangesArray.optJSONObject(i);
                 if (rangeObject == null) {
-                    continue;
-                }
-
-                // We'll add noticons after the rest of the string has been styled
-                if (NoteBlockRangeType.fromString(rangeObject.optString("type")) == NoteBlockRangeType.NOTICON) {
-                    if (shouldAddNoticons) {
-                        noticonRange = rangeObject;
-                    }
-
                     continue;
                 }
 
@@ -295,16 +280,6 @@ public class NotificationsUtils {
                         spannableStringBuilder.setSpan(styleSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                     }
                 }
-            }
-
-            if (noticonRange != null) {
-                NoticonTypefaceSpan noticonSpan = new NoticonTypefaceSpan(WordPress.getContext());
-                int[] indices = getIndicesForRange(noticonRange);
-                // Add a space to the glyph to separate it from the other content
-                String noticonGlyph = noticonRange.optString("value", " ") + " ";
-                spannableStringBuilder.insert(indices[0], noticonGlyph);
-
-                spannableStringBuilder.setSpan(noticonSpan, indices[0], indices[0] + 2, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
             }
         }
 
