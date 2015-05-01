@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
@@ -192,9 +193,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
             if (mNote.getParentCommentId() > 0 || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
                 // show comments list for the post
-                detailActivity.showReaderCommentList(mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId());
-            } else if (mNote.isFollowType()) {
-                detailActivity.showBlogPreviewActivity(mNote.getSiteId());
+                if (ReaderPostTable.postExists(mNote.getSiteId(), mNote.getPostId())) {
+                    long commentId = (mNote.getParentCommentId() > 0) ? mNote.getParentCommentId() : mNote.getCommentId();
+                    detailActivity.showReaderCommentList(mNote.getSiteId(), mNote.getPostId(), commentId);
+                } else {
+                    detailActivity.showWebViewActivityForUrl(mNote.getUrl());
+                }
             } else {
                 // otherwise, load the post in the Reader
                 detailActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());

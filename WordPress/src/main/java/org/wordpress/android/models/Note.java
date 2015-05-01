@@ -348,7 +348,6 @@ public class Note extends Syncable {
         return queryJSON("meta.ids.comment", 0);
     }
 
-
     public long getParentCommentId() {
         return queryJSON("meta.ids.parent_comment", 0);
     }
@@ -434,6 +433,10 @@ public class Note extends Syncable {
     public boolean hasLikedComment() {
         JSONObject jsonActions = getCommentActions();
         return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE);
+    }
+
+    public String getUrl() {
+        return queryJSON("url", "");
     }
 
     public JSONArray getHeader() {
