@@ -97,7 +97,7 @@ public class Note extends Syncable {
         return String.valueOf(queryJSON("id", 0));
     }
 
-    private String getType() {
+    public String getType() {
         return queryJSON("type", NOTE_UNKNOWN_TYPE);
     }
 

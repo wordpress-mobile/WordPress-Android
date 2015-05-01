@@ -19,7 +19,7 @@ public class FooterNoteBlock extends NoteBlock {
         super(noteObject, onNoteBlockTextClickListener);
     }
 
-    public void setClickableSpan(JSONObject rangeObject) {
+    public void setClickableSpan(JSONObject rangeObject, String noteType) {
         if (rangeObject == null) return;
 
         mClickableSpan = new NoteBlockClickableSpan(
@@ -28,6 +28,8 @@ public class FooterNoteBlock extends NoteBlock {
                 false,
                 true
         );
+
+        mClickableSpan.setCustomType(noteType);
     }
 
     @Override

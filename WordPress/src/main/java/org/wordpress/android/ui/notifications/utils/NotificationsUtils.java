@@ -447,6 +447,9 @@ public class NotificationsUtils {
                     activity.showWebViewActivityForUrl(clickedSpan.getUrl());
                 }
                 break;
+            case LIKE:
+                activity.showReaderPostLikeUsers(clickedSpan.getSiteId(), clickedSpan.getId());
+                break;
             default:
                 // We don't know what type of id this is, let's see if it has a URL and push a webview
                 if (!TextUtils.isEmpty(clickedSpan.getUrl())) {

@@ -130,4 +130,8 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     public String getUrl() {
         return mUrl;
     }
+
+    public void setCustomType(String type) {
+        mRangeType = NoteBlockRangeType.fromString(type);
+    }
 }

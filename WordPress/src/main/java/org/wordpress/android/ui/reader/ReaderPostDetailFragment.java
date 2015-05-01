@@ -538,7 +538,7 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutLikes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReaderActivityLauncher.showReaderLikingUsers(getActivity(), mPost);
+                ReaderActivityLauncher.showReaderLikingUsers(getActivity(), mPost.blogId, mPost.postId);
             }
         });
 

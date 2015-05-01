@@ -309,10 +309,14 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         } else if (isFooterBlock(noteObject)) {
                             noteBlock = new FooterNoteBlock(noteObject, mOnNoteBlockTextClickListener);
                             ((FooterNoteBlock)noteBlock).setClickableSpan(
-                                    JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()));
+                                    JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()),
+                                    mNote.getType()
+                            );
 
-                            // Request the post for the reader tables, so loading reader activities will work.
-                            ReaderPostActions.requestPost(mNote.getSiteId(), mNote.getPostId(), null);
+                            if (mNote.isFollowType() || mNote.isReblogType() || mNote.isCommentType()) {
+                                // Request the reader post so that loading reader activities will work.
+                                ReaderPostActions.requestPost(mNote.getSiteId(), mNote.getPostId(), null);
+                            }
                         } else {
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }
