@@ -108,14 +108,30 @@ public class NotificationsListFragment extends Fragment
 
         mEmptyTextView = (TextView) view.findViewById(R.id.empty_view);
 
+        mFauxSwipeToRefreshHelper = new SwipeToRefreshHelper(
+                getActivity(),
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        // Show a fake refresh animation for a few seconds
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isAdded()) {
+                                    mFauxSwipeToRefreshHelper.setRefreshing(false);
+                                }
+                            }
+                        }, 2000);
+                    }
+                });
+
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        initSwipeToRefreshHelper();
 
         if (savedInstanceState != null) {
             setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
@@ -159,26 +175,6 @@ public class NotificationsListFragment extends Fragment
         }
 
         super.onDestroy();
-    }
-
-    private void initSwipeToRefreshHelper() {
-        mFauxSwipeToRefreshHelper = new SwipeToRefreshHelper(
-                getActivity(),
-                (CustomSwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
-                new SwipeToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        // Show a fake refresh animation for a few seconds
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (isAdded()) {
-                                    mFauxSwipeToRefreshHelper.setRefreshing(false);
-                                }
-                            }
-                        }, 2000);
-                    }
-                });
     }
 
     /**
