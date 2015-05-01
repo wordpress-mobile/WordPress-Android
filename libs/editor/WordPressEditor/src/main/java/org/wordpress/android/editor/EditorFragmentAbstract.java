@@ -3,6 +3,7 @@ package org.wordpress.android.editor;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+
 import android.text.Spanned;
 
 import com.android.volley.toolbox.ImageLoader;

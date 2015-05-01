@@ -183,6 +183,9 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             }
         });
 
+        mContentEditText = (WPEditText) rootView.findViewById(R.id.post_content);
+        mContentEditText.setText(mContent);
+
         mPostContentLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_content_wrapper);
         mPostSettingsLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_settings_wrapper);
         Button postSettingsButton = (Button) rootView.findViewById(R.id.post_settings_button);
@@ -461,7 +464,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                     ImageUtils.getMaximumThumbnailWidthForEditor(context));
             if (thumbnailBitmap == null) {
                 // Use a placeholder in case thumbnail can't be decoded (OOM for instance)
-                thumbnailBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.dashicon_format_image_big_grey);
+                thumbnailBitmap = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.legacy_dashicon_format_image_big_grey);
             }
         }
         WPEditImageSpan imageSpan = new WPEditImageSpan(context, thumbnailBitmap, imageUri);
@@ -470,7 +474,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     private WPEditImageSpan createWPEditImageSpanRemote(Context context, MediaFile mediaFile) {
-        int drawable = mediaFile.isVideo() ? R.drawable.media_movieclip : R.drawable.dashicon_format_image_big_grey;
+        int drawable = mediaFile.isVideo() ? R.drawable.media_movieclip : R.drawable.legacy_dashicon_format_image_big_grey;
         Uri uri = Uri.parse(mediaFile.getFileURL());
         WPEditImageSpan imageSpan = new WPEditImageSpan(context, drawable, uri);
         imageSpan.setMediaFile(mediaFile);
@@ -1106,7 +1110,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
         editableText.insert(selectionStart, " ");
         MediaGalleryImageSpan is = new MediaGalleryImageSpan(getActivity(), mediaGallery,
-                R.drawable.icon_mediagallery_placeholder);
+                R.drawable.legacy_icon_mediagallery_placeholder);
         editableText.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
         editableText.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
