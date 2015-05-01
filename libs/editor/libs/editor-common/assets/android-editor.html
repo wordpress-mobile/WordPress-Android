@@ -2,27 +2,37 @@
 <html>
   <head>
     <title>ZSSRichTextEditor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    <script type="text/javascript" src="jquery-2.0.3.min.js"></script>
-    <script type="text/javascript" src="underscore-min.js"></script>
-    <script type="text/javascript" src="shortcode.js"></script>
-    <script type="text/javascript" src="jquery.mobile-events.min.js"></script>
-    <script type="text/javascript" src="ZSSRichTextEditor.js"></script>
-    <script type="text/javascript">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="jquery-2.1.3.min.js"></script>
+    <script src="js-beautifier.js"></script>
+    <script src="underscore-min.js"></script>
+    <script src="shortcode.js"></script>
+    <script src="jquery.mobile-events.min.js"></script>
+    <script src="ZSSRichTextEditor.js"></script>
+    <script src="wpload.js"></script>
+    <script src="wpsave.js"></script>
+    <script src="rangy-core.js"></script>
+    <script src="rangy-cssclassapplier.js"></script>
+    <script src="rangy-selectionsaverestore.js"></script>
+    <script src="rangy-serializer.js"></script>
+    <script>
+        // DRM: onLoad does not get called when offline, if there's remote content in the editor
+        // (such as remote images).  We use the 'ready' event for this reason.
+        //
         $(document).ready(function() {
-          ZSSEditor.init();
-          ZSSEditor.domLoadedCallback();
-          console.log("ZSSEditor initialized");
+            ZSSEditor.init();
+            ZSSEditor.domLoadedCallback();
         });
     </script>
+    <link rel="stylesheet" href="editor.css">
   </head>
   <body>
-      <div contenteditable="false" id="zss_field_title" class="field" nostyle>
+      <div contenteditable="true" id="zss_field_title" class="field" nostyle>
       </div>
       <div contenteditable="false" id="separatorDiv" >
-          <hr/>
+          <hr>
       </div>
-      <div contenteditable="false" id="zss_field_content" class="field">
+      <div contenteditable="true" id="zss_field_content" class="field">
       </div>
   </body>
 </html>
