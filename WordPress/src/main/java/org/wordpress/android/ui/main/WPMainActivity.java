@@ -226,9 +226,8 @@ public class WPMainActivity extends Activity
             case RequestCodes.READER_SUBS:
             case RequestCodes.READER_REBLOG:
                 ReaderPostListFragment readerFragment = getReaderListFragment();
-                // TODO:
                 if (readerFragment != null) {
-                    //readerFragment.handleActivityResult(requestCode, resultCode, data);
+                    readerFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.ADD_ACCOUNT:
@@ -251,6 +250,12 @@ public class WPMainActivity extends Activity
                     WordPress.registerForCloudMessaging(this);
                 } else {
                     ActivityLauncher.showSignInForResult(this);
+                }
+                break;
+            case RequestCodes.NOTE_DETAIL:
+                // Pass activity result on to the notifications list fragment
+                if (getNotificationListFragment() != null) {
+                    getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.SITE_PICKER:

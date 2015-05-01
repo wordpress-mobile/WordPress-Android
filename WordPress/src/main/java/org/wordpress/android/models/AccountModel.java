@@ -98,7 +98,7 @@ public class AccountModel {
     }
 
     public void setAccessToken(String accessToken) {
-        mIsWordPressComUser = true;
+        mIsWordPressComUser = !TextUtils.isEmpty(accessToken);
         mAccessToken = accessToken;
     }
 

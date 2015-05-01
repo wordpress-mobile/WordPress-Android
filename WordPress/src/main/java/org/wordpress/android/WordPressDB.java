@@ -191,6 +191,8 @@ public class WordPressDB {
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
+        boolean isNewInstall = (currentVersion == 0);
+
         switch (currentVersion) {
             case 0:
                 // New install
@@ -287,7 +289,9 @@ public class WordPressDB {
             case 29:
                 // Migrate WordPress.com token and infos to the DB
                 AccountTable.createTables(db);
-                migratePreferencesToAccountTable(context);
+                if (!isNewInstall) {
+                    migratePreferencesToAccountTable(context);
+                }
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -301,7 +305,6 @@ public class WordPressDB {
         account.setUserName(oldUsername);
         if (oldAccessToken != null) {
             account.setAccessToken(oldAccessToken);
-            account.setIsWordPressComUser(true);
         }
         AccountTable.save(account, db);
 
@@ -440,6 +443,10 @@ public class WordPressDB {
 
     public int getNumDotComBlogs() {
         return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE + " WHERE dotcomFlag = 1", null);
+    }
+
+    public int getNumBlogs() {
+        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE, null);
     }
 
     // Removes stored DotCom credentials. As of March 2015 only the OAuth token is used

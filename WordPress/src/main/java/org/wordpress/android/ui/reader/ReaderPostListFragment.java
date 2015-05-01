@@ -43,6 +43,7 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -354,8 +355,8 @@ public class ReaderPostListFragment extends Fragment
         mNewPostsBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hideNewPostsBar();
                 mRecyclerView.scrollToPosition(0);
+                refreshPosts();
                 if (hasFragmentToolbar()) {
                     showFragmentToolbar(true);
                 }
@@ -538,12 +539,13 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * disable swipe-to-refresh if posts can be scrolled upwards - only necessary when the fragment
-     * toolbar is enabled since it can intercept the touch event and pass it on to the swipe layout,
-     * cause a refresh to begin even though the user is simply scrolling up the posts
+     * disable swipe-to-refresh if "new posts" bar is showing or posts can be scrolled up
+     * because otherwise it can intercept the touch event and pass it on to the swipe layout,
+     * causing a refresh to begin even though the user is simply scrolling up the posts.
+     * note that this problem only applies when the fragment toolbar is enabled.
      */
     private void checkSwipeToRefresh() {
-        mSwipeToRefreshLayout.setEnabled(!mRecyclerView.canScrollUp());
+        mSwipeToRefreshLayout.setEnabled(!mRecyclerView.canScrollUp() && !isNewPostsBarShowing());
     }
 
     /*
@@ -800,6 +802,7 @@ public class ReaderPostListFragment extends Fragment
                     mRecyclerView.scrollToPosition(mRestorePosition);
                 }
             }
+            checkSwipeToRefresh();
             mRestorePosition = 0;
         }
     };
@@ -983,6 +986,7 @@ public class ReaderPostListFragment extends Fragment
      * refresh adapter so latest posts appear
      */
     private void refreshPosts() {
+        hideNewPostsBar();
         if (hasPostAdapter()) {
             getPostAdapter().refresh();
         }
@@ -1030,34 +1034,37 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        // show "new posts" bar if new posts were downloaded in a followed tag and the adapter
-        // isn't empty (if it's empty, we want to display the new posts immediately)
-        boolean showNewPostsBar;
+        // determine whether to show the "new posts" bar - when this is shown, the newly
+        // downloaded posts aren't displayed until the user taps the bar - only appears
+        // when there are new posts in a followed tag and the user has scrolled the list
+        // beyond the first post
         if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW
-                && !isPostAdapterEmpty()
                 && event.getAction() == UpdateAction.REQUEST_NEWER
-                && getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            // make sure that these new posts will actually appear at the top of the list - we
-            // don't want to show "new posts" if the new posts are older ones since the user
-            // expects to see the new posts at the top of the list. we do this by getting the
-            // id of the newest post in the database (which will contain the newly downloaded
-            // posts) and comparing it to the id of the first post in the adapter
-            long newestPostId = ReaderPostTable.getNewestPostIdWithTag(getCurrentTag());
-            ReaderPost post = getPostAdapter().getItem(0);
-            showNewPostsBar = (post != null && post.postId != newestPostId);
-        } else {
-            showNewPostsBar = false;
-        }
-
-        if (showNewPostsBar) {
+                && getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                && !isPostAdapterEmpty()
+                && !isFirstPostVisible()) {
             showNewPostsBar();
-            refreshPosts();
         } else if (event.getResult().isNewOrChanged()) {
             refreshPosts();
         } else {
             boolean requestFailed = (event.getResult() == ReaderActions.UpdateResult.FAILED);
             setEmptyTitleAndDescription(requestFailed);
         }
+    }
+
+    /*
+     * returns true if the first post is still visible in the RecyclerView - will return
+     * false if the first post is scrolled out of view, or if the list is empty
+     */
+    private boolean isFirstPostVisible() {
+        if (!isAdded()
+                || mRecyclerView == null
+                || mRecyclerView.getLayoutManager() == null) {
+            return false;
+        }
+
+        View child = mRecyclerView.getLayoutManager().getChildAt(0);
+        return (child != null && mRecyclerView.getLayoutManager().getPosition(child) == 0);
     }
 
     /*
@@ -1131,14 +1138,7 @@ public class ReaderPostListFragment extends Fragment
 
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
-
-        // hide after a short delay
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideNewPostsBar();
-            }
-        }, 3000);
+        checkSwipeToRefresh();
     }
 
     private void hideNewPostsBar() {
@@ -1153,8 +1153,11 @@ public class ReaderPostListFragment extends Fragment
             public void onAnimationStart(Animation animation) { }
             @Override
             public void onAnimationEnd(Animation animation) {
-                mNewPostsBar.setVisibility(View.GONE);
-                mIsAnimatingOutNewPostsBar = false;
+                if (isAdded()) {
+                    mNewPostsBar.setVisibility(View.GONE);
+                    mIsAnimatingOutNewPostsBar = false;
+                    checkSwipeToRefresh();
+                }
             }
             @Override
             public void onAnimationRepeat(Animation animation) { }
@@ -1408,7 +1411,7 @@ public class ReaderPostListFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             // user just returned from the tags/subs activity
-            case ReaderConstants.INTENT_READER_SUBS:
+            case RequestCodes.READER_SUBS:
                 if (data != null) {
                     boolean tagsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false);
                     boolean blogsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false);
@@ -1429,7 +1432,7 @@ public class ReaderPostListFragment extends Fragment
 
             // user just returned from reblogging activity, reload the displayed post if reblogging
             // succeeded
-            case ReaderConstants.INTENT_READER_REBLOG:
+            case RequestCodes.READER_REBLOG:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);

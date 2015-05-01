@@ -2,6 +2,8 @@ package org.wordpress.android.editor;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.os.Bundle;
+
 import android.text.Spanned;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -20,9 +22,13 @@ public abstract class EditorFragmentAbstract extends Fragment {
     // TODO: remove this as soon as we can (we'll need to drop the legacy editor or fix html2spanned translation)
     public abstract Spanned getSpannedContent();
 
+    private static final String FEATURED_IMAGE_SUPPORT_KEY = "featured-image-supported";
+    private static final String FEATURED_IMAGE_WIDTH_KEY   = "featured-image-width";
+
     protected EditorFragmentListener mEditorFragmentListener;
     protected boolean mFeaturedImageSupported;
     protected String mBlogSettingMaxImageWidth;
+    protected ImageLoader mImageLoader;
 
     @Override
     public void onAttach(Activity activity) {
@@ -32,6 +38,32 @@ public abstract class EditorFragmentAbstract extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement EditorFragmentListener");
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(FEATURED_IMAGE_SUPPORT_KEY, mFeaturedImageSupported);
+        outState.putString(FEATURED_IMAGE_WIDTH_KEY, mBlogSettingMaxImageWidth);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(FEATURED_IMAGE_SUPPORT_KEY)) {
+                mFeaturedImageSupported = savedInstanceState.getBoolean(FEATURED_IMAGE_SUPPORT_KEY);
+            }
+            if (savedInstanceState.containsKey(FEATURED_IMAGE_WIDTH_KEY)) {
+                mBlogSettingMaxImageWidth = savedInstanceState.getString(FEATURED_IMAGE_WIDTH_KEY);
+            }
+        }
+    }
+
+    public void setImageLoader(ImageLoader imageLoader) {
+        mImageLoader = imageLoader;
     }
 
     public void setFeaturedImageSupported(boolean featuredImageSupported) {
