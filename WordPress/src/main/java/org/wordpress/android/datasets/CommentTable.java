@@ -170,9 +170,7 @@ public class CommentTable {
             if (c.moveToFirst()) {
                 do {
                     Comment comment = getCommentFromCursor(c);
-                    if (!remoteComments.contains(comment)) {
-                        CommentTable.deleteComment(localBlogId, comment.commentID);
-                    }
+                    CommentTable.deleteComment(localBlogId, comment.commentID);
                 } while (c.moveToNext());
             }
         } finally {
