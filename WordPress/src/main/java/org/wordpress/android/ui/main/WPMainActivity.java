@@ -307,32 +307,30 @@ public class WPMainActivity extends Activity
      * returns the reader list fragment from the reader tab
      */
     private ReaderPostListFragment getReaderListFragment() {
-        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_READER);
-        if (fragment != null && fragment instanceof ReaderPostListFragment) {
-            return (ReaderPostListFragment) fragment;
-        }
-        return null;
+        return getFragmentByPosition(WPMainTabAdapter.TAB_READER, ReaderPostListFragment.class);
     }
 
     /*
      * returns the notification list fragment from the notification tab
      */
     private NotificationsListFragment getNotificationListFragment() {
-        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_NOTIFS);
-        if (fragment != null && fragment instanceof NotificationsListFragment) {
-            return (NotificationsListFragment) fragment;
-        }
-        return null;
+        return getFragmentByPosition(WPMainTabAdapter.TAB_NOTIFS, NotificationsListFragment.class);
     }
 
     /*
      * returns the my site fragment from the sites tab
      */
     public MySiteFragment getMySiteFragment() {
-        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_SITES);
-        if (fragment != null && fragment instanceof MySiteFragment) {
-            return (MySiteFragment) fragment;
+        return getFragmentByPosition(WPMainTabAdapter.TAB_SITES, MySiteFragment.class);
+    }
+
+    private <T> T getFragmentByPosition(int position, Class<T> type) {
+        Fragment fragment = mTabAdapter != null ? mTabAdapter.getFragment(position) : null;
+
+        if (fragment != null && type.isInstance(fragment)) {
+            return type.cast(fragment);
         }
+
         return null;
     }
 
