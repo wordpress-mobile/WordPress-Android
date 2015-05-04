@@ -378,7 +378,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(SuggestionEvents.SuggestionListUpdated event) {
+    public void onEventMainThread(SuggestionEvents.SuggestionNameListUpdated event) {
         // check if the updated suggestions are for the current blog and update the suggestions
         if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == mRemoteBlogId) {
             List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);

@@ -512,6 +512,7 @@ public class WordPress extends Application {
 
         // Save that this user signed out
         AccountHelper.getDefaultAccount().setUserTappedSignedOutButton(true);
+        AccountHelper.getDefaultAccount().save();
 
         wpDB.updateLastBlogId(-1);
         currentBlog = null;

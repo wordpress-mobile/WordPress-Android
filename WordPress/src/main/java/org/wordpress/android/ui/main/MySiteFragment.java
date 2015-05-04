@@ -142,7 +142,7 @@ public class MySiteFragment extends Fragment
         settingsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogSettings(getActivity(), mBlog);
+                ActivityLauncher.viewBlogSettingsForResult(getActivity(), mBlog);
             }
         });
 

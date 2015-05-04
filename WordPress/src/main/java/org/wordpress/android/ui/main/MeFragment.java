@@ -83,9 +83,10 @@ public class MeFragment extends Fragment {
     }
 
     private void refreshAccountDetails() {
-        Account defaultAccount = AccountHelper.getDefaultAccount();
         // we only want to show user details for WordPress.com users
-        if (defaultAccount.isWordPressComUser()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
+            Account defaultAccount = AccountHelper.getDefaultAccount();
+
             mAvatarImageView.setVisibility(View.VISIBLE);
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
@@ -139,15 +140,8 @@ public class MeFragment extends Fragment {
     }
 
     private void signout() {
-        WordPress.signOutAsyncWithProgressBar(getActivity(), new WordPress.SignOutAsync.SignOutCallback() {
-            @Override
-            public void onSignOut() {
-                // note that signing out sends a CoreEvents.UserSignedOut() EventBus event,
-                // which will cause the main activity to show the sign in screen
-                if (isAdded()) {
-                    refreshAccountDetails();
-                }
-            }
-        });
+        // note that signing out sends a CoreEvents.UserSignedOut() EventBus event,
+        // which will cause the main activity to recreate this fragment
+        WordPress.signOutAsyncWithProgressBar(getActivity(), null);
     }
 }

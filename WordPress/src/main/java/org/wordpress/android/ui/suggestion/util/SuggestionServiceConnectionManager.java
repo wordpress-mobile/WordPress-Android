@@ -42,6 +42,7 @@ public class SuggestionServiceConnectionManager implements ServiceConnection {
         SuggestionService suggestionService = b.getService();
 
         suggestionService.updateSuggestions(mRemoteBlogId);
+        suggestionService.updateTags(mRemoteBlogId);
 
         mAttemptingToBind = false;
         mBound = true;
