@@ -67,6 +67,10 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -143,10 +147,14 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     private Post mPost;
     private Post mOriginalPost;
+    private TagSuggestionAdapter mTagSuggestionAdapter;
+    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
+    private int remoteBlogId;
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditPostPreviewFragment mEditPostPreviewFragment;
+    private SuggestionAutoCompleteText mTags;
 
     private boolean mIsNewPost;
     private boolean mHasSetPostContent;
@@ -309,6 +317,10 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         super.onDestroy();
         unregisterReceiver(mGalleryReceiver);
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED_POST);
+
+        if (mSuggestionServiceConnectionManager != null) {
+            mSuggestionServiceConnectionManager.unbindFromService();
+        }
     }
 
     @Override
@@ -327,6 +339,17 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_post, menu);
+
+        mTags = (SuggestionAutoCompleteText) findViewById(R.id.tags);
+        mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
+
+        remoteBlogId = WordPress.getCurrentRemoteBlogId();
+        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
+        mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
+        if (mTagSuggestionAdapter != null) {
+            mTags.setAdapter(mTagSuggestionAdapter);
+        }
+
         return true;
     }
 

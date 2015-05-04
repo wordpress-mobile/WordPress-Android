@@ -31,6 +31,13 @@ public class AccountHelper {
         return getDefaultAccount().hasAccessToken() || (WordPress.wpDB.getNumVisibleBlogs() != 0);
     }
 
+    public static boolean isSignedInWordPressDotCom() {
+        if (getDefaultAccount().isUserTappedSignedOutButton()) {
+            return false;
+        }
+        return getDefaultAccount().hasAccessToken();
+    }
+
     public static boolean isJetPackUser() {
         return WordPress.wpDB.hasAnyJetpackBlogs();
     }
