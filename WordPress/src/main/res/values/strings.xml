@@ -550,6 +550,7 @@
     <string name="more_notifications">and %d more.</string>
     <string name="reply_failed">Reply failed</string>
     <string name="notifications_empty_list">No notifications</string>
+    <string name="notifications_account_required">Sign in to WordPress.com for notifications</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
@@ -703,7 +704,6 @@
     <string name="reader_label_reblog_to">Reblog to</string>
     <string name="reader_label_reply">Reply</string>
     <string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
-    <string name="reader_label_reblog_empty_link">Change blog visibility</string>
     <string name="reader_label_followed_blog">Blog followed</string>
     <string name="reader_label_tag_preview">Posts tagged %s</string>
     <string name="reader_label_comments_on">Comments on</string>

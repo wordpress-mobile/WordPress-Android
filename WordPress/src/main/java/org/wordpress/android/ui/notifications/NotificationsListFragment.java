@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,6 +17,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.cocosw.undobar.UndoBarController;
@@ -28,11 +30,13 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.comments.CommentActions;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -55,7 +59,7 @@ public class NotificationsListFragment extends Fragment
     private NotesAdapter mNotesAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
-    private TextView mEmptyTextView;
+    private ViewGroup mEmptyView;
 
     private int mRestoredScrollPosition;
 
@@ -63,7 +67,7 @@ public class NotificationsListFragment extends Fragment
 
     public static NotificationsListFragment newInstance() {
         return new NotificationsListFragment();
-   }
+    }
 
     /**
      * For responding to tapping of notes
@@ -77,6 +81,8 @@ public class NotificationsListFragment extends Fragment
         View view = inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notes);
+        mEmptyView = (ViewGroup) view.findViewById(R.id.empty_view);
+
         RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
         animator.setSupportsChangeAnimations(true);
         mRecyclerView.setItemAnimator(animator);
@@ -103,28 +109,14 @@ public class NotificationsListFragment extends Fragment
 
             mRecyclerView.setAdapter(mNotesAdapter);
         } else {
-            ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
+            if (!AccountHelper.getDefaultAccount().isWordPressComUser()) {
+                // let user know that notifications require a wp.com account and enable sign-in
+                showEmptyView(R.string.notifications_account_required, true);
+            } else {
+                // failed for some other reason
+                showEmptyView(R.string.error_refresh_notifications, false);
+            }
         }
-
-        mEmptyTextView = (TextView) view.findViewById(R.id.empty_view);
-
-        mFauxSwipeToRefreshHelper = new SwipeToRefreshHelper(
-                getActivity(),
-                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
-                new SwipeToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        // Show a fake refresh animation for a few seconds
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (isAdded()) {
-                                    mFauxSwipeToRefreshHelper.setRefreshing(false);
-                                }
-                            }
-                        }, 2000);
-                    }
-                });
 
         return view;
     }
@@ -132,6 +124,8 @@ public class NotificationsListFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        initSwipeToRefreshHelper();
 
         if (savedInstanceState != null) {
             setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
@@ -175,6 +169,26 @@ public class NotificationsListFragment extends Fragment
         }
 
         super.onDestroy();
+    }
+
+    private void initSwipeToRefreshHelper() {
+        mFauxSwipeToRefreshHelper = new SwipeToRefreshHelper(
+                getActivity(),
+                (CustomSwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        // Show a fake refresh animation for a few seconds
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isAdded()) {
+                                    mFauxSwipeToRefreshHelper.setRefreshing(false);
+                                }
+                            }
+                        }, 2000);
+                    }
+                });
     }
 
     /**
@@ -241,6 +255,29 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
+    private void showEmptyView(@StringRes int stringResId, boolean showSignIn) {
+        if (isAdded() && mEmptyView != null) {
+            ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(stringResId);
+            mEmptyView.setVisibility(View.VISIBLE);
+            Button btnSignIn = (Button) mEmptyView.findViewById(R.id.button_sign_in);
+            btnSignIn.setVisibility(showSignIn ? View.VISIBLE : View.GONE);
+            if (showSignIn) {
+                btnSignIn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ActivityLauncher.showSignInForResult(getActivity());
+                    }
+                });
+            }
+        }
+    }
+
+    private void hideEmptyView() {
+        if (isAdded() && mEmptyView != null) {
+            mEmptyView.setVisibility(View.GONE);
+        }
+    }
+
     void refreshNotes() {
         if (!isAdded() || mNotesAdapter == null) {
             return;
@@ -251,7 +288,11 @@ public class NotificationsListFragment extends Fragment
             public void run() {
                 mNotesAdapter.reloadNotes();
                 restoreListScrollPosition();
-                mEmptyTextView.setVisibility(mNotesAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
+                if (mNotesAdapter.getCount() > 0) {
+                    hideEmptyView();
+                } else {
+                    showEmptyView(R.string.notifications_empty_list, false);
+                }
             }
         });
     }
