@@ -25,6 +25,7 @@ import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
@@ -114,7 +115,7 @@ public class WPMainActivity extends Activity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        AppLog.i(AppLog.T.NOTIFS, "Main activity new intent");
+        AppLog.i(AppLog.T.MAIN, "main activity > new intent");
         if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
             launchWithNoteId();
         }
@@ -220,6 +221,20 @@ public class WPMainActivity extends Activity
         checkNoteBadge();
     }
 
+    /*
+     * re-create the fragment adapter so all its fragments are also re-created - used when
+     * user signs in/out so the fragments reflect the active account
+     */
+    void resetFragments() {
+        AppLog.i(AppLog.T.MAIN, "main activity > reset fragments");
+        int position = mViewPager.getCurrentItem();
+        mTabAdapter = new WPMainTabAdapter(getFragmentManager());
+        mViewPager.setAdapter(mTabAdapter);
+        if (mTabAdapter.isValidPosition(position)) {
+            mViewPager.setCurrentItem(position);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -234,7 +249,9 @@ public class WPMainActivity extends Activity
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
                     WordPress.registerForCloudMessaging(this);
-                } else {
+                    resetFragments();
+                } else if (!AccountHelper.isSignedIn()) {
+                    // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
                 }
                 break;
@@ -243,14 +260,6 @@ public class WPMainActivity extends Activity
                     ActivityLauncher.showSignInForResult(this);
                 } else {
                     WordPress.registerForCloudMessaging(this);
-                }
-                break;
-            case RequestCodes.SETTINGS:
-                // user returned from settings
-                if (AccountHelper.isSignedIn()) {
-                    WordPress.registerForCloudMessaging(this);
-                } else {
-                    ActivityLauncher.showSignInForResult(this);
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:
@@ -268,7 +277,6 @@ public class WPMainActivity extends Activity
             case RequestCodes.SITE_PICKER:
                 if (resultCode == RESULT_OK && data != null) {
                     int localId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, 0);
-                    //String blogId = data.getStringExtra(SitePickerActivity.KEY_BLOG_ID);
 
                     // when a new blog is picked, set it to the current blog
                     Blog blog = WordPress.setCurrentBlog(localId);
@@ -277,6 +285,19 @@ public class WPMainActivity extends Activity
                     MySiteFragment mySiteFragment = getMySiteFragment();
                     if (mySiteFragment != null) {
                         mySiteFragment.setBlog(blog);
+                    }
+                }
+                break;
+            case RequestCodes.BLOG_SETTINGS:
+                if (resultCode == BlogPreferencesActivity.RESULT_BLOG_REMOVED) {
+                    // user removed the current (self-hosted) blog from blog settings
+                    if (!AccountHelper.isSignedIn()) {
+                        ActivityLauncher.showSignInForResult(this);
+                    } else {
+                        MySiteFragment mySiteFragment = getMySiteFragment();
+                        if (mySiteFragment != null) {
+                            mySiteFragment.setBlog(WordPress.getCurrentBlog());
+                        }
                     }
                 }
                 break;
@@ -322,7 +343,7 @@ public class WPMainActivity extends Activity
     private boolean mIsCheckingNoteBadge;
     private void checkNoteBadge() {
         if (mIsCheckingNoteBadge) {
-            AppLog.v(AppLog.T.NOTIFS, "already checking note badge");
+            AppLog.v(AppLog.T.MAIN, "main activity > already checking note badge");
             return;
         } else if (isViewingNotificationsTab()) {
             // Don't show the badge if the notifications tab is active
@@ -362,7 +383,10 @@ public class WPMainActivity extends Activity
 
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.UserSignedOut event) {
-        ActivityLauncher.showSignInForResult(this);
+        resetFragments();
+        if (!AccountHelper.isSignedIn()) {
+            ActivityLauncher.showSignInForResult(this);
+        }
     }
 
     @SuppressWarnings("unused")

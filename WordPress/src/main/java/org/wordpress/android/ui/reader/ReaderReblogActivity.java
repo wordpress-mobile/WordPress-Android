@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,8 +25,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderReblogAdapter;
@@ -170,15 +167,6 @@ public class ReaderReblogActivity extends ActionBarActivity {
         new LoadPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // reload adapter if user returned from settings since blog visibility may have changed
-        if (requestCode == RequestCodes.SETTINGS) {
-            getReblogAdapter().reload();
-        }
-    }
-
     private boolean hasReblogAdapter() {
         return (mAdapter != null);
     }
@@ -191,20 +179,6 @@ public class ReaderReblogActivity extends ActionBarActivity {
                     // show empty message and hide other views if there are no visible blogs to reblog to
                     final TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
                     final View scrollView = findViewById(R.id.scroll_view);
-
-                    // empty message includes a link to settings so user can change blog visibility
-                    if (isEmpty) {
-                        String emptyMsg = getString(R.string.reader_label_reblog_empty);
-                        String emptyLink = "<a href='settings'>" + getString(R.string.reader_label_reblog_empty_link) + "</a>";
-                        txtEmpty.setText(Html.fromHtml(emptyMsg + "<br /><br />" + emptyLink));
-                        txtEmpty.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ActivityLauncher.viewSettingsForResult(ReaderReblogActivity.this);
-                            }
-                        });
-                    }
-
                     txtEmpty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
                     scrollView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
 

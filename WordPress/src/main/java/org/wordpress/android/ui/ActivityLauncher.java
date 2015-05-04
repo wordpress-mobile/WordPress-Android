@@ -88,12 +88,12 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewBlogSettings(Context context, Blog blog) {
+    public static void viewBlogSettingsForResult(Activity activity, Blog blog) {
         if (blog == null) return;
 
-        Intent intent = new Intent(context, BlogPreferencesActivity.class);
-        intent.putExtra("id", blog.getLocalTableBlogId());
-        context.startActivity(intent);
+        Intent intent = new Intent(activity, BlogPreferencesActivity.class);
+        intent.putExtra(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, blog.getLocalTableBlogId());
+        activity.startActivityForResult(intent, RequestCodes.BLOG_SETTINGS);
     }
 
     public static void viewBlogAdmin(Context context, Blog blog) {

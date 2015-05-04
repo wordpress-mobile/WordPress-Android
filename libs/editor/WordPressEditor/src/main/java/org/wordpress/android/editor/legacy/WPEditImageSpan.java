@@ -57,8 +57,7 @@ public class WPEditImageSpan extends WPImageSpan {
         }
     }
 
-    public static final Parcelable.Creator<WPEditImageSpan> CREATOR
-            = new Parcelable.Creator<WPEditImageSpan>() {
+    public static final Parcelable.Creator<WPEditImageSpan> CREATOR = new Parcelable.Creator<WPEditImageSpan>() {
         public WPEditImageSpan createFromParcel(Parcel in) {
             WPEditImageSpan editSpan = new WPEditImageSpan();
             editSpan.setupFromParcel(in);

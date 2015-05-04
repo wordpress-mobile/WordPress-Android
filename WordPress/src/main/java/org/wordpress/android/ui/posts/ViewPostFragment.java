@@ -76,7 +76,7 @@ public class ViewPostFragment extends Fragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(SuggestionEvents.SuggestionListUpdated event) {
+    public void onEventMainThread(SuggestionEvents.SuggestionNameListUpdated event) {
         int remoteBlogId = WordPress.getCurrentRemoteBlogId();
         // check if the updated suggestions are for the current blog and update the suggestions
         if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == remoteBlogId) {
