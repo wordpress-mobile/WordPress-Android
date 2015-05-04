@@ -185,7 +185,7 @@ public class MySiteFragment extends Fragment
         switch (requestCode) {
             case WordPressMediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                 FragmentManager fm = getFragmentManager();
-                Fragment addFragment = fm.getFragment(null, ADD_MEDIA_FRAGMENT_TAG);
+                Fragment addFragment = fm.findFragmentByTag(ADD_MEDIA_FRAGMENT_TAG);
                 if (addFragment != null) {
                     addFragment.onActivityResult(requestCode, resultCode, data);
                 }
