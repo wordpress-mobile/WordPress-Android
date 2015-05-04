@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
@@ -40,8 +39,6 @@ import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
-import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import javax.annotation.Nonnull;
 
@@ -55,7 +52,6 @@ public class NotificationsListFragment extends Fragment
 
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
 
-    private SwipeToRefreshHelper mFauxSwipeToRefreshHelper;
     private NotesAdapter mNotesAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
@@ -125,8 +121,6 @@ public class NotificationsListFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initSwipeToRefreshHelper();
-
         if (savedInstanceState != null) {
             setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
         }
@@ -169,26 +163,6 @@ public class NotificationsListFragment extends Fragment
         }
 
         super.onDestroy();
-    }
-
-    private void initSwipeToRefreshHelper() {
-        mFauxSwipeToRefreshHelper = new SwipeToRefreshHelper(
-                getActivity(),
-                (CustomSwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
-                new SwipeToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        // Show a fake refresh animation for a few seconds
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (isAdded()) {
-                                    mFauxSwipeToRefreshHelper.setRefreshing(false);
-                                }
-                            }
-                        }, 2000);
-                    }
-                });
     }
 
     /**
