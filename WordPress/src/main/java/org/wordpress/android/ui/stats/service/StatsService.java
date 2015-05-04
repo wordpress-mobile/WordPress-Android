@@ -166,7 +166,6 @@ public class StatsService extends Service {
         String cachedStats = getCachedStats(blogId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
 
         if (cachedStats != null) {
-            AppLog.d(AppLog.T.STATS, "Stats read from the DB");
             Serializable mResponseObjectModel;
                 try {
                     JSONObject response = new JSONObject(cachedStats);
