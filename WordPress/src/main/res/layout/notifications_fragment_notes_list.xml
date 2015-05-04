@@ -2,21 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/ptr_layout"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_notes"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_notes"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scrollbars="vertical" />
-
-    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
     <LinearLayout
         android:id="@+id/empty_view"
