@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MediaUtils;
@@ -29,13 +30,6 @@ import java.net.URL;
 import static org.wordpress.mediapicker.MediaUtils.fadeInImage;
 
 public class WordPressMediaUtils {
-    public class RequestCode {
-        public static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 1000;
-        public static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1100;
-        public static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 1200;
-        public static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 1300;
-    }
-
     public interface LaunchCameraCallback {
         public void onMediaCapturePathReady(String mediaCapturePath);
     }
@@ -60,12 +54,12 @@ public class WordPressMediaUtils {
 
         AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.pick_video)),
-                RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
+                RequestCodes.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
     }
 
     public static void launchVideoCamera(Activity activity) {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        activity.startActivityForResult(intent, RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
@@ -76,7 +70,7 @@ public class WordPressMediaUtils {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.pick_photo)),
-                RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+                RequestCodes.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
 
     public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
@@ -85,7 +79,7 @@ public class WordPressMediaUtils {
             showSDCardRequiredDialog(activity);
         } else {
             Intent intent = prepareLaunchCameraIntent(callback);
-            activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+            activity.startActivityForResult(intent, RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
             AppLockManager.getInstance().setExtendedTimeout();
         }
     }

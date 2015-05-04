@@ -20,7 +20,6 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -268,7 +267,7 @@ public class WPMainActivity extends Activity
                     getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
                 }
                 break;
-            case WordPressMediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+            case RequestCodes.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                 MySiteFragment siteFragment = getMySiteFragment();
                 if (siteFragment != null) {
                     siteFragment.onActivityResult(requestCode, resultCode, data);

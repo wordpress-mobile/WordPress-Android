@@ -47,6 +47,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.MediaGridFragment;
@@ -54,7 +55,6 @@ import org.wordpress.android.ui.media.MediaPickerActivity;
 import org.wordpress.android.ui.media.MediaSourceWPImages;
 import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
-import org.wordpress.android.ui.media.WordPressMediaUtils.RequestCode;
 import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.AppLog;
@@ -1115,8 +1115,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
-                requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
+        if (data != null || ((requestCode == RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
+                requestCode == RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
             switch (requestCode) {
                 case MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
                     if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_MEDIA_SELECTED) {
@@ -1137,12 +1137,12 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         handleMediaGalleryPickerResult(data);
                     }
                     break;
-                case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+                case RequestCodes.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     fetchMedia(imageUri);
                     AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                     break;
-                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                case RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
                         try {
                             File f = new File(mMediaCapturePath);
@@ -1165,11 +1165,11 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         finish();
                     }
                     break;
-                case RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
+                case RequestCodes.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
                     fetchMedia(videoUri);
                     break;
-                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                case RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
                         Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
                         if (!addMedia(capturedVideoUri)) {

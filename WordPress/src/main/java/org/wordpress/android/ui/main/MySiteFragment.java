@@ -15,8 +15,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaAddFragment;
-import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
@@ -183,7 +183,7 @@ public class MySiteFragment extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case WordPressMediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+            case RequestCodes.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                 FragmentManager fm = getFragmentManager();
                 Fragment addFragment = fm.findFragmentByTag(ADD_MEDIA_FRAGMENT_TAG);
                 if (addFragment != null) {

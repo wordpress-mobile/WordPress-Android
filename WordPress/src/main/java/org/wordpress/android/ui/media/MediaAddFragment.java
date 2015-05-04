@@ -23,9 +23,9 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils.LaunchCameraCallback;
-import org.wordpress.android.ui.media.WordPressMediaUtils.RequestCode;
 import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.MediaUtils;
@@ -138,24 +138,24 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
-                requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO) {
+        if (data != null || requestCode == RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
+                requestCode == RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_VIDEO) {
             String path;
 
             switch (requestCode) {
-                case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
-                case RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
+                case RequestCodes.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+                case RequestCodes.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
                     Uri imageUri = data.getData();
                     fetchMedia(imageUri);
                     break;
-                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                case RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
                         path = mMediaCapturePath;
                         mMediaCapturePath = null;
                         queueFileForUpload(path);
                     }
                     break;
-                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                case RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
                         path = getRealPathFromURI(MediaUtils.getLastRecordedVideoUri(getActivity()));
                         queueFileForUpload(path);
