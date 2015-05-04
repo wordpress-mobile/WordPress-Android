@@ -18,16 +18,33 @@
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
-    <org.wordpress.android.widgets.WPTextView
+    <LinearLayout
         android:id="@+id/empty_view"
-        style="@style/WordPress.EmptyList.Title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
         android:layout_marginLeft="@dimen/empty_list_title_side_margin"
         android:layout_marginRight="@dimen/empty_list_title_side_margin"
         android:gravity="center"
-        android:text="@string/notifications_empty_list"
+        android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_empty"
+            style="@style/WordPress.EmptyList.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notifications_empty_list" />
+
+        <org.wordpress.android.widgets.OpenSansButton
+            android:id="@+id/button_sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:text="@string/sign_in"
+            android:textColor="@color/grey_dark"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </LinearLayout>
 </RelativeLayout>
