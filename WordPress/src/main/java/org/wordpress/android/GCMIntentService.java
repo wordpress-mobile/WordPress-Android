@@ -45,6 +45,7 @@ import de.greenrobot.event.EventBus;
 
 public class GCMIntentService extends GCMBaseIntentService {
     public static final int PUSH_NOTIFICATION_ID = 1337;
+    private static final int AUTH_PUSH_NOTIFICATION_ID = 1338;
 
     private static final Map<String, Bundle> mActiveNotificationsMap = new HashMap<>();
     private static String mPreviousNoteId = null;
@@ -293,13 +294,13 @@ public class GCMIntentService extends GCMBaseIntentService {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setPriority(NotificationCompat.PRIORITY_MAX);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, pushAuthIntent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, pushAuthIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(PUSH_NOTIFICATION_ID, builder.build());
+        notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
     }
 
     @Override
