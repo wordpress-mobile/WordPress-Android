@@ -54,12 +54,12 @@ public class WordPressMediaUtils {
 
         AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.pick_video)),
-                RequestCodes.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
+                RequestCodes.VIDEO_LIBRARY);
     }
 
     public static void launchVideoCamera(Activity activity) {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        activity.startActivityForResult(intent, RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        activity.startActivityForResult(intent, RequestCodes.TAKE_VIDEO);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
@@ -70,7 +70,7 @@ public class WordPressMediaUtils {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.pick_photo)),
-                RequestCodes.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+                RequestCodes.PICTURE_LIBRARY);
     }
 
     public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
@@ -79,7 +79,7 @@ public class WordPressMediaUtils {
             showSDCardRequiredDialog(activity);
         } else {
             Intent intent = prepareLaunchCameraIntent(callback);
-            activity.startActivityForResult(intent, RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+            activity.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
             AppLockManager.getInstance().setExtendedTimeout();
         }
     }

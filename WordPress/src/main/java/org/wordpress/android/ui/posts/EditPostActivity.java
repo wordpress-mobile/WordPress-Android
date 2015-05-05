@@ -1115,8 +1115,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
-                requestCode == RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
+        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO ||
+                requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
                 case MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
                     if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_MEDIA_SELECTED) {
@@ -1137,12 +1137,12 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         handleMediaGalleryPickerResult(data);
                     }
                     break;
-                case RequestCodes.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+                case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     fetchMedia(imageUri);
                     AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                     break;
-                case RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                case RequestCodes.TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
                         try {
                             File f = new File(mMediaCapturePath);
@@ -1165,11 +1165,11 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                         finish();
                     }
                     break;
-                case RequestCodes.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
+                case RequestCodes.VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
                     fetchMedia(videoUri);
                     break;
-                case RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                case RequestCodes.TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
                         Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
                         if (!addMedia(capturedVideoUri)) {

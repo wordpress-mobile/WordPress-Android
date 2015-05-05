@@ -154,7 +154,7 @@ public class MediaPickerActivity extends ActionBarActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+            case RequestCodes.TAKE_PHOTO:
                 File file = new File(mCapturePath);
                 Uri imageUri = Uri.fromFile(file);
 
@@ -170,7 +170,7 @@ public class MediaPickerActivity extends ActionBarActivity
                     finishWithResults(imageResult, ACTIVITY_RESULT_CODE_MEDIA_SELECTED);
                 }
                 break;
-            case RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+            case RequestCodes.TAKE_VIDEO:
                 Uri videoUri = data != null ? data.getData() : null;
 
                 if (videoUri != null) {

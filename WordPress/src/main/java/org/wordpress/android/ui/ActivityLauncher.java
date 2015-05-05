@@ -131,7 +131,7 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void addMedia(Activity activity, Blog blog) {
+    public static void addMedia(Activity activity) {
         WordPressMediaUtils.launchPictureLibrary(activity);
     }
 

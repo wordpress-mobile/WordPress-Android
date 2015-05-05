@@ -138,24 +138,24 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || requestCode == RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
-                requestCode == RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_VIDEO) {
+        if (data != null || requestCode == RequestCodes.TAKE_PHOTO ||
+                requestCode == RequestCodes.TAKE_VIDEO) {
             String path;
 
             switch (requestCode) {
-                case RequestCodes.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
-                case RequestCodes.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
+                case RequestCodes.PICTURE_LIBRARY:
+                case RequestCodes.VIDEO_LIBRARY:
                     Uri imageUri = data.getData();
                     fetchMedia(imageUri);
                     break;
-                case RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                case RequestCodes.TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
                         path = mMediaCapturePath;
                         mMediaCapturePath = null;
                         queueFileForUpload(path);
                     }
                     break;
-                case RequestCodes.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                case RequestCodes.TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
                         path = getRealPathFromURI(MediaUtils.getLastRecordedVideoUri(getActivity()));
                         queueFileForUpload(path);

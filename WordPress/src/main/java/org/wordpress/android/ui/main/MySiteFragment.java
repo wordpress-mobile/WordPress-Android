@@ -169,7 +169,7 @@ public class MySiteFragment extends Fragment
         addMediaContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addMedia(getActivity(), mBlog);
+                ActivityLauncher.addMedia(getActivity());
             }
         });
 
@@ -183,7 +183,7 @@ public class MySiteFragment extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case RequestCodes.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+            case RequestCodes.PICTURE_LIBRARY:
                 FragmentManager fm = getFragmentManager();
                 Fragment addFragment = fm.findFragmentByTag(ADD_MEDIA_FRAGMENT_TAG);
                 if (addFragment != null) {

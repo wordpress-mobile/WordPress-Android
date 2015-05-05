@@ -267,7 +267,7 @@ public class WPMainActivity extends Activity
                     getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
                 }
                 break;
-            case RequestCodes.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+            case RequestCodes.PICTURE_LIBRARY:
                 MySiteFragment siteFragment = getMySiteFragment();
                 if (siteFragment != null) {
                     siteFragment.onActivityResult(requestCode, resultCode, data);
