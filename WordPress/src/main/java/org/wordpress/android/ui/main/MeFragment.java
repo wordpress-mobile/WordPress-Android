@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -19,15 +20,15 @@ import org.wordpress.android.models.Account;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPNetworkImageView;
-import org.wordpress.android.widgets.WPTextView;
 
 public class MeFragment extends Fragment {
 
     private WPNetworkImageView mAvatarImageView;
-    private WPTextView mDisplayNameTextView;
-    private WPTextView mUsernameTextView;
-    private WPTextView mLoginLogoutTextView;
+    private TextView mDisplayNameTextView;
+    private TextView mUsernameTextView;
+    private TextView mLoginLogoutTextView;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -38,10 +39,10 @@ public class MeFragment extends Fragment {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_me, container, false);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
-        mDisplayNameTextView = (WPTextView) rootView.findViewById(R.id.me_display_name);
-        mUsernameTextView = (WPTextView) rootView.findViewById(R.id.me_username);
+        mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
+        mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
 
-        WPTextView settingsTextView = (WPTextView) rootView.findViewById(R.id.me_settings_text_view);
+        TextView settingsTextView = (TextView) rootView.findViewById(R.id.me_settings_text_view);
         settingsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,15 +50,15 @@ public class MeFragment extends Fragment {
             }
         });
 
-        WPTextView supportTextView = (WPTextView) rootView.findViewById(R.id.me_support_text_view);
+        TextView supportTextView = (TextView) rootView.findViewById(R.id.me_support_text_view);
         supportTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewHelpAndSupport(getActivity());
+                ActivityLauncher.viewHelpAndSupport(getActivity(), Tag.ORIGIN_ME_SCREEN_HELP);
             }
         });
 
-        mLoginLogoutTextView = (WPTextView) rootView.findViewById(R.id.me_login_logout_text_view);
+        mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
 
         addDropShadow(rootView.findViewById(R.id.frame_avatar));
         refreshAccountDetails();
@@ -82,9 +83,10 @@ public class MeFragment extends Fragment {
     }
 
     private void refreshAccountDetails() {
-        Account defaultAccount = AccountHelper.getDefaultAccount();
         // we only want to show user details for WordPress.com users
-        if (defaultAccount.isWordPressComUser()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
+            Account defaultAccount = AccountHelper.getDefaultAccount();
+
             mAvatarImageView.setVisibility(View.VISIBLE);
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
@@ -138,15 +140,8 @@ public class MeFragment extends Fragment {
     }
 
     private void signout() {
-        WordPress.signOutAsyncWithProgressBar(getActivity(), new WordPress.SignOutAsync.SignOutCallback() {
-            @Override
-            public void onSignOut() {
-                // note that signing out sends a CoreEvents.UserSignedOut() EventBus event,
-                // which will cause the main activity to show the sign in screen
-                if (isAdded()) {
-                    refreshAccountDetails();
-                }
-            }
-        });
+        // note that signing out sends a CoreEvents.UserSignedOut() EventBus event,
+        // which will cause the main activity to recreate this fragment
+        WordPress.signOutAsyncWithProgressBar(getActivity(), null);
     }
 }

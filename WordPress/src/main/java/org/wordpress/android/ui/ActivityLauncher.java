@@ -30,6 +30,8 @@ import org.wordpress.android.ui.stats.StatsSinglePostDetailsActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -85,12 +87,12 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewBlogSettings(Context context, Blog blog) {
+    public static void viewBlogSettingsForResult(Activity activity, Blog blog) {
         if (blog == null) return;
 
-        Intent intent = new Intent(context, BlogPreferencesActivity.class);
-        intent.putExtra("id", blog.getLocalTableBlogId());
-        context.startActivity(intent);
+        Intent intent = new Intent(activity, BlogPreferencesActivity.class);
+        intent.putExtra(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, blog.getLocalTableBlogId());
+        activity.startActivityForResult(intent, RequestCodes.BLOG_SETTINGS);
     }
 
     public static void viewBlogAdmin(Context context, Blog blog) {
@@ -137,8 +139,9 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewHelpAndSupport(Context context) {
+    public static void viewHelpAndSupport(Context context, Tag origin) {
         Intent intent = new Intent(context, HelpActivity.class);
+        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
         context.startActivity(intent);
     }
 

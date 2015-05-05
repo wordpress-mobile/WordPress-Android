@@ -42,7 +42,8 @@ public class HelpshiftHelper {
     public enum Tag {
         ORIGIN_UNKNOWN("origin:unknown"),
         ORIGIN_LOGIN_SCREEN_HELP("origin:login-screen-help"),
-        ORIGIN_LOGIN_SCREEN_ERROR("origin:login-screen-error");
+        ORIGIN_LOGIN_SCREEN_ERROR("origin:login-screen-error"),
+        ORIGIN_ME_SCREEN_HELP("origin:me-screen-help");
 
         private final String mStringValue;
 

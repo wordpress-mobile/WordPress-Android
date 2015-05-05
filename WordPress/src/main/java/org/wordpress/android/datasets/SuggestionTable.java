@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.models.Tag;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class SuggestionTable {
     private static final String SUGGESTIONS_TABLE = "suggestions";
+    private static final String TAXONOMY_TABLE = "taxonomy";
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + SUGGESTIONS_TABLE + " ("
@@ -24,14 +26,20 @@ public class SuggestionTable {
                 + "    taxonomy             TEXT,"
                 + "    PRIMARY KEY (user_login)"
                 + " );");
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TAXONOMY_TABLE + " ("
+                + "    site_id              INTEGER DEFAULT 0,"
+                + "    tag                  TEXT,"
+                + "    PRIMARY KEY (site_id, tag)"
+                + " );");
     }
 
     private static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + SUGGESTIONS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TAXONOMY_TABLE);
     }
 
     public static void reset(SQLiteDatabase db) {
-        AppLog.i(AppLog.T.SUGGESTION, "resetting suggestion table");
+        AppLog.i(AppLog.T.SUGGESTION, "resetting suggestion tables");
         dropTables(db);
         createTables(db);
     }
@@ -53,7 +61,6 @@ public class SuggestionTable {
             }
         }
     }
-
     public static void addSuggestion(final Suggestion suggestion) {
         if (suggestion == null)
             return;
@@ -106,5 +113,61 @@ public class SuggestionTable {
                 displayName,
                 imageUrl,
                 taxonomy);
+    }
+
+    public static void insertTagsForSite(final int siteId, final List<Tag> tags) {
+        // we want to delete the current tags, so that removed tags will not show up
+        deleteTagsForSite(siteId);
+
+        if (tags != null) {
+            for (Tag tag : tags) {
+                addTag(tag);
+            }
+        }
+    }
+
+    public static void addTag(final Tag tag) {
+        if (tag == null)
+            return;
+
+        ContentValues values = new ContentValues();
+        values.put("site_id",           tag.siteID);
+        values.put("tag",               tag.getTag());
+
+        getWritableDb().insertWithOnConflict(TAXONOMY_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    public static List<Tag> getTagsForSite(int siteId) {
+        List<Tag> tags = new ArrayList<Tag>();
+
+        String[] args = {Integer.toString(siteId)};
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + TAXONOMY_TABLE + " WHERE site_id=? ORDER BY tag ASC", args);
+
+        try {
+            if (c.moveToFirst()) {
+                do {
+                    Tag comment = getTagFromCursor(c);
+                    tags.add(comment);
+                } while (c.moveToNext());
+            }
+
+            return tags;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
+    public static int deleteTagsForSite(int siteId) {
+        return getWritableDb().delete(TAXONOMY_TABLE, "site_id=?", new String[]{Integer.toString(siteId)});
+    }
+
+    private static Tag getTagFromCursor(Cursor c) {
+        final String tag = c.getString(c.getColumnIndex("tag"));
+
+        int siteId = c.getInt(c.getColumnIndex("site_id"));
+
+        return new Tag(
+                siteId,
+                tag);
     }
 }

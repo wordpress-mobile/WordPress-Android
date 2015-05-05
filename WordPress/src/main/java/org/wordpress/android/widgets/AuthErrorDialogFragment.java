@@ -52,7 +52,7 @@ public class AuthErrorDialogFragment extends DialogFragment {
         b.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ActivityLauncher.viewBlogSettings(getActivity(), WordPress.getCurrentBlog());
+                ActivityLauncher.viewBlogSettingsForResult(getActivity(), WordPress.getCurrentBlog());
             }
         });
         b.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
