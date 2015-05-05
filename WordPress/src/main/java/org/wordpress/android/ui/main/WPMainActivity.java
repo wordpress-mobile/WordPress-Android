@@ -30,6 +30,7 @@ import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
@@ -375,7 +376,7 @@ public class WPMainActivity extends Activity
     // Events
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.UserSignedOut event) {
+    public void onEventMainThread(UserSignedOutWordPressCom event) {
         resetFragments();
         if (!AccountHelper.isSignedIn()) {
             ActivityLauncher.showSignInForResult(this);

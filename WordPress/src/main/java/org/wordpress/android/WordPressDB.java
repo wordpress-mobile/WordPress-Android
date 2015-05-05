@@ -560,8 +560,21 @@ public class WordPressDB {
 
     public boolean deleteBlog(Context ctx, int id) {
         int rowsAffected = db.delete(BLOGS_TABLE, "id=?", new String[]{Integer.toString(id)});
-        deleteQuickPressShortcutsForBlog(ctx, id);
+        deleteQuickPressShortcutsForLocalTableBlogId(ctx, id);
         deleteAllPostsForLocalTableBlogId(id);
+        return (rowsAffected > 0);
+    }
+
+    public boolean deleteWordPressComBlogs(Context ctx) {
+        List<Map<String, Object>> wordPressComBlogs = getBlogsBy("isHidden = 0 AND dotcomFlag = 1", null);
+        for (Map<String, Object> blog : wordPressComBlogs) {
+            int localBlogId = MapUtils.getMapInt(blog, "id");
+            deleteQuickPressShortcutsForLocalTableBlogId(ctx, localBlogId);
+            deleteAllPostsForLocalTableBlogId(localBlogId);
+        }
+
+        // Delete blogs
+        int rowsAffected = db.delete(BLOGS_TABLE, "dotcomFlag=1", null);
         return (rowsAffected > 0);
     }
 
@@ -1301,7 +1314,7 @@ public class WordPressDB {
     /*
      * delete QuickPress home screen shortcuts connected with the passed blog
      */
-    private void deleteQuickPressShortcutsForBlog(Context ctx, int blogId) {
+    private void deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId) {
         List<Map<String, Object>> shortcuts = getQuickPressShortcuts(blogId);
         if (shortcuts.size() == 0)
             return;

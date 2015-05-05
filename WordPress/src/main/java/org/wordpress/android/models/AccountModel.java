@@ -9,9 +9,6 @@ public class AccountModel {
     // General state
     private boolean mIsWordPressComUser;
 
-    // True when the user was signed in and tapped the signout button (used to preserve app content on signout)
-    private boolean mUserTappedSignedOutButton;
-
     // WordPress.com only - data fetched from the REST API endpoint
     private String mUserName;
     private long mUserId;
@@ -38,7 +35,6 @@ public class AccountModel {
         mSiteCount = 0;
         mVisibleSiteCount = 0;
         mAccessToken = "";
-        mUserTappedSignedOutButton = false;
     }
 
     public void updateFromRestResponse(JSONObject json) {
@@ -51,14 +47,6 @@ public class AccountModel {
         mPrimaryBlogId = json.optLong("primary_blog");
         mSiteCount = json.optInt("site_count");
         mVisibleSiteCount = json.optInt("visible_site_count");
-    }
-
-    public boolean isUserTappedSignedOutButton() {
-        return mUserTappedSignedOutButton;
-    }
-
-    public void setUserTappedSignedOutButton(boolean userTappedSignedOutButton) {
-        mUserTappedSignedOutButton = userTappedSignedOutButton;
     }
 
     public long getUserId() {

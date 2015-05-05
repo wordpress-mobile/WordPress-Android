@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts.helpers;
 
 import android.annotation.SuppressLint;
-import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -19,7 +18,6 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 public class LoginWPCom extends LoginAbstract {
@@ -83,15 +81,6 @@ public class LoginWPCom extends LoginAbstract {
                 }
 
                 Account account = AccountHelper.getDefaultAccount();
-
-                // If user has signed out and back in with a different username, we must clear the old data
-                if (StringUtils.equals(account.getUserName(), mUsername) && account.isUserTappedSignedOutButton()) {
-                    account.setUserTappedSignedOutButton(false);
-                    account.save();
-                    WordPress.wpDB.dangerouslyDeleteAllContent();
-                    WordPress.removeWpComUserRelatedData(WordPress.getContext());
-                    WordPress.currentBlog = null;
-                }
 
                 if (mJetpackBlog == null) {
                     // Store token in global account

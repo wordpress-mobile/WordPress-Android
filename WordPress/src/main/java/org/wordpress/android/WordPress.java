@@ -26,7 +26,6 @@ import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 
-import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
@@ -52,6 +51,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
@@ -473,15 +473,14 @@ public class WordPress extends Application {
     public static int getCurrentLocalTableBlogId() {
         return (getCurrentBlog() != null ? getCurrentBlog().getLocalTableBlogId() : -1);
     }
-    public static void signOutAsyncWithProgressBar(Context context, SignOutCallback callback) {
-        new SignOutAsync(context, callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    public static void signOutWordPressComAsyncWithProgressBar(Context context) {
+        new SignOutWordPressComAsync(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /**
-     * Sign out from all accounts by clearing out the password, which will require user to sign in
-     * again
+     * Sign out from wpcom account
      */
-    public static void signOut(Context context) {
+    public static void WordPressComSignOut(Context context) {
         try {
             SelfSignedSSLCertsManager.getInstance(context).emptyLocalKeyStoreFile();
         } catch (GeneralSecurityException e) {
@@ -490,40 +489,32 @@ public class WordPress extends Application {
             AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
         }
 
-        // Save that this user signed out
-        AccountHelper.getDefaultAccount().setUserTappedSignedOutButton(true);
-        AccountHelper.getDefaultAccount().save();
-
-        wpDB.updateLastBlogId(-1);
-        currentBlog = null;
         flushHttpCache();
+        removeWpComUserRelatedData(context);
 
-        // General analytics resets
-        AnalyticsTracker.endSession(false);
-        AnalyticsTracker.clearAllData();
+        // Only if the user doesn't have any remaining wporg sites
+        if (!AccountHelper.isSignedIn()) {
+            // Analytics resets
+            AnalyticsTracker.endSession(false);
+            AnalyticsTracker.clearAllData();
 
-        // disable passcode lock
-        AbstractAppLock appLock = AppLockManager.getInstance().getCurrentAppLock();
-        if (appLock != null) {
-            appLock.setPassword(null);
+            // disable passcode lock
+            AbstractAppLock appLock = AppLockManager.getInstance().getCurrentAppLock();
+            if (appLock != null) {
+                appLock.setPassword(null);
+            }
         }
 
         // send broadcast that user is signing out
-        EventBus.getDefault().post(new CoreEvents.UserSignedOut());
+        EventBus.getDefault().post(new UserSignedOutWordPressCom());
     }
 
-    public static class SignOutAsync extends AsyncTask<Void, Void, Void> {
-        public interface SignOutCallback {
-            public void onSignOut();
-        }
-
+    public static class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
         ProgressDialog mProgressDialog;
         WeakReference<Context> mWeakContext;
-        SignOutCallback mCallback;
 
-        public SignOutAsync(Context context, SignOutCallback callback) {
+        public SignOutWordPressComAsync(Context context) {
             mWeakContext = new WeakReference<Context>(context);
-            mCallback = callback;
         }
 
         @Override
@@ -539,7 +530,7 @@ public class WordPress extends Application {
         protected Void doInBackground(Void... params) {
             Context context = mWeakContext.get();
             if (context != null) {
-                signOut(context);
+                WordPressComSignOut(context);
             }
             return null;
         }
@@ -549,9 +540,6 @@ public class WordPress extends Application {
             super.onPostExecute(aVoid);
             if (mProgressDialog != null) {
                 mProgressDialog.dismiss();
-            }
-            if (mCallback != null) {
-                mCallback.onSignOut();
             }
         }
     }
@@ -569,6 +557,10 @@ public class WordPress extends Application {
             AppLog.v(T.NOTIFS, "Could not unregister for GCM: " + e.getMessage());
         }
 
+        // delete wpcom blogs
+        wpDB.deleteWordPressComBlogs(context);
+
+        // reset default account
         AccountHelper.getDefaultAccount().signout();
 
         // reset all reader-related prefs & data

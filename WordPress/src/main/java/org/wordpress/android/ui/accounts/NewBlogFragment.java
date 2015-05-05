@@ -76,7 +76,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
     private void signoutAndFinish() {
         if (mSignoutOnCancelMode) {
-            WordPress.signOut(getActivity());
+            WordPress.WordPressComSignOut(getActivity());
             getActivity().setResult(Activity.RESULT_CANCELED);
             getActivity().finish();
         }
