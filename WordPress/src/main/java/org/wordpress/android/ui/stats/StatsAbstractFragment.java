@@ -71,6 +71,17 @@ public abstract class StatsAbstractFragment extends Fragment {
             return;
         }
 
+        // Do not pass the array of StatsEndpointsEnum to the Service. Otherwise we get
+        // java.lang.RuntimeException: Unable to start service org.wordpress.android.ui.stats.service.StatsService
+        // with Intent { cmp=org.wordpress.android/.ui.stats.service.StatsService (has extras) }: java.lang.ClassCastException:
+        // java.lang.Object[] cannot be cast to org.wordpress.android.ui.stats.service.StatsService$StatsEndpointsEnum[]
+        // on older devices.
+        // We should use Enumset, or array of int. Going for the latter, since we have an array and cannot create an Enumset easily.
+        int[] sectionsForTheService = new int[sections.length];
+        for (int i=0; i < sections.length; i++){
+            sectionsForTheService[i] = sections[i].ordinal();
+        }
+
         // start service to get stats
         Intent intent = new Intent(getActivity(), StatsService.class);
         intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
@@ -87,7 +98,7 @@ public abstract class StatsAbstractFragment extends Fragment {
         if (pageNumberRequested > 0) {
             intent.putExtra(StatsService.ARG_PAGE_REQUESTED, pageNumberRequested);
         }
-        intent.putExtra(StatsService.ARG_SECTION, sections);
+        intent.putExtra(StatsService.ARG_SECTION, sectionsForTheService);
         getActivity().startService(intent);
     }
 
