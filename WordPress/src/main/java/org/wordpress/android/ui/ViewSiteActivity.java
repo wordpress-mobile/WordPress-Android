@@ -21,6 +21,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.passcodelock.AppLockManager;
@@ -63,7 +64,7 @@ public class ViewSiteActivity extends ActionBarActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
-        this.setTitle(mBlog.getBlogName());
+        this.setTitle(StringUtils.unescapeHTML(mBlog.getBlogName()));
         loadSiteURL();
     }
 
