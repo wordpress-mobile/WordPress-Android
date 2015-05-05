@@ -213,9 +213,9 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
-            Intent data = new Intent();
-            data.putExtra(KEY_LOCAL_ID, site.localId);
-            setResult(RESULT_OK, data);
+            WordPress.setCurrentBlog(site.localId);
+            WordPress.wpDB.updateLastBlogId(site.localId);
+            setResult(RESULT_OK);
             finish();
         }
     }
