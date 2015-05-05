@@ -25,6 +25,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class MeFragment extends Fragment {
 
+    private ViewGroup mAvatarFrame;
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
@@ -38,6 +39,8 @@ public class MeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_me, container, false);
+
+        mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
@@ -87,7 +90,7 @@ public class MeFragment extends Fragment {
         if (AccountHelper.isSignedInWordPressDotCom()) {
             Account defaultAccount = AccountHelper.getDefaultAccount();
 
-            mAvatarImageView.setVisibility(View.VISIBLE);
+            mAvatarFrame.setVisibility(View.VISIBLE);
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
 
@@ -112,7 +115,7 @@ public class MeFragment extends Fragment {
                 }
             });
         } else {
-            mAvatarImageView.setVisibility(View.GONE);
+            mAvatarFrame.setVisibility(View.GONE);
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
 
