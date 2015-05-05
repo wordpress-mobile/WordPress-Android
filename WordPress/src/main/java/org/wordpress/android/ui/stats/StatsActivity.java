@@ -225,11 +225,6 @@ public class StatsActivity extends ActionBarActivity
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         mIsInFront = true;
