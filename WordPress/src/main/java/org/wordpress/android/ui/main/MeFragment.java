@@ -44,6 +44,7 @@ public class MeFragment extends Fragment {
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
+        mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
 
         TextView settingsTextView = (TextView) rootView.findViewById(R.id.me_settings_text_view);
         settingsTextView.setOnClickListener(new View.OnClickListener() {
@@ -61,9 +62,6 @@ public class MeFragment extends Fragment {
             }
         });
 
-        mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
-
-        addDropShadow(rootView.findViewById(R.id.frame_avatar));
         refreshAccountDetails();
 
         return rootView;
@@ -73,15 +71,23 @@ public class MeFragment extends Fragment {
      * adds a circular drop shadow to the avatar's parent view (Lollipop+ only)
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void addDropShadow(View view) {
+    private void addDropShadow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            view.setOutlineProvider(new ViewOutlineProvider() {
+            mAvatarFrame.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
                     outline.setOval(0, 0, view.getWidth(), view.getHeight());
                 }
             });
-            view.setElevation(view.getResources().getDimensionPixelSize(R.dimen.card_elevation));
+            mAvatarFrame.setElevation(mAvatarFrame.getResources().getDimensionPixelSize(R.dimen.card_elevation));
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void removeDropShadow() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mAvatarFrame.setOutlineProvider(null);
+            mAvatarFrame.setElevation(0);
         }
     }
 
@@ -90,13 +96,13 @@ public class MeFragment extends Fragment {
         if (AccountHelper.isSignedInWordPressDotCom()) {
             Account defaultAccount = AccountHelper.getDefaultAccount();
 
-            mAvatarFrame.setVisibility(View.VISIBLE);
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
 
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
             String avatarUrl = GravatarUtils.fixGravatarUrl(defaultAccount.getAvatarUrl(), avatarSz);
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+            addDropShadow();
 
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
 
@@ -115,7 +121,9 @@ public class MeFragment extends Fragment {
                 }
             });
         } else {
-            mAvatarFrame.setVisibility(View.GONE);
+            mAvatarImageView.setImageResource(R.drawable.blavatar_placeholder_org);
+            removeDropShadow();
+
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
 
@@ -131,15 +139,15 @@ public class MeFragment extends Fragment {
 
     private void signoutWithConfirmation() {
         new AlertDialog.Builder(getActivity())
-            .setMessage(getString(R.string.sign_out_confirm))
-            .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    signout();
-                }
-            })
-            .setNegativeButton(R.string.cancel, null)
-            .setCancelable(true)
-            .create().show();
+                .setMessage(getString(R.string.sign_out_confirm))
+                .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        signout();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .setCancelable(true)
+                .create().show();
     }
 
     private void signout() {
