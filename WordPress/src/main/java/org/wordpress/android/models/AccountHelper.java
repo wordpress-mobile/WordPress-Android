@@ -4,8 +4,6 @@ import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.AccountTable;
-import org.wordpress.android.models.Account;
-import org.wordpress.android.models.Blog;
 
 /**
  * The app supports only one WordPress.com account at the moment, so we might use getDefaultAccount() everywhere we
@@ -25,11 +23,11 @@ public class AccountHelper {
     }
 
     public static boolean isSignedIn() {
-        return getDefaultAccount().isWordPressComUser() || (WordPress.wpDB.getNumVisibleBlogs() != 0);
+        return getDefaultAccount().hasAccessToken() || (WordPress.wpDB.getNumVisibleBlogs() != 0);
     }
 
     public static boolean isSignedInWordPressDotCom() {
-        return getDefaultAccount().isWordPressComUser();
+        return getDefaultAccount().hasAccessToken();
     }
 
     public static boolean isJetPackUser() {

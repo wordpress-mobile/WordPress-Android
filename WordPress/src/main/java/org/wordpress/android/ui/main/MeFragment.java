@@ -18,7 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPNetworkImageView;

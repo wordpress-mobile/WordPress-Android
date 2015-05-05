@@ -13,6 +13,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.models.AccountHelper;
 
 import java.util.HashMap;
 import java.util.Map;

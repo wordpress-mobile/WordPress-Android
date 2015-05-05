@@ -45,7 +45,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -116,7 +116,7 @@ public class WordPress extends Application {
      */
     public static RateLimitedTask sUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
-            if (AccountHelper.getDefaultAccount().isWordPressComUser()) {
+            if (AccountHelper.isSignedInWordPressDotCom()) {
                 new GenericUpdateBlogListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
             return true;
@@ -167,7 +167,7 @@ public class WordPress extends Application {
         setupVolleyQueue();
 
         // Refresh account informations
-        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
             AccountHelper.getDefaultAccount().fetchAccountDetails();
         }
 
@@ -199,7 +199,7 @@ public class WordPress extends Application {
 
     // Configure Simperium and start buckets if we are signed in to WP.com
     private void configureSimperium() {
-        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
             AppLog.i(T.NOTIFS, "Configuring Simperium");
             SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
         }
@@ -340,7 +340,7 @@ public class WordPress extends Application {
         String regId = gcmRegisterIfNot(context);
 
         // Register to WordPress.com notifications
-        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
             if (!TextUtils.isEmpty(regId)) {
                 // Send the token to WP.com in case it was invalidated
                 NotificationsUtils.registerDeviceForPushNotifications(context, regId);
@@ -718,7 +718,7 @@ public class WordPress extends Application {
          */
         private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
-            if (isPushNotificationPingNeeded() && AccountHelper.getDefaultAccount().hasAccessToken()) {
+            if (isPushNotificationPingNeeded() && AccountHelper.isSignedInWordPressDotCom()) {
                 String token = null;
                 try {
                     // Register for Google Cloud Messaging
