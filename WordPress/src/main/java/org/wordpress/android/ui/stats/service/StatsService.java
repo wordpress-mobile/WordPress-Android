@@ -7,7 +7,6 @@ import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
-import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
