@@ -159,14 +159,15 @@ public class StatsService extends Service {
         final int maxResultsRequested = intent.getIntExtra(ARG_MAX_RESULTS, DEFAULT_NUMBER_OF_RESULTS);
         final int pageRequested = intent.getIntExtra(ARG_PAGE_REQUESTED, -1);
 
-        StatsEndpointsEnum[] sectionsToUpdate = (StatsEndpointsEnum[]) intent.getSerializableExtra(ARG_SECTION);
+        int[] sectionFromIntent = intent.getIntArrayExtra(ARG_SECTION);
 
         this.mServiceStartId = startId;
-        for (final StatsEndpointsEnum sectionToUpdate : sectionsToUpdate) {
+        for (int i=0; i < sectionFromIntent.length; i++){
+            final StatsEndpointsEnum currentSectionsToUpdate = StatsEndpointsEnum.values()[sectionFromIntent[i]];
             singleThreadNetworkHandler.submit(new Thread() {
                 @Override
                 public void run() {
-                    startTasks(blogId, period, requestedDate, sectionToUpdate, maxResultsRequested, pageRequested);
+                    startTasks(blogId, period, requestedDate, currentSectionsToUpdate, maxResultsRequested, pageRequested);
                 }
             });
         }
