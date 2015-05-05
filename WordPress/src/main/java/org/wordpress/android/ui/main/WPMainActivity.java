@@ -22,6 +22,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
@@ -126,6 +127,15 @@ public class WPMainActivity extends Activity
      */
     private void launchWithNoteId() {
         if (isFinishing() || getIntent() == null) return;
+
+        // Check for push authorization request
+        if (getIntent().hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
+            Bundle extras = getIntent().getExtras();
+            String token = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, "");
+            String title = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TITLE, "");
+            String message = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, "");
+            NotificationsUtils.showPushAuthAlert(this, token, title, message);
+        }
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 

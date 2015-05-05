@@ -51,12 +51,13 @@ public class GCMIntentService extends GCMBaseIntentService {
     private static long mPreviousNoteTime = 0L;
     private static final int mMaxInboxItems = 5;
 
-    private static final String NOTE_TYPE_COMMENT = "c";
-    private static final String NOTE_TYPE_LIKE = "like";
-    private static final String NOTE_TYPE_COMMENT_LIKE = "comment_like";
-    private static final String NOTE_TYPE_AUTOMATTCHER = "automattcher";
-    private static final String NOTE_TYPE_FOLLOW = "follow";
-    private static final String NOTE_TYPE_REBLOG = "reblog";
+    private static final String PUSH_TYPE_COMMENT = "c";
+    private static final String PUSH_TYPE_LIKE = "like";
+    private static final String PUSH_TYPE_COMMENT_LIKE = "comment_like";
+    private static final String PUSH_TYPE_AUTOMATTCHER = "automattcher";
+    private static final String PUSH_TYPE_FOLLOW = "follow";
+    private static final String PUSH_TYPE_REBLOG = "reblog";
+    private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
 
     @Override
     protected String[] getSenderIds(Context context) {
@@ -79,6 +80,14 @@ public class GCMIntentService extends GCMBaseIntentService {
                 AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
                 return;
             }
+        }
+
+        String noteType = StringUtils.notNullStr(extras.getString("type"));
+
+        // Check for wpcom auth push, if so we will process this push differently
+        if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
+            handlePushAuth(context, extras);
+            return;
         }
 
         String title = StringEscapeUtils.unescapeHtml(extras.getString("title"));
@@ -118,7 +127,6 @@ public class GCMIntentService extends GCMBaseIntentService {
         }
 
         String iconUrl = extras.getString("icon");
-        String noteType = StringUtils.notNullStr(extras.getString("type"));
         Bitmap largeIconBitmap = null;
         if (iconUrl != null) {
             try {
@@ -166,7 +174,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
 
             // Add some actions if this is a comment notification
-            if (noteType.equals(NOTE_TYPE_COMMENT)) {
+            if (noteType.equals(PUSH_TYPE_COMMENT)) {
                 Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
                 commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
                 commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
@@ -196,7 +204,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                     break;
                 if (wpPN.getString("msg") == null)
                     continue;
-                if (wpPN.getString("type") != null && wpPN.getString("type").equals(NOTE_TYPE_COMMENT)) {
+                if (wpPN.getString("type") != null && wpPN.getString("type").equals(PUSH_TYPE_COMMENT)) {
                     String pnTitle = StringEscapeUtils.unescapeHtml((wpPN.getString("title")));
                     String pnMessage = StringEscapeUtils.unescapeHtml((wpPN.getString("msg")));
                     inboxStyle.addLine(pnTitle + ": " + pnMessage);
@@ -245,11 +253,53 @@ public class GCMIntentService extends GCMBaseIntentService {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
-        NotificationManager mNotificationManager =
+        NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(PUSH_NOTIFICATION_ID, mBuilder.build());
+        notificationManager.notify(PUSH_NOTIFICATION_ID, mBuilder.build());
 
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+    }
+
+    // Show a notification for two-step auth users who sign in from a web browser
+    private void handlePushAuth(Context context, Bundle extras) {
+        if (context == null || extras == null) return;
+
+        String pushAuthToken = extras.getString("push_auth_token", "");
+        String title = extras.getString("title", "");
+        String message = extras.getString("msg", "");
+
+        // No strings, no service
+        if (TextUtils.isEmpty(pushAuthToken) || TextUtils.isEmpty(title) || TextUtils.isEmpty(message)) {
+            return;
+        }
+
+        // Show authorization intent
+        Intent pushAuthIntent = new Intent(this, WPMainActivity.class);
+        pushAuthIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+        pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
+        pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
+        pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
+        pushAuthIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        pushAuthIntent.setAction("android.intent.action.MAIN");
+        pushAuthIntent.addCategory("android.intent.category.LAUNCHER");
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setColor(getResources().getColor(R.color.blue_wordpress))
+                .setContentTitle(title)
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setPriority(NotificationCompat.PRIORITY_MAX);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, pushAuthIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(PUSH_NOTIFICATION_ID, builder.build());
     }
 
     @Override
@@ -322,12 +372,12 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (TextUtils.isEmpty(noteType)) return false;
 
         switch (noteType) {
-            case NOTE_TYPE_COMMENT:
-            case NOTE_TYPE_LIKE:
-            case NOTE_TYPE_COMMENT_LIKE:
-            case NOTE_TYPE_AUTOMATTCHER:
-            case NOTE_TYPE_FOLLOW:
-            case NOTE_TYPE_REBLOG:
+            case PUSH_TYPE_COMMENT:
+            case PUSH_TYPE_LIKE:
+            case PUSH_TYPE_COMMENT_LIKE:
+            case PUSH_TYPE_AUTOMATTCHER:
+            case PUSH_TYPE_FOLLOW:
+            case PUSH_TYPE_REBLOG:
                 return true;
             default:
                 return false;

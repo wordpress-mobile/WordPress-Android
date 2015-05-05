@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.notifications.utils;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -29,6 +31,7 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
@@ -45,10 +48,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NotificationsUtils {
+    public static final String ARG_PUSH_AUTH_TOKEN = "arg_push_auth_token";
+    public static final String ARG_PUSH_AUTH_TITLE = "arg_push_auth_title";
+    public static final String ARG_PUSH_AUTH_MESSAGE = "arg_push_auth_message";
 
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
+    public static final String WPCOM_PUSH_AUTH_TOKEN = "wp_pref_push_auth_token";
+
+    private static final String PUSH_AUTH_ENDPOINT = "me/two-step/push-authentication";
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
@@ -429,4 +438,36 @@ public class NotificationsUtils {
         return spannable != null && index < spannable.length() && spannable.charAt(index) == character;
     }
 
+    public static void showPushAuthAlert(Context context, final String token, String title, String message) {
+        if (context == null ||
+                TextUtils.isEmpty(token) ||
+                TextUtils.isEmpty(title) ||
+                TextUtils.isEmpty(message)) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title).setMessage(message);
+
+        builder.setPositiveButton(R.string.mnu_comment_approve, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // ping the push auth endpoint with the token, wp.com will take care of the rest!
+                Map<String, String> tokenMap = new HashMap<>();
+                tokenMap.put("action", "authorize_login");
+                tokenMap.put("push_token", token);
+                WordPress.getRestClientUtilsV1_1().post(PUSH_AUTH_ENDPOINT, tokenMap, null, null, null);
+            }
+        });
+
+        builder.setNegativeButton(R.string.ignore, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // noop
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }
