@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
@@ -25,11 +25,11 @@ public class AccountHelper {
     }
 
     public static boolean isSignedIn() {
-        return getDefaultAccount().hasAccessToken() || (WordPress.wpDB.getNumVisibleBlogs() != 0);
+        return getDefaultAccount().isWordPressComUser() || (WordPress.wpDB.getNumVisibleBlogs() != 0);
     }
 
     public static boolean isSignedInWordPressDotCom() {
-        return getDefaultAccount().hasAccessToken();
+        return getDefaultAccount().isWordPressComUser();
     }
 
     public static boolean isJetPackUser() {
