@@ -45,9 +45,58 @@ public class StatsService extends Service {
     // The number of results to return per page for Paged REST endpoints. Numbers larger than 20 will default to 20 on the server.
     public static final int MAX_RESULTS_REQUESTED_PER_PAGE = 20;
 
-    public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS,
-        VIDEO_PLAYS, COMMENTS, FOLLOWERS_WPCOM, FOLLOWERS_EMAIL, COMMENT_FOLLOWERS, TAGS_AND_CATEGORIES,
-        PUBLICIZE, SEARCH_TERMS}
+    public static enum StatsEndpointsEnum {
+        VISITS,
+        TOP_POSTS,
+        REFERRERS,
+        CLICKS,
+        GEO_VIEWS,
+        AUTHORS,
+        VIDEO_PLAYS,
+        COMMENTS,
+        FOLLOWERS_WPCOM,
+        FOLLOWERS_EMAIL,
+        COMMENT_FOLLOWERS,
+        TAGS_AND_CATEGORIES,
+        PUBLICIZE,
+        SEARCH_TERMS;
+
+        public String getRestEndpointPath() {
+            switch (this) {
+                case VISITS:
+                    return "visits";
+                case TOP_POSTS:
+                    return "top-posts";
+                case REFERRERS:
+                    return "referrers";
+                case CLICKS:
+                    return "clicks";
+                case GEO_VIEWS:
+                    return "country-views";
+                case AUTHORS:
+                    return "top-authors";
+                case VIDEO_PLAYS:
+                    return "video-plays";
+                case COMMENTS:
+                    return "comments";
+                case FOLLOWERS_WPCOM:
+                    return "followers?type=wpcom";
+                case FOLLOWERS_EMAIL:
+                    return "followers?type=email";
+                case COMMENT_FOLLOWERS:
+                    return "comment-followers";
+                case TAGS_AND_CATEGORIES:
+                    return "tags";
+                case PUBLICIZE:
+                    return "publicize";
+                case SEARCH_TERMS:
+                    return "search-terms";
+                default:
+                    AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + this.name());
+                    return "";
+            }
+        }
+    }
 
     private int mServiceStartId;
     private final LinkedList<Request<JSONObject>> mStatsNetworkRequests = new LinkedList<>();
@@ -153,7 +202,7 @@ public class StatsService extends Service {
 
         final String periodDateMaxPlaceholder =  "?period=%s&date=%s&max=%s";
 
-        String path = String.format("/sites/%s/stats/" + getRestEndpointPath(sectionToUpdate), blogId);
+        String path = String.format("/sites/%s/stats/" + sectionToUpdate.getRestEndpointPath(), blogId);
         synchronized (mStatsNetworkRequests) {
             switch (sectionToUpdate) {
                 case VISITS:
@@ -213,43 +262,6 @@ public class StatsService extends Service {
             } else {
                 AppLog.d(AppLog.T.STATS, "Stats request is already in the queue:" + path);
             }
-        }
-    }
-
-
-    private String getRestEndpointPath(final StatsEndpointsEnum sectionToUpdate) {
-        switch (sectionToUpdate) {
-            case VISITS:
-                return "visits";
-            case TOP_POSTS:
-                return "top-posts";
-            case REFERRERS:
-                return "referrers";
-            case CLICKS:
-                return "clicks";
-            case GEO_VIEWS:
-                return "country-views";
-            case AUTHORS:
-                return "top-authors";
-            case VIDEO_PLAYS:
-                return "video-plays";
-            case COMMENTS:
-                return "comments";
-            case FOLLOWERS_WPCOM:
-               return "followers?type=wpcom";
-            case FOLLOWERS_EMAIL:
-                return "followers?type=email";
-            case COMMENT_FOLLOWERS:
-               return "comment-followers";
-            case TAGS_AND_CATEGORIES:
-                return "tags";
-            case PUBLICIZE:
-                return "publicize";
-            case SEARCH_TERMS:
-                return "search-terms";
-            default:
-                AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());
-                return "";
         }
     }
 
