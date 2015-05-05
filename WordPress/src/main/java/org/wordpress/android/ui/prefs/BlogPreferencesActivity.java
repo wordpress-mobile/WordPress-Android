@@ -19,10 +19,14 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.CoreEvents.UserSignedOut;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Activity for configuring blog specific settings.
@@ -271,6 +275,12 @@ public class BlogPreferencesActivity extends ActionBarActivity {
             WordPress.currentBlog = null;
             mBlogDeleted = true;
             setResult(RESULT_BLOG_REMOVED);
+
+            // If the last blog is removed and the user is not signed in wpcom, broadcast a UserSignedOut event
+            if (!AccountHelper.isSignedIn()) {
+                EventBus.getDefault().post(new UserSignedOut());
+            }
+
             finish();
         } else {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);

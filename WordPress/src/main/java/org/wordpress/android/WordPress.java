@@ -51,6 +51,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.CoreEvents.UserSignedOut;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -158,6 +159,7 @@ public class WordPress extends Application {
                 .sendNoSubscriberEvent(false)
                 .throwSubscriberException(true)
                 .installDefaultEventBus();
+        EventBus.getDefault().register(this);
 
         RestClientUtils.setUserAgent(getUserAgent());
 
@@ -375,7 +377,6 @@ public class WordPress extends Application {
         } else {
             postsShouldRefresh = true;
         }
-
     }
 
     public static void postUploadFailed(int localBlogId) {
@@ -388,7 +389,6 @@ public class WordPress extends Application {
         } else {
             postsShouldRefresh = true;
         }
-
     }
 
     /**
@@ -473,6 +473,7 @@ public class WordPress extends Application {
     public static int getCurrentLocalTableBlogId() {
         return (getCurrentBlog() != null ? getCurrentBlog().getLocalTableBlogId() : -1);
     }
+
     public static void signOutWordPressComAsyncWithProgressBar(Context context) {
         new SignOutWordPressComAsync(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -481,8 +482,21 @@ public class WordPress extends Application {
      * Sign out from wpcom account
      */
     public static void WordPressComSignOut(Context context) {
+        removeWpComUserRelatedData(context);
+
+        // broadcast an event: wpcom user signed out
+        EventBus.getDefault().post(new UserSignedOutWordPressCom());
+
+        // broadcast an event only if the user is completly signed out
+        if (!AccountHelper.isSignedIn()) {
+            EventBus.getDefault().post(new UserSignedOut());
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.UserSignedOut event) {
         try {
-            SelfSignedSSLCertsManager.getInstance(context).emptyLocalKeyStoreFile();
+            SelfSignedSSLCertsManager.getInstance(getContext()).emptyLocalKeyStoreFile();
         } catch (GeneralSecurityException e) {
             AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
         } catch (IOException e) {
@@ -490,23 +504,19 @@ public class WordPress extends Application {
         }
 
         flushHttpCache();
-        removeWpComUserRelatedData(context);
 
-        // Only if the user doesn't have any remaining wporg sites
-        if (!AccountHelper.isSignedIn()) {
-            // Analytics resets
-            AnalyticsTracker.endSession(false);
-            AnalyticsTracker.clearAllData();
+        // Analytics resets
+        AnalyticsTracker.endSession(false);
+        AnalyticsTracker.clearAllData();
 
-            // disable passcode lock
-            AbstractAppLock appLock = AppLockManager.getInstance().getCurrentAppLock();
-            if (appLock != null) {
-                appLock.setPassword(null);
-            }
+        // disable passcode lock
+        AbstractAppLock appLock = AppLockManager.getInstance().getCurrentAppLock();
+        if (appLock != null) {
+            appLock.setPassword(null);
         }
 
-        // send broadcast that user is signing out
-        EventBus.getDefault().post(new UserSignedOutWordPressCom());
+        // dangerously delete all content!
+        wpDB.dangerouslyDeleteAllContent();
     }
 
     public static class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {

@@ -140,7 +140,7 @@ public class MeFragment extends Fragment {
     }
 
     private void signOutWordPressCom() {
-        // note that signing out sends a CoreEvents.UserSignedOut() EventBus event,
+        // note that signing out sends a CoreEvents.UserSignedOutWordPressCom EventBus event,
         // which will cause the main activity to recreate this fragment
         WordPress.signOutWordPressComAsyncWithProgressBar(getActivity());
     }
