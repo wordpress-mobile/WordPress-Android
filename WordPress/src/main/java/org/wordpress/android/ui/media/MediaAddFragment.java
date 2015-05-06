@@ -264,25 +264,25 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
 
     public void launchCamera() {
         if (isAdded()) {
-            WordPressMediaUtils.launchCamera(getActivity(), this);
+            WordPressMediaUtils.launchCamera(this, this);
         }
     }
 
     public void launchVideoCamera() {
         if (isAdded()) {
-            WordPressMediaUtils.launchVideoCamera(getActivity());
+            WordPressMediaUtils.launchVideoCamera(this);
         }
     }
 
     public void launchVideoLibrary() {
         if (isAdded()) {
-            WordPressMediaUtils.launchVideoLibrary(getActivity());
+            WordPressMediaUtils.launchVideoLibrary(this);
         }
     }
 
     public void launchPictureLibrary() {
         if (isAdded()) {
-            WordPressMediaUtils.launchPictureLibrary(getActivity());
+            WordPressMediaUtils.launchPictureLibrary(this);
         }
     }
 

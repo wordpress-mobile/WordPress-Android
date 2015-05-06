@@ -2,6 +2,7 @@ package org.wordpress.android.ui.media;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -53,39 +54,36 @@ public class WordPressMediaUtils {
         dialogBuilder.create().show();
     }
 
-    public static void launchVideoLibrary(Activity activity) {
+    public static void launchVideoLibrary(Object object) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-
         AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.pick_video)),
-                RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
+        startActivityForResult(object, intent, R.string.pick_video, RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
     }
 
-    public static void launchVideoCamera(Activity activity) {
+    public static void launchVideoCamera(Object object) {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        startActivityForResult(object, intent, 0, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
 
-    public static void launchPictureLibrary(Activity activity) {
+    public static void launchPictureLibrary(Object object) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.pick_photo)),
-                RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+        startActivityForResult(object, intent, R.string.pick_photo, RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
 
-    public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
+    public static void launchCamera(Object object, LaunchCameraCallback callback) {
         String state = android.os.Environment.getExternalStorageState();
         if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-            showSDCardRequiredDialog(activity);
+            showSDCardRequiredDialog((Activity) object);
         } else {
             Intent intent = prepareLaunchCameraIntent(callback);
-            activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+            startActivityForResult(object, intent, 0, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
             AppLockManager.getInstance().setExtendedTimeout();
         }
     }
@@ -223,5 +221,36 @@ public class WordPressMediaUtils {
 
     public static Cursor getWordPressMediaVideos(String blogId) {
         return WordPress.wpDB.getMediaFilesForBlog(blogId);
+    }
+
+    /**
+     * helper method so that the returned result of startActivityForResult
+     * can be consumed in both activity and fragment.
+     * That is, result can be passed back to either {@link android.app.Activity#onActivityResult} or
+     * {@link android.app.Fragment#onActivityResult}.
+     *
+     * @param object - either instance of Activity or Fragment
+     * @param intent
+     * @param stringResource - String resource id; 0 if unused.
+     * @param requestCode
+     */
+    private static void startActivityForResult(Object object, Intent intent, int stringResource, int requestCode) {
+        if (object instanceof Activity) {
+            Activity activity = (Activity) object;
+            if (stringResource != 0) {
+                activity.startActivityForResult(
+                        Intent.createChooser(intent, activity.getString(stringResource)), requestCode);
+            } else {
+                activity.startActivityForResult(intent, requestCode);
+            }
+        } else {
+            Fragment fragment = (Fragment) object;
+            if (stringResource != 0) {
+                fragment.startActivityForResult(
+                        Intent.createChooser(intent, fragment.getString(stringResource)), requestCode);
+            } else {
+                fragment.startActivityForResult(intent, requestCode);
+            }
+        }
     }
 }
