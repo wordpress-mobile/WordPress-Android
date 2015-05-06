@@ -257,6 +257,7 @@ public class StatsService extends Service {
             if (checkIfRequestShouldBeEnqueued(restClientUtils, path)) {
                 AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + path);
                 Request<JSONObject> currentRequest = restClientUtils.get(path, vListener, vListener);
+                vListener.currentRequest = currentRequest;
                 currentRequest.setTag("StatsCall");
                 mStatsNetworkRequests.add(currentRequest);
             } else {
@@ -299,6 +300,7 @@ public class StatsService extends Service {
         protected Serializable mResponseObjectModel;
         final StatsEndpointsEnum mEndpointName;
         private final String mDate;
+        private Request<JSONObject> currentRequest;
 
         public RestListener(StatsEndpointsEnum endpointName, String blogId, StatsTimeframe timeframe, String date) {
             mRequestBlogId = blogId;
@@ -322,7 +324,7 @@ public class StatsService extends Service {
                         }
                     }
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate, mResponseObjectModel));
-                    checkAllRequestsFinished();
+                    checkAllRequestsFinished(currentRequest);
                 }
             });
         }
@@ -336,7 +338,7 @@ public class StatsService extends Service {
                     StatsUtils.logVolleyErrorDetails(volleyError);
                     mResponseObjectModel = volleyError;
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate, mResponseObjectModel));
-                    checkAllRequestsFinished();
+                    checkAllRequestsFinished(currentRequest);
                 }
             });
         }
@@ -353,14 +355,10 @@ public class StatsService extends Service {
     }
 
 
-    void checkAllRequestsFinished() {
+    void checkAllRequestsFinished(Request<JSONObject> req) {
         synchronized (mStatsNetworkRequests) {
-            Iterator<Request<JSONObject>> it = mStatsNetworkRequests.iterator();
-            while (it.hasNext()) {
-                Request<JSONObject> req = it.next();
-                if (req.hasHadResponseDelivered() || req.isCanceled()) {
-                    it.remove();
-                }
+            if (req != null) {
+                mStatsNetworkRequests.remove(req);
             }
             boolean isStillWorking = mStatsNetworkRequests.size() > 0 ;
             EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(isStillWorking));
