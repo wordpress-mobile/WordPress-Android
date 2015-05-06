@@ -29,7 +29,6 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
@@ -407,12 +406,8 @@ public class NotificationsUtils {
                 activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
                 break;
             case COMMENT:
-                // Show reader comment list if it exists
-                if (ReaderPostTable.postExists(clickedSpan.getSiteId(), clickedSpan.getPostId())) {
-                    activity.showReaderCommentList(clickedSpan.getSiteId(), clickedSpan.getPostId(), clickedSpan.getId());
-                } else {
-                    activity.showWebViewActivityForUrl(clickedSpan.getUrl());
-                }
+                // For now, show post detail for comments
+                activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getPostId());
                 break;
             case STAT:
             case FOLLOW:
@@ -441,5 +436,4 @@ public class NotificationsUtils {
     public static boolean spannableHasCharacterAtIndex(Spannable spannable, char character, int index) {
         return spannable != null && index < spannable.length() && spannable.charAt(index) == character;
     }
-
 }

@@ -17,6 +17,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
+import org.wordpress.android.ui.comments.CommentDetailActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -180,10 +181,13 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, url, AccountHelper.getDefaultAccount().getUserName());
     }
 
-    public void showReaderCommentList(long blogId, long postId, long commentId) {
-        if (isFinishing()) return;
+    public void showCommentDetailForNote(Note note) {
+        if (isFinishing() || note == null) return;
 
-        ReaderActivityLauncher.showReaderComments(this, blogId, postId, commentId);
+        Intent intent = new Intent(this, CommentDetailActivity.class);
+        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_IS_REMOTE, true);
+        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_NOTE_ID, note.getId());
+        startActivity(intent);
     }
 
     public void showReaderPostLikeUsers(long blogId, long postId) {
