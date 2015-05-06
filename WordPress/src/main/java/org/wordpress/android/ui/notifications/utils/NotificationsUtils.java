@@ -407,8 +407,8 @@ public class NotificationsUtils {
                 activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
                 break;
             case COMMENT:
-                // For now, show post detail for comments
-                activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getPostId());
+                // Load a comment in the webview, it should scroll to the comment
+                activity.showWebViewActivityForUrl(clickedSpan.getUrl());
                 break;
             case STAT:
             case FOLLOW:
