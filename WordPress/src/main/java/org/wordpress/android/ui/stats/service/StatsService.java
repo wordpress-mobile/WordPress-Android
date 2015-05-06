@@ -221,7 +221,7 @@ public class StatsService extends Service {
                     mResponseObjectModel = StatsUtils.parseResponse(sectionToUpdate, blogId, response);
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(sectionToUpdate, blogId, timeframe, date,
                             maxResultsRequested, pageRequested, mResponseObjectModel));
-                    checkAllRequestsFinished();
+                    checkAllRequestsFinished(null);
                     return;
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.STATS, e);
@@ -295,6 +295,7 @@ public class StatsService extends Service {
             if (checkIfRequestShouldBeEnqueued(restClientUtils, path)) {
                 AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + path);
                 Request<JSONObject> currentRequest = restClientUtils.get(path, vListener, vListener);
+                vListener.currentRequest = currentRequest;
                 currentRequest.setTag("StatsCall");
                 mStatsNetworkRequests.add(currentRequest);
             } else {
@@ -337,6 +338,7 @@ public class StatsService extends Service {
         protected Serializable mResponseObjectModel;
         final StatsEndpointsEnum mEndpointName;
         private final String mDate;
+        private Request<JSONObject> currentRequest;
         private final int mMaxResultsRequested, mPageRequested;
 
         public RestListener(StatsEndpointsEnum endpointName, String blogId, StatsTimeframe timeframe, String date,
@@ -372,7 +374,7 @@ public class StatsService extends Service {
                     }
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, mResponseObjectModel));
-                    checkAllRequestsFinished();
+                    checkAllRequestsFinished(currentRequest);
                 }
             });
         }
@@ -387,7 +389,7 @@ public class StatsService extends Service {
                     mResponseObjectModel = volleyError;
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, mResponseObjectModel));
-                    checkAllRequestsFinished();
+                    checkAllRequestsFinished(currentRequest);
                 }
             });
         }
@@ -404,14 +406,10 @@ public class StatsService extends Service {
     }
 
 
-    void checkAllRequestsFinished() {
+    void checkAllRequestsFinished(Request<JSONObject> req) {
         synchronized (mStatsNetworkRequests) {
-            Iterator<Request<JSONObject>> it = mStatsNetworkRequests.iterator();
-            while (it.hasNext()) {
-                Request<JSONObject> req = it.next();
-                if (req.hasHadResponseDelivered() || req.isCanceled()) {
-                    it.remove();
-                }
+            if (req != null) {
+                mStatsNetworkRequests.remove(req);
             }
             boolean isStillWorking = mStatsNetworkRequests.size() > 0 ;
             EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(isStillWorking));
