@@ -16,11 +16,11 @@ import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowDataModel;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,7 +46,6 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            AppLog.d(AppLog.T.STATS, this.getTag() + " > restoring instance state");
             if (savedInstanceState.containsKey(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX)) {
                 mTopPagerSelectedButtonIndex = savedInstanceState.getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX);
             }
@@ -123,7 +122,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
     private List<AuthorModel> getAuthors() {
         if (!hasAuthors()) {
-            return null;
+            return new ArrayList<AuthorModel>(0);
         }
         return ((CommentsModel) mDatamodels[0]).getAuthors();
     }
@@ -136,7 +135,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
     private List<PostModel> getPosts() {
         if (!hasPosts()) {
-            return null;
+            return new ArrayList<PostModel>(0);
         }
         return ((CommentsModel) mDatamodels[0]).getPosts();
     }

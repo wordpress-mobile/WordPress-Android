@@ -26,7 +26,6 @@ import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -245,7 +244,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > restoring instance state");
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
                 mVisitsData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             }
@@ -299,7 +297,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             updateUI();
         } else {
             setupNoResultsUI(true);
-            mMoreDataListener.onRefreshRequested(new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.VISITS});
+            refreshStats();
         }
     }
 
@@ -469,8 +467,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
         double largest = Integer.MIN_VALUE;
 
-        for (int i = 0; i < dataToShowOnGraph.length; i++) {
-            int currentItemValue = dataToShowOnGraph[i].getViews();
+        for (VisitModel aDataToShowOnGraph : dataToShowOnGraph) {
+            int currentItemValue = aDataToShowOnGraph.getViews();
             if (currentItemValue > largest) {
                 largest = currentItemValue;
             }
@@ -579,7 +577,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         return "";
     }
 
-
     /**
      * Return the date string that is displayed under each bar in the graph
      */
@@ -653,6 +650,18 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.SectionUpdated event) {
         if (!isAdded()) {
+            return;
+        }
+
+        if (!getDate().equals(event.mDate)) {
+            return;
+        }
+
+        if (!event.mRequestBlogId.equals(StatsUtils.getBlogId(getLocalTableBlogID()))) {
+            return;
+        }
+
+        if (event.mTimeframe != getTimeframe()) {
             return;
         }
 
@@ -786,7 +795,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     @Override
-    protected void resetDataModel() {
-        mVisitsData = null;
+    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.VISITS
+        };
     }
 }

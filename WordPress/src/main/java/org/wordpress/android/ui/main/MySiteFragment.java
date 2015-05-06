@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,8 +15,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
@@ -47,6 +50,15 @@ public class MySiteFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         mBlog = WordPress.getCurrentBlog();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
+            getActivity().stopService(new Intent(getActivity(), StatsService.class));
+        }
     }
 
     @Override

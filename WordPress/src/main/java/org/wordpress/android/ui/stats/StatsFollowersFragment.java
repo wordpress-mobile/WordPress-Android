@@ -65,7 +65,6 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            AppLog.d(AppLog.T.STATS, this.getTag() + " > restoring instance state");
             if (savedInstanceState.containsKey(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX)) {
                 mTopPagerSelectedButtonIndex = savedInstanceState.getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX);
             }
@@ -81,12 +80,12 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             public void run() {
                 // Read all the dotcomBlog blogs and get the list of home URLs.
                 // This will be used later to check if the user is a member of followers blog marked as private.
-                List <Map<String, Object>> dotComUserBlogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1",
+                List<Map<String, Object>> dotComUserBlogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1",
                         new String[]{"homeURL"});
                 for (Map<String, Object> blog : dotComUserBlogs) {
                     if (blog != null && blog.get("homeURL") != null && blog.get("blogId") != null) {
                         String normURL = normalizeAndRemoveScheme(blog.get("homeURL").toString());
-                        Integer blogID = (Integer)blog.get("blogId");
+                        Integer blogID = (Integer) blog.get("blogId");
                         userBlogs.put(normURL, blogID);
                     }
                 }
@@ -157,9 +156,9 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                             @Override
                             public void onClick(View v) {
                                 setNavigationButtonsEnabled(false);
-                                mMoreDataListener.onMoreDataRequested(
-                                        getSectionsToUpdate()[mTopPagerSelectedButtonIndex],
-                                        followersModel.getPage() - 1
+                                refreshStats(
+                                        followersModel.getPage() - 1,
+                                        new StatsService.StatsEndpointsEnum[]{getSectionsToUpdate()[mTopPagerSelectedButtonIndex]}
                                 );
                             }
                         };
@@ -177,9 +176,9 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                             @Override
                             public void onClick(View v) {
                                 setNavigationButtonsEnabled(false);
-                                mMoreDataListener.onMoreDataRequested(
-                                        getSectionsToUpdate()[mTopPagerSelectedButtonIndex],
-                                        followersModel.getPage() + 1
+                                refreshStats(
+                                        followersModel.getPage() + 1,
+                                        new StatsService.StatsEndpointsEnum[]{getSectionsToUpdate()[mTopPagerSelectedButtonIndex]}
                                 );
                             }
                         };
@@ -188,7 +187,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     }
 
                     // Change the total number of followers label by adding the current paging info
-                    int startIndex = followersModel.getPage() * StatsViewAllActivity.MAX_RESULTS_PER_PAGE - StatsViewAllActivity.MAX_RESULTS_PER_PAGE + 1;
+                    int startIndex = followersModel.getPage() * StatsService.MAX_RESULTS_REQUESTED_PER_PAGE - StatsService.MAX_RESULTS_REQUESTED_PER_PAGE + 1;
                     int endIndex = startIndex + followersModel.getFollowers().size() - 1;
                     String pagedLabel  = getString(
                             mTopPagerSelectedButtonIndex == 0 ? R.string.stats_followers_total_wpcom_paged : R.string.stats_followers_total_email_paged,
