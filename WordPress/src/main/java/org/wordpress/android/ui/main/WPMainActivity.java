@@ -15,6 +15,7 @@ import com.simperium.client.Bucket;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
@@ -140,6 +141,7 @@ public class WPMainActivity extends Activity
             if (now > expires) {
                 // Show a toast if the user took too long to open the notification
                 ToastUtils.showToast(this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
             } else {
                 NotificationsUtils.showPushAuthAlert(this, token, title, message);
             }
