@@ -24,6 +24,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.BlockType;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -312,6 +314,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                     JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()),
                                     mNote.getType()
                             );
+
+                            if (mNote.isUserList() && !ReaderPostTable.postExists(mNote.getSiteId(), mNote.getPostId())) {
+                                // Request the reader post so that loading reader activities will work.
+                                ReaderPostActions.requestPost(mNote.getSiteId(), mNote.getPostId(), null);
+                            }
+
                         } else {
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }

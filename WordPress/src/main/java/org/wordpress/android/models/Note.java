@@ -132,6 +132,10 @@ public class Note extends Syncable {
         return isType(NOTE_REBLOG_TYPE);
     }
 
+    public Boolean isUserList() {
+        return isLikeType() || isCommentLikeType() || isFollowType() || isReblogType();
+    }
+
     public String getLocalStatus() {
         return StringUtils.notNullStr(mLocalStatus);
     }

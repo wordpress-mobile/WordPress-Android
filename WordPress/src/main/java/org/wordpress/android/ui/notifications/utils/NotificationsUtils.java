@@ -29,6 +29,8 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
@@ -49,7 +51,6 @@ public class NotificationsUtils {
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
-    public static final String NOTICON_FONT_NAME = "Noticons-Regular.otf";
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
@@ -423,7 +424,11 @@ public class NotificationsUtils {
                 }
                 break;
             case LIKE:
-                activity.showReaderPostLikeUsers(clickedSpan.getSiteId(), clickedSpan.getId());
+                if (ReaderPostTable.postExists(clickedSpan.getSiteId(), clickedSpan.getId())) {
+                    activity.showReaderPostLikeUsers(clickedSpan.getSiteId(), clickedSpan.getId());
+                } else {
+                    activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
+                }
                 break;
             default:
                 // We don't know what type of id this is, let's see if it has a URL and push a webview
