@@ -51,7 +51,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CoreEvents;
-import org.wordpress.android.util.CoreEvents.UserSignedOut;
+import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -489,12 +489,12 @@ public class WordPress extends Application {
 
         // broadcast an event only if the user is completly signed out
         if (!AccountHelper.isSignedIn()) {
-            EventBus.getDefault().post(new UserSignedOut());
+            EventBus.getDefault().post(new UserSignedOutCompletely());
         }
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.UserSignedOut event) {
+    public void onEventMainThread(UserSignedOutCompletely event) {
         try {
             SelfSignedSSLCertsManager.getInstance(getContext()).emptyLocalKeyStoreFile();
         } catch (GeneralSecurityException e) {

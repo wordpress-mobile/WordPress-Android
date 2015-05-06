@@ -22,7 +22,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AnalyticsUtils;
-import org.wordpress.android.util.CoreEvents.UserSignedOut;
+import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -278,7 +278,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
 
             // If the last blog is removed and the user is not signed in wpcom, broadcast a UserSignedOut event
             if (!AccountHelper.isSignedIn()) {
-                EventBus.getDefault().post(new UserSignedOut());
+                EventBus.getDefault().post(new UserSignedOutCompletely());
             }
 
             finish();
