@@ -15,6 +15,7 @@ import com.simperium.client.Bucket;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -25,10 +26,10 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
@@ -372,9 +373,11 @@ public class WPMainActivity extends Activity
     @SuppressWarnings("unused")
     public void onEventMainThread(UserSignedOutWordPressCom event) {
         resetFragments();
-        if (!AccountHelper.isSignedIn()) {
-            ActivityLauncher.showSignInForResult(this);
-        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UserSignedOutCompletely event) {
+        ActivityLauncher.showSignInForResult(this);
     }
 
     @SuppressWarnings("unused")
