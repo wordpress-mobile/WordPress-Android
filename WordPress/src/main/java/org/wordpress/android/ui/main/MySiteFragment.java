@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -194,8 +195,12 @@ public class MySiteFragment extends Fragment
         mBlavatarImageView.setErrorImageResId(mBlog.isDotcomFlag() ? R.drawable.blavatar_placeholder_com : R.drawable.blavatar_placeholder_org);
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
-        mBlogTitleTextView.setText(mBlog.getBlogName());
-        mBlogSubtitleTextView.setText(StringUtils.getHost(mBlog.getUrl()));
+        String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
+        String hostName = StringUtils.getHost(mBlog.getUrl());
+        String blogTitle = TextUtils.isEmpty(blogName) ? hostName : blogName;
+
+        mBlogTitleTextView.setText(blogTitle);
+        mBlogSubtitleTextView.setText(hostName);
     }
 
     @Override

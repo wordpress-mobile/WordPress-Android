@@ -26,7 +26,7 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -283,7 +283,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        if (!AccountHelper.getDefaultAccount().hasAccessToken()) {
+        if (!AccountHelper.isSignedInWordPressDotCom()) {
             return;
         }
 

@@ -22,7 +22,6 @@ public class AccountTable {
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + " ("
                 + "local_id                INTEGER PRIMARY KEY DEFAULT 0,"
-                + "is_wordpress_com_user   INTEGER DEFAULT 0,"
                 + "user_name               TEXT,"
                 + "user_id                 INTEGER DEFAULT 0,"
                 + "display_name            TEXT,"
@@ -46,7 +45,6 @@ public class AccountTable {
         ContentValues values = new ContentValues();
         // we only support one wpcom user at the moment: local_id is always 0
         values.put("local_id", 0);
-        values.put("is_wordpress_com_user", account.isWordPressComUser());
         values.put("user_name", account.getUserName());
         values.put("user_id", account.getUserId());
         values.put("display_name", account.getDisplayName());
@@ -71,7 +69,6 @@ public class AccountTable {
 
         try {
             if (c.moveToFirst()) {
-                account.setIsWordPressComUser(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_wordpress_com_user"))));
                 account.setUserName(c.getString(c.getColumnIndex("user_name")));
                 account.setUserId(c.getLong(c.getColumnIndex("user_id")));
                 account.setDisplayName(c.getString(c.getColumnIndex("display_name")));

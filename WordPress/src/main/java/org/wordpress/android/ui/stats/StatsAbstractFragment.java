@@ -8,7 +8,7 @@ import android.os.Bundle;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 
@@ -67,7 +67,7 @@ public abstract class StatsAbstractFragment extends Fragment {
 
         // Check credentials for jetpack blogs first
         if (!currentBlog.isDotcomFlag()
-                && !currentBlog.hasValidJetpackCredentials() && !AccountHelper.getDefaultAccount().hasAccessToken()) {
+                && !currentBlog.hasValidJetpackCredentials() && !AccountHelper.isSignedInWordPressDotCom()) {
             AppLog.w(AppLog.T.STATS, "Current blog is a Jetpack blog without valid .com credentials stored");
             return;
         }

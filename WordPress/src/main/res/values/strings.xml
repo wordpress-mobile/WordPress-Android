@@ -7,7 +7,7 @@
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="sign_out_confirm">Disconnect from WordPress.com?</string>
+    <string name="sign_out_wpcom_confirm">Disconnecting your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
 
     <!-- form labels -->

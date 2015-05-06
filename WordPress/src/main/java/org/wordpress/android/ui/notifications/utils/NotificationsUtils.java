@@ -32,7 +32,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -52,7 +52,7 @@ public class NotificationsUtils {
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
-        if (!AccountHelper.getDefaultAccount().hasAccessToken()) {
+        if (!AccountHelper.isSignedInWordPressDotCom()) {
             return;
         }
 
@@ -72,7 +72,7 @@ public class NotificationsUtils {
     }
 
     public static void setPushNotificationSettings(Context context) {
-        if (!AccountHelper.getDefaultAccount().hasAccessToken()) {
+        if (!AccountHelper.isSignedInWordPressDotCom()) {
             return;
         }
 

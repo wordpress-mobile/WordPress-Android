@@ -31,7 +31,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -568,7 +568,7 @@ public class StatsActivity extends ActionBarActivity
             // for self-hosted sites; launch the user into an activity where they can provide their credentials
             if (!currentBlog.isDotcomFlag()
                     && !currentBlog.hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
-                if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+                if (AccountHelper.isSignedInWordPressDotCom()) {
                     // Let's try the global wpcom credentials them first
                     String username = AccountHelper.getDefaultAccount().getUserName();
                     currentBlog.setDotcom_username(username);
@@ -597,7 +597,8 @@ public class StatsActivity extends ActionBarActivity
 
         // check again that we've valid credentials for a Jetpack site
         if (!currentBlog.isDotcomFlag() && !currentBlog.hasValidJetpackCredentials() &&
-                !AccountHelper.getDefaultAccount().hasAccessToken()) {
+                !AccountHelper.isSignedInWordPressDotCom()) {
+            mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
             return false;
         }
