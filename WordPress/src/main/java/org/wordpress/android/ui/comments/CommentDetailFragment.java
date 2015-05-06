@@ -55,7 +55,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -625,7 +625,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // the post this comment is on can only be requested if this is a .com blog or a
         // jetpack-enabled self-hosted blog, and we have valid .com credentials
         boolean isDotComOrJetpack = WordPress.wpDB.isRemoteBlogIdDotComOrJetpack(mRemoteBlogId);
-        boolean canRequestPost = isDotComOrJetpack && AccountHelper.getDefaultAccount().hasAccessToken();
+        boolean canRequestPost = isDotComOrJetpack && AccountHelper.isSignedInWordPressDotCom();
 
         final String title;
         final boolean hasTitle;

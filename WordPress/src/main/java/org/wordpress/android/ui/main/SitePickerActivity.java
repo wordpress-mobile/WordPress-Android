@@ -24,7 +24,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
 
@@ -201,7 +201,7 @@ public class SitePickerActivity extends ActionBarActivity
     private void addSite() {
         // if user is signed into wp.com use the dialog to enable choosing whether to
         // create a new wp.com blog or add a self-hosted one
-        if (AccountHelper.getDefaultAccount().isWordPressComUser()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
             DialogFragment dialog = new AddSiteDialog();
             dialog.show(getSupportFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
         } else {

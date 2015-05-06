@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteStatement;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.SqlUtils;
 

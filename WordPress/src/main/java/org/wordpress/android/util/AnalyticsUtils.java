@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog.T;
 
@@ -26,7 +27,7 @@ public class AnalyticsUtils {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
         boolean isUserConnected = AccountHelper.isSignedIn();
-        boolean isWordPressComUser = AccountHelper.getDefaultAccount().isWordPressComUser();
+        boolean isWordPressComUser = AccountHelper.isSignedInWordPressDotCom();
         boolean isJetpackUser = AccountHelper.isJetPackUser();
         int numBlogs = WordPress.wpDB.getVisibleBlogs().size();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
@@ -46,7 +47,7 @@ public class AnalyticsUtils {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
         boolean isUserConnected = AccountHelper.isSignedIn();
-        boolean isWordPressComUser = AccountHelper.getDefaultAccount().isWordPressComUser();
+        boolean isWordPressComUser = AccountHelper.isSignedInWordPressDotCom();
         boolean isJetpackUser = AccountHelper.isJetPackUser();
         int numBlogs = WordPress.wpDB.getVisibleBlogs().size();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
@@ -87,6 +88,6 @@ public class AnalyticsUtils {
     }
 
     private static boolean hasDotComTokenAndNoMixpanelUserEmail() {
-        return (AccountHelper.getDefaultAccount().hasAccessToken() && AppPrefs.getMixpanelUserEmail() == null);
+        return (AccountHelper.isSignedInWordPressDotCom() && AppPrefs.getMixpanelUserEmail() == null);
     }
 }

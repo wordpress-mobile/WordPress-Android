@@ -18,7 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -117,7 +117,7 @@ public class MeFragment extends Fragment {
             mLoginLogoutTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    signoutWithConfirmation();
+                    signOutWordPressComWithConfirmation();
                 }
             });
         } else {
@@ -137,12 +137,15 @@ public class MeFragment extends Fragment {
         }
     }
 
-    private void signoutWithConfirmation() {
+    private void signOutWordPressComWithConfirmation() {
+        String message = String.format(getString(R.string.sign_out_wpcom_confirm), AccountHelper.getDefaultAccount()
+                .getUserName());
+
         new AlertDialog.Builder(getActivity())
-                .setMessage(getString(R.string.sign_out_confirm))
+                .setMessage(message)
                 .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        signout();
+                        signOutWordPressCom();
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -150,9 +153,9 @@ public class MeFragment extends Fragment {
                 .create().show();
     }
 
-    private void signout() {
-        // note that signing out sends a CoreEvents.UserSignedOut() EventBus event,
+    private void signOutWordPressCom() {
+        // note that signing out sends a CoreEvents.UserSignedOutWordPressCom EventBus event,
         // which will cause the main activity to recreate this fragment
-        WordPress.signOutAsyncWithProgressBar(getActivity(), null);
+        WordPress.signOutWordPressComAsyncWithProgressBar(getActivity());
     }
 }

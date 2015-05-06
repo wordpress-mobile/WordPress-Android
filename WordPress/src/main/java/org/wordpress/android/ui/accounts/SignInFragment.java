@@ -46,7 +46,6 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
-import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -54,7 +53,6 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GenericCallback;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
-import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -433,20 +431,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 if (isWPComLogin()) {
                     BlogUtils.addBlogs(userBlogList, mUsername);
                 } else {
-                    // If app is signed out, check for a matching username. No match? Then delete existing accounts
-                    if (AccountHelper.getDefaultAccount().isUserTappedSignedOutButton()) {
-                        AccountHelper.getDefaultAccount().setUserTappedSignedOutButton(false);
-                        if (userBlogList.size() > 0) {
-                            String xmlrpcUrl = MapUtils.getMapStr(userBlogList.get(0), "xmlrpc");
-                            if (!WordPress.wpDB.hasDotOrgBlogForUsernameAndUrl(mUsername, xmlrpcUrl)) {
-                                WordPress.wpDB.dangerouslyDeleteAllContent();
-                                // Clear WPCom login info (could have been set up for Jetpack stats auth)
-                                WordPress.removeWpComUserRelatedData(WordPress.getContext());
-                                WordPress.currentBlog = null;
-                            }
-                        }
-                    }
-
                     BlogUtils.addBlogs(userBlogList, mUsername, mPassword, mHttpUsername, mHttpPassword);
                 }
 
