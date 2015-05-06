@@ -138,8 +138,11 @@ public class MeFragment extends Fragment {
     }
 
     private void signOutWordPressComWithConfirmation() {
+        String message = String.format(getString(R.string.sign_out_wpcom_confirm), AccountHelper.getDefaultAccount()
+                .getUserName());
+
         new AlertDialog.Builder(getActivity())
-                .setMessage(getString(R.string.sign_out_confirm))
+                .setMessage(message)
                 .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         signOutWordPressCom();
