@@ -15,7 +15,6 @@ import com.simperium.client.Bucket;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -268,16 +267,11 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.SITE_PICKER:
-                if (resultCode == RESULT_OK && data != null) {
-                    int localId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, 0);
-
-                    // when a new blog is picked, set it to the current blog
-                    Blog blog = WordPress.setCurrentBlog(localId);
-                    WordPress.wpDB.updateLastBlogId(localId);
-
+                if (resultCode == RESULT_OK) {
+                    // site picker will have set the current blog, so make sure My Site reflects it
                     MySiteFragment mySiteFragment = getMySiteFragment();
                     if (mySiteFragment != null) {
-                        mySiteFragment.setBlog(blog);
+                        mySiteFragment.setBlog(WordPress.getCurrentBlog());
                     }
                 }
                 break;
