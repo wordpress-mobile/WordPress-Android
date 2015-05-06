@@ -55,6 +55,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
@@ -113,6 +114,7 @@ public class ReaderPostListFragment extends Fragment
     private boolean mIsUpdating;
     private boolean mWasPaused;
     private boolean mIsAnimatingOutNewPostsBar;
+    private boolean mIsLoggedOutReader;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -217,6 +219,8 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
         if (savedInstanceState != null) {
             AppLog.d(T.READER, "reader post list > restoring instance state");
@@ -478,8 +482,12 @@ public class ReaderPostListFragment extends Fragment
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     if (menuItem.getItemId() == R.id.menu_tags) {
-                        ReaderActivityLauncher.showReaderSubsForResult(getActivity());
-                        return true;
+                        if (mIsLoggedOutReader) {
+                            // TODO
+                        } else {
+                            ReaderActivityLauncher.showReaderSubsForResult(getActivity());
+                            return true;
+                        }
                     }
                     return false;
                 }
@@ -522,7 +530,7 @@ public class ReaderPostListFragment extends Fragment
             }
         }
 
-        if (getPostListType().isPreviewType()) {
+        if (getPostListType().isPreviewType() && !mIsLoggedOutReader) {
             createFollowButton();
         }
 

@@ -71,6 +71,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsBlockBlogDisabled;
+    private boolean mIsLoggedOutReader;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
     private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
@@ -99,6 +100,12 @@ public class ReaderPostDetailFragment extends Fragment
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
     }
 
     @Override
@@ -200,6 +207,7 @@ public class ReaderPostDetailFragment extends Fragment
                 && !mIsBlockBlogDisabled
                 && !mPost.isPrivate
                 && !mPost.isExternal
+                && !mIsLoggedOutReader
                 && (mOnPopupListener != null)
                 && (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
     }
@@ -501,7 +509,9 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    togglePostLike();
+                    if (!mIsLoggedOutReader) {
+                        togglePostLike();
+                    }
                 }
             });
             // if we know refreshLikes() is going to show the liking layout, force it to take up
@@ -726,13 +736,17 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
-            followButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    togglePostFollowed();
-                }
-            });
+            if (mIsLoggedOutReader) {
+                followButton.setVisibility(View.GONE);
+            } else {
+                followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
+                followButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        togglePostFollowed();
+                    }
+                });
+            }
 
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
@@ -775,7 +789,7 @@ public class ReaderPostDetailFragment extends Fragment
             }
 
             // enable reblogging wp posts
-            if (mPost.canReblog()) {
+            if (mPost.canReblog() && !mIsLoggedOutReader) {
                 imgBtnReblog.setVisibility(View.VISIBLE);
                 imgBtnReblog.setSelected(mPost.isRebloggedByCurrentUser);
                 imgBtnReblog.setOnClickListener(new View.OnClickListener() {
