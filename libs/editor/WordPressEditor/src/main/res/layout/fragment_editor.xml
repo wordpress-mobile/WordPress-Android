@@ -4,9 +4,110 @@
              android:layout_height="match_parent"
              tools:context="org.wordpress.android.editor.EditorFragment">
 
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/webview"/>
+    <include
+        layout="@layout/editor_webview"
+        android:id="@+id/webview" />
+
+    <LinearLayout
+        android:id="@+id/format_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/format_bar_height"
+        android:layout_gravity="bottom"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/format_bar_horizontal_divider"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/format_bar_horizontal_divider_height"
+            style="@style/Divider"/>
+
+        <LinearLayout
+            android:id="@+id/format_bar_buttons"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/format_bar_height"
+            android:layout_gravity="bottom"
+            android:layout_marginRight="@dimen/format_bar_right_margin"
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded">
+
+            <HorizontalScrollView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/format_bar_left_margin"
+                    android:orientation="horizontal"
+                    tools:ignore="RtlHardcoded">
+
+                    <ToggleButton
+                        android:id="@+id/format_bar_button_media"
+                        style="@style/FormatBarScrollViewButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/format_bar_button_media_selector"/>
+
+                    <ToggleButton
+                        android:id="@+id/format_bar_button_bold"
+                        style="@style/FormatBarScrollViewButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/format_bar_button_bold_selector"/>
+
+                    <ToggleButton
+                        android:id="@+id/format_bar_button_italic"
+                        style="@style/FormatBarScrollViewButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/format_bar_button_italic_selector"/>
+
+                    <ToggleButton
+                        android:id="@+id/format_bar_button_quote"
+                        style="@style/FormatBarScrollViewButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/format_bar_button_quote_selector"/>
+
+                    <ToggleButton
+                        android:id="@+id/format_bar_button_ul"
+                        style="@style/FormatBarScrollViewButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/format_bar_button_ul_selector"/>
+
+                    <ToggleButton
+                        android:id="@+id/format_bar_button_ol"
+                        style="@style/FormatBarScrollViewButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/format_bar_button_ol_selector"/>
+
+                    <ToggleButton
+                        android:id="@+id/format_bar_button_link"
+                        style="@style/FormatBarScrollViewButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/format_bar_button_link_selector"/>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <View
+                android:id="@+id/format_bar_vertical_divider"
+                android:layout_width="@dimen/format_bar_vertical_divider_width"
+                android:layout_height="@dimen/format_bar_vertical_divider_height"
+                android:layout_gravity="center"
+                style="@style/Divider"/>
+
+            <ToggleButton
+                android:id="@+id/format_bar_button_html"
+                style="@style/FormatBarHtmlButton"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:background="@drawable/format_bar_button_html_selector"/>
+        </LinearLayout>
+    </LinearLayout>
 
 </FrameLayout>

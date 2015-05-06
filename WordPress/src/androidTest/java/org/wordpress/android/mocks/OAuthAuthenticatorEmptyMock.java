@@ -2,7 +2,7 @@ package org.wordpress.android.mocks;
 
 import org.wordpress.android.networking.AuthenticatorRequest;
 import org.wordpress.android.networking.OAuthAuthenticator;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 
 public class OAuthAuthenticatorEmptyMock extends OAuthAuthenticator {
     public void authenticate(AuthenticatorRequest request) {

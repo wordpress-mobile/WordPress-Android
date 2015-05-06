@@ -1,9 +1,16 @@
 package org.wordpress.android.ui.suggestion.service;
 
 public class SuggestionEvents {
-    public static class SuggestionListUpdated {
+    public static class SuggestionNameListUpdated {
         public final int mRemoteBlogId;
-        SuggestionListUpdated(int remoteBlogId) {
+        SuggestionNameListUpdated(int remoteBlogId) {
+            mRemoteBlogId = remoteBlogId;
+        }
+    }
+
+    public static class SuggestionTagListUpdated {
+        public final int mRemoteBlogId;
+        SuggestionTagListUpdated(int remoteBlogId) {
             mRemoteBlogId = remoteBlogId;
         }
     }

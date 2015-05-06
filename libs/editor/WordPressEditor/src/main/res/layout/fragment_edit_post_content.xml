@@ -46,7 +46,7 @@
                 android:textSize="18sp"
                 android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
                 android:imeOptions="flagNoExtractUi"
-                android:textColorLink="@color/placeholder_content_text" />
+                android:textColorLink="@color/legacy_placeholder_content_text" />
         </LinearLayout>
     </ScrollView>
 
@@ -81,7 +81,7 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/format_bar_height"
         android:layout_gravity="bottom"
-        android:background="@color/format_bar_background"
+        android:background="@color/legacy_format_bar_background"
         android:orientation="horizontal"
         android:visibility="gone">
 
@@ -100,49 +100,49 @@
                     style="@style/ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:background="@drawable/format_bar_button_bold_selector" />
+                    android:background="@drawable/legacy_format_bar_button_bold_selector" />
 
                 <ToggleButton
                     android:id="@+id/em"
                     style="@style/ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:background="@drawable/format_bar_button_italic_selector" />
+                    android:background="@drawable/legacy_format_bar_button_italic_selector" />
 
                 <ToggleButton
                     android:id="@+id/underline"
                     style="@style/ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:background="@drawable/format_bar_button_underline_selector" />
+                    android:background="@drawable/legacy_format_bar_button_underline_selector" />
 
                 <ToggleButton
                     android:id="@+id/strike"
                     style="@style/ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:background="@drawable/format_bar_button_strike_selector" />
+                    android:background="@drawable/legacy_format_bar_button_strike_selector" />
 
                 <ToggleButton
                     android:id="@+id/bquote"
                     style="@style/ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:background="@drawable/format_bar_button_quote_selector" />
+                    android:background="@drawable/legacy_format_bar_button_quote_selector" />
 
                 <Button
                     android:id="@+id/link"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:minWidth="@dimen/format_bar_height"
-                    android:background="@drawable/format_bar_button_link_selector" />
+                    android:background="@drawable/legacy_format_bar_button_link_selector" />
 
                 <Button
                     android:id="@+id/more"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:minWidth="@dimen/format_bar_height"
-                    android:background="@drawable/format_bar_button_more_selector" />
+                    android:background="@drawable/legacy_format_bar_button_more_selector" />
             </LinearLayout>
         </HorizontalScrollView>
 
@@ -151,7 +151,7 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:minWidth="@dimen/format_bar_height"
-            android:background="@drawable/format_bar_button_media_selector" />
+            android:background="@drawable/legacy_format_bar_button_media_selector" />
     </LinearLayout>
 
 </LinearLayout>
