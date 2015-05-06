@@ -556,6 +556,7 @@
     <string name="older_month">Older than a month</string>
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
+    <string name="push_auth_expired">The login request has expired. Log in to WordPress.com to try again.</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>

@@ -268,6 +268,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         String pushAuthToken = extras.getString("push_auth_token", "");
         String title = extras.getString("title", "");
         String message = extras.getString("msg", "");
+        long expirationTimestamp = Long.valueOf(extras.getString("expires", "0"));
 
         // No strings, no service
         if (TextUtils.isEmpty(pushAuthToken) || TextUtils.isEmpty(title) || TextUtils.isEmpty(message)) {
@@ -280,6 +281,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
         pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
         pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
+        pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
         pushAuthIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         pushAuthIntent.setAction("android.intent.action.MAIN");

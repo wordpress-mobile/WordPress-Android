@@ -51,6 +51,7 @@ public class NotificationsUtils {
     public static final String ARG_PUSH_AUTH_TOKEN = "arg_push_auth_token";
     public static final String ARG_PUSH_AUTH_TITLE = "arg_push_auth_title";
     public static final String ARG_PUSH_AUTH_MESSAGE = "arg_push_auth_message";
+    public static final String ARG_PUSH_AUTH_EXPIRES = "arg_push_auth_expires";
 
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";

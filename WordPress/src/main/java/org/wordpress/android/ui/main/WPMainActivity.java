@@ -134,7 +134,15 @@ public class WPMainActivity extends Activity
             String token = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, "");
             String title = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TITLE, "");
             String message = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, "");
-            NotificationsUtils.showPushAuthAlert(this, token, title, message);
+            long expires = extras.getLong(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, 0);
+
+            long now = System.currentTimeMillis() / 1000;
+            if (now > expires) {
+                // Show a toast if the user took too long to open the notification
+                ToastUtils.showToast(this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
+            } else {
+                NotificationsUtils.showPushAuthAlert(this, token, title, message);
+            }
         }
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
