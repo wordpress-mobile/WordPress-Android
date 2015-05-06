@@ -12,6 +12,7 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -32,6 +33,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -62,6 +66,10 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
             if (SimperiumUtils.getNotesBucket() != null) {
                 try {
                     Note note = SimperiumUtils.getNotesBucket().get(noteId);
+
+                    Map<String, String> properties = new HashMap<>();
+                    properties.put("notification_type", note.getType());
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
 
                     // mark the note as read if it's unread
                     if (note.isUnread()) {
