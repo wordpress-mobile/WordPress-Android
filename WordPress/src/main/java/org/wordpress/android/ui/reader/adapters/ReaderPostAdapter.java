@@ -230,7 +230,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             holder.commentCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderComments(v.getContext(), post.blogId, post.postId);
+                    ReaderActivityLauncher.showReaderComments(v.getContext(), post);
                 }
             });
         } else {

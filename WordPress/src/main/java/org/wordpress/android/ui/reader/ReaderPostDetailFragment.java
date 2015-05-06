@@ -486,7 +486,7 @@ public class ReaderPostDetailFragment extends Fragment
             countComments.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId);
+                    ReaderActivityLauncher.showReaderComments(getActivity(), mPost);
                 }
             });
         } else {
@@ -570,7 +570,7 @@ public class ReaderPostDetailFragment extends Fragment
             btnCommentCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId);
+                    ReaderActivityLauncher.showReaderComments(getActivity(), mPost);
                 }
             });
         }
