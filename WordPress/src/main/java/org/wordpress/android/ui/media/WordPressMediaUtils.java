@@ -2,6 +2,8 @@ package org.wordpress.android.ui.media;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -40,11 +42,11 @@ public class WordPressMediaUtils {
         public void onMediaCapturePathReady(String mediaCapturePath);
     }
 
-    private static void showSDCardRequiredDialog(Activity activity) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
-        dialogBuilder.setTitle(activity.getResources().getText(R.string.sdcard_title));
-        dialogBuilder.setMessage(activity.getResources().getText(R.string.sdcard_message));
-        dialogBuilder.setPositiveButton(activity.getString(R.string.ok), new DialogInterface.OnClickListener() {
+    private static void showSDCardRequiredDialog(Context context) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+        dialogBuilder.setTitle(context.getResources().getText(R.string.sdcard_title));
+        dialogBuilder.setMessage(context.getResources().getText(R.string.sdcard_message));
+        dialogBuilder.setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
             }
@@ -54,43 +56,97 @@ public class WordPressMediaUtils {
     }
 
     public static void launchVideoLibrary(Activity activity) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-
         AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.pick_video)),
+        activity.startActivityForResult(prepareVideoLibraryIntent(activity),
                 RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
     }
 
-    public static void launchVideoCamera(Activity activity) {
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+    public static void launchVideoLibrary(Fragment fragment) {
+        if (!fragment.isAdded()) {
+            return;
+        }
         AppLockManager.getInstance().setExtendedTimeout();
+        fragment.startActivityForResult(prepareVideoLibraryIntent(fragment.getActivity()),
+                RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
     }
 
 
-    public static void launchPictureLibrary(Activity activity) {
+    public static Intent prepareVideoLibraryIntent(Context context) {
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
+        intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        return Intent.createChooser(intent, context.getString(R.string.pick_video));
+    }
+
+    public static void launchVideoCamera(Activity activity) {
         AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.pick_photo)),
+        activity.startActivityForResult(prepareVideoCameraIntent(), RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+    }
+
+    public static void launchVideoCamera(Fragment fragment) {
+        if (!fragment.isAdded()) {
+            return;
+        }
+        AppLockManager.getInstance().setExtendedTimeout();
+        fragment.startActivityForResult(prepareVideoCameraIntent(), RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+    }
+
+    private static Intent prepareVideoCameraIntent() {
+        return new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+    }
+
+    public static void launchPictureLibrary(Activity activity) {
+        AppLockManager.getInstance().setExtendedTimeout();
+        activity.startActivityForResult(preparePictureLibraryIntent(activity),
                 RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
 
+    public static void launchPictureLibrary(Fragment fragment) {
+        if (!fragment.isAdded()) {
+            return;
+        }
+        AppLockManager.getInstance().setExtendedTimeout();
+        fragment.startActivityForResult(preparePictureLibraryIntent(fragment.getActivity()),
+                RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+    }
+
+    private static Intent preparePictureLibraryIntent(Context context) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        return Intent.createChooser(intent, context.getString(R.string.pick_photo));
+    }
+
     public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
-        String state = android.os.Environment.getExternalStorageState();
-        if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-            showSDCardRequiredDialog(activity);
-        } else {
-            Intent intent = prepareLaunchCameraIntent(callback);
-            activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+        Intent intent = preparelaunchCamera(activity, callback);
+        if (intent != null) {
             AppLockManager.getInstance().setExtendedTimeout();
+            activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
         }
     }
 
-    private static Intent prepareLaunchCameraIntent(LaunchCameraCallback callback) {
+    public static void launchCamera(Fragment fragment, LaunchCameraCallback callback) {
+        if (!fragment.isAdded()) {
+            return;
+        }
+        Intent intent = preparelaunchCamera(fragment.getActivity(), callback);
+        if (intent != null) {
+            AppLockManager.getInstance().setExtendedTimeout();
+            fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+        }
+    }
+
+    private static Intent preparelaunchCamera(Context context, LaunchCameraCallback callback) {
+        String state = android.os.Environment.getExternalStorageState();
+        if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
+            showSDCardRequiredDialog(context);
+            return null;
+        } else {
+            return getLaunchCameraIntent(callback);
+        }
+    }
+
+    private static Intent getLaunchCameraIntent(LaunchCameraCallback callback) {
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
         String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
