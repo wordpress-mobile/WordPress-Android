@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
+import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.AuthorModel;
 import org.wordpress.android.ui.stats.models.AuthorsModel;
@@ -182,6 +183,10 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
             AuthorModel group = (AuthorModel) getGroup(groupPosition);
 
             String name = group.getName();
+            if (StringUtils.isBlank(name)) {
+                // Jetpack case: articles published before the activation of Jetpack.
+                name = getString(R.string.stats_unknown_author);
+            }
             int total = group.getViews();
             String icon = group.getAvatar();
             int children = getChildrenCount(groupPosition);
