@@ -24,8 +24,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
-import org.wordpress.android.ui.stats.datasets.StatsTable;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
 
@@ -183,7 +182,6 @@ public class SitePickerActivity extends ActionBarActivity
                     currentSiteName = site.getBlogNameOrHostName();
                 } else {
                     WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
-                    StatsTable.deleteStatsForBlog(this, site.localId); // Remove stats data for hidden sites
                 }
             }
 
@@ -203,7 +201,7 @@ public class SitePickerActivity extends ActionBarActivity
     private void addSite() {
         // if user is signed into wp.com use the dialog to enable choosing whether to
         // create a new wp.com blog or add a self-hosted one
-        if (AccountHelper.getDefaultAccount().isWordPressComUser()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
             DialogFragment dialog = new AddSiteDialog();
             dialog.show(getSupportFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
         } else {
@@ -215,9 +213,9 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
-            Intent data = new Intent();
-            data.putExtra(KEY_LOCAL_ID, site.localId);
-            setResult(RESULT_OK, data);
+            WordPress.setCurrentBlog(site.localId);
+            WordPress.wpDB.updateLastBlogId(site.localId);
+            setResult(RESULT_OK);
             finish();
         }
     }

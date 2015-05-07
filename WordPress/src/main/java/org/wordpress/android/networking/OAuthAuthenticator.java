@@ -2,7 +2,7 @@ package org.wordpress.android.networking;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.StringUtils;
 
 public class OAuthAuthenticator implements Authenticator {

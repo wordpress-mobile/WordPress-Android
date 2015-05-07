@@ -79,7 +79,7 @@ public class TestUtils {
         WordPress.currentBlog = null;
         if (WordPress.getContext() != null) {
             try {
-                WordPress.signOut(context);
+                WordPress.WordPressComSignOut(context);
             } catch (Exception e) {
                 // noop
             }

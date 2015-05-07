@@ -35,7 +35,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -126,7 +126,7 @@ public class SettingsFragment extends PreferenceFragment {
 
     private void initNotifications() {
         // AuthenticatorRequest notification settings if needed
-        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
             String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
             if (settingsJson == null) {
                 com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -227,7 +227,7 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void addWpComSignIn(PreferenceCategory wpComCategory, int order) {
-        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
             String username = AccountHelper.getDefaultAccount().getUserName();
             Preference usernamePref = new Preference(getActivity());
             usernamePref.setTitle(getString(R.string.username));

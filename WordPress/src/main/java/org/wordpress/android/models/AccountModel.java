@@ -6,12 +6,6 @@ import org.json.JSONObject;
 import org.wordpress.android.util.StringUtils;
 
 public class AccountModel {
-    // General state
-    private boolean mIsWordPressComUser;
-
-    // True when the user was signed in and tapped the signout button (used to preserve app content on signout)
-    private boolean mUserTappedSignedOutButton;
-
     // WordPress.com only - data fetched from the REST API endpoint
     private String mUserName;
     private long mUserId;
@@ -28,7 +22,6 @@ public class AccountModel {
     }
 
     public void init() {
-        mIsWordPressComUser = false;
         mUserName = "";
         mUserId = 0;
         mDisplayName = "";
@@ -38,11 +31,9 @@ public class AccountModel {
         mSiteCount = 0;
         mVisibleSiteCount = 0;
         mAccessToken = "";
-        mUserTappedSignedOutButton = false;
     }
 
     public void updateFromRestResponse(JSONObject json) {
-        mIsWordPressComUser = true;
         mUserId = json.optLong("ID");
         mUserName = json.optString("username");
         mDisplayName = json.optString("display_name");
@@ -51,14 +42,6 @@ public class AccountModel {
         mPrimaryBlogId = json.optLong("primary_blog");
         mSiteCount = json.optInt("site_count");
         mVisibleSiteCount = json.optInt("visible_site_count");
-    }
-
-    public boolean isUserTappedSignedOutButton() {
-        return mUserTappedSignedOutButton;
-    }
-
-    public void setUserTappedSignedOutButton(boolean userTappedSignedOutButton) {
-        mUserTappedSignedOutButton = userTappedSignedOutButton;
     }
 
     public long getUserId() {
@@ -85,24 +68,15 @@ public class AccountModel {
         mUserName = userName;
     }
 
-    public boolean isWordPressComUser() {
-        return mIsWordPressComUser;
-    }
-
-    public void setIsWordPressComUser(boolean isWordPressComUser) {
-        mIsWordPressComUser = isWordPressComUser;
-    }
-
     public String getAccessToken() {
         return mAccessToken;
     }
 
     public void setAccessToken(String accessToken) {
-        mIsWordPressComUser = !TextUtils.isEmpty(accessToken);
         mAccessToken = accessToken;
     }
 
-    public boolean hasAccessToken() {
+    boolean hasAccessToken() {
         return !TextUtils.isEmpty(getAccessToken());
     }
 
