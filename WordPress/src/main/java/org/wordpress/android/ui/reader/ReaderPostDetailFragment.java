@@ -506,14 +506,16 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setCount(mPost.numLikes, animateChanges);
             countLikes.setVisibility(View.VISIBLE);
             countLikes.setSelected(mPost.isLikedByCurrentUser);
-            countLikes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!mIsLoggedOutReader) {
+            if (mIsLoggedOutReader) {
+                countLikes.setEnabled(false);
+            } else {
+                countLikes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
                         togglePostLike();
                     }
-                }
-            });
+                });
+            }
             // if we know refreshLikes() is going to show the liking layout, force it to take up
             // space right now
             if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
@@ -737,7 +739,7 @@ public class ReaderPostDetailFragment extends Fragment
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
             if (mIsLoggedOutReader) {
-                followButton.setVisibility(View.GONE);
+                followButton.setEnabled(false);
             } else {
                 followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
                 followButton.setOnClickListener(new View.OnClickListener() {

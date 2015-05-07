@@ -145,7 +145,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
 
             // follow/following
             if (mIsLoggedOutReader) {
-                holder.followButton.setVisibility(View.GONE);
+                holder.followButton.setEnabled(false);
             } else {
                 holder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
                 holder.followButton.setOnClickListener(new View.OnClickListener() {
@@ -220,14 +220,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         if (showLikes) {
             holder.likeCount.setSelected(post.isLikedByCurrentUser);
             holder.likeCount.setVisibility(View.VISIBLE);
-            holder.likeCount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!mIsLoggedOutReader) {
+            if (mIsLoggedOutReader) {
+                holder.likeCount.setEnabled(false);
+            } else {
+                holder.likeCount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         toggleLike(v.getContext(), holder, position);
                     }
-                }
-            });
+                });
+            }
         } else {
             holder.likeCount.setVisibility(View.GONE);
             holder.likeCount.setOnClickListener(null);
