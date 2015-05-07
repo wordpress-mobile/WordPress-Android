@@ -167,7 +167,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
             Intent intent = new Intent(this, StatsViewAllActivity.class);
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
             intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
-            intent.putExtra(StatsAbstractFragment.ARGS_START_DATE, "");
+            intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
             intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableSiteId);
             intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, getString(R.string.stats_view_followers));
             startActivity(intent);
