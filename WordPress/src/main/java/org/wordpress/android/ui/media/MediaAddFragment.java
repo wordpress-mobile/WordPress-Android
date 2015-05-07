@@ -247,7 +247,9 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             mediaFile.setMimeType(mimeType);
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
-        mCallback.onMediaAdded(mediaFile.getMediaId());
+        if (mCallback != null) {
+            mCallback.onMediaAdded(mediaFile.getMediaId());
+        }
 
         startMediaUploadService();
     }
