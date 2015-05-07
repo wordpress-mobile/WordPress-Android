@@ -138,7 +138,12 @@ public class GCMIntentService extends GCMBaseIntentService {
         // Bump Analytics
         Map<String, String> properties = new HashMap<>();
         if (!TextUtils.isEmpty(noteType)) {
-            properties.put("notification_type", noteType);
+            // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
+            if (noteType.equals("c")) {
+                properties.put("notification_type", "comment");
+            } else {
+                properties.put("notification_type", noteType);
+            }
         }
         AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED, properties);
 
