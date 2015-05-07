@@ -46,7 +46,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
 
     private boolean mCanRequestMorePosts;
     private boolean mHasSpacer;
-    private boolean mIsLoggedOutReader;
+    private final boolean mIsLoggedOutReader;
 
     private final ReaderTypes.ReaderPostListType mPostListType;
     private final ReaderPostList mPosts = new ReaderPostList();
