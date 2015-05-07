@@ -51,7 +51,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     private List<ReferrerGroupModel> getReferrersGroups() {
         if (!hasReferrers()) {
-            return null;
+            return new ArrayList<ReferrerGroupModel>(0);
         }
         return ((ReferrersModel) mDatamodels[0]).getGroups();
     }
