@@ -478,20 +478,20 @@ public class ReaderPostListFragment extends Fragment
             mFragmentToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
             mFragmentToolbar.setVisibility(View.VISIBLE);
             mFragmentToolbar.inflateMenu(R.menu.reader_list);
-            mFragmentToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    if (menuItem.getItemId() == R.id.menu_tags) {
-                        if (mIsLoggedOutReader) {
-                            // TODO
-                        } else {
+            if (mIsLoggedOutReader) {
+                mFragmentToolbar.findViewById(R.id.menu_tags).setVisibility(View.GONE);
+            } else {
+                mFragmentToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.menu_tags) {
                             ReaderActivityLauncher.showReaderSubsForResult(getActivity());
                             return true;
                         }
+                        return false;
                     }
-                    return false;
-                }
-            });
+                });
+            }
             // auto-hide the reader toolbar when user scrolls
             mRecyclerView.setScrollDirectionListener(new ScrollDirectionListener() {
                 @Override
