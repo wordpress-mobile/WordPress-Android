@@ -21,17 +21,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
+import org.wordpress.android.ui.notifications.blocks.BlockType;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
+import org.wordpress.android.ui.notifications.blocks.FooterNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.HeaderNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
-import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -268,7 +272,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         NoteBlock noteBlock;
                         String noteBlockTypeString = JSONUtils.queryJSON(noteObject, "type", "");
 
-                        if (NoteBlockRangeType.fromString(noteBlockTypeString) == NoteBlockRangeType.USER) {
+                        if (BlockType.fromString(noteBlockTypeString) == BlockType.USER) {
                             if (mNote.isCommentType()) {
                                 // Set comment position so we can target it later
                                 // See refreshBlocksForCommentStatus()
@@ -304,6 +308,18 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         mOnGravatarClickedListener
                                 );
                             }
+                        } else if (isFooterBlock(noteObject)) {
+                            noteBlock = new FooterNoteBlock(noteObject, mOnNoteBlockTextClickListener);
+                            ((FooterNoteBlock)noteBlock).setClickableSpan(
+                                    JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()),
+                                    mNote.getType()
+                            );
+
+                            if (mNote.isUserList() && !ReaderPostTable.postExists(mNote.getSiteId(), mNote.getPostId())) {
+                                // Request the reader post so that loading reader activities will work.
+                                ReaderPostActions.requestPost(mNote.getSiteId(), mNote.getPostId(), null);
+                            }
+
                         } else {
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }
@@ -348,6 +364,24 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 mRestoredListPosition = 0;
             }
         }
+    }
+
+    private boolean isFooterBlock(JSONObject blockObject) {
+        if (mNote == null || blockObject == null) return false;
+
+        if (mNote.isCommentType()) {
+            // Check if this is a comment notification that has been replied to
+            // The block will not have a type, and its id will match the comment reply id in the Note.
+            return (JSONUtils.queryJSON(blockObject, "type", null) == null &&
+                    mNote.getCommentReplyId() == JSONUtils.queryJSON(blockObject, "ranges[1].id", 0));
+        } else if (mNote.isFollowType() || mNote.isLikeType() ||
+                mNote.isCommentLikeType() || mNote.isReblogType()) {
+            // User list notifications have a footer if they have 10 or more users in the body
+            // The last block will not have a type, so we can use that to determine if it is the footer
+            return JSONUtils.queryJSON(blockObject, "type", null) == null;
+        }
+
+        return false;
     }
 
     public void refreshBlocksForCommentStatus(CommentStatus newStatus) {
