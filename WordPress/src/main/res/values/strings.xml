@@ -497,6 +497,9 @@
     <!-- stats: search terms -->
     <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
 
+    <!-- stats: Authors -->
+    <string name="stats_unknown_author">Unknown Author</string>
+
     <!-- Stats: Single post details view -->
     <string name="stats_period">Period</string>
     <string name="stats_total">Total</string>
