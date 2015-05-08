@@ -210,8 +210,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         }
 
         // likes, comments & reblogging - supported by wp posts only
-        boolean showLikes = post.isWP() && post.isLikesEnabled;
         boolean showComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
+        boolean showLikes;
+        if (mIsLoggedOutReader) {
+            showLikes = (post.numLikes > 0);
+        } else {
+            showLikes = (post.isWP() && post.isLikesEnabled);
+        }
 
         if (showLikes || showComments) {
             showCounts(holder, post, false);
