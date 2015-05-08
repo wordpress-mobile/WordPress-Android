@@ -182,8 +182,6 @@ public class NotificationsListFragment extends Fragment
                 R.anim.reader_activity_slide_in,
                 R.anim.do_nothing);
         ActivityCompat.startActivityForResult(activity, detailIntent, RequestCodes.NOTE_DETAIL, options.toBundle());
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
 
     private void setNoteIsHidden(String noteId, boolean isHidden) {
