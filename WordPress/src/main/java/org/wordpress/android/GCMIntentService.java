@@ -139,7 +139,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         Map<String, String> properties = new HashMap<>();
         if (!TextUtils.isEmpty(noteType)) {
             // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
-            if (noteType.equals("c")) {
+            if (noteType.equals(NOTE_TYPE_COMMENT)) {
                 properties.put("notification_type", "comment");
             } else {
                 properties.put("notification_type", noteType);
