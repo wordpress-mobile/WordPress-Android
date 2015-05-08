@@ -145,7 +145,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
 
             // follow/following
             if (mIsLoggedOutReader) {
-                holder.followButton.setEnabled(false);
+                holder.followButton.setVisibility(View.GONE);
             } else {
                 holder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
                 holder.followButton.setOnClickListener(new View.OnClickListener() {

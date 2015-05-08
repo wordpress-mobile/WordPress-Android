@@ -739,7 +739,7 @@ public class ReaderPostDetailFragment extends Fragment
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
             if (mIsLoggedOutReader) {
-                followButton.setEnabled(false);
+                followButton.setVisibility(View.GONE);
             } else {
                 followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
                 followButton.setOnClickListener(new View.OnClickListener() {
