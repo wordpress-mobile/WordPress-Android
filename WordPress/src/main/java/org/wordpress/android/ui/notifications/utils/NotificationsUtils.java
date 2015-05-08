@@ -29,6 +29,8 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
@@ -221,23 +223,35 @@ public class NotificationsUtils {
         return "org.wordpress.android.playstore";
     }
 
-    // Builds a Spannable with range objects found in the note JSON
-    public static Spannable getSpannableContentForRanges(JSONObject subject, TextView textView,
-                                                         final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
-        if (subject == null) {
+    public static Spannable getSpannableContentForRanges(JSONObject subject) {
+        return getSpannableContentForRanges(subject, null, null, false);
+    }
+
+    /**
+     * Returns a spannable with formatted content based on WP.com note content 'range' data
+     * @param blockObject
+     * @param textView
+     * @param onNoteBlockTextClickListener - click listener for ClickableSpans in the spannable
+     * @param isFooter - Set if spannable should apply special formatting
+     * @return Spannable string with formatted content
+     */
+    public static Spannable getSpannableContentForRanges(JSONObject blockObject, TextView textView,
+                                                         final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                                                         boolean isFooter) {
+        if (blockObject == null) {
             return new SpannableStringBuilder();
         }
 
-        String text = subject.optString("text", "");
+        String text = blockObject.optString("text", "");
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
         boolean shouldLink = onNoteBlockTextClickListener != null;
 
         // Add ImageSpans for note media
-        addImageSpansForBlockMedia(textView, subject, spannableStringBuilder);
+        addImageSpansForBlockMedia(textView, blockObject, spannableStringBuilder);
 
         // Process Ranges to add links and text formatting
-        JSONArray rangesArray = subject.optJSONArray("ranges");
+        JSONArray rangesArray = blockObject.optJSONArray("ranges");
         if (rangesArray != null) {
             for (int i = 0; i < rangesArray.length(); i++) {
                 JSONObject rangeObject = rangesArray.optJSONObject(i);
@@ -246,7 +260,7 @@ public class NotificationsUtils {
                 }
 
                 NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(WordPress.getContext(), rangeObject,
-                        shouldLink) {
+                        shouldLink, isFooter) {
                     @Override
                     public void onClick(View widget) {
                         if (onNoteBlockTextClickListener != null) {
@@ -260,7 +274,7 @@ public class NotificationsUtils {
                         indices[1] <= spannableStringBuilder.length()) {
                     spannableStringBuilder.setSpan(clickableSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
-                    // Add additional styling if the id wants it
+                    // Add additional styling if the range wants it
                     if (clickableSpan.getSpanStyle() != Typeface.NORMAL) {
                         StyleSpan styleSpan = new StyleSpan(clickableSpan.getSpanStyle());
                         spannableStringBuilder.setSpan(styleSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -270,6 +284,21 @@ public class NotificationsUtils {
         }
 
         return spannableStringBuilder;
+    }
+
+    public static int[] getIndicesForRange(JSONObject rangeObject) {
+        int[] indices = new int[]{0,0};
+        if (rangeObject == null) {
+            return indices;
+        }
+
+        JSONArray indicesArray = rangeObject.optJSONArray("indices");
+        if (indicesArray != null && indicesArray.length() >= 2) {
+            indices[0] = indicesArray.optInt(0);
+            indices[1] = indicesArray.optInt(1);
+        }
+
+        return indices;
     }
 
     /**
@@ -363,29 +392,6 @@ public class NotificationsUtils {
         }
     }
 
-    public static Spannable getClickableTextForIdUrl(JSONObject idBlock, String text,
-                                                     final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
-        if (idBlock == null || TextUtils.isEmpty(text)) {
-            return new SpannableStringBuilder("");
-        }
-
-        boolean shouldLink = onNoteBlockTextClickListener != null;
-
-        NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(WordPress.getContext(), idBlock, shouldLink) {
-            @Override
-            public void onClick(View widget) {
-                if (onNoteBlockTextClickListener != null) {
-                    onNoteBlockTextClickListener.onNoteBlockTextClicked(this);
-                }
-            }
-        };
-
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
-        spannableStringBuilder.setSpan(clickableSpan, 0, spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-
-        return spannableStringBuilder;
-    }
-
     public static void handleNoteBlockSpanClick(NotificationsDetailActivity activity, NoteBlockClickableSpan clickedSpan) {
         switch (clickedSpan.getRangeType()) {
             case SITE:
@@ -401,8 +407,8 @@ public class NotificationsUtils {
                 activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
                 break;
             case COMMENT:
-                // For now, show post detail for comments
-                activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getPostId());
+                // Load a comment in the webview, it should scroll to the comment
+                activity.showWebViewActivityForUrl(clickedSpan.getUrl());
                 break;
             case STAT:
             case FOLLOW:
@@ -417,6 +423,13 @@ public class NotificationsUtils {
                     activity.showWebViewActivityForUrl(clickedSpan.getUrl());
                 }
                 break;
+            case LIKE:
+                if (ReaderPostTable.postExists(clickedSpan.getSiteId(), clickedSpan.getId())) {
+                    activity.showReaderPostLikeUsers(clickedSpan.getSiteId(), clickedSpan.getId());
+                } else {
+                    activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
+                }
+                break;
             default:
                 // We don't know what type of id this is, let's see if it has a URL and push a webview
                 if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
@@ -428,5 +441,4 @@ public class NotificationsUtils {
     public static boolean spannableHasCharacterAtIndex(Spannable spannable, char character, int index) {
         return spannable != null && index < spannable.length() && spannable.charAt(index) == character;
     }
-
 }

@@ -176,15 +176,12 @@ public class ReaderActivityLauncher {
     }
 
     /*
-     * show users who liked the passed post
+     * show users who liked a post
      */
-    public static void showReaderLikingUsers(Context context, ReaderPost post) {
-        if (post == null) {
-            return;
-        }
+    public static void showReaderLikingUsers(Context context, long blogId, long postId) {
         Intent intent = new Intent(context, ReaderUserListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, post.blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, post.postId);
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         context.startActivity(intent);
     }
 
@@ -192,9 +189,6 @@ public class ReaderActivityLauncher {
      * show users who liked the passed comment
      */
     public static void showReaderLikingUsers(Context context, ReaderComment comment) {
-        if (comment == null) {
-            return;
-        }
         Intent intent = new Intent(context, ReaderUserListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, comment.blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, comment.postId);

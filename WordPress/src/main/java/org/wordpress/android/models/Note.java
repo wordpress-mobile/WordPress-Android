@@ -31,10 +31,14 @@ public class Note extends Syncable {
     // Maximum character length for a comment preview
     static private final int MAX_COMMENT_PREVIEW_LENGTH = 200;
 
+    // Note types
     private static final String NOTE_UNKNOWN_TYPE = "unknown";
     private static final String NOTE_COMMENT_TYPE = "comment";
     private static final String NOTE_MATCHER_TYPE = "automattcher";
     private static final String NOTE_FOLLOW_TYPE = "follow";
+    private static final String NOTE_LIKE_TYPE = "like";
+    private static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
+    private static final String NOTE_REBLOG_TYPE = "reblog";
 
     // JSON action keys
     private static final String ACTION_KEY_REPLY = "replyto-comment";
@@ -116,6 +120,22 @@ public class Note extends Syncable {
         return isType(NOTE_FOLLOW_TYPE);
     }
 
+    public Boolean isLikeType() {
+        return isType(NOTE_LIKE_TYPE);
+    }
+
+    public Boolean isCommentLikeType() {
+        return isType(NOTE_COMMENT_LIKE_TYPE);
+    }
+
+    public Boolean isReblogType() {
+        return isType(NOTE_REBLOG_TYPE);
+    }
+
+    public Boolean isUserList() {
+        return isLikeType() || isCommentLikeType() || isFollowType() || isReblogType();
+    }
+
     public String getLocalStatus() {
         return StringUtils.notNullStr(mLocalStatus);
     }
@@ -140,7 +160,7 @@ public class Note extends Syncable {
     }
 
     public Spannable getFormattedSubject() {
-        return NotificationsUtils.getSpannableContentForRanges(getSubject(), null, null);
+        return NotificationsUtils.getSpannableContentForRanges(getSubject());
     }
 
     public String getTitle() {
@@ -186,6 +206,10 @@ public class Note extends Syncable {
         }
 
         return "";
+    }
+
+    public long getCommentReplyId() {
+        return queryJSON("meta.ids.reply_comment", 0);
     }
 
     /**
@@ -328,7 +352,6 @@ public class Note extends Syncable {
         return queryJSON("meta.ids.comment", 0);
     }
 
-
     public long getParentCommentId() {
         return queryJSON("meta.ids.parent_comment", 0);
     }
@@ -414,6 +437,10 @@ public class Note extends Syncable {
     public boolean hasLikedComment() {
         JSONObject jsonActions = getCommentActions();
         return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE);
+    }
+
+    public String getUrl() {
+        return queryJSON("url", "");
     }
 
     public JSONArray getHeader() {
