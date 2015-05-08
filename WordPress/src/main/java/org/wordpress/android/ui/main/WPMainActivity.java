@@ -226,7 +226,7 @@ public class WPMainActivity extends Activity
      * re-create the fragment adapter so all its fragments are also re-created - used when
      * user signs in/out so the fragments reflect the active account
      */
-    void resetFragments() {
+    private void resetFragments() {
         AppLog.i(AppLog.T.MAIN, "main activity > reset fragments");
 
         // remove the event the determines when followed tags/blogs are updated so they're
@@ -412,11 +412,6 @@ public class WPMainActivity extends Activity
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.LoginLimitDetected event) {
         ToastUtils.showToast(this, R.string.limit_reached, ToastUtils.Duration.LONG);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.BlogListChanged event) {
-        // TODO: reload blog list if showing
     }
 
     @SuppressWarnings("unused")

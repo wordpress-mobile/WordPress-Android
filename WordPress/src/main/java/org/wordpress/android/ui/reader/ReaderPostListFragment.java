@@ -530,7 +530,7 @@ public class ReaderPostListFragment extends Fragment
             }
         }
 
-        if (getPostListType().isPreviewType()) {
+        if (getPostListType().isPreviewType() && !mIsLoggedOutReader) {
             createFollowButton();
         }
 
@@ -587,20 +587,16 @@ public class ReaderPostListFragment extends Fragment
         toolbar.addView(mFollowButton);
         updateFollowButton();
 
-        if (mIsLoggedOutReader) {
-            mFollowButton.setEnabled(false);
-        } else {
-            mFollowButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                        toggleBlogFollowStatus();
-                    } else {
-                        toggleTagFollowStatus();
-                    }
+        mFollowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                    toggleBlogFollowStatus();
+                } else {
+                    toggleTagFollowStatus();
                 }
-            });
-        }
+            }
+        });
     }
 
     private void updateFollowButton() {
