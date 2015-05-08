@@ -21,6 +21,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.StringUtils;
@@ -269,6 +270,7 @@ public class BlogPreferencesActivity extends ActionBarActivity {
 
     private void removeBlog() {
         if (WordPress.wpDB.deleteBlog(this, blog.getLocalTableBlogId())) {
+            StatsTable.deleteStatsForBlog(this,blog.getLocalTableBlogId()); // Remove stats data
             AnalyticsUtils.refreshMetadata();
             ToastUtils.showToast(this, R.string.blog_removed_successfully);
             WordPress.wpDB.deleteLastBlogId();

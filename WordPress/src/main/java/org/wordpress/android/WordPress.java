@@ -43,6 +43,8 @@ import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdat
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.models.AccountHelper;
@@ -92,6 +94,7 @@ public class WordPress extends Application {
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
+    private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
@@ -120,6 +123,23 @@ public class WordPress extends Application {
             if (AccountHelper.isSignedInWordPressDotCom()) {
                 new GenericUpdateBlogListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
+            return true;
+        }
+    };
+
+    /**
+     *  Delete stats cache that is already expired
+     */
+    public static RateLimitedTask sDeleteExpiredStats = new RateLimitedTask(SECONDS_BETWEEN_DELETE_STATS) {
+        protected boolean run() {
+            // Offload to a separate thread. We don't want to slown down the app on startup/resume.
+            new Thread(new Runnable() {
+                public void run() {
+                    // subtracts to the current time the cache TTL
+                    long timeToDelete = System.currentTimeMillis() - (StatsTable.CACHE_TTL_MINUTES * 60 * 1000);
+                    StatsTable.deleteOldStats(WordPress.getContext(), timeToDelete);
+                }
+            }).start();
             return true;
         }
     };
@@ -577,6 +597,9 @@ public class WordPress extends Application {
         AppPrefs.reset();
         ReaderDatabase.reset();
 
+        // Reset Stats Data
+        StatsDatabaseHelper.getDatabase(context).reset();
+
         // Reset Simperium buckets (removes local data)
         SimperiumUtils.resetBucketsAndDeauthorize();
     }
@@ -767,6 +790,8 @@ public class WordPress extends Application {
                 // Rate limited blog options Update
                 sUpdateCurrentBlogOption.runIfNotLimited();
             }
+
+            sDeleteExpiredStats.runIfNotLimited();
         }
 
         @Override
