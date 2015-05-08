@@ -135,6 +135,19 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
         }
 
+        // Bump Analytics
+        Map<String, String> properties = new HashMap<>();
+        if (!TextUtils.isEmpty(noteType)) {
+            // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
+            if (noteType.equals(NOTE_TYPE_COMMENT)) {
+                properties.put("notification_type", "comment");
+            } else {
+                properties.put("notification_type", noteType);
+            }
+        }
+        AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED, properties);
+
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean sound, vibrate, light;
 
@@ -255,7 +268,6 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onMessage(Context context, Intent intent) {
         AppLog.v(T.NOTIFS, "Received Message");
-        AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED);
         Bundle extras = intent.getExtras();
 
         if (extras == null) {
