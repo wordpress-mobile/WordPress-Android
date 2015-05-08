@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -42,6 +44,7 @@ import de.greenrobot.event.EventBus;
 public class WPMainActivity extends Activity
     implements ViewPager.OnPageChangeListener,
         SlidingTabLayout.SingleTabClickListener,
+        MediaAddFragment.MediaAddFragmentCallback,
         Bucket.Listener<Note> {
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
@@ -268,9 +271,10 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.PICTURE_LIBRARY:
-                MySiteFragment siteFragment = getMySiteFragment();
-                if (siteFragment != null) {
-                    siteFragment.onActivityResult(requestCode, resultCode, data);
+                FragmentManager fm = getFragmentManager();
+                Fragment addFragment = fm.findFragmentByTag(MySiteFragment.ADD_MEDIA_FRAGMENT_TAG);
+                if (addFragment != null) {
+                    addFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.SITE_PICKER:
@@ -444,5 +448,9 @@ public class WPMainActivity extends Activity
     @Override
     public void onSaveObject(Bucket<Note> noteBucket, Note note) {
         // noop
+    }
+
+    @Override
+    public void onMediaAdded(String mediaId) {
     }
 }

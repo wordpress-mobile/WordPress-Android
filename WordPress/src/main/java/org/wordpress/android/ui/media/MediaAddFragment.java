@@ -24,7 +24,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
@@ -65,13 +64,11 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (activity instanceof WPMainActivity) {
-            mCallback = ((WPMainActivity) activity).getMySiteFragment();
-        } else {
+        if (activity instanceof MediaAddFragmentCallback) {
             try {
                 mCallback = (MediaAddFragmentCallback) activity;
             } catch (ClassCastException e) {
-                throw new ClassCastException(activity.toString() + " must extend " + MediaAddFragmentCallback.class.getSimpleName());
+                throw new ClassCastException(activity.toString() + " must implement " + MediaAddFragmentCallback.class.getSimpleName());
             }
         }
     }
@@ -105,11 +102,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         resumeMediaUploadService();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -126,12 +118,17 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), event.mErrorMessage, ToastUtils.Duration.SHORT);
         }
-        mCallback.onMediaAdded(event.mLocalId);
+
+        if (mCallback != null) {
+            mCallback.onMediaAdded(event.mLocalId);
+        }
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(MediaUploadEvents.MediaUploadSucceed event) {
-        mCallback.onMediaAdded(event.mLocalId);
+        if (mCallback != null) {
+            mCallback.onMediaAdded(event.mLocalId);
+        }
     }
 
     @Override

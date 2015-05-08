@@ -24,8 +24,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
 public class MySiteFragment extends Fragment
-        implements WPMainActivity.OnScrollToTopListener, MediaAddFragment.MediaAddFragmentCallback {
-    private static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
+        implements WPMainActivity.OnScrollToTopListener {
+    public static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
 
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
