@@ -218,8 +218,4 @@ public class MySiteFragment extends Fragment
             scrollView.smoothScrollTo(0, 0);
         }
     }
-
-    @Override
-    public void onMediaAdded(String mediaId) {
-    }
 }
