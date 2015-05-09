@@ -29,7 +29,7 @@
 
             <include
                 android:id="@+id/toolbar_reader"
-                layout="@layout/toolbar_reader" />
+                layout="@layout/reader_toolbar" />
 
         </RelativeLayout>
 
