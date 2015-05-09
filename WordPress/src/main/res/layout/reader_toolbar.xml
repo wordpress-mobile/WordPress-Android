@@ -10,15 +10,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
-    android:minHeight="?attr/actionBarSize"
     android:visibility="gone"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
     tools:visibility="visible">
 
     <Spinner
         android:id="@+id/reader_spinner"
-        style="?android:actionDropDownStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/content_margin"

@@ -97,7 +97,6 @@ public class ReaderPostListFragment extends Fragment
     private View mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
-    private Toolbar mFragmentToolbar;
 
     private ViewGroup mTagInfoView;
     private ReaderBlogInfoView mBlogInfoView;
@@ -468,10 +467,10 @@ public class ReaderPostListFragment extends Fragment
 
         // configure the toolbar for posts in followed tags (shown in main viewpager activity)
         if (hasFragmentToolbar()) {
-            mFragmentToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
-            mFragmentToolbar.setVisibility(View.VISIBLE);
-            mFragmentToolbar.inflateMenu(R.menu.reader_list);
-            mFragmentToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
+            toolbar.setVisibility(View.VISIBLE);
+            toolbar.inflateMenu(R.menu.reader_list);
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     if (menuItem.getItemId() == R.id.menu_tags) {
@@ -497,7 +496,7 @@ public class ReaderPostListFragment extends Fragment
             });
             // create the tag spinner in the toolbar
             if (mSpinner == null) {
-                enableTagSpinner(mFragmentToolbar);
+                enableTagSpinner(toolbar);
             }
             selectTagInSpinner(getCurrentTag());
         }
