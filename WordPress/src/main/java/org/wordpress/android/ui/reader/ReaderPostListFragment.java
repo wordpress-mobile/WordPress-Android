@@ -357,9 +357,6 @@ public class ReaderPostListFragment extends Fragment
             public void onClick(View view) {
                 mRecyclerView.scrollToPosition(0);
                 refreshPosts();
-                if (hasFragmentToolbar()) {
-                    showFragmentToolbar(true);
-                }
             }
         });
 
@@ -484,16 +481,13 @@ public class ReaderPostListFragment extends Fragment
                     return false;
                 }
             });
-            // auto-hide the reader toolbar when user scrolls
             mRecyclerView.setScrollDirectionListener(new ScrollDirectionListener() {
                 @Override
                 public void onScrollUp() {
-                    showFragmentToolbar(true);
                     checkSwipeToRefresh();
                 }
                 @Override
                 public void onScrollDown() {
-                    showFragmentToolbar(false);
                     checkSwipeToRefresh();
                 }
                 @Override
@@ -708,19 +702,6 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * animates the toolbar above the reader fragment containing the tag spinner
-     */
-    public void showFragmentToolbar(boolean show) {
-        if (isAdded() && mFragmentToolbar != null) {
-            ReaderAnim.animateTopBar(mFragmentToolbar, show);
-        }
-    }
-
-    public boolean isFragmentToolbarShowing() {
-        return mFragmentToolbar != null && mFragmentToolbar.getVisibility() == View.VISIBLE;
-    }
-
-    /*
      * box/pages animation that appears when loading an empty list (only appears for tags)
      */
     private boolean shouldShowBoxAndPagesAnimation() {
@@ -862,7 +843,6 @@ public class ReaderPostListFragment extends Fragment
             AppLog.d(T.READER, "reader post list > creating post adapter");
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
-            mPostAdapter.setHasSpacer(hasFragmentToolbar());
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnTagSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
@@ -1490,9 +1470,6 @@ public class ReaderPostListFragment extends Fragment
     public void onScrollToTop() {
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, 0);
-            if (hasFragmentToolbar()) {
-                showFragmentToolbar(true);
-            }
         }
     }
 
