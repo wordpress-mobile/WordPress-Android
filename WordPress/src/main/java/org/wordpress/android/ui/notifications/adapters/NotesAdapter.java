@@ -39,9 +39,9 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
     private final List<String> mHiddenNoteIds = new ArrayList<String>();
     private final List<String> mModeratingNoteIds = new ArrayList<String>();
 
-    private Context mContext;
+    private final Context mContext;
 
-    static NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
+    private NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
 
     public NotesAdapter(Context context, Bucket<Note> bucket) {
         super(context, null);
@@ -161,7 +161,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
     @Override
     public void onBindViewHolder(NoteViewHolder noteViewHolder, Cursor cursor) {
         final Bucket.ObjectCursor<Note> objectCursor = (Bucket.ObjectCursor<Note>) cursor;
-        noteViewHolder.noteId = objectCursor.getSimperiumKey();
+        final String noteId = objectCursor.getSimperiumKey();
 
         // Display group header
         Note.NoteTimeGroup timeGroup = Note.getTimeGroupForTimestamp(getLongForColumnName(objectCursor, Note.Schema.TIMESTAMP_INDEX));
@@ -264,6 +264,15 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         } else {
             noteViewHolder.itemView.setBackgroundResource(mReadBackgroundResId);
         }
+
+        noteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnNoteClickListener != null && noteId != null) {
+                    mOnNoteClickListener.onClickNote(noteId);
+                }
+            }
+        });
     }
 
     public int getPositionForNote(String noteId) {
@@ -285,7 +294,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         mOnNoteClickListener = mNoteClickListener;
     }
 
-    public static class NoteViewHolder extends RecyclerView.ViewHolder {
+    static class NoteViewHolder extends RecyclerView.ViewHolder {
         private final View headerView;
         private final View contentView;
         private final TextView headerText;
@@ -296,8 +305,6 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         private final WPNetworkImageView imgAvatar;
         private final NoticonTextView noteIcon;
         private final View progressBar;
-
-        private String noteId;
 
         public NoteViewHolder(View view) {
             super(view);
@@ -310,15 +317,6 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             noteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);
             progressBar = view.findViewById(R.id.moderate_progress);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnNoteClickListener != null && noteId != null) {
-                        mOnNoteClickListener.onClickNote(noteId);
-                    }
-                }
-            });
         }
     }
 }
