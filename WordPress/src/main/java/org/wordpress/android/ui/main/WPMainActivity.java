@@ -229,8 +229,8 @@ public class WPMainActivity extends Activity
     private void resetFragments() {
         AppLog.i(AppLog.T.MAIN, "main activity > reset fragments");
 
-        // remove the event the determines when followed tags/blogs are updated so they're
-        // updated when the fragment is recreated (necessary are signin/disconnect)
+        // remove the event that determines when followed tags/blogs are updated so they're
+        // updated when the fragment is recreated (necessary after signin/disconnect)
         EventBus.getDefault().removeStickyEvent(ReaderEvents.UpdatedFollowedTagsAndBlogs.class);
 
         // remember the current tab position, then recreate the adapter so new fragments are created
