@@ -127,7 +127,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         holder.txtTitle.setText(site.getBlogNameOrHostName());
         holder.txtDomain.setText(site.hostName);
-        holder.imgBlavatar.setErrorImageResId(site.isDotCom ? R.drawable.blavatar_placeholder_com : R.drawable.blavatar_placeholder_org);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

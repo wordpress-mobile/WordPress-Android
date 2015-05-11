@@ -19,7 +19,7 @@
         android:layout_marginLeft="@dimen/site_picker_blavatar_margin_left"
         android:layout_marginRight="@dimen/site_picker_blavatar_margin_right"
         android:gravity="center_vertical"
-        tools:src="@drawable/gravatar_placeholder" />
+        tools:src="@drawable/blavatar_placeholder" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_title"
