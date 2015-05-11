@@ -26,7 +26,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -182,20 +181,6 @@ public class PostsActivity extends ActionBarActivity
             } catch (RuntimeException e) {
                 AppLog.e(T.POSTS, e);
             }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // posts can't be shown if there aren't any visible blogs, so redirect to the reader and
-        // exit the post list in this situation
-        if (AccountHelper.isSignedIn()) {
-            // TODO:
-            /*if (showCorrectActivityForAccountIfRequired()) {
-                finish();
-            }*/
         }
     }
 
