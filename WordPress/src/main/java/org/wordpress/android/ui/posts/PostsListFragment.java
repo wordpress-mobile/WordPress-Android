@@ -276,6 +276,12 @@ public class PostsListFragment extends ListFragment
         }
     }
 
+    @Override
+    public void onDetach() {
+        WordPress.setOnPostUploadedListener(null);
+        super.onDetach();
+    }
+
     public void onResume() {
         super.onResume();
         if (WordPress.getCurrentBlog() != null) {
