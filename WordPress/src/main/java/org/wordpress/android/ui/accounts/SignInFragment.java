@@ -386,15 +386,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private void wpcomPostLoginActions() {
-        // get reader tags so they're available as soon as the Reader is accessed - note that
-        // this uses the application context since the activity is finished immediately below
-        if (isAdded()) {
-            ReaderUpdateService.startService(getActivity().getApplicationContext(), EnumSet.of(
-                    UpdateTask.TAGS));
-        }
-    }
-
     private void trackAnalyticsSignIn() {
         Map<String, Boolean> properties = new HashMap<String, Boolean>();
         properties.put("dotcom_user", isWPComLogin());
@@ -440,8 +431,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
             trackAnalyticsSignIn();
 
+            // get reader tags so they're available as soon as the Reader is accessed - done for
+            // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
+            // uses the application context since the activity is finished immediately below
+            ReaderUpdateService.startService(getActivity().getApplicationContext(),
+                    EnumSet.of(UpdateTask.TAGS));
+
             if (isWPComLogin()) {
-                wpcomPostLoginActions();
                 // Fire off a synchronous request to get the primary blog
                 WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
                     @Override

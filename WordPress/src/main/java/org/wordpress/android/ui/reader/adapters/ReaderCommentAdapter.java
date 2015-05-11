@@ -24,6 +24,7 @@ import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -43,6 +44,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
     private long mHighlightCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
+    private final boolean mIsLoggedOutReader;
 
     private final int mLinkColor;
     private final int mNoLinkColor;
@@ -112,6 +114,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
     public ReaderCommentAdapter(Context context, ReaderPost post) {
         mPost = post;
         mIsPrivatePost = (post != null && post.isPrivate);
+        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
         mIndentPerLevel = (context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level) / 2);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
@@ -208,8 +211,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
             holder.progress.setVisibility(View.GONE);
         }
 
-        // tapping reply icon tells activity to show reply box
-        if (mReplyListener != null) {
+        if (mIsLoggedOutReader) {
+            holder.txtReply.setVisibility(View.GONE);
+            holder.imgReply.setVisibility(View.GONE);
+        } else if (mReplyListener != null) {
+            // tapping reply icon tells activity to show reply box
             View.OnClickListener replyClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -271,13 +277,19 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
                 holder.txtLikeCount.setVisibility(View.VISIBLE);
             }
 
-            // toggle like when layout containing like image and caption is tapped
-            holder.layoutLikes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleLike(v.getContext(), holder, position);
-                }
-            });
+            if (mIsLoggedOutReader) {
+                holder.imgLike.setEnabled(false);
+                holder.txtLike.setEnabled(false);
+                holder.txtLikeCount.setEnabled(false);
+            } else {
+                // toggle like when layout containing like image and caption is tapped
+                holder.layoutLikes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleLike(v.getContext(), holder, position);
+                    }
+                });
+            }
 
             // show liking users when like count is tapped
             holder.txtLikeCount.setOnClickListener(new View.OnClickListener() {
