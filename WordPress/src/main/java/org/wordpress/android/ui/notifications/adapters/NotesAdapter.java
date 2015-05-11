@@ -262,7 +262,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         if (isUnread) {
             noteViewHolder.itemView.setBackgroundColor(mColorUnread);
         } else {
-            noteViewHolder.itemView.setBackgroundColor(mColorUnread);
+            noteViewHolder.itemView.setBackgroundColor(mColorRead);
         }
     }
 
