@@ -15,19 +15,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
+import org.wordpress.android.widgets.FloatingActionButton;
 
 import de.greenrobot.event.EventBus;
 
@@ -59,7 +59,8 @@ public class SitePickerActivity extends ActionBarActivity
             mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
         }
 
-        Button btnAddSite = (Button) findViewById(R.id.btn_add);
+        FloatingActionButton btnAddSite = (FloatingActionButton) findViewById(R.id.btn_add);
+        btnAddSite.setFabColor(getResources().getColor(R.color.white));
         btnAddSite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

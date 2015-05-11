@@ -45,6 +45,10 @@ public class FloatingActionButton extends ImageButton {
         }
 
         int fabColor = context.getResources().getColor(R.color.fab_color);
+        setFabColor(fabColor);
+    }
+
+    public void setFabColor(int fabColor) {
         int fabColorPressed = darken(fabColor);
 
         StateListDrawable background = new StateListDrawable();
