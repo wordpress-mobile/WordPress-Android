@@ -264,9 +264,22 @@ public class ReaderPostDetailFragment extends Fragment
      * animate in/out the layout containing the reblog/comment/like icons
      */
     private void showIconBar(boolean show) {
-        if (isAdded()) {
+        if (isAdded() && canShowIconBar()) {
             ReaderAnim.animateBottomBar(mLayoutIcons, show);
         }
+    }
+
+    /*
+     * action icons don't appear for feeds or when logged out, otherwise they appear
+     * only if the user can act upon them
+     */
+    private boolean canShowIconBar() {
+        if (mPost == null || mPost.isExternal || mIsLoggedOutReader) {
+            return false;
+        }
+        return (mPost.isLikesEnabled
+                || mPost.canReblog()
+                || mPost.isCommentsOpen);
     }
 
     @Override
@@ -414,6 +427,7 @@ public class ReaderPostDetailFragment extends Fragment
      * display the standard Android share chooser to share this post
      */
     private static final int MAX_SHARE_TITLE_LEN = 100;
+
     private void sharePage() {
         if (!isAdded() || !hasPost()) {
             return;
@@ -807,15 +821,6 @@ public class ReaderPostDetailFragment extends Fragment
                 imgBtnReblog.setVisibility(View.INVISIBLE);
             }
 
-            // external blogs (feeds) don't support action icons
-            if (!mPost.isExternal && (mPost.isLikesEnabled
-                    || mPost.canReblog()
-                    || mPost.isCommentsOpen)) {
-                mLayoutIcons.setVisibility(View.VISIBLE);
-            } else {
-                mLayoutIcons.setVisibility(View.GONE);
-            }
-
             // enable blocking the associated blog
             if (canBlockBlog()) {
                 imgMore.setVisibility(View.VISIBLE);
@@ -831,8 +836,7 @@ public class ReaderPostDetailFragment extends Fragment
                 imgMore.setVisibility(View.GONE);
             }
 
-            // only show action buttons for WP posts
-            mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
+            mLayoutIcons.setVisibility(canShowIconBar() ? View.VISIBLE : View.GONE);
             refreshIconBarCounts(false);
         }
     }
