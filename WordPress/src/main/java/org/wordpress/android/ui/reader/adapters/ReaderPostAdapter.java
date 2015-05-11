@@ -209,13 +209,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             holder.txtTag.setOnClickListener(null);
         }
 
-        // likes, comments & reblogging - supported by wp posts only
-        boolean showComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
+        boolean showComments;
         boolean showLikes;
         if (mIsLoggedOutReader) {
-            showLikes = (post.numLikes > 0);
+            showLikes = post.numLikes > 0;
+            showComments = post.numReplies > 0;
         } else {
-            showLikes = (post.isWP() && post.isLikesEnabled);
+            showLikes = post.isWP() && post.isLikesEnabled;
+            showComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
         }
 
         if (showLikes || showComments) {
