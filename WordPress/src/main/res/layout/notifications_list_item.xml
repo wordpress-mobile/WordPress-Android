@@ -10,7 +10,6 @@
         android:id="@+id/time_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:clickable="false"
         android:orientation="vertical"
         android:paddingLeft="@dimen/margin_extra_large"
@@ -56,6 +55,7 @@
         android:id="@+id/note_content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?android:selectableItemBackground"
         android:orientation="vertical">
 
         <LinearLayout
@@ -126,9 +126,9 @@
                         android:id="@+id/note_subject_noticon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
                         android:layout_marginTop="@dimen/margin_extra_small"
-                        android:textColor="@color/grey_lighten_10"/>
+                        android:textColor="@color/grey_lighten_10"
+                        android:textSize="18sp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/note_subject"
