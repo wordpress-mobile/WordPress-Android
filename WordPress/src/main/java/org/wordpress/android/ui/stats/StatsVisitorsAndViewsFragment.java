@@ -73,7 +73,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     // Container Activity must implement this interface
     public interface OnDateChangeListener {
-        public void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate);
+        void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate);
     }
 
     @Override
@@ -775,7 +775,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         private final int mLabelResId;
 
-        private OverviewLabel(int labelResId) {
+        OverviewLabel(int labelResId) {
             mLabelResId = labelResId;
         }
 

@@ -84,8 +84,7 @@ public class StatsTable {
                     return null; // cache is expired
                 }
 
-                String jsonData =(cursor.getString(cursor.getColumnIndex("jsonData")));
-                return jsonData;
+                return cursor.getString(cursor.getColumnIndex("jsonData"));
             } else {
                 return null;
             }

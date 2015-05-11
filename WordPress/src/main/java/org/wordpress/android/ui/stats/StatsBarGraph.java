@@ -295,6 +295,6 @@ class StatsBarGraph extends GraphView {
     }
 
     interface OnGestureListener {
-        public void onBarTapped(int tappedBar);
+        void onBarTapped(int tappedBar);
     }
 }

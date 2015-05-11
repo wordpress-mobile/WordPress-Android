@@ -58,7 +58,7 @@ public class AuthorModel implements Serializable {
             String title = currentPostJSON.getString("title");
             int views = currentPostJSON.getInt("views");
             String url = currentPostJSON.getString("url");
-            PostModel currentPost = new PostModel(mBlogId, mDate, postId, title, views, url, null, "post");
+            PostModel currentPost = new PostModel(mBlogId, mDate, postId, title, views, url);
             mPosts.add(currentPost);
         }
     }
