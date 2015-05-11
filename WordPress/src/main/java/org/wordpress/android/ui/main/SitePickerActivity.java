@@ -27,6 +27,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.FloatingActionButton;
@@ -189,6 +190,7 @@ public class SitePickerActivity extends ActionBarActivity
                     currentSiteName = site.getBlogNameOrHostName();
                 } else {
                     WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
+                    StatsTable.deleteStatsForBlog(this, site.localId); // Remove stats data for hidden sites
                 }
             }
 
