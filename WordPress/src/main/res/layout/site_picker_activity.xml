@@ -20,6 +20,6 @@
         android:layout_gravity="end|bottom"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
-        android:src="@drawable/ic_add_grey600_24dp" />
+        android:src="@drawable/ic_add_blue_24dp" />
 
 </FrameLayout>
