@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -79,21 +78,6 @@ public class ReaderUtils {
         } else {
             return (numLikes == 1 ?
                     context.getString(R.string.reader_likes_one) : context.getString(R.string.reader_likes_multi, numLikes));
-        }
-    }
-
-    /*
-     * returns the drawable resource id to use as the default blavatar for the passed blog
-     */
-    public static int getDefaultBlavatarResId(ReaderBlog blogInfo) {
-        if (blogInfo == null) {
-            return R.drawable.gravatar_placeholder;
-        } else if (blogInfo.isJetpack) {
-            return R.drawable.blavatar_placeholder_org;
-        } else if (blogInfo.isExternal()) {
-            return R.drawable.gravatar_placeholder;
-        } else {
-            return R.drawable.blavatar_placeholder_com;
         }
     }
 }
