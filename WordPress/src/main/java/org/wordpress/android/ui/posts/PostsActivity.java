@@ -197,12 +197,6 @@ public class PostsActivity extends ActionBarActivity
                 finish();
             }*/
         }
-
-        if (WordPress.postsShouldRefresh) {
-            requestPosts();
-            mPostList.setRefreshing(true);
-            WordPress.postsShouldRefresh = false;
-        }
     }
 
     public void newPost() {
