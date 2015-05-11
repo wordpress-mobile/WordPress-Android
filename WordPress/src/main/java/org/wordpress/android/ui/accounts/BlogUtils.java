@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
@@ -40,6 +41,7 @@ public class BlogUtils {
         for (Map<String, Object> blog : allBlogs) {
             if (!newBlogURLs.contains(blog.get("url").toString() + blog.get("blogId"))) {
                 WordPress.wpDB.deleteBlog(context, Integer.parseInt(blog.get("id").toString()));
+                StatsTable.deleteStatsForBlog(context, Integer.parseInt(blog.get("id").toString())); // Remove stats data
                 retValue = true;
             }
         }
