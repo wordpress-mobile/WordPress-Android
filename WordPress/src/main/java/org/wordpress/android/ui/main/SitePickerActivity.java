@@ -27,6 +27,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.DividerItemDecoration;
 
 import de.greenrobot.event.EventBus;
 
@@ -69,6 +70,9 @@ public class SitePickerActivity extends ActionBarActivity
         RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler_view);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(getAdapter());
+        recycler.setClipToPadding(false);
+        recycler.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        recycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
     }
 
     @Override
