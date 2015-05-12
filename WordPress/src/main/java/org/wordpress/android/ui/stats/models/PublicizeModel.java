@@ -9,13 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PublicizeModel implements Serializable {
-    private final String mDate; // Not available in the response
     private String mBlogID;
     private List<SingleItemModel> mServices;
 
     public PublicizeModel(String blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
-        this.mDate = null;
         JSONArray services = response.getJSONArray("services");
         if (services.length() > 0) {
             mServices = new ArrayList<>(services.length());
@@ -23,7 +21,7 @@ public class PublicizeModel implements Serializable {
                 JSONObject current = services.getJSONObject(i);
                 String serviceName = current.getString("service");
                 int followers = current.getInt("followers");
-                SingleItemModel currentItem = new SingleItemModel(blogID, mDate, null, serviceName, followers, null, null);
+                SingleItemModel currentItem = new SingleItemModel(blogID, null, null, serviceName, followers, null, null);
                 mServices.add(currentItem);
             }
         }
@@ -39,9 +37,5 @@ public class PublicizeModel implements Serializable {
 
     public void setBlogId(String blogId) {
         this.mBlogID = blogId;
-    }
-
-    public String getDate() {
-        return mDate;
     }
 }
