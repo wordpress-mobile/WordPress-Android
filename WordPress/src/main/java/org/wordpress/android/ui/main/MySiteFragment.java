@@ -15,6 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.GravatarUtils;

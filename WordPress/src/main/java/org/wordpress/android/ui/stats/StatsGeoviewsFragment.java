@@ -72,29 +72,28 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                 String label = getResources().getString(getTotalsLabelResId());
 
                 // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
-                String htmlPage = new StringBuilder().append("<html>")
-                        .append("<head>")
-                        .append("<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>")
-                        .append("<script type=\"text/javascript\">")
-                            .append("google.load(\"visualization\", \"1\", {packages:[\"geochart\"]});")
-                            .append("google.setOnLoadCallback(drawRegionsMap);")
-                            .append("function drawRegionsMap() {")
-                                .append("var data = google.visualization.arrayToDataTable(")
-                                .append("[")
-                                .append("['Country', '").append(label).append("'],")
-                                        .append(dataToLoad)
-                                .append("]);")
-                                .append("var options = {legend: 'none', keepAspectRatio: true, region: 'world', enableRegionInteractivity: true};")
-                                .append("var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));")
-                                .append("chart.draw(data, options);")
-                            .append("}")
-                            .append("</script>")
-                        .append("</head>")
-                        .append("<body>")
-                        .append("<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>")
-                        .append("</body>")
-                        .append("</html>").toString();
-
+                String htmlPage = "<html>" +
+                        "<head>" +
+                        "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>" +
+                        "<script type=\"text/javascript\">" +
+                            "google.load(\"visualization\", \"1\", {packages:[\"geochart\"]});" +
+                            "google.setOnLoadCallback(drawRegionsMap);" +
+                            "function drawRegionsMap() {" +
+                                "var data = google.visualization.arrayToDataTable(" +
+                                "[" +
+                                "['Country', '" + label + "']," +
+                                        dataToLoad +
+                                "]);" +
+                                "var options = {legend: 'none', keepAspectRatio: true, region: 'world', enableRegionInteractivity: true};" +
+                                "var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
+                                "chart.draw(data, options);" +
+                            "}" +
+                            "</script>" +
+                        "</head>" +
+                        "<body>" +
+                        "<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>" +
+                        "</body>" +
+                        "</html>";
 
                 WebView webView = new WebView(getActivity());
                 mTopPagerContainer.addView(webView);

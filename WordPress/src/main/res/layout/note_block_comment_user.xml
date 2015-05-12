@@ -1,84 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingRight="@dimen/margin_extra_large"
     android:paddingTop="@dimen/comment_avatar_margin_top">
 
-    <org.wordpress.android.widgets.WPNetworkImageView
-        android:id="@+id/user_avatar"
-        android:layout_width="@dimen/avatar_sz_small"
-        android:layout_height="@dimen/avatar_sz_small"
-        android:layout_marginTop="@dimen/comment_avatar_margin_top" />
-
-    <RelativeLayout
-        android:id="@+id/user_name_wrapper"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/user_avatar"
-        android:layout_marginLeft="@dimen/notifications_adjusted_font_margin"
-        android:layout_toRightOf="@id/user_avatar">
+        android:orientation="horizontal">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/user_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/comment_user_margin_adjustment"
-            android:ellipsize="end"
-            android:includeFontPadding="false"
-            android:singleLine="true"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="Bob Ross" />
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="@dimen/avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
+            android:layout_marginTop="5dp"/>
 
         <LinearLayout
+            android:id="@+id/user_name_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/comment_snippet_margin_adjustment">
+            android:layout_marginLeft="@dimen/notifications_adjusted_font_margin"
+            android:layout_marginStart="@dimen/notifications_adjusted_font_margin"
+            android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/user_comment_ago"
-                android:layout_width="wrap_content"
+                android:id="@+id/user_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:includeFontPadding="false"
-                android:singleLine="true"
-                android:textColor="@color/grey"
-                android:textSize="@dimen/text_sz_large"
-                android:visibility="gone"
-                tools:text="5h"
-                tools:visibility="visible" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/user_comment_bullet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey"
-                android:includeFontPadding="false"
-                android:textSize="@dimen/text_sz_large"
-                android:text="\u2022"
-                android:textStyle="bold"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:layout_marginRight="@dimen/margin_small"/>
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/user_comment_site"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
                 android:ellipsize="end"
-                android:textColor="@color/grey"
                 android:includeFontPadding="false"
+                android:singleLine="true"
+                android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_large"
-                android:clickable="true"
-                android:background="@drawable/selectable_background_wordpress"
-                tools:text="example.com"/>
-        </LinearLayout>
+                tools:text="Bob Ross" />
 
-    </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="-2dp">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/user_comment_ago"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:singleLine="true"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_sz_large"
+                    android:visibility="gone"
+                    tools:text="5h"
+                    tools:visibility="visible" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/user_comment_bullet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginRight="@dimen/margin_small"
+                    android:includeFontPadding="false"
+                    android:text="\u2022"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_sz_large"
+                    android:textStyle="bold" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/user_comment_site"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selectable_background_wordpress"
+                    android:clickable="true"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:singleLine="true"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_sz_large"
+                    tools:text="example.com" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/user_comment"
@@ -97,7 +103,6 @@
         android:layout_height="1dp"
         android:layout_below="@id/user_comment"
         android:background="@drawable/notifications_list_divider_full_width" />
-
-</RelativeLayout>
+</LinearLayout>
 
 

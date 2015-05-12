@@ -88,12 +88,14 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
         if (mDatamodels[1] != null && !isErrorResponse(1)) { // check if comment-followers is already here
             mTotalsLabel.setVisibility(View.VISIBLE);
             int totalNumberOfFollowers = ((CommentFollowersModel) mDatamodels[1]).getTotal();
-            mTotalsLabel.setText(
-                    getString(
-                            R.string.stats_comments_total_comments_followers,
-                            FormatUtils.formatDecimal(totalNumberOfFollowers)
-                    )
-            );
+            try {
+                mTotalsLabel.setText(getString(R.string.stats_comments_total_comments_followers,
+                                     FormatUtils.formatDecimal(totalNumberOfFollowers)));
+            } catch (AssertionError e) {
+                // Workaround for a weird bug in Android 4.2.2 with en_GB or en_AU locale
+                // https://github.com/wordpress-mobile/WordPress-Android/issues/2639
+                mTotalsLabel.setVisibility(View.GONE);
+            }
         } else {
             mTotalsLabel.setVisibility(View.GONE);
         }
@@ -103,7 +105,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
         if (mTopPagerSelectedButtonIndex == 0 && hasAuthors()) {
             adapter = new AuthorsAdapter(getActivity(), getAuthors());
         } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts()) {
-            adapter = new PostsAndPagesAdapter(getActivity(), getLocalTableBlogID(), getPosts());
+            adapter = new PostsAndPagesAdapter(getActivity(), getPosts());
         }
 
         if (adapter != null) {

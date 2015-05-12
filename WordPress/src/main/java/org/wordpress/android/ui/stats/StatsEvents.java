@@ -16,16 +16,19 @@ public class StatsEvents {
         public final String mRequestBlogId; // This is the remote blog ID
         public final StatsTimeframe mTimeframe;
         public final String mDate;
+        public final int mMaxResultsRequested, mPageRequested;
 
         // TODO: replace Serializable by a POJO or use several event types (like SectionXUpdated, SectionYUpdated)
         public final Serializable mResponseObjectModel;
         public SectionUpdated(StatsEndpointsEnum endPointName, String blogId, StatsTimeframe timeframe, String date,
-                              Serializable responseObjectModel) {
+                              final int maxResultsRequested, final int pageRequested, Serializable responseObjectModel) {
             mEndPointName = endPointName;
             mResponseObjectModel = responseObjectModel;
             mRequestBlogId = blogId;
             mDate = date;
             mTimeframe = timeframe;
+            mMaxResultsRequested = maxResultsRequested;
+            mPageRequested = pageRequested;
         }
     }
     public static class JetpackSettingsCompleted {

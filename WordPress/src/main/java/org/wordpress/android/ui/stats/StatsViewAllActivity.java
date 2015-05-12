@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -29,6 +30,8 @@ import de.greenrobot.event.EventBus;
  *  Single item details activity.
  */
 public class StatsViewAllActivity extends ActionBarActivity {
+
+    public static final String ARG_STATS_VIEW_ALL_TITLE = "arg_stats_view_all_title";
 
     private boolean mIsInFront;
     private boolean mIsUpdatingStats;
@@ -57,6 +60,8 @@ public class StatsViewAllActivity extends ActionBarActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        setTitle(R.string.stats);
 
         // pull to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
@@ -96,6 +101,11 @@ public class StatsViewAllActivity extends ActionBarActivity {
             mDate = extras.getString(StatsAbstractFragment.ARGS_SELECTED_DATE);
             mStatsViewType = (StatsViewType) extras.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE);
             mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
+
+            // Set a custom activity title if one was passed
+            if (!TextUtils.isEmpty(extras.getString(ARG_STATS_VIEW_ALL_TITLE))) {
+                setTitle(extras.getString(ARG_STATS_VIEW_ALL_TITLE));
+            }
         }
 
         if (mStatsViewType == null || mTimeframe == null || mDate == null) {
@@ -121,8 +131,6 @@ public class StatsViewAllActivity extends ActionBarActivity {
                 dateTextView.setVisibility(View.GONE);
                 break;
         }
-
-        setTitle(R.string.stats);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();

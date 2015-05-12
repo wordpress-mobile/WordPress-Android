@@ -80,6 +80,13 @@ public class ReaderIconCountView extends LinearLayout {
         mImageView.setSelected(selected);
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        mImageView.setEnabled(enabled);
+        mTextCount.setEnabled(enabled);
+    }
+
     public void setCount(int count, boolean animateChanges) {
         if (count != 0) {
             mTextCount.setText(FormatUtils.formatInt(count));
