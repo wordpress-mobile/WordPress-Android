@@ -3,9 +3,9 @@ package org.wordpress.android.ui.stats.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.text.TextUtils;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -13,11 +13,12 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
-import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -43,11 +44,11 @@ public class StatsService extends Service {
     public static final String ARG_MAX_RESULTS = "stats_max_results";
     public static final String ARG_PAGE_REQUESTED = "stats_page_requested";
 
-    public static final int DEFAULT_NUMBER_OF_RESULTS = 12;
+    private static final int DEFAULT_NUMBER_OF_RESULTS = 12;
     // The number of results to return per page for Paged REST endpoints. Numbers larger than 20 will default to 20 on the server.
     public static final int MAX_RESULTS_REQUESTED_PER_PAGE = 20;
 
-    public static enum StatsEndpointsEnum {
+    public enum StatsEndpointsEnum {
         VISITS,
         TOP_POSTS,
         REFERRERS,
@@ -102,7 +103,7 @@ public class StatsService extends Service {
 
     private int mServiceStartId;
     private final LinkedList<Request<JSONObject>> mStatsNetworkRequests = new LinkedList<>();
-    protected ThreadPoolExecutor singleThreadNetworkHandler = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
+    private final ThreadPoolExecutor singleThreadNetworkHandler = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
 
     @Override
     public void onCreate() {
@@ -205,8 +206,7 @@ public class StatsService extends Service {
 
         int parsedBlogID = Integer.parseInt(blogId);
         int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
-        String result = StatsTable.getStats(this, localTableBlogId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
-        return result;
+        return StatsTable.getStats(this, localTableBlogId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
     }
 
     private void startTasks(final String blogId, final StatsTimeframe timeframe, final String date, final StatsEndpointsEnum sectionToUpdate,
@@ -333,9 +333,9 @@ public class StatsService extends Service {
     }
 
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
-        protected String mRequestBlogId;
+        final String mRequestBlogId;
         private final StatsTimeframe mTimeframe;
-        protected Serializable mResponseObjectModel;
+        Serializable mResponseObjectModel;
         final StatsEndpointsEnum mEndpointName;
         private final String mDate;
         private Request<JSONObject> currentRequest;
@@ -384,8 +384,25 @@ public class StatsService extends Service {
             singleThreadNetworkHandler.submit(new Thread() {
                 @Override
                 public void run() {
-                    AppLog.e(T.STATS, this.getClass().getName() + " responded with an Error");
+                    AppLog.e(T.STATS, "Error while loading Stats!");
                     StatsUtils.logVolleyErrorDetails(volleyError);
+
+                    // Check here if this is an authentication error
+                    // .com authentication errors are handled automatically by the app
+                    if (volleyError.networkResponse != null) {
+                        NetworkResponse networkResponse = volleyError.networkResponse;
+                        if (networkResponse.statusCode == 403 && networkResponse.data != null) {
+                            if (new String(networkResponse.data).contains("unauthorized")) {
+                                int localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+                                        Integer.parseInt(mRequestBlogId)
+                                );
+                                Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
+                                if (blog != null && blog.isJetpackPowered()) {
+                                    EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
+                                }
+                            }
+                        }
+                    }
                     mResponseObjectModel = volleyError;
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, mResponseObjectModel));
@@ -406,7 +423,7 @@ public class StatsService extends Service {
     }
 
 
-    void checkAllRequestsFinished(Request<JSONObject> req) {
+    private void checkAllRequestsFinished(Request<JSONObject> req) {
         synchronized (mStatsNetworkRequests) {
             if (req != null) {
                 mStatsNetworkRequests.remove(req);

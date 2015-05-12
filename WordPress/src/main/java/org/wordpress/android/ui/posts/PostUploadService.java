@@ -34,6 +34,8 @@ import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
+import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -60,6 +62,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import de.greenrobot.event.EventBus;
 
 public class PostUploadService extends Service {
     private static Context mContext;
@@ -168,11 +172,12 @@ public class PostUploadService extends Service {
             WordPress.wpDB.updatePost(mPost);
 
             if (postUploadedSuccessfully) {
-                WordPress.postUploaded(mPost.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
+                EventBus.getDefault().post(new PostUploadSucceed(mPost.getLocalTableBlogId(), mPost.getRemotePostId(),
+                                mPost.isPage()));
                 mPostUploadNotifier.cancelNotification();
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
             } else {
-                WordPress.postUploadFailed(mPost.getLocalTableBlogId());
+                EventBus.getDefault().post(new PostUploadFailed(mPost.getLocalTableBlogId()));
                 mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
                         mErrorUnavailableVideoPress);
             }
@@ -187,7 +192,7 @@ public class PostUploadService extends Service {
             if (mPostUploadNotifier != null && mPost != null) {
                 mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
                         mErrorUnavailableVideoPress);
-                WordPress.postUploadFailed(mPost.getLocalTableBlogId());
+                EventBus.getDefault().post(new PostUploadFailed(mPost.getLocalTableBlogId()));
             }
         }
 

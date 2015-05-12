@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -79,5 +80,13 @@ public class ReaderUtils {
             return (numLikes == 1 ?
                     context.getString(R.string.reader_likes_one) : context.getString(R.string.reader_likes_multi, numLikes));
         }
+    }
+
+    /*
+     * returns true if the reader should provide a "logged out" experience - no likes, comments,
+     * reblogs, or anything else that requires an account
+     */
+    public static boolean isLoggedOutReader() {
+        return !AccountHelper.isSignedInWordPressDotCom();
     }
 }

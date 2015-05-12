@@ -34,8 +34,8 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
     private final int mAvatarSz;
     private final Query mQuery;
     private final Bucket<Note> mNotesBucket;
-    private final int mReadBackgroundResId;
-    private final int mUnreadBackgroundResId;
+    private final int mColorRead;
+    private final int mColorUnread;
     private final List<String> mHiddenNoteIds = new ArrayList<String>();
     private final List<String> mModeratingNoteIds = new ArrayList<String>();
 
@@ -65,8 +65,8 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
                 .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.avatar_sz_medium);
-        mReadBackgroundResId = R.drawable.list_bg_selector;
-        mUnreadBackgroundResId = R.drawable.list_unread_bg_selector;
+        mColorRead = context.getResources().getColor(R.color.white);
+        mColorUnread = context.getResources().getColor(R.color.grey_light);
     }
 
     public void closeCursor() {
@@ -260,9 +260,9 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         }
 
         if (isUnread) {
-            noteViewHolder.itemView.setBackgroundResource(mUnreadBackgroundResId);
+            noteViewHolder.itemView.setBackgroundColor(mColorUnread);
         } else {
-            noteViewHolder.itemView.setBackgroundResource(mReadBackgroundResId);
+            noteViewHolder.itemView.setBackgroundColor(mColorRead);
         }
 
         noteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {

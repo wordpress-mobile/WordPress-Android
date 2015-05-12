@@ -23,6 +23,8 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.EmptyViewAnimationHandler;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
+import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ServiceUtils;
@@ -39,8 +41,9 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 import java.util.List;
 import java.util.Vector;
 
-public class PostsListFragment extends ListFragment
-        implements WordPress.OnPostUploadedListener, EmptyViewAnimationHandler.OnAnimationProgressListener {
+import de.greenrobot.event.EventBus;
+
+public class PostsListFragment extends ListFragment implements EmptyViewAnimationHandler.OnAnimationProgressListener {
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -238,7 +241,6 @@ public class PostsListFragment extends ListFragment
         });
 
         initSwipeToRefreshHelper();
-        WordPress.setOnPostUploadedListener(this);
 
         mFabButton = (FloatingActionButton) getView().findViewById(R.id.fab_button);
         mFabButton.setOnClickListener(new View.OnClickListener() {
@@ -251,6 +253,7 @@ public class PostsListFragment extends ListFragment
         mEmptyViewAnimationHandler = new EmptyViewAnimationHandler(mEmptyViewTitle, mEmptyViewImage, this);
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            // If we remove or throttle the following call, we should make PostUpload events sticky
             ((PostsActivity) getActivity()).requestPosts();
         } else {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
@@ -274,12 +277,6 @@ public class PostsListFragment extends ListFragment
             throw new ClassCastException(activity.toString()
                     + " must implement Callback");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        WordPress.setOnPostUploadedListener(null);
-        super.onDetach();
     }
 
     public void onResume() {
@@ -437,15 +434,14 @@ public class PostsListFragment extends ListFragment
         mShouldSelectFirstPost = shouldSelect;
     }
 
-    @Override
-    public void OnPostUploaded(int localBlogId, String postId, boolean isPage) {
+    public void onEventMainThread(PostUploadSucceed event) {
         if (!isAdded()) {
             return;
         }
 
         // If the user switched to a different blog while uploading his post, don't reload posts and refresh the view
         boolean sameBlogId = true;
-        if (WordPress.getCurrentBlog() == null || WordPress.getCurrentBlog().getLocalTableBlogId() != localBlogId) {
+        if (WordPress.getCurrentBlog() == null || WordPress.getCurrentBlog().getLocalTableBlogId() != event.mLocalBlogId) {
             sameBlogId = false;
         }
 
@@ -456,12 +452,12 @@ public class PostsListFragment extends ListFragment
         }
 
         // Fetch the newly uploaded post
-        if (!TextUtils.isEmpty(postId)) {
+        if (!TextUtils.isEmpty(event.mRemotePostId)) {
             final boolean reloadPosts = sameBlogId;
             List<Object> apiArgs = new Vector<Object>();
-            apiArgs.add(WordPress.wpDB.instantiateBlogByLocalId(localBlogId));
-            apiArgs.add(postId);
-            apiArgs.add(isPage);
+            apiArgs.add(WordPress.wpDB.instantiateBlogByLocalId(event.mLocalBlogId));
+            apiArgs.add(event.mRemotePostId);
+            apiArgs.add(event.mIsPage);
 
             mCurrentFetchSinglePostTask = new ApiHelper.FetchSinglePostTask(
                     new ApiHelper.FetchSinglePostTask.Callback() {
@@ -498,8 +494,7 @@ public class PostsListFragment extends ListFragment
         }
     }
 
-    @Override
-    public void OnPostUploadFailed(int localBlogId) {
+    public void onEventMainThread(PostUploadFailed event) {
         mSwipeToRefreshHelper.setRefreshing(true);
 
         if (!isAdded()) {
@@ -507,7 +502,7 @@ public class PostsListFragment extends ListFragment
         }
 
         // If the user switched to a different blog while uploading his post, don't reload posts and refresh the view
-        if (WordPress.getCurrentBlog() == null || WordPress.getCurrentBlog().getLocalTableBlogId() != localBlogId) {
+        if (WordPress.getCurrentBlog() == null || WordPress.getCurrentBlog().getLocalTableBlogId() != event.mLocalId) {
             return;
         }
 
@@ -628,5 +623,17 @@ public class PostsListFragment extends ListFragment
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 }

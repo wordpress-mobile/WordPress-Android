@@ -19,14 +19,14 @@ public abstract class StatsAbstractFragment extends Fragment {
     public static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
     public static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
     public static final String ARGS_SELECTED_DATE = "ARGS_SELECTED_DATE";
-    protected static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
-    protected static final String ARGS_IS_SINGLE_VIEW = "ARGS_IS_SINGLE_VIEW";
+    static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
+    static final String ARGS_IS_SINGLE_VIEW = "ARGS_IS_SINGLE_VIEW";
 
     // The number of results to return for NON Paged REST endpoints.
     private static final int MAX_RESULTS_REQUESTED = 100;
 
-    protected String mDate;
-    protected StatsTimeframe mStatsTimeframe = StatsTimeframe.DAY;
+    private String mDate;
+    private StatsTimeframe mStatsTimeframe = StatsTimeframe.DAY;
 
     protected abstract StatsService.StatsEndpointsEnum[] getSectionsToUpdate();
 
@@ -34,7 +34,7 @@ public abstract class StatsAbstractFragment extends Fragment {
         refreshStats(-1, null);
     }
     // call an update for the stats shown in the fragment
-    public void refreshStats(int pageNumberRequested, StatsService.StatsEndpointsEnum[] sections) {
+    void refreshStats(int pageNumberRequested, StatsService.StatsEndpointsEnum[] sections) {
         if (!isAdded()) {
             return;
         }
@@ -192,7 +192,7 @@ public abstract class StatsAbstractFragment extends Fragment {
         mDate = newDate;
     }
 
-    public String getDate() {
+    String getDate() {
         return mDate;
     }
 
@@ -200,19 +200,19 @@ public abstract class StatsAbstractFragment extends Fragment {
         mStatsTimeframe = newTimeframe;
     }
 
-    public StatsTimeframe getTimeframe() {
+    StatsTimeframe getTimeframe() {
         return mStatsTimeframe;
     }
 
-    protected StatsViewType getViewType() {
+    StatsViewType getViewType() {
         return (StatsViewType) getArguments().getSerializable(ARGS_VIEW_TYPE);
     }
 
-    protected int getLocalTableBlogID() {
+    int getLocalTableBlogID() {
         return getArguments().getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID);
     }
 
-    protected boolean isSingleView() {
+    boolean isSingleView() {
         return getArguments().getBoolean(ARGS_IS_SINGLE_VIEW, false);
     }
 
