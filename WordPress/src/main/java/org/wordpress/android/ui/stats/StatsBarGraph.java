@@ -29,10 +29,10 @@ import java.util.List;
  */
 class StatsBarGraph extends GraphView {
     // Keep tracks of every bar drawn on the graph.
-    private List<List<BarChartRect>> mSeriesRectsDrawedOnScreen = (List<List<BarChartRect>>) new LinkedList();
+    private final List<List<BarChartRect>> mSeriesRectsDrawedOnScreen = (List<List<BarChartRect>>) new LinkedList();
     private int mBarPositionToHighlight = -1;
 
-    private GestureDetectorCompat mDetector;
+    private final GestureDetectorCompat mDetector;
     private OnGestureListener mGestureListener;
 
     public StatsBarGraph(Context context) {
@@ -208,7 +208,7 @@ class StatsBarGraph extends GraphView {
         mSeriesRectsDrawedOnScreen.add(barChartRects);
     }
 
-    public int getTappedBar() {
+    private int getTappedBar() {
         float[] lastBarChartTouchedPoint = this.getLastTouchedPointOnCanvasAndReset();
         if (lastBarChartTouchedPoint[0] == 0f && lastBarChartTouchedPoint[1] == 0f) {
             return -1;
@@ -273,7 +273,10 @@ class StatsBarGraph extends GraphView {
      * of every single bar in the graph
      */
     private class BarChartRect {
-        float mLeft, mTop, mRight, mBottom;
+        final float mLeft;
+        final float mTop;
+        final float mRight;
+        final float mBottom;
 
         BarChartRect(float left, float top, float right, float bottom) {
             this.mLeft = left;
@@ -295,6 +298,6 @@ class StatsBarGraph extends GraphView {
     }
 
     interface OnGestureListener {
-        public void onBarTapped(int tappedBar);
+        void onBarTapped(int tappedBar);
     }
 }

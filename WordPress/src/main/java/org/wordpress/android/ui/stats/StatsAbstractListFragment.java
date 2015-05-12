@@ -31,37 +31,37 @@ import de.greenrobot.event.EventBus;
 public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     // Used when the fragment has 2 pages/kind of stats in it. Not meaning the bottom pagination.
-    protected static final String ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX = "ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX";
-    protected static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST = 1000;
-    protected static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST = 10;
+    static final String ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX = "ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX";
+    private static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST = 1000;
+    static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST = 10;
 
-    protected static final int NO_STRING_ID = -1;
+    private static final int NO_STRING_ID = -1;
 
-    protected TextView mModuleTitleTextView;
-    protected TextView mEmptyLabel;
-    protected TextView mTotalsLabel;
-    protected LinearLayout mListContainer;
-    protected LinearLayout mList;
-    protected Button mViewAll;
+    private TextView mModuleTitleTextView;
+    private TextView mEmptyLabel;
+    TextView mTotalsLabel;
+    private LinearLayout mListContainer;
+    LinearLayout mList;
+    private Button mViewAll;
 
-    protected LinearLayout mTopPagerContainer;
-    protected int mTopPagerSelectedButtonIndex = 0;
+    LinearLayout mTopPagerContainer;
+    int mTopPagerSelectedButtonIndex = 0;
 
     // Bottom and Top Pagination for modules that has pagination enabled.
-    protected LinearLayout mBottomPaginationContainer;
-    protected Button mBottomPaginationGoBackButton;
-    protected Button mBottomPaginationGoForwardButton;
-    protected TextView mBottomPaginationText;
-    protected LinearLayout mTopPaginationContainer;
-    protected Button mTopPaginationGoBackButton;
-    protected Button mTopPaginationGoForwardButton;
-    protected TextView mTopPaginationText;
+    LinearLayout mBottomPaginationContainer;
+    Button mBottomPaginationGoBackButton;
+    Button mBottomPaginationGoForwardButton;
+    TextView mBottomPaginationText;
+    LinearLayout mTopPaginationContainer;
+    Button mTopPaginationGoBackButton;
+    Button mTopPaginationGoForwardButton;
+    TextView mTopPaginationText;
 
-    protected LinearLayout mEmptyModulePlaceholder;
+    private LinearLayout mEmptyModulePlaceholder;
 
-    protected Serializable[] mDatamodels;
+    Serializable[] mDatamodels;
 
-    protected SparseBooleanArray mGroupIdToExpandedMap;
+    SparseBooleanArray mGroupIdToExpandedMap;
 
     protected abstract int getEntryLabelResId();
     protected abstract int getTotalsLabelResId();
@@ -71,7 +71,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract boolean isExpandableList();
     protected abstract boolean isViewAllOptionAvailable();
 
-    protected StatsResourceVars mResourceVars;
+    StatsResourceVars mResourceVars;
 
     @Override
     public void onAttach(Activity activity) {
@@ -177,7 +177,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         }
     }
 
-    protected void showEmptyUI() {
+    private void showEmptyUI() {
         mTopPagerContainer.setVisibility(View.GONE);
         mEmptyLabel.setVisibility(View.GONE);
         mListContainer.setVisibility(View.GONE);
@@ -188,7 +188,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mEmptyModulePlaceholder.setVisibility(View.VISIBLE);
     }
 
-    protected void showHideNoResultsUI(boolean showNoResultsUI) {
+    void showHideNoResultsUI(boolean showNoResultsUI) {
         mModuleTitleTextView.setVisibility(View.VISIBLE);
         mEmptyModulePlaceholder.setVisibility(View.GONE);
 
@@ -225,14 +225,14 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         }
     }
 
-    protected void showErrorUI() {
+    void showErrorUI() {
         if (!isAdded()) {
             return;
         }
         showErrorUI(mDatamodels[mTopPagerSelectedButtonIndex]);
     }
 
-    protected void showErrorUI(Serializable error) {
+    private void showErrorUI(Serializable error) {
         if (!isAdded()) {
             return;
         }
@@ -269,11 +269,11 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
      * Check if the current datamodel is populated and is NOT an error response.
      *
      */
-    protected boolean isDataEmpty() {
+    boolean isDataEmpty() {
         return isDataEmpty(mTopPagerSelectedButtonIndex);
     }
 
-    protected boolean isDataEmpty(int index) {
+    boolean isDataEmpty(int index) {
         return mDatamodels == null
                 || mDatamodels[index] == null
                 || isErrorResponse(index);
@@ -284,11 +284,11 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
      *
      * @return true if it is a Volley Error
      */
-    protected boolean isErrorResponse() {
+    boolean isErrorResponse() {
         return isErrorResponse(mTopPagerSelectedButtonIndex);
     }
 
-    protected boolean isErrorResponse(int index) {
+    boolean isErrorResponse(int index) {
         return mDatamodels != null && mDatamodels[index] != null
                 && (mDatamodels[index] instanceof VolleyError || mDatamodels[index] instanceof StatsError);
     }
@@ -327,11 +327,11 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         });
     }
 
-    protected int getMaxNumberOfItemsToShowInList() {
+    int getMaxNumberOfItemsToShowInList() {
         return isSingleView() ? MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST : MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
-    protected void setupTopModulePager(LayoutInflater inflater, ViewGroup container, View view, String[] buttonTitles) {
+    void setupTopModulePager(LayoutInflater inflater, ViewGroup container, View view, String[] buttonTitles) {
         int dp4 = DisplayUtils.dpToPx(view.getContext(), 4);
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
 
@@ -357,7 +357,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mTopPagerContainer.setVisibility(View.VISIBLE);
     }
 
-    protected View.OnClickListener TopModulePagerOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener TopModulePagerOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {

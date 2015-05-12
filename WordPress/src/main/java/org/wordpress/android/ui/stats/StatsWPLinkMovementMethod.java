@@ -12,7 +12,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 
-public class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
+class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
     public static WPLinkMovementMethod getInstance() {
         if (mMovementMethod == null) {
             mMovementMethod = new StatsWPLinkMovementMethod();

@@ -40,7 +40,7 @@ public class CommentsModel implements Serializable {
                 String name = currentPostJSON.getString("name");
                 int totals = currentPostJSON.getInt("comments");
                 String link = currentPostJSON.getString("link");
-                PostModel currentPost = new PostModel(blogID, mDate, itemID, name, totals, link, null, "post");
+                PostModel currentPost = new PostModel(blogID, mDate, itemID, name, totals, link, "post");
                 mPosts.add(currentPost);
             }
         }

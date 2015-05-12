@@ -49,7 +49,7 @@ public class TopPostsAndPagesModel implements Serializable {
                 String itemURL = postObject.getString("href");
                 String itemType = postObject.getString("type");
                 PostModel currentModel = new PostModel(blogID, mDate, itemID, itemTitle,
-                        itemTotal, itemURL, null, itemType);
+                        itemTotal, itemURL, itemType);
                 list.add(currentModel);
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.STATS, "Unexpected PostModel object in top posts and pages array" +
