@@ -327,7 +327,7 @@ public class SitePickerActivity extends ActionBarActivity
      * dividers for sites
      */
     public static class SitePickerItemDecoration extends RecyclerView.ItemDecoration {
-        private Drawable mDivider;
+        private final Drawable mDivider;
 
         public SitePickerItemDecoration(Resources resources) {
             mDivider = resources.getDrawable(R.drawable.site_picker_divider);
