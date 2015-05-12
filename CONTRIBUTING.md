@@ -59,4 +59,4 @@ Note: `release/x.y` or `hotfix/x.y.z` will be merged back in `master` after a ne
 
 # Contribute to translations
 
-We use a tool called GlotPress to manage translations. The WordPress-Android GlotPress instance lives here: https://translate.wordpress.org/projects/android/dev. To add new translations or fix existing ones, create an account over at GlotPress and submit your changes over at the GlotPress site.
+We use a tool called GlotPress to manage translations. The WordPress-Android GlotPress instance lives here: http://translate.wordpress.org/projects/apps/android/dev. To add new translations or fix existing ones, create an account over at GlotPress and submit your changes over at the GlotPress site.
