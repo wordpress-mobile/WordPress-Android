@@ -307,7 +307,13 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mGalleryReceiver);
+
+        try {
+            unregisterReceiver(mGalleryReceiver);
+        } catch (IllegalArgumentException e) {
+            AppLog.d(T.EDITOR, "Illegal state! Can't unregister receiver that was no registered");
+        }
+
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED_POST);
     }
 
