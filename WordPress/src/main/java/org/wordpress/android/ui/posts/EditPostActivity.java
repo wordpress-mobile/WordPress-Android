@@ -1338,7 +1338,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         }
     };
 
-
     /**
      * Handles media upload notifications. Used when uploading local media to create a gallery
      * after media selection.
