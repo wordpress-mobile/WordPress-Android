@@ -77,6 +77,7 @@ public class LoginWPCom extends LoginAbstract {
                 if (mJetpackBlog != null) {
                     // Store token in blog object for Jetpack sites
                     mJetpackBlog.setApi_key(token.toString());
+                    mJetpackBlog.setDotcom_username(mUsername);
                     WordPress.wpDB.saveBlog(mJetpackBlog);
                 }
 

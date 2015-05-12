@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.text.TextUtils;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -12,6 +13,8 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.ui.stats.StatsTimeframe;
@@ -381,8 +384,25 @@ public class StatsService extends Service {
             singleThreadNetworkHandler.submit(new Thread() {
                 @Override
                 public void run() {
-                    AppLog.e(T.STATS, this.getClass().getName() + " responded with an Error");
+                    AppLog.e(T.STATS, "Error while loading Stats!");
                     StatsUtils.logVolleyErrorDetails(volleyError);
+
+                    // Check here if this is an authentication error
+                    // .com authentication errors are handled automatically by the app
+                    if (volleyError.networkResponse != null) {
+                        NetworkResponse networkResponse = volleyError.networkResponse;
+                        if (networkResponse.statusCode == 403 && networkResponse.data != null) {
+                            if (new String(networkResponse.data).contains("unauthorized")) {
+                                int localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+                                        Integer.parseInt(mRequestBlogId)
+                                );
+                                Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
+                                if (blog != null && blog.isJetpackPowered()) {
+                                    EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
+                                }
+                            }
+                        }
+                    }
                     mResponseObjectModel = volleyError;
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, mResponseObjectModel));

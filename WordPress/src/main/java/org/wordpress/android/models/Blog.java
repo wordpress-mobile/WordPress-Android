@@ -442,7 +442,7 @@ public class Blog {
     }
 
     public boolean hasValidJetpackCredentials() {
-        return !TextUtils.isEmpty(getDotcom_username()) && !TextUtils.isEmpty(getDotcom_password());
+        return !TextUtils.isEmpty(getDotcom_username()) && !TextUtils.isEmpty(getApi_key());
     }
 
     public boolean hasValidHTTPAuthCredentials() {
