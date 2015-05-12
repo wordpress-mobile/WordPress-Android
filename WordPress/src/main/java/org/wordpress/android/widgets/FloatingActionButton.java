@@ -20,6 +20,7 @@ import org.wordpress.android.util.DisplayUtils;
 
 public class FloatingActionButton extends ImageButton {
     private boolean mIsLollipop;
+    private int mFabColor;
 
     public FloatingActionButton(Context context) {
         super(context);
@@ -49,11 +50,12 @@ public class FloatingActionButton extends ImageButton {
     }
 
     public void setFabColor(int fabColor) {
-        int fabColorPressed = darken(fabColor);
+        mFabColor = fabColor;
+        int fabColorPressed = darken(mFabColor);
 
         StateListDrawable background = new StateListDrawable();
         background.addState(new int[]{android.R.attr.state_pressed}, createOval(fabColorPressed));
-        background.addState(new int[]{}, createOval(fabColor));
+        background.addState(new int[]{}, createOval(mFabColor));
         setBackgroundCompat(background);
     }
 
@@ -91,9 +93,8 @@ public class FloatingActionButton extends ImageButton {
     @SuppressLint("NewApi")
     private void setBackgroundCompat(Drawable drawable) {
         if (mIsLollipop) {
-            int rippleColor = getContext().getResources().getColor(R.color.fab_color);
             RippleDrawable rippleDrawable = new RippleDrawable(
-                    new ColorStateList(new int[][]{{}}, new int[]{rippleColor}), drawable, null);
+                    new ColorStateList(new int[][]{{}}, new int[]{mFabColor}), drawable, null);
             setBackground(rippleDrawable);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             setBackground(drawable);
