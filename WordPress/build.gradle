@@ -81,6 +81,7 @@ dependencies {
     compile 'commons-lang:commons-lang:2.6'
     compile 'com.cocosw:undobar:1.6@aar'
     compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.getbase:floatingactionbutton:1.9.0'
 
     compile 'com.mcxiaoke.volley:library:1.0.+'
 

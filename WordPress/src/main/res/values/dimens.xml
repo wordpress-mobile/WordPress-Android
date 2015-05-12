@@ -6,11 +6,9 @@
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
 
-    <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
-    <dimen name="fab_elevation">8dp</dimen>
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
