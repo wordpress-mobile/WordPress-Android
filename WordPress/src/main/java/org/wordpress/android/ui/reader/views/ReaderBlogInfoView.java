@@ -15,7 +15,6 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -119,7 +118,6 @@ public class ReaderBlogInfoView extends FrameLayout {
                 imageUrl = GravatarUtils.blavatarFromUrl(blogInfo.getUrl(), imageSz);
             }
         }
-        imgBlavatar.setErrorImageResId(ReaderUtils.getDefaultBlavatarResId(blogInfo));
         imgBlavatar.setImageUrl(imageUrl, ImageType.BLAVATAR);
 
         // layout is invisible at design time

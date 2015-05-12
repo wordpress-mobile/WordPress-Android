@@ -1,7 +1,15 @@
 package org.wordpress.android.ui.main;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
@@ -10,9 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -25,6 +30,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.FloatingActionButton;
 
 import de.greenrobot.event.EventBus;
 
@@ -56,47 +62,21 @@ public class SitePickerActivity extends ActionBarActivity
             mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
         }
 
-        setupFab();
+        FloatingActionButton btnAddSite = (FloatingActionButton) findViewById(R.id.btn_add);
+        btnAddSite.setFabColor(getResources().getColor(R.color.white));
+        btnAddSite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addSite();
+            }
+        });
 
         RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler_view);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(getAdapter());
-    }
-
-    /*
-     * if the user is signed into wp.com, show a fab menu which enables choosing between
-     * adding a self-hosted site and creating a new wp.com one - if they're not signed in
-     * we hide the menu and use a separate fab which directly adds a self-hosted site
-     */
-    private void setupFab() {
-        FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            FloatingActionButton fabMenuItemCreateDotCom = (FloatingActionButton) findViewById(R.id.fab_item_create_dotcom);
-            fabMenuItemCreateDotCom.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityLauncher.newBlogForResult(SitePickerActivity.this);
-                }
-            });
-
-            FloatingActionButton fabMenuItemAddDotOrg = (FloatingActionButton) findViewById(R.id.fab_item_add_dotorg);
-            fabMenuItemAddDotOrg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
-                }
-            });
-        } else {
-            fabMenu.setVisibility(View.GONE);
-            FloatingActionButton fabMenuAddDotOrg = (FloatingActionButton) findViewById(R.id.fab_add_dotorg);
-            fabMenuAddDotOrg.setVisibility(View.VISIBLE);
-            fabMenuAddDotOrg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
-                }
-            });
-        }
+        recycler.setClipToPadding(false);
+        recycler.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        recycler.addItemDecoration(new SitePickerItemDecoration(this.getResources()));
     }
 
     @Override
@@ -227,6 +207,18 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
+    private void addSite() {
+        // if user is signed into wp.com use the dialog to enable choosing whether to
+        // create a new wp.com blog or add a self-hosted one
+        if (AccountHelper.isSignedInWordPressDotCom()) {
+            DialogFragment dialog = new AddSiteDialog();
+            dialog.show(getSupportFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
+        } else {
+            // user isn't signed into wp.com, so simply enable adding self-hosted
+            ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
+        }
+    }
+
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
@@ -299,6 +291,64 @@ public class SitePickerActivity extends ActionBarActivity
             }
             getAdapter().setEnableEditMode(false);
             mActionMode = null;
+        }
+    }
+
+    /*
+     * dialog which appears after user taps "Add site" - enables choosing whether to create
+     * a new wp.com blog or add an existing self-hosted one
+     */
+    public static class AddSiteDialog extends DialogFragment {
+        static final String ADD_SITE_DIALOG_TAG = "add_site_dialog";
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            CharSequence[] items =
+                    {getString(R.string.site_picker_create_dotcom),
+                     getString(R.string.site_picker_add_self_hosted)};
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.site_picker_add_site);
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == 0) {
+                        ActivityLauncher.newBlogForResult(getActivity());
+                    } else {
+                        ActivityLauncher.addSelfHostedSiteForResult(getActivity());
+                    }
+                }
+            });
+            return builder.create();
+        }
+    }
+
+    /**
+     * dividers for sites
+     */
+    public static class SitePickerItemDecoration extends RecyclerView.ItemDecoration {
+        private final Drawable mDivider;
+
+        public SitePickerItemDecoration(Resources resources) {
+            mDivider = resources.getDrawable(R.drawable.site_picker_divider);
+        }
+
+        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            int left = parent.getPaddingLeft();
+            int right = parent.getWidth() - parent.getPaddingRight();
+
+            int childCount = parent.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = parent.getChildAt(i);
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                int top = child.getBottom() + params.bottomMargin;
+                int bottom = top + mDivider.getIntrinsicHeight();
+
+                mDivider.setBounds(left, top, right, bottom);
+                mDivider.draw(c);
+            }
         }
     }
 }
