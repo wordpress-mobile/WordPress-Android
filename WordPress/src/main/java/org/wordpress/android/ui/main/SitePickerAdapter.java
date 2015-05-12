@@ -45,7 +45,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private SiteList mSites = new SiteList();
     private final int mCurrentLocalId;
 
-    private final Drawable mSelectedItemBackground;
     private final Drawable mCurrentItemBackground;
 
     private final LayoutInflater mInflater;
@@ -87,8 +86,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         mTextColorNormal = context.getResources().getColor(R.color.grey_dark);
         mTextColorHidden = context.getResources().getColor(R.color.grey);
 
-        mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_20));
-        mCurrentItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_30));
+        mCurrentItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_20));
 
         loadSites();
     }
@@ -140,10 +138,8 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             }
         });
 
-        if (site.localId == mCurrentLocalId) {
+        if (site.localId == mCurrentLocalId || (mIsMultiSelectEnabled && isItemSelected(position))) {
             holder.layoutContainer.setBackgroundDrawable(mCurrentItemBackground);
-        } else if (mIsMultiSelectEnabled && isItemSelected(position)) {
-            holder.layoutContainer.setBackgroundDrawable(mSelectedItemBackground);
         } else {
             holder.layoutContainer.setBackgroundDrawable(null);
         }
