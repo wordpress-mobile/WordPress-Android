@@ -14,7 +14,7 @@
     <color name="color_control_activated">@color/blue_light</color>
     <color name="color_control_highlight">@color/pressed_wordpress</color>
 
-    <color name="fab_color">@color/color_accent</color>
+    <color name="fab_normal">@color/color_accent</color>
     <color name="fab_pressed">@color/orange_fire</color>
     <color name="list_selected">@color/semi_transparent_blue_light</color>
 
