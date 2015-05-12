@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="select_from_new_picker">בחירה מרובה בעזרת רכיב חדש</string>
+	<string name="no_media_sources">לא ניתן לטעון קבצי מדיה</string>
+	<string name="loading_blog_videos">טוען וידאו</string>
+	<string name="loading_blog_images">טוען תמונות</string>
+	<string name="error_loading_videos">שגיאה בטעינת וידאו</string>
+	<string name="error_loading_images">שגיאה בטעינת תמונות</string>
+	<string name="error_loading_blog_images">לא ניתן לטעון תמונות</string>
+	<string name="error_loading_blog_videos">לא ניתן לטעון וידאו</string>
+	<string name="no_device_images">אין תמונות</string>
+	<string name="stats_generic_error">לא ניתן לטעון סטטוס נדרש</string>
+	<string name="no_device_videos">אין וידאו</string>
+	<string name="no_blog_images">אין תמונות</string>
+	<string name="no_blog_videos">אין וידאו</string>
+	<string name="loading_videos">טוען וידאו</string>
+	<string name="no_media">אין קבצי מדיה</string>
+	<string name="loading_images">טוען תמונות</string>
 	<string name="editor_toast_invalid_path">נתיב קובץ שגוי</string>
 	<string name="verification_code">קוד אימות</string>
 	<string name="invalid_verification_code">קוד אימות שגוי</string>
@@ -57,6 +73,8 @@
 	<string name="reader_label_new_posts">פוסטים חדשים</string>
 	<string name="stats_total">סה"כ</string>
 	<string name="post_uploading">מעלה</string>
+	<string name="stats_empty_video">לא הופעל וידאו</string>
+	<string name="stats_view_videos">וידאו</string>
 	<string name="stats_reblogs">פרסום מחדש באתר</string>
 	<string name="stats_unfollow">ביטול מעקב</string>
 	<string name="stats_follow">הרשמה</string>
@@ -69,7 +87,6 @@
 	<string name="stats_view_countries">מדינות</string>
 	<string name="stats_view_followers">עוקבים</string>
 	<string name="stats_view_publicize">שיתוף אוטומטי</string>
-	<string name="stats_view_videos">סרטונים</string>
 	<string name="stats_entry_clicks_link">קישור</string>
 	<string name="stats_view_top_posts_and_pages">פוסטים ועמודים</string>
 	<string name="stats_totals_publicize">עוקבים</string>
@@ -92,7 +109,6 @@
 	<string name="stats_empty_top_authors_desc">אפשר לעקוב אחר הצפיות בפוסטים של כל משתתף ולהגדיל תמונה כדי לראות את הפריטים הפופולריים ביותר של כל מחבר.</string>
 	<string name="stats_empty_comments_desc">אם אפשרת תגובות באתר, אפשר לעקוב אחר המגיבים המובילים ולגלות את פריטי התוכן שהציתו את השיחות התוססות ביותר, על פי 1,000 התגובות האחרונות.</string>
 	<string name="stats_empty_video_desc">לאחר העלאת סרטוני וידאו בעזרת VideoPress אפשר לקבל פרטים על מספר הצפיות.</string>
-	<string name="stats_empty_video">לא הופעלו סרטונים</string>
 	<string name="stats_empty_publicize">לא נרשמו עוקבים בשיתוף האוטומטי</string>
 	<string name="stats_empty_followers">אין עוקבים</string>
 	<string name="stats_empty_publicize_desc">בעזרת שיתוף אוטומטי אפשר לנהל מעקב אחר העוקבים שלך מרשתות חברתיות שונות.</string>
