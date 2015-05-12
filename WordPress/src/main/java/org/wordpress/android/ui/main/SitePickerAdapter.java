@@ -117,7 +117,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     @Override
     public SiteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.site_picker_card, parent, false);
+        View itemView = mInflater.inflate(R.layout.site_picker_listitem, parent, false);
         return new SiteViewHolder(itemView);
     }
 
