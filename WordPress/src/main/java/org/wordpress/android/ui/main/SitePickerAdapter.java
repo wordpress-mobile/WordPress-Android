@@ -45,7 +45,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private SiteList mSites = new SiteList();
     private final int mCurrentLocalId;
 
-    private final Drawable mCurrentItemBackground;
+    private final Drawable mSelectedItemBackground;
 
     private final LayoutInflater mInflater;
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
@@ -86,7 +86,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         mTextColorNormal = context.getResources().getColor(R.color.grey_dark);
         mTextColorHidden = context.getResources().getColor(R.color.grey);
 
-        mCurrentItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_20));
+        mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_20));
 
         loadSites();
     }
@@ -139,7 +139,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         });
 
         if (site.localId == mCurrentLocalId || (mIsMultiSelectEnabled && isItemSelected(position))) {
-            holder.layoutContainer.setBackgroundDrawable(mCurrentItemBackground);
+            holder.layoutContainer.setBackgroundDrawable(mSelectedItemBackground);
         } else {
             holder.layoutContainer.setBackgroundDrawable(null);
         }
