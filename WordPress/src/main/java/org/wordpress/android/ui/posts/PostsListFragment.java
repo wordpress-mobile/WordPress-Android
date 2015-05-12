@@ -253,6 +253,7 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
         mEmptyViewAnimationHandler = new EmptyViewAnimationHandler(mEmptyViewTitle, mEmptyViewImage, this);
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            // If we remove or throttle the following call, we should make PostUpload events sticky
             ((PostsActivity) getActivity()).requestPosts();
         } else {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
@@ -276,11 +277,6 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
             throw new ClassCastException(activity.toString()
                     + " must implement Callback");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     public void onResume() {
@@ -455,7 +451,6 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
             return;
         }
 
-        EventBus.getDefault().removeStickyEvent(event.getClass());
         // Fetch the newly uploaded post
         if (!TextUtils.isEmpty(event.mRemotePostId)) {
             final boolean reloadPosts = sameBlogId;
@@ -500,7 +495,6 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
     }
 
     public void onEventMainThread(PostUploadFailed event) {
-        EventBus.getDefault().removeStickyEvent(event.getClass());
         mSwipeToRefreshHelper.setRefreshing(true);
 
         if (!isAdded()) {
@@ -634,7 +628,7 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override

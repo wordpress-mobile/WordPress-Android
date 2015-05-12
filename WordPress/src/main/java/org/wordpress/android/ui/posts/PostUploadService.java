@@ -172,13 +172,12 @@ public class PostUploadService extends Service {
             WordPress.wpDB.updatePost(mPost);
 
             if (postUploadedSuccessfully) {
-                EventBus.getDefault().postSticky(
-                        new PostUploadSucceed(mPost.getLocalTableBlogId(), mPost.getRemotePostId(),
+                EventBus.getDefault().post(new PostUploadSucceed(mPost.getLocalTableBlogId(), mPost.getRemotePostId(),
                                 mPost.isPage()));
                 mPostUploadNotifier.cancelNotification();
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
             } else {
-                EventBus.getDefault().postSticky(new PostUploadFailed(mPost.getLocalTableBlogId()));
+                EventBus.getDefault().post(new PostUploadFailed(mPost.getLocalTableBlogId()));
                 mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
                         mErrorUnavailableVideoPress);
             }
@@ -193,7 +192,7 @@ public class PostUploadService extends Service {
             if (mPostUploadNotifier != null && mPost != null) {
                 mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
                         mErrorUnavailableVideoPress);
-                EventBus.getDefault().postSticky(new PostUploadFailed(mPost.getLocalTableBlogId()));
+                EventBus.getDefault().post(new PostUploadFailed(mPost.getLocalTableBlogId()));
             }
         }
 
