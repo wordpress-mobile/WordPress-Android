@@ -95,6 +95,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
     private LinearLayout mFormatBar, mPostContentLinearLayout, mPostSettingsLinearLayout;
+    private Button mAddPictureButton;
     private boolean mIsBackspace;
     private boolean mScrollDetected;
     private boolean mIsLocalDraft;
@@ -200,11 +201,11 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         mBquoteToggleButton = (ToggleButton) rootView.findViewById(R.id.bquote);
         mUnderlineToggleButton = (ToggleButton) rootView.findViewById(R.id.underline);
         mStrikeToggleButton = (ToggleButton) rootView.findViewById(R.id.strike);
-        Button addPictureButton = (Button) rootView.findViewById(R.id.addPictureButton);
+        mAddPictureButton = (Button) rootView.findViewById(R.id.addPictureButton);
         Button linkButton = (Button) rootView.findViewById(R.id.link);
         Button moreButton = (Button) rootView.findViewById(R.id.more);
 
-        registerForContextMenu(addPictureButton);
+        registerForContextMenu(mAddPictureButton);
         mContentEditText = (WPEditText) rootView.findViewById(R.id.post_content);
         mContentEditText.setOnSelectionChangedListener(this);
         mContentEditText.setOnTouchListener(this);
@@ -220,7 +221,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 }
             }
         });
-        addPictureButton.setOnClickListener(mFormatBarButtonClickListener);
+        mAddPictureButton.setOnClickListener(mFormatBarButtonClickListener);
         mBoldToggleButton.setOnClickListener(mFormatBarButtonClickListener);
         linkButton.setOnClickListener(mFormatBarButtonClickListener);
         mEmToggleButton.setOnClickListener(mFormatBarButtonClickListener);
@@ -450,6 +451,9 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             } else if (id == R.id.addPictureButton) {
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
                 mEditorFragmentListener.onAddMediaClicked();
+                if (isAdded()) {
+                    getActivity().openContextMenu(mAddPictureButton);
+                }
             }
         }
     };
