@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.ReaderBlog;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -83,17 +83,10 @@ public class ReaderUtils {
     }
 
     /*
-     * returns the drawable resource id to use as the default blavatar for the passed blog
+     * returns true if the reader should provide a "logged out" experience - no likes, comments,
+     * reblogs, or anything else that requires an account
      */
-    public static int getDefaultBlavatarResId(ReaderBlog blogInfo) {
-        if (blogInfo == null) {
-            return R.drawable.gravatar_placeholder;
-        } else if (blogInfo.isJetpack) {
-            return R.drawable.blavatar_placeholder_org;
-        } else if (blogInfo.isExternal()) {
-            return R.drawable.gravatar_placeholder;
-        } else {
-            return R.drawable.blavatar_placeholder_com;
-        }
+    public static boolean isLoggedOutReader() {
+        return !AccountHelper.isSignedInWordPressDotCom();
     }
 }

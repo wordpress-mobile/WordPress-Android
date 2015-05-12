@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,10 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaAddFragment;
+import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
@@ -51,6 +54,15 @@ public class MySiteFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         mBlog = WordPress.getCurrentBlog();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
+            getActivity().stopService(new Intent(getActivity(), StatsService.class));
+        }
     }
 
     @Override
@@ -204,11 +216,14 @@ public class MySiteFragment extends Fragment
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 
-        mBlavatarImageView.setErrorImageResId(mBlog.isDotcomFlag() ? R.drawable.blavatar_placeholder_com : R.drawable.blavatar_placeholder_org);
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
-        mBlogTitleTextView.setText(mBlog.getBlogName());
-        mBlogSubtitleTextView.setText(StringUtils.getHost(mBlog.getUrl()));
+        String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
+        String hostName = StringUtils.getHost(mBlog.getUrl());
+        String blogTitle = TextUtils.isEmpty(blogName) ? hostName : blogName;
+
+        mBlogTitleTextView.setText(blogTitle);
+        mBlogSubtitleTextView.setText(hostName);
     }
 
     @Override

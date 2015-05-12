@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -15,18 +18,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.FloatingActionButton;
 
 import de.greenrobot.event.EventBus;
 
@@ -58,7 +62,8 @@ public class SitePickerActivity extends ActionBarActivity
             mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
         }
 
-        Button btnAddSite = (Button) findViewById(R.id.btn_add);
+        FloatingActionButton btnAddSite = (FloatingActionButton) findViewById(R.id.btn_add);
+        btnAddSite.setFabColor(getResources().getColor(R.color.white));
         btnAddSite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +74,9 @@ public class SitePickerActivity extends ActionBarActivity
         RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler_view);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(getAdapter());
+        recycler.setClipToPadding(false);
+        recycler.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        recycler.addItemDecoration(new SitePickerItemDecoration(this.getResources()));
     }
 
     @Override
@@ -182,6 +190,7 @@ public class SitePickerActivity extends ActionBarActivity
                     currentSiteName = site.getBlogNameOrHostName();
                 } else {
                     WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
+                    StatsTable.deleteStatsForBlog(this, site.localId); // Remove stats data for hidden sites
                 }
             }
 
@@ -201,7 +210,7 @@ public class SitePickerActivity extends ActionBarActivity
     private void addSite() {
         // if user is signed into wp.com use the dialog to enable choosing whether to
         // create a new wp.com blog or add a self-hosted one
-        if (AccountHelper.getDefaultAccount().isWordPressComUser()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
             DialogFragment dialog = new AddSiteDialog();
             dialog.show(getSupportFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
         } else {
@@ -213,9 +222,9 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
-            Intent data = new Intent();
-            data.putExtra(KEY_LOCAL_ID, site.localId);
-            setResult(RESULT_OK, data);
+            WordPress.setCurrentBlog(site.localId);
+            WordPress.wpDB.updateLastBlogId(site.localId);
+            setResult(RESULT_OK);
             finish();
         }
     }
@@ -311,6 +320,35 @@ public class SitePickerActivity extends ActionBarActivity
                 }
             });
             return builder.create();
+        }
+    }
+
+    /**
+     * dividers for sites
+     */
+    public static class SitePickerItemDecoration extends RecyclerView.ItemDecoration {
+        private final Drawable mDivider;
+
+        public SitePickerItemDecoration(Resources resources) {
+            mDivider = resources.getDrawable(R.drawable.site_picker_divider);
+        }
+
+        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            int left = parent.getPaddingLeft();
+            int right = parent.getWidth() - parent.getPaddingRight();
+
+            int childCount = parent.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = parent.getChildAt(i);
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                int top = child.getBottom() + params.bottomMargin;
+                int bottom = top + mDivider.getIntrinsicHeight();
+
+                mDivider.setBounds(left, top, right, bottom);
+                mDivider.draw(c);
+            }
         }
     }
 }

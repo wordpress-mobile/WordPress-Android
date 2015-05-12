@@ -71,6 +71,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsBlockBlogDisabled;
+    private boolean mIsLoggedOutReader;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
     private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
@@ -99,6 +100,12 @@ public class ReaderPostDetailFragment extends Fragment
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
     }
 
     @Override
@@ -200,6 +207,7 @@ public class ReaderPostDetailFragment extends Fragment
                 && !mIsBlockBlogDisabled
                 && !mPost.isPrivate
                 && !mPost.isExternal
+                && !mIsLoggedOutReader
                 && (mOnPopupListener != null)
                 && (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
     }
@@ -256,9 +264,22 @@ public class ReaderPostDetailFragment extends Fragment
      * animate in/out the layout containing the reblog/comment/like icons
      */
     private void showIconBar(boolean show) {
-        if (isAdded()) {
+        if (isAdded() && canShowIconBar()) {
             ReaderAnim.animateBottomBar(mLayoutIcons, show);
         }
+    }
+
+    /*
+     * action icons don't appear for feeds or when logged out, otherwise they appear
+     * only if the user can act upon them
+     */
+    private boolean canShowIconBar() {
+        if (mPost == null || mPost.isExternal || mIsLoggedOutReader) {
+            return false;
+        }
+        return (mPost.isLikesEnabled
+                || mPost.canReblog()
+                || mPost.isCommentsOpen);
     }
 
     @Override
@@ -406,6 +427,7 @@ public class ReaderPostDetailFragment extends Fragment
      * display the standard Android share chooser to share this post
      */
     private static final int MAX_SHARE_TITLE_LEN = 100;
+
     private void sharePage() {
         if (!isAdded() || !hasPost()) {
             return;
@@ -498,12 +520,16 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setCount(mPost.numLikes, animateChanges);
             countLikes.setVisibility(View.VISIBLE);
             countLikes.setSelected(mPost.isLikedByCurrentUser);
-            countLikes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    togglePostLike();
-                }
-            });
+            if (mIsLoggedOutReader) {
+                countLikes.setEnabled(false);
+            } else {
+                countLikes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        togglePostLike();
+                    }
+                });
+            }
             // if we know refreshLikes() is going to show the liking layout, force it to take up
             // space right now
             if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
@@ -538,7 +564,7 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutLikes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReaderActivityLauncher.showReaderLikingUsers(getActivity(), mPost);
+                ReaderActivityLauncher.showReaderLikingUsers(getActivity(), mPost.blogId, mPost.postId);
             }
         });
 
@@ -726,13 +752,17 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
-            followButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    togglePostFollowed();
-                }
-            });
+            if (mIsLoggedOutReader) {
+                followButton.setVisibility(View.GONE);
+            } else {
+                followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
+                followButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        togglePostFollowed();
+                    }
+                });
+            }
 
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
@@ -775,7 +805,7 @@ public class ReaderPostDetailFragment extends Fragment
             }
 
             // enable reblogging wp posts
-            if (mPost.canReblog()) {
+            if (mPost.canReblog() && !mIsLoggedOutReader) {
                 imgBtnReblog.setVisibility(View.VISIBLE);
                 imgBtnReblog.setSelected(mPost.isRebloggedByCurrentUser);
                 imgBtnReblog.setOnClickListener(new View.OnClickListener() {
@@ -789,15 +819,6 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             } else {
                 imgBtnReblog.setVisibility(View.INVISIBLE);
-            }
-
-            // external blogs (feeds) don't support action icons
-            if (!mPost.isExternal && (mPost.isLikesEnabled
-                    || mPost.canReblog()
-                    || mPost.isCommentsOpen)) {
-                mLayoutIcons.setVisibility(View.VISIBLE);
-            } else {
-                mLayoutIcons.setVisibility(View.GONE);
             }
 
             // enable blocking the associated blog
@@ -815,8 +836,7 @@ public class ReaderPostDetailFragment extends Fragment
                 imgMore.setVisibility(View.GONE);
             }
 
-            // only show action buttons for WP posts
-            mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
+            mLayoutIcons.setVisibility(canShowIconBar() ? View.VISIBLE : View.GONE);
             refreshIconBarCounts(false);
         }
     }

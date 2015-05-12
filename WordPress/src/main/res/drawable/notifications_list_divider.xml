@@ -4,7 +4,7 @@
     android:insetRight="@dimen/margin_extra_large">
     <shape android:shape="rectangle">
 
-        <solid android:color="@color/grey_lighten_20" />
+        <solid android:color="@color/grey_lighten_30" />
 
     </shape>
 </inset>

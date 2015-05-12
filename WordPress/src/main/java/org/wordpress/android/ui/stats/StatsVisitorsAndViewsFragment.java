@@ -26,7 +26,6 @@ import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -64,7 +63,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     private OnDateChangeListener mListener;
 
-    final OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
+    private final OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
             OverviewLabel.COMMENTS};
 
     // Restore the following variables on restart
@@ -74,7 +73,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     // Container Activity must implement this interface
     public interface OnDateChangeListener {
-        public void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate);
+        void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate);
     }
 
     @Override
@@ -124,12 +123,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     private class TabViewHolder {
-        LinearLayout tab;
-        LinearLayout innerContainer;
-        TextView label;
-        TextView value;
-        ImageView icon;
-        OverviewLabel labelItem;
+        final LinearLayout tab;
+        final LinearLayout innerContainer;
+        final TextView label;
+        final TextView value;
+        final ImageView icon;
+        final OverviewLabel labelItem;
         boolean isChecked = false;
         boolean isLastItem = false;
 
@@ -195,7 +194,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
     }
 
-    private View.OnClickListener TopButtonsOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener TopButtonsOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {
@@ -232,7 +231,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     };
 
 
-    View.OnClickListener onCheckboxClicked = new View.OnClickListener() {
+    private final View.OnClickListener onCheckboxClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             // Is the view now checked?
@@ -245,7 +244,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > restoring instance state");
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
                 mVisitsData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             }
@@ -299,7 +297,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             updateUI();
         } else {
             setupNoResultsUI(true);
-            mMoreDataListener.onRefreshRequested(new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.VISITS});
+            refreshStats();
         }
     }
 
@@ -469,8 +467,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
         double largest = Integer.MIN_VALUE;
 
-        for (int i = 0; i < dataToShowOnGraph.length; i++) {
-            int currentItemValue = dataToShowOnGraph[i].getViews();
+        for (VisitModel aDataToShowOnGraph : dataToShowOnGraph) {
+            int currentItemValue = aDataToShowOnGraph.getViews();
             if (currentItemValue > largest) {
                 largest = currentItemValue;
             }
@@ -579,7 +577,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         return "";
     }
 
-
     /**
      * Return the date string that is displayed under each bar in the graph
      */
@@ -653,6 +650,18 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.SectionUpdated event) {
         if (!isAdded()) {
+            return;
+        }
+
+        if (!getDate().equals(event.mDate)) {
+            return;
+        }
+
+        if (!event.mRequestBlogId.equals(StatsUtils.getBlogId(getLocalTableBlogID()))) {
+            return;
+        }
+
+        if (event.mTimeframe != getTimeframe()) {
             return;
         }
 
@@ -766,7 +775,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         private final int mLabelResId;
 
-        private OverviewLabel(int labelResId) {
+        OverviewLabel(int labelResId) {
             mLabelResId = labelResId;
         }
 
@@ -786,7 +795,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     @Override
-    protected void resetDataModel() {
-        mVisitsData = null;
+    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.VISITS
+        };
     }
 }

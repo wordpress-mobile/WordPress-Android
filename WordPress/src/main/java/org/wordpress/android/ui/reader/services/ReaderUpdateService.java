@@ -22,6 +22,7 @@ import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
@@ -137,10 +138,15 @@ public class ReaderUpdateService extends Service {
         new Thread() {
             @Override
             public void run() {
-                // get server topics, both default & followed
+                // get server topics, both default & followed - but use "recommended" for logged-out
+                // reader since user won't have any followed tags
                 ReaderTagList serverTopics = new ReaderTagList();
                 serverTopics.addAll(parseTags(jsonObject, "default", ReaderTagType.DEFAULT));
-                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
+                if (ReaderUtils.isLoggedOutReader()) {
+                    serverTopics.addAll(parseTags(jsonObject, "recommended", ReaderTagType.FOLLOWED));
+                } else {
+                    serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
+                }
 
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
@@ -159,12 +165,14 @@ public class ReaderUpdateService extends Service {
                 }
 
                 // save changes to recommended topics
-                ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTagType.RECOMMENDED);
-                ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
-                if (!serverRecommended.isSameList(localRecommended)) {
-                    AppLog.d(AppLog.T.READER, "reader service > recommended topics changed");
-                    ReaderTagTable.setRecommendedTags(serverRecommended);
-                    EventBus.getDefault().post(new ReaderEvents.RecommendedTagsChanged());
+                if (!ReaderUtils.isLoggedOutReader()) {
+                    ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTagType.RECOMMENDED);
+                    ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
+                    if (!serverRecommended.isSameList(localRecommended)) {
+                        AppLog.d(AppLog.T.READER, "reader service > recommended topics changed");
+                        ReaderTagTable.setRecommendedTags(serverRecommended);
+                        EventBus.getDefault().post(new ReaderEvents.RecommendedTagsChanged());
+                    }
                 }
 
                 taskCompleted(UpdateTask.TAGS);

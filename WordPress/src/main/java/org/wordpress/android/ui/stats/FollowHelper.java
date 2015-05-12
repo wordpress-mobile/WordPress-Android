@@ -19,7 +19,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import java.lang.ref.WeakReference;
 
-public class FollowHelper {
+class FollowHelper {
 
     private final WeakReference<Activity> mActivityRef;
 

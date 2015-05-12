@@ -29,7 +29,7 @@ import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsUtils {
     @SuppressLint("SimpleDateFormat")
-    public static long toMs(String date, String pattern) {
+    private static long toMs(String date, String pattern) {
         if (date == null) {
             return -1;
         }

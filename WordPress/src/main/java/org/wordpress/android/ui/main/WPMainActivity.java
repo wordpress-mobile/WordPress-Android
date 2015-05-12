@@ -16,7 +16,7 @@ import com.simperium.client.Bucket;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -27,11 +27,13 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
-import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
+import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
@@ -227,11 +229,19 @@ public class WPMainActivity extends Activity
      * re-create the fragment adapter so all its fragments are also re-created - used when
      * user signs in/out so the fragments reflect the active account
      */
-    void resetFragments() {
+    private void resetFragments() {
         AppLog.i(AppLog.T.MAIN, "main activity > reset fragments");
+
+        // remove the event that determines when followed tags/blogs are updated so they're
+        // updated when the fragment is recreated (necessary after signin/disconnect)
+        EventBus.getDefault().removeStickyEvent(ReaderEvents.UpdatedFollowedTagsAndBlogs.class);
+
+        // remember the current tab position, then recreate the adapter so new fragments are created
         int position = mViewPager.getCurrentItem();
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
+
+        // restore previous position
         if (mTabAdapter.isValidPosition(position)) {
             mViewPager.setCurrentItem(position);
         }
@@ -278,16 +288,11 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.SITE_PICKER:
-                if (resultCode == RESULT_OK && data != null) {
-                    int localId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, 0);
-
-                    // when a new blog is picked, set it to the current blog
-                    Blog blog = WordPress.setCurrentBlog(localId);
-                    WordPress.wpDB.updateLastBlogId(localId);
-
+                if (resultCode == RESULT_OK) {
+                    // site picker will have set the current blog, so make sure My Site reflects it
                     MySiteFragment mySiteFragment = getMySiteFragment();
                     if (mySiteFragment != null) {
-                        mySiteFragment.setBlog(blog);
+                        mySiteFragment.setBlog(WordPress.getCurrentBlog());
                     }
                 }
                 break;
@@ -383,11 +388,13 @@ public class WPMainActivity extends Activity
     // Events
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.UserSignedOut event) {
+    public void onEventMainThread(UserSignedOutWordPressCom event) {
         resetFragments();
-        if (!AccountHelper.isSignedIn()) {
-            ActivityLauncher.showSignInForResult(this);
-        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UserSignedOutCompletely event) {
+        ActivityLauncher.showSignInForResult(this);
     }
 
     @SuppressWarnings("unused")
@@ -413,11 +420,6 @@ public class WPMainActivity extends Activity
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.LoginLimitDetected event) {
         ToastUtils.showToast(this, R.string.limit_reached, ToastUtils.Duration.LONG);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.BlogListChanged event) {
-        // TODO: reload blog list if showing
     }
 
     @SuppressWarnings("unused")

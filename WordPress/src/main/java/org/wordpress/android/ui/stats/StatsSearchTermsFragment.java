@@ -85,11 +85,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
         }
 
         // No clear-text search terms. Check if we have the encrypted search terms item available.
-        if (searchTerms.getEncryptedSearchTerms() > 0) {
-            return true;
-        }
-
-        return false;
+        return searchTerms.getEncryptedSearchTerms() > 0;
     }
 
     @Override

@@ -77,8 +77,8 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
     }
 
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
-        public LayoutInflater inflater;
-        private List<ClickGroupModel> clickGroups;
+        public final LayoutInflater inflater;
+        private final List<ClickGroupModel> clickGroups;
 
         public MyExpandableListAdapter(Context context, List<ClickGroupModel> clickGroups) {
             this.clickGroups = clickGroups;

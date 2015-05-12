@@ -26,7 +26,7 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -134,6 +134,19 @@ public class GCMIntentService extends GCMBaseIntentService {
                 AppLog.e(T.NOTIFS, e);
             }
         }
+
+        // Bump Analytics
+        Map<String, String> properties = new HashMap<>();
+        if (!TextUtils.isEmpty(noteType)) {
+            // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
+            if (noteType.equals(NOTE_TYPE_COMMENT)) {
+                properties.put("notification_type", "comment");
+            } else {
+                properties.put("notification_type", noteType);
+            }
+        }
+        AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED, properties);
+
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean sound, vibrate, light;
@@ -255,7 +268,6 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onMessage(Context context, Intent intent) {
         AppLog.v(T.NOTIFS, "Received Message");
-        AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED);
         Bundle extras = intent.getExtras();
 
         if (extras == null) {
@@ -283,7 +295,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        if (!AccountHelper.getDefaultAccount().hasAccessToken()) {
+        if (!AccountHelper.isSignedInWordPressDotCom()) {
             return;
         }
 

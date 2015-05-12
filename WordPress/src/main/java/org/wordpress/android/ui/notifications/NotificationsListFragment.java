@@ -35,7 +35,7 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -105,7 +105,7 @@ public class NotificationsListFragment extends Fragment
 
             mRecyclerView.setAdapter(mNotesAdapter);
         } else {
-            if (!AccountHelper.getDefaultAccount().isWordPressComUser()) {
+            if (!AccountHelper.isSignedInWordPressDotCom()) {
                 // let user know that notifications require a wp.com account and enable sign-in
                 showEmptyView(R.string.notifications_account_required, true);
             } else {
@@ -182,8 +182,6 @@ public class NotificationsListFragment extends Fragment
                 R.anim.reader_activity_slide_in,
                 R.anim.do_nothing);
         ActivityCompat.startActivityForResult(activity, detailIntent, RequestCodes.NOTE_DETAIL, options.toBundle());
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
 
     private void setNoteIsHidden(String noteId, boolean isHidden) {

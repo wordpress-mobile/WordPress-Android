@@ -14,7 +14,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -27,7 +27,7 @@ public class StatsViewHolder {
     public final TextView totalsTextView;
     public final WPNetworkImageView networkImageView;
     public final ImageView chevronImageView;
-    public final ImageView linkImageView;
+    private final ImageView linkImageView;
     public final ImageView imgMore;
     public final LinearLayout rowContent;
 

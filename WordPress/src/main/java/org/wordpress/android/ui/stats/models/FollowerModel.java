@@ -48,7 +48,7 @@ public class FollowerModel implements Serializable {
         return mUrl;
     }
 
-    public boolean setURL(String URL) {
+    private boolean setURL(String URL) {
         if (!TextUtils.isEmpty(URL) && UrlUtils.isValidUrlAndHostNotNull(URL)) {
             this.mUrl = URL;
             return true;
@@ -67,7 +67,7 @@ public class FollowerModel implements Serializable {
 
 
 
-    public void setAvatar(String icon) {
+    private void setAvatar(String icon) {
         this.mAvatar = icon;
     }
 

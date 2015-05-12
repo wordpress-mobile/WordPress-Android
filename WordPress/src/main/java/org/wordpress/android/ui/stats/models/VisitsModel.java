@@ -90,7 +90,7 @@ public class VisitsModel implements Serializable {
         return mBlogID;
     }
 
-    public void setBlogID(String blogID) {
+    private void setBlogID(String blogID) {
         this.mBlogID = blogID;
     }
 
@@ -98,7 +98,7 @@ public class VisitsModel implements Serializable {
         return mDate;
     }
 
-    public void setDate(String date) {
+    private void setDate(String date) {
         this.mDate = date;
     }
 
@@ -106,7 +106,7 @@ public class VisitsModel implements Serializable {
         return mUnit;
     }
 
-    public void setUnit(String unit) {
+    private void setUnit(String unit) {
         this.mUnit = unit;
     }
 

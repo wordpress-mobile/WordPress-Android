@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AppLog;
@@ -45,6 +46,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
 
     private boolean mCanRequestMorePosts;
     private boolean mHasSpacer;
+    private final boolean mIsLoggedOutReader;
 
     private final ReaderTypes.ReaderPostListType mPostListType;
     private final ReaderPostList mPosts = new ReaderPostList();
@@ -142,13 +144,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             }
 
             // follow/following
-            holder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
-            holder.followButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleFollow((ReaderFollowButton) v, position);
-                }
-            });
+            if (mIsLoggedOutReader) {
+                holder.followButton.setVisibility(View.GONE);
+            } else {
+                holder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
+                holder.followButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleFollow((ReaderFollowButton) v, position);
+                    }
+                });
+            }
 
             // show blog/feed preview when avatar is tapped
             holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
@@ -203,9 +209,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             holder.txtTag.setOnClickListener(null);
         }
 
-        // likes, comments & reblogging - supported by wp posts only
-        boolean showLikes = post.isWP() && post.isLikesEnabled;
-        boolean showComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
+        boolean showComments;
+        boolean showLikes;
+        if (mIsLoggedOutReader) {
+            showLikes = post.numLikes > 0;
+            showComments = post.numReplies > 0;
+        } else {
+            showLikes = post.isWP() && post.isLikesEnabled;
+            showComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
+        }
 
         if (showLikes || showComments) {
             showCounts(holder, post, false);
@@ -214,12 +226,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         if (showLikes) {
             holder.likeCount.setSelected(post.isLikedByCurrentUser);
             holder.likeCount.setVisibility(View.VISIBLE);
-            holder.likeCount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleLike(v.getContext(), holder, position);
-                }
-            });
+            if (mIsLoggedOutReader) {
+                holder.likeCount.setEnabled(false);
+            } else {
+                holder.likeCount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleLike(v.getContext(), holder, position);
+                    }
+                });
+            }
         } else {
             holder.likeCount.setVisibility(View.GONE);
             holder.likeCount.setOnClickListener(null);
@@ -238,7 +254,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
             holder.commentCount.setOnClickListener(null);
         }
 
-        if (post.canReblog()) {
+        if (post.canReblog() && !mIsLoggedOutReader) {
             showReblogStatus(holder.imgBtnReblog, post.isRebloggedByCurrentUser);
             holder.imgBtnReblog.setVisibility(View.VISIBLE);
             if (!post.isRebloggedByCurrentUser) {
@@ -261,7 +277,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         }
 
         // more menu with "block this blog" only shows for public wp posts in followed tags
-        if (post.isWP() && !post.isPrivate && postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
+        if (!mIsLoggedOutReader && post.isWP() && !post.isPrivate && postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
             holder.imgMore.setVisibility(View.VISIBLE);
             holder.imgMore.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -299,6 +315,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         mPostListType = postListType;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
+        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);

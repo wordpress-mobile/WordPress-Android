@@ -16,14 +16,12 @@ import java.util.List;
 
 public class PostsAndPagesAdapter extends ArrayAdapter<PostModel> {
 
-    private List<PostModel> list;
+    private final List<PostModel> list;
     private final LayoutInflater inflater;
-    private final int localTableBlogID;
 
-    public PostsAndPagesAdapter(Context context, int localTableBlogID, List<PostModel> list) {
+    public PostsAndPagesAdapter(Context context, List<PostModel> list) {
         super(context, R.layout.stats_list_cell, list);
         this.list = list;
-        this.localTableBlogID = localTableBlogID;
         inflater = LayoutInflater.from(context);
     }
 

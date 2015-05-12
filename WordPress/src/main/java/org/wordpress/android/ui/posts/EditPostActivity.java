@@ -1548,9 +1548,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     @Override
     public void onAddMediaClicked() {
-        if (mEditorFragment != null && mEditorFragment.isResumed()) {
-            openContextMenu(findViewById(R.id.addPictureButton));
-        }
+        // no op
     }
 
     @Override

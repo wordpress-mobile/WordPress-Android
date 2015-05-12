@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 
 import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CoreEvents;

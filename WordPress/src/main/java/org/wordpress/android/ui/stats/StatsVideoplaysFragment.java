@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,7 +47,7 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
 
     private List<SingleItemModel> getVideoplays() {
         if (!hasVideoplays()) {
-            return null;
+            return new ArrayList<SingleItemModel>(0);
         }
         return ((VideoPlaysModel) mDatamodels[0]).getPlays();
     }
