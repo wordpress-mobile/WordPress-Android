@@ -46,7 +46,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private final int mCurrentLocalId;
 
     private final Drawable mSelectedItemBackground;
-    private final Drawable mCurrentItemBackground;
 
     private final LayoutInflater mInflater;
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
@@ -88,7 +87,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         mTextColorHidden = context.getResources().getColor(R.color.grey);
 
         mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_20));
-        mCurrentItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_30));
 
         loadSites();
     }
@@ -117,7 +115,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     @Override
     public SiteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.site_picker_card, parent, false);
+        View itemView = mInflater.inflate(R.layout.site_picker_listitem, parent, false);
         return new SiteViewHolder(itemView);
     }
 
@@ -127,7 +125,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         holder.txtTitle.setText(site.getBlogNameOrHostName());
         holder.txtDomain.setText(site.hostName);
-        holder.imgBlavatar.setErrorImageResId(site.isDotCom ? R.drawable.blavatar_placeholder_com : R.drawable.blavatar_placeholder_org);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -141,9 +138,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             }
         });
 
-        if (site.localId == mCurrentLocalId) {
-            holder.layoutContainer.setBackgroundDrawable(mCurrentItemBackground);
-        } else if (mIsMultiSelectEnabled && isItemSelected(position)) {
+        if (site.localId == mCurrentLocalId || (mIsMultiSelectEnabled && isItemSelected(position))) {
             holder.layoutContainer.setBackgroundDrawable(mSelectedItemBackground);
         } else {
             holder.layoutContainer.setBackgroundDrawable(null);

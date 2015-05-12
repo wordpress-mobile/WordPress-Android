@@ -15,7 +15,6 @@ import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -119,7 +118,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     blogHolder.txtTitle.setText(blog.getTitle());
                     blogHolder.txtDescription.setText(blog.getReason());
                     blogHolder.txtUrl.setText(UrlUtils.getDomainFromUrl(blog.getBlogUrl()));
-                    blogHolder.imgBlog.setErrorImageResId(R.drawable.blavatar_placeholder_com);
                     blogHolder.imgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.BLAVATAR);
                     break;
 
@@ -132,7 +130,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         blogHolder.txtTitle.setText(domain);
                     }
                     blogHolder.txtUrl.setText(domain);
-                    blogHolder.imgBlog.setErrorImageResId(ReaderUtils.getDefaultBlavatarResId(blogInfo));
                     blogHolder.imgBlog.setImageUrl(blogInfo.getImageUrl(), WPNetworkImageView.ImageType.BLAVATAR);
                     break;
             }
