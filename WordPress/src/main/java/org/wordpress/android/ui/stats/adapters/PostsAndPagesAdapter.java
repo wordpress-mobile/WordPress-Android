@@ -16,7 +16,7 @@ import java.util.List;
 
 public class PostsAndPagesAdapter extends ArrayAdapter<PostModel> {
 
-    private List<PostModel> list;
+    private final List<PostModel> list;
     private final LayoutInflater inflater;
 
     public PostsAndPagesAdapter(Context context, List<PostModel> list) {

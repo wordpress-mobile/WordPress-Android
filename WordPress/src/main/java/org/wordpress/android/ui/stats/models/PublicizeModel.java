@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PublicizeModel implements Serializable {
-    private String mDate; // Not available in the response
+    private final String mDate; // Not available in the response
     private String mBlogID;
     private List<SingleItemModel> mServices;
 

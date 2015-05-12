@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsUtils {
     @SuppressLint("SimpleDateFormat")
-    public static long toMs(String date, String pattern) {
+    private static long toMs(String date, String pattern) {
         if (date == null) {
             return -1;
         }

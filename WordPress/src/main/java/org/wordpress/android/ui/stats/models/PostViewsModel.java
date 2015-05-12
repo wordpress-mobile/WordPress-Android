@@ -352,8 +352,8 @@ public class PostViewsModel implements Serializable {
     }
 
     public class Month implements Serializable {
-        private int mCount;
-        private String mMonth;
+        private final int mCount;
+        private final String mMonth;
 
         Month(String label, int count) {
             this.mMonth = label;

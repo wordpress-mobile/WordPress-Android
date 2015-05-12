@@ -41,7 +41,7 @@ public class StatsService extends Service {
     public static final String ARG_MAX_RESULTS = "stats_max_results";
     public static final String ARG_PAGE_REQUESTED = "stats_page_requested";
 
-    public static final int DEFAULT_NUMBER_OF_RESULTS = 12;
+    private static final int DEFAULT_NUMBER_OF_RESULTS = 12;
     // The number of results to return per page for Paged REST endpoints. Numbers larger than 20 will default to 20 on the server.
     public static final int MAX_RESULTS_REQUESTED_PER_PAGE = 20;
 
@@ -100,7 +100,7 @@ public class StatsService extends Service {
 
     private int mServiceStartId;
     private final LinkedList<Request<JSONObject>> mStatsNetworkRequests = new LinkedList<>();
-    protected ThreadPoolExecutor singleThreadNetworkHandler = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
+    private final ThreadPoolExecutor singleThreadNetworkHandler = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
 
     @Override
     public void onCreate() {
@@ -330,9 +330,9 @@ public class StatsService extends Service {
     }
 
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
-        protected String mRequestBlogId;
+        final String mRequestBlogId;
         private final StatsTimeframe mTimeframe;
-        protected Serializable mResponseObjectModel;
+        Serializable mResponseObjectModel;
         final StatsEndpointsEnum mEndpointName;
         private final String mDate;
         private Request<JSONObject> currentRequest;
@@ -403,7 +403,7 @@ public class StatsService extends Service {
     }
 
 
-    void checkAllRequestsFinished(Request<JSONObject> req) {
+    private void checkAllRequestsFinished(Request<JSONObject> req) {
         synchronized (mStatsNetworkRequests) {
             if (req != null) {
                 mStatsNetworkRequests.remove(req);

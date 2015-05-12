@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class PostModel extends SingleItemModel implements Serializable {
 
-    private String mPostType;
+    private final String mPostType;
 
     public PostModel(String blogId, String date, String itemID, String title, int totals, String url, String postType) {
         super(blogId, date, itemID, title, totals, url, null);

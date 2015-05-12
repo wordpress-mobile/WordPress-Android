@@ -15,7 +15,7 @@ public class StatsTable {
     private static final String TABLE_NAME = "tbl_stats";
     public static final int CACHE_TTL_MINUTES = 10;
 
-    protected static void createTables(SQLiteDatabase db) {
+    static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_NAME + " ("
                 + " id              INTEGER PRIMARY KEY ASC," // Also alias for the built-in rowid:  "rowid", "oid", or "_rowid_"
                 + " blogID          INTEGER NOT NULL,"        // The local blog_id as stored in the WPDB
@@ -30,7 +30,7 @@ public class StatsTable {
                 + ")");
     }
 
-    protected static void dropTables(SQLiteDatabase db) {
+    static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
     }
 

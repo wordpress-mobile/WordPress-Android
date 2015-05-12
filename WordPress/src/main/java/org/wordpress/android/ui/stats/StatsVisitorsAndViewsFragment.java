@@ -63,7 +63,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     private OnDateChangeListener mListener;
 
-    final OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
+    private final OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
             OverviewLabel.COMMENTS};
 
     // Restore the following variables on restart
@@ -123,12 +123,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     private class TabViewHolder {
-        LinearLayout tab;
-        LinearLayout innerContainer;
-        TextView label;
-        TextView value;
-        ImageView icon;
-        OverviewLabel labelItem;
+        final LinearLayout tab;
+        final LinearLayout innerContainer;
+        final TextView label;
+        final TextView value;
+        final ImageView icon;
+        final OverviewLabel labelItem;
         boolean isChecked = false;
         boolean isLastItem = false;
 
@@ -194,7 +194,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
     }
 
-    private View.OnClickListener TopButtonsOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener TopButtonsOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {
@@ -231,7 +231,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     };
 
 
-    View.OnClickListener onCheckboxClicked = new View.OnClickListener() {
+    private final View.OnClickListener onCheckboxClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             // Is the view now checked?
