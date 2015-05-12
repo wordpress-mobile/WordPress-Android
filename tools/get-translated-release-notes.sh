@@ -10,7 +10,7 @@ function fetch() {
 		local=$(echo $line|cut -d "," -f2|tr -d " ")
 		echo updating $local - $code
 		mkdir -p $TMPDIR
-		curl -sSfL --globoff -o $TMPDIR/strings-$code.xml "http://translate.wordpress.org/projects/apps/android/dev/release-notes/$code/default/export-translations?filters[status]=current&format=android" || (echo Error downloading $code)
+		curl -sSfL --globoff -o $TMPDIR/strings-$code.xml "http://translate.wordpress.org/projects/apps/android/release-notes/$code/default/export-translations?filters[status]=current&format=android" || (echo Error downloading $code)
 	done
 }
 
