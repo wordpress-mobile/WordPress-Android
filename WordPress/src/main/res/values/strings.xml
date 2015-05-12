@@ -397,6 +397,7 @@
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
     <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
+    <string name="stats_sign_in_jetpack_different_com_account">This Jetpack site is not connected with "@%1$s". Sign in to the WordPress.com account connected with this site.</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>

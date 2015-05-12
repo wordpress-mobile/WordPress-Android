@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Window;
 
 import org.wordpress.android.R;
@@ -20,6 +19,7 @@ public class SignInActivity extends Activity {
     public static final int SHOW_CERT_DETAILS = 4;
     public static String START_FRAGMENT_KEY = "start-fragment";
     public static final String ARG_JETPACK_SITE_AUTH = "ARG_JETPACK_SITE_AUTH";
+    public static final String ARG_JETPACK_MESSAGE_AUTH = "ARG_JETPACK_MESSAGE_AUTH";
     public static final String ARG_IS_AUTH_ERROR = "ARG_IS_AUTH_ERROR";
 
     private SignInFragment mSignInFragment;
@@ -44,7 +44,8 @@ public class SignInActivity extends Activity {
             if (extras.containsKey(ARG_JETPACK_SITE_AUTH)) {
                 Blog jetpackBlog = WordPress.getBlog(extras.getInt(ARG_JETPACK_SITE_AUTH));
                 if (jetpackBlog != null) {
-                    mSignInFragment.setBlog(jetpackBlog);
+                    String customMessage = extras.getString(ARG_JETPACK_MESSAGE_AUTH, null);
+                    mSignInFragment.setBlogAndCustomMessageForJetpackAuth(jetpackBlog, customMessage);
                 }
             } else if (extras.containsKey(ARG_IS_AUTH_ERROR)) {
                 mSignInFragment.showAuthErrorMessage();

@@ -28,6 +28,7 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -362,6 +363,14 @@ public class StatsActivity extends ActionBarActivity
         mResultCode = RESULT_CANCELED;
         Intent signInIntent = new Intent(this, SignInActivity.class);
         signInIntent.putExtra(SignInActivity.ARG_JETPACK_SITE_AUTH, mLocalBlogID);
+
+        // we only want to show default .com account name only if it's already logged
+        if (AccountHelper.isSignedInWordPressDotCom()) {
+            Account defaultAccount = AccountHelper.getDefaultAccount();
+            String authMessage = String.format(getString(R.string.stats_sign_in_jetpack_different_com_account),defaultAccount.getUserName());
+            signInIntent.putExtra(SignInActivity.ARG_JETPACK_MESSAGE_AUTH, authMessage);
+        }
+
         startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
     }
 
