@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -20,6 +21,9 @@ import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
+import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
+import org.wordpress.android.ui.stats.models.InsightsPopularModel;
+import org.wordpress.android.ui.stats.models.InsightsTodayModel;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
@@ -29,7 +33,6 @@ import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -394,6 +397,18 @@ public class StatsUtils {
                 break;
             case SEARCH_TERMS:
                 model = new SearchTermsModel(blogID, response);
+                break;
+            case INSIGHTS_ALL_TIME:
+                model = new InsightsAllTimeModel(blogID, response);
+                model = response.toString();
+                break;
+            case INSIGHTS_POPULAR:
+                model = new InsightsPopularModel(blogID, response);
+                model = response.toString();
+                break;
+            case INSIGHTS_TODAY:
+                model = new InsightsTodayModel(blogID, response);
+                model = response.toString();
                 break;
         }
         return model;

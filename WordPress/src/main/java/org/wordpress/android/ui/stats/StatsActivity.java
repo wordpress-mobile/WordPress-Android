@@ -28,10 +28,10 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -173,7 +173,7 @@ public class StatsActivity extends ActionBarActivity
             View view = View.inflate(this, R.layout.toolbar_spinner, toolbar);
             mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
 
-            StatsTimeframe[] timeframes = {StatsTimeframe.DAY, StatsTimeframe.WEEK,
+            StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
                     StatsTimeframe.MONTH, StatsTimeframe.YEAR};
             mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, timeframes);
 
@@ -261,64 +261,87 @@ public class StatsActivity extends ActionBarActivity
 
         StatsAbstractFragment fragment;
 
-        if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
-        }
+        if (mCurrentTimeframe != StatsTimeframe.INSIGHTS) {
+            findViewById(R.id.stats_timeline_fragments_container).setVisibility(View.VISIBLE);
+            findViewById(R.id.stats_insights_fragments_container).setVisibility(View.GONE);
 
-        if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsAuthorsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_top_authors_container, fragment, StatsAuthorsFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsVideoplaysFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsAuthorsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_top_authors_container, fragment, StatsAuthorsFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsSearchTermsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.SEARCH_TERMS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_search_terms_container, fragment, StatsSearchTermsFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsVideoplaysFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsSearchTermsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.SEARCH_TERMS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_search_terms_container, fragment, StatsSearchTermsFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsPublicizeFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
+            if (fm.findFragmentByTag(StatsPublicizeFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
+            }
+
+            if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
+            }
+        } else {
+            findViewById(R.id.stats_timeline_fragments_container).setVisibility(View.GONE);
+            findViewById(R.id.stats_insights_fragments_container).setVisibility(View.VISIBLE);
+
+            if (fm.findFragmentByTag(StatsInsightsMostPopularFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_MOST_POPULAR, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_insights_most_popular_container, fragment, StatsInsightsMostPopularFragment.TAG);
+            }
+
+            if (fm.findFragmentByTag(StatsInsightsAllTimeFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_ALL_TIME, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_insights_all_time_container, fragment, StatsInsightsAllTimeFragment.TAG);
+            }
+
+            if (fm.findFragmentByTag(StatsInsightsTodayFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_TODAY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_insights_today_container, fragment, StatsInsightsTodayFragment.TAG);
+            }
         }
 
         ft.commitAllowingStateLoss();
@@ -330,20 +353,27 @@ public class StatsActivity extends ActionBarActivity
         }
         FragmentManager fm = getFragmentManager();
 
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTopPostsAndPagesFragment.TAG);
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsReferrersFragment.TAG);
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsClicksFragment.TAG);
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsGeoviewsFragment.TAG);
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsAuthorsFragment.TAG);
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVideoplaysFragment.TAG);
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsSearchTermsFragment.TAG);
+        if (mCurrentTimeframe != StatsTimeframe.INSIGHTS) {
 
-        if (includeGraphAndTimelessFragments) {
-            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVisitorsAndViewsFragment.TAG);
-            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsCommentsFragment.TAG);
-            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTagsAndCategoriesFragment.TAG);
-            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsPublicizeFragment.TAG);
-            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsFollowersFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTopPostsAndPagesFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsReferrersFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsClicksFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsGeoviewsFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsAuthorsFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVideoplaysFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsSearchTermsFragment.TAG);
+
+            if (includeGraphAndTimelessFragments) {
+                updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVisitorsAndViewsFragment.TAG);
+                updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsCommentsFragment.TAG);
+                updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTagsAndCategoriesFragment.TAG);
+                updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsPublicizeFragment.TAG);
+                updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsFollowersFragment.TAG);
+            }
+        } else {
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsTodayFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsAllTimeFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsMostPopularFragment.TAG);
         }
     }
 

@@ -13,7 +13,6 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsEvents;
@@ -62,7 +61,10 @@ public class StatsService extends Service {
         COMMENT_FOLLOWERS,
         TAGS_AND_CATEGORIES,
         PUBLICIZE,
-        SEARCH_TERMS;
+        SEARCH_TERMS,
+        INSIGHTS_POPULAR,
+        INSIGHTS_ALL_TIME,
+        INSIGHTS_TODAY;
 
         public String getRestEndpointPath() {
             switch (this) {
@@ -94,6 +96,12 @@ public class StatsService extends Service {
                     return "publicize";
                 case SEARCH_TERMS:
                     return "search-terms";
+                case INSIGHTS_POPULAR:
+                    return "insights";
+                case INSIGHTS_ALL_TIME:
+                    return "";
+                case INSIGHTS_TODAY:
+                    return "summary";
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + this.name());
                     return "";
@@ -285,6 +293,12 @@ public class StatsService extends Service {
                         path = String.format(path + "?period=%s&date=%s&max=%s&page=%s", period,
                                 date, maxResultsRequested, pageRequested);
                     }
+                    break;
+                case INSIGHTS_ALL_TIME:
+                case INSIGHTS_POPULAR:
+                    break;
+                case INSIGHTS_TODAY:
+                    path = String.format(path + "?period=day&date=%s", date);
                     break;
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());

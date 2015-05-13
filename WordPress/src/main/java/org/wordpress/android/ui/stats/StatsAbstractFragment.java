@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 
@@ -174,6 +174,15 @@ public abstract class StatsAbstractFragment extends Fragment {
                 break;
             case SEARCH_TERMS:
                 fragment = new StatsSearchTermsFragment();
+                break;
+            case INSIGHTS_MOST_POPULAR:
+                fragment = new StatsInsightsMostPopularFragment();
+                break;
+            case INSIGHTS_ALL_TIME:
+                fragment = new StatsInsightsAllTimeFragment();
+                break;
+            case INSIGHTS_TODAY:
+                fragment = new StatsInsightsTodayFragment();
                 break;
         }
 

@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.R;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
