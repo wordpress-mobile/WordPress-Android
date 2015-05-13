@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="select_from_new_picker">Fă o selecție multiplă cu noul selector</string>
+	<string name="no_media_sources">Nu am putut extrage media</string>
+	<string name="error_loading_videos">Eroare încărcare video-uri</string>
+	<string name="loading_blog_images">Extragere imagini</string>
+	<string name="loading_blog_videos">Extragere video-uri</string>
+	<string name="error_loading_images">Eroare încărcare imagini</string>
+	<string name="no_device_images">Nicio imagine</string>
+	<string name="error_loading_blog_images">Nu pot extrage imaginile</string>
+	<string name="error_loading_blog_videos">Nu pot extrage video-urile</string>
+	<string name="no_blog_images">Nicio imagine</string>
+	<string name="no_blog_videos">Niciun video</string>
+	<string name="stats_generic_error">Statisticile cerute nu pot fi încărcate</string>
+	<string name="no_device_videos">Niciun video</string>
+	<string name="no_media">Nicio media</string>
+	<string name="loading_videos">Încarc video-uri</string>
+	<string name="loading_images">Încarc imagini</string>
 	<string name="auth_required">Autentifică-te din nou pentru a continua.</string>
 	<string name="sign_in_jetpack">Autentifică-te în contul tău de WordPress.com pentru conectare la Jetpack.</string>
 	<string name="two_step_sms_sent">Uită-te la mesajele text după codul de verificare.</string>
