@@ -206,13 +206,12 @@ public class EditPostSettingsFragment extends Fragment
     private void initSettingsFields() {
         mExcerptEditText.setText(mPost.getPostExcerpt());
 
-        String[] items =
-                new String[]{getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
-                        getResources().getString(R.string.pending_review),
-                        getResources().getString(R.string.post_private)};
+        String[] items = new String[]{ getResources().getString(R.string.publish_post),
+                                       getResources().getString(R.string.draft),
+                                       getResources().getString(R.string.pending_review),
+                                       getResources().getString(R.string.post_private) };
 
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mStatusSpinner.setAdapter(adapter);
         mStatusSpinner.setOnTouchListener(
@@ -223,17 +222,6 @@ public class EditPostSettingsFragment extends Fragment
                     }
                 }
         );
-
-        if (mPost.isUploaded()) {
-            items = new String[]{
-                    getResources().getString(R.string.publish_post),
-                    getResources().getString(R.string.draft),
-                    getResources().getString(R.string.pending_review),
-                    getResources().getString(R.string.post_private)
-            };
-            adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
-            mStatusSpinner.setAdapter(adapter);
-        }
 
         long pubDate = mPost.getDate_created_gmt();
         if (pubDate != 0) {
@@ -443,12 +431,7 @@ public class EditPostSettingsFragment extends Fragment
      * Updates post object with content of this fragment
      */
     public void updatePostSettings() {
-        if (!isAdded()) {
-            return;
-        }
-
-        Post post = mPost;
-        if (post == null) {
+        if (!isAdded() || mPost == null) {
             return;
         }
 
@@ -457,21 +440,21 @@ public class EditPostSettingsFragment extends Fragment
         String excerpt = (mExcerptEditText.getText() != null) ? mExcerptEditText.getText().toString() : "";
 
         long pubDateTimestamp = 0;
-        if (mIsCustomPubDate && pubDate.equals(getResources().getText(R.string.immediately)) && !post.isLocalDraft()) {
+        if (mIsCustomPubDate && pubDate.equals(getResources().getText(R.string.immediately)) && !mPost.isLocalDraft()) {
             Date d = new Date();
             pubDateTimestamp = d.getTime();
         } else if (!pubDate.equals(getResources().getText(R.string.immediately))) {
             if (mIsCustomPubDate)
                 pubDateTimestamp = mCustomPubDate;
-            else if (post.getDate_created_gmt() > 0)
-                pubDateTimestamp = post.getDate_created_gmt();
-        } else if (pubDate.equals(getResources().getText(R.string.immediately)) && post.isLocalDraft()) {
-            post.setDate_created_gmt(0);
-            post.setDateCreated(0);
+            else if (mPost.getDate_created_gmt() > 0)
+                pubDateTimestamp = mPost.getDate_created_gmt();
+        } else if (pubDate.equals(getResources().getText(R.string.immediately)) && mPost.isLocalDraft()) {
+            mPost.setDate_created_gmt(0);
+            mPost.setDateCreated(0);
         }
 
         String tags = "", postFormat = "";
-        if (!post.isPage()) {
+        if (!mPost.isPage()) {
             tags = (mTagsEditText.getText() != null) ? mTagsEditText.getText().toString() : "";
 
             // post format
@@ -484,22 +467,22 @@ public class EditPostSettingsFragment extends Fragment
 
         // We want to flag this post as having changed statuses from draft to published so that we
         // properly track stats we care about for when users first publish posts.
-        if (post.isUploaded() && post.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
+        if (mPost.isUploaded() && mPost.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
                 && status.equals(PostStatus.toString(PostStatus.PUBLISHED))) {
-            post.setChangedFromLocalDraftToPublished(true);
+            mPost.setChangedFromLocalDraftToPublished(true);
         }
 
-        if (post.supportsLocation()) {
-            post.setLocation(mPostLocation);
+        if (mPost.supportsLocation()) {
+            mPost.setLocation(mPostLocation);
         }
 
-        post.setPostExcerpt(excerpt);
-        post.setDate_created_gmt(pubDateTimestamp);
-        post.setJSONCategories(new JSONArray(mCategories));
-        post.setKeywords(tags);
-        post.setPostStatus(status);
-        post.setPassword(password);
-        post.setPostFormat(postFormat);
+        mPost.setPostExcerpt(excerpt);
+        mPost.setDate_created_gmt(pubDateTimestamp);
+        mPost.setJSONCategories(new JSONArray(mCategories));
+        mPost.setKeywords(tags);
+        mPost.setPostStatus(status);
+        mPost.setPassword(password);
+        mPost.setPostFormat(postFormat);
     }
 
     /*
@@ -628,10 +611,8 @@ public class EditPostSettingsFragment extends Fragment
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
     private void initLocation(ViewGroup rootView) {
-        Post post = mPost;
-
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (hasLocationProvider() && post.supportsLocation()) {
+        if (hasLocationProvider() && mPost.supportsLocation()) {
             View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
             TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
@@ -660,10 +641,10 @@ public class EditPostSettingsFragment extends Fragment
             removeLocation.setOnClickListener(this);
 
             // if this post has location attached to it, look up the location address
-            if (post.hasLocation()) {
+            if (mPost.hasLocation()) {
                 showLocationView();
 
-                PostLocation location = post.getLocation();
+                PostLocation location = mPost.getLocation();
                 setLocation(location.getLatitude(), location.getLongitude());
             } else {
                 showLocationAdd();
