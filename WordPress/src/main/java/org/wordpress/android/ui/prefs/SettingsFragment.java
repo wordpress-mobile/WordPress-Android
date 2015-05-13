@@ -110,7 +110,7 @@ public class SettingsFragment extends PreferenceFragment {
             PreferenceGroup passcodeGroup = (PreferenceGroup) findPreference(resources.getString(R.string.pref_key_passlock_section));
             rootScreen.removePreference(passcodeGroup);
         }
-        displayPreferences();
+        updatePostSignature();
     }
 
     @Override
@@ -170,8 +170,6 @@ public class SettingsFragment extends PreferenceFragment {
         super.onResume();
         getActivity().setTitle(R.string.settings);
 
-        refreshWPComAuthCategory();
-
         //update Passcode lock row if available
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
             CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(getResources().getString(R.string.pref_key_passlock));
@@ -195,59 +193,14 @@ public class SettingsFragment extends PreferenceFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void refreshWPComAuthCategory() {
-        PreferenceCategory wpComCategory = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_wpcom));
-        wpComCategory.removeAll();
-        addWpComSignIn(wpComCategory, 0);
-    }
-
-    private void displayPreferences() {
-        if (WordPress.wpDB.getNumVisibleBlogs() == 0) {
-            hidePostSignatureCategory();
-            hideNotificationBlogsCategory();
+    private void updatePostSignature() {
+        if (mTaglineTextPreference.getText() == null || mTaglineTextPreference.getText().equals("")) {
+            mTaglineTextPreference.setSummary(R.string.posted_from);
+            mTaglineTextPreference.setText(getString(R.string.posted_from));
         } else {
-            if (mTaglineTextPreference.getText() == null || mTaglineTextPreference.getText().equals("")) {
-                mTaglineTextPreference.setSummary(R.string.posted_from);
-                mTaglineTextPreference.setText(getString(R.string.posted_from));
-            } else {
-                mTaglineTextPreference.setSummary(mTaglineTextPreference.getText());
-            }
+            mTaglineTextPreference.setSummary(mTaglineTextPreference.getText());
         }
     }
-
-    private void addWpComSignIn(PreferenceCategory wpComCategory, int order) {
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            String username = AccountHelper.getDefaultAccount().getUserName();
-            Preference usernamePref = new Preference(getActivity());
-            usernamePref.setTitle(getString(R.string.username));
-            usernamePref.setSummary(username);
-            usernamePref.setSelectable(false);
-            usernamePref.setOrder(order);
-            wpComCategory.addPreference(usernamePref);
-        } else {
-            Preference signInPref = new Preference(getActivity());
-            signInPref.setTitle(getString(R.string.sign_in));
-            signInPref.setOnPreferenceClickListener(signInPreferenceClickListener);
-            wpComCategory.addPreference(signInPref);
-
-            PreferenceScreen rootScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
-            PreferenceGroup notificationsGroup = (PreferenceGroup) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
-            if (notificationsGroup != null) {
-                rootScreen.removePreference(notificationsGroup);
-            }
-        }
-    }
-
-    private final OnPreferenceClickListener signInPreferenceClickListener = new OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            Intent i = new Intent(getActivity(), SignInActivity.class);
-            i.putExtra("wpcom", true);
-            i.putExtra("auth-only", true);
-            startActivityForResult(i, 0);
-            return true;
-        }
-    };
 
     private final OnPreferenceClickListener resetAutoSharePreferenceClickListener = new OnPreferenceClickListener() {
         @Override

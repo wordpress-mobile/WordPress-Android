@@ -78,12 +78,6 @@ public class SettingsActivity extends ActionBarActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mSettingsFragment.refreshWPComAuthCategory();
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     public void onBackPressed() {
         FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 0) {
