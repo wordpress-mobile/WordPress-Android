@@ -30,7 +30,6 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
@@ -96,7 +95,7 @@ public class NotificationsUtils {
 
         Gson gson = new Gson();
         Map<String, StringMap<String>> notificationSettings = gson.fromJson(settingsJson, HashMap.class);
-        Map<String, Object> updatedSettings = new HashMap<String, Object>();
+        Map<String, Object> updatedSettings = new HashMap<>();
         if (notificationSettings == null)
             return;
 
@@ -118,7 +117,7 @@ public class NotificationsUtils {
             updatedSettings.put("mute_until", muteUntilMap.get("value"));
         }
 
-        ArrayList<StringMap<Double>> mutedBlogsList = new ArrayList<StringMap<Double>>();
+        ArrayList<StringMap<Double>> mutedBlogsList = new ArrayList<>();
         for (StringMap<Double> userBlog : blogsList) {
             if (MapUtils.getMapBool(userBlog, "value")) {
                 mutedBlogsList.add(userBlog);
@@ -130,7 +129,7 @@ public class NotificationsUtils {
 
         updatedSettings.put("muted_blogs", mutedBlogsList); //If muted blogs list is unchanged we can even skip this assignment.
 
-        Map<String, String> contentStruct = new HashMap<String, String>();
+        Map<String, String> contentStruct = new HashMap<>();
         contentStruct.put("device_token", gcmToken);
         contentStruct.put("device_family", "android");
         contentStruct.put("app_secret_key", NotificationsUtils.getAppPushNotificationsName());
@@ -145,7 +144,7 @@ public class NotificationsUtils {
             return;
 
         String deviceName = DeviceUtils.getInstance().getDeviceName(ctx);
-        Map<String, String> contentStruct = new HashMap<String, String>();
+        Map<String, String> contentStruct = new HashMap<>();
         contentStruct.put("device_token", token);
         contentStruct.put("device_family", "android");
         contentStruct.put("app_secret_key", NotificationsUtils.getAppPushNotificationsName());
@@ -229,8 +228,8 @@ public class NotificationsUtils {
 
     /**
      * Returns a spannable with formatted content based on WP.com note content 'range' data
-     * @param blockObject
-     * @param textView
+     * @param blockObject the JSON data
+     * @param textView the TextView that will display the spannnable
      * @param onNoteBlockTextClickListener - click listener for ClickableSpans in the spannable
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
