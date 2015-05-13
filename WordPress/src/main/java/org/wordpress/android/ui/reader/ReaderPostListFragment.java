@@ -842,6 +842,7 @@ public class ReaderPostListFragment extends Fragment
             AppLog.d(T.READER, "reader post list > creating post adapter");
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
+            mPostAdapter.setShowToolbar(getPostListType() == ReaderPostListType.TAG_FOLLOWED);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnTagSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);

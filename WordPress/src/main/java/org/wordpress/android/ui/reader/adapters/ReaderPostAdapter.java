@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.ReaderPostViewHolder> {
+public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
 
@@ -44,6 +45,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     private final int mMarginLarge;
 
     private boolean mCanRequestMorePosts;
+    private boolean mShowToolbar;
 
     private final ReaderTypes.ReaderPostListType mPostListType;
     private final ReaderPostList mPosts = new ReaderPostList();
@@ -58,6 +60,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
     private static final int MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
+
+    private static final int VIEW_TYPE_TOOLBAR = 1;
+    private static final int VIEW_TYPE_POST    = 2;
 
     class ReaderPostViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtTitle;
@@ -104,182 +109,217 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         }
     }
 
-    @Override
-    public ReaderPostViewHolder onCreateViewHolder(ViewGroup parent, int position) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_post, parent, false);
-        return new ReaderPostViewHolder(view);
+    class ReaderToolbarHolder extends RecyclerView.ViewHolder {
+        private final Toolbar toolbar;
+
+        public ReaderToolbarHolder(View itemView) {
+            super(itemView);
+            toolbar = (Toolbar) itemView.findViewById(R.id.toolbar_reader);
+        }
     }
 
     @Override
-    public void onBindViewHolder(final ReaderPostViewHolder holder, final int position) {
-        final ReaderPost post = mPosts.get(position);
-        ReaderTypes.ReaderPostListType postListType = getPostListType();
-
-        holder.txtTitle.setText(post.getTitle());
-        holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
-
-        // hide the post header (avatar, blog name & follow button) if we're showing posts
-        // in a specific blog
-        if (postListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
-            holder.layoutPostHeader.setVisibility(View.GONE);
+    public int getItemViewType(int position) {
+        if (mShowToolbar && position == 0) {
+            return VIEW_TYPE_TOOLBAR;
         } else {
-            holder.layoutPostHeader.setVisibility(View.VISIBLE);
-            holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-            if (post.hasBlogName()) {
-                holder.txtBlogName.setText(post.getBlogName());
-            } else if (post.hasAuthorName()) {
-                holder.txtBlogName.setText(post.getAuthorName());
-            } else {
-                holder.txtBlogName.setText(null);
+            return VIEW_TYPE_POST;
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
+        switch (getItemViewType(position)) {
+            case VIEW_TYPE_TOOLBAR:
+                View toolbarView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_toolbar, parent, false);
+                return new ReaderToolbarHolder(toolbarView);
+            default:
+                View postView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_post, parent, false);
+                return new ReaderPostViewHolder(postView);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof ReaderToolbarHolder) {
+            final ReaderToolbarHolder toolbarHolder = (ReaderToolbarHolder) holder;
+            toolbarHolder.toolbar.setVisibility(View.VISIBLE);
+        } else if (holder instanceof ReaderPostViewHolder) {
+            final ReaderPost post = getItem(position);
+            if (post == null) {
+                AppLog.e(AppLog.T.READER, "null post in reader post adapter");
+                return;
             }
 
-            // follow/following
-            holder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
-            holder.followButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleFollow((ReaderFollowButton) v, position);
+            final ReaderPostViewHolder postHolder = (ReaderPostViewHolder) holder;
+            ReaderTypes.ReaderPostListType postListType = getPostListType();
+
+            postHolder.txtTitle.setText(post.getTitle());
+            postHolder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
+
+            // hide the post header (avatar, blog name & follow button) if we're showing posts
+            // in a specific blog
+            if (postListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
+                postHolder.layoutPostHeader.setVisibility(View.GONE);
+            } else {
+                postHolder.layoutPostHeader.setVisibility(View.VISIBLE);
+                postHolder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+                if (post.hasBlogName()) {
+                    postHolder.txtBlogName.setText(post.getBlogName());
+                } else if (post.hasAuthorName()) {
+                    postHolder.txtBlogName.setText(post.getAuthorName());
+                } else {
+                    postHolder.txtBlogName.setText(null);
                 }
-            });
 
-            // show blog/feed preview when avatar is tapped
-            holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
-                }
-            });
-        }
-
-        if (post.hasExcerpt()) {
-            holder.txtText.setVisibility(View.VISIBLE);
-            holder.txtText.setText(post.getExcerpt());
-        } else {
-            holder.txtText.setVisibility(View.GONE);
-        }
-
-        final int titleMargin;
-        if (post.hasFeaturedImage()) {
-            final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-            holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
-            holder.imgFeatured.setVisibility(View.VISIBLE);
-            titleMargin = mMarginLarge;
-        } else if (post.hasFeaturedVideo()) {
-            holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
-            holder.imgFeatured.setVisibility(View.VISIBLE);
-            titleMargin = mMarginLarge;
-        } else {
-            holder.imgFeatured.setVisibility(View.GONE);
-            titleMargin = (holder.layoutPostHeader.getVisibility() == View.VISIBLE ? 0 : mMarginLarge);
-        }
-
-        // set the top margin of the title based on whether there's a featured image and post header
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.txtTitle.getLayoutParams();
-        params.topMargin = titleMargin;
-
-        // show the best tag for this post
-        final String tagToDisplay = (mCurrentTag != null ? post.getTagForDisplay(mCurrentTag.getTagName()) : null);
-        if (!TextUtils.isEmpty(tagToDisplay)) {
-            holder.txtTag.setText(tagToDisplay);
-            holder.txtTag.setVisibility(View.VISIBLE);
-            holder.txtTag.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnTagSelectedListener != null) {
-                        mOnTagSelectedListener.onTagSelected(tagToDisplay);
-                    }
-                }
-            });
-        } else {
-            holder.txtTag.setVisibility(View.GONE);
-            holder.txtTag.setOnClickListener(null);
-        }
-
-        // likes, comments & reblogging - supported by wp posts only
-        boolean showLikes = post.isWP() && post.isLikesEnabled;
-        boolean showComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
-
-        if (showLikes || showComments) {
-            showCounts(holder, post, false);
-        }
-
-        if (showLikes) {
-            holder.likeCount.setSelected(post.isLikedByCurrentUser);
-            holder.likeCount.setVisibility(View.VISIBLE);
-            holder.likeCount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleLike(v.getContext(), holder, position);
-                }
-            });
-        } else {
-            holder.likeCount.setVisibility(View.GONE);
-            holder.likeCount.setOnClickListener(null);
-        }
-
-        if (showComments) {
-            holder.commentCount.setVisibility(View.VISIBLE);
-            holder.commentCount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderComments(v.getContext(), post);
-                }
-            });
-        } else {
-            holder.commentCount.setVisibility(View.GONE);
-            holder.commentCount.setOnClickListener(null);
-        }
-
-        if (post.canReblog()) {
-            showReblogStatus(holder.imgBtnReblog, post.isRebloggedByCurrentUser);
-            holder.imgBtnReblog.setVisibility(View.VISIBLE);
-            if (!post.isRebloggedByCurrentUser) {
-                holder.imgBtnReblog.setOnClickListener(new View.OnClickListener() {
+                // follow/following
+                postHolder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
+                postHolder.followButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ReaderAnim.animateReblogButton(holder.imgBtnReblog);
-                        if (mReblogListener != null) {
-                            mReblogListener.onRequestReblog(post, v);
+                        toggleFollow((ReaderFollowButton) v, position);
+                    }
+                });
+
+                // show blog/feed preview when avatar is tapped
+                postHolder.imgAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+                    }
+                });
+            }
+
+            if (post.hasExcerpt()) {
+                postHolder.txtText.setVisibility(View.VISIBLE);
+                postHolder.txtText.setText(post.getExcerpt());
+            } else {
+                postHolder.txtText.setVisibility(View.GONE);
+            }
+
+            final int titleMargin;
+            if (post.hasFeaturedImage()) {
+                final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
+                postHolder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+                postHolder.imgFeatured.setVisibility(View.VISIBLE);
+                titleMargin = mMarginLarge;
+            } else if (post.hasFeaturedVideo()) {
+                postHolder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
+                postHolder.imgFeatured.setVisibility(View.VISIBLE);
+                titleMargin = mMarginLarge;
+            } else {
+                postHolder.imgFeatured.setVisibility(View.GONE);
+                titleMargin = (postHolder.layoutPostHeader.getVisibility() == View.VISIBLE ? 0 : mMarginLarge);
+            }
+
+            // set the top margin of the title based on whether there's a featured image and post header
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) postHolder.txtTitle.getLayoutParams();
+            params.topMargin = titleMargin;
+
+            // show the best tag for this post
+            final String tagToDisplay = (mCurrentTag != null ? post.getTagForDisplay(mCurrentTag.getTagName()) : null);
+            if (!TextUtils.isEmpty(tagToDisplay)) {
+                postHolder.txtTag.setText(tagToDisplay);
+                postHolder.txtTag.setVisibility(View.VISIBLE);
+                postHolder.txtTag.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnTagSelectedListener != null) {
+                            mOnTagSelectedListener.onTagSelected(tagToDisplay);
                         }
                     }
                 });
             } else {
-                holder.imgBtnReblog.setOnClickListener(null);
+                postHolder.txtTag.setVisibility(View.GONE);
+                postHolder.txtTag.setOnClickListener(null);
             }
-        } else {
-            // use INVISIBLE rather than GONE to ensure container maintains the same height
-            holder.imgBtnReblog.setVisibility(View.INVISIBLE);
-            holder.imgBtnReblog.setOnClickListener(null);
-        }
 
-        // more menu with "block this blog" only shows for public wp posts in followed tags
-        if (post.isWP() && !post.isPrivate && postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
-            holder.imgMore.setVisibility(View.VISIBLE);
-            holder.imgMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mOnPostPopupListener != null) {
-                        mOnPostPopupListener.onShowPostPopup(view, post);
+            // likes, comments & reblogging - supported by wp posts only
+            boolean showLikes = post.isWP() && post.isLikesEnabled;
+            boolean showComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
+
+            if (showLikes || showComments) {
+                showCounts(postHolder, post, false);
+            }
+
+            if (showLikes) {
+                postHolder.likeCount.setSelected(post.isLikedByCurrentUser);
+                postHolder.likeCount.setVisibility(View.VISIBLE);
+                postHolder.likeCount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleLike(v.getContext(), postHolder, position);
                     }
-                }
-            });
-        } else {
-            holder.imgMore.setVisibility(View.GONE);
-            holder.imgMore.setOnClickListener(null);
-        }
+                });
+            } else {
+                postHolder.likeCount.setVisibility(View.GONE);
+                postHolder.likeCount.setOnClickListener(null);
+            }
 
-        // if we're nearing the end of the posts, fire request to load more
-        if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getItemCount() - 1)) {
-            mDataRequestedListener.onRequestData();
-        }
+            if (showComments) {
+                postHolder.commentCount.setVisibility(View.VISIBLE);
+                postHolder.commentCount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.showReaderComments(v.getContext(), post);
+                    }
+                });
+            } else {
+                postHolder.commentCount.setVisibility(View.GONE);
+                postHolder.commentCount.setOnClickListener(null);
+            }
 
-        if (mPostSelectedListener != null) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+            if (post.canReblog()) {
+                showReblogStatus(postHolder.imgBtnReblog, post.isRebloggedByCurrentUser);
+                postHolder.imgBtnReblog.setVisibility(View.VISIBLE);
+                if (!post.isRebloggedByCurrentUser) {
+                    postHolder.imgBtnReblog.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ReaderAnim.animateReblogButton(postHolder.imgBtnReblog);
+                            if (mReblogListener != null) {
+                                mReblogListener.onRequestReblog(post, v);
+                            }
+                        }
+                    });
+                } else {
+                    postHolder.imgBtnReblog.setOnClickListener(null);
                 }
-            });
+            } else {
+                // use INVISIBLE rather than GONE to ensure container maintains the same height
+                postHolder.imgBtnReblog.setVisibility(View.INVISIBLE);
+                postHolder.imgBtnReblog.setOnClickListener(null);
+            }
+
+            // more menu with "block this blog" only shows for public wp posts in followed tags
+            if (post.isWP() && !post.isPrivate && postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
+                postHolder.imgMore.setVisibility(View.VISIBLE);
+                postHolder.imgMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mOnPostPopupListener != null) {
+                            mOnPostPopupListener.onShowPostPopup(view, post);
+                        }
+                    }
+                });
+            } else {
+                postHolder.imgMore.setVisibility(View.GONE);
+                postHolder.imgMore.setOnClickListener(null);
+            }
+
+            // if we're nearing the end of the posts, fire request to load more
+            if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getItemCount() - 1)) {
+                mDataRequestedListener.onRequestData();
+            }
+
+            if (mPostSelectedListener != null) {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+                    }
+                });
+            }
         }
     }
 
@@ -298,6 +338,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         setHasStableIds(true);
+    }
+
+    public void setShowToolbar(boolean show) {
+        if (mShowToolbar != show) {
+            mShowToolbar = show;
+            if (!isEmpty()) {
+                notifyDataSetChanged();
+            }
+        }
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
@@ -367,15 +416,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         loadPosts();
     }
 
-    private void removeItem(int position) {
-        if (isValidPosition(position)) {
-            mPosts.remove(position);
-            notifyItemRemoved(position);
-        }
-    }
-
     private void removePost(ReaderPost post) {
-        removeItem(indexOfPost(post));
+        int index = mPosts.indexOfPost(post);
+        if (index > -1) {
+            mPosts.remove(index);
+            notifyItemRemoved(getActualPosition(index));
+        }
     }
 
     public void removePostsInBlog(long blogId) {
@@ -389,7 +435,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
      * reload a single post
      */
     public void reloadPost(ReaderPost post) {
-        int index = indexOfPost(post);
+        int index = mPosts.indexOfPost(post);
         if (index == -1) {
             return;
         }
@@ -397,12 +443,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
         final ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
         if (updatedPost != null) {
             mPosts.set(index, updatedPost);
-            notifyDataSetChanged();
+            notifyItemChanged(getActualPosition(index));
         }
-    }
-
-    private int indexOfPost(ReaderPost post) {
-        return mPosts.indexOfPost(post);
     }
 
     /*
@@ -451,29 +493,41 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<ReaderPostAdapter.Re
     }
 
     public ReaderPost getItem(int position) {
-        if (isValidPosition(position)) {
-            return mPosts.get(position);
+        switch (getItemViewType(position)) {
+            case VIEW_TYPE_POST:
+                return mPosts.get(getActualPosition(position));
+            default:
+                return null;
+        }
+    }
+
+    private int getActualPosition(int position) {
+        if (mShowToolbar) {
+            return position - 1;
         } else {
-            return null;
+            return position;
         }
     }
 
     @Override
     public int getItemCount() {
-        return mPosts.size();
+        if (mShowToolbar) {
+            return mPosts.size() + 1;
+        } else {
+            return mPosts.size();
+        }
     }
 
     public boolean isEmpty() {
-        return (getItemCount() == 0);
-    }
-
-    private boolean isValidPosition(int position) {
-        return (position >= 0 && position < getItemCount());
+        return (mPosts == null || mPosts.size() == 0);
     }
 
     @Override
     public long getItemId(int position) {
-        return mPosts.get(position).getStableId();
+        if (mShowToolbar && position == 0) {
+            return 0;
+        }
+        return getItem(position).getStableId();
     }
 
     /*
