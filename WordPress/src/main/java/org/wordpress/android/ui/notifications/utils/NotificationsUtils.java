@@ -30,10 +30,10 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -63,6 +63,7 @@ public class NotificationsUtils {
 
         String gcmToken = GCMRegistrar.getRegistrationId(context);
         if (TextUtils.isEmpty(gcmToken)) {
+            AppLog.e(T.NOTIFS, "can't get push notification settings, gcm token is null.");
             return;
         }
 

@@ -79,7 +79,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 noteBlockHolder.avatarImageView.setOnTouchListener(null);
             }
         } else {
-            noteBlockHolder.avatarImageView.setImageResource(R.drawable.gravatar_placeholder);
+            noteBlockHolder.avatarImageView.showDefaultGravatarImage();
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 

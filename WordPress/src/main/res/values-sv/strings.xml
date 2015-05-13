@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="select_from_new_picker">Flerval med den nya väljaren</string>
+	<string name="stats_generic_error">Nödvändig statistik kunde inte laddas in. </string>
+	<string name="error_loading_blog_images">Kunde inte hämta bilder </string>
+	<string name="no_device_videos">Inga videor</string>
+	<string name="error_loading_blog_videos">Kunde inte hämta bilder </string>
+	<string name="no_blog_videos">Inga videor</string>
+	<string name="error_loading_videos">Det gick inte att ladda in videor</string>
+	<string name="loading_blog_videos">Hämtar videor</string>
+	<string name="no_media_sources">Kunde inte hämta media </string>
+	<string name="loading_blog_images">Hämtar bilder</string>
+	<string name="error_loading_images">Det gick inte att ladda in bilderna</string>
+	<string name="no_device_images">Inga bilder</string>
+	<string name="no_blog_images">Inga bilder</string>
+	<string name="no_media">Ingen media</string>
+	<string name="loading_images">Laddar bilder</string>
+	<string name="loading_videos">Laddar videos </string>
 	<string name="auth_required">Logga in igen för att fortsätta.</string>
 	<string name="sign_in_jetpack">Logga in på ditt WordPress.com-konto för att ansluta till Jetpack.</string>
 	<string name="two_step_sms_sent">Kolla dina SMS för att se verifieringskoden.</string>
