@@ -274,9 +274,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             }
         });
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
-
-        registerReceiver(mGalleryReceiver,
-                new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
     }
 
     class AutoSaveTask extends TimerTask {
@@ -288,6 +285,10 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     @Override
     protected void onResume() {
         super.onResume();
+
+        registerReceiver(mGalleryReceiver,
+                new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
+
         refreshBlogMedia();
         mAutoSaveTimer = new Timer();
         mAutoSaveTimer.scheduleAtFixedRate(new AutoSaveTask(), AUTOSAVE_INTERVAL_MILLIS, AUTOSAVE_INTERVAL_MILLIS);
@@ -308,6 +309,13 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     @Override
     protected void onPause() {
         super.onPause();
+
+        try {
+            unregisterReceiver(mGalleryReceiver);
+        } catch (IllegalArgumentException e) {
+            AppLog.d(T.EDITOR, "Illegal state! Can't unregister receiver that was no registered");
+        }
+
         stopMediaUploadService();
         mAutoSaveTimer.cancel();
     }
@@ -315,7 +323,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mGalleryReceiver);
+
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED_POST);
 
         if (mSuggestionServiceConnectionManager != null) {
@@ -331,7 +339,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
 
-        getFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
+        if (mEditorFragment != null) {
+            getFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
+        }
     }
 
     @Override
@@ -1360,7 +1370,6 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             }
         }
     };
-
 
     /**
      * Handles media upload notifications. Used when uploading local media to create a gallery

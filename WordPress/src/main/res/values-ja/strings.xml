@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="select_from_new_picker">新しいピッカーでの複数選択</string>
+	<string name="error_loading_videos">動画読み込みエラー</string>
+	<string name="stats_generic_error">必須の統計情報が読み込めませんでした</string>
+	<string name="no_blog_images">画像なし</string>
+	<string name="no_device_videos">動画なし</string>
+	<string name="no_blog_videos">動画なし</string>
+	<string name="no_device_images">画像なし</string>
+	<string name="error_loading_images">画像読み込みエラー</string>
+	<string name="loading_blog_videos">動画を取得中</string>
+	<string name="no_media_sources">メディアを取得できませんでした</string>
+	<string name="error_loading_blog_videos">動画を取得できません</string>
+	<string name="loading_blog_images">画像を取得中</string>
+	<string name="error_loading_blog_images">画像を取得できません</string>
+	<string name="no_media">メディアがありません</string>
+	<string name="loading_videos">動画を読み込み中</string>
+	<string name="loading_images">画像を読み込み中</string>
 	<string name="editor_toast_gallery_pending_formatted">ギャラリーの作成は %d 個のアップロードを待機中です</string>
 	<string name="editor_toast_gallery_created_formatted">%d 個のアイテムでギャラリーが作成されました</string>
 	<string name="auth_required">続行するにはもう一度サインインしてください。</string>
