@@ -143,23 +143,9 @@ apiKey=${crashlyticsApiKey}""")
     }
 }
 
-task deleteXxxHdpiIntermediateResources(group: "filter", description: "Generate Crashlytics config",
-        dependsOn: "generateVanillaReleaseResources") {
-    doLast {
-        def intermediateResDir = new File("${buildDir}/intermediates/res/")
-        intermediateResDir.traverse() {
-            if (it =~ /drawable-xxxhdpi.*\// && it.name != "app_icon.png") {
-                logger.lifecycle("Resource won't be packaged: " + it);
-                it.delete();
-            }
-        }
-    }
-}
-
 // Add generateCrashlyticsConfig to all generateBuildConfig tasks (all variants)
 android.applicationVariants.all { variant ->
     variant.generateBuildConfig.dependsOn(generateCrashlyticsConfig)
-    variant.mergeResources.dependsOn(deleteXxxHdpiIntermediateResources)
 }
 
 // Add properties named "wp.xxx" to our BuildConfig
