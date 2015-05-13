@@ -95,7 +95,7 @@ public class NotificationsUtils {
         }
 
         Gson gson = new Gson();
-        HashMap notificationSettings = gson.fromJson(settingsJson, HashMap.class);
+        Map notificationSettings = gson.fromJson(settingsJson, HashMap.class);
         Map<String, Object> updatedSettings = new HashMap<>();
         ArrayList<StringMap> mutedBlogsList = new ArrayList<>();
         if (notificationSettings == null || !(notificationSettings.get(WPCOM_PUSH_KEY_MUTED_BLOGS) instanceof StringMap)
