@@ -98,6 +98,7 @@ public class MeFragment extends Fragment {
 
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
+            mAvatarFrame.setVisibility(View.VISIBLE);
 
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
             String avatarUrl = GravatarUtils.fixGravatarUrl(defaultAccount.getAvatarUrl(), avatarSz);
@@ -121,11 +122,11 @@ public class MeFragment extends Fragment {
                 }
             });
         } else {
-            mAvatarImageView.showDefaultGravatarImage();
             removeDropShadow();
 
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
+            mAvatarFrame.setVisibility(View.GONE);
 
             mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
             mLoginLogoutTextView.setOnClickListener(new View.OnClickListener() {
