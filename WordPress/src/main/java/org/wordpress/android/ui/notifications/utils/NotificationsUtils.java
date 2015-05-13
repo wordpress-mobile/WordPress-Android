@@ -73,12 +73,7 @@ public class NotificationsUtils {
     }
 
     public static void setPushNotificationSettings(Context context) {
-        if (!AccountHelper.isSignedInWordPressDotCom()) {
-            return;
-        }
-
-        String gcmToken = GCMRegistrar.getRegistrationId(context);
-        if (TextUtils.isEmpty(gcmToken)) {
+        if (context == null || !AccountHelper.isSignedInWordPressDotCom()) {
             return;
         }
 
@@ -90,49 +85,61 @@ public class NotificationsUtils {
         }
 
         String settingsJson = settings.getString(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
-        if (settingsJson == null)
+        if (settingsJson == null) {
+            AppLog.e(T.NOTIFS, "Notifications settings JSON not found in app preferences.");
             return;
+        }
 
         Gson gson = new Gson();
-        Map<String, StringMap<String>> notificationSettings = gson.fromJson(settingsJson, HashMap.class);
+        HashMap notificationSettings = gson.fromJson(settingsJson, HashMap.class);
         Map<String, Object> updatedSettings = new HashMap<>();
-        if (notificationSettings == null)
+        ArrayList mutedBlogsList = new ArrayList<>();
+        if (notificationSettings == null || !(notificationSettings.get("muted_blogs") instanceof StringMap)
+                || !(notificationSettings.get("muted_blogs") instanceof StringMap)) {
             return;
+        }
 
+        StringMap<?> mutedBlogsMap = (StringMap)notificationSettings.get("muted_blogs");
+        StringMap<?> muteUntilMap = (StringMap)notificationSettings.get("mute_until");
 
-        // Build the settings object to send back to WP.com
-        StringMap<?> mutedBlogsMap = notificationSettings.get("muted_blogs");
-        StringMap<?> muteUntilMap = notificationSettings.get("mute_until");
-        ArrayList<StringMap<Double>> blogsList = (ArrayList<StringMap<Double>>) mutedBlogsMap.get("value");
+        // Remove entries that we don't want to loop through
         notificationSettings.remove("muted_blogs");
         notificationSettings.remove("mute_until");
 
-        for (Map.Entry<String, StringMap<String>> entry : notificationSettings.entrySet())
+        for (Object entry : notificationSettings.entrySet())
         {
-            StringMap<String> setting = entry.getValue();
-            updatedSettings.put(entry.getKey(), setting.get("value"));
+            if (entry instanceof Map.Entry) {
+                Map.Entry hashMapEntry = (Map.Entry)entry;
+                if (hashMapEntry.getValue() instanceof StringMap && hashMapEntry.getKey() instanceof String) {
+                    StringMap setting = (StringMap)hashMapEntry.getValue();
+                    updatedSettings.put((String)hashMapEntry.getKey(), setting.get("value"));
+                }
+            }
         }
 
         if (muteUntilMap != null && muteUntilMap.get("value") != null) {
             updatedSettings.put("mute_until", muteUntilMap.get("value"));
         }
 
-        ArrayList<StringMap<Double>> mutedBlogsList = new ArrayList<>();
-        for (StringMap<Double> userBlog : blogsList) {
-            if (MapUtils.getMapBool(userBlog, "value")) {
-                mutedBlogsList.add(userBlog);
+        if (mutedBlogsMap.get("value") instanceof ArrayList) {
+            ArrayList blogsList = (ArrayList)mutedBlogsMap.get("value");
+            for (Object userBlog : blogsList) {
+                if (userBlog instanceof StringMap) {
+                    StringMap userBlogMap = (StringMap)userBlog;
+                    if (MapUtils.getMapBool(userBlogMap, "value")) {
+                        mutedBlogsList.add(userBlogMap);
+                    }
+                }
             }
         }
 
-        if (updatedSettings.size() == 0 && mutedBlogsList.size() == 0)
+        if (updatedSettings.size() == 0 && mutedBlogsList.size() == 0) {
             return;
+        }
 
-        updatedSettings.put("muted_blogs", mutedBlogsList); //If muted blogs list is unchanged we can even skip this assignment.
+        updatedSettings.put("muted_blogs", mutedBlogsList);
 
         Map<String, String> contentStruct = new HashMap<>();
-        contentStruct.put("device_token", gcmToken);
-        contentStruct.put("device_family", "android");
-        contentStruct.put("app_secret_key", NotificationsUtils.getAppPushNotificationsName());
         contentStruct.put("settings", gson.toJson(updatedSettings));
         WordPress.getRestClientUtils().post("/device/"+deviceID, contentStruct, null, null, null);
     }
