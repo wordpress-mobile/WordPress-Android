@@ -122,8 +122,6 @@ public class MeFragment extends Fragment {
                 }
             });
         } else {
-            removeDropShadow();
-
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
             mAvatarFrame.setVisibility(View.GONE);
