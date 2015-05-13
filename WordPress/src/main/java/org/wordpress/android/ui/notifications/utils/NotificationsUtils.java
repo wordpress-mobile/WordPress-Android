@@ -51,6 +51,10 @@ public class NotificationsUtils {
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
 
+    private static final String WPCOM_PUSH_KEY_MUTED_BLOGS = "muted_blogs";
+    private static final String WPCOM_PUSH_KEY_MUTE_UNTIL = "mute_until";
+    private static final String WPCOM_PUSH_KEY_VALUE = "value";
+
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
         if (!AccountHelper.isSignedInWordPressDotCom()) {
@@ -93,18 +97,18 @@ public class NotificationsUtils {
         Gson gson = new Gson();
         HashMap notificationSettings = gson.fromJson(settingsJson, HashMap.class);
         Map<String, Object> updatedSettings = new HashMap<>();
-        ArrayList mutedBlogsList = new ArrayList<>();
-        if (notificationSettings == null || !(notificationSettings.get("muted_blogs") instanceof StringMap)
-                || !(notificationSettings.get("muted_blogs") instanceof StringMap)) {
+        ArrayList<StringMap> mutedBlogsList = new ArrayList<>();
+        if (notificationSettings == null || !(notificationSettings.get(WPCOM_PUSH_KEY_MUTED_BLOGS) instanceof StringMap)
+                || !(notificationSettings.get(WPCOM_PUSH_KEY_MUTE_UNTIL) instanceof StringMap)) {
             return;
         }
 
-        StringMap<?> mutedBlogsMap = (StringMap)notificationSettings.get("muted_blogs");
-        StringMap<?> muteUntilMap = (StringMap)notificationSettings.get("mute_until");
+        StringMap<?> mutedBlogsMap = (StringMap)notificationSettings.get(WPCOM_PUSH_KEY_MUTED_BLOGS);
+        StringMap<?> muteUntilMap = (StringMap)notificationSettings.get(WPCOM_PUSH_KEY_MUTE_UNTIL);
 
         // Remove entries that we don't want to loop through
-        notificationSettings.remove("muted_blogs");
-        notificationSettings.remove("mute_until");
+        notificationSettings.remove(WPCOM_PUSH_KEY_MUTED_BLOGS);
+        notificationSettings.remove(WPCOM_PUSH_KEY_MUTE_UNTIL);
 
         for (Object entry : notificationSettings.entrySet())
         {
@@ -112,21 +116,21 @@ public class NotificationsUtils {
                 Map.Entry hashMapEntry = (Map.Entry)entry;
                 if (hashMapEntry.getValue() instanceof StringMap && hashMapEntry.getKey() instanceof String) {
                     StringMap setting = (StringMap)hashMapEntry.getValue();
-                    updatedSettings.put((String)hashMapEntry.getKey(), setting.get("value"));
+                    updatedSettings.put((String)hashMapEntry.getKey(), setting.get(WPCOM_PUSH_KEY_VALUE));
                 }
             }
         }
 
-        if (muteUntilMap != null && muteUntilMap.get("value") != null) {
-            updatedSettings.put("mute_until", muteUntilMap.get("value"));
+        if (muteUntilMap != null && muteUntilMap.get(WPCOM_PUSH_KEY_VALUE) != null) {
+            updatedSettings.put(WPCOM_PUSH_KEY_MUTE_UNTIL, muteUntilMap.get(WPCOM_PUSH_KEY_VALUE));
         }
 
-        if (mutedBlogsMap.get("value") instanceof ArrayList) {
-            ArrayList blogsList = (ArrayList)mutedBlogsMap.get("value");
+        if (mutedBlogsMap.get(WPCOM_PUSH_KEY_VALUE) instanceof ArrayList) {
+            ArrayList blogsList = (ArrayList)mutedBlogsMap.get(WPCOM_PUSH_KEY_VALUE);
             for (Object userBlog : blogsList) {
                 if (userBlog instanceof StringMap) {
                     StringMap userBlogMap = (StringMap)userBlog;
-                    if (MapUtils.getMapBool(userBlogMap, "value")) {
+                    if (MapUtils.getMapBool(userBlogMap, WPCOM_PUSH_KEY_VALUE)) {
                         mutedBlogsList.add(userBlogMap);
                     }
                 }
@@ -137,7 +141,7 @@ public class NotificationsUtils {
             return;
         }
 
-        updatedSettings.put("muted_blogs", mutedBlogsList);
+        updatedSettings.put(WPCOM_PUSH_KEY_MUTED_BLOGS, mutedBlogsList);
 
         Map<String, String> contentStruct = new HashMap<>();
         contentStruct.put("settings", gson.toJson(updatedSettings));
