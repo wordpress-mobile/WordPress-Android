@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -128,8 +129,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
-        switch (getItemViewType(position)) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
             case VIEW_TYPE_TOOLBAR:
                 View toolbarView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_toolbar, parent, false);
                 return new ReaderToolbarHolder(toolbarView);
@@ -143,14 +144,20 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof ReaderToolbarHolder) {
             final ReaderToolbarHolder toolbarHolder = (ReaderToolbarHolder) holder;
-            toolbarHolder.toolbar.setVisibility(View.VISIBLE);
+            toolbarHolder.toolbar.inflateMenu(R.menu.reader_list);
+            toolbarHolder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    if (menuItem.getItemId() == R.id.menu_tags) {
+                        //ReaderActivityLauncher.showReaderSubsForResult(getActivity());
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            // TODO
         } else if (holder instanceof ReaderPostViewHolder) {
             final ReaderPost post = getItem(position);
-            if (post == null) {
-                AppLog.e(AppLog.T.READER, "null post in reader post adapter");
-                return;
-            }
-
             final ReaderPostViewHolder postHolder = (ReaderPostViewHolder) holder;
             ReaderTypes.ReaderPostListType postListType = getPostListType();
 
