@@ -46,6 +46,8 @@ public class MeFragment extends Fragment {
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
         mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
 
+        addDropShadowToAvatar();
+
         TextView settingsTextView = (TextView) rootView.findViewById(R.id.me_settings_text_view);
         settingsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +73,7 @@ public class MeFragment extends Fragment {
      * adds a circular drop shadow to the avatar's parent view (Lollipop+ only)
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void addDropShadow() {
+    private void addDropShadowToAvatar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mAvatarFrame.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
@@ -80,14 +82,6 @@ public class MeFragment extends Fragment {
                 }
             });
             mAvatarFrame.setElevation(mAvatarFrame.getResources().getDimensionPixelSize(R.dimen.card_elevation));
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void removeDropShadow() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mAvatarFrame.setOutlineProvider(null);
-            mAvatarFrame.setElevation(0);
         }
     }
 
@@ -103,7 +97,6 @@ public class MeFragment extends Fragment {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
             String avatarUrl = GravatarUtils.fixGravatarUrl(defaultAccount.getAvatarUrl(), avatarSz);
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-            addDropShadow();
 
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
 
