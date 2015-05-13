@@ -30,12 +30,10 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.ui.ShareIntentReceiverActivity;
-import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.ShareIntentReceiverActivity;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -125,54 +123,45 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void initNotifications() {
-        // AuthenticatorRequest notification settings if needed
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
-            if (settingsJson == null) {
-                com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        AppLog.d(T.NOTIFS, "Get settings action succeeded");
-                        Editor editor = mSettings.edit();
-                        try {
-                            JSONObject settingsJSON = jsonObject.getJSONObject("settings");
-                            editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS,
-                                    settingsJSON.toString());
-                            editor.apply();
-                        } catch (JSONException e) {
-                            AppLog.e(T.NOTIFS,
-                                    "Can't parse the JSON object returned from the server that contains PN settings.",
-                                    e);
-                        }
-                        refreshWPComAuthCategory();
+        if (!AccountHelper.isSignedInWordPressDotCom()) {
+            hideManageNotificationCategory();
+            return;
+        }
+        // Request notification settings if needed
+        String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
+        if (settingsJson == null) {
+            com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+                    AppLog.d(T.NOTIFS, "Get settings action succeeded");
+                    Editor editor = mSettings.edit();
+                    try {
+                        JSONObject settingsJSON = jsonObject.getJSONObject("settings");
+                        editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS,
+                                settingsJSON.toString());
+                        editor.apply();
+                    } catch (JSONException e) {
+                        AppLog.e(T.NOTIFS, "Can't parse PN settings from server response", e);
                     }
-                };
-                RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        AppLog.e(T.NOTIFS, "Get settings action failed", volleyError);
-                    }
-                };
-                NotificationsUtils.getPushNotificationSettings(getActivity(), listener, errorListener);
-            }
+                }
+            };
+            RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    AppLog.e(T.NOTIFS, "Get settings action failed", volleyError);
+                }
+            };
+            NotificationsUtils.getPushNotificationSettings(getActivity(), listener, errorListener);
         }
     }
 
-    private void hidePostSignatureCategory() {
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
-        PreferenceCategory postSignature = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_post_sig_section));
-        if (preferenceScreen != null && postSignature != null) {
-            preferenceScreen.removePreference(postSignature);
-        }
-    }
-
-    private void hideNotificationBlogsCategory() {
+    private void hideManageNotificationCategory() {
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
-        PreferenceCategory blogs =
-                (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_notification_blogs));
-        if (preferenceScreen != null && blogs != null) {
-            preferenceScreen.removePreference(blogs);
+        PreferenceCategory notifs =
+                (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
+        if (preferenceScreen != null && notifs != null) {
+            preferenceScreen.removePreference(notifs);
         }
     }
 
