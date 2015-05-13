@@ -121,7 +121,7 @@ public class MeFragment extends Fragment {
                 }
             });
         } else {
-            mAvatarImageView.setImageResource(R.drawable.gravatar_placeholder);
+            mAvatarImageView.showDefaultGravatarImage();
             removeDropShadow();
 
             mDisplayNameTextView.setVisibility(View.GONE);
