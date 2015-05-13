@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MediaUtils;
@@ -51,7 +52,7 @@ public class WordPressMediaUtils {
     public static void launchVideoLibrary(Activity activity) {
         AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(prepareVideoLibraryIntent(activity),
-                RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
+                RequestCodes.VIDEO_LIBRARY);
     }
 
     public static void launchVideoLibrary(Fragment fragment) {
@@ -60,7 +61,7 @@ public class WordPressMediaUtils {
         }
         AppLockManager.getInstance().setExtendedTimeout();
         fragment.startActivityForResult(prepareVideoLibraryIntent(fragment.getActivity()),
-                RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
+                RequestCodes.VIDEO_LIBRARY);
     }
 
 
@@ -73,7 +74,7 @@ public class WordPressMediaUtils {
 
     public static void launchVideoCamera(Activity activity) {
         AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(prepareVideoCameraIntent(), RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        activity.startActivityForResult(prepareVideoCameraIntent(), RequestCodes.TAKE_VIDEO);
     }
 
     public static void launchVideoCamera(Fragment fragment) {
@@ -81,7 +82,7 @@ public class WordPressMediaUtils {
             return;
         }
         AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(prepareVideoCameraIntent(), RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        fragment.startActivityForResult(prepareVideoCameraIntent(), RequestCodes.TAKE_VIDEO);
     }
 
     private static Intent prepareVideoCameraIntent() {
@@ -91,7 +92,7 @@ public class WordPressMediaUtils {
     public static void launchPictureLibrary(Activity activity) {
         AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(preparePictureLibraryIntent(activity),
-                RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+                RequestCodes.PICTURE_LIBRARY);
     }
 
     public static void launchPictureLibrary(Fragment fragment) {
@@ -100,7 +101,7 @@ public class WordPressMediaUtils {
         }
         AppLockManager.getInstance().setExtendedTimeout();
         fragment.startActivityForResult(preparePictureLibraryIntent(fragment.getActivity()),
-                RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+                RequestCodes.PICTURE_LIBRARY);
     }
 
     private static Intent preparePictureLibraryIntent(Context context) {
@@ -114,7 +115,7 @@ public class WordPressMediaUtils {
         Intent intent = preparelaunchCamera(activity, callback);
         if (intent != null) {
             AppLockManager.getInstance().setExtendedTimeout();
-            activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+            activity.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
         }
     }
 
@@ -125,7 +126,7 @@ public class WordPressMediaUtils {
         Intent intent = preparelaunchCamera(fragment.getActivity(), callback);
         if (intent != null) {
             AppLockManager.getInstance().setExtendedTimeout();
-            fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+            fragment.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
         }
     }
 
@@ -221,10 +222,7 @@ public class WordPressMediaUtils {
         }
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         cursor.close();
-        if (state != null && state.equals("uploading")) {
-            return false;
-        }
-        return true;
+        return state == null || state.equals("uploading");
     }
 
     public static class BackgroundDownloadWebImage extends AsyncTask<Uri, String, Bitmap> {
