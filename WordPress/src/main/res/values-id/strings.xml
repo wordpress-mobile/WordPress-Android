@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="select_from_new_picker">Beberapa-pilihan dengan pemilih baru</string>
+	<string name="loading_blog_images">Memuat gambar</string>
+	<string name="loading_blog_videos">Memuat video</string>
+	<string name="no_media_sources">Gagal memuat media</string>
+	<string name="error_loading_videos">Galat memuat video</string>
+	<string name="stats_generic_error">Statistik yang diminta gagal dimuat</string>
+	<string name="error_loading_blog_images">Gagal memuat gambar</string>
+	<string name="error_loading_blog_videos">Gagal memuat video</string>
+	<string name="error_loading_images">Galat memuat gambar</string>
+	<string name="no_device_videos">Tak ada video</string>
+	<string name="no_blog_images">Tak ada gambar</string>
+	<string name="no_blog_videos">Tak ada video</string>
+	<string name="no_device_images">Tak ada gambar</string>
+	<string name="loading_videos">Memuat video</string>
+	<string name="loading_images">Memuat gambar</string>
+	<string name="no_media">Tak ada media</string>
 	<string name="auth_required">Masuk lagi untuk melanjutkan.</string>
 	<string name="sign_in_jetpack">Masuk ke akun WordPress.com Anda untuk menyambungkan dengan Jetpack.</string>
 	<string name="two_step_sms_sent">Periksa pesan teks Anda untuk melihat kode verifikasi.</string>

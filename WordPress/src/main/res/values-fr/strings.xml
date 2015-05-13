@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="select_from_new_picker">Multi selection avec le nouveau selecteur</string>
+	<string name="loading_blog_images">Récupération des images</string>
+	<string name="loading_blog_videos">Récupération des vidéos</string>
+	<string name="no_media_sources">Impossible de récupérer les medias</string>
+	<string name="no_blog_videos">Aucune vidéo</string>
+	<string name="no_device_images">Aucune image</string>
+	<string name="error_loading_blog_images">Impossible de récupérer les images</string>
+	<string name="error_loading_blog_videos">Impossible de récupérer les vidéos</string>
+	<string name="error_loading_images">Erreur pendant le chargement des images</string>
+	<string name="error_loading_videos">Erreur pendant le chargement des vidéos</string>
+	<string name="no_blog_images">Aucune image</string>
+	<string name="no_device_videos">Aucune vidéo</string>
+	<string name="stats_generic_error">Les stats n\'ont pas pu être chargées</string>
+	<string name="no_media">Aucun média</string>
+	<string name="loading_videos">Chargement des vidéos</string>
+	<string name="loading_images">Chargement des images</string>
 	<string name="sign_in_jetpack">Se connecter à votre compte WordPress.com pour vous connecter à Jetpack.</string>
 	<string name="auth_required">Se reconnecter pour continuer.</string>
 	<string name="two_step_sms_sent">Vérifier que le code de vérification est dans vos SMS.</string>
