@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="select_from_new_picker">Множественный выбор с помощью нового диалога</string>
+	<string name="stats_generic_error">Не удалось загрузить необходимую статистику</string>
+	<string name="loading_blog_videos">Загрузка видео</string>
+	<string name="no_media_sources">Не удалось загрузить медиафайлы</string>
+	<string name="loading_blog_images">Загрузка изображений</string>
+	<string name="error_loading_blog_images">Не удалось загрузить изображения</string>
+	<string name="error_loading_blog_videos">Не удалось загрузить видео</string>
+	<string name="error_loading_images">Ошибка при загрузке изображений</string>
+	<string name="error_loading_videos">Ошибка при загрузке видео</string>
+	<string name="no_device_images">Нет изображений</string>
+	<string name="no_blog_images">Нет изображений</string>
+	<string name="no_blog_videos">Нет видео</string>
+	<string name="no_device_videos">Нет видео</string>
+	<string name="no_media">Нет медиафайлов</string>
+	<string name="loading_images">Загрузка изображений</string>
+	<string name="loading_videos">Загрузка видео</string>
 	<string name="two_step_sms_sent">Проверьте ваши SMS-сообщения и найдите код подтверждения.</string>
 	<string name="two_step_footer_label">Введите код из вашего приложения аутентификации.</string>
 	<string name="verify">Подтвердить</string>

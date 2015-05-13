@@ -13,7 +13,7 @@ public class StatsEvents {
     }
     public static class SectionUpdated {
         public final StatsEndpointsEnum mEndPointName;
-        public final String mRequestBlogId;
+        public final String mRequestBlogId; // This is the remote blog ID
         public final StatsTimeframe mTimeframe;
         public final String mDate;
         public final int mMaxResultsRequested, mPageRequested;
@@ -35,6 +35,14 @@ public class StatsEvents {
         public final boolean isError;
         public JetpackSettingsCompleted(boolean isError) {
             this.isError = isError;
+        }
+    }
+
+    public static class JetpackAuthError {
+        public final int mLocalBlogId; // This is the local blogID
+
+        public JetpackAuthError(int blogId) {
+            mLocalBlogId = blogId;
         }
     }
 }

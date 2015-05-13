@@ -17,7 +17,7 @@ import java.io.OutputStream;
  * database for all tracks information
  */
 public class StatsDatabaseHelper extends SQLiteOpenHelper {
-    protected static final String DB_NAME = "stats.db";
+    private static final String DB_NAME = "stats.db";
     private static final int DB_VERSION = 1;
 
     /*

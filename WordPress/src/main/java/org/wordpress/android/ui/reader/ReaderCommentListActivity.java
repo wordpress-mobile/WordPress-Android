@@ -18,6 +18,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
@@ -25,12 +26,12 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -202,7 +203,10 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         String url = mPost.getPostAvatarForDisplay(getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
         imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
 
-        if (mPost.isCommentsOpen) {
+        if (ReaderUtils.isLoggedOutReader()) {
+            mCommentBox.setVisibility(View.GONE);
+            txtCommentsClosed.setVisibility(View.GONE);
+        } else if (mPost.isCommentsOpen) {
             mCommentBox.setVisibility(View.VISIBLE);
             txtCommentsClosed.setVisibility(View.GONE);
 

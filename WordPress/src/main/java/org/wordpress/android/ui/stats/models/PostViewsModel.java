@@ -21,7 +21,6 @@ public class PostViewsModel implements Serializable {
     private int mHighestMonth, mHighestDayAverage, mHighestWeekAverage;
     private String mDate;
     private VisitModel[] mDayViews; //Used to build the graph
-    private HashMap<String, Integer> fieldColumnsMapping;
     private List<Year> mYears;
     private List<Year> mAverages;
     private List<Week> mWeeks;
@@ -91,6 +90,7 @@ public class PostViewsModel implements Serializable {
         if (dataJSON != null) {
             // Read the position/index of each field in the response
             JSONArray fieldsJSON = response.getJSONArray("fields");
+            HashMap<String, Integer> fieldColumnsMapping;
             try {
                 fieldColumnsMapping = new HashMap<>(2);
                 for (int i = 0; i < fieldsJSON.length(); i++) {
@@ -146,9 +146,8 @@ public class PostViewsModel implements Serializable {
             // Keys could not be ordered fine. Reordering them.
             String[] orderedKeys = orderKeys(yearsJSON.keys(), yearsJSON.length());
 
-            for (String orderedKey : orderedKeys) {
+            for (String currentYearKey : orderedKeys) {
                 Year currentYear = new Year();
-                String currentYearKey = orderedKey;
                 currentYear.setLabel(currentYearKey);
 
                 JSONObject currentYearObj = yearsJSON.getJSONObject(currentYearKey);
@@ -353,8 +352,8 @@ public class PostViewsModel implements Serializable {
     }
 
     public class Month implements Serializable {
-        private int mCount;
-        private String mMonth;
+        private final int mCount;
+        private final String mMonth;
 
         Month(String label, int count) {
             this.mMonth = label;

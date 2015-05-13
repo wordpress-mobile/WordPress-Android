@@ -57,7 +57,7 @@ public class ClickGroupModel implements Serializable {
         return mBlogId;
     }
 
-    public void setBlogId(String blogId) {
+    private void setBlogId(String blogId) {
         this.mBlogId = blogId;
     }
 
@@ -65,7 +65,7 @@ public class ClickGroupModel implements Serializable {
         return mDate;
     }
 
-    public void setDate(long date) {
+    private void setDate(long date) {
         this.mDate = date;
     }
 
@@ -73,7 +73,7 @@ public class ClickGroupModel implements Serializable {
         return mGroupId;
     }
 
-    public void setGroupId(String groupId) {
+    private void setGroupId(String groupId) {
         this.mGroupId = groupId;
     }
 
@@ -81,7 +81,7 @@ public class ClickGroupModel implements Serializable {
         return mName;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.mName = name;
     }
 
@@ -89,7 +89,7 @@ public class ClickGroupModel implements Serializable {
         return mViews;
     }
 
-    public void setViews(int total) {
+    private void setViews(int total) {
         this.mViews = total;
     }
 
@@ -97,7 +97,7 @@ public class ClickGroupModel implements Serializable {
         return mUrl;
     }
 
-    public void setUrl(String url) {
+    private void setUrl(String url) {
         this.mUrl = url;
     }
 
@@ -105,7 +105,7 @@ public class ClickGroupModel implements Serializable {
         return mIcon;
     }
 
-    public void setIcon(String icon) {
+    private void setIcon(String icon) {
         this.mIcon = icon;
     }
 

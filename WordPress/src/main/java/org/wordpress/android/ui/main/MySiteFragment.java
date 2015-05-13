@@ -15,7 +15,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.GravatarUtils;
@@ -193,7 +192,6 @@ public class MySiteFragment extends Fragment
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 
-        mBlavatarImageView.setErrorImageResId(mBlog.isDotcomFlag() ? R.drawable.blavatar_placeholder_com : R.drawable.blavatar_placeholder_org);
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
         String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
