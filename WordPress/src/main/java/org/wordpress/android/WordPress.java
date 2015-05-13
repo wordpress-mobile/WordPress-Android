@@ -85,8 +85,6 @@ public class WordPress extends Application {
     public static Blog currentBlog;
     public static Post currentPost;
     public static WordPressDB wpDB;
-    public static OnPostUploadedListener onPostUploadedListener = null;
-    public static boolean postsShouldRefresh;
     public static RestClientUtils mRestClientUtils;
     public static RestClientUtils mRestClientUtilsVersion1_1;
     public static RequestQueue requestQueue;
@@ -375,40 +373,6 @@ public class WordPress extends Application {
             HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
         }
         AnalyticsTracker.registerPushNotificationToken(regId);
-    }
-
-    public interface OnPostUploadedListener {
-        public abstract void OnPostUploaded(int localBlogId, String postId, boolean isPage);
-
-        public abstract void OnPostUploadFailed(int localBlogId);
-    }
-
-    public static void setOnPostUploadedListener(OnPostUploadedListener listener) {
-        onPostUploadedListener = listener;
-    }
-
-    public static void postUploaded(int localBlogId, String postId, boolean isPage) {
-        if (onPostUploadedListener != null) {
-            try {
-                onPostUploadedListener.OnPostUploaded(localBlogId, postId, isPage);
-            } catch (Exception e) {
-                postsShouldRefresh = true;
-            }
-        } else {
-            postsShouldRefresh = true;
-        }
-    }
-
-    public static void postUploadFailed(int localBlogId) {
-        if (onPostUploadedListener != null) {
-            try {
-                onPostUploadedListener.OnPostUploadFailed(localBlogId);
-            } catch (Exception e) {
-                postsShouldRefresh = true;
-            }
-        } else {
-            postsShouldRefresh = true;
-        }
     }
 
     /**

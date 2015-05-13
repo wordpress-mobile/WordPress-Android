@@ -369,6 +369,9 @@ public class StatsActivity extends ActionBarActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SignInActivity.REQUEST_CODE) {
+            if (resultCode == RESULT_CANCELED) {
+                finish();
+            }
             mResultCode = resultCode;
             final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
             if (resultCode == RESULT_OK && currentBlog != null && !currentBlog.isDotcomFlag()) {
@@ -425,7 +428,7 @@ public class StatsActivity extends ActionBarActivity
                     }, "wp.getOptions", params);
                 } else {
                     mRequestedDate =  StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                    createFragments(true); // Recreate the fragment and start a refresh od Stats
+                    createFragments(true); // Recreate the fragment and start a refresh of Stats
                 }
                 mSwipeToRefreshHelper.setRefreshing(true);
             }
@@ -554,7 +557,6 @@ public class StatsActivity extends ActionBarActivity
             AppLog.w(AppLog.T.STATS, "StatsActivity > cannot check credentials since no internet connection available");
             return false;
         }
-
         final String blogId = StatsUtils.getBlogId(mLocalBlogID);
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
@@ -627,7 +629,8 @@ public class StatsActivity extends ActionBarActivity
                 // Blog has not returned a jetpack_client_id
                 showJetpackMissingAlert();
             } else {
-                createFragments(true); // recreate fragments and force a refresh not that we have a valid blog_id
+                mSwipeToRefreshHelper.setRefreshing(true);
+                checkCredentials();
             }
         } else {
             if (mSignInDialog != null && mSignInDialog.isShowing()) {
@@ -635,6 +638,20 @@ public class StatsActivity extends ActionBarActivity
             }
             Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.JetpackAuthError event) {
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
+
+        if (event.mLocalBlogId != mLocalBlogID) {
+            // The user has changed blog
+            return;
+        }
+        mSwipeToRefreshHelper.setRefreshing(false);
+        startWPComLoginActivity();
     }
 
     /*

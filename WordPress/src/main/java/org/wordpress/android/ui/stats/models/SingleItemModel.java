@@ -20,7 +20,7 @@ public class SingleItemModel implements Serializable {
        this(blogId, StatsUtils.toMs(date), itemID, title, totals, url, icon);
     }
 
-    public SingleItemModel(String blogId, long date, String itemID, String title, int totals, String url, String icon) {
+    SingleItemModel(String blogId, long date, String itemID, String title, int totals, String url, String icon) {
         this.mBlogID = blogId;
         this.mItemID = itemID;
         this.mTitle = title;

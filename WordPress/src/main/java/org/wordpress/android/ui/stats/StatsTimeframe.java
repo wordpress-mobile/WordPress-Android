@@ -15,7 +15,7 @@ public enum StatsTimeframe {
 
     private final int mLabelResId;
 
-    private StatsTimeframe(int labelResId) {
+    StatsTimeframe(int labelResId) {
         mLabelResId = labelResId;
     }
 
