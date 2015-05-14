@@ -70,7 +70,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
-import org.wordpress.android.widgets.ScrollDirectionListener;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -93,7 +92,6 @@ public class ReaderPostListFragment extends Fragment
     private ReaderRecyclerView mRecyclerView;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private CustomSwipeRefreshLayout mSwipeToRefreshLayout;
 
     private View mNewPostsBar;
     private View mEmptyView;
@@ -386,9 +384,8 @@ public class ReaderPostListFragment extends Fragment
         mProgress.setVisibility(View.GONE);
 
         // swipe to refresh setup
-        mSwipeToRefreshLayout = (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout);
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
-                mSwipeToRefreshLayout,
+                (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -483,21 +480,6 @@ public class ReaderPostListFragment extends Fragment
                 }
             });
 
-            mRecyclerView.setScrollDirectionListener(new ScrollDirectionListener() {
-                @Override
-                public void onScrollUp() {
-                    checkSwipeToRefresh();
-                }
-                @Override
-                public void onScrollDown() {
-                    checkSwipeToRefresh();
-                }
-                @Override
-                public void onScrollCompleted() {
-                    checkSwipeToRefresh();
-                }
-            });
-
             // scroll the tag toolbar with the recycler
             mRecyclerView.setOnScrollListener(new ReaderScrollListener(getActivity()) {
                 @Override
@@ -541,16 +523,6 @@ public class ReaderPostListFragment extends Fragment
                 animateHeaderDelayed();
                 break;
         }
-    }
-
-    /*
-     * disable swipe-to-refresh if "new posts" bar is showing or posts can be scrolled up
-     * because otherwise it can intercept the touch event and pass it on to the swipe layout,
-     * causing a refresh to begin even though the user is simply scrolling up the posts.
-     * note that this problem only applies when the fragment toolbar is enabled.
-     */
-    private void checkSwipeToRefresh() {
-        mSwipeToRefreshLayout.setEnabled(!mRecyclerView.canScrollUp() && !isNewPostsBarShowing());
     }
 
     /*
@@ -794,7 +766,6 @@ public class ReaderPostListFragment extends Fragment
                     mRecyclerView.scrollToPosition(mRestorePosition);
                 }
             }
-            checkSwipeToRefresh();
             mRestorePosition = 0;
         }
     };
@@ -1131,7 +1102,6 @@ public class ReaderPostListFragment extends Fragment
 
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
-        checkSwipeToRefresh();
     }
 
     private void hideNewPostsBar() {
@@ -1149,7 +1119,6 @@ public class ReaderPostListFragment extends Fragment
                 if (isAdded()) {
                     mNewPostsBar.setVisibility(View.GONE);
                     mIsAnimatingOutNewPostsBar = false;
-                    checkSwipeToRefresh();
                 }
             }
             @Override
