@@ -343,12 +343,8 @@ public class WPNetworkImageView extends ImageView {
                 // do nothing
                 break;
             case AVATAR:
-                if (getContext() == null) break;
                 // circular "mystery man" for failed avatars
-                new CircularizeBitmapTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
-                        getContext().getResources(),
-                        R.drawable.gravatar_placeholder
-                ));
+                showDefaultGravatarImage();
                 break;
             case BLAVATAR:
                 setImageResource(R.drawable.blavatar_placeholder);
@@ -358,6 +354,14 @@ public class WPNetworkImageView extends ImageView {
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_lighten_30)));
                 break;
         }
+    }
+
+    public void showDefaultGravatarImage() {
+        if (getContext() == null) return;
+        new CircularizeBitmapTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
+                getContext().getResources(),
+                R.drawable.gravatar_placeholder
+        ));
     }
 
     // --------------------------------------------------------------------------------------------------

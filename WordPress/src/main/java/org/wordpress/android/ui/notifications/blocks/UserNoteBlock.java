@@ -96,7 +96,7 @@ public class UserNoteBlock extends NoteBlock {
                 noteBlockHolder.rootView.setOnClickListener(null);
             }
         } else {
-            noteBlockHolder.avatarImageView.setImageResource(R.drawable.gravatar_placeholder);
+            noteBlockHolder.avatarImageView.showDefaultGravatarImage();
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 

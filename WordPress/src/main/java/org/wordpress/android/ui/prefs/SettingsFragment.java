@@ -30,12 +30,10 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.ui.ShareIntentReceiverActivity;
-import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.ShareIntentReceiverActivity;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -112,7 +110,7 @@ public class SettingsFragment extends PreferenceFragment {
             PreferenceGroup passcodeGroup = (PreferenceGroup) findPreference(resources.getString(R.string.pref_key_passlock_section));
             rootScreen.removePreference(passcodeGroup);
         }
-        displayPreferences();
+        updatePostSignature();
     }
 
     @Override
@@ -125,54 +123,45 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void initNotifications() {
-        // AuthenticatorRequest notification settings if needed
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
-            if (settingsJson == null) {
-                com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        AppLog.d(T.NOTIFS, "Get settings action succeeded");
-                        Editor editor = mSettings.edit();
-                        try {
-                            JSONObject settingsJSON = jsonObject.getJSONObject("settings");
-                            editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS,
-                                    settingsJSON.toString());
-                            editor.apply();
-                        } catch (JSONException e) {
-                            AppLog.e(T.NOTIFS,
-                                    "Can't parse the JSON object returned from the server that contains PN settings.",
-                                    e);
-                        }
-                        refreshWPComAuthCategory();
+        if (!AccountHelper.isSignedInWordPressDotCom()) {
+            hideManageNotificationCategory();
+            return;
+        }
+        // Request notification settings if needed
+        String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
+        if (settingsJson == null) {
+            com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+                    AppLog.d(T.NOTIFS, "Get settings action succeeded");
+                    Editor editor = mSettings.edit();
+                    try {
+                        JSONObject settingsJSON = jsonObject.getJSONObject("settings");
+                        editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS,
+                                settingsJSON.toString());
+                        editor.apply();
+                    } catch (JSONException e) {
+                        AppLog.e(T.NOTIFS, "Can't parse PN settings from server response", e);
                     }
-                };
-                RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        AppLog.e(T.NOTIFS, "Get settings action failed", volleyError);
-                    }
-                };
-                NotificationsUtils.getPushNotificationSettings(getActivity(), listener, errorListener);
-            }
+                }
+            };
+            RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    AppLog.e(T.NOTIFS, "Get settings action failed", volleyError);
+                }
+            };
+            NotificationsUtils.getPushNotificationSettings(getActivity(), listener, errorListener);
         }
     }
 
-    private void hidePostSignatureCategory() {
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
-        PreferenceCategory postSignature = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_post_sig_section));
-        if (preferenceScreen != null && postSignature != null) {
-            preferenceScreen.removePreference(postSignature);
-        }
-    }
-
-    private void hideNotificationBlogsCategory() {
+    private void hideManageNotificationCategory() {
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
-        PreferenceCategory blogs =
-                (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_notification_blogs));
-        if (preferenceScreen != null && blogs != null) {
-            preferenceScreen.removePreference(blogs);
+        PreferenceCategory notifs =
+                (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
+        if (preferenceScreen != null && notifs != null) {
+            preferenceScreen.removePreference(notifs);
         }
     }
 
@@ -180,8 +169,6 @@ public class SettingsFragment extends PreferenceFragment {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.settings);
-
-        refreshWPComAuthCategory();
 
         //update Passcode lock row if available
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
@@ -206,59 +193,14 @@ public class SettingsFragment extends PreferenceFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void refreshWPComAuthCategory() {
-        PreferenceCategory wpComCategory = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_wpcom));
-        wpComCategory.removeAll();
-        addWpComSignIn(wpComCategory, 0);
-    }
-
-    private void displayPreferences() {
-        if (WordPress.wpDB.getNumVisibleBlogs() == 0) {
-            hidePostSignatureCategory();
-            hideNotificationBlogsCategory();
+    private void updatePostSignature() {
+        if (mTaglineTextPreference.getText() == null || mTaglineTextPreference.getText().equals("")) {
+            mTaglineTextPreference.setSummary(R.string.posted_from);
+            mTaglineTextPreference.setText(getString(R.string.posted_from));
         } else {
-            if (mTaglineTextPreference.getText() == null || mTaglineTextPreference.getText().equals("")) {
-                mTaglineTextPreference.setSummary(R.string.posted_from);
-                mTaglineTextPreference.setText(getString(R.string.posted_from));
-            } else {
-                mTaglineTextPreference.setSummary(mTaglineTextPreference.getText());
-            }
+            mTaglineTextPreference.setSummary(mTaglineTextPreference.getText());
         }
     }
-
-    private void addWpComSignIn(PreferenceCategory wpComCategory, int order) {
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            String username = AccountHelper.getDefaultAccount().getUserName();
-            Preference usernamePref = new Preference(getActivity());
-            usernamePref.setTitle(getString(R.string.username));
-            usernamePref.setSummary(username);
-            usernamePref.setSelectable(false);
-            usernamePref.setOrder(order);
-            wpComCategory.addPreference(usernamePref);
-        } else {
-            Preference signInPref = new Preference(getActivity());
-            signInPref.setTitle(getString(R.string.sign_in));
-            signInPref.setOnPreferenceClickListener(signInPreferenceClickListener);
-            wpComCategory.addPreference(signInPref);
-
-            PreferenceScreen rootScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
-            PreferenceGroup notificationsGroup = (PreferenceGroup) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
-            if (notificationsGroup != null) {
-                rootScreen.removePreference(notificationsGroup);
-            }
-        }
-    }
-
-    private final OnPreferenceClickListener signInPreferenceClickListener = new OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            Intent i = new Intent(getActivity(), SignInActivity.class);
-            i.putExtra("wpcom", true);
-            i.putExtra("auth-only", true);
-            startActivityForResult(i, 0);
-            return true;
-        }
-    };
 
     private final OnPreferenceClickListener resetAutoSharePreferenceClickListener = new OnPreferenceClickListener() {
         @Override
