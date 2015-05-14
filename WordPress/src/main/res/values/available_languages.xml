@@ -3,10 +3,6 @@
 <string-array name="available_languages" translatable="false">
 
 <item>
-en-us
-</item>
-
-<item>
 az
 </item>
 
@@ -128,6 +124,22 @@ mk
 
 <item>
 en-au
+</item>
+
+<item>
+sr
+</item>
+
+<item>
+sk
+</item>
+
+<item>
+cy
+</item>
+
+<item>
+da
 </item>
 
 </string-array>

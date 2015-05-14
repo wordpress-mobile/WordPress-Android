@@ -2,6 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -62,14 +63,16 @@
                 tools:listitem="@layout/post_list_row" />
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
-        <org.wordpress.android.widgets.FloatingActionButton
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_button"
-            android:layout_width="@dimen/fab_size"
-            android:layout_height="@dimen/fab_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_marginBottom="@dimen/fab_margin"
             android:layout_marginRight="@dimen/fab_margin"
-            android:src="@drawable/ic_create_white_24dp" />
+            fab:fab_colorNormal="@color/fab_normal"
+            fab:fab_colorPressed="@color/fab_pressed"
+            fab:fab_icon="@drawable/ic_create_white_24dp" />
 
     </FrameLayout>
 

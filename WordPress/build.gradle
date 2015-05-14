@@ -32,7 +32,7 @@ android {
     defaultConfig {
         applicationId "org.wordpress.android"
         versionName "4.0"
-        versionCode 180
+        versionCode 181
         minSdkVersion 14
         targetSdkVersion 21
 
@@ -81,6 +81,9 @@ dependencies {
     compile 'commons-lang:commons-lang:2.6'
     compile 'com.cocosw:undobar:1.6@aar'
     compile 'de.greenrobot:eventbus:2.4.0'
+    compile ('com.getbase:floatingactionbutton:1.9.0') {
+        exclude module: 'support-annotations'
+    }
 
     compile 'com.mcxiaoke.volley:library:1.0.+'
 

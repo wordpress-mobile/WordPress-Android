@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="select_from_new_picker">Yeni seçici ile birden çok öge seç</string>
+	<string name="no_media_sources">Ortam çekilemedi</string>
+	<string name="loading_blog_videos">Videolar çekiliyor</string>
+	<string name="error_loading_images">Görseller yüklenirken hata oluştu</string>
+	<string name="error_loading_videos">Videolar yüklenirken hata oluştu</string>
+	<string name="loading_blog_images">Görseller çekiliyor</string>
+	<string name="error_loading_blog_videos">Videolar çekilemiyor</string>
+	<string name="error_loading_blog_images">Görseller çekilemiyor</string>
+	<string name="no_device_videos">Video yok</string>
+	<string name="no_blog_images">Görsel yok</string>
+	<string name="no_blog_videos">Video yok</string>
+	<string name="no_device_images">Görsel yok</string>
+	<string name="stats_generic_error">Gerekli istatistikler yüklenemiyor</string>
+	<string name="no_media">Ortam yok</string>
+	<string name="loading_videos">Videolar yükleniyor</string>
+	<string name="loading_images">Görseller yükleniyor</string>
 	<string name="auth_required">Devam etmek için giriş yapın.</string>
 	<string name="sign_in_jetpack">JetPack bağlantısı için WordPress.com hesabınıza giriş yapın.</string>
 	<string name="two_step_sms_sent">Metin mesajlarınızı doğrulama kodu için kontrol edin.</string>
