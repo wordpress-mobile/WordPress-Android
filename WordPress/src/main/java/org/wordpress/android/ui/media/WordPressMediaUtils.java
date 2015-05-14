@@ -222,7 +222,7 @@ public class WordPressMediaUtils {
         }
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         cursor.close();
-        return state == null || state.equals("uploading");
+        return state == null || !state.equals("uploading");
     }
 
     public static class BackgroundDownloadWebImage extends AsyncTask<Uri, String, Bitmap> {

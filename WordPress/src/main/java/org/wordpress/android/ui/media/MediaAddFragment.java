@@ -118,10 +118,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), event.mErrorMessage, ToastUtils.Duration.SHORT);
         }
-
-        if (mCallback != null) {
-            mCallback.onMediaAdded(event.mLocalId);
-        }
     }
 
     @SuppressWarnings("unused")
