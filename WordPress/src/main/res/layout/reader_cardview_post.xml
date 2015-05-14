@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:wp="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <View
         android:id="@+id/spacer_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
@@ -61,11 +60,11 @@
 
                 <org.wordpress.android.ui.reader.views.ReaderFollowButton
                     android:id="@+id/follow_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_below="@+id/text_blog_name"
                     android:layout_marginTop="@dimen/margin_small"
-                    android:layout_toRightOf="@+id/image_avatar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_toRightOf="@+id/image_avatar" />
 
                 <ImageView
                     android:id="@+id/image_more"
@@ -169,4 +168,5 @@
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+
 </LinearLayout>

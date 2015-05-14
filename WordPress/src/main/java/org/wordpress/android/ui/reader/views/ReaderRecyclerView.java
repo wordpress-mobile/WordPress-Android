@@ -120,9 +120,9 @@ public class ReaderRecyclerView extends RecyclerView {
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
             super.getItemOffsets(outRect, view, parent, state);
             outRect.set(mSpacingHorizontal, // left
-                        mSpacingVertical,   // top
+                        0,                  // top
                         mSpacingHorizontal, // right
-                        0);                 // bottom
+                        mSpacingVertical);  // bottom
         }
     }
 }
