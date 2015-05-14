@@ -205,6 +205,12 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         ReaderActivityLauncher.showReaderLikingUsers(this, blogId, postId);
     }
 
+    public void showReaderCommentsList(long siteId, long postId, long commentId) {
+        if (isFinishing()) return;
+
+        ReaderActivityLauncher.showReaderComments(this, siteId, postId, commentId);
+    }
+
     @Override
     public void onModerateCommentForNote(Note note, CommentStatus newStatus) {
         Intent resultIntent = new Intent();

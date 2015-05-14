@@ -34,6 +34,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -418,8 +419,12 @@ public class NotificationsUtils {
                 activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
                 break;
             case COMMENT:
-                // Load a comment in the webview, it should scroll to the comment
-                activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                // Load the comment in the reader list if it exists, otherwise show a webview
+                if (ReaderUtils.postAndCommentExists(clickedSpan.getSiteId(), clickedSpan.getPostId(), clickedSpan.getId())) {
+                    activity.showReaderCommentsList(clickedSpan.getSiteId(), clickedSpan.getPostId(), clickedSpan.getId());
+                } else {
+                    activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                }
                 break;
             case STAT:
             case FOLLOW:

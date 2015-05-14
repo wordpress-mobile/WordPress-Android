@@ -35,6 +35,8 @@ public class ReaderCommentService extends Service {
     private static final String ARG_COMMENT_ID  = "comment_id";
     private static final String ARG_NEXT_PAGE   = "next_page";
 
+    private static int mCurrentPage;
+
     public static void startService(Context context, long blogId, long postId, boolean requestNextPage) {
         Intent intent = new Intent(context, ReaderCommentService.class);
         intent.putExtra(ARG_BLOG_ID, blogId);
@@ -81,15 +83,14 @@ public class ReaderCommentService extends Service {
         final long commentId = intent.getLongExtra(ARG_COMMENT_ID, 0);
         boolean requestNextPage = intent.getBooleanExtra(ARG_NEXT_PAGE, false);
 
-        int pageNumber;
         if (requestNextPage) {
             int prevPage = ReaderCommentTable.getLastPageNumberForPost(blogId, postId);
-            pageNumber = prevPage + 1;
+            mCurrentPage = prevPage + 1;
         } else {
-            pageNumber = 1;
+            mCurrentPage = 1;
         }
 
-        updateCommentsForPost(blogId, postId, pageNumber, new UpdateResultListener() {
+        updateCommentsForPost(blogId, postId, mCurrentPage, new UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
                 if (commentId > 0) {
@@ -98,9 +99,8 @@ public class ReaderCommentService extends Service {
                         stopSelf();
                     } else {
                         // Comment not found yet, request the next page
-                        int prevPage = ReaderCommentTable.getLastPageNumberForPost(blogId, postId);
-                        int nextPage = prevPage + 1;
-                        updateCommentsForPost(blogId, postId, nextPage, this);
+                        mCurrentPage++;
+                        updateCommentsForPost(blogId, postId, mCurrentPage, this);
                     }
                 } else {
                     EventBus.getDefault().post(new ReaderEvents.UpdateCommentsEnded(result));

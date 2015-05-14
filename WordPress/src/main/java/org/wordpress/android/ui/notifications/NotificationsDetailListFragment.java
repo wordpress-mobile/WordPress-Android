@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
+import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -55,7 +57,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private int mRestoredListPosition;
 
     public interface OnNoteChangeListener {
-        public void onNoteChanged(Note note);
+        void onNoteChanged(Note note);
     }
 
     private Note mNote;
@@ -193,9 +195,15 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             }
 
             NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
-            if (mNote.getParentCommentId() > 0 || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
-                // show comment detail
-                detailActivity.showCommentDetailForNote(mNote);
+            if (mNote.isCommentReplyType() || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
+                long commentId = mNote.isCommentReplyType() ? mNote.getParentCommentId() : mNote.getCommentId();
+
+                // show comments list if it exists in the reader
+                if (ReaderUtils.postAndCommentExists(mNote.getSiteId(), mNote.getPostId(), commentId)) {
+                    detailActivity.showReaderCommentsList(mNote.getSiteId(), mNote.getPostId(), commentId);
+                } else {
+                    detailActivity.showWebViewActivityForUrl(mNote.getUrl());
+                }
             } else if (mNote.isFollowType()) {
                 detailActivity.showBlogPreviewActivity(mNote.getSiteId());
             } else {
