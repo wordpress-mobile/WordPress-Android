@@ -85,13 +85,15 @@ public class ReaderPostListFragment extends Fragment
                    ReaderInterfaces.OnPostPopupListener,
                    WPMainActivity.OnScrollToTopListener {
 
-    private Spinner mSpinner;
+    private Toolbar mTagToolbar;
+    private Spinner mTagSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
 
     private ReaderPostAdapter mPostAdapter;
     private ReaderRecyclerView mRecyclerView;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private CustomSwipeRefreshLayout mSwipeToRefreshLayout;
 
     private View mNewPostsBar;
     private View mEmptyView;
@@ -107,6 +109,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostListType mPostListType;
 
     private int mRestorePosition;
+    private int mTagToolbarOffset;
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
@@ -384,8 +387,9 @@ public class ReaderPostListFragment extends Fragment
         mProgress.setVisibility(View.GONE);
 
         // swipe to refresh setup
+        mSwipeToRefreshLayout = (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout);
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
-                (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout),
+                mSwipeToRefreshLayout,
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -459,17 +463,37 @@ public class ReaderPostListFragment extends Fragment
         });
     }
 
+    /*
+     * position the tag toolbar based on the recycler's scroll position - this will make it
+     * appear to scroll along with the recycler
+     */
+    private void positionTagToolbar() {
+        if (!isAdded() || mTagToolbar == null) return;
+
+        int distance = mRecyclerView.getVerticalScrollOffset();
+        int newVisibility;
+        if (distance <= mTagToolbarOffset) {
+            newVisibility = View.VISIBLE;
+            mTagToolbar.setTranslationY(-distance);
+        } else {
+            newVisibility = View.GONE;
+        }
+        if (mTagToolbar.getVisibility() != newVisibility) {
+            mTagToolbar.setVisibility(newVisibility);
+        }
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         // configure the toolbar for posts in followed tags (shown in main viewpager activity)
-        if (hasFragmentToolbar()) {
-            final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
-            toolbar.setVisibility(View.VISIBLE);
+        if (shouldShowTagToolbar()) {
+            mTagToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
+            mTagToolbar.setVisibility(View.VISIBLE);
 
-            toolbar.inflateMenu(R.menu.reader_list);
-            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            mTagToolbar.inflateMenu(R.menu.reader_list);
+            mTagToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     if (menuItem.getItemId() == R.id.menu_tags) {
@@ -481,16 +505,22 @@ public class ReaderPostListFragment extends Fragment
             });
 
             // scroll the tag toolbar with the recycler
-            mRecyclerView.setOnScrollListener(new ReaderScrollListener(getActivity()) {
+            int toolbarHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+            mTagToolbarOffset = (int) (toolbarHeight + (toolbarHeight * 0.25));
+            mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
-                public void onMoved(int distance) {
-                    toolbar.setTranslationY(-distance);
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    positionTagToolbar();
                 }
             });
 
+            // move swipe progress down so it doesn't get covered by the toolbar
+            mSwipeToRefreshLayout.setProgressViewOffset(false, 0, mTagToolbarOffset);
+
             // create the tag spinner in the toolbar
-            if (mSpinner == null) {
-                enableTagSpinner(toolbar);
+            if (mTagSpinner == null) {
+                enableTagSpinner();
             }
             selectTagInSpinner(getCurrentTag());
         }
@@ -645,12 +675,12 @@ public class ReaderPostListFragment extends Fragment
     /*
      * enables the tag spinner in the toolbar, used only for posts in followed tags
      */
-    private void enableTagSpinner(Toolbar toolbar) {
+    private void enableTagSpinner() {
         if (!isAdded()) return;
 
-        mSpinner = (Spinner) toolbar.findViewById(R.id.reader_spinner);
-        mSpinner.setAdapter(getSpinnerAdapter());
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mTagSpinner = (Spinner) mTagToolbar.findViewById(R.id.reader_spinner);
+        mTagSpinner.setAdapter(getSpinnerAdapter());
+        mTagSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 final ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(position);
@@ -680,7 +710,7 @@ public class ReaderPostListFragment extends Fragment
      * returns true if the fragment should have it's own toolbar - used when showing posts in
      * followed tags so user can select a different tag from the toolbar spinner
      */
-    private boolean hasFragmentToolbar() {
+    private boolean shouldShowTagToolbar() {
         return (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
     }
 
@@ -831,8 +861,8 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             mPostAdapter.setOnReblogRequestedListener(mRequestReblogListener);
-            // show spacer above the first post to accommodate fragment toolbar
-            mPostAdapter.setShowToolbarSpacer(hasFragmentToolbar());
+            // show spacer above the first post to accommodate toolbar
+            mPostAdapter.setShowToolbarSpacer(shouldShowTagToolbar());
         }
         return mPostAdapter;
     }
@@ -1199,12 +1229,12 @@ public class ReaderPostListFragment extends Fragment
      * make sure the passed tag is the one selected in the spinner
      */
     private void selectTagInSpinner(final ReaderTag tag) {
-        if (mSpinner == null || !hasSpinnerAdapter()) {
+        if (mTagSpinner == null || !hasSpinnerAdapter()) {
             return;
         }
         int position = getSpinnerAdapter().getIndexOfTag(tag);
-        if (position > -1 && position != mSpinner.getSelectedItemPosition()) {
-            mSpinner.setSelection(position);
+        if (position > -1 && position != mTagSpinner.getSelectedItemPosition()) {
+            mTagSpinner.setSelection(position);
         }
     }
 
@@ -1453,37 +1483,5 @@ public class ReaderPostListFragment extends Fragment
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, 0);
         }
-    }
-
-    abstract class ReaderScrollListener extends RecyclerView.OnScrollListener {
-
-        private final int toolbarHeight;
-        private int toolbarOffset;
-
-        public ReaderScrollListener(Context context) {
-            toolbarHeight = context.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-        }
-
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-
-            clipToolbarOffset();
-            onMoved(toolbarOffset);
-
-            if ((toolbarOffset < toolbarHeight && dy > 0) || (toolbarOffset > 0 && dy < 0)) {
-                toolbarOffset += dy;
-            }
-        }
-
-        private void clipToolbarOffset() {
-            if (toolbarOffset > toolbarHeight) {
-                toolbarOffset = toolbarHeight;
-            } else if (toolbarOffset < 0) {
-                toolbarOffset = 0;
-            }
-        }
-
-        public abstract void onMoved(int distance);
     }
 }

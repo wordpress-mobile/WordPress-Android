@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.adapters;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -61,6 +62,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
 
     class ReaderPostViewHolder extends RecyclerView.ViewHolder {
+        private final CardView cardView;
+
         private final TextView txtTitle;
         private final TextView txtText;
         private final TextView txtBlogName;
@@ -82,6 +85,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public ReaderPostViewHolder(View itemView) {
             super(itemView);
+
+            cardView = (CardView) itemView.findViewById(R.id.card_view);
 
             txtTitle = (TextView) itemView.findViewById(R.id.text_title);
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
@@ -280,7 +285,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (mPostSelectedListener != null) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            postHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mPostSelectedListener.onPostSelected(post.blogId, post.postId);
