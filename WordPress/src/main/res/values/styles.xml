@@ -339,7 +339,7 @@
 
     <style name="fab_menu_label_style">
         <item name="android:background">@drawable/fab_menu_label_background</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/grey_darken_20</item>
     </style>
 
 </resources>
