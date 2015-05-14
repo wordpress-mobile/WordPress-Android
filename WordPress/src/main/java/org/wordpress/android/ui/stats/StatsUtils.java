@@ -400,15 +400,12 @@ public class StatsUtils {
                 break;
             case INSIGHTS_ALL_TIME:
                 model = new InsightsAllTimeModel(blogID, response);
-                model = response.toString();
                 break;
             case INSIGHTS_POPULAR:
                 model = new InsightsPopularModel(blogID, response);
-                model = response.toString();
                 break;
             case INSIGHTS_TODAY:
                 model = new InsightsTodayModel(blogID, response);
-                model = response.toString();
                 break;
         }
         return model;

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_weight="1"
+        android:padding="@dimen/margin_extra_large">
+
+        <org.wordpress.android.widgets.WPAutoResizeTextView
+            android:id="@+id/stats_most_popular_views_count"
+            style="@style/StatsHeaderTotals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0" />
+
+        <org.wordpress.android.widgets.WPAutoResizeTextView
+            style="@style/StatsHeaderTotalsLabel"
+            android:id="@+id/stats_most_popular_views_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/stats_most_popular_views_count"
+            android:text="@string/stats_totals_visitors" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_weight="1"
+        android:padding="@dimen/margin_extra_large">
+
+        <org.wordpress.android.widgets.WPAutoResizeTextView
+            android:id="@+id/stats_visitors_and_views_today_views_count"
+            style="@style/StatsHeaderTotals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0" />
+
+        <org.wordpress.android.widgets.WPAutoResizeTextView
+            style="@style/StatsHeaderTotalsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/stats_visitors_and_views_today_views_count"
+            android:text="@string/stats_insights_hour_with_most_views" />
+    </RelativeLayout>
+</LinearLayout>

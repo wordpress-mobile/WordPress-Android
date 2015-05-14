@@ -766,7 +766,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART);
     }
 
-    private enum OverviewLabel {
+    public enum OverviewLabel {
         VIEWS(R.string.stats_views),
         VISITORS(R.string.stats_visitors),
         LIKES(R.string.stats_likes),

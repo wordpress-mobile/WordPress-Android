@@ -42,4 +42,24 @@ public class InsightsAllTimeModel implements Serializable {
     public void setDate(String date) {
         this.mDate = date;
     }
+
+    public int getVisitors() {
+        return visitors;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public int getPosts() {
+        return posts;
+    }
+
+    public String getViews_best_day() {
+        return views_best_day;
+    }
+
+    public int getViews_best_day_total() {
+        return views_best_day_total;
+    }
 }

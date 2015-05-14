@@ -10,7 +10,12 @@ public class InsightsTodayModel implements Serializable {
     private String mBlogID;
     private String mDate;
     private String period;
-    private int visitors, views, likes, reblogs, comments, followers;
+    private int visitors;
+    private int views;
+    private int likes;
+    private int reblogs;
+    private int comments;
+    private int followers;
 
     public InsightsTodayModel(String blogID, JSONObject response) throws JSONException {
         this.setBlogID(blogID);
@@ -38,5 +43,29 @@ public class InsightsTodayModel implements Serializable {
 
     public void setDate(String date) {
         this.mDate = date;
+    }
+
+    public int getReblogs() {
+        return reblogs;
+    }
+
+    public int getComments() {
+        return comments;
+    }
+
+    public int getFollowers() {
+        return followers;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public int getVisitors() {
+        return visitors;
     }
 }

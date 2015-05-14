@@ -29,13 +29,13 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
 
     StatsResourceVars mResourceVars;
 
-    private TextView mEmptyLabel;
+    private TextView mErrorLabel;
     private LinearLayout mEmptyModulePlaceholder;
-    private LinearLayout mResultContainer;
+    protected LinearLayout mResultContainer;
 
     private TextView mResponseAsText;
 
-    //protected abstract int  getInsightsFragmentID();
+    abstract void customizeUIWithResults(); // This is where all the UI is customized at module level
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
 
         mEmptyModulePlaceholder = (LinearLayout) view.findViewById(R.id.stats_empty_module_placeholder);
         mResultContainer = (LinearLayout) view.findViewById(R.id.stats_module_result_container);
-        mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
+        mErrorLabel = (TextView) view.findViewById(R.id.stats_error_text);
         mResponseAsText = (TextView) view.findViewById(R.id.stats_insights_response_text);
         return view;
     }
@@ -119,26 +119,32 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
 
         if (mDatamodels == null) {
             // TODO ??? what should we do here?
-            mEmptyLabel.setVisibility(View.GONE);
-            mResultContainer.setVisibility(View.GONE);
-            mEmptyModulePlaceholder.setVisibility(View.VISIBLE);
+            showPlaceholderUI();
             return;
         }
 
-        if (isErrorResponse(0)) {
+/*        if (isErrorResponse(0)) {
+            showErrorUI(0);
+            return;
+        }
+        */
+
+        if (isDataEmpty(0)) {
             showErrorUI(0);
             return;
         }
 
         // not an error update the module UI here
-        mEmptyLabel.setVisibility(View.GONE);
+        mErrorLabel.setVisibility(View.GONE);
         mResultContainer.setVisibility(View.VISIBLE);
         mEmptyModulePlaceholder.setVisibility(View.GONE);
-        mResponseAsText.setText((String)mDatamodels[0]);
+       // mResponseAsText.setText((String) mDatamodels[0]);
+
+        customizeUIWithResults(); // call the subclass and draw the real UI here
     }
 
     private void showPlaceholderUI() {
-        mEmptyLabel.setVisibility(View.GONE);
+        mErrorLabel.setVisibility(View.GONE);
         mResultContainer.setVisibility(View.GONE);
         mEmptyModulePlaceholder.setVisibility(View.VISIBLE);
     }
@@ -155,11 +161,11 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
         }
 
         if (label.contains("<")) {
-            mEmptyLabel.setText(Html.fromHtml(label));
+            mErrorLabel.setText(Html.fromHtml(label));
         } else {
-            mEmptyLabel.setText(label);
+            mErrorLabel.setText(label);
         }
-        mEmptyLabel.setVisibility(View.VISIBLE);
+        mErrorLabel.setVisibility(View.VISIBLE);
         mResultContainer.setVisibility(View.GONE);
         mEmptyModulePlaceholder.setVisibility(View.GONE);
     }
