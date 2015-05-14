@@ -9,8 +9,10 @@
     android:id="@+id/toolbar_reader"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/transparent"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    android:background="@color/grey_lighten_30"
+    android:visibility="gone"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    tools:visibility="visible">
 
     <Spinner
         android:id="@+id/reader_spinner"

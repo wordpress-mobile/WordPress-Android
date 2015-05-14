@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -1489,14 +1488,11 @@ public class ReaderPostListFragment extends Fragment
 
     abstract class ReaderScrollListener extends RecyclerView.OnScrollListener {
 
+        private final int toolbarHeight;
         private int toolbarOffset;
-        private int toolbarHeight;
 
         public ReaderScrollListener(Context context) {
-            int[] actionBarAttr = new int[]{android.R.attr.actionBarSize};
-            TypedArray a = context.obtainStyledAttributes(actionBarAttr);
-            toolbarHeight = (int) a.getDimension(0, 0) + 10;
-            a.recycle();
+            toolbarHeight = context.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
         }
 
         @Override
