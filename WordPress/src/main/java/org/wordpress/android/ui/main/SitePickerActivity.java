@@ -81,13 +81,14 @@ public class SitePickerActivity extends ActionBarActivity
      * we hide the menu and use a separate fab which directly adds a self-hosted site
      */
     private void setupFab() {
-        FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
         if (AccountHelper.isSignedInWordPressDotCom()) {
             FloatingActionButton fabMenuItemCreateDotCom = (FloatingActionButton) findViewById(R.id.fab_item_create_dotcom);
             fabMenuItemCreateDotCom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ActivityLauncher.newBlogForResult(SitePickerActivity.this);
+                    fabMenu.collapse();
                 }
             });
 
@@ -96,6 +97,7 @@ public class SitePickerActivity extends ActionBarActivity
                 @Override
                 public void onClick(View v) {
                     ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
+                    fabMenu.collapse();
                 }
             });
         } else {
