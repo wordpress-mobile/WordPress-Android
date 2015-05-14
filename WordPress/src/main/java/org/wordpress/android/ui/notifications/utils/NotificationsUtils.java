@@ -30,11 +30,10 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -52,6 +51,10 @@ public class NotificationsUtils {
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
 
+    private static final String WPCOM_PUSH_KEY_MUTED_BLOGS = "muted_blogs";
+    private static final String WPCOM_PUSH_KEY_MUTE_UNTIL = "mute_until";
+    private static final String WPCOM_PUSH_KEY_VALUE = "value";
+
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
         if (!AccountHelper.isSignedInWordPressDotCom()) {
@@ -60,6 +63,7 @@ public class NotificationsUtils {
 
         String gcmToken = GCMRegistrar.getRegistrationId(context);
         if (TextUtils.isEmpty(gcmToken)) {
+            AppLog.e(T.NOTIFS, "can't get push notification settings, gcm token is null.");
             return;
         }
 
@@ -74,12 +78,7 @@ public class NotificationsUtils {
     }
 
     public static void setPushNotificationSettings(Context context) {
-        if (!AccountHelper.isSignedInWordPressDotCom()) {
-            return;
-        }
-
-        String gcmToken = GCMRegistrar.getRegistrationId(context);
-        if (TextUtils.isEmpty(gcmToken)) {
+        if (context == null || !AccountHelper.isSignedInWordPressDotCom()) {
             return;
         }
 
@@ -91,49 +90,61 @@ public class NotificationsUtils {
         }
 
         String settingsJson = settings.getString(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
-        if (settingsJson == null)
+        if (settingsJson == null) {
+            AppLog.e(T.NOTIFS, "Notifications settings JSON not found in app preferences.");
             return;
+        }
 
         Gson gson = new Gson();
-        Map<String, StringMap<String>> notificationSettings = gson.fromJson(settingsJson, HashMap.class);
-        Map<String, Object> updatedSettings = new HashMap<String, Object>();
-        if (notificationSettings == null)
+        Map notificationSettings = gson.fromJson(settingsJson, HashMap.class);
+        Map<String, Object> updatedSettings = new HashMap<>();
+        ArrayList<StringMap> mutedBlogsList = new ArrayList<>();
+        if (notificationSettings == null || !(notificationSettings.get(WPCOM_PUSH_KEY_MUTED_BLOGS) instanceof StringMap)
+                || !(notificationSettings.get(WPCOM_PUSH_KEY_MUTE_UNTIL) instanceof StringMap)) {
             return;
+        }
 
+        StringMap<?> mutedBlogsMap = (StringMap)notificationSettings.get(WPCOM_PUSH_KEY_MUTED_BLOGS);
+        StringMap<?> muteUntilMap = (StringMap)notificationSettings.get(WPCOM_PUSH_KEY_MUTE_UNTIL);
 
-        // Build the settings object to send back to WP.com
-        StringMap<?> mutedBlogsMap = notificationSettings.get("muted_blogs");
-        StringMap<?> muteUntilMap = notificationSettings.get("mute_until");
-        ArrayList<StringMap<Double>> blogsList = (ArrayList<StringMap<Double>>) mutedBlogsMap.get("value");
-        notificationSettings.remove("muted_blogs");
-        notificationSettings.remove("mute_until");
+        // Remove entries that we don't want to loop through
+        notificationSettings.remove(WPCOM_PUSH_KEY_MUTED_BLOGS);
+        notificationSettings.remove(WPCOM_PUSH_KEY_MUTE_UNTIL);
 
-        for (Map.Entry<String, StringMap<String>> entry : notificationSettings.entrySet())
+        for (Object entry : notificationSettings.entrySet())
         {
-            StringMap<String> setting = entry.getValue();
-            updatedSettings.put(entry.getKey(), setting.get("value"));
-        }
-
-        if (muteUntilMap != null && muteUntilMap.get("value") != null) {
-            updatedSettings.put("mute_until", muteUntilMap.get("value"));
-        }
-
-        ArrayList<StringMap<Double>> mutedBlogsList = new ArrayList<StringMap<Double>>();
-        for (StringMap<Double> userBlog : blogsList) {
-            if (MapUtils.getMapBool(userBlog, "value")) {
-                mutedBlogsList.add(userBlog);
+            if (entry instanceof Map.Entry) {
+                Map.Entry hashMapEntry = (Map.Entry)entry;
+                if (hashMapEntry.getValue() instanceof StringMap && hashMapEntry.getKey() instanceof String) {
+                    StringMap setting = (StringMap)hashMapEntry.getValue();
+                    updatedSettings.put((String)hashMapEntry.getKey(), setting.get(WPCOM_PUSH_KEY_VALUE));
+                }
             }
         }
 
-        if (updatedSettings.size() == 0 && mutedBlogsList.size() == 0)
+        if (muteUntilMap != null && muteUntilMap.get(WPCOM_PUSH_KEY_VALUE) != null) {
+            updatedSettings.put(WPCOM_PUSH_KEY_MUTE_UNTIL, muteUntilMap.get(WPCOM_PUSH_KEY_VALUE));
+        }
+
+        if (mutedBlogsMap.get(WPCOM_PUSH_KEY_VALUE) instanceof ArrayList) {
+            ArrayList blogsList = (ArrayList)mutedBlogsMap.get(WPCOM_PUSH_KEY_VALUE);
+            for (Object userBlog : blogsList) {
+                if (userBlog instanceof StringMap) {
+                    StringMap userBlogMap = (StringMap)userBlog;
+                    if (MapUtils.getMapBool(userBlogMap, WPCOM_PUSH_KEY_VALUE)) {
+                        mutedBlogsList.add(userBlogMap);
+                    }
+                }
+            }
+        }
+
+        if (updatedSettings.size() == 0 && mutedBlogsList.size() == 0) {
             return;
+        }
 
-        updatedSettings.put("muted_blogs", mutedBlogsList); //If muted blogs list is unchanged we can even skip this assignment.
+        updatedSettings.put(WPCOM_PUSH_KEY_MUTED_BLOGS, mutedBlogsList);
 
-        Map<String, String> contentStruct = new HashMap<String, String>();
-        contentStruct.put("device_token", gcmToken);
-        contentStruct.put("device_family", "android");
-        contentStruct.put("app_secret_key", NotificationsUtils.getAppPushNotificationsName());
+        Map<String, String> contentStruct = new HashMap<>();
         contentStruct.put("settings", gson.toJson(updatedSettings));
         WordPress.getRestClientUtils().post("/device/"+deviceID, contentStruct, null, null, null);
     }
@@ -145,7 +156,7 @@ public class NotificationsUtils {
             return;
 
         String deviceName = DeviceUtils.getInstance().getDeviceName(ctx);
-        Map<String, String> contentStruct = new HashMap<String, String>();
+        Map<String, String> contentStruct = new HashMap<>();
         contentStruct.put("device_token", token);
         contentStruct.put("device_family", "android");
         contentStruct.put("app_secret_key", NotificationsUtils.getAppPushNotificationsName());
@@ -229,8 +240,8 @@ public class NotificationsUtils {
 
     /**
      * Returns a spannable with formatted content based on WP.com note content 'range' data
-     * @param blockObject
-     * @param textView
+     * @param blockObject the JSON data
+     * @param textView the TextView that will display the spannnable
      * @param onNoteBlockTextClickListener - click listener for ClickableSpans in the spannable
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
