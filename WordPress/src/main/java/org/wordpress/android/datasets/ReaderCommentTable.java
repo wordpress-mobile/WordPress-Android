@@ -294,6 +294,16 @@ public class ReaderCommentTable {
                 args);
     }
 
+    public static boolean commentExists(long blogId, long postId, long commentId) {
+        String[] args = {Long.toString(blogId),
+                Long.toString(postId),
+                Long.toString(commentId)};
+
+        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT blog_id FROM tbl_comments WHERE blog_id=? AND post_id=? and comment_id=?",
+                args) > 0;
+    }
+
     private static ReaderComment getCommentFromCursor(Cursor c) {
         if (c == null) {
             throw new IllegalArgumentException("null comment cursor");

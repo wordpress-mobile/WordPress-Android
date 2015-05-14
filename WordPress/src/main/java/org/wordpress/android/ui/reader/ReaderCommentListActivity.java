@@ -341,7 +341,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         if (showProgress) {
             showProgress();
         }
-        ReaderCommentService.startService(this, mPost, requestNextPage);
+        ReaderCommentService.startService(this, mPost.blogId, mPost.postId, requestNextPage);
     }
 
     private void checkEmptyView() {
