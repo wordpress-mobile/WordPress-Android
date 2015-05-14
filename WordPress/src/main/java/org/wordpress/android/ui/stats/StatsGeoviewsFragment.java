@@ -84,7 +84,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                                 "['Country', '" + label + "']," +
                                         dataToLoad +
                                 "]);" +
-                                "var options = {legend: 'none', keepAspectRatio: true, region: 'world', enableRegionInteractivity: true};" +
+                                "var options = {keepAspectRatio: true, region: 'world', colorAxis: { colors: [ '#FFF088', '#F34605' ] }, enableRegionInteractivity: true};" +
                                 "var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
                                 "chart.draw(data, options);" +
                             "}" +
