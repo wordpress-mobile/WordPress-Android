@@ -99,7 +99,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             // remove all but the first page of comments for this post if there's an active
             // connection - infinite scroll will take care of filling in subsequent pages
-            if (NetworkUtils.isNetworkAvailable(this)) {
+            if (NetworkUtils.isNetworkAvailable(this) && mCommentId == 0) {
                 ReaderCommentTable.purgeExcessCommentsForPost(mBlogId, mPostId);
             }
         }
