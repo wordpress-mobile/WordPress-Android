@@ -337,4 +337,9 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
+    <style name="fab_menu_label_style">
+        <item name="android:background">@drawable/fab_menu_label_background</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

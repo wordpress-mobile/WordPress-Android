@@ -60,6 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -90,21 +91,50 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:padding="@dimen/margin_extra_large">
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
+                android:id="@+id/stats_all_time_bestever_date"
+                style="@style/StatsHeaderTotalsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="..."/>
+
+
+            <org.wordpress.android.widgets.WPAutoResizeTextView
                 android:id="@+id/stats_all_time_bestever"
+                android:layout_below="@id/stats_all_time_bestever_date"
                 style="@style/StatsHeaderTotals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0" />
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
-                style="@style/StatsHeaderTotalsLabel"
-                android:layout_width="wrap_content"
+            <LinearLayout
                 android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical|center_horizontal"
                 android:layout_below="@id/stats_all_time_bestever"
-                android:text="@string/stats_insights_best_ever" />
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:src="@drawable/ic_action_like_active" />
+
+                <org.wordpress.android.widgets.WPAutoResizeTextView
+                    style="@style/StatsHeaderTotalsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/orange_jazzy"
+                    android:text="@string/stats_insights_best_ever" />
+            </LinearLayout>
+
+
         </RelativeLayout>
     </LinearLayout>
 

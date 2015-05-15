@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
-import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.FormatUtils;
 
 
 public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment {
@@ -15,23 +15,34 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
 
 
     void customizeUIWithResults() {
+        // Another check that the data is available
+        if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsAllTimeModel)) {
+            showErrorUI(0);
+            return;
+        }
+
+        InsightsAllTimeModel data = (InsightsAllTimeModel) mDatamodels[0];
+
         mResultContainer.removeAllViews();
 
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
                 .inflate(R.layout.stats_insights_all_time_item, (ViewGroup) mResultContainer.getRootView(), false);
 
-        TextView stats_all_time_posts = (TextView) ll.findViewById(R.id.stats_all_time_posts);
-        TextView stats_all_time_views = (TextView) ll.findViewById(R.id.stats_all_time_views);
-        TextView stats_all_time_visitors = (TextView) ll.findViewById(R.id.stats_all_time_visitors);
-        TextView stats_all_time_bestever = (TextView) ll.findViewById(R.id.stats_all_time_bestever);
+        TextView postsTextView = (TextView) ll.findViewById(R.id.stats_all_time_posts);
+        TextView viewsTextView = (TextView) ll.findViewById(R.id.stats_all_time_views);
+        TextView visitorsTextView = (TextView) ll.findViewById(R.id.stats_all_time_visitors);
+        TextView besteverTextView = (TextView) ll.findViewById(R.id.stats_all_time_bestever);
+        TextView besteverDateTextView = (TextView) ll.findViewById(R.id.stats_all_time_bestever_date);
 
-        InsightsAllTimeModel data = (InsightsAllTimeModel) mDatamodels[0];
 
-        stats_all_time_posts.setText(String.valueOf(data.getPosts()));
-        stats_all_time_views.setText(String.valueOf(data.getViews()));
-        stats_all_time_visitors.setText(String.valueOf(data.getVisitors()));
-        stats_all_time_bestever.setText(data.getViews_best_day() + " " + data.getViews_best_day_total());
+        postsTextView.setText(FormatUtils.formatDecimal(data.getPosts()));
+        viewsTextView.setText(FormatUtils.formatDecimal(data.getViews()));
+        visitorsTextView.setText(FormatUtils.formatDecimal(data.getVisitors()));
 
+        besteverTextView.setText(FormatUtils.formatDecimal(data.getViews_best_day_total()));
+        besteverDateTextView.setText(
+                StatsUtils.parseDate(data.getViews_best_day(), StatsConstants.STATS_INPUT_DATE_FORMAT, "MMMM dd, yyyy")
+        );
 
         mResultContainer.addView(ll);
     }

@@ -149,7 +149,7 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
         mEmptyModulePlaceholder.setVisibility(View.VISIBLE);
     }
 
-    private void showErrorUI(Serializable error) {
+    protected final void showErrorUI(Serializable error) {
         if (!isAdded()) {
             return;
         }

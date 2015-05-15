@@ -46,6 +46,8 @@ public class MeFragment extends Fragment {
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
         mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
 
+        addDropShadowToAvatar();
+
         TextView settingsTextView = (TextView) rootView.findViewById(R.id.me_settings_text_view);
         settingsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +73,7 @@ public class MeFragment extends Fragment {
      * adds a circular drop shadow to the avatar's parent view (Lollipop+ only)
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void addDropShadow() {
+    private void addDropShadowToAvatar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mAvatarFrame.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
@@ -83,14 +85,6 @@ public class MeFragment extends Fragment {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void removeDropShadow() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mAvatarFrame.setOutlineProvider(null);
-            mAvatarFrame.setElevation(0);
-        }
-    }
-
     private void refreshAccountDetails() {
         // we only want to show user details for WordPress.com users
         if (AccountHelper.isSignedInWordPressDotCom()) {
@@ -98,11 +92,11 @@ public class MeFragment extends Fragment {
 
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
+            mAvatarFrame.setVisibility(View.VISIBLE);
 
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
             String avatarUrl = GravatarUtils.fixGravatarUrl(defaultAccount.getAvatarUrl(), avatarSz);
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-            addDropShadow();
 
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
 
@@ -121,11 +115,9 @@ public class MeFragment extends Fragment {
                 }
             });
         } else {
-            mAvatarImageView.setImageResource(R.drawable.gravatar_placeholder);
-            removeDropShadow();
-
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
+            mAvatarFrame.setVisibility(View.GONE);
 
             mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
             mLoginLogoutTextView.setOnClickListener(new View.OnClickListener() {

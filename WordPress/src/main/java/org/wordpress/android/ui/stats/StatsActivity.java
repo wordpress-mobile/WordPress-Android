@@ -78,7 +78,7 @@ public class StatsActivity extends ActionBarActivity
     private int mResultCode = -1;
     private boolean mIsInFront;
     private int mLocalBlogID = -1;
-    private StatsTimeframe mCurrentTimeframe = StatsTimeframe.DAY;
+    private StatsTimeframe mCurrentTimeframe = StatsTimeframe.INSIGHTS;
     private String mRequestedDate;
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -144,7 +144,7 @@ public class StatsActivity extends ActionBarActivity
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
             } else {
-                mCurrentTimeframe = StatsTimeframe.DAY;
+                mCurrentTimeframe = StatsTimeframe.INSIGHTS;
             }
             mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
         }

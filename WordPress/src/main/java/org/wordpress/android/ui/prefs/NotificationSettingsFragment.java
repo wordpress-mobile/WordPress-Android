@@ -253,7 +253,7 @@ public class NotificationSettingsFragment extends PreferenceFragment {
                 Gson gson = new Gson();
                 String settingsJson = gson.toJson(mNotificationSettings);
                 editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJson);
-                editor.commit();
+                editor.apply();
                 NotificationsUtils.setPushNotificationSettings(context);
             }
             return null;

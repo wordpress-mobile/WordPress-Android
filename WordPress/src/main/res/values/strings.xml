@@ -358,7 +358,6 @@
 
     <!-- Preference keys -->
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
-    <string name="pref_key_wpcom" translatable="false">wp_pref_wpcom</string>
     <string name="pref_key_notifications_section" translatable="false">wp_pref_notifications_category</string>
     <string name="pref_key_notifications" translatable="false">wp_pref_manage_notifications</string>
     <string name="pref_key_post_sig_section" translatable="false">wp_post_signature</string>
@@ -380,7 +379,6 @@
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
-    <string name="wpcom_blogs">WordPress.com</string>
     <string name="preference_privacy">Privacy</string>
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
