@@ -47,7 +47,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     private MediaAddFragmentCallback mCallback;
 
     public interface MediaAddFragmentCallback {
-        public void onMediaAdded(String mediaId);
+        void onMediaAdded(String mediaId);
     }
 
     @Override
@@ -295,11 +295,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         protected Uri doInBackground(Uri... uris) {
             Uri imageUri = uris[0];
             return MediaUtils.downloadExternalMedia(getActivity(), imageUri);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Toast.makeText(getActivity(), R.string.download, Toast.LENGTH_SHORT).show();
         }
 
         protected void onPostExecute(Uri newUri) {
