@@ -515,9 +515,6 @@ public class ReaderPostListFragment extends Fragment
                 }
             });
 
-            // move swipe progress down so it doesn't get covered by the toolbar
-            mSwipeToRefreshLayout.setProgressViewOffset(false, 0, mTagToolbarOffset);
-
             // create the tag spinner in the toolbar
             if (mTagSpinner == null) {
                 enableTagSpinner();
