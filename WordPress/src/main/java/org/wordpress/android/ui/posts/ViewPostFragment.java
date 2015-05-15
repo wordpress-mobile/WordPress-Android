@@ -78,7 +78,7 @@ public class ViewPostFragment extends Fragment {
     public void onEventMainThread(SuggestionEvents.SuggestionNameListUpdated event) {
         int remoteBlogId = WordPress.getCurrentRemoteBlogId();
         // check if the updated suggestions are for the current blog and update the suggestions
-        if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == remoteBlogId) {
+        if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == remoteBlogId && mSuggestionAdapter != null) {
             List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
             mSuggestionAdapter.setSuggestionList(suggestions);
         }

@@ -160,22 +160,12 @@ public class WPMainActivity extends Activity
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        int position = mViewPager.getCurrentItem();
-        if (position == WPMainTabAdapter.TAB_READER) {
-            ReaderPostListFragment fragment = getReaderListFragment();
-            if (fragment != null) {
-                if (state == ViewPager.SCROLL_STATE_DRAGGING && fragment.isFragmentToolbarShowing()) {
-                    fragment.showFragmentToolbar(false);
-                } else if (state == ViewPager.SCROLL_STATE_SETTLING && !fragment.isFragmentToolbarShowing()) {
-                    fragment.showFragmentToolbar(true);
-                }
-            }
-        }
+        // noop
     }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        // nop
+        // noop
     }
 
     /*
