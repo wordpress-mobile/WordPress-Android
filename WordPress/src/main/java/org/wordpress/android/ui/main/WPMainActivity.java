@@ -283,7 +283,8 @@ public class WPMainActivity extends Activity
             case RequestCodes.PICTURE_LIBRARY:
                 FragmentManager fm = getFragmentManager();
                 Fragment addFragment = fm.findFragmentByTag(MySiteFragment.ADD_MEDIA_FRAGMENT_TAG);
-                if (addFragment != null) {
+                if (addFragment != null && data != null) {
+                    ToastUtils.showToast(this, R.string.image_added);
                     addFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;

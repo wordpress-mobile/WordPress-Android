@@ -129,6 +129,7 @@
     <string name="no_blog_videos">No videos</string>
 
     <!-- Upload Media -->
+    <string name="image_added">Image added</string>
     <string name="media_no_video_title">VideoPress unavailable</string>
     <string name="media_no_video_message">Get the VideoPress upgrade to upload video!</string>
 
