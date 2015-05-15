@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -44,6 +46,7 @@ import de.greenrobot.event.EventBus;
 public class WPMainActivity extends Activity
     implements ViewPager.OnPageChangeListener,
         SlidingTabLayout.SingleTabClickListener,
+        MediaAddFragment.MediaAddFragmentCallback,
         Bucket.Listener<Note> {
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
@@ -267,6 +270,14 @@ public class WPMainActivity extends Activity
                     getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
                 }
                 break;
+            case RequestCodes.PICTURE_LIBRARY:
+                FragmentManager fm = getFragmentManager();
+                Fragment addFragment = fm.findFragmentByTag(MySiteFragment.ADD_MEDIA_FRAGMENT_TAG);
+                if (addFragment != null && data != null) {
+                    ToastUtils.showToast(this, R.string.image_added);
+                    addFragment.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
             case RequestCodes.SITE_PICKER:
                 if (resultCode == RESULT_OK) {
                     // site picker will have set the current blog, so make sure My Site reflects it
@@ -296,32 +307,30 @@ public class WPMainActivity extends Activity
      * returns the reader list fragment from the reader tab
      */
     private ReaderPostListFragment getReaderListFragment() {
-        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_READER);
-        if (fragment != null && fragment instanceof ReaderPostListFragment) {
-            return (ReaderPostListFragment) fragment;
-        }
-        return null;
+        return getFragmentByPosition(WPMainTabAdapter.TAB_READER, ReaderPostListFragment.class);
     }
 
     /*
      * returns the notification list fragment from the notification tab
      */
     private NotificationsListFragment getNotificationListFragment() {
-        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_NOTIFS);
-        if (fragment != null && fragment instanceof NotificationsListFragment) {
-            return (NotificationsListFragment) fragment;
-        }
-        return null;
+        return getFragmentByPosition(WPMainTabAdapter.TAB_NOTIFS, NotificationsListFragment.class);
     }
 
     /*
      * returns the my site fragment from the sites tab
      */
-    private MySiteFragment getMySiteFragment() {
-        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_SITES);
-        if (fragment != null && fragment instanceof MySiteFragment) {
-            return (MySiteFragment) fragment;
+    public MySiteFragment getMySiteFragment() {
+        return getFragmentByPosition(WPMainTabAdapter.TAB_SITES, MySiteFragment.class);
+    }
+
+    private <T> T getFragmentByPosition(int position, Class<T> type) {
+        Fragment fragment = mTabAdapter != null ? mTabAdapter.getFragment(position) : null;
+
+        if (fragment != null && type.isInstance(fragment)) {
+            return type.cast(fragment);
         }
+
         return null;
     }
 
@@ -432,5 +441,9 @@ public class WPMainActivity extends Activity
     @Override
     public void onSaveObject(Bucket<Note> noteBucket, Note note) {
         // noop
+    }
+
+    @Override
+    public void onMediaAdded(String mediaId) {
     }
 }

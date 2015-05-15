@@ -14,4 +14,10 @@ public class RequestCodes {
     public static final int EDIT_POST       = 800;
     public static final int CREATE_BLOG     = 900;
     public static final int BLOG_SETTINGS   = 1000;
+
+    // Media
+    public static final int PICTURE_LIBRARY = 2000;
+    public static final int TAKE_PHOTO = 2100;
+    public static final int VIDEO_LIBRARY = 2200;
+    public static final int TAKE_VIDEO = 2300;
 }
