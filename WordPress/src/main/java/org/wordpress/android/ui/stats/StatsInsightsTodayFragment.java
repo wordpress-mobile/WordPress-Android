@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.models.InsightsTodayModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 
@@ -17,10 +18,17 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
     void customizeUIWithResults() {
         mResultContainer.removeAllViews();
 
+        // Another check that the data is available
+        if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsTodayModel)) {
+            showErrorUI(0);
+            return;
+        }
+
+        InsightsTodayModel data = (InsightsTodayModel) mDatamodels[0];
+
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
                 .inflate(R.layout.stats_insights_today_item, (ViewGroup) mResultContainer.getRootView(), false);
 
-        InsightsTodayModel data = (InsightsTodayModel) mDatamodels[0];
         for (int i = 0; i < ll.getChildCount(); i++) {
             LinearLayout currentTab = (LinearLayout) ll.getChildAt(i);
             switch (i) {

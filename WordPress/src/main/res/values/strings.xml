@@ -512,6 +512,7 @@
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_popular">Most popular Day and Time</string>
     <string name="stats_insights_hour_with_most_views">hour with most Views</string>
+    <string name="stats_insights_happen_on_a">happen on a %1$s</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
 
 

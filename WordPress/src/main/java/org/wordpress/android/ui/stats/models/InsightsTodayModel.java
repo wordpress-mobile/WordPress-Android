@@ -10,23 +10,23 @@ public class InsightsTodayModel implements Serializable {
     private String mBlogID;
     private String mDate;
     private String period;
-    private int visitors;
-    private int views;
-    private int likes;
-    private int reblogs;
-    private int comments;
-    private int followers;
+    private int mVisitors;
+    private int mViews;
+    private int mLikes;
+    private int mReblogs;
+    private int mComments;
+    private int mFollowers;
 
     public InsightsTodayModel(String blogID, JSONObject response) throws JSONException {
         this.setBlogID(blogID);
         this.mDate = response.getString("date");
         this.period = response.getString("period");
-        this.views = response.getInt(("views"));
-        this.visitors = response.getInt(("visitors"));
-        this.likes = response.getInt(("likes"));
-        this.reblogs = response.getInt(("reblogs"));
-        this.comments = response.getInt(("comments"));
-        this.followers = response.getInt(("followers"));
+        this.mViews = response.getInt(("views"));
+        this.mVisitors = response.getInt(("visitors"));
+        this.mLikes = response.getInt(("likes"));
+        this.mReblogs = response.getInt(("reblogs"));
+        this.mComments = response.getInt(("comments"));
+        this.mFollowers = response.getInt(("followers"));
     }
 
     public String getBlogID() {
@@ -46,26 +46,26 @@ public class InsightsTodayModel implements Serializable {
     }
 
     public int getReblogs() {
-        return reblogs;
+        return mReblogs;
     }
 
     public int getComments() {
-        return comments;
+        return mComments;
     }
 
     public int getFollowers() {
-        return followers;
+        return mFollowers;
     }
 
     public int getLikes() {
-        return likes;
+        return mLikes;
     }
 
     public int getViews() {
-        return views;
+        return mViews;
     }
 
     public int getVisitors() {
-        return visitors;
+        return mVisitors;
     }
 }

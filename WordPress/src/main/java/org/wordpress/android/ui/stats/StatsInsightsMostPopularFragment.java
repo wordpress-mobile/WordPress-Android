@@ -5,8 +5,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
 import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.FormatUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,13 +23,19 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
     void customizeUIWithResults() {
         mResultContainer.removeAllViews();
 
-        LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
-                .inflate(R.layout.stats_insights_most_popular_item, (ViewGroup) mResultContainer.getRootView(), false);
+        // Another check that the data is available
+        if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsPopularModel)) {
+            showErrorUI(0);
+            return;
+        }
 
         InsightsPopularModel data = (InsightsPopularModel) mDatamodels[0];
 
-        TextView mostPopularDayValueText = (TextView) ll.findViewById(R.id.stats_most_popular_views_count);
-        TextView mostPopularDayLabelText = (TextView) ll.findViewById(R.id.stats_most_popular_views_label);
+        LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
+                .inflate(R.layout.stats_insights_most_popular_item, (ViewGroup) mResultContainer.getRootView(), false);
+
+        TextView mostPopularDayValueText = (TextView) ll.findViewById(R.id.stats_most_popular_day_percent);
+        TextView mostPopularDayLabelText = (TextView) ll.findViewById(R.id.stats_most_popular_day_label);
 
         Double mostPopularDayValue = data.getHighestDayPercent();
         int dayOfTheWeek = data.getHighestDayOfWeek();
@@ -60,12 +68,16 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
         }
         DateFormat formatter ;
         formatter = new SimpleDateFormat("EEEE");
-        formatter.format(c.getTime());
-        mostPopularDayValueText.setText(String.valueOf(mostPopularDayValue.intValue()) + "%");
-        mostPopularDayLabelText.setText("happen on a " + formatter.format(c.getTime()));
+        mostPopularDayValueText.setText(mostPopularDayValue.intValue() + "%");
+        mostPopularDayLabelText.setText(
+                getString(R.string.stats_insights_happen_on_a, formatter.format(c.getTime()))
+        );
 
-        TextView mostPopularHourValue = (TextView) ll.findViewById(R.id.stats_visitors_and_views_today_views_count);
-        mostPopularHourValue.setText(String.valueOf(data.getHighestHour()));
+
+        TextView mostPopularHourValue = (TextView) ll.findViewById(R.id.stats_most_popular_hour);
+        formatter = new SimpleDateFormat("ha");
+        c.set(Calendar.HOUR_OF_DAY, data.getHighestHour());
+        mostPopularHourValue.setText(formatter.format(c.getTime()));
 
         mResultContainer.addView(ll);
     }
