@@ -39,6 +39,8 @@
                 android:layout_centerHorizontal="true"
                 android:paddingLeft="@dimen/margin_small"
                 android:textColor="@color/white"
+                android:shadowColor="@color/primary_text_default_material_light"
+                android:shadowRadius="2"
                 android:textSize="@dimen/text_sz_small"/>
         </RelativeLayout>
 
