@@ -40,7 +40,6 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
-import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
@@ -51,8 +50,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * The main activity in which the user can browse their media.
@@ -128,13 +125,11 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
         registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
         super.onStop();
     }
@@ -486,6 +481,8 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
 
         if (cursor == null || !cursor.moveToFirst()) {
             mMediaGridFragment.removeFromMultiSelect(mediaId);
+            mMediaGridFragment.refreshMediaFromDB();
+
             if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
                     && mediaId.equals(mMediaEditFragment.getMediaId())) {
                 if (mMediaEditFragment.isInLayout()) {
@@ -500,11 +497,6 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         if (cursor != null) {
             cursor.close();
         }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaUploadEvents.MediaUploadSucceed event) {
-        onMediaAdded(event.mLocalId);
     }
 
     @Override
