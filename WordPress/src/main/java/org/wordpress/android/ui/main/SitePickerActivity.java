@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -36,6 +37,7 @@ public class SitePickerActivity extends ActionBarActivity
     public static final String KEY_LOCAL_ID = "local_id";
 
     private SitePickerAdapter mAdapter;
+    private RecyclerView mRecycleView;
     private ActionMode mActionMode;
     private int mCurrentLocalId;
 
@@ -59,11 +61,12 @@ public class SitePickerActivity extends ActionBarActivity
 
         setupFab();
 
-        RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler_view);
-        recycler.setLayoutManager(new LinearLayoutManager(this));
-        recycler.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        recycler.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        recycler.setAdapter(getAdapter());
+        mRecycleView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        mRecycleView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        mRecycleView.setItemAnimator(null);
+        mRecycleView.setAdapter(getAdapter());
     }
 
     @Override
@@ -143,6 +146,7 @@ public class SitePickerActivity extends ActionBarActivity
             return true;
         } else if (itemId == R.id.menu_edit) {
             getAdapter().setEnableEditMode(true);
+            mRecycleView.setItemAnimator(new DefaultItemAnimator());
             startSupportActionMode(new ActionModeCallback());
             return true;
         }
