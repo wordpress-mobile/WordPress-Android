@@ -218,9 +218,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
                 }
 
                 mAddMediaPopup.dismiss();
-
             }
-
         });
 
         int width = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_width);
@@ -483,6 +481,8 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
 
         if (cursor == null || !cursor.moveToFirst()) {
             mMediaGridFragment.removeFromMultiSelect(mediaId);
+            mMediaGridFragment.refreshMediaFromDB();
+
             if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
                     && mediaId.equals(mMediaEditFragment.getMediaId())) {
                 if (mMediaEditFragment.isInLayout()) {
