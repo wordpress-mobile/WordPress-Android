@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -139,9 +140,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         });
 
         if (site.localId == mCurrentLocalId || (mIsMultiSelectEnabled && isItemSelected(position))) {
-            holder.layoutContainer.setBackgroundDrawable(mSelectedItemBackground);
+            setBackgroundCompat(holder.layoutContainer, mSelectedItemBackground);
         } else {
-            holder.layoutContainer.setBackgroundDrawable(null);
+            setBackgroundCompat(holder.layoutContainer, null);
         }
 
         // different styling for visible/hidden sites
@@ -150,6 +151,15 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             holder.txtTitle.setTextColor(site.isHidden ? mTextColorHidden : mTextColorNormal);
             holder.txtTitle.setTypeface(holder.txtTitle.getTypeface(), site.isHidden ? Typeface.NORMAL : Typeface.BOLD);
             holder.imgBlavatar.setAlpha(site.isHidden ? 0.5f : 1f);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void setBackgroundCompat(View view, Drawable drawable) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view.setBackground(drawable);
+        } else {
+            view.setBackgroundDrawable(drawable);
         }
     }
 

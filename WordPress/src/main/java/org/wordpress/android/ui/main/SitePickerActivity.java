@@ -145,8 +145,8 @@ public class SitePickerActivity extends ActionBarActivity
             onBackPressed();
             return true;
         } else if (itemId == R.id.menu_edit) {
-            getAdapter().setEnableEditMode(true);
             mRecycleView.setItemAnimator(new DefaultItemAnimator());
+            getAdapter().setEnableEditMode(true);
             startSupportActionMode(new ActionModeCallback());
             return true;
         }
