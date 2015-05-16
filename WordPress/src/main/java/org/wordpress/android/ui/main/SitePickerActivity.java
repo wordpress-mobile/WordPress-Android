@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.main;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -28,6 +25,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.DividerItemDecoration;
 
 import de.greenrobot.event.EventBus;
 
@@ -63,10 +61,9 @@ public class SitePickerActivity extends ActionBarActivity
 
         RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler_view);
         recycler.setLayoutManager(new LinearLayoutManager(this));
-        recycler.setAdapter(getAdapter());
-        recycler.setClipToPadding(false);
         recycler.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        recycler.addItemDecoration(new SitePickerItemDecoration(this.getResources()));
+        recycler.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recycler.setAdapter(getAdapter());
     }
 
     @Override
@@ -307,35 +304,6 @@ public class SitePickerActivity extends ActionBarActivity
             }
             getAdapter().setEnableEditMode(false);
             mActionMode = null;
-        }
-    }
-
-    /**
-     * dividers for sites
-     */
-    public static class SitePickerItemDecoration extends RecyclerView.ItemDecoration {
-        private final Drawable mDivider;
-
-        public SitePickerItemDecoration(Resources resources) {
-            mDivider = resources.getDrawable(R.drawable.site_picker_divider);
-        }
-
-        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            int left = parent.getPaddingLeft();
-            int right = parent.getWidth() - parent.getPaddingRight();
-
-            int childCount = parent.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View child = parent.getChildAt(i);
-
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-
-                int top = child.getBottom() + params.bottomMargin;
-                int bottom = top + mDivider.getIntrinsicHeight();
-
-                mDivider.setBounds(left, top, right, bottom);
-                mDivider.draw(c);
-            }
         }
     }
 }
