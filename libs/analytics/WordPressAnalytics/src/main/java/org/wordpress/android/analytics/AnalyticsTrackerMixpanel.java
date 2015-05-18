@@ -17,6 +17,7 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.EnumMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
@@ -31,6 +32,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private static final String JETPACK_USER = "jetpack_user";
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
     private static final String VERSION_CODE = "version_code";
+    private static final String APP_LOCALE = "app_locale";
 
     public AnalyticsTrackerMixpanel(Context context, String token) {
         mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
@@ -174,6 +176,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             properties.put(JETPACK_USER, isJetpackUser);
             properties.put(MIXPANEL_NUMBER_OF_BLOGS, numBlogs);
             properties.put(VERSION_CODE, versionCode);
+            properties.put(APP_LOCALE, mContext.getResources().getConfiguration().locale.toString());
             mMixpanel.registerSuperProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);

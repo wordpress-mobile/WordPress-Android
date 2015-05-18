@@ -35,6 +35,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -265,8 +266,10 @@ public class SettingsFragment extends PreferenceFragment {
                         conf.locale = new Locale(localString);
                     }
                     res.updateConfiguration(conf, dm);
-
                     mSettings.edit().putString(SETTINGS_PREFERENCES, localeMap.get(values[position])).apply();
+
+                    // Language is now part of metadata, so we need to refresh them
+                    AnalyticsUtils.refreshMetadata();
 
                     Intent refresh = new Intent(getActivity(), getActivity().getClass());
                     startActivity(refresh);
