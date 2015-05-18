@@ -86,6 +86,21 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
     }
 
+    public void switchToItem(OverviewLabel item) {
+        if (!isAdded()) {
+            return;
+        }
+        if (mModuleButtonsContainer != null) {
+            for (int i = 0; i < mModuleButtonsContainer.getChildCount(); i++) {
+                if (overviewItems[i] == item) {
+                    LinearLayout currentTab = (LinearLayout) mModuleButtonsContainer.getChildAt(i);
+                    currentTab.performClick();
+                    return;
+                }
+            }
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);

@@ -33,8 +33,6 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
     private LinearLayout mEmptyModulePlaceholder;
     protected LinearLayout mResultContainer;
 
-    private TextView mResponseAsText;
-
     abstract void customizeUIWithResults(); // This is where all the UI is customized at module level
 
     @Override
@@ -46,7 +44,6 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
         mEmptyModulePlaceholder = (LinearLayout) view.findViewById(R.id.stats_empty_module_placeholder);
         mResultContainer = (LinearLayout) view.findViewById(R.id.stats_module_result_container);
         mErrorLabel = (TextView) view.findViewById(R.id.stats_error_text);
-        mResponseAsText = (TextView) view.findViewById(R.id.stats_insights_response_text);
         return view;
     }
 

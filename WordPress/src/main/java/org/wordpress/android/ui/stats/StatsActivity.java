@@ -60,7 +60,8 @@ import de.greenrobot.event.EventBus;
  */
 public class StatsActivity extends ActionBarActivity
         implements ScrollViewExt.ScrollViewListener,
-                StatsVisitorsAndViewsFragment.OnDateChangeListener {
+                StatsVisitorsAndViewsFragment.OnDateChangeListener,
+                StatsInsightsTodayFragment.OnInsightsTodayClickListener {
 
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
@@ -83,6 +84,8 @@ public class StatsActivity extends ActionBarActivity
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
+    private StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
+            StatsTimeframe.MONTH, StatsTimeframe.YEAR};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -173,8 +176,7 @@ public class StatsActivity extends ActionBarActivity
             View view = View.inflate(this, R.layout.toolbar_spinner, toolbar);
             mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
 
-            StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
-                    StatsTimeframe.MONTH, StatsTimeframe.YEAR};
+
             mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, timeframes);
 
             mSpinner.setAdapter(mTimeframeSpinnerAdapter);
@@ -339,7 +341,7 @@ public class StatsActivity extends ActionBarActivity
             }
 
             if (fm.findFragmentByTag(StatsInsightsTodayFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_TODAY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_TODAY, mLocalBlogID, StatsTimeframe.DAY, mRequestedDate);
                 ft.replace(R.id.stats_insights_today_container, fragment, StatsInsightsTodayFragment.TAG);
             }
         }
@@ -565,6 +567,29 @@ public class StatsActivity extends ActionBarActivity
         if (scrollView != null) {
             scrollView.fullScroll(ScrollView.FOCUS_UP);
         }
+    }
+
+    // StatsInsightsTodayFragment calls this when the user taps on a item in Today's Stats
+    @Override
+    public void onInsightsClicked(final StatsVisitorsAndViewsFragment.OverviewLabel item) {
+        for (int i = 0; i < timeframes.length; i++) {
+            if (timeframes[i] ==  StatsTimeframe.DAY) {
+                mSpinner.setSelection(i);
+                break;
+            }
+        }
+
+        mSpinner.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                FragmentManager fm = getFragmentManager();
+                if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) != null) {
+                    StatsVisitorsAndViewsFragment fragment = (StatsVisitorsAndViewsFragment)
+                            fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG);
+                    fragment.switchToItem(item);
+                }
+            }
+        }, 250L);
     }
 
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph

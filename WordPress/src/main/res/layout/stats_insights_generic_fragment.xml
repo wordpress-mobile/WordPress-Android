@@ -40,19 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/stats_insights_response_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_sz_small"
-                    android:padding="@dimen/margin_small"
-                    android:visibility="visible" />
             </LinearLayout>
-
-
-
-
         </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
