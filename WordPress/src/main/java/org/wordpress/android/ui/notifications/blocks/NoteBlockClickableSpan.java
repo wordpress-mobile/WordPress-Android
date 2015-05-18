@@ -67,7 +67,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     @Override
     public void updateDrawState(@Nonnull TextPaint textPaint) {
         // Set background color
-        textPaint.bgColor = mPressed && !isBlockquoteType() ?
+        textPaint.bgColor = mShouldLink && mPressed && !isBlockquoteType() ?
                 mContext.getResources().getColor(R.color.grey_lighten_20) : Color.TRANSPARENT;
         textPaint.setColor(mShouldLink && !mIsFooter ? mContext.getResources().getColor(R.color.blue_medium) : mTextColor);
         // No underlines
