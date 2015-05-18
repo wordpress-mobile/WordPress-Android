@@ -620,6 +620,10 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Failed To Guess XMLRPC");
                 break;
+            case SETTINGS_LANGUAGE_SELECTION_FORCED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Forced Language Selection");
+                break;
             default:
                 instructions = null;
                 break;
