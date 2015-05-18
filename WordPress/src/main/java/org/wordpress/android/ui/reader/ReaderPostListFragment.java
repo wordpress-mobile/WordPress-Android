@@ -356,7 +356,7 @@ public class ReaderPostListFragment extends Fragment
         mNewPostsBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mRecyclerView.scrollToPosition(0);
+                scrollRecycleViewToPosition(0);
                 refreshPosts();
             }
         });
@@ -461,6 +461,25 @@ public class ReaderPostListFragment extends Fragment
                 }, 250);
             }
         });
+    }
+
+    private void scrollRecycleViewToPosition(int position) {
+        if (!isAdded() || mRecyclerView == null) return;
+
+        mRecyclerView.scrollToPosition(position);
+
+        // we need to reposition the tag toolbar here, but we need to wait for the
+        // recycler to settle before doing so - note that RecyclerView doesn't
+        // fire it's scroll listener when scrollToPosition() is called, so we
+        // can't rely on that to position the toolbar in this situation
+        if (shouldShowTagToolbar()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    positionTagToolbar();
+                }
+            }, 250);
+        }
     }
 
     /*
@@ -790,7 +809,7 @@ public class ReaderPostListFragment extends Fragment
             } else {
                 mEmptyView.setVisibility(View.GONE);
                 if (mRestorePosition > 0) {
-                    mRecyclerView.scrollToPosition(mRestorePosition);
+                    scrollRecycleViewToPosition(mRestorePosition);
                 }
             }
             mRestorePosition = 0;
