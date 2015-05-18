@@ -6,55 +6,60 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/header_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/notifications_header_selector"
-        android:clickable="true"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_medium"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/comment_avatar_margin_top">
-
-        <org.wordpress.android.widgets.WPNetworkImageView
-            android:id="@+id/header_avatar"
-            android:layout_width="@dimen/avatar_sz_small"
-            android:layout_height="@dimen/avatar_sz_small"
-            android:layout_marginTop="5dp" />
+        android:background="@color/white">
 
         <LinearLayout
+            android:id="@+id/header_root_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/notifications_adjusted_font_margin"
-            android:layout_marginStart="@dimen/notifications_adjusted_font_margin"
-            android:orientation="vertical">
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/comment_avatar_margin_top">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/header_user"
-                android:layout_width="wrap_content"
+            <org.wordpress.android.widgets.WPNetworkImageView
+                android:id="@+id/header_avatar"
+                android:layout_width="@dimen/avatar_sz_small"
+                android:layout_height="@dimen/avatar_sz_small"
+                android:layout_marginTop="5dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:includeFontPadding="false"
-                android:singleLine="true"
-                android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_large"
-                tools:text="Bob Ross" />
+                android:layout_marginLeft="@dimen/notifications_adjusted_font_margin"
+                android:layout_marginStart="@dimen/notifications_adjusted_font_margin"
+                android:orientation="vertical">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/header_snippet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-2dp"
-                android:ellipsize="end"
-                android:includeFontPadding="false"
-                android:singleLine="true"
-                android:textColor="@color/blue_medium"
-                android:textSize="@dimen/text_sz_large"
-                tools:text="www.bobross.com" />
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/header_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:singleLine="true"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/text_sz_large"
+                    tools:text="Bob Ross" />
 
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/header_snippet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-2dp"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:singleLine="true"
+                    android:textColor="@color/blue_medium"
+                    android:textSize="@dimen/text_sz_large"
+                    tools:text="www.bobross.com" />
+
+            </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
     <!-- Two footer views, one is used specifically for comments -->
     <LinearLayout
