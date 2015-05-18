@@ -90,7 +90,8 @@ public final class AnalyticsTracker {
         SUPPORT_OPENED_HELPSHIFT_SCREEN,
         SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE,
         LOGIN_FAILED,
-        LOGIN_FAILED_TO_GUESS_XMLRPC
+        LOGIN_FAILED_TO_GUESS_XMLRPC,
+        SETTINGS_LANGUAGE_SELECTION_FORCED,
     }
 
     public interface Tracker {

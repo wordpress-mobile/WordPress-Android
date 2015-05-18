@@ -295,6 +295,9 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case LOGIN_FAILED_TO_GUESS_XMLRPC:
                 eventName = "login_failed_to_guess_xmlrpc";
                 break;
+            case SETTINGS_LANGUAGE_SELECTION_FORCED:
+                eventName = "settings_language_selection_forced";
+                break;
             default:
                 eventName = null;
                 break;
