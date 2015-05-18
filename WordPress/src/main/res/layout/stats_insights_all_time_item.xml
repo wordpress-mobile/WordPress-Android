@@ -3,120 +3,167 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:baselineAligned="false"
+    android:padding="@dimen/margin_extra_large"
     android:orientation="vertical">
 
+    <!-- First row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:orientation="horizontal">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_medium"
+        android:orientation="horizontal" >
+
+        <!-- Posts item -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:padding="@dimen/margin_extra_large">
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/stats_visitors_and_views_tab_icon"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:src="@drawable/my_site_icon_posts" />
+
+                <org.wordpress.android.widgets.WPAutoResizeTextView
+                    style="@style/StatsHeaderTotalsLabel"
+                    android:textColor="@color/grey_darken_20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:text="@string/posts" />
+            </LinearLayout>
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 android:id="@+id/stats_all_time_posts"
                 style="@style/StatsHeaderTotals"
-                android:layout_width="wrap_content"
+                android:textColor="@color/grey_darken_30"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:text="0" />
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
-                style="@style/StatsHeaderTotalsLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/stats_all_time_posts"
-                android:text="@string/posts" />
-        </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
+
+        <!-- Views Item -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:padding="@dimen/margin_extra_large">
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:src="@drawable/stats_icon_views" />
+
+                <org.wordpress.android.widgets.WPAutoResizeTextView
+                    style="@style/StatsHeaderTotalsLabel"
+                    android:textColor="@color/grey_darken_20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:text="@string/stats_views" />
+            </LinearLayout>
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 android:id="@+id/stats_all_time_views"
                 style="@style/StatsHeaderTotals"
-                android:layout_width="wrap_content"
+                android:textColor="@color/grey_darken_30"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:text="0" />
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
-                style="@style/StatsHeaderTotalsLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/stats_all_time_views"
-                android:text="@string/stats_views" />
-        </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
+
+    <!-- Second row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal" >
+
+        <!-- Visitors Item -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:padding="@dimen/margin_extra_large">
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:src="@drawable/stats_icon_views" />
+
+                <org.wordpress.android.widgets.WPAutoResizeTextView
+                    style="@style/StatsHeaderTotalsLabel"
+                    android:textColor="@color/grey_darken_20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:text="@string/stats_visitors" />
+            </LinearLayout>
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 android:id="@+id/stats_all_time_visitors"
                 style="@style/StatsHeaderTotals"
-                android:layout_width="wrap_content"
+                android:textColor="@color/grey_darken_30"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:text="0" />
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
-                android:id="@+id/stats_most_popular_views_label"
-                style="@style/StatsHeaderTotalsLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/stats_all_time_visitors"
-                android:text="@string/stats_visitors" />
-        </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
+        <!-- Best Ever Item -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/margin_extra_large">
-
-            <org.wordpress.android.widgets.WPAutoResizeTextView
-                android:id="@+id/stats_all_time_bestever_date"
-                style="@style/StatsHeaderTotalsLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:text="..."/>
-
-
-            <org.wordpress.android.widgets.WPAutoResizeTextView
-                android:id="@+id/stats_all_time_bestever"
-                android:layout_below="@id/stats_all_time_bestever_date"
-                style="@style/StatsHeaderTotals"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0" />
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
 
             <LinearLayout
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_below="@id/stats_all_time_bestever"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -128,14 +175,37 @@
 
                 <org.wordpress.android.widgets.WPAutoResizeTextView
                     style="@style/StatsHeaderTotalsLabel"
+                    android:textColor="@color/grey_darken_20"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/orange_jazzy"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
                     android:text="@string/stats_insights_best_ever" />
             </LinearLayout>
 
+            <org.wordpress.android.widgets.WPAutoResizeTextView
+                android:id="@+id/stats_all_time_bestever"
+                style="@style/StatsHeaderTotals"
+                android:textColor="@color/grey_darken_30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="0" />
 
-        </RelativeLayout>
+            <org.wordpress.android.widgets.WPAutoResizeTextView
+                android:id="@+id/stats_all_time_bestever_date"
+                style="@style/StatsHeaderTotalsLabel"
+                android:textColor="@color/grey_darken_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="..."/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 
