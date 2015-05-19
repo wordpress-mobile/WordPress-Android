@@ -62,6 +62,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         private final TextView txtTitle;
         private final TextView txtDomain;
         private final WPNetworkImageView imgBlavatar;
+        private final View divider;
         private Boolean isSiteHidden;
 
         public SiteViewHolder(View view) {
@@ -70,6 +71,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtDomain = (TextView) view.findViewById(R.id.text_domain);
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
+            divider = view.findViewById(R.id.divider);
             isSiteHidden = null;
         }
     }
@@ -151,6 +153,10 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             holder.txtTitle.setTypeface(holder.txtTitle.getTypeface(), site.isHidden ? Typeface.NORMAL : Typeface.BOLD);
             holder.imgBlavatar.setAlpha(site.isHidden ? 0.5f : 1f);
         }
+
+        // hide the divider for the last item
+        boolean isLastItem = (position == getItemCount() - 1);
+        holder.divider.setVisibility(isLastItem ?  View.INVISIBLE : View.VISIBLE);
     }
 
     private boolean isValidPosition(int position) {
