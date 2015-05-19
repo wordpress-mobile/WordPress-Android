@@ -8,6 +8,8 @@
     android:layout_width="wrap_content"
     android:layout_height="@dimen/toolbar_height"
     android:background="?android:selectableItemBackground"
+    android:paddingLeft="@dimen/tabstrip_icon_spacing"
+    android:paddingRight="@dimen/tabstrip_icon_spacing"
     tools:background="@color/color_primary">
 
     <FrameLayout
