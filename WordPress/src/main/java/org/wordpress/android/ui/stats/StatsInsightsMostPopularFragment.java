@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats;
 
+import android.graphics.Color;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,6 +15,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import tr.xip.markview.MarkView;
 
 
 public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragment {
@@ -34,7 +37,9 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
                 .inflate(R.layout.stats_insights_most_popular_item, (ViewGroup) mResultContainer.getRootView(), false);
 
-        TextView mostPopularDayValueText = (TextView) ll.findViewById(R.id.stats_most_popular_day_percent);
+        final MarkView markView = (MarkView) ll.findViewById(R.id.stats_most_popular_day_percent);
+        markView.setStrokeColors(new int[] {getResources().getColor(R.color.blue_wordpress)});
+
         TextView mostPopularDayLabelText = (TextView) ll.findViewById(R.id.stats_most_popular_day_label);
 
         Double mostPopularDayValue = data.getHighestDayPercent();
@@ -68,7 +73,7 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
         }
         DateFormat formatter ;
         formatter = new SimpleDateFormat("EEEE");
-        mostPopularDayValueText.setText(mostPopularDayValue.intValue() + "%");
+        markView.setMark(mostPopularDayValue.intValue());
         mostPopularDayLabelText.setText(
                 getString(R.string.stats_insights_happen_on_a, formatter.format(c.getTime()))
         );
