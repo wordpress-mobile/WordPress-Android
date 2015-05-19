@@ -29,17 +29,25 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private boolean mPressed;
     private boolean mShouldLink;
     private boolean mIsFooter;
-    private Context mContext;
+
     private int mTextColor;
+    private int mBackgroundColor;
+    private int mLinkColor;
+    private int mLightTextColor;
 
     private final JSONObject mBlockData;
 
     public NoteBlockClickableSpan(Context context, JSONObject blockData, boolean shouldLink, boolean isFooter) {
-        mContext = context;
         mBlockData = blockData;
         mShouldLink = shouldLink;
         mIsFooter = isFooter;
+
+        // Text/background colors
         mTextColor = context.getResources().getColor(R.color.grey_dark);
+        mBackgroundColor = context.getResources().getColor(R.color.pressed_wordpress);
+        mLinkColor = context.getResources().getColor(R.color.blue_medium);
+        mLightTextColor = context.getResources().getColor(R.color.grey);
+
         processRangeData();
     }
 
@@ -59,7 +67,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
             // Apply grey color to some types
             if (mIsFooter || getRangeType() == NoteBlockRangeType.BLOCKQUOTE || getRangeType() == NoteBlockRangeType.POST) {
-                mTextColor = mContext.getResources().getColor(R.color.grey);
+                mTextColor = mLightTextColor;
             }
         }
     }
@@ -68,8 +76,8 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     public void updateDrawState(@Nonnull TextPaint textPaint) {
         // Set background color
         textPaint.bgColor = mShouldLink && mPressed && !isBlockquoteType() ?
-                mContext.getResources().getColor(R.color.grey_lighten_20) : Color.TRANSPARENT;
-        textPaint.setColor(mShouldLink && !mIsFooter ? mContext.getResources().getColor(R.color.blue_medium) : mTextColor);
+                mBackgroundColor : Color.TRANSPARENT;
+        textPaint.setColor(mShouldLink && !mIsFooter ? mLinkColor : mTextColor);
         // No underlines
         textPaint.setUnderlineText(mIsFooter);
     }
