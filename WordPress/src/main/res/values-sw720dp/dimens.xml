@@ -4,6 +4,5 @@
     <dimen name="format_bar_height">50dp</dimen>
     <dimen name="theme_details_dialog_min_width">650dp</dimen>
     <dimen name="theme_details_dialog_height">500dp</dimen>
-    <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_tablet</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_tablet_large</dimen>
 </resources>

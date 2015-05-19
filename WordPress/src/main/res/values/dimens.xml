@@ -40,10 +40,10 @@
     <dimen name="content_margin_tablet_landscape">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
 
-    <!-- spacing between icons in main tab strip - note that the tabs are left-aligned on large
-         tablets and small landscape tablets, otherwise they're distributed evenly w/o padding -->
+    <!-- spacing between icons in main tab strip - note that the tabs are left-aligned on
+         landscape tablets, otherwise they're distributed evenly w/o padding -->
     <dimen name="tabstrip_icon_spacing_normal">0dp</dimen>
-    <dimen name="tabstrip_icon_spacing_tablet">24dp</dimen>
+    <dimen name="tabstrip_icon_spacing_landscape_tablet">24dp</dimen>
     <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_normal</dimen>
 
     <!--
