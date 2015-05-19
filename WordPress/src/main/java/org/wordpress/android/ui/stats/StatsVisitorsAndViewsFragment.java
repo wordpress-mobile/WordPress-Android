@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -311,8 +312,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (mVisitsData != null) {
             updateUI();
         } else {
-            setupNoResultsUI(true);
-            refreshStats();
+            if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                setupNoResultsUI(true);
+                refreshStats();
+            } else {
+                setupNoResultsUI(false);
+            }
         }
     }
 

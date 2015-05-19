@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.NetworkUtils;
 
 import java.io.Serializable;
 
@@ -103,8 +104,12 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
         if (mDatamodels != null) {
             updateUI();
         } else {
-            showPlaceholderUI();
-            refreshStats();
+            if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                showPlaceholderUI();
+                refreshStats();
+            } else {
+                showErrorUI(new NoConnectionError());
+            }
         }
     }
 
@@ -120,14 +125,13 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
             return;
         }
 
-/*        if (isErrorResponse(0)) {
-            showErrorUI(0);
+        if (isErrorResponse(0)) {
+            showErrorUI(mDatamodels[0]);
             return;
         }
-        */
 
         if (isDataEmpty(0)) {
-            showErrorUI(0);
+            showErrorUI(null);
             return;
         }
 
@@ -135,7 +139,6 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
         mErrorLabel.setVisibility(View.GONE);
         mResultContainer.setVisibility(View.VISIBLE);
         mEmptyModulePlaceholder.setVisibility(View.GONE);
-       // mResponseAsText.setText((String) mDatamodels[0]);
 
         customizeUIWithResults(); // call the subclass and draw the real UI here
     }

@@ -41,13 +41,13 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
 
         // Another check that the data is available
         if (isDataEmpty(0) || !(mDatamodels[0] instanceof VisitsModel)) {
-            showErrorUI(0);
+            showErrorUI(null);
             return;
         }
 
         VisitsModel visitsModel = (VisitsModel) mDatamodels[0];
         if (visitsModel.getVisits() == null || visitsModel.getVisits().size() == 0) {
-            showErrorUI(0);
+            showErrorUI(null);
             return;
         }
 

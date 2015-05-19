@@ -17,7 +17,7 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
     void customizeUIWithResults() {
         // Another check that the data is available
         if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsAllTimeModel)) {
-            showErrorUI(0);
+            showErrorUI(null);
             return;
         }
 
