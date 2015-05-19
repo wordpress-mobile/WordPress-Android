@@ -270,7 +270,9 @@ public class SettingsFragment extends PreferenceFragment {
                     res.updateConfiguration(conf, dm);
                     mSettings.edit().putString(SETTINGS_PREFERENCES, localeMap.get(values[position])).apply();
 
-                    // Track the change only if the user selected a non default Device language
+                    // Track the change only if the user selected a non default Device language. This is only used in
+                    // Mixpanel, because we have both the device language and app selected language data in Tracks
+                    // metadata.
                     if (position != 0) {
                         Map<String, Object> properties = new HashMap<String, Object>();
                         properties.put("forced_app_locale", conf.locale.toString());
