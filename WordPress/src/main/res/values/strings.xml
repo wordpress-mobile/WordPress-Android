@@ -885,4 +885,7 @@
     <string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Disconnect from WordPress.com</string>
 
+    <string name="passcodelock_prompt_message">Enter your PIN</string>
+    <string name="passcodelock_hint"></string>
+
 </resources>
