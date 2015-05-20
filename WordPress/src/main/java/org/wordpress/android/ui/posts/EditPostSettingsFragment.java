@@ -448,7 +448,8 @@ public class EditPostSettingsFragment extends Fragment
             tags = (mTagsEditText.getText() != null) ? mTagsEditText.getText().toString() : "";
 
             // post format
-            if (mPostFormats != null && mPostFormatSpinner.getSelectedItemPosition() < mPostFormats.length) {
+            if (mPostFormats != null && mPostFormatSpinner != null &&
+                mPostFormatSpinner.getSelectedItemPosition() < mPostFormats.length) {
                 postFormat = mPostFormats[mPostFormatSpinner.getSelectedItemPosition()];
             }
         }
