@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +24,7 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -34,7 +33,6 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -175,12 +173,7 @@ public class NotificationsListFragment extends Fragment
         Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
         detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
         detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard);
-
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.activity_slide_in_from_right,
-                R.anim.do_nothing);
-        ActivityCompat.startActivityForResult(activity, detailIntent, RequestCodes.NOTE_DETAIL, options.toBundle());
+        ActivityLauncher.slideInFromRightForResult(activity, detailIntent, RequestCodes.NOTE_DETAIL);
     }
 
     private void setNoteIsHidden(String noteId, boolean isHidden) {
