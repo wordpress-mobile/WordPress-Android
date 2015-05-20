@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
@@ -16,8 +17,6 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
-
-import java.util.ArrayList;
 
 public class HelpActivity extends ActionBarActivity {
     final private static String FAQ_URL = "http://android.wordpress.org/faq/";
@@ -43,6 +42,12 @@ public class HelpActivity extends ActionBarActivity {
                 startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
             }
         });
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 
     private void initHelpshiftLayout() {

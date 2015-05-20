@@ -26,7 +26,6 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -179,7 +178,7 @@ public class NotificationsListFragment extends Fragment
 
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
-                R.anim.reader_activity_slide_in,
+                R.anim.activity_slide_in_from_right,
                 R.anim.do_nothing);
         ActivityCompat.startActivityForResult(activity, detailIntent, RequestCodes.NOTE_DETAIL, options.toBundle());
     }
