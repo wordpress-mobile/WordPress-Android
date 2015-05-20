@@ -196,11 +196,6 @@ public class StatsActivity extends ActionBarActivity
                     AppLog.d(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
                     mCurrentTimeframe = selectedTimeframe;
                     mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                    if (NetworkUtils.checkConnection(StatsActivity.this)) {
-                        mSwipeToRefreshHelper.setRefreshing(true);
-                    } else {
-                        mSwipeToRefreshHelper.setRefreshing(false);
-                    }
                     createFragments(true); // Need to recreate fragment here, since a new timeline was selected.
                 }
                 @Override
@@ -684,7 +679,6 @@ public class StatsActivity extends ActionBarActivity
                 // Blog has not returned a jetpack_client_id
                 showJetpackMissingAlert();
             } else {
-                mSwipeToRefreshHelper.setRefreshing(true);
                 checkCredentials();
             }
         } else {
