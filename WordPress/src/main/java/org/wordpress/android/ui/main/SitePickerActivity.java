@@ -119,7 +119,9 @@ public class SitePickerActivity extends ActionBarActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                ReaderAnim.showFab(mFabView, true);
+                if (!isFinishing()) {
+                    ReaderAnim.showFab(mFabView, true);
+                }
             }
         }, 500);
     }
