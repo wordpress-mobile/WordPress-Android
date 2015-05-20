@@ -356,7 +356,7 @@ public class ReaderPostListFragment extends Fragment
         mNewPostsBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mRecyclerView.scrollToPosition(0);
+                scrollRecycleViewToPosition(0);
                 refreshPosts();
             }
         });
@@ -463,6 +463,25 @@ public class ReaderPostListFragment extends Fragment
         });
     }
 
+    private void scrollRecycleViewToPosition(int position) {
+        if (!isAdded() || mRecyclerView == null) return;
+
+        mRecyclerView.scrollToPosition(position);
+
+        // we need to reposition the tag toolbar here, but we need to wait for the
+        // recycler to settle before doing so - note that RecyclerView doesn't
+        // fire it's scroll listener when scrollToPosition() is called, so we
+        // can't rely on that to position the toolbar in this situation
+        if (shouldShowTagToolbar()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    positionTagToolbar();
+                }
+            }, 250);
+        }
+    }
+
     /*
      * position the tag toolbar based on the recycler's scroll position - this will make it
      * appear to scroll along with the recycler
@@ -490,7 +509,11 @@ public class ReaderPostListFragment extends Fragment
         // configure the toolbar for posts in followed tags (shown in main viewpager activity)
         if (shouldShowTagToolbar()) {
             mTagToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
-            mTagToolbar.setVisibility(View.VISIBLE);
+
+            // the toolbar is hidden by the layout, so we need to show it here unless we know we're
+            // going to restore the list position once the adapter is loaded (which will take care
+            // of showing/hiding the toolbar)
+            mTagToolbar.setVisibility(mRestorePosition == 0 ? View.VISIBLE : View.GONE);
 
             mTagToolbar.inflateMenu(R.menu.reader_list);
             mTagToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -790,7 +813,8 @@ public class ReaderPostListFragment extends Fragment
             } else {
                 mEmptyView.setVisibility(View.GONE);
                 if (mRestorePosition > 0) {
-                    mRecyclerView.scrollToPosition(mRestorePosition);
+                    AppLog.d(T.READER, "reader post list > restoring position");
+                    scrollRecycleViewToPosition(mRestorePosition);
                 }
             }
             mRestorePosition = 0;

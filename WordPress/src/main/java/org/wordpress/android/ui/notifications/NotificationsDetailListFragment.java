@@ -24,7 +24,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.BlockType;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
@@ -54,7 +53,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private int mRestoredListPosition;
 
     public interface OnNoteChangeListener {
-        public void onNoteChanged(Note note);
+        void onNoteChanged(Note note);
     }
 
     private Note mNote;
@@ -63,6 +62,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     private int mBackgroundColor;
     private int mCommentListPosition = ListView.INVALID_POSITION;
+    private boolean mIsUnread;
+
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
     private OnNoteChangeListener mOnNoteChangeListener;
     private NoteBlockAdapter mNoteBlockAdapter;
@@ -148,6 +149,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         if (SimperiumUtils.getNotesBucket() != null) {
             try {
                 Note note = SimperiumUtils.getNotesBucket().get(noteId);
+                mIsUnread = note.isUnread();
                 setNote(note);
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();
@@ -432,6 +434,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             try {
                 mNote = noteBucket.get(noteId);
+
+                // Don't refresh if the note was just marked as read
+                if (!mNote.isUnread() && mIsUnread) {
+                    mIsUnread = false;
+                    return;
+                }
 
                 // Mark note as read since we are looking at it already
                 if (mNote.isUnread()) {

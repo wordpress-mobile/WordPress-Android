@@ -53,7 +53,8 @@
 
         <activity
             android:name=".ui.WPLaunchActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

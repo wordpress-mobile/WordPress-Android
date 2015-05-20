@@ -309,8 +309,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     // Set blog for Jetpack auth
-    public void setBlog(Blog blog) {
+    public void setBlogAndCustomMessageForJetpackAuth(Blog blog, String customAuthMessage) {
         mJetpackBlog = blog;
+        if(customAuthMessage != null && mJetpackAuthLabel != null) {
+            mJetpackAuthLabel.setText(customAuthMessage);
+        }
 
         if (mAddSelfHostedButton != null) {
             mJetpackAuthLabel.setVisibility(View.VISIBLE);

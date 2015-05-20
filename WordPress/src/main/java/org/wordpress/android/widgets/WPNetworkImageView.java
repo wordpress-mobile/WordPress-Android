@@ -28,6 +28,8 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.VolleyUtils;
 
+import java.util.HashSet;
+
 /**
  * most of the code below is from Volley's NetworkImageView, but it's modified to support:
  *  (1) fading in downloaded images
@@ -54,6 +56,8 @@ public class WPNetworkImageView extends ImageView {
     private int mRetryCnt;
     private static final int MAX_RETRIES = 3;
     private static final long RETRY_DELAY = 2500;
+
+    private static final HashSet<String> mUrlSkipList = new HashSet<>();
 
     public interface ImageListener {
         public void onImageLoaded(boolean succeeded);
@@ -183,6 +187,13 @@ public class WPNetworkImageView extends ImageView {
             }
         }
 
+        // skip this URL if a previous request for it returned a 404
+        if (mUrlSkipList.contains(mUrl)) {
+            AppLog.d(AppLog.T.READER, "skipping image request " + mUrl);
+            showErrorImage();
+            return;
+        }
+
         // enforce a max size to reduce memory usage
         Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
         int maxSize = Math.max(pt.x, pt.y);
@@ -193,12 +204,13 @@ public class WPNetworkImageView extends ImageView {
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        int statusCode = VolleyUtils.statusCodeFromVolleyError(error);
                         // mshot requests return a 307 if the mshot has never been requested,
                         // handle this by retrying request after a short delay to give time
                         // for server to generate the image
                         if (mImageType == ImageType.MSHOT
                                 && mRetryCnt < MAX_RETRIES
-                                && VolleyUtils.statusCodeFromVolleyError(error) == 307)
+                                && statusCode == 307)
                         {
                             mRetryCnt++;
                             retry(isInLayoutPass);
@@ -206,6 +218,10 @@ public class WPNetworkImageView extends ImageView {
                             showErrorImage();
                             if (mImageListener != null) {
                                 mImageListener.onImageLoaded(false);
+                            }
+                            // keep track of URLs that 404 so we can skip them the next time
+                            if (statusCode == 404) {
+                                mUrlSkipList.add(mUrl);
                             }
                         }
                     }
