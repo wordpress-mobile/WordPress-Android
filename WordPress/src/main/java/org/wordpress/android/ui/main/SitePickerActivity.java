@@ -115,7 +115,8 @@ public class SitePickerActivity extends ActionBarActivity
             mFabView = fabMenuAddDotOrg;
         }
 
-        // animate fab in after brief delay (to give time for activity transition to complete first)
+        // animate fab in after a delay which matches that of the activity transition
+        long delay = getResources().getInteger(android.R.integer.config_shortAnimTime);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -123,7 +124,7 @@ public class SitePickerActivity extends ActionBarActivity
                     ReaderAnim.showFab(mFabView, true);
                 }
             }
-        }, 500);
+        }, delay);
     }
 
     @Override
