@@ -39,7 +39,7 @@ import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
 
-    private static final String ARG_SLIDE_OUT_TO_RIGHT = "slide_out_to_right";
+    private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
 
     public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
@@ -197,7 +197,7 @@ public class ActivityLauncher {
 
     public static void slideInFromRight(Context context, Intent intent) {
         if (context instanceof Activity) {
-            intent.putExtra(ARG_SLIDE_OUT_TO_RIGHT, true);
+            intent.putExtra(ARG_DID_SLIDE_IN_FROM_RIGHT, true);
             Activity activity = (Activity) context;
             ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                     activity,
@@ -210,7 +210,7 @@ public class ActivityLauncher {
     }
 
     public static void slideInFromRightForResult(Activity activity, Intent intent, int requestCode) {
-        intent.putExtra(ARG_SLIDE_OUT_TO_RIGHT, true);
+        intent.putExtra(ARG_DID_SLIDE_IN_FROM_RIGHT, true);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
                 R.anim.activity_slide_in_from_right,
@@ -219,12 +219,13 @@ public class ActivityLauncher {
     }
 
     /*
-     * called in an activity's finish to slide it out if it slid in from the right when started
+     * called in an activity's finish to slide it out to the right if it slid in
+     * from the right when started
      */
     public static void slideOutToRight(Activity activity) {
         if (activity != null
                 && activity.getIntent() != null
-                && activity.getIntent().hasExtra(ARG_SLIDE_OUT_TO_RIGHT)) {
+                && activity.getIntent().hasExtra(ARG_DID_SLIDE_IN_FROM_RIGHT)) {
             activity.overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_right);
         }
     }
