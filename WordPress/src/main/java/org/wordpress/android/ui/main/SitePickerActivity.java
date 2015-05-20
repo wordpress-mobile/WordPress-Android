@@ -39,6 +39,7 @@ public class SitePickerActivity extends ActionBarActivity
     private RecyclerView mRecycleView;
     private ActionMode mActionMode;
     private int mCurrentLocalId;
+    private boolean mDidUserSelectSite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class SitePickerActivity extends ActionBarActivity
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -114,7 +116,9 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
+        if (mDidUserSelectSite) {
+            overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
+        }
     }
 
     @Override
@@ -240,6 +244,7 @@ public class SitePickerActivity extends ActionBarActivity
             WordPress.setCurrentBlog(site.localId);
             WordPress.wpDB.updateLastBlogId(site.localId);
             setResult(RESULT_OK);
+            mDidUserSelectSite = true;
             finish();
         }
     }

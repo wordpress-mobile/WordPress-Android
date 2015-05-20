@@ -509,7 +509,11 @@ public class ReaderPostListFragment extends Fragment
         // configure the toolbar for posts in followed tags (shown in main viewpager activity)
         if (shouldShowTagToolbar()) {
             mTagToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
-            mTagToolbar.setVisibility(View.VISIBLE);
+
+            // the toolbar is hidden by the layout, so we need to show it here unless we know we're
+            // going to restore the list position once the adapter is loaded (which will take care
+            // of showing/hiding the toolbar)
+            mTagToolbar.setVisibility(mRestorePosition == 0 ? View.VISIBLE : View.GONE);
 
             mTagToolbar.inflateMenu(R.menu.reader_list);
             mTagToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -809,6 +813,7 @@ public class ReaderPostListFragment extends Fragment
             } else {
                 mEmptyView.setVisibility(View.GONE);
                 if (mRestorePosition > 0) {
+                    AppLog.d(T.READER, "reader post list > restoring position");
                     scrollRecycleViewToPosition(mRestorePosition);
                 }
             }
