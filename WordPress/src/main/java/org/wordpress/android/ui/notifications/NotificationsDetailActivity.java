@@ -71,13 +71,6 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
                     properties.put("notification_type", note.getType());
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
 
-                    // mark the note as read if it's unread
-                    if (note.isUnread()) {
-                        // mark as read which syncs with simperium
-                        note.markAsRead();
-                        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-                    }
-
                     Fragment detailFragment = getDetailFragmentForNote(note);
                     getFragmentManager().beginTransaction()
                             .add(R.id.notifications_detail_container, detailFragment)
@@ -85,6 +78,13 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
 
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setTitle(note.getTitle());
+                    }
+
+                    // mark the note as read if it's unread
+                    if (note.isUnread()) {
+                        // mark as read which syncs with simperium
+                        note.markAsRead();
+                        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
                     }
                 } catch (BucketObjectMissingException e) {
                     showErrorToastAndFinish();
