@@ -87,8 +87,6 @@ dependencies {
 
     compile 'com.mcxiaoke.volley:library:1.0.+'
 
-    compile 'com.github.xiprox.markview:library:1.0.0'
-
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'
     androidTestCompile 'org.mockito:mockito-core:+'

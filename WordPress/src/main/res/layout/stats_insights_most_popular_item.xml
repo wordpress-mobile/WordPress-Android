@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:baselineAligned="false"
-    android:padding="@dimen/margin_extra_large"
+    android:paddingBottom="@dimen/margin_extra_large"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_medium"
     android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical">
 
@@ -14,23 +17,13 @@
         android:orientation="horizontal"
         android:gravity="center_vertical|center_horizontal">
 
-        <!--org.wordpress.android.widgets.WPAutoResizeTextView
-            android:id="@+id/stats_most_popular_day_percent"
-            android:gravity="center_vertical|center_horizontal"
-            style="@style/StatsHeaderTotals"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textColor="@color/grey_darken_30" / -->
-
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical|center_horizontal">
-            <tr.xip.markview.MarkView
+            <org.wordpress.android.ui.stats.MarkView
                 android:id="@+id/stats_most_popular_day_percent"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -39,9 +32,11 @@
                 app:mv_max="100"
                 app:mv_ringWidth="10dp"
                 app:mv_strokeWidth="10dp"
+                app:mv_ringColor="@color/grey_lighten_20"
                 app:mv_textSize="@dimen/text_sz_extra_large"
                 app:mv_textColor="@color/grey_darken_30"
-                app:mv_ringColor="@color/grey_lighten_20"
+                app:mv_secondLine_textSize="@dimen/text_sz_medium"
+                app:mv_secondLine_textColor="@color/grey_darken_10"
                 />
         </LinearLayout>
 
@@ -60,8 +55,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="@dimen/margin_small">
+        android:gravity="center_vertical|center_horizontal" >
 
         <org.wordpress.android.widgets.WPAutoResizeTextView
             style="@style/StatsHeaderTotalsLabel"

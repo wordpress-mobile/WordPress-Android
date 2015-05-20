@@ -135,6 +135,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
             mModuleButtonsContainer.setVisibility(View.VISIBLE);
         }
+
         return view;
     }
 

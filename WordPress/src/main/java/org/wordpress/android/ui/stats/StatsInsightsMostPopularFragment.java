@@ -1,22 +1,18 @@
 package org.wordpress.android.ui.stats;
 
-import android.graphics.Color;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
 import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.FormatUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
-import tr.xip.markview.MarkView;
+
 
 
 public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragment {
@@ -38,7 +34,6 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
                 .inflate(R.layout.stats_insights_most_popular_item, (ViewGroup) mResultContainer.getRootView(), false);
 
         final MarkView markView = (MarkView) ll.findViewById(R.id.stats_most_popular_day_percent);
-        markView.setStrokeColors(new int[] {getResources().getColor(R.color.blue_wordpress)});
 
         TextView mostPopularDayLabelText = (TextView) ll.findViewById(R.id.stats_most_popular_day_label);
 

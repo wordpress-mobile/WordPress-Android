@@ -105,6 +105,9 @@
     <color name="stats_bar_graph_secondary_series">@color/blue_dark</color>
     <color name="stats_empty_placeholder_color">@color/translucent_grey_lighten_30</color>
 
+    <string-array name="stats_mark_colors">
+        <item>#006b98</item> <!-- referencing wordpress blue -->
+    </string-array>
 
     <!-- Reader  -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>
