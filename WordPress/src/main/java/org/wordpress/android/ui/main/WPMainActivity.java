@@ -34,6 +34,7 @@ import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
@@ -75,7 +76,10 @@ public class WPMainActivity extends Activity
 
         mTabs = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.tab_indicator));
-        mTabs.setDistributeEvenly(getResources().getBoolean(R.bool.tabstrip_distribute_tabs));
+
+        // tabs are left-aligned rather than evenly distributed in landscape
+        mTabs.setDistributeEvenly(!DisplayUtils.isLandscape(this));
+
         Integer icons[] = {R.drawable.main_tab_sites,
                            R.drawable.main_tab_reader,
                            R.drawable.main_tab_me,
