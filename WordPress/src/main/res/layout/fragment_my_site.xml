@@ -91,6 +91,7 @@
 
             <!--View Site-->
             <RelativeLayout
+                android:id="@+id/row_view_site"
                 style="@style/MySiteListRowLayout"
                 android:layout_marginTop="@dimen/my_site_margin_general">
 
@@ -109,7 +110,9 @@
             </RelativeLayout>
 
             <!--Stats-->
-            <RelativeLayout style="@style/MySiteListRowLayout">
+            <RelativeLayout
+                android:id="@+id/row_stats"
+                style="@style/MySiteListRowLayout">
 
                 <ImageView
                     android:id="@+id/my_site_stats_icon"
@@ -137,7 +140,9 @@
             </LinearLayout>
 
             <!--Blog Posts-->
-            <RelativeLayout style="@style/MySiteListRowLayout">
+            <RelativeLayout
+                android:id="@+id/row_blog_posts"
+                style="@style/MySiteListRowLayout">
 
                 <ImageView
                     android:id="@+id/my_site_blog_posts_icon"
@@ -154,7 +159,9 @@
             </RelativeLayout>
 
             <!--Media-->
-            <RelativeLayout style="@style/MySiteListRowLayout">
+            <RelativeLayout
+                android:id="@+id/row_media"
+                style="@style/MySiteListRowLayout">
 
                 <ImageView
                     android:id="@+id/my_site_media_icon"
@@ -171,7 +178,9 @@
             </RelativeLayout>
 
             <!--Pages-->
-            <RelativeLayout style="@style/MySiteListRowLayout">
+            <RelativeLayout
+                android:id="@+id/row_pages"
+                style="@style/MySiteListRowLayout">
 
                 <ImageView
                     android:id="@+id/my_site_pages_icon"
@@ -188,7 +197,9 @@
             </RelativeLayout>
 
             <!--Comments-->
-            <RelativeLayout style="@style/MySiteListRowLayout">
+            <RelativeLayout
+                android:id="@+id/row_comments"
+                style="@style/MySiteListRowLayout">
 
                 <ImageView
                     android:id="@+id/my_site_comments_icon"
@@ -219,7 +230,7 @@
 
             <!--Themes-->
             <RelativeLayout
-                android:id="@+id/my_site_themes_container"
+                android:id="@+id/row_themes"
                 style="@style/MySiteListRowLayout">
 
                 <ImageView
@@ -248,7 +259,9 @@
             </LinearLayout>
 
             <!--Settings-->
-            <RelativeLayout style="@style/MySiteListRowLayout">
+            <RelativeLayout
+                android:id="@+id/row_settings"
+                style="@style/MySiteListRowLayout">
 
                 <ImageView
                     android:id="@+id/my_site_settings_icon"
@@ -277,6 +290,7 @@
 
             <!--View Admin-->
             <RelativeLayout
+                android:id="@+id/row_admin"
                 style="@style/MySiteListRowLayout"
                 android:layout_marginBottom="@dimen/margin_extra_large">
 

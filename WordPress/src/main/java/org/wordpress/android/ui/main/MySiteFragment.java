@@ -81,7 +81,7 @@ public class MySiteFragment extends Fragment
         mBlogTitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_title_label);
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
-        mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.my_site_themes_container);
+        mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
 
         // TODO: animate FAB
         mFabButton = (FloatingActionButton) rootView.findViewById(R.id.fab_button);
@@ -93,8 +93,7 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        WPTextView switchSiteTextView = (WPTextView) rootView.findViewById(R.id.switch_site);
-        switchSiteTextView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.switch_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
@@ -102,16 +101,14 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        WPTextView viewSiteTextView = (WPTextView) rootView.findViewById(R.id.my_site_view_site_text_view);
-        viewSiteTextView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentSite(getActivity());
             }
         });
 
-        WPTextView statsTextView = (WPTextView) rootView.findViewById(R.id.my_site_stats_text_view);
-        statsTextView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // if the blog is empty, fail silently
@@ -121,56 +118,49 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        WPTextView blogPostsTextView = (WPTextView) rootView.findViewById(R.id.my_site_blog_posts_text_view);
-        blogPostsTextView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogPosts(getActivity());
             }
         });
 
-        WPTextView mediaTextView = (WPTextView) rootView.findViewById(R.id.my_site_media_text_view);
-        mediaTextView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_media).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogMedia(getActivity());
             }
         });
 
-        WPTextView pagesTextView = (WPTextView) rootView.findViewById(R.id.my_site_pages_text_view);
-        pagesTextView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_pages).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogPages(getActivity());
             }
         });
 
-        WPTextView commentsTextView = (WPTextView) rootView.findViewById(R.id.my_site_comments_text_view);
-        commentsTextView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_comments).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogComments(getActivity());
             }
         });
 
-        WPTextView themesTextView = (WPTextView) rootView.findViewById(R.id.my_site_themes_text_view);
-        themesTextView.setOnClickListener(new View.OnClickListener() {
+        mThemesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogThemes(getActivity());
             }
         });
 
-        WPTextView settingsTextView = (WPTextView) rootView.findViewById(R.id.my_site_settings_text_view);
-        settingsTextView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewBlogSettingsForResult(getActivity(), mBlog);
             }
         });
 
-        WPTextView viewAdminTextView = (WPTextView) rootView.findViewById(R.id.my_site_view_admin_text_view);
-        viewAdminTextView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_admin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewBlogAdmin(getActivity(), mBlog);
