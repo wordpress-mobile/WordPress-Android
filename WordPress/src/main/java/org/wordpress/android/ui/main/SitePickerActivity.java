@@ -265,12 +265,14 @@ public class SitePickerActivity extends ActionBarActivity
 
     @Override
     public boolean onQueryTextSubmit(String s) {
-        return false;
+        mSearchView.clearFocus();
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
-        return false;
+        getAdapter().searchSitesThatContain(s);
+        return true;
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
