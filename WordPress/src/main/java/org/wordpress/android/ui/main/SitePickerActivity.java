@@ -2,6 +2,7 @@ package org.wordpress.android.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
+import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
@@ -37,6 +39,7 @@ public class SitePickerActivity extends ActionBarActivity
 
     private SitePickerAdapter mAdapter;
     private RecyclerView mRecycleView;
+    private View mFabView;
     private ActionMode mActionMode;
     private int mCurrentLocalId;
     private boolean mDidUserSelectSite;
@@ -100,17 +103,28 @@ public class SitePickerActivity extends ActionBarActivity
                     fabMenu.collapse();
                 }
             });
+            mFabView = fabMenu;
         } else {
-            fabMenu.setVisibility(View.GONE);
             FloatingActionButton fabMenuAddDotOrg = (FloatingActionButton) findViewById(R.id.fab_add_dotorg);
-            fabMenuAddDotOrg.setVisibility(View.VISIBLE);
             fabMenuAddDotOrg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
                 }
             });
+            mFabView = fabMenuAddDotOrg;
         }
+
+        // animate fab in after a delay which matches that of the activity transition
+        long delay = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing()) {
+                    ReaderAnim.showFab(mFabView, true);
+                }
+            }
+        }, delay);
     }
 
     @Override
@@ -264,6 +278,7 @@ public class SitePickerActivity extends ActionBarActivity
             mActionMode = actionMode;
             mHasChanges = false;
             updateActionModeTitle();
+            ReaderAnim.showFab(mFabView, false);
             actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
         }
@@ -310,6 +325,7 @@ public class SitePickerActivity extends ActionBarActivity
                 saveHiddenSites();
             }
             getAdapter().setEnableEditMode(false);
+            ReaderAnim.showFab(mFabView, true);
             mActionMode = null;
         }
     }
