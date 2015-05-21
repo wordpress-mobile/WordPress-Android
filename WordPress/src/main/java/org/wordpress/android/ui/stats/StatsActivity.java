@@ -30,6 +30,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -209,6 +210,12 @@ public class StatsActivity extends ActionBarActivity
         }
 
         selectCurrentTimeframeInActionBar();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 
     @Override

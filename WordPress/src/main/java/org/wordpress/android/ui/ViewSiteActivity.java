@@ -68,6 +68,12 @@ public class ViewSiteActivity extends ActionBarActivity {
         loadSiteURL();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
+    }
+
     private void loadSiteURL() {
         if (mBlog == null) {
             return;
