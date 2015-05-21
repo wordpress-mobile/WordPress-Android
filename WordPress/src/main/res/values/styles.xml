@@ -280,7 +280,7 @@
     </style>
 
     <style name="MySiteListSectionDividerView">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginLeft">@dimen/margin_large</item>
@@ -291,7 +291,7 @@
     <style name="MeListRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/me_list_row_height</item>
-        <item name="android:background">@drawable/me_list_row_bg</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:orientation">horizontal</item>
     </style>
 
@@ -307,11 +307,17 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:padding">@dimen/margin_extra_large</item>
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="MeListSectionDividerView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">@color/me_list_row_border</item>
     </style>
 
     <style name="fab_menu_label_style">
