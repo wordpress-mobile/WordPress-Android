@@ -63,6 +63,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private boolean mIsCheckboxChecked;
 
     private OnDateChangeListener mListener;
+    private OnOverviewItemChangeListener mOverviewItemChangeListener;
 
     private final OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
             OverviewLabel.COMMENTS};
@@ -77,6 +78,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate);
     }
 
+    // Container Activity must implement this interface
+    public interface OnOverviewItemChangeListener {
+        void onOverviewItemChanged(OverviewLabel newItem);
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -85,19 +91,18 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnDateChangeListener");
         }
+        try {
+            mOverviewItemChangeListener = (OnOverviewItemChangeListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnOverviewItemChangeListener");
+        }
     }
 
-    public void switchToItem(OverviewLabel item) {
-        if (!isAdded()) {
-            return;
-        }
-        if (mModuleButtonsContainer != null) {
-            for (int i = 0; i < mModuleButtonsContainer.getChildCount(); i++) {
-                if (overviewItems[i] == item) {
-                    LinearLayout currentTab = (LinearLayout) mModuleButtonsContainer.getChildAt(i);
-                    currentTab.performClick();
-                    return;
-                }
+    void setSelectedOverviewItem(OverviewLabel itemToSelect) {
+        for (int i = 0; i < overviewItems.length; i++) {
+            if (overviewItems[i] == itemToSelect) {
+                mSelectedOverviewItemIndex = i;
+                return;
             }
         }
     }
@@ -243,6 +248,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 return;
 
             mSelectedOverviewItemIndex = checkedId;
+            if (mOverviewItemChangeListener != null) {
+                mOverviewItemChangeListener.onOverviewItemChanged(
+                        overviewItems[mSelectedOverviewItemIndex]
+                );
+            }
             updateUI();
         }
     };

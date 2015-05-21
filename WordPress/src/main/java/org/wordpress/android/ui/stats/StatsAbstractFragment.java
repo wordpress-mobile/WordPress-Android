@@ -131,6 +131,14 @@ public abstract class StatsAbstractFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
+    public static StatsAbstractFragment newVisitorsAndViewsInstance(StatsViewType viewType, int localTableBlogID,
+                                                    StatsTimeframe timeframe, String date,  StatsVisitorsAndViewsFragment.OverviewLabel itemToSelect) {
+
+        StatsVisitorsAndViewsFragment fragment = (StatsVisitorsAndViewsFragment) newInstance(viewType, localTableBlogID, timeframe, date);
+        fragment.setSelectedOverviewItem(itemToSelect);
+        return fragment;
+    }
+
     public static StatsAbstractFragment newInstance(StatsViewType viewType, int localTableBlogID,
                                                     StatsTimeframe timeframe, String date ) {
         StatsAbstractFragment fragment = null;

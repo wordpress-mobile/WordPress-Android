@@ -62,6 +62,7 @@ import de.greenrobot.event.EventBus;
 public class StatsActivity extends ActionBarActivity
         implements ScrollViewExt.ScrollViewListener,
                 StatsVisitorsAndViewsFragment.OnDateChangeListener,
+                StatsVisitorsAndViewsFragment.OnOverviewItemChangeListener,
                 StatsInsightsTodayFragment.OnInsightsTodayClickListener {
 
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
@@ -87,6 +88,7 @@ public class StatsActivity extends ActionBarActivity
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
     private StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
             StatsTimeframe.MONTH, StatsTimeframe.YEAR};
+    private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph = StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -270,7 +272,8 @@ public class StatsActivity extends ActionBarActivity
             findViewById(R.id.stats_insights_fragments_container).setVisibility(View.GONE);
 
             if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newVisitorsAndViewsInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate,
+                       mTabToSelectOnGraph);
                 ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
             }
 
@@ -578,24 +581,13 @@ public class StatsActivity extends ActionBarActivity
     // StatsInsightsTodayFragment calls this when the user taps on a item in Today's Stats
     @Override
     public void onInsightsClicked(final StatsVisitorsAndViewsFragment.OverviewLabel item) {
+        mTabToSelectOnGraph = item;
         for (int i = 0; i < timeframes.length; i++) {
             if (timeframes[i] ==  StatsTimeframe.DAY) {
                 mSpinner.setSelection(i);
                 break;
             }
         }
-
-        mSpinner.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                FragmentManager fm = getFragmentManager();
-                if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) != null) {
-                    StatsVisitorsAndViewsFragment fragment = (StatsVisitorsAndViewsFragment)
-                            fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG);
-                    fragment.switchToItem(item);
-                }
-            }
-        }, 250L);
     }
 
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
@@ -611,6 +603,12 @@ public class StatsActivity extends ActionBarActivity
         } else {
             mSwipeToRefreshHelper.setRefreshing(false);
         }
+    }
+
+    // StatsVisitorsAndViewsFragment calls this when the user taps on the tab bar to change the type of the graph
+    @Override
+    public void onOverviewItemChanged(StatsVisitorsAndViewsFragment.OverviewLabel newItem) {
+        mTabToSelectOnGraph = newItem;
     }
 
     private boolean checkCredentials() {
