@@ -50,6 +50,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private final LayoutInflater mInflater;
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
 
+    private String mSearchText;
     private boolean mIsMultiSelectEnabled;
     private boolean mShowHiddenSites = false;
     private boolean mShowSelfHostedSites = true;
@@ -181,6 +182,11 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         mSelectedPositions.clear();
 
         loadSites();
+    }
+
+    void searchSitesThatContain(String searchText) {
+        mSearchText = searchText;
+        setEnableEditMode(true);
     }
 
     int getNumSelected() {
@@ -332,8 +338,12 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
             if (mShowHiddenSites) {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted blogs and all wp.com blogs
-                    blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
+                    if (mSearchText.isEmpty()) {
+                        // all self-hosted blogs and all wp.com blogs
+                        blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
+                    } else {
+                        blogs = WordPress.wpDB.getBlogsBy("blogName LIKE " + mSearchText + " OR url LIKE " + mSearchText, extraFields);
+                    }
                 } else {
                     // only wp.com blogs
                     blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
@@ -341,7 +351,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             } else {
                 if (mShowSelfHostedSites) {
                     // all self-hosted blogs plus visible wp.com blogs
-                    blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=0 OR (isHidden=0 AND dotcomFlag=1) ", extraFields);
+                    blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=0 OR (isHidden=0 AND dotcomFlag=1)", extraFields);
                 } else {
                     // only visible wp.com blogs
                     blogs = WordPress.wpDB.getBlogsBy("isHidden=0 AND dotcomFlag=1", extraFields);
