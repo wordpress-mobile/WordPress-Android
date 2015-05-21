@@ -8,6 +8,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,13 +32,15 @@ import de.greenrobot.event.EventBus;
 
 public class SitePickerActivity extends ActionBarActivity
         implements SitePickerAdapter.OnSiteClickListener,
-        SitePickerAdapter.OnSelectedCountChangedListener {
+        SitePickerAdapter.OnSelectedCountChangedListener,
+        SearchView.OnQueryTextListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
 
     private SitePickerAdapter mAdapter;
     private RecyclerView mRecycleView;
     private ActionMode mActionMode;
+    private SearchView mSearchView;
     private int mCurrentLocalId;
     private boolean mDidUserSelectSite;
 
@@ -125,6 +128,10 @@ public class SitePickerActivity extends ActionBarActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
+
+        mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        mSearchView.setOnQueryTextListener(this);
+
         return true;
     }
 
@@ -254,6 +261,16 @@ public class SitePickerActivity extends ActionBarActivity
             int numSelected = getAdapter().getNumSelected();
             mActionMode.setTitle(getString(R.string.cab_selected, numSelected));
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        return false;
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
