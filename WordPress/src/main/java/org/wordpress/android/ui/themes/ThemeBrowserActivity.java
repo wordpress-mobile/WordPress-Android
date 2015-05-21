@@ -29,6 +29,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragmentCallback;
 import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragmentCallback;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
@@ -120,6 +121,12 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
             mViewPager.setVisibility(View.GONE);
             mTabLayout.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 
     @Override
