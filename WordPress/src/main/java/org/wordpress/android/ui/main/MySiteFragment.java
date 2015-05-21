@@ -177,30 +177,6 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        LinearLayout addPostContainer = (LinearLayout) rootView.findViewById(R.id.my_site_posts_add_button_container);
-        addPostContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, false);
-            }
-        });
-
-        LinearLayout addPageContainer = (LinearLayout) rootView.findViewById(R.id.my_site_pages_add_button_container);
-        addPageContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, true);
-            }
-        });
-
-        LinearLayout addMediaContainer = (LinearLayout) rootView.findViewById(R.id.my_site_media_add_button_container);
-        addMediaContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.addMedia(getActivity());
-            }
-        });
-
         refreshBlogDetails();
 
         return rootView;

@@ -145,18 +145,9 @@
                     android:contentDescription="@string/my_site_btn_blog_posts"
                     android:src="@drawable/my_site_icon_posts" />
 
-                <LinearLayout
-                    android:id="@+id/my_site_posts_add_button_container"
-                    style="@style/MySiteAddButtonContainer">
-
-                    <org.wordpress.android.widgets.WPTextView style="@style/MySiteAddButton" />
-
-                </LinearLayout>
-
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_blog_posts_text_view"
                     style="@style/MySiteListRowTextView"
-                    android:layout_toLeftOf="@id/my_site_posts_add_button_container"
                     android:layout_toRightOf="@id/my_site_blog_posts_icon"
                     android:text="@string/my_site_btn_blog_posts" />
 
@@ -171,18 +162,9 @@
                     android:contentDescription="@string/media"
                     android:src="@drawable/my_site_icon_media" />
 
-                <LinearLayout
-                    android:id="@+id/my_site_media_add_button_container"
-                    style="@style/MySiteAddButtonContainer">
-
-                    <org.wordpress.android.widgets.WPTextView style="@style/MySiteAddButton" />
-
-                </LinearLayout>
-
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_media_text_view"
                     style="@style/MySiteListRowTextView"
-                    android:layout_toLeftOf="@id/my_site_media_add_button_container"
                     android:layout_toRightOf="@id/my_site_media_icon"
                     android:text="@string/media" />
 
@@ -197,18 +179,9 @@
                     android:contentDescription="@string/pages"
                     android:src="@drawable/my_site_icon_pages" />
 
-                <LinearLayout
-                    android:id="@+id/my_site_pages_add_button_container"
-                    style="@style/MySiteAddButtonContainer">
-
-                    <org.wordpress.android.widgets.WPTextView style="@style/MySiteAddButton" />
-
-                </LinearLayout>
-
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_pages_text_view"
                     style="@style/MySiteListRowTextView"
-                    android:layout_toLeftOf="@id/my_site_pages_add_button_container"
                     android:layout_toRightOf="@id/my_site_pages_icon"
                     android:text="@string/pages" />
 
