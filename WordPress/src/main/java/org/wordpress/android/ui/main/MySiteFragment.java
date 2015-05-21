@@ -12,8 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -37,7 +35,6 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
-    private FloatingActionButton mFabButton;
     private int mBlavatarSz;
 
     private Blog mBlog;
@@ -48,17 +45,14 @@ public class MySiteFragment extends Fragment
 
     public void setBlog(Blog blog) {
         mBlog = blog;
-
         refreshBlogDetails();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mBlog = WordPress.getCurrentBlog();
     }
-
 
     @Override
     public void onResume() {
@@ -83,10 +77,7 @@ public class MySiteFragment extends Fragment
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
 
-        // TODO: animate FAB
-        mFabButton = (FloatingActionButton) rootView.findViewById(R.id.fab_button);
-        mFabButton.setVisibility(mBlog != null ? View.VISIBLE : View.GONE);
-        mFabButton.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, false);
