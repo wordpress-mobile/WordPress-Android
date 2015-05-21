@@ -138,7 +138,7 @@ public class WPMainActivity extends Activity
         boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
 
         if (!TextUtils.isEmpty(noteId)) {
-            NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard);
+            NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
             GCMIntentService.clearNotificationsMap();
         }
     }

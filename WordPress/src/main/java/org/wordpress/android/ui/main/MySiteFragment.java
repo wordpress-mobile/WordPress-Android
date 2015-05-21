@@ -101,7 +101,10 @@ public class MySiteFragment extends Fragment
         statsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
+                // if the blog is empty, fail silently
+                if (mBlog != null) {
+                    ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
+                }
             }
         });
 
