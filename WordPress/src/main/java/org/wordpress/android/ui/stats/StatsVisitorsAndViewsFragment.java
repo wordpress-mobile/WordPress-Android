@@ -695,7 +695,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         mVisitsData = (dataObj == null || dataObj instanceof VolleyError) ? null : (VisitsModel) dataObj;
         mSelectedBarGraphBarIndex = -1;
-        mSelectedOverviewItemIndex = 0;
 
         // Reset the bar to highlight
         if (mGraphView != null) {
