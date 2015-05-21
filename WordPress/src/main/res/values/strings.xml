@@ -749,6 +749,7 @@
     <string name="reader_toast_err_block_blog">Unable to block this blog</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
     <string name="editor_toast_invalid_path">Invalid file path</string>
+    <string name="editor_toast_post_saved">Post saved</string>
 
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>

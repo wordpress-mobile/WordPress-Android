@@ -632,6 +632,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             Intent i = new Intent();
             i.putExtra("shouldRefresh", true);
             setResult(RESULT_OK, i);
+
+            ToastUtils.showToast(this, R.string.editor_toast_post_saved);
         }
         finish();
     }
