@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats;
 
+import android.animation.TypeEvaluator;
+import android.animation.ValueAnimator;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -68,11 +70,29 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
         }
         DateFormat formatter ;
         formatter = new SimpleDateFormat("EEEE");
-        markView.setMark(mostPopularDayValue.intValue());
+
+
+        // Animate the value in the mark view
+        ValueAnimator animator = new ValueAnimator();
+        animator.setObjectValues(0, mostPopularDayValue.intValue());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+                String sValue = String.valueOf(animation.getAnimatedValue());
+                markView.setMark(Integer.parseInt(sValue));
+            }
+        });
+        animator.setEvaluator(new TypeEvaluator<Integer>() {
+            public Integer evaluate(float fraction, Integer startValue, Integer endValue) {
+                return Math.round((endValue - startValue) * fraction);
+            }
+        });
+        animator.setDuration(1500);
+        animator.start();
+
+
         mostPopularDayLabelText.setText(
                 getString(R.string.stats_insights_happen_on_a, formatter.format(c.getTime()))
         );
-
 
         TextView mostPopularHourValue = (TextView) ll.findViewById(R.id.stats_most_popular_hour);
         formatter = new SimpleDateFormat("ha");
