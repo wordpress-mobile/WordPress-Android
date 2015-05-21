@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.FormatUtils;
 
 import java.util.List;
 
@@ -61,16 +62,16 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
             LinearLayout currentTab = (LinearLayout) ll.getChildAt(i);
             switch (i) {
                 case 0:
-                    setupTab(currentTab, String.valueOf(data.getViews()), StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS );
+                    setupTab(currentTab, FormatUtils.formatDecimal(data.getViews()), StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
                     break;
                 case 1:
-                    setupTab(currentTab, String.valueOf(data.getVisitors()), StatsVisitorsAndViewsFragment.OverviewLabel.VISITORS );
+                    setupTab(currentTab, FormatUtils.formatDecimal(data.getVisitors()), StatsVisitorsAndViewsFragment.OverviewLabel.VISITORS );
                     break;
                 case 2:
-                    setupTab(currentTab, String.valueOf(data.getLikes()), StatsVisitorsAndViewsFragment.OverviewLabel.LIKES );
+                    setupTab(currentTab, FormatUtils.formatDecimal(data.getLikes()), StatsVisitorsAndViewsFragment.OverviewLabel.LIKES );
                     break;
                 case 3:
-                    setupTab(currentTab, String.valueOf(data.getComments()), StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS );
+                    setupTab(currentTab, FormatUtils.formatDecimal(data.getComments()), StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS );
                     break;
             }
         }
