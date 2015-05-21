@@ -633,7 +633,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             i.putExtra("shouldRefresh", true);
             setResult(RESULT_OK, i);
 
-            ToastUtils.showToast(this, R.string.editor_toast_post_saved);
+            ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
         }
         finish();
     }
