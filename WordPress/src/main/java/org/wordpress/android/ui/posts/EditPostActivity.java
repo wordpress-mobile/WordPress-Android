@@ -57,6 +57,9 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -67,15 +70,12 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
-import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
-import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
+import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
@@ -935,7 +935,13 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         SpannableStringBuilder postContent;
         if (mEditorFragment.getSpannedContent() != null) {
             // needed by the legacy editor to save local drafts
-            postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
+            try {
+                postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
+            } catch (IndexOutOfBoundsException e) {
+                // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
+                // See https://code.google.com/p/android/issues/detail?id=5164
+                postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
+            }
         } else {
             postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
         }
