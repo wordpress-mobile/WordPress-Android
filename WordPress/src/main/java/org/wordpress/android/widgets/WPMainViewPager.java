@@ -6,9 +6,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CoreEvents.MainViewPagerScrolling;
-
-import de.greenrobot.event.EventBus;
 
 /*
  * custom ViewPager which resolves the "pointer index out of range" bug in the compatibility library
@@ -46,11 +43,5 @@ public class WPMainViewPager extends ViewPager {
             AppLog.e(AppLog.T.READER, e);
             return false;
         }
-    }
-    
-    @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        super.onScrollChanged(l, t, oldl, oldt);
-        EventBus.getDefault().post(new MainViewPagerScrolling(l, t));
     }
 }

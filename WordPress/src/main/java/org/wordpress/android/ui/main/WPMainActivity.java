@@ -33,6 +33,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.ToastUtils;
@@ -52,7 +53,6 @@ public class WPMainActivity extends Activity
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
-    int mSelectedPageOnResume;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -121,7 +121,7 @@ public class WPMainActivity extends Activity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        AppLog.i(AppLog.T.MAIN, "main activity > new intent");
+        AppLog.i(T.MAIN, "main activity > new intent");
         if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
             launchWithNoteId();
         }
@@ -168,6 +168,9 @@ public class WPMainActivity extends Activity
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         // noop
+        if (position == 0) {
+            EventBus.getDefault().post(new MainViewPagerScrolled(positionOffset));
+        }
     }
 
     /*
@@ -213,8 +216,6 @@ public class WPMainActivity extends Activity
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().addListener(this);
         }
-        mSelectedPageOnResume = mViewPager.getCurrentItem();
-
         checkNoteBadge();
     }
 
@@ -448,9 +449,5 @@ public class WPMainActivity extends Activity
 
     @Override
     public void onMediaAdded(String mediaId) {
-    }
-
-    public int getSelectedPageOnResume() {
-        return mSelectedPageOnResume;
     }
 }

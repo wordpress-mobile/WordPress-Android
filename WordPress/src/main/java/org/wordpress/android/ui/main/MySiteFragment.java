@@ -238,14 +238,10 @@ public class MySiteFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.MainViewPagerScrolling event) {
+    public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) mFabView.getLayoutParams();
         int height = mFabView.getHeight();
         int targetYTranslation = layoutParams.bottomMargin + height;
-        int pageOffset = ((WPMainActivity) getActivity()).getSelectedPageOnResume();
-        int rightScreenBorder = mScreenWidth - pageOffset * mScreenWidth;
-        // 0.2 means 20% of the screen is hidden, 1.0 means the view is completly switched
-        float relativeOffset = 1 - (rightScreenBorder - event.mXOffset) / (float)  mScreenWidth;
-        mFabView.setTranslationY(targetYTranslation * relativeOffset);
+        mFabView.setTranslationY(targetYTranslation * event.mXOffset);
     }
 }
