@@ -30,6 +30,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
@@ -51,6 +52,7 @@ public class WPMainActivity extends Activity
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
+    int mSelectedPageOnResume;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -211,6 +213,7 @@ public class WPMainActivity extends Activity
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().addListener(this);
         }
+        mSelectedPageOnResume = mViewPager.getCurrentItem();
 
         checkNoteBadge();
     }
@@ -445,5 +448,9 @@ public class WPMainActivity extends Activity
 
     @Override
     public void onMediaAdded(String mediaId) {
+    }
+
+    public int getSelectedPageOnResume() {
+        return mSelectedPageOnResume;
     }
 }
