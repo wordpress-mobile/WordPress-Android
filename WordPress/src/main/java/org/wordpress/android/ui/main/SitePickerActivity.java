@@ -33,7 +33,8 @@ import de.greenrobot.event.EventBus;
 public class SitePickerActivity extends ActionBarActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener,
-        SearchView.OnQueryTextListener {
+        SearchView.OnQueryTextListener,
+        SearchView.OnCloseListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
 
@@ -131,6 +132,7 @@ public class SitePickerActivity extends ActionBarActivity
 
         mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnCloseListener(this);
 
         return true;
     }
@@ -272,6 +274,12 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public boolean onQueryTextChange(String s) {
         getAdapter().searchSitesThatContain(s);
+        return true;
+    }
+
+    @Override
+    public boolean onClose() {
+        mRecycleView.swapAdapter(getAdapter(), true);
         return true;
     }
 
