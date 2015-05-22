@@ -114,7 +114,7 @@ public class ActivityLauncher {
         slideInFromRight(context, intent);
     }
 
-    public static void addNewBlogPostOrPage(Activity context, Blog blog, boolean isPage) {
+    public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
         if (blog == null) return;
 
         // Create a new post object

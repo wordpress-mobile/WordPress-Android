@@ -9,9 +9,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -35,8 +35,8 @@ public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
     public static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
 
-    private static final String KEY_POST_EDITED = "post-edited";
-    private static final String KEY_PAGE_EDITED = "page-edited";
+    private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
+    private static final long ALERT_ANIM_DURATION_MS = 1000l;
 
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
@@ -44,8 +44,6 @@ public class MySiteFragment extends Fragment
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private int mBlavatarSz;
-    private boolean mPostEdited;
-    private boolean mPageEdited;
 
     private Blog mBlog;
 
@@ -75,16 +73,6 @@ public class MySiteFragment extends Fragment
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            mPostEdited = savedInstanceState.getBoolean(KEY_POST_EDITED, false);
-            mPageEdited = savedInstanceState.getBoolean(KEY_PAGE_EDITED, false);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_my_site, container, false);
 
@@ -97,16 +85,6 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.my_site_themes_container);
-
-        View postsGlow = rootView.findViewById(R.id.postsGlowBackground);
-        if (savedInstanceState != null && (mPostEdited = savedInstanceState.getBoolean(KEY_POST_EDITED, false))) {
-            showAlert(postsGlow);
-        }
-
-        View pagesGlow = rootView.findViewById(R.id.pagesGlowBackground);
-        if (savedInstanceState != null && (mPageEdited = savedInstanceState.getBoolean(KEY_PAGE_EDITED, false))) {
-            showAlert(pagesGlow);
-        }
 
         WPTextView switchSiteTextView = (WPTextView) rootView.findViewById(R.id.switch_site);
         switchSiteTextView.setOnClickListener(new View.OnClickListener() {
@@ -140,8 +118,6 @@ public class MySiteFragment extends Fragment
         blogPostsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPostEdited = false;
-                getView().findViewById(R.id.postsGlowBackground).clearAnimation();
                 ActivityLauncher.viewCurrentBlogPosts(getActivity());
             }
         });
@@ -158,8 +134,6 @@ public class MySiteFragment extends Fragment
         pagesTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPageEdited = false;
-                getView().findViewById(R.id.pagesGlowBackground).clearAnimation();
                 ActivityLauncher.viewCurrentBlogPages(getActivity());
             }
         });
@@ -200,9 +174,7 @@ public class MySiteFragment extends Fragment
         addPostContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPostEdited = false;
-                getView().findViewById(R.id.postsGlowBackground).clearAnimation();
-                ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, false);
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mBlog, false);
             }
         });
 
@@ -210,9 +182,7 @@ public class MySiteFragment extends Fragment
         addPageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPageEdited = false;
-                getView().findViewById(R.id.pagesGlowBackground).clearAnimation();
-                ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, true);
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mBlog, true);
             }
         });
 
@@ -230,14 +200,6 @@ public class MySiteFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putBoolean(KEY_POST_EDITED, mPostEdited);
-        outState.putBoolean(KEY_PAGE_EDITED, mPageEdited);
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -251,25 +213,15 @@ public class MySiteFragment extends Fragment
                 break;
             case RequestCodes.EDIT_POST:
                 View view = getView();
-
-                if (data == null || view == null) {
+                if (data == null || view == null || resultCode != Activity.RESULT_OK ||
+                        !WordPress.currentPost.isLocalDraft()) {
                     break;
                 }
 
-                if (!data.getBooleanExtra(EditPostActivity.EXTRA_IS_PAGE, false)) {
-                    mPostEdited = resultCode == Activity.RESULT_OK;
-                    if (mPostEdited) {
-                        showAlert(view.findViewById(R.id.postsGlowBackground));
-                    } else {
-                        view.findViewById(R.id.postsGlowBackground).setAlpha(0.0f);
-                    }
+                if (data.getBooleanExtra(EditPostActivity.EXTRA_IS_PAGE, false)) {
+                    showAlert(view.findViewById(R.id.pagesGlowBackground));
                 } else {
-                    mPageEdited = resultCode == Activity.RESULT_OK;
-                    if (mPageEdited) {
-                        showAlert(view.findViewById(R.id.pagesGlowBackground));
-                    } else {
-                        view.findViewById(R.id.pagesGlowBackground).setAlpha(0.0f);
-                    }
+                    showAlert(view.findViewById(R.id.postsGlowBackground));
                 }
                 break;
             default:
@@ -278,12 +230,25 @@ public class MySiteFragment extends Fragment
     }
 
     private void showAlert(View view) {
-        if (view != null) {
-            Animation highlightAnimation = new AlphaAnimation(1.0f, 0.0f);
-            highlightAnimation.setInterpolator(new AccelerateInterpolator());
-            highlightAnimation.setRepeatCount(Animation.INFINITE);
-            highlightAnimation.setRepeatMode(Animation.REVERSE);
-            highlightAnimation.setDuration(1250);
+        if (isAdded() && view != null) {
+            Animation highlightAnimation = new AlphaAnimation(0.0f, 1.0f);
+            highlightAnimation.setInterpolator(new BounceInterpolator() {
+                private float bounce(float t) {
+                    return t * t * 24.0f;
+                }
+
+                public float getInterpolation(float t) {
+                    t *= 1.1226f;
+                    if (t < 0.184f) return bounce(t);
+                    else if (t < 0.545f) return bounce(t - 0.40719f);
+                    else if (t < 0.7275f) return -bounce(t - 0.6126f) + 1.0f;
+                    else return 0.0f;
+                }
+            });
+            highlightAnimation.setStartOffset(ALERT_ANIM_OFFSET_MS);
+            highlightAnimation.setRepeatCount(1);
+            highlightAnimation.setRepeatMode(Animation.RESTART);
+            highlightAnimation.setDuration(ALERT_ANIM_DURATION_MS);
             view.startAnimation(highlightAnimation);
         }
     }
