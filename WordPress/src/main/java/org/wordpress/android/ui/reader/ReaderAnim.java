@@ -229,8 +229,33 @@ public class ReaderAnim {
     /*
      * in/out animation for floating action button
      */
-    public static void showFab(View fabView, boolean show) {
-        animateBar(fabView, show, false);
+    public static void showFab(final View view, final boolean show) {
+        int newVisibility = (show ? View.VISIBLE : View.GONE);
+        if (view == null || view.getVisibility() == newVisibility) {
+            return;
+        }
+
+        float fromY = (show ? 1f : 0f);
+        float toY   = (show ? 0f : 1f);
+        Animation animation = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, fromY,
+                Animation.RELATIVE_TO_SELF, toY);
+
+        long durationMillis;
+        if (show) {
+            durationMillis = Duration.SHORT.toMillis(view.getContext());
+            animation.setInterpolator(new DecelerateInterpolator());
+        } else {
+            durationMillis = (long) (Duration.SHORT.toMillis(view.getContext()) * 0.5f);
+            animation.setInterpolator(new AccelerateInterpolator());
+        }
+        animation.setDuration(durationMillis);
+
+        view.clearAnimation();
+        view.startAnimation(animation);
+        view.setVisibility(newVisibility);
     }
     public static void showFabDelayed(View fabView, final boolean show, long delayMs) {
         // use a weak reference to the view so it won't be retained if the

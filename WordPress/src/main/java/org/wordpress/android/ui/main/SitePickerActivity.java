@@ -247,6 +247,7 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
+            ReaderAnim.showFab(mFabView, false);
             WordPress.setCurrentBlog(site.localId);
             WordPress.wpDB.updateLastBlogId(site.localId);
             setResult(RESULT_OK);
