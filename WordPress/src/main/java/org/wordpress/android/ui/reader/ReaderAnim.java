@@ -221,27 +221,9 @@ public class ReaderAnim {
             animation.setInterpolator(new AccelerateInterpolator());
         }
 
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                if (show) {
-                    view.setVisibility(View.VISIBLE);
-                }
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if (!show) {
-                    view.setVisibility(View.GONE);
-                }
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-                // noop
-            }
-        });
-
         view.clearAnimation();
         view.startAnimation(animation);
+        view.setVisibility(newVisibility);
     }
 
     /*
@@ -251,14 +233,9 @@ public class ReaderAnim {
         animateBar(fabView, show, false);
     }
     public static void showFabDelayed(View fabView, final boolean show, long delayMs) {
-        int newVisibility = (show ? View.VISIBLE : View.GONE);
-        if (fabView == null || fabView.getVisibility() == newVisibility) {
-            return;
-        }
-
         // use a weak reference to the view so it won't be retained if the
         // activity/fragment is destroyed before the animation is started
-        final WeakReference<View> weakView = new WeakReference<View>(fabView);
+        final WeakReference<View> weakView = new WeakReference<>(fabView);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
