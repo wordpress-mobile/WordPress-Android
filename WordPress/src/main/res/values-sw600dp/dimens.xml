@@ -8,4 +8,5 @@
     <dimen name="content_margin">@dimen/content_margin_tablet</dimen>
 
     <dimen name="fab_margin">@dimen/fab_margin_tablet</dimen>
+    <dimen name="tabstrip_padding">@dimen/tabstrip_padding_tablet</dimen>
 </resources>
