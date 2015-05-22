@@ -30,7 +30,7 @@ public class EditPostPreviewFragment extends Fragment {
         mActivity = (EditPostActivity)getActivity();
 
         ViewGroup rootView = (ViewGroup) inflater
-                .inflate(R.layout.fragment_edit_post_preview, container, false);
+                .inflate(R.layout.edit_post_preview_fragment, container, false);
         mWebView = (WebView) rootView.findViewById(R.id.post_preview_webview);
         mTextView = (TextView) rootView.findViewById(R.id.post_preview_textview);
         mTextView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

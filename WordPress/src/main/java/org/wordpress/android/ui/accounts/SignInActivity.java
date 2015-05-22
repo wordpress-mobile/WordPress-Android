@@ -28,7 +28,7 @@ public class SignInActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_welcome);
+        setContentView(R.layout.welcome_activity);
         FragmentManager fragmentManager = getFragmentManager();
         mSignInFragment = (SignInFragment) fragmentManager.findFragmentById(R.id.sign_in_fragment);
         actionMode(getIntent().getExtras());
