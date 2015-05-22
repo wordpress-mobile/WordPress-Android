@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -8,6 +9,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -18,6 +22,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaAddFragment;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.GravatarUtils;
@@ -30,12 +35,17 @@ public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
     public static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
 
+    private static final String KEY_POST_EDITED = "post-edited";
+    private static final String KEY_PAGE_EDITED = "page-edited";
+
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private int mBlavatarSz;
+    private boolean mPostEdited;
+    private boolean mPageEdited;
 
     private Blog mBlog;
 
@@ -56,7 +66,6 @@ public class MySiteFragment extends Fragment
         mBlog = WordPress.getCurrentBlog();
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -66,8 +75,17 @@ public class MySiteFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mPostEdited = savedInstanceState.getBoolean(KEY_POST_EDITED, false);
+            mPageEdited = savedInstanceState.getBoolean(KEY_PAGE_EDITED, false);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_my_site, container, false);
 
         FragmentManager fm = getFragmentManager();
@@ -79,6 +97,16 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.my_site_themes_container);
+
+        View postsGlow = rootView.findViewById(R.id.postsGlowBackground);
+        if (savedInstanceState != null && (mPostEdited = savedInstanceState.getBoolean(KEY_POST_EDITED, false))) {
+            showAlert(postsGlow);
+        }
+
+        View pagesGlow = rootView.findViewById(R.id.pagesGlowBackground);
+        if (savedInstanceState != null && (mPageEdited = savedInstanceState.getBoolean(KEY_PAGE_EDITED, false))) {
+            showAlert(pagesGlow);
+        }
 
         WPTextView switchSiteTextView = (WPTextView) rootView.findViewById(R.id.switch_site);
         switchSiteTextView.setOnClickListener(new View.OnClickListener() {
@@ -112,6 +140,8 @@ public class MySiteFragment extends Fragment
         blogPostsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPostEdited = false;
+                getView().findViewById(R.id.postsGlowBackground).clearAnimation();
                 ActivityLauncher.viewCurrentBlogPosts(getActivity());
             }
         });
@@ -128,6 +158,8 @@ public class MySiteFragment extends Fragment
         pagesTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPageEdited = false;
+                getView().findViewById(R.id.pagesGlowBackground).clearAnimation();
                 ActivityLauncher.viewCurrentBlogPages(getActivity());
             }
         });
@@ -168,6 +200,8 @@ public class MySiteFragment extends Fragment
         addPostContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPostEdited = false;
+                getView().findViewById(R.id.postsGlowBackground).clearAnimation();
                 ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, false);
             }
         });
@@ -176,6 +210,8 @@ public class MySiteFragment extends Fragment
         addPageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPageEdited = false;
+                getView().findViewById(R.id.pagesGlowBackground).clearAnimation();
                 ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, true);
             }
         });
@@ -194,6 +230,14 @@ public class MySiteFragment extends Fragment
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(KEY_POST_EDITED, mPostEdited);
+        outState.putBoolean(KEY_PAGE_EDITED, mPageEdited);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -205,8 +249,42 @@ public class MySiteFragment extends Fragment
                     addFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
+            case RequestCodes.EDIT_POST:
+                View view = getView();
+
+                if (data == null || view == null) {
+                    break;
+                }
+
+                if (!data.getBooleanExtra(EditPostActivity.EXTRA_IS_PAGE, false)) {
+                    mPostEdited = resultCode == Activity.RESULT_OK;
+                    if (mPostEdited) {
+                        showAlert(view.findViewById(R.id.postsGlowBackground));
+                    } else {
+                        view.findViewById(R.id.postsGlowBackground).setAlpha(0.0f);
+                    }
+                } else {
+                    mPageEdited = resultCode == Activity.RESULT_OK;
+                    if (mPageEdited) {
+                        showAlert(view.findViewById(R.id.pagesGlowBackground));
+                    } else {
+                        view.findViewById(R.id.pagesGlowBackground).setAlpha(0.0f);
+                    }
+                }
+                break;
             default:
                 break;
+        }
+    }
+
+    private void showAlert(View view) {
+        if (view != null) {
+            Animation highlightAnimation = new AlphaAnimation(1.0f, 0.0f);
+            highlightAnimation.setInterpolator(new AccelerateInterpolator());
+            highlightAnimation.setRepeatCount(Animation.INFINITE);
+            highlightAnimation.setRepeatMode(Animation.REVERSE);
+            highlightAnimation.setDuration(1250);
+            view.startAnimation(highlightAnimation);
         }
     }
 

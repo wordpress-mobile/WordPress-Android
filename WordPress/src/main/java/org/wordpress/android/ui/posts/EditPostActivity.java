@@ -157,6 +157,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     private SuggestionAutoCompleteText mTags;
 
     private boolean mIsNewPost;
+    private boolean mIsPage;
     private boolean mHasSetPostContent;
 
     @Override
@@ -202,7 +203,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             } else if (extras != null) {
                 // Load post from the postId passed in extras
                 long localTablePostId = extras.getLong(EXTRA_POSTID, -1);
-                boolean isPage = extras.getBoolean(EXTRA_IS_PAGE);
+                mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
                 mPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
                 mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
@@ -631,6 +632,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             WordPress.currentPost = mPost;
             Intent i = new Intent();
             i.putExtra("shouldRefresh", true);
+            i.putExtra(EXTRA_IS_PAGE, mIsPage);
             setResult(RESULT_OK, i);
 
             ToastUtils.showToast(this, R.string.editor_toast_changes_saved);

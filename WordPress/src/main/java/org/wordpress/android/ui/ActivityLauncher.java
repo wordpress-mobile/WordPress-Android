@@ -114,7 +114,7 @@ public class ActivityLauncher {
         slideInFromRight(context, intent);
     }
 
-    public static void addNewBlogPostOrPage(Context context, Blog blog, boolean isPage) {
+    public static void addNewBlogPostOrPage(Activity context, Blog blog, boolean isPage) {
         if (blog == null) return;
 
         // Create a new post object
@@ -125,7 +125,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         intent.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
-        context.startActivity(intent);
+        context.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     public static void editBlogPostOrPageForResult(Activity activity, long postOrPageId, boolean isPage) {
