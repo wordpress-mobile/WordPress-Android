@@ -152,6 +152,7 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
+
         if (itemId == android.R.id.home) {
             onBackPressed();
             return true;
@@ -160,7 +161,12 @@ public class SitePickerActivity extends ActionBarActivity
             getAdapter().setEnableEditMode(true);
             startSupportActionMode(new ActionModeCallback());
             return true;
+        } else if (itemId == R.id.menu_search) {
+            SitePickerSearchAdapter sitePickerSearchAdapter = new SitePickerSearchAdapter();
+            mRecycleView.swapAdapter(sitePickerSearchAdapter, true);
+            return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
