@@ -269,7 +269,6 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:
-                // Pass activity result on to the notifications list fragment
                 if (getNotificationListFragment() != null) {
                     getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
                 }
@@ -283,12 +282,8 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.SITE_PICKER:
-                if (resultCode == RESULT_OK) {
-                    // site picker will have set the current blog, so make sure My Site reflects it
-                    MySiteFragment mySiteFragment = getMySiteFragment();
-                    if (mySiteFragment != null) {
-                        mySiteFragment.setBlog(WordPress.getCurrentBlog());
-                    }
+                if (getMySiteFragment() != null) {
+                    getMySiteFragment().onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.BLOG_SETTINGS:

@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
@@ -14,6 +15,8 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
+
+import java.lang.ref.WeakReference;
 
 public class ReaderAnim {
 
@@ -186,7 +189,9 @@ public class ReaderAnim {
     public static void animateBottomBar(View view, boolean show) {
         animateBar(view, show, false);
     }
-    private static void animateBar(View view, boolean show, boolean isTopBar) {
+    private static void animateBar(final View view,
+                                   final boolean show,
+                                   final boolean isTopBar) {
         int newVisibility = (show ? View.VISIBLE : View.GONE);
         if (view == null || view.getVisibility() == newVisibility) {
             return;
@@ -216,15 +221,52 @@ public class ReaderAnim {
             animation.setInterpolator(new AccelerateInterpolator());
         }
 
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                if (show) {
+                    view.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (!show) {
+                    view.setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // noop
+            }
+        });
+
         view.clearAnimation();
         view.startAnimation(animation);
-        view.setVisibility(newVisibility);
     }
 
     /*
      * in/out animation for floating action button
      */
-    public static void showFab(final View fabView, final boolean show) {
+    public static void showFab(View fabView, boolean show) {
         animateBar(fabView, show, false);
+    }
+    public static void showFabDelayed(View fabView, final boolean show, long delayMs) {
+        int newVisibility = (show ? View.VISIBLE : View.GONE);
+        if (fabView == null || fabView.getVisibility() == newVisibility) {
+            return;
+        }
+
+        // use a weak reference to the view so it won't be retained if the
+        // activity/fragment is destroyed before the animation is started
+        final WeakReference<View> weakView = new WeakReference<View>(fabView);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                View view = weakView.get();
+                if (view != null) {
+                    showFab(view, show);
+                }
+            }
+        }, delayMs);
     }
 }

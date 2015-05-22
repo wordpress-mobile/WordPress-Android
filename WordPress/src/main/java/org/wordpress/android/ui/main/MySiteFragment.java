@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -95,8 +96,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.switch_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
-                ActivityLauncher.showSitePickerForResult(getActivity(), localBlogId);
+                showSitePicker();
             }
         });
 
@@ -177,6 +177,13 @@ public class MySiteFragment extends Fragment
         resetFabAnimationValues();
     }
 
+    private void showSitePicker() {
+        if (isAdded()) {
+            int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
+            ActivityLauncher.showSitePickerForResult(getActivity(), localBlogId);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -187,6 +194,12 @@ public class MySiteFragment extends Fragment
                 Fragment addFragment = fm.findFragmentByTag(ADD_MEDIA_FRAGMENT_TAG);
                 if (addFragment != null) {
                     addFragment.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
+            case RequestCodes.SITE_PICKER:
+                // RESULT_OK = site picker changed the current blog
+                if (resultCode == Activity.RESULT_OK) {
+                    setBlog(WordPress.getCurrentBlog());
                 }
                 break;
             default:

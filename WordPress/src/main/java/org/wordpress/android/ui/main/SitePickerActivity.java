@@ -2,7 +2,6 @@ package org.wordpress.android.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
@@ -116,15 +115,8 @@ public class SitePickerActivity extends ActionBarActivity
         }
 
         // animate fab in after a delay which matches that of the activity transition
-        long delay = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isFinishing()) {
-                    ReaderAnim.showFab(mFabView, true);
-                }
-            }
-        }, delay);
+        long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        ReaderAnim.showFabDelayed(mFabView, true, delayMs);
     }
 
     @Override
