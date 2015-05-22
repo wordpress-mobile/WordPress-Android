@@ -135,7 +135,6 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
     @Override
     protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
-               // StatsService.StatsEndpointsEnum.INSIGHTS_TODAY,
                 StatsService.StatsEndpointsEnum.VISITS
         };
     }

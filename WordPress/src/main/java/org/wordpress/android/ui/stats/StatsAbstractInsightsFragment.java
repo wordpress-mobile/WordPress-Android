@@ -120,8 +120,6 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
         }
 
         if (mDatamodels == null) {
-            // TODO ??? what should we do here?
-            showPlaceholderUI();
             return;
         }
 
@@ -135,7 +133,7 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
             return;
         }
 
-        // not an error update the module UI here
+        // not an error - update the module UI here
         mErrorLabel.setVisibility(View.GONE);
         mResultContainer.setVisibility(View.VISIBLE);
         mEmptyModulePlaceholder.setVisibility(View.GONE);
