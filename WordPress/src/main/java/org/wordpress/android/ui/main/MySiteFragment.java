@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.BounceInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -232,7 +232,7 @@ public class MySiteFragment extends Fragment
     private void showAlert(View view) {
         if (isAdded() && view != null) {
             Animation highlightAnimation = new AlphaAnimation(0.0f, 1.0f);
-            highlightAnimation.setInterpolator(new BounceInterpolator() {
+            highlightAnimation.setInterpolator(new Interpolator() {
                 private float bounce(float t) {
                     return t * t * 24.0f;
                 }
@@ -274,7 +274,8 @@ public class MySiteFragment extends Fragment
 
     @Override
     public void onScrollToTop() {
-        if (isAdded()) {
+        View view = getView();
+        if (isAdded() && view != null) {
             ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
             scrollView.smoothScrollTo(0, 0);
         }
