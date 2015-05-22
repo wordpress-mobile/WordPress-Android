@@ -30,8 +30,10 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.ToastUtils;
@@ -119,7 +121,7 @@ public class WPMainActivity extends Activity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        AppLog.i(AppLog.T.MAIN, "main activity > new intent");
+        AppLog.i(T.MAIN, "main activity > new intent");
         if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
             launchWithNoteId();
         }
@@ -166,6 +168,9 @@ public class WPMainActivity extends Activity
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         // noop
+        if (position == 0) {
+            EventBus.getDefault().post(new MainViewPagerScrolled(positionOffset));
+        }
     }
 
     /*
@@ -211,7 +216,6 @@ public class WPMainActivity extends Activity
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().addListener(this);
         }
-
         checkNoteBadge();
     }
 

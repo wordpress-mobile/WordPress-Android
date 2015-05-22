@@ -20,11 +20,15 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
+
+import de.greenrobot.event.EventBus;
 
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
@@ -35,6 +39,9 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
+    private View mFabView;
+    int mScreenWidth;
+
     private int mBlavatarSz;
 
     private Blog mBlog;
@@ -76,8 +83,9 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mFabView = rootView.findViewById(R.id.fab_button);
 
-        rootView.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
+        mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, false);
@@ -164,6 +172,12 @@ public class MySiteFragment extends Fragment
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        resetFabAnimationValues();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -205,5 +219,29 @@ public class MySiteFragment extends Fragment
             ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
             scrollView.smoothScrollTo(0, 0);
         }
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    private void resetFabAnimationValues() {
+        mScreenWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) mFabView.getLayoutParams();
+        int height = mFabView.getHeight();
+        int targetYTranslation = layoutParams.bottomMargin + height;
+        mFabView.setTranslationY(targetYTranslation * event.mXOffset);
     }
 }
