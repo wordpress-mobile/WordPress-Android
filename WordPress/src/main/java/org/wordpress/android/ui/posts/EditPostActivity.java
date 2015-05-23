@@ -100,6 +100,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
+    public static final String EXTRA_SHOULD_ALERT = "shouldAlert";
+    public static final String EXTRA_SHOULD_REFRESH = "shouldRefresh";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
@@ -457,7 +459,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();
-            i.putExtra("shouldRefresh", true);
+            i.putExtra(EXTRA_SHOULD_REFRESH, true);
             setResult(RESULT_OK, i);
             finish();
             return true;
@@ -631,7 +633,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             savePost(false);
             WordPress.currentPost = mPost;
             Intent i = new Intent();
-            i.putExtra("shouldRefresh", true);
+            i.putExtra(EXTRA_SHOULD_REFRESH, true);
+            i.putExtra(EXTRA_SHOULD_ALERT, true);
             i.putExtra(EXTRA_IS_PAGE, mIsPage);
             setResult(RESULT_OK, i);
 

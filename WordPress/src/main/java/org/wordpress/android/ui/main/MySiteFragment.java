@@ -214,7 +214,7 @@ public class MySiteFragment extends Fragment
             case RequestCodes.EDIT_POST:
                 View view = getView();
                 if (data == null || view == null || resultCode != Activity.RESULT_OK ||
-                        !WordPress.currentPost.isLocalDraft()) {
+                        !data.getBooleanExtra(EditPostActivity.EXTRA_SHOULD_ALERT, false)) {
                     break;
                 }
 
