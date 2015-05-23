@@ -130,9 +130,24 @@ public class SitePickerActivity extends ActionBarActivity
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
 
-        mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        MenuItem menuSearch = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) menuSearch.getActionView();
         mSearchView.setOnQueryTextListener(this);
-        mSearchView.setOnCloseListener(this);
+
+        MenuItemCompat.setOnActionExpandListener(menuSearch, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                mSearchView.requestFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                mRecycleView.swapAdapter(getAdapter(), true);
+                return true;
+            }
+        });
+
 
         return true;
     }
