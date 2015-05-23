@@ -167,8 +167,9 @@ public class WPMainActivity extends Activity
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        // noop
-        if (position == 0) {
+        // fire event if the "My Site" page is being scrolled so the fragment can
+        // animate its fab to match
+        if (position == WPMainTabAdapter.TAB_MY_SITE) {
             EventBus.getDefault().post(new MainViewPagerScrolled(positionOffset));
         }
     }
@@ -320,7 +321,7 @@ public class WPMainActivity extends Activity
      * returns the my site fragment from the sites tab
      */
     public MySiteFragment getMySiteFragment() {
-        return getFragmentByPosition(WPMainTabAdapter.TAB_SITES, MySiteFragment.class);
+        return getFragmentByPosition(WPMainTabAdapter.TAB_MY_SITE, MySiteFragment.class);
     }
 
     private <T> T getFragmentByPosition(int position, Class<T> type) {

@@ -42,6 +42,7 @@ public class MySiteFragment extends Fragment
     private RelativeLayout mThemesContainer;
     private View mFabView;
 
+    private int mFabTargetYTranslation;
     private int mBlavatarSz;
 
     private Blog mBlog;
@@ -77,7 +78,11 @@ public class MySiteFragment extends Fragment
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().add(new MediaAddFragment(), ADD_MEDIA_FRAGMENT_TAG).commit();
 
+        int fabHeight = getResources().getDimensionPixelSize(R.dimen.fab_size_normal);
+        int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
+        mFabTargetYTranslation = fabHeight + fabMargin;
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
+
         mBlavatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.my_site_blavatar);
         mBlogTitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_title_label);
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
@@ -109,7 +114,6 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // if the blog is empty, fail silently
                 if (mBlog != null) {
                     ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
                 }
@@ -243,11 +247,11 @@ public class MySiteFragment extends Fragment
         EventBus.getDefault().register(this);
     }
 
+    /*
+     * animate the fab as the users scrolls the "My Site" page in the main activity's ViewPager
+     */
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
-        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) mFabView.getLayoutParams();
-        int height = mFabView.getHeight();
-        int targetYTranslation = layoutParams.bottomMargin + height;
-        mFabView.setTranslationY(targetYTranslation * event.mXOffset);
+        mFabView.setTranslationY(mFabTargetYTranslation * event.mXOffset);
     }
 }
