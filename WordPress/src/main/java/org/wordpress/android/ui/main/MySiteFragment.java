@@ -23,7 +23,6 @@ import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.CoreEvents;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
@@ -42,7 +41,6 @@ public class MySiteFragment extends Fragment
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private View mFabView;
-    int mScreenWidth;
 
     private int mBlavatarSz;
 
@@ -172,12 +170,6 @@ public class MySiteFragment extends Fragment
         return rootView;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        resetFabAnimationValues();
-    }
-
     private void showSitePicker() {
         if (isAdded()) {
             ReaderAnim.showFab(mFabView, false);
@@ -249,10 +241,6 @@ public class MySiteFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-    }
-
-    private void resetFabAnimationValues() {
-        mScreenWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
     }
 
     @SuppressWarnings("unused")
