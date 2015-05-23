@@ -16,6 +16,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 
+import org.wordpress.android.util.DisplayUtils;
+
 import java.lang.ref.WeakReference;
 
 public class ReaderAnim {
@@ -230,33 +232,30 @@ public class ReaderAnim {
      * in/out animation for floating action button
      */
     public static void showFab(final View view, final boolean show) {
-        int newVisibility = (show ? View.VISIBLE : View.GONE);
-        if (view == null || view.getVisibility() == newVisibility) {
-            return;
-        }
+        if (view == null) return;
 
-        float fromY = (show ? 1f : 0f);
-        float toY   = (show ? 0f : 1f);
-        Animation animation = new TranslateAnimation(
-                Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, fromY,
-                Animation.RELATIVE_TO_SELF, toY);
+        Context context = view.getContext();
+        int max = DisplayUtils.getDisplayPixelHeight(context) - view.getTop();
+        float fromY = (show ? max : 0f);
+        float toY   = (show ? 0f : max);
 
-        long durationMillis;
-        if (show) {
-            durationMillis = Duration.SHORT.toMillis(view.getContext());
-            animation.setInterpolator(new DecelerateInterpolator());
-        } else {
-            durationMillis = (long) (Duration.SHORT.toMillis(view.getContext()) * 0.5f);
-            animation.setInterpolator(new AccelerateInterpolator());
-        }
-        animation.setDuration(durationMillis);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, fromY, toY);
+        anim.setInterpolator(show ? new DecelerateInterpolator() : new AccelerateInterpolator());
+        anim.setDuration(show ? Duration.LONG.toMillis(context) : Duration.SHORT.toMillis(context));
 
-        view.clearAnimation();
-        view.startAnimation(animation);
-        view.setVisibility(newVisibility);
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                if (view.getVisibility() != View.VISIBLE) {
+                    view.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        anim.start();
     }
+
     public static void showFabDelayed(View fabView, final boolean show, long delayMs) {
         // use a weak reference to the view so it won't be retained if the
         // activity/fragment is destroyed before the animation is started
