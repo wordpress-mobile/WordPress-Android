@@ -2,16 +2,17 @@ package org.wordpress.android.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -33,8 +34,7 @@ import de.greenrobot.event.EventBus;
 public class SitePickerActivity extends ActionBarActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener,
-        SearchView.OnQueryTextListener,
-        SearchView.OnCloseListener {
+        SearchView.OnQueryTextListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
 
@@ -280,12 +280,6 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public boolean onQueryTextChange(String s) {
         getAdapter().searchSitesThatContain(s);
-        return true;
-    }
-
-    @Override
-    public boolean onClose() {
-        mRecycleView.swapAdapter(getAdapter(), true);
         return true;
     }
 
