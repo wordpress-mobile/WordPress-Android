@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -79,6 +80,85 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.my_site_themes_container);
+
+        /*
+          issue #2738 - "My Site and Me icons aren't tappable
+          Add click handler for various icons to load activity associated with icon
+         */
+        ImageView mySiteImageView = (ImageView) rootView.findViewById(R.id.my_site_view_site_icon);
+        mySiteImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentSite(getActivity());
+            }
+        });
+
+        ImageView mySiteStatsImageView= (ImageView) rootView.findViewById(R.id.my_site_stats_icon);
+        mySiteStatsImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // if the blog is empty, fail silently
+                if (mBlog != null) {
+                    ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
+                }
+            }
+        });
+
+        ImageView mySiteBlogPostImageView = (ImageView) rootView.findViewById(R.id.my_site_blog_posts_icon);
+        mySiteBlogPostImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogPosts(getActivity());
+            }
+        });
+
+        ImageView mySiteMediaImageView = (ImageView) rootView.findViewById(R.id.my_site_media_icon);
+        mySiteMediaImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogMedia(getActivity());
+            }
+        });
+
+        ImageView mySitePagesImageView = (ImageView) rootView.findViewById(R.id.my_site_pages_icon);
+        mySitePagesImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogPages(getActivity());
+            }
+        });
+
+        ImageView mySiteCommentsImageView = (ImageView) rootView.findViewById(R.id.my_site_comments_icon);
+        mySiteCommentsImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogComments(getActivity());
+            }
+        });
+
+        ImageView mySiteThemesImageView = (ImageView) rootView.findViewById(R.id.my_site_themes_icon);
+        mySiteThemesImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogThemes(getActivity());
+            }
+        });
+
+        ImageView mySiteSettingsImageView = (ImageView) rootView.findViewById(R.id.my_site_settings_icon);
+        mySiteSettingsImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewBlogSettingsForResult(getActivity(), mBlog);
+            }
+        });
+
+        ImageView mySiteAdminImageView = (ImageView) rootView.findViewById(R.id.my_site_view_admin_icon);
+        mySiteAdminImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewBlogAdmin(getActivity(), mBlog);
+            }
+        });
 
         WPTextView switchSiteTextView = (WPTextView) rootView.findViewById(R.id.switch_site);
         switchSiteTextView.setOnClickListener(new View.OnClickListener() {
