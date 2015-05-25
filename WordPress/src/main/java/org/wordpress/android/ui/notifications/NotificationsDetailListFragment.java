@@ -417,8 +417,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private void requestReaderContentForNote() {
         if (mNote == null || !isAdded()) return;
 
+        // Request the reader post so that loading reader activities will work.
         if (mNote.isUserList() && !ReaderPostTable.postExists(mNote.getSiteId(), mNote.getPostId())) {
-            // Request the reader post so that loading reader activities will work.
             ReaderPostActions.requestPost(mNote.getSiteId(), mNote.getPostId(), null);
         }
 
