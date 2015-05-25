@@ -291,7 +291,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                             mRecyclerView.scrollToPosition(mRestorePosition);
                         } else if (mCommentId > 0) {
                             // Scroll to the commentId once if it was passed to this activity
-                            scrollToCommentIdWithSmooth(mCommentId, true);
+                            smoothScrollToCommentId(mCommentId);
                             mCommentId = 0;
                         }
                         mRestorePosition = 0;
@@ -397,17 +397,19 @@ public class ReaderCommentListActivity extends ActionBarActivity {
      * scrolls the passed comment to the top of the listView
      */
     private void scrollToCommentId(long commentId) {
-        scrollToCommentIdWithSmooth(commentId, false);
-    }
-
-    private void scrollToCommentIdWithSmooth(long commentId, boolean shouldSmooth) {
         int position = getCommentAdapter().indexOfCommentId(commentId);
         if (position > -1) {
-            if (shouldSmooth) {
-                mRecyclerView.smoothScrollToPosition(position);
-            } else {
-                mRecyclerView.scrollToPosition(position);
-            }
+            mRecyclerView.scrollToPosition(position);
+        }
+    }
+
+    /*
+     * Smoothly scrolls the passed comment to the top of the listView
+     */
+    private void smoothScrollToCommentId(long commentId) {
+        int position = getCommentAdapter().indexOfCommentId(commentId);
+        if (position > -1) {
+            mRecyclerView.smoothScrollToPosition(position);
         }
     }
 
