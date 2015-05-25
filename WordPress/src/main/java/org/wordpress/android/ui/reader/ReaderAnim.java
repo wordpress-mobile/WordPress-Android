@@ -220,4 +220,11 @@ public class ReaderAnim {
         view.startAnimation(animation);
         view.setVisibility(newVisibility);
     }
+
+    /*
+     * in/out animation for floating action button
+     */
+    public static void showFab(final View fabView, final boolean show) {
+        animateBar(fabView, show, false);
+    }
 }
