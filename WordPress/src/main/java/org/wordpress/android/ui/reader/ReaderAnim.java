@@ -16,7 +16,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 
-import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.R;
 
 import java.lang.ref.WeakReference;
 
@@ -231,11 +231,13 @@ public class ReaderAnim {
     /*
      * in/out animation for floating action button
      */
-    public static void showFab(final View view, final boolean show) {
+    public static void showFab(final View view, boolean show) {
         if (view == null) return;
 
         Context context = view.getContext();
-        int max = DisplayUtils.getDisplayPixelHeight(context) - view.getTop();
+        int fabHeight = context.getResources().getDimensionPixelSize(com.getbase.floatingactionbutton.R.dimen.fab_size_normal);
+        int fabMargin = context.getResources().getDimensionPixelSize(R.dimen.fab_margin);
+        int max = (fabHeight + fabMargin) * 2;
         float fromY = (show ? max : 0f);
         float toY   = (show ? 0f : max);
 

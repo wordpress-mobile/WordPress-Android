@@ -80,7 +80,7 @@ public class MySiteFragment extends Fragment
 
         int fabHeight = getResources().getDimensionPixelSize(R.dimen.fab_size_normal);
         int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
-        mFabTargetYTranslation = fabHeight + fabMargin;
+        mFabTargetYTranslation = (fabHeight + fabMargin) * 2;
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
 
         mBlavatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.my_site_blavatar);
