@@ -197,7 +197,7 @@ public class MarkView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        String text = isMarkValid(mMark) ? String.valueOf(mMark) + "%" : "";
+        String text = (isMarkValid(mMark) ? String.valueOf(mMark) : "0") + "%" ;
         if (!TextUtils.isEmpty(text)) {
             float textHeight = mTextPaint.descent() + mTextPaint.ascent();
             float yPositionOfText = (getWidth() - textHeight) / 2.0f;
