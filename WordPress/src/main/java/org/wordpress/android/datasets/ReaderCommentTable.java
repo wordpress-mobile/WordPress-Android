@@ -299,9 +299,8 @@ public class ReaderCommentTable {
                 Long.toString(postId),
                 Long.toString(commentId)};
 
-        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT blog_id FROM tbl_comments WHERE blog_id=? AND post_id=? and comment_id=?",
-                args) > 0;
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT 1 FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=?", args);
     }
 
     private static ReaderComment getCommentFromCursor(Cursor c) {
