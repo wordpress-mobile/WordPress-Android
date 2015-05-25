@@ -89,8 +89,10 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             mTotalsLabel.setVisibility(View.VISIBLE);
             int totalNumberOfFollowers = ((CommentFollowersModel) mDatamodels[1]).getTotal();
             try {
-                mTotalsLabel.setText(getString(R.string.stats_comments_total_comments_followers,
-                                     FormatUtils.formatDecimal(totalNumberOfFollowers)));
+                String totalCommentsFollowers = getString(R.string.stats_comments_total_comments_followers);
+                mTotalsLabel.setText(
+                        String.format(totalCommentsFollowers, FormatUtils.formatDecimal(totalNumberOfFollowers))
+                );
             } catch (AssertionError e) {
                 // Workaround for a weird bug in Android 4.2.2 with en_GB or en_AU locale
                 // https://github.com/wordpress-mobile/WordPress-Android/issues/2639
