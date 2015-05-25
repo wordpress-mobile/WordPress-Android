@@ -78,7 +78,7 @@ public class MySiteFragment extends Fragment
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().add(new MediaAddFragment(), ADD_MEDIA_FRAGMENT_TAG).commit();
 
-        int fabHeight = getResources().getDimensionPixelSize(R.dimen.fab_size_normal);
+        int fabHeight = getResources().getDimensionPixelSize(com.getbase.floatingactionbutton.R.dimen.fab_size_normal);
         int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
         mFabTargetYTranslation = (fabHeight + fabMargin) * 2;
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
