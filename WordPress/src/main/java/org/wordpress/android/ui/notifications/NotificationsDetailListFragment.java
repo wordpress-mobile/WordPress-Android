@@ -128,10 +128,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     @Override
     public void onPause() {
-        // remove the bucket listener
+        // Remove the simperium bucket listener
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().removeListener(this);
         }
+
+        // Stop the reader comment service if it is running
+        ReaderCommentService.stopService(getActivity());
 
         super.onPause();
     }

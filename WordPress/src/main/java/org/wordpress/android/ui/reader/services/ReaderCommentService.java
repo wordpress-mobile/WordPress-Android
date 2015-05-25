@@ -45,6 +45,7 @@ public class ReaderCommentService extends Service {
         context.startService(intent);
     }
 
+    // Requests comments until the passed commentId is found
     public static void startServiceForComment(Context context, long blogId, long postId, long commentId) {
         Intent intent = new Intent(context, ReaderCommentService.class);
         intent.putExtra(ARG_BLOG_ID, blogId);
@@ -52,6 +53,13 @@ public class ReaderCommentService extends Service {
         intent.putExtra(ARG_COMMENT_ID, commentId);
         context.startService(intent);
     }
+
+    public static void stopService(Context context) {
+        if (context == null) return;
+
+        Intent intent = new Intent(context, ReaderCommentService.class);
+        context.stopService(intent);
+     }
 
     @Override
     public IBinder onBind(Intent intent) {
