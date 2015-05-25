@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:background="@drawable/selectable_background_wordpress"
+        android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingLeft="@dimen/margin_extra_large"

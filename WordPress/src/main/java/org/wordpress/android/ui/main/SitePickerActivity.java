@@ -1,13 +1,12 @@
 package org.wordpress.android.ui.main;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -25,6 +24,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
+import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
@@ -33,13 +33,16 @@ import de.greenrobot.event.EventBus;
 
 public class SitePickerActivity extends ActionBarActivity
         implements SitePickerAdapter.OnSiteClickListener,
-                   SitePickerAdapter.OnSelectedCountChangedListener {
+        SitePickerAdapter.OnSelectedCountChangedListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
 
     private SitePickerAdapter mAdapter;
+    private RecyclerView mRecycleView;
+    private View mFabView;
     private ActionMode mActionMode;
     private int mCurrentLocalId;
+    private boolean mDidUserSelectSite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class SitePickerActivity extends ActionBarActivity
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -61,12 +65,11 @@ public class SitePickerActivity extends ActionBarActivity
 
         setupFab();
 
-        RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler_view);
-        recycler.setLayoutManager(new LinearLayoutManager(this));
-        recycler.setAdapter(getAdapter());
-        recycler.setClipToPadding(false);
-        recycler.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        recycler.addItemDecoration(new SitePickerItemDecoration(this.getResources()));
+        mRecycleView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        mRecycleView.setItemAnimator(null);
+        mRecycleView.setAdapter(getAdapter());
     }
 
     @Override
@@ -100,23 +103,36 @@ public class SitePickerActivity extends ActionBarActivity
                     fabMenu.collapse();
                 }
             });
+            mFabView = fabMenu;
         } else {
-            fabMenu.setVisibility(View.GONE);
             FloatingActionButton fabMenuAddDotOrg = (FloatingActionButton) findViewById(R.id.fab_add_dotorg);
-            fabMenuAddDotOrg.setVisibility(View.VISIBLE);
             fabMenuAddDotOrg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
                 }
             });
+            mFabView = fabMenuAddDotOrg;
         }
+
+        // animate fab in after a delay which matches that of the activity transition
+        long delay = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing()) {
+                    ReaderAnim.showFab(mFabView, true);
+                }
+            }
+        }, delay);
     }
 
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
+        if (mDidUserSelectSite) {
+            overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
+        }
     }
 
     @Override
@@ -145,6 +161,7 @@ public class SitePickerActivity extends ActionBarActivity
             onBackPressed();
             return true;
         } else if (itemId == R.id.menu_edit) {
+            mRecycleView.setItemAnimator(new DefaultItemAnimator());
             getAdapter().setEnableEditMode(true);
             startSupportActionMode(new ActionModeCallback());
             return true;
@@ -241,6 +258,7 @@ public class SitePickerActivity extends ActionBarActivity
             WordPress.setCurrentBlog(site.localId);
             WordPress.wpDB.updateLastBlogId(site.localId);
             setResult(RESULT_OK);
+            mDidUserSelectSite = true;
             finish();
         }
     }
@@ -260,6 +278,7 @@ public class SitePickerActivity extends ActionBarActivity
             mActionMode = actionMode;
             mHasChanges = false;
             updateActionModeTitle();
+            ReaderAnim.showFab(mFabView, false);
             actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
         }
@@ -306,36 +325,8 @@ public class SitePickerActivity extends ActionBarActivity
                 saveHiddenSites();
             }
             getAdapter().setEnableEditMode(false);
+            ReaderAnim.showFab(mFabView, true);
             mActionMode = null;
-        }
-    }
-
-    /**
-     * dividers for sites
-     */
-    public static class SitePickerItemDecoration extends RecyclerView.ItemDecoration {
-        private final Drawable mDivider;
-
-        public SitePickerItemDecoration(Resources resources) {
-            mDivider = resources.getDrawable(R.drawable.site_picker_divider);
-        }
-
-        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            int left = parent.getPaddingLeft();
-            int right = parent.getWidth() - parent.getPaddingRight();
-
-            int childCount = parent.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View child = parent.getChildAt(i);
-
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-
-                int top = child.getBottom() + params.bottomMargin;
-                int bottom = top + mDivider.getIntrinsicHeight();
-
-                mDivider.setBounds(left, top, right, bottom);
-                mDivider.draw(c);
-            }
         }
     }
 }

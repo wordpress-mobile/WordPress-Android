@@ -232,6 +232,9 @@ public class MediaGridAdapter extends CursorAdapter {
                     holder.progressUpload.setVisibility(View.VISIBLE);
                 } else {
                     holder.progressUpload.setVisibility(View.GONE);
+                    if (state.equals("uploaded")) {
+                        holder.stateTextView.setVisibility(View.GONE);
+                    }
                 }
 
                 // add onclick to retry failed uploads

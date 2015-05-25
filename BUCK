@@ -320,6 +320,7 @@ r_android_library(
         ':android-support-v13',
         ':android-support-v4',
         ':recyclerview-v7',
+        ':cardview-v7',
         ':persistentedittext',
         ':wpandroid-utils',
         ':wpandroid-editor',

@@ -31,10 +31,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -247,6 +249,7 @@ public class SettingsFragment extends PreferenceFragment {
             }
             values[0] = getActivity().getString(R.string.device) + " (" + Locale.getDefault().getLanguage() + ")";
             localeMap.put(values[0], Locale.getDefault().getLanguage());
+            // Sorted array will always start with the default "Device (xx)" entry
             Arrays.sort(values, 1, values.length);
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, values);
@@ -265,9 +268,21 @@ public class SettingsFragment extends PreferenceFragment {
                         conf.locale = new Locale(localString);
                     }
                     res.updateConfiguration(conf, dm);
-
                     mSettings.edit().putString(SETTINGS_PREFERENCES, localeMap.get(values[position])).apply();
 
+                    // Track the change only if the user selected a non default Device language. This is only used in
+                    // Mixpanel, because we have both the device language and app selected language data in Tracks
+                    // metadata.
+                    if (position != 0) {
+                        Map<String, Object> properties = new HashMap<String, Object>();
+                        properties.put("forced_app_locale", conf.locale.toString());
+                        AnalyticsTracker.track(Stat.SETTINGS_LANGUAGE_SELECTION_FORCED, properties);
+                    }
+
+                    // Language is now part of metadata, so we need to refresh them
+                    AnalyticsUtils.refreshMetadata();
+
+                    // Refresh the app
                     Intent refresh = new Intent(getActivity(), getActivity().getClass());
                     startActivity(refresh);
                     if (getActivity() instanceof SettingsActivity) {

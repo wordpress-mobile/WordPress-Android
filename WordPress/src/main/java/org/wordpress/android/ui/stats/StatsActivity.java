@@ -28,10 +28,11 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -212,6 +213,12 @@ public class StatsActivity extends ActionBarActivity
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
+    }
+
+    @Override
     protected void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
@@ -362,6 +369,10 @@ public class StatsActivity extends ActionBarActivity
         mResultCode = RESULT_CANCELED;
         Intent signInIntent = new Intent(this, SignInActivity.class);
         signInIntent.putExtra(SignInActivity.ARG_JETPACK_SITE_AUTH, mLocalBlogID);
+        signInIntent.putExtra(
+                SignInActivity.ARG_JETPACK_MESSAGE_AUTH,
+                getString(R.string.stats_sign_in_jetpack_different_com_account)
+        );
         startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
     }
 

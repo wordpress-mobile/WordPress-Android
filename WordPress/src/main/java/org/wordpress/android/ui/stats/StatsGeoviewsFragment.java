@@ -59,6 +59,9 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             @Override
             public void onGlobalLayout() {
                 mTopPagerContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                if (!isAdded()) {
+                    return;
+                }
 
                 StringBuilder dataToLoad = new StringBuilder();
 

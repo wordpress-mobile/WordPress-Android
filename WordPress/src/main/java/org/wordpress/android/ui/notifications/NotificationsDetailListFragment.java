@@ -65,6 +65,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     private int mBackgroundColor;
     private int mCommentListPosition = ListView.INVALID_POSITION;
+    private boolean mIsUnread;
+
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
     private OnNoteChangeListener mOnNoteChangeListener;
     private NoteBlockAdapter mNoteBlockAdapter;
@@ -150,6 +152,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         if (SimperiumUtils.getNotesBucket() != null) {
             try {
                 Note note = SimperiumUtils.getNotesBucket().get(noteId);
+                mIsUnread = note.isUnread();
                 setNote(note);
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();
@@ -452,6 +455,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             try {
                 mNote = noteBucket.get(noteId);
+
+                // Don't refresh if the note was just marked as read
+                if (!mNote.isUnread() && mIsUnread) {
+                    mIsUnread = false;
+                    return;
+                }
 
                 // Mark note as read since we are looking at it already
                 if (mNote.isUnread()) {

@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -17,6 +16,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -49,7 +49,7 @@ public class ReaderActivityLauncher {
             intent.putExtra(ReaderConstants.ARG_TITLE, title);
         }
 
-        showReaderPostPager(context, intent);
+        ActivityLauncher.slideInFromRight(context, intent);
     }
 
     /*
@@ -72,7 +72,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
-        showReaderPostPager(context, intent);
+        ActivityLauncher.slideInFromRight(context, intent);
     }
 
     /*
@@ -87,19 +87,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
-        showReaderPostPager(context, intent);
-    }
-
-    private static void showReaderPostPager(Context context, Intent intent) {
-        if (context instanceof Activity) {
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                    context,
-                    R.anim.reader_activity_slide_in,
-                    R.anim.do_nothing);
-            ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
-        } else {
-            context.startActivity(intent);
-        }
+        ActivityLauncher.slideInFromRight(context, intent);
     }
 
     /*
@@ -169,17 +157,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
-
-        if (context instanceof Activity) {
-            Activity activity = (Activity) context;
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                    activity,
-                    R.anim.reader_flyin,
-                    R.anim.reader_activity_scale_out);
-            ActivityCompat.startActivity(activity, intent, options.toBundle());
-        } else {
-            context.startActivity(intent);
-        }
+        ActivityLauncher.slideInFromRight(context, intent);
     }
 
     /*
@@ -189,7 +167,7 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderUserListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-        context.startActivity(intent);
+        ActivityLauncher.slideInFromRight(context, intent);
     }
 
     /*
@@ -208,7 +186,7 @@ public class ReaderActivityLauncher {
      */
     public static void showReaderSubsForResult(Activity activity) {
         Intent intent = new Intent(activity, ReaderSubsActivity.class);
-        activity.startActivityForResult(intent, RequestCodes.READER_SUBS);
+        ActivityLauncher.slideInFromRightForResult(activity, intent, RequestCodes.READER_SUBS);
     }
 
     /*

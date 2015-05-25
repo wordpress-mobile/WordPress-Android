@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,6 +16,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.GravatarUtils;
@@ -25,6 +28,7 @@ import org.wordpress.android.widgets.WPTextView;
 
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
+    public static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
 
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
@@ -66,6 +70,9 @@ public class MySiteFragment extends Fragment
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_my_site, container, false);
 
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().add(new MediaAddFragment(), ADD_MEDIA_FRAGMENT_TAG).commit();
+
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
         mBlavatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.my_site_blavatar);
         mBlogTitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_title_label);
@@ -94,7 +101,10 @@ public class MySiteFragment extends Fragment
         statsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
+                // if the blog is empty, fail silently
+                if (mBlog != null) {
+                    ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
+                }
             }
         });
 
@@ -174,13 +184,30 @@ public class MySiteFragment extends Fragment
         addMediaContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addMedia(getActivity(), mBlog);
+                ActivityLauncher.addMedia(getActivity());
             }
         });
 
         refreshBlogDetails();
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case RequestCodes.PICTURE_LIBRARY:
+                FragmentManager fm = getFragmentManager();
+                Fragment addFragment = fm.findFragmentByTag(ADD_MEDIA_FRAGMENT_TAG);
+                if (addFragment != null) {
+                    addFragment.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     private void refreshBlogDetails() {
