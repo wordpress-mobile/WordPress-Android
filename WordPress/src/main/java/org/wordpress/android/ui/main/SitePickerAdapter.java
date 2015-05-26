@@ -43,6 +43,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private static int mBlavatarSz;
 
     protected SiteList mSites = new SiteList();
+    private SiteList mAllSites = new SiteList();
     private final int mCurrentLocalId;
 
     private final Drawable mSelectedItemBackground;
@@ -50,8 +51,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private final LayoutInflater mInflater;
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
 
-    private String mSearchText;
-    protected boolean mIsSearchMode;
+    protected boolean mIsInSearchMode;
     protected boolean mIsMultiSelectEnabled;
     protected boolean mShowHiddenSites = false;
     protected boolean mShowSelfHostedSites = true;
@@ -302,6 +302,27 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
+    void searchSites(String searchText) {
+        mSites = new SiteList();
+
+        for (int i = 0; i < mAllSites.size(); i++) {
+            SiteRecord record = mAllSites.get(i);
+            String searchTextLowerCase = searchText.toLowerCase();
+            String siteName = record.blogName.toLowerCase();
+            String siteUrl = record.hostName.toLowerCase();
+
+            if (siteName.contains(searchText) || siteUrl.contains(searchText)) {
+                mSites.add(record);
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public void setIsInSearchMode(boolean isInSearchMode) {
+        mIsInSearchMode = isInSearchMode;
+    }
+
     void loadSites() {
         if (mIsTaskRunning) {
             AppLog.w(AppLog.T.UTILS, "site picker > already loading sites");
@@ -332,20 +353,24 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             List<Map<String, Object>> blogs;
             String[] extraFields = {"isHidden", "dotcomFlag"};
 
-            if (mShowHiddenSites) {
-                if (mShowSelfHostedSites) {
-                    blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
-                } else {
-                    // only wp.com blogs
-                    blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
-                }
+            if (mIsInSearchMode) {
+                blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
             } else {
-                if (mShowSelfHostedSites) {
-                    // all self-hosted blogs plus visible wp.com blogs
-                    blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=0 OR (isHidden=0 AND dotcomFlag=1)", extraFields);
+                if (mShowHiddenSites) {
+                    if (mShowSelfHostedSites) {
+                        blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
+                    } else {
+                        // only wp.com blogs
+                        blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
+                    }
                 } else {
-                    // only visible wp.com blogs
-                    blogs = WordPress.wpDB.getBlogsBy("isHidden=0 AND dotcomFlag=1", extraFields);
+                    if (mShowSelfHostedSites) {
+                        // all self-hosted blogs plus visible wp.com blogs
+                        blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=0 OR (isHidden=0 AND dotcomFlag=1)", extraFields);
+                    } else {
+                        // only visible wp.com blogs
+                        blogs = WordPress.wpDB.getBlogsBy("isHidden=0 AND dotcomFlag=1", extraFields);
+                    }
                 }
             }
 
@@ -365,6 +390,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         protected void onPostExecute(SiteList sites) {
             if (mSites == null || !mSites.isSameList(sites)) {
                 mSites = sites;
+                if (mIsInSearchMode) {
+                    mAllSites = (SiteList) sites.clone();
+                }
                 notifyDataSetChanged();
             }
             mIsTaskRunning = false;
