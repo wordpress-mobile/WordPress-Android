@@ -42,7 +42,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     private static int mBlavatarSz;
 
-    private SiteList mSites = new SiteList();
+    protected SiteList mSites = new SiteList();
     private final int mCurrentLocalId;
 
     private final Drawable mSelectedItemBackground;
@@ -51,9 +51,10 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
 
     private String mSearchText;
-    private boolean mIsMultiSelectEnabled;
-    private boolean mShowHiddenSites = false;
-    private boolean mShowSelfHostedSites = true;
+    protected boolean mIsSearchMode;
+    protected boolean mIsMultiSelectEnabled;
+    protected boolean mShowHiddenSites = false;
+    protected boolean mShowSelfHostedSites = true;
 
     private OnSiteClickListener mSiteSelectedListener;
     private OnSelectedCountChangedListener mSelectedCountListener;
@@ -184,11 +185,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         loadSites();
     }
 
-    void searchSitesThatContain(String searchText) {
-        mSearchText = searchText;
-        setEnableEditMode(true);
-    }
-
     int getNumSelected() {
         return mSelectedPositions.size();
     }
@@ -317,7 +313,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     /*
      * AsyncTask which loads sites from database and populates the adapter
      */
-    private boolean mIsTaskRunning;
+    protected boolean mIsTaskRunning;
     private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
         @Override
         protected void onPreExecute() {
@@ -338,12 +334,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
             if (mShowHiddenSites) {
                 if (mShowSelfHostedSites) {
-                    if (mSearchText.isEmpty()) {
-                        // all self-hosted blogs and all wp.com blogs
-                        blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
-                    } else {
-                        blogs = WordPress.wpDB.getBlogsBy("blogName LIKE " + mSearchText + " OR url LIKE " + mSearchText, extraFields);
-                    }
+                    blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
                 } else {
                     // only wp.com blogs
                     blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);

@@ -43,6 +43,7 @@ public class SitePickerActivity extends ActionBarActivity
     public static final String KEY_LOCAL_ID = "local_id";
 
     private SitePickerAdapter mAdapter;
+    private SitePickerSearchAdapter mSearchAdapter;
     private RecyclerView mRecycleView;
     private View mFabView;
     private ActionMode mActionMode;
@@ -156,8 +157,8 @@ public class SitePickerActivity extends ActionBarActivity
                 item.getActionView().requestFocus();
                 toggleKeyboard();
 
-                SitePickerSearchAdapter sitePickerSearchAdapter = new SitePickerSearchAdapter();
-                mRecycleView.swapAdapter(sitePickerSearchAdapter, true);
+                mSearchAdapter = new SitePickerSearchAdapter(getApplicationContext(), mCurrentLocalId);
+                mRecycleView.swapAdapter(mSearchAdapter, true);
                 return true;
             }
 
@@ -168,11 +169,6 @@ public class SitePickerActivity extends ActionBarActivity
                 mRecycleView.swapAdapter(getAdapter(), true);
                 getAdapter().loadSites();
                 return true;
-            }
-
-            private void toggleKeyboard() {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
             }
         });
 
@@ -309,14 +305,21 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
+    protected void toggleKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
     @Override
     public boolean onQueryTextSubmit(String s) {
-        return false;
+        toggleKeyboard();
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
-        return false;
+        mSearchAdapter.search(s);
+        return true;
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
