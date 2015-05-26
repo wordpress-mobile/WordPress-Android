@@ -211,7 +211,7 @@ public class PostsActivity extends ActionBarActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
             if (requestCode == RequestCodes.EDIT_POST && resultCode == RESULT_OK) {
-                if (data.getBooleanExtra("shouldRefresh", false)) {
+                if (data.getBooleanExtra(EditPostActivity.EXTRA_SHOULD_REFRESH, false)) {
                     mPostList.getPostListAdapter().loadPosts();
                 }
             }
