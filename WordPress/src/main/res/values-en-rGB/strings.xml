@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="ssl_certificate_details">Details</string>
-	<string name="close_drawer">Close menu drawer</string>
-	<string name="open_drawer">Open menu drawer</string>
 	<string name="delete_sure_post">Delete this post</string>
 	<string name="delete_sure">Delete this draft</string>
 	<string name="delete_sure_page">Delete this page</string>
@@ -10,8 +8,6 @@
 	<string name="confirm_delete_media">Delete selected item?</string>
 	<string name="cab_selected">%d selected</string>
 	<string name="media_gallery_date_range">Displaying media from %1$s to %2$s</string>
-	<string name="sure_to_remove_account">Remove this blog?</string>
-	<string name="sign_out_confirm">Sign out?</string>
 	<string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet</string>
 	<string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
 	<string name="faq_button">FAQ</string>
@@ -40,10 +36,8 @@
 	<string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
 	<string name="overwrite_local_changes">You\'ve made changes to a post that haven\'t been uploaded yet. Proceed with the refresh and overwrite local changes?</string>
 	<string name="older_month">Older than a month</string>
-	<string name="more">More</string>
 	<string name="older_two_days">Older than 2 days</string>
 	<string name="older_last_week">Older than a week</string>
-	<string name="help_and_support">Help and support</string>
 	<string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
 	<string name="select_a_blog">Select a WordPress site</string>
 	<string name="sending_content">Uploading %s content</string>
@@ -51,8 +45,6 @@
 	<string name="mnu_comment_liked">Liked</string>
 	<string name="comment">Comment</string>
 	<string name="comment_trashed">Comment trashed</string>
-	<string name="dlg_confirm_spam_comment">Mark this comment as spam?</string>
-	<string name="comment_mark_spam">Mark spam</string>
 	<string name="posts_empty_list">No posts yet. Why not create one?</string>
 	<string name="comment_reply_to_user">Reply to %s</string>
 	<string name="pages_empty_list">No pages yet. Why not create one?</string>
@@ -63,7 +55,6 @@
 	<string name="reader_toast_err_generic">Unable to perform this action</string>
 	<string name="reader_toast_err_block_blog">Unable to block this blog</string>
 	<string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
-	<string name="contact_us_pref_summary">Get help from Automattic support</string>
 	<string name="hs__conversation_detail_error">Describe the problem you\'re seeing</string>
 	<string name="hs__new_conversation_header">Support chat</string>
 	<string name="hs__conversation_header">Support chat</string>
@@ -84,9 +75,6 @@
 	<string name="reader_label_reblog_to">Reblog to</string>
 	<string name="update_verb">Update</string>
 	<string name="schedule_verb">Schedule</string>
-	<string name="sign_in_again">Sign in again</string>
-	<string name="simperium_connection_error">Couldn\'t sign in to get notifications.</string>
-	<string name="invalid_xmlrpc_url">XMLRPC url returned by your WordPress instance is invalid. Contact your site administrator.</string>
 	<string name="reader_title_blog_preview">Preview Blog</string>
 	<string name="reader_title_tag_preview">Preview Tag</string>
 	<string name="reader_title_subs">Tags &amp; Blogs</string>
@@ -94,26 +82,17 @@
 	<string name="reader_page_popular_tags">Popular tags</string>
 	<string name="reader_page_followed_blogs">Followed blogs</string>
 	<string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
-	<string name="reader_label_followers">%s followers</string>
 	<string name="reader_label_followed_blog">Blog followed</string>
-	<string name="reader_label_unfollowed_blog">Blog unfollowed</string>
 	<string name="reader_label_tag_preview">Posts tagged %s</string>
 	<string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
 	<string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
 	<string name="reader_toast_err_follow_blog">Unable to follow this blog</string>
 	<string name="reader_toast_err_unfollow_blog">Unable to unfollow this blog</string>
 	<string name="reader_empty_recommended_blogs">No recommended blogs</string>
-	<string name="blogs_visibility">Blogs</string>
-	<string name="stats_empty_search_engine_terms_desc">Search terms are words or phrases users find you with when they search.</string>
-	<string name="load_settings">You can visit settings and change your username and password there.</string>
 	<string name="saving">Saving…</string>
 	<string name="media_empty_list">No media</string>
-	<string name="need_help_signin_wpcom">Need help?</string>
-	<string name="wpcom_signin_dialog_title">WordPress.com sign in</string>
-	<string name="jetpack_stats_switch_user">The current WordPress.com account (%s) doesn\'t have access to the stats for this blog. Would you like to sign in to a different account?</string>
 	<string name="ptr_tip_message">Tip: Pull down to refresh</string>
 	<string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
-	<string name="reader_label_reblog_empty_link">Change blog visibility</string>
 	<string name="help">Help</string>
 	<string name="forgot_password">Lost your password?</string>
 	<string name="forums">Forums</string>
@@ -121,7 +100,6 @@
 	<string name="ssl_certificate_error">Invalid SSL certificate</string>
 	<string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
 	<string name="no_network_message">There is no network available</string>
-	<string name="could_not_remove_account">Couldn\'t remove blog</string>
 	<string name="gallery_error">The media item couldn\'t be retrieved</string>
 	<string name="blog_not_found">An error occurred when accessing this blog</string>
 	<string name="wait_until_upload_completes">Wait until upload completes</string>
@@ -131,7 +109,6 @@
 	<string name="theme_no_search_result_found">No results found</string>
 	<string name="comments_empty_list">No comments</string>
 	<string name="mnu_comment_unspam">Not spam</string>
-	<string name="mnu_comment_edit">Edit</string>
 	<string name="no_site_error">Couldn\'t connect to the WordPress site</string>
 	<string name="adding_cat_failed">Adding category failed</string>
 	<string name="adding_cat_success">Category added successfully</string>
@@ -153,7 +130,6 @@
 	<string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
 	<string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
 	<string name="error_generic">An error occurred</string>
-	<string name="error_parsing_response">An error occurred while fetching data</string>
 	<string name="error_moderate_comment">An error occurred while moderating</string>
 	<string name="error_edit_comment">An error occurred while editing the comment</string>
 	<string name="error_upload">An error occurred while uploading the %s</string>
@@ -189,13 +165,8 @@
 	<string name="nux_cannot_log_in">We can\'t log you in</string>
 	<string name="out_of_memory">Device out of memory</string>
 	<string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
-	<string name="visit_security_settings">Visit security settings</string>
 	<string name="select_categories">Select categories</string>
 	<string name="account_details">Account details</string>
-	<string name="show_and_hide_blogs">Show/hide WordPress.com blogs</string>
-	<string name="show_all">Show all</string>
-	<string name="hide_all">Hide all</string>
-	<string name="edit_page">Edit page</string>
 	<string name="edit_post">Edit post</string>
 	<string name="add_comment">Add comment</string>
 	<string name="connection_error">Connection error</string>
@@ -248,8 +219,6 @@
 	<string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
 	<string name="content_required">Comment is required</string>
 	<string name="toast_comment_unedited">Comment hasn\'t changed</string>
-	<string name="remove_account">Remove blog</string>
-	<string name="blog_removed_successfully">Blog removed successfully</string>
 	<string name="delete_draft">Delete draft</string>
 	<string name="preview_page">Preview page</string>
 	<string name="page_deleted">Page deleted successfully</string>
@@ -269,22 +238,14 @@
 	<string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
 	<string name="location_not_found">Unknown location</string>
 	<string name="open_source_licenses">Open source licenses</string>
-	<string name="wpcom_blogs">WordPress.com blogs</string>
-	<string name="self_hosted_blogs">Self-hosted blogs</string>
-	<string name="stats_view_totals_followers_and_shares">Totals, followers, &amp; shares</string>
 	<string name="stats_view_tags_and_categories">Tags &amp; categories</string>
-	<string name="stats_visitors_and_views_header_best_ever">Best ever</string>
-	<string name="stats_visitors_and_views_header_all_time">All time</string>
 	<string name="pending_review">Pending review</string>
 	<string name="http_credentials">HTTP credentials (optional)</string>
 	<string name="http_authorization_required">Authorization required</string>
 	<string name="post_format">Post format</string>
 	<string name="new_post">New post</string>
-	<string name="new_page">New page</string>
 	<string name="new_media">New media</string>
-	<string name="quick_photo">Quick photo</string>
 	<string name="view_site">View site</string>
-	<string name="view_admin">View admin</string>
 	<string name="privacy_policy">Privacy policy</string>
 	<string name="local_changes">Local changes</string>
 	<string name="image_settings">Image settings</string>
@@ -293,7 +254,6 @@
 	<string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
 	<string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
 	<string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
-	<string name="jetpack_stats_unauthorized">Can\'t access stats</string>
 	<string name="reader_title_applog">Application log</string>
 	<string name="reader_share_link">Share link</string>
 	<string name="reader_toast_err_reblog_requires_blog">Select a blog</string>
@@ -333,7 +293,6 @@
 	<string name="select_date">Select date</string>
 	<string name="pick_photo">Select photo</string>
 	<string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
-	<string name="add_self_hosted_blog">Add self-hosted blog</string>
 	<string name="pick_video">Select video</string>
 	<string name="reader_toast_err_get_post">Unable to retrieve this post</string>
 	<string name="validating_user_data">Validating user data</string>
@@ -369,7 +328,6 @@
 	<string name="nux_tutorial_get_started_title">Get started!</string>
 	<string name="reader_menu_tags">Tags</string>
 	<string name="reader_btn_share">Share</string>
-	<string name="reader_btn_reblog">Reblog</string>
 	<string name="reader_btn_follow">Follow</string>
 	<string name="reader_btn_unfollow">Following</string>
 	<string name="reader_hint_comment_on_post">Add your comment</string>
@@ -412,7 +370,6 @@
 	<string name="stats_timeframe_days">Days</string>
 	<string name="stats_timeframe_weeks">Weeks</string>
 	<string name="stats_timeframe_months">Months</string>
-	<string name="stats_summary">Summary</string>
 	<string name="stats_entry_country">Country</string>
 	<string name="stats_entry_posts_and_pages">Title</string>
 	<string name="stats_entry_tags_and_categories">Topic</string>
@@ -422,8 +379,6 @@
 	<string name="stats_totals_clicks">Clicks</string>
 	<string name="stats_totals_plays">Plays</string>
 	<string name="stats_totals_comments">Comments</string>
-	<string name="stats_totals_visitors">Visitors</string>
-	<string name="stats_visitors_and_views_header_today">Today</string>
 	<string name="media_edit_failure">Failed to update</string>
 	<string name="themes_details_label">Details</string>
 	<string name="themes_features_label">Features</string>
@@ -448,9 +403,7 @@
 	<string name="passcode_turn_off">Turn PIN lock off</string>
 	<string name="passcode_turn_on">Turn PIN lock on</string>
 	<string name="upload">Upload</string>
-	<string name="manage">Manage</string>
 	<string name="sign_in">Sign in</string>
-	<string name="sign_out">Sign out</string>
 	<string name="notifications">Notifications</string>
 	<string name="manage_notifications">Manage notifications</string>
 	<string name="enable_notifications">Enable notifications</string>
@@ -462,7 +415,6 @@
 	<string name="note_reply_successful">Reply published</string>
 	<string name="new_notifications">%d new notifications</string>
 	<string name="more_notifications">and %d more.</string>
-	<string name="tooltip_follow">Follow or unfollow this blog</string>
 	<string name="loading">Loading…</string>
 	<string name="post_signature">Post signature</string>
 	<string name="add_tagline">Add a signature to new posts</string>
@@ -494,7 +446,6 @@
 	<string name="scheduled">Scheduled</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Posted from WordPress for Android</string>
-	<string name="uploading">Uploading</string>
 	<string name="version">Version</string>
 	<string name="tos">Terms of Service</string>
 	<string name="app_title">WordPress for Android</string>
@@ -503,7 +454,6 @@
 	<string name="image_alignment">Alignment</string>
 	<string name="refresh">Refresh</string>
 	<string name="untitled">Untitled</string>
-	<string name="edit">Edit</string>
 	<string name="post_id">Post</string>
 	<string name="page_id">Page</string>
 	<string name="post_password">Password (optional)</string>
@@ -520,7 +470,6 @@
 	<string name="title">Title</string>
 	<string name="tags_separate_with_commas">Tags (separate tags with commas)</string>
 	<string name="categories">Categories</string>
-	<string name="tab_stats">Stats</string>
 	<string name="notification_blink">Blink notification light</string>
 	<string name="notification_sound">Play notification sound</string>
 	<string name="notification_vibrate">Vibrate</string>
