@@ -280,8 +280,8 @@ public class SitePickerActivity extends ActionBarActivity
     }
 
     private void toggleKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     @Override
