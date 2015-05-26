@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
@@ -14,6 +15,10 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
+
+import org.wordpress.android.R;
+
+import java.lang.ref.WeakReference;
 
 public class ReaderAnim {
 
@@ -186,7 +191,9 @@ public class ReaderAnim {
     public static void animateBottomBar(View view, boolean show) {
         animateBar(view, show, false);
     }
-    private static void animateBar(View view, boolean show, boolean isTopBar) {
+    private static void animateBar(final View view,
+                                   final boolean show,
+                                   final boolean isTopBar) {
         int newVisibility = (show ? View.VISIBLE : View.GONE);
         if (view == null || view.getVisibility() == newVisibility) {
             return;
@@ -224,7 +231,45 @@ public class ReaderAnim {
     /*
      * in/out animation for floating action button
      */
-    public static void showFab(final View fabView, final boolean show) {
-        animateBar(fabView, show, false);
+    public static void showFab(final View view, boolean show) {
+        if (view == null) return;
+
+        Context context = view.getContext();
+        int fabHeight = context.getResources().getDimensionPixelSize(com.getbase.floatingactionbutton.R.dimen.fab_size_normal);
+        int fabMargin = context.getResources().getDimensionPixelSize(R.dimen.fab_margin);
+        int max = (fabHeight + fabMargin) * 2;
+        float fromY = (show ? max : 0f);
+        float toY   = (show ? 0f : max);
+
+        ObjectAnimator anim = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, fromY, toY);
+        anim.setInterpolator(show ? new DecelerateInterpolator() : new AccelerateInterpolator());
+        anim.setDuration(show ? Duration.LONG.toMillis(context) : Duration.SHORT.toMillis(context));
+
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                if (view.getVisibility() != View.VISIBLE) {
+                    view.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        anim.start();
+    }
+
+    public static void showFabDelayed(View fabView, final boolean show, long delayMs) {
+        // use a weak reference to the view so it won't be retained if the
+        // activity/fragment is destroyed before the animation is started
+        final WeakReference<View> weakView = new WeakReference<>(fabView);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                View view = weakView.get();
+                if (view != null) {
+                    showFab(view, show);
+                }
+            }
+        }, delayMs);
     }
 }
