@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
@@ -12,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -145,22 +148,23 @@ public class SitePickerActivity extends ActionBarActivity
 
         MenuItem menuSearch = menu.findItem(R.id.menu_search);
         mSearchView = (SearchView) menuSearch.getActionView();
+        mSearchView.setIconifiedByDefault(false);
         mSearchView.setOnQueryTextListener(this);
-
         MenuItemCompat.setOnActionExpandListener(menuSearch, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                mSearchView.requestFocus();
+                item.getActionView().requestFocus();
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                mRecycleView.swapAdapter(getAdapter(), true);
                 return true;
             }
         });
-
 
         return true;
     }
@@ -188,10 +192,6 @@ public class SitePickerActivity extends ActionBarActivity
             mRecycleView.setItemAnimator(new DefaultItemAnimator());
             getAdapter().setEnableEditMode(true);
             startSupportActionMode(new ActionModeCallback());
-            return true;
-        } else if (itemId == R.id.menu_search) {
-            SitePickerSearchAdapter sitePickerSearchAdapter = new SitePickerSearchAdapter();
-            mRecycleView.swapAdapter(sitePickerSearchAdapter, true);
             return true;
         }
 
@@ -301,14 +301,12 @@ public class SitePickerActivity extends ActionBarActivity
 
     @Override
     public boolean onQueryTextSubmit(String s) {
-        mSearchView.clearFocus();
-        return true;
+        return false;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
-        getAdapter().searchSitesThatContain(s);
-        return true;
+        return false;
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
