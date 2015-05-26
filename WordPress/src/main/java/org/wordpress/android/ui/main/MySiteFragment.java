@@ -9,6 +9,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -19,6 +22,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaAddFragment;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -33,7 +37,10 @@ import de.greenrobot.event.EventBus;
 
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
+
     public static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
+    private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
+    private static final long ALERT_ANIM_DURATION_MS = 1000l;
 
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
@@ -93,7 +100,7 @@ public class MySiteFragment extends Fragment
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, false);
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mBlog, false);
             }
         });
 
@@ -194,6 +201,7 @@ public class MySiteFragment extends Fragment
                     addFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
+
             case RequestCodes.SITE_PICKER:
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
@@ -203,8 +211,42 @@ public class MySiteFragment extends Fragment
                 long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
                 ReaderAnim.showFabDelayed(mFabView, true, delayMs);
                 break;
-            default:
+
+            case RequestCodes.EDIT_POST:
+                // if user returned from adding a post via the FAB and it was saved as a local
+                // draft, briefly animate the background of the "Blog posts" view to give the
+                // user a cue as to where to go to return to that post
+                if (resultCode == Activity.RESULT_OK
+                        && getView() != null
+                        && data != null
+                        && data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
+                    showAlert(getView().findViewById(R.id.postsGlowBackground));
+                }
                 break;
+        }
+    }
+
+    private void showAlert(View view) {
+        if (isAdded() && view != null) {
+            Animation highlightAnimation = new AlphaAnimation(0.0f, 1.0f);
+            highlightAnimation.setInterpolator(new Interpolator() {
+                private float bounce(float t) {
+                    return t * t * 24.0f;
+                }
+
+                public float getInterpolation(float t) {
+                    t *= 1.1226f;
+                    if (t < 0.184f) return bounce(t);
+                    else if (t < 0.545f) return bounce(t - 0.40719f);
+                    else if (t < 0.7275f) return -bounce(t - 0.6126f) + 1.0f;
+                    else return 0.0f;
+                }
+            });
+            highlightAnimation.setStartOffset(ALERT_ANIM_OFFSET_MS);
+            highlightAnimation.setRepeatCount(1);
+            highlightAnimation.setRepeatMode(Animation.RESTART);
+            highlightAnimation.setDuration(ALERT_ANIM_DURATION_MS);
+            view.startAnimation(highlightAnimation);
         }
     }
 
