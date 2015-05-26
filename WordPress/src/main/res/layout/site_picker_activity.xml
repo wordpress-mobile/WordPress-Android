@@ -2,6 +2,7 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -30,11 +31,13 @@
         android:layout_gravity="end|bottom"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
+        android:visibility="gone"
         fab:fab_addButtonColorNormal="@color/white"
         fab:fab_addButtonColorPressed="@color/grey_light"
         fab:fab_addButtonPlusIconColor="@color/blue_medium"
         fab:fab_labelStyle="@style/fab_menu_label_style"
-        fab:fab_labelsPosition="left">
+        fab:fab_labelsPosition="left"
+        tools:visibility="visible">
 
         <com.getbase.floatingactionbutton.AddFloatingActionButton
             android:id="@+id/fab_item_create_dotcom"

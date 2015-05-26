@@ -53,6 +53,7 @@
             tools:text="username" />
 
         <LinearLayout
+            android:id="@+id/row_settings"
             style="@style/MeListRowLayout"
             android:layout_marginTop="@dimen/me_list_margin_top">
 
@@ -69,7 +70,11 @@
 
         </LinearLayout>
 
-        <LinearLayout style="@style/MeListRowLayout">
+        <View style="@style/MeListSectionDividerView" />
+
+        <LinearLayout
+            android:id="@+id/row_support"
+            style="@style/MeListRowLayout">
 
             <ImageView
                 android:id="@+id/me_support_icon"
@@ -84,7 +89,11 @@
 
         </LinearLayout>
 
-        <LinearLayout style="@style/MeListRowLayout">
+        <View style="@style/MeListSectionDividerView" />
+
+        <LinearLayout
+            android:id="@+id/row_logout"
+            style="@style/MeListRowLayout">
 
             <ImageView
                 android:id="@+id/me_login_logout_icon"
@@ -98,6 +107,8 @@
                 tools:text="@string/me_btn_login_logout" />
 
         </LinearLayout>
+
+        <View style="@style/MeListSectionDividerView" />
 
     </LinearLayout>
 </ScrollView>

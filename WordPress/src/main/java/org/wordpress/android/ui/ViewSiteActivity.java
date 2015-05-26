@@ -48,6 +48,7 @@ public class ViewSiteActivity extends ActionBarActivity {
             Toast.makeText(this, getResources().getText(R.string.blog_not_found),
                     Toast.LENGTH_SHORT).show();
             finish();
+            return;
         }
 
         setContentView(R.layout.webview);
@@ -64,7 +65,7 @@ public class ViewSiteActivity extends ActionBarActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
-        this.setTitle(StringUtils.unescapeHTML(mBlog.getBlogName()));
+        setTitle(StringUtils.unescapeHTML(mBlog.getBlogName()));
         loadSiteURL();
     }
 
