@@ -17,8 +17,8 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -38,7 +38,7 @@ public class MeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_me, container, false);
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.me_fragment, container, false);
 
         mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
@@ -47,24 +47,32 @@ public class MeFragment extends Fragment {
         mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
 
         addDropShadowToAvatar();
+        refreshAccountDetails();
 
-        TextView settingsTextView = (TextView) rootView.findViewById(R.id.me_settings_text_view);
-        settingsTextView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewAccountSettings(getActivity());
             }
         });
 
-        TextView supportTextView = (TextView) rootView.findViewById(R.id.me_support_text_view);
-        supportTextView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_support).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewHelpAndSupport(getActivity(), Tag.ORIGIN_ME_SCREEN_HELP);
             }
         });
 
-        refreshAccountDetails();
+        rootView.findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AccountHelper.isSignedInWordPressDotCom()) {
+                    signOutWordPressComWithConfirmation();
+                } else {
+                    ActivityLauncher.showSignInForResult(getActivity());
+                }
+            }
+        });
 
         return rootView;
     }
@@ -99,6 +107,7 @@ public class MeFragment extends Fragment {
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
+            mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
 
             String displayName = defaultAccount.getDisplayName();
             if (!TextUtils.isEmpty(displayName)) {
@@ -106,26 +115,11 @@ public class MeFragment extends Fragment {
             } else {
                 mDisplayNameTextView.setText(defaultAccount.getUserName());
             }
-
-            mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
-            mLoginLogoutTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    signOutWordPressComWithConfirmation();
-                }
-            });
         } else {
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
             mAvatarFrame.setVisibility(View.GONE);
-
             mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
-            mLoginLogoutTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ActivityLauncher.showSignInForResult(getActivity());
-                }
-            });
         }
     }
 

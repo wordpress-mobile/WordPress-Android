@@ -123,15 +123,8 @@ public class SitePickerActivity extends ActionBarActivity
         }
 
         // animate fab in after a delay which matches that of the activity transition
-        long delay = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isFinishing()) {
-                    ReaderAnim.showFab(mFabView, true);
-                }
-            }
-        }, delay);
+        long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        ReaderAnim.showFabDelayed(mFabView, true, delayMs);
     }
 
     @Override
@@ -290,6 +283,7 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
+            ReaderAnim.showFab(mFabView, false);
             WordPress.setCurrentBlog(site.localId);
             WordPress.wpDB.updateLastBlogId(site.localId);
             setResult(RESULT_OK);

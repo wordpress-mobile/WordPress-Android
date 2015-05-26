@@ -345,7 +345,7 @@ public class MediaPickerActivity extends ActionBarActivity
      * Helper method; sets up the tab bar, media adapter, and ViewPager for displaying media content
      */
     private void initializeContentView() {
-        setContentView(R.layout.activity_media_picker);
+        setContentView(R.layout.media_picker_activity);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
