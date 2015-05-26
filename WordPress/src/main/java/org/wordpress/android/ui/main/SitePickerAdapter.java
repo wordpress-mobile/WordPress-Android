@@ -42,7 +42,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     private static int mBlavatarSz;
 
-    protected SiteList mSites = new SiteList();
+    private SiteList mSites = new SiteList();
     private SiteList mAllSites = new SiteList();
     private final int mCurrentLocalId;
 
@@ -51,10 +51,10 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private final LayoutInflater mInflater;
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
 
-    protected boolean mIsInSearchMode;
-    protected boolean mIsMultiSelectEnabled;
-    protected boolean mShowHiddenSites = false;
-    protected boolean mShowSelfHostedSites = true;
+    private boolean mIsInSearchMode;
+    private boolean mIsMultiSelectEnabled;
+    private boolean mShowHiddenSites = false;
+    private boolean mShowSelfHostedSites = true;
 
     private OnSiteClickListener mSiteSelectedListener;
     private OnSelectedCountChangedListener mSelectedCountListener;
@@ -302,7 +302,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    void searchSites(String searchText) {
+    public void searchSites(String searchText) {
         mSites = new SiteList();
 
         for (int i = 0; i < mAllSites.size(); i++) {
@@ -334,7 +334,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     /*
      * AsyncTask which loads sites from database and populates the adapter
      */
-    protected boolean mIsTaskRunning;
+    private boolean mIsTaskRunning;
     private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
         @Override
         protected void onPreExecute() {
