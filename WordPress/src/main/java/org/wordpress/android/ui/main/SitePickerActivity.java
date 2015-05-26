@@ -237,14 +237,6 @@ public class SitePickerActivity extends ActionBarActivity
         return mAdapter;
     }
 
-    @Override
-    public void onSelectedCountChanged(int numSelected) {
-        if (mActionMode != null) {
-            updateActionModeTitle();
-            mActionMode.invalidate();
-        }
-    }
-
     private void saveHiddenSites() {
         WordPress.wpDB.getDatabase().beginTransaction();
         try {
@@ -278,6 +270,26 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
+    private void updateActionModeTitle() {
+        if (mActionMode != null) {
+            int numSelected = getAdapter().getNumSelected();
+            mActionMode.setTitle(getString(R.string.cab_selected, numSelected));
+        }
+    }
+
+    private void toggleKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    @Override
+    public void onSelectedCountChanged(int numSelected) {
+        if (mActionMode != null) {
+            updateActionModeTitle();
+            mActionMode.invalidate();
+        }
+    }
+
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
@@ -288,18 +300,6 @@ public class SitePickerActivity extends ActionBarActivity
             mDidUserSelectSite = true;
             finish();
         }
-    }
-
-    private void updateActionModeTitle() {
-        if (mActionMode != null) {
-            int numSelected = getAdapter().getNumSelected();
-            mActionMode.setTitle(getString(R.string.cab_selected, numSelected));
-        }
-    }
-
-    protected void toggleKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     @Override
