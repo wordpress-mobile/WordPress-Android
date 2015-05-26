@@ -9,4 +9,10 @@ public class CoreEvents {
     public static class InvalidSslCertificateDetected {}
     public static class LoginLimitDetected {}
     public static class TwoFactorAuthenticationDetected {}
+    public static class MainViewPagerScrolled {
+        public final float mXOffset;
+        public MainViewPagerScrolled(float xOffset) {
+            mXOffset = xOffset;
+        }
+    }
 }
