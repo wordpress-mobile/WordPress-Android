@@ -254,22 +254,22 @@ public class SitePickerActivity extends ActionBarActivity
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 item.getActionView().requestFocus();
-                toggleKeyboard();
-
-                getAdapter().setIsInSearchMode(true);
-                getAdapter().loadSites();
+                toggleSearchMode(true);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                toggleKeyboard();
-
-                getAdapter().setIsInSearchMode(false);
-                getAdapter().loadSites();
+                toggleSearchMode(false);
                 return true;
             }
         });
+    }
+
+    private void toggleSearchMode(boolean inSearchMode) {
+        toggleKeyboard();
+        getAdapter().setIsInSearchMode(inSearchMode);
+        getAdapter().loadSites();
     }
 
     private void updateActionModeTitle() {
