@@ -320,6 +320,7 @@ public class SitePickerActivity extends ActionBarActivity
             WordPress.wpDB.updateLastBlogId(site.localId);
             setResult(RESULT_OK);
             mDidUserSelectSite = true;
+            hideSoftKeyboard();
             finish();
         }
     }
