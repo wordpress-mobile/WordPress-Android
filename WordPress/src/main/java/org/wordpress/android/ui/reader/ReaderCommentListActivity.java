@@ -70,6 +70,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     private boolean mHasUpdatedComments;
     private boolean mIsSubmittingComment;
     private long mReplyToCommentId;
+    private long mCommentId;
     private int mRestorePosition;
 
     @Override
@@ -96,9 +97,10 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+            mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             // remove all but the first page of comments for this post if there's an active
             // connection - infinite scroll will take care of filling in subsequent pages
-            if (NetworkUtils.isNetworkAvailable(this)) {
+            if (NetworkUtils.isNetworkAvailable(this) && mCommentId == 0) {
                 ReaderCommentTable.purgeExcessCommentsForPost(mBlogId, mPostId);
             }
         }
@@ -239,6 +241,18 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             txtCommentsClosed.setVisibility(View.VISIBLE);
         }
 
+        if (mCommentId > 0) {
+            txtTitle.setBackgroundResource(R.drawable.selectable_background_wordpress);
+            txtTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isFinishing()) return;
+
+                    ReaderActivityLauncher.showReaderPostDetail(ReaderCommentListActivity.this, mBlogId, mPostId);
+                }
+            });
+        }
+
         return true;
     }
 
@@ -275,6 +289,10 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                             updateComments(isEmpty, false);
                         } else if (mRestorePosition > 0) {
                             mRecyclerView.scrollToPosition(mRestorePosition);
+                        } else if (mCommentId > 0) {
+                            // Scroll to the commentId once if it was passed to this activity
+                            smoothScrollToCommentId(mCommentId);
+                            mCommentId = 0;
                         }
                         mRestorePosition = 0;
                         checkEmptyView();
@@ -348,7 +366,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         if (showProgress) {
             showProgress();
         }
-        ReaderCommentService.startService(this, mPost, requestNextPage);
+        ReaderCommentService.startService(this, mPost.blogId, mPost.postId, requestNextPage);
     }
 
     private void checkEmptyView() {
@@ -367,7 +385,6 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         }
     }
 
-
     /*
      * refresh adapter so latest comments appear
      */
@@ -383,6 +400,16 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         int position = getCommentAdapter().indexOfCommentId(commentId);
         if (position > -1) {
             mRecyclerView.scrollToPosition(position);
+        }
+    }
+
+    /*
+     * Smoothly scrolls the passed comment to the top of the listView
+     */
+    private void smoothScrollToCommentId(long commentId) {
+        int position = getCommentAdapter().indexOfCommentId(commentId);
+        if (position > -1) {
+            mRecyclerView.smoothScrollToPosition(position);
         }
     }
 

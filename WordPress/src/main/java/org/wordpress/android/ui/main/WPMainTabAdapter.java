@@ -17,10 +17,10 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
 
     private static final int NUM_TABS = 4;
 
-    static final int TAB_SITES  = 0;
-    static final int TAB_READER = 1;
-    static final int TAB_ME     = 2;
-    static final int TAB_NOTIFS = 3;
+    static final int TAB_MY_SITE = 0;
+    static final int TAB_READER  = 1;
+    static final int TAB_ME      = 2;
+    static final int TAB_NOTIFS  = 3;
 
     private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_TABS);
 
@@ -52,7 +52,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case TAB_SITES:
+            case TAB_MY_SITE:
                 return MySiteFragment.newInstance();
             case TAB_READER:
                 return ReaderPostListFragment.newInstance();

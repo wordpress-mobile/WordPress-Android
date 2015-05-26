@@ -30,8 +30,10 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.DisplayUtils;
@@ -123,7 +125,7 @@ public class WPMainActivity extends Activity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        AppLog.i(AppLog.T.MAIN, "main activity > new intent");
+        AppLog.i(T.MAIN, "main activity > new intent");
         if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
             launchWithNoteId();
         }
@@ -169,7 +171,11 @@ public class WPMainActivity extends Activity
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        // noop
+        // fire event if the "My Site" page is being scrolled so the fragment can
+        // animate its fab to match
+        if (position == WPMainTabAdapter.TAB_MY_SITE) {
+            EventBus.getDefault().post(new MainViewPagerScrolled(positionOffset));
+        }
     }
 
     /*
@@ -215,7 +221,6 @@ public class WPMainActivity extends Activity
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().addListener(this);
         }
-
         checkNoteBadge();
     }
 
@@ -245,6 +250,14 @@ public class WPMainActivity extends Activity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case RequestCodes.EDIT_POST:
+                if (resultCode == RESULT_OK) {
+                    MySiteFragment mySiteFragment = getMySiteFragment();
+                    if (mySiteFragment != null) {
+                        mySiteFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
+                break;
             case RequestCodes.READER_SUBS:
             case RequestCodes.READER_REBLOG:
                 ReaderPostListFragment readerFragment = getReaderListFragment();
@@ -269,7 +282,6 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:
-                // Pass activity result on to the notifications list fragment
                 if (getNotificationListFragment() != null) {
                     getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
                 }
@@ -283,12 +295,8 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.SITE_PICKER:
-                if (resultCode == RESULT_OK) {
-                    // site picker will have set the current blog, so make sure My Site reflects it
-                    MySiteFragment mySiteFragment = getMySiteFragment();
-                    if (mySiteFragment != null) {
-                        mySiteFragment.setBlog(WordPress.getCurrentBlog());
-                    }
+                if (getMySiteFragment() != null) {
+                    getMySiteFragment().onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.BLOG_SETTINGS:
@@ -325,7 +333,7 @@ public class WPMainActivity extends Activity
      * returns the my site fragment from the sites tab
      */
     public MySiteFragment getMySiteFragment() {
-        return getFragmentByPosition(WPMainTabAdapter.TAB_SITES, MySiteFragment.class);
+        return getFragmentByPosition(WPMainTabAdapter.TAB_MY_SITE, MySiteFragment.class);
     }
 
     private <T> T getFragmentByPosition(int position, Class<T> type) {

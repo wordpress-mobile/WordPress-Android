@@ -196,19 +196,16 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, url, AccountHelper.getDefaultAccount().getUserName());
     }
 
-    public void showCommentDetailForNote(Note note) {
-        if (isFinishing() || note == null) return;
-
-        Intent intent = new Intent(this, CommentDetailActivity.class);
-        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_IS_REMOTE, true);
-        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_NOTE_ID, note.getId());
-        startActivity(intent);
-    }
-
     public void showReaderPostLikeUsers(long blogId, long postId) {
         if (isFinishing()) return;
 
         ReaderActivityLauncher.showReaderLikingUsers(this, blogId, postId);
+    }
+
+    public void showReaderCommentsList(long siteId, long postId, long commentId) {
+        if (isFinishing()) return;
+
+        ReaderActivityLauncher.showReaderComments(this, siteId, postId, commentId);
     }
 
     @Override
