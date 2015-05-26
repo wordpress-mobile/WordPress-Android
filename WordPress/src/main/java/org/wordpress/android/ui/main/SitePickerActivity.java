@@ -2,6 +2,7 @@ package org.wordpress.android.ui.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -253,22 +254,28 @@ public class SitePickerActivity extends ActionBarActivity
         MenuItemCompat.setOnActionExpandListener(menuSearch, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                item.getActionView().requestFocus();
-                toggleSearchMode(true);
+                enableSearchMode();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                toggleSearchMode(false);
+                disableSearchMode();
                 return true;
             }
         });
     }
 
-    private void toggleSearchMode(boolean inSearchMode) {
-        toggleKeyboard();
-        getAdapter().setIsInSearchMode(inSearchMode);
+    private void enableSearchMode() {
+        mSearchView.requestFocus();
+        showSoftKeyboard();
+        getAdapter().setIsInSearchMode(true);
+        getAdapter().loadSites();
+    }
+
+    private void disableSearchMode() {
+        hideSoftKeyboard();
+        getAdapter().setIsInSearchMode(false);
         getAdapter().loadSites();
     }
 
@@ -279,9 +286,22 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
-    private void toggleKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    private void showSoftKeyboard() {
+        if (!hasHardwareKeyboard()) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    private void hideSoftKeyboard() {
+        if (!hasHardwareKeyboard()) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    private boolean hasHardwareKeyboard() {
+        return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
     @Override
@@ -306,7 +326,7 @@ public class SitePickerActivity extends ActionBarActivity
 
     @Override
     public boolean onQueryTextSubmit(String s) {
-        toggleKeyboard();
+        hideSoftKeyboard();
         return true;
     }
 
