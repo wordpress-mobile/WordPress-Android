@@ -132,6 +132,10 @@ public class Note extends Syncable {
         return isType(NOTE_REBLOG_TYPE);
     }
 
+    public Boolean isCommentReplyType() {
+        return isCommentType() && getParentCommentId() > 0;
+    }
+
     public Boolean isUserList() {
         return isLikeType() || isCommentLikeType() || isFollowType() || isReblogType();
     }

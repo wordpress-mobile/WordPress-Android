@@ -4,6 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderCommentTable;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -88,5 +90,13 @@ public class ReaderUtils {
      */
     public static boolean isLoggedOutReader() {
         return !AccountHelper.isSignedInWordPressDotCom();
+    }
+
+    /*
+     * returns true if a ReaderPost and ReaderComment exist for the passed Ids
+     */
+    public static boolean postAndCommentExists(long blogId, long postId, long commentId) {
+        return ReaderPostTable.postExists(blogId, postId) &&
+                ReaderCommentTable.commentExists(blogId, postId, commentId);
     }
 }
