@@ -137,32 +137,7 @@ public class SitePickerActivity extends ActionBarActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
-
-        MenuItem menuSearch = menu.findItem(R.id.menu_search);
-        mSearchView = (SearchView) menuSearch.getActionView();
-        mSearchView.setIconifiedByDefault(false);
-        mSearchView.setOnQueryTextListener(this);
-        MenuItemCompat.setOnActionExpandListener(menuSearch, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                item.getActionView().requestFocus();
-                toggleKeyboard();
-
-                getAdapter().setIsInSearchMode(true);
-                getAdapter().loadSites();
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                toggleKeyboard();
-
-                getAdapter().setIsInSearchMode(false);
-                getAdapter().loadSites();
-                return true;
-            }
-        });
-
+        setupSearchView(menu);
         return true;
     }
 
@@ -268,6 +243,33 @@ public class SitePickerActivity extends ActionBarActivity
         } finally {
             WordPress.wpDB.getDatabase().endTransaction();
         }
+    }
+
+    private void setupSearchView(Menu menu) {
+        MenuItem menuSearch = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) menuSearch.getActionView();
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setOnQueryTextListener(this);
+        MenuItemCompat.setOnActionExpandListener(menuSearch, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                item.getActionView().requestFocus();
+                toggleKeyboard();
+
+                getAdapter().setIsInSearchMode(true);
+                getAdapter().loadSites();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                toggleKeyboard();
+
+                getAdapter().setIsInSearchMode(false);
+                getAdapter().loadSites();
+                return true;
+            }
+        });
     }
 
     private void updateActionModeTitle() {
