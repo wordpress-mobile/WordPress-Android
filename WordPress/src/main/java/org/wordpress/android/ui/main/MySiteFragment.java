@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -8,6 +9,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -18,6 +22,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaAddFragment;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.GravatarUtils;
@@ -29,6 +34,9 @@ import org.wordpress.android.widgets.WPTextView;
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
     public static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
+
+    private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
+    private static final long ALERT_ANIM_DURATION_MS = 1000l;
 
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
@@ -56,7 +64,6 @@ public class MySiteFragment extends Fragment
         mBlog = WordPress.getCurrentBlog();
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -66,8 +73,7 @@ public class MySiteFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_my_site, container, false);
 
         FragmentManager fm = getFragmentManager();
@@ -168,7 +174,7 @@ public class MySiteFragment extends Fragment
         addPostContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, false);
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mBlog, false);
             }
         });
 
@@ -176,7 +182,7 @@ public class MySiteFragment extends Fragment
         addPageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addNewBlogPostOrPage(getActivity(), mBlog, true);
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mBlog, true);
             }
         });
 
@@ -205,8 +211,45 @@ public class MySiteFragment extends Fragment
                     addFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
+            case RequestCodes.EDIT_POST:
+                View view = getView();
+                if (data == null || view == null || resultCode != Activity.RESULT_OK ||
+                        !data.getBooleanExtra(EditPostActivity.EXTRA_SHOULD_ALERT, false)) {
+                    break;
+                }
+
+                if (data.getBooleanExtra(EditPostActivity.EXTRA_IS_PAGE, false)) {
+                    showAlert(view.findViewById(R.id.pagesGlowBackground));
+                } else {
+                    showAlert(view.findViewById(R.id.postsGlowBackground));
+                }
+                break;
             default:
                 break;
+        }
+    }
+
+    private void showAlert(View view) {
+        if (isAdded() && view != null) {
+            Animation highlightAnimation = new AlphaAnimation(0.0f, 1.0f);
+            highlightAnimation.setInterpolator(new Interpolator() {
+                private float bounce(float t) {
+                    return t * t * 24.0f;
+                }
+
+                public float getInterpolation(float t) {
+                    t *= 1.1226f;
+                    if (t < 0.184f) return bounce(t);
+                    else if (t < 0.545f) return bounce(t - 0.40719f);
+                    else if (t < 0.7275f) return -bounce(t - 0.6126f) + 1.0f;
+                    else return 0.0f;
+                }
+            });
+            highlightAnimation.setStartOffset(ALERT_ANIM_OFFSET_MS);
+            highlightAnimation.setRepeatCount(1);
+            highlightAnimation.setRepeatMode(Animation.RESTART);
+            highlightAnimation.setDuration(ALERT_ANIM_DURATION_MS);
+            view.startAnimation(highlightAnimation);
         }
     }
 
@@ -231,7 +274,8 @@ public class MySiteFragment extends Fragment
 
     @Override
     public void onScrollToTop() {
-        if (isAdded()) {
+        View view = getView();
+        if (isAdded() && view != null) {
             ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
             scrollView.smoothScrollTo(0, 0);
         }

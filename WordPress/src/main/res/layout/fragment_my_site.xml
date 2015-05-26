@@ -131,7 +131,17 @@
         </LinearLayout>
 
         <!--Blog Posts-->
-        <RelativeLayout style="@style/MySiteListRowLayout">
+        <RelativeLayout
+            android:id="@+id/row_blog_posts"
+            style="@style/MySiteListRowLayout">
+
+            <View
+                android:id="@+id/postsGlowBackground"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@drawable/pressed_background_wordpress"
+                android:visibility="invisible"
+                android:alpha="1" />
 
             <ImageView
                 android:id="@+id/my_site_blog_posts_icon"
@@ -184,6 +194,14 @@
 
         <!--Pages-->
         <RelativeLayout style="@style/MySiteListRowLayout">
+
+            <View
+                android:id="@+id/pagesGlowBackground"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@drawable/pressed_background_wordpress"
+                android:visibility="invisible"
+                android:alpha="1" />
 
             <ImageView
                 android:id="@+id/my_site_pages_icon"

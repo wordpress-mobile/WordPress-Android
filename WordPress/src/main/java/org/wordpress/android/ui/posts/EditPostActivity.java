@@ -100,6 +100,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
+    public static final String EXTRA_SHOULD_ALERT = "shouldAlert";
+    public static final String EXTRA_SHOULD_REFRESH = "shouldRefresh";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
@@ -157,6 +159,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     private SuggestionAutoCompleteText mTags;
 
     private boolean mIsNewPost;
+    private boolean mIsPage;
     private boolean mHasSetPostContent;
 
     @Override
@@ -202,7 +205,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             } else if (extras != null) {
                 // Load post from the postId passed in extras
                 long localTablePostId = extras.getLong(EXTRA_POSTID, -1);
-                boolean isPage = extras.getBoolean(EXTRA_IS_PAGE);
+                mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
                 mPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
                 mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
@@ -456,7 +459,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();
-            i.putExtra("shouldRefresh", true);
+            i.putExtra(EXTRA_SHOULD_REFRESH, true);
             setResult(RESULT_OK, i);
             finish();
             return true;
@@ -630,8 +633,12 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             savePost(false);
             WordPress.currentPost = mPost;
             Intent i = new Intent();
-            i.putExtra("shouldRefresh", true);
+            i.putExtra(EXTRA_SHOULD_REFRESH, true);
+            i.putExtra(EXTRA_SHOULD_ALERT, true);
+            i.putExtra(EXTRA_IS_PAGE, mIsPage);
             setResult(RESULT_OK, i);
+
+            ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
         }
         finish();
     }
