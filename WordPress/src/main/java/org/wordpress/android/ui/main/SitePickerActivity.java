@@ -3,7 +3,6 @@ package org.wordpress.android.ui.main;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -43,7 +42,6 @@ public class SitePickerActivity extends ActionBarActivity
     public static final String KEY_LOCAL_ID = "local_id";
 
     private SitePickerAdapter mAdapter;
-    private SitePickerSearchAdapter mSearchAdapter;
     private RecyclerView mRecycleView;
     private View mFabView;
     private ActionMode mActionMode;
@@ -150,8 +148,8 @@ public class SitePickerActivity extends ActionBarActivity
                 item.getActionView().requestFocus();
                 toggleKeyboard();
 
-                mSearchAdapter = new SitePickerSearchAdapter(getApplicationContext(), mCurrentLocalId);
-                mRecycleView.swapAdapter(mSearchAdapter, true);
+                getAdapter().setIsInSearchMode(true);
+                getAdapter().loadSites();
                 return true;
             }
 
@@ -159,7 +157,7 @@ public class SitePickerActivity extends ActionBarActivity
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 toggleKeyboard();
 
-                mRecycleView.swapAdapter(getAdapter(), true);
+                getAdapter().setIsInSearchMode(false);
                 getAdapter().loadSites();
                 return true;
             }
@@ -312,7 +310,7 @@ public class SitePickerActivity extends ActionBarActivity
 
     @Override
     public boolean onQueryTextChange(String s) {
-        mSearchAdapter.search(s);
+        getAdapter().searchSites(s);
         return true;
     }
 
