@@ -260,7 +260,10 @@ public class SettingsFragment extends PreferenceFragment {
                     Configuration conf = res.getConfiguration();
                     String localString = localeMap.get(values[position]);
                     if (localString.contains("-")) {
-                        conf.locale = new Locale(localString.substring(0, localString.indexOf("-")), localString.substring(localString.indexOf("-") + 1, localString.length()));
+                        conf.locale = new Locale(
+                                localString.substring(0, localString.indexOf("-")),
+                                localString.substring(localString.indexOf("-") + 1, localString.length()).toUpperCase()
+                        );
                     } else {
                         conf.locale = new Locale(localString);
                     }
