@@ -144,6 +144,14 @@
                 android:id="@+id/row_blog_posts"
                 style="@style/MySiteListRowLayout">
 
+                <View
+                    android:id="@+id/postsGlowBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="1"
+                    android:background="@drawable/pressed_background_wordpress"
+                    android:visibility="invisible" />
+
                 <ImageView
                     android:id="@+id/my_site_blog_posts_icon"
                     style="@style/MySiteListRowIcon"
@@ -181,6 +189,14 @@
             <RelativeLayout
                 android:id="@+id/row_pages"
                 style="@style/MySiteListRowLayout">
+
+                <View
+                    android:id="@+id/pagesGlowBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="1"
+                    android:background="@drawable/pressed_background_wordpress"
+                    android:visibility="invisible" />
 
                 <ImageView
                     android:id="@+id/my_site_pages_icon"
