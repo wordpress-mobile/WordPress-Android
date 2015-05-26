@@ -154,15 +154,25 @@ public class SitePickerActivity extends ActionBarActivity
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 item.getActionView().requestFocus();
+                toggleKeyboard();
 
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                SitePickerSearchAdapter sitePickerSearchAdapter = new SitePickerSearchAdapter();
+                mRecycleView.swapAdapter(sitePickerSearchAdapter, true);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                toggleKeyboard();
+
+                mRecycleView.swapAdapter(getAdapter(), true);
+                getAdapter().loadSites();
                 return true;
+            }
+
+            private void toggleKeyboard() {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
             }
         });
 
