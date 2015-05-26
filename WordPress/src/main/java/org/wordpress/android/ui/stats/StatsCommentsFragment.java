@@ -88,16 +88,10 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
         if (mDatamodels[1] != null && !isErrorResponse(1)) { // check if comment-followers is already here
             mTotalsLabel.setVisibility(View.VISIBLE);
             int totalNumberOfFollowers = ((CommentFollowersModel) mDatamodels[1]).getTotal();
-            try {
-                String totalCommentsFollowers = getString(R.string.stats_comments_total_comments_followers);
-                mTotalsLabel.setText(
-                        String.format(totalCommentsFollowers, FormatUtils.formatDecimal(totalNumberOfFollowers))
-                );
-            } catch (AssertionError e) {
-                // Workaround for a weird bug in Android 4.2.2 with en_GB or en_AU locale
-                // https://github.com/wordpress-mobile/WordPress-Android/issues/2639
-                mTotalsLabel.setVisibility(View.GONE);
-            }
+            String totalCommentsFollowers = getString(R.string.stats_comments_total_comments_followers);
+            mTotalsLabel.setText(
+                    String.format(totalCommentsFollowers, FormatUtils.formatDecimal(totalNumberOfFollowers))
+            );
         } else {
             mTotalsLabel.setVisibility(View.GONE);
         }
