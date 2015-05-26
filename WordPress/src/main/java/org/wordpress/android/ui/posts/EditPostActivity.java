@@ -448,7 +448,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 return false;
             }
 
-            savePost(false, false);
+            savePostToDb();
             trackSavePostAnalytics();
 
             if (!NetworkUtils.isNetworkAvailable(this)) {
@@ -587,14 +587,12 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     }
 
     private void savePost(boolean isAutosave) {
-        savePost(isAutosave, true);
+        updatePostObject(isAutosave);
+
+        savePostToDb();
     }
 
-    private void savePost(boolean isAutosave, boolean updatePost) {
-        if (updatePost) {
-            updatePostObject(isAutosave);
-        }
-
+    private void savePostToDb() {
         WordPress.wpDB.updatePost(mPost);
     }
 
