@@ -19,7 +19,6 @@
 	<string name="verification_code">Verifikasjonskode</string>
 	<string name="invalid_verification_code">Ugyldig verifikasjonskode</string>
 	<string name="verify">Verifiser</string>
-	<string name="delete_from_collection">Fjern media</string>
 	<string name="error_publish_no_network">Kan ikke publisere uten tilkobling. Laget som utkast.</string>
 	<string name="media_details_dimensions">Dimensjoner:</string>
 	<string name="media_details_file_name">Filnavn:</string>
@@ -39,7 +38,6 @@
 	<string name="reader_toast_blog_blocked">Innlegg fra denne bloggen vil ikke bli vist lenger.</string>
 	<string name="reader_menu_block_blog">Blokker denne bloggen.</string>
 	<string name="contact_us">Kontakt oss</string>
-	<string name="contact_us_pref_summary">Få hjelp fra Automattic-forum</string>
 	<string name="hs__conversation_detail_error">Beskriv problemet du opplever</string>
 	<string name="hs__new_conversation_header">Support-chat</string>
 	<string name="hs__conversation_header">Support-chat</string>
@@ -58,13 +56,10 @@
 	<string name="reader_hint_reblog_comment">Skriv en kommentar (valgfritt)</string>
 	<string name="update_verb">Oppdater</string>
 	<string name="schedule_verb">Publiser</string>
-	<string name="sign_in_again">Logg inn igjen</string>
 	<string name="reader_title_blog_preview">Forhåndsvis blogg</string>
 	<string name="reader_title_tag_preview">Forhåndsvis stikkord</string>
 	<string name="reader_title_subs">Stikkord &amp; blogger</string>
 	<string name="menu_search">Søk</string>
-	<string name="stats_totals_visitors">Besøkende</string>
-	<string name="stats_visitors_and_views_header_today">I dag</string>
 	<string name="themes">Temaer</string>
 	<string name="all">Alle</string>
 	<string name="images">Bilder</string>
@@ -97,7 +92,6 @@
 	<string name="theme_auth_error_title">Kunne ikke hente temaer</string>
 	<string name="theme_set_success">Temaet er lagret!</string>
 	<string name="stats_timeframe_yesterday">I går</string>
-	<string name="stats_summary">Sammendrag</string>
 	<string name="stats_entry_tags_and_categories">Emne</string>
 	<string name="stats_entry_authors">Forfatter</string>
 	<string name="stats_totals_views">Visninger</string>
@@ -129,9 +123,7 @@
 	<string name="passcode_turn_off">Slå av PIN-lås</string>
 	<string name="passcode_turn_on">Slå PIN-lås på</string>
 	<string name="upload">Last opp</string>
-	<string name="manage">Håndter</string>
 	<string name="sign_in">Logg inn</string>
-	<string name="sign_out">Logg ut</string>
 	<string name="notifications">Varsler</string>
 	<string name="manage_notifications">Håndter varsler</string>
 	<string name="enable_notifications">Aktiver versler</string>
@@ -142,7 +134,6 @@
 	<string name="note_reply_successful">Kommentar publisert</string>
 	<string name="new_notifications">%d nye varsler</string>
 	<string name="more_notifications">og %d flere.</string>
-	<string name="tooltip_follow">Følg eller ikke følg denne bloggen</string>
 	<string name="types">Format</string>
 	<string name="loading">Laster...</string>
 	<string name="post_signature">Signatur innlegg</string>
@@ -175,7 +166,6 @@
 	<string name="scheduled">Planlagt</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Publisert med WordPress for Android</string>
-	<string name="uploading">Opplasting</string>
 	<string name="version">Versjon</string>
 	<string name="tos">Lisens</string>
 	<string name="app_title">WordPress for Android</string>
@@ -184,7 +174,6 @@
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Oppdater</string>
 	<string name="untitled">Uten tittel</string>
-	<string name="edit">Redigér</string>
 	<string name="post_id">Innlegg</string>
 	<string name="page_id">Side</string>
 	<string name="post_password">Passord (valgfritt)</string>
@@ -201,7 +190,6 @@
 	<string name="title">Tittel</string>
 	<string name="tags_separate_with_commas">Stikkord (separer flere stikkord med komma)</string>
 	<string name="categories">Kategorier</string>
-	<string name="tab_stats">Statistikk</string>
 	<string name="notification_sound">Spill av meldingslyd</string>
 	<string name="notification_vibrate">Vibrer</string>
 	<string name="notification_blink">Blinkende varsler</string>
