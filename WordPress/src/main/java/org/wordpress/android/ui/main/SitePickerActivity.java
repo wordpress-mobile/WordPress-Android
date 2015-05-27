@@ -196,7 +196,7 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
-    private SitePickerAdapter getAdapter() {
+    protected SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
             mAdapter = new SitePickerAdapter(this, mCurrentLocalId);
             mAdapter.setOnSiteClickListener(this);
