@@ -1,12 +1,16 @@
 package org.wordpress.android.ui.comments;
 
+import android.app.Activity;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
+import com.cocosw.undobar.UndoBarController;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
@@ -14,6 +18,9 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationFailed;
+import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationStatusChanged;
+import org.wordpress.android.ui.notifications.NotificationEvents.NoteVisibilityChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlpull.v1.XmlPullParserException;
@@ -24,6 +31,10 @@ import org.xmlrpc.android.XMLRPCFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * actions related to comments - replies, moderating, etc.
@@ -303,11 +314,71 @@ public class CommentActions {
         );
     }
 
+    public static void showUndoBarForNote(final Note note, final CommentStatus status, final Activity activity) {
+        new UndoBarController.UndoBar(activity)
+                .message(status == CommentStatus.TRASH ? R.string.comment_trashed : R.string.comment_spammed)
+                .listener(new UndoBarController.AdvancedUndoListener() {
+                    @Override
+                    public void onHide(Parcelable parcelable) {
+                        // Deleted notifications in Simperium never come back, so we won't
+                        // make the request until the undo bar fades away
+                        CommentActions.moderateCommentForNote(note, status,
+                                new CommentActions.CommentActionListener() {
+                                    @Override
+                                    public void onActionResult(boolean succeeded) {
+                                        if (!succeeded) {
+                                            EventBus.getDefault().post(new NoteVisibilityChanged(note.getId(), false));
+                                            EventBus.getDefault().post(new NoteModerationFailed(note.getId(), status));
+                                        }
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onClear(@Nonnull Parcelable[] token) {
+                        //noop
+                    }
+
+                    @Override
+                    public void onUndo(Parcelable parcelable) {
+                        EventBus.getDefault().post(new NoteVisibilityChanged(note.getId(), false));
+                    }
+                }).show();
+    }
+
+    /**
+     * Moderate a comment from a WPCOM notification.
+     * Broadcast EventBus events on update/success/failure
+     */
+    public static void moderateCommentForNote(final Note note, final CommentStatus newStatus, final Activity activity) {
+        if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
+            note.setLocalStatus(CommentStatus.toRESTString(newStatus));
+            note.save();
+            EventBus.getDefault().post(new NoteModerationStatusChanged(note.getId(), true));
+            CommentActions.moderateCommentForNote(note, newStatus,
+                    new CommentActions.CommentActionListener() {
+                        @Override
+                        public void onActionResult(boolean succeeded) {
+                            EventBus.getDefault().post(new NoteModerationStatusChanged(note.getId(), false));
+                            if (!succeeded) {
+                                note.setLocalStatus(null);
+                                note.save();
+                                EventBus.getDefault().post(new NoteModerationFailed(note.getId(), newStatus));
+                            }
+                        }
+                    });
+        } else if (newStatus == CommentStatus.TRASH || newStatus == CommentStatus.SPAM) {
+            EventBus.getDefault().post(new NoteVisibilityChanged(note.getId(), true));
+            // Show undo bar for trash or spam actions
+            showUndoBarForNote(note, newStatus, activity);
+        }
+    }
+
     /**
      * Moderate a comment from a WPCOM notification
      */
-    public static void moderateCommentForNote(Note note, CommentStatus newStatus, final CommentActionListener actionListener) {
-
+    public static void moderateCommentForNote(Note note, CommentStatus newStatus,
+                                              final CommentActionListener actionListener) {
         WordPress.getRestClientUtils().moderateComment(
                 String.valueOf(note.getSiteId()),
                 String.valueOf(note.getCommentId()),

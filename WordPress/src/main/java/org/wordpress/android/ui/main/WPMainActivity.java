@@ -7,22 +7,28 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.cocosw.undobar.UndoBarController;
 import com.simperium.client.Bucket;
+import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
+import org.wordpress.android.ui.notifications.NotificationEvents.NoteVisibilityChanged;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -36,9 +42,13 @@ import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
+
+import javax.annotation.Nonnull;
 
 import de.greenrobot.event.EventBus;
 
@@ -242,6 +252,18 @@ public class WPMainActivity extends Activity
         }
     }
 
+    private void moderateCommentOnActivityResult(Intent data) {
+        try {
+            Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
+                    (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+            CommentStatus status = CommentStatus.fromString(data.getStringExtra(
+                    NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
+            CommentActions.moderateCommentForNote(note, status, this);
+        } catch (BucketObjectMissingException e) {
+            AppLog.e(T.NOTIFS, e);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -278,8 +300,8 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:
-                if (getNotificationListFragment() != null) {
-                    getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
+                if (resultCode == RESULT_OK && data != null) {
+                    moderateCommentOnActivityResult(data);
                 }
                 break;
             case RequestCodes.PICTURE_LIBRARY:
