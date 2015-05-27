@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.main;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
@@ -14,8 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.SearchView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -37,8 +33,7 @@ import de.greenrobot.event.EventBus;
 
 public class SitePickerActivity extends ActionBarActivity
         implements SitePickerAdapter.OnSiteClickListener,
-        SitePickerAdapter.OnSelectedCountChangedListener,
-        SearchView.OnQueryTextListener {
+        SitePickerAdapter.OnSelectedCountChangedListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
 
@@ -46,7 +41,7 @@ public class SitePickerActivity extends ActionBarActivity
     private RecyclerView mRecycleView;
     private View mFabView;
     private ActionMode mActionMode;
-    private SearchView mSearchView;
+    private SitePickerSearchView mSearchView;
     private int mCurrentLocalId;
     private boolean mDidUserSelectSite;
 
@@ -248,35 +243,9 @@ public class SitePickerActivity extends ActionBarActivity
 
     private void setupSearchView(Menu menu) {
         MenuItem menuSearch = menu.findItem(R.id.menu_search);
-        mSearchView = (SearchView) menuSearch.getActionView();
-        mSearchView.setIconifiedByDefault(false);
-        mSearchView.setOnQueryTextListener(this);
-        MenuItemCompat.setOnActionExpandListener(menuSearch, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                enableSearchMode();
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                disableSearchMode();
-                return true;
-            }
-        });
-    }
-
-    private void enableSearchMode() {
-        mSearchView.requestFocus();
-        showSoftKeyboard();
-        getAdapter().setIsInSearchMode(true);
-        getAdapter().loadSites();
-    }
-
-    private void disableSearchMode() {
-        hideSoftKeyboard();
-        getAdapter().setIsInSearchMode(false);
-        getAdapter().loadSites();
+        mSearchView = (SitePickerSearchView) menuSearch.getActionView();
+        mSearchView.configure(menuSearch);
+        mSearchView.setSitePickerAdapter(getAdapter());
     }
 
     private void updateActionModeTitle() {
@@ -284,24 +253,6 @@ public class SitePickerActivity extends ActionBarActivity
             int numSelected = getAdapter().getNumSelected();
             mActionMode.setTitle(getString(R.string.cab_selected, numSelected));
         }
-    }
-
-    private void showSoftKeyboard() {
-        if (!hasHardwareKeyboard()) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-    private void hideSoftKeyboard() {
-        if (!hasHardwareKeyboard()) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-    private boolean hasHardwareKeyboard() {
-        return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
     @Override
@@ -315,26 +266,14 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
+            mSearchView.hideSoftKeyboard();
             ReaderAnim.showFab(mFabView, false);
             WordPress.setCurrentBlog(site.localId);
             WordPress.wpDB.updateLastBlogId(site.localId);
             setResult(RESULT_OK);
             mDidUserSelectSite = true;
-            hideSoftKeyboard();
             finish();
         }
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String s) {
-        hideSoftKeyboard();
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String s) {
-        getAdapter().searchSites(s);
-        return true;
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
