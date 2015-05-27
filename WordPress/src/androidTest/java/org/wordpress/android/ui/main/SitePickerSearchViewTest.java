@@ -3,10 +3,7 @@ package org.wordpress.android.ui.main;
 import android.test.InstrumentationTestCase;
 import android.view.MenuItem;
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class SitePickerSearchViewTest extends InstrumentationTestCase {
     private SitePickerSearchView mSitePickerSearchView;
