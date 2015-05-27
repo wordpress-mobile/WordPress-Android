@@ -26,6 +26,19 @@
         <item name="swipeToRefreshStyle">@style/WordPress.SwipeToRefresh</item>
     </style>
 
+    <style name="PreferencesActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:titleTextStyle">@style/PreferencesActionBarTitleTextStyle</item>
+        <item name="android:background">@color/color_primary</item>
+    </style>
+
+    <style name="PreferencesActionBarTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/primary_text_default_material_dark</item>
+    </style>
+
+    <style name="PreferencesActionBarTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/PreferencesActionBarStyle</item>
+    </style>
+
     <style name="WordPress.DropDownListView.Light" parent="WordPress">
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
