@@ -383,7 +383,7 @@ public class WordPress extends Application {
      * select the first one.
      */
     public static Blog getCurrentBlog() {
-        if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
+        if (currentBlog == null) {
             // attempt to restore the last active blog
             if (setCurrentBlogToLastActive() == null) {
                 // fallback to just using the first blog
