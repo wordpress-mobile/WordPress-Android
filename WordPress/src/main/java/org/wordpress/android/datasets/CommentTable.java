@@ -164,17 +164,22 @@ public class CommentTable {
                 Integer.toString(limit),
                 Integer.toString(offset)
         };
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? ORDER BY published DESC LIMIT ? OFFSET ?", args);
 
-        try {
-            if (c.moveToFirst()) {
-                do {
-                    Comment comment = getCommentFromCursor(c);
-                    CommentTable.deleteComment(localBlogId, comment.commentID);
-                } while (c.moveToNext());
+        if (offset == 0) {
+            deleteCommentsForBlog(localBlogId);
+        } else {
+            Cursor c = getReadableDb().rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? ORDER BY published DESC LIMIT ? OFFSET ?", args);
+
+            try {
+                if (c.moveToFirst()) {
+                    do {
+                        Comment comment = getCommentFromCursor(c);
+                        CommentTable.deleteComment(localBlogId, comment.commentID);
+                    } while (c.moveToNext());
+                }
+            } finally {
+                SqlUtils.closeCursor(c);
             }
-        } finally {
-            SqlUtils.closeCursor(c);
         }
 
         CommentTable.saveComments(localBlogId, remoteComments);
