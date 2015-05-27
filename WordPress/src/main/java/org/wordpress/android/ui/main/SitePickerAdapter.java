@@ -303,7 +303,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     }
 
     public void searchSites(String searchText) {
-        mSites = new SiteList();
+        mSites.clear();
 
         for (int i = 0; i < mAllSites.size(); i++) {
             SiteRecord record = mAllSites.get(i);
@@ -311,7 +311,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             String siteName = record.blogName.toLowerCase();
             String siteUrl = record.hostName.toLowerCase();
 
-            if (siteName.contains(searchText) || siteUrl.contains(searchText)) {
+            if (siteName.contains(searchTextLowerCase) || siteUrl.contains(searchTextLowerCase)) {
                 mSites.add(record);
             }
         }
