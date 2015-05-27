@@ -47,6 +47,10 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
         });
     }
 
+    public InputMethodManager getInputMethodManager() {
+        return mInputMethodManager;
+    }
+
     public void enableSearchMode() {
         requestFocus();
         showSoftKeyboard();
@@ -60,15 +64,15 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
         mSitePickerActivity.getAdapter().loadSites();
     }
 
-    private void showSoftKeyboard() {
-        if (!hasHardwareKeyboard()) {
-            mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
     public void hideSoftKeyboard() {
         if (!hasHardwareKeyboard()) {
             mInputMethodManager.hideSoftInputFromWindow(getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    private void showSoftKeyboard() {
+        if (!hasHardwareKeyboard()) {
+            mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
