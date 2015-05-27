@@ -303,32 +303,40 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     }
 
     public void searchSites(String searchText) {
-        mSites.clear();
-
-        for (int i = 0; i < mAllSites.size(); i++) {
-            SiteRecord record = mAllSites.get(i);
-            String searchTextLowerCase = searchText.toLowerCase();
-            String siteName = record.blogName.toLowerCase();
-            String siteUrl = record.hostName.toLowerCase();
-
-            if (siteName.contains(searchTextLowerCase) || siteUrl.contains(searchTextLowerCase)) {
-                mSites.add(record);
-            }
-        }
+        mSites = filteredSitesByText(mAllSites, searchText);
 
         notifyDataSetChanged();
     }
 
-    public void setIsInSearchMode(boolean isInSearchMode) {
-        mIsInSearchMode = isInSearchMode;
+    public void loadSites() {
+        loadSites(false, new String());
     }
 
-    void loadSites() {
+    public void loadSites(boolean isInSearchMode, String searchText) {
+        mIsInSearchMode = isInSearchMode;
+
         if (mIsTaskRunning) {
             AppLog.w(AppLog.T.UTILS, "site picker > already loading sites");
         } else {
-            new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, searchText);
         }
+    }
+
+    private SiteList filteredSitesByText(SiteList sites, String searchText) {
+        SiteList filteredSiteList = new SiteList();
+        String searchTextLowerCase = searchText.toLowerCase();
+
+        for (int i = 0; i < sites.size(); i++) {
+            SiteRecord record = sites.get(0);
+            String siteNameLowerCase = record.blogName.toLowerCase();
+            String hostNameLowerCase = record.hostName.toLowerCase();
+
+            if (siteNameLowerCase.contains(searchTextLowerCase) || hostNameLowerCase.contains(searchTextLowerCase)) {
+                filteredSiteList.add(record);
+            }
+        }
+
+        return filteredSiteList;
     }
 
     /*
