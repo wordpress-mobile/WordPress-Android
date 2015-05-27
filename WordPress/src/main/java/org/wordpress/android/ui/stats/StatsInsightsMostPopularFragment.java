@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -87,6 +88,7 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
             }
         });
         animator.setDuration(1500);
+        animator.setInterpolator(new DecelerateInterpolator());
         animator.start();
 
 
