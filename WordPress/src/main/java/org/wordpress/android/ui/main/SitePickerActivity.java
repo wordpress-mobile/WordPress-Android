@@ -151,7 +151,6 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
-
         if (itemId == android.R.id.home) {
             onBackPressed();
             return true;
@@ -161,7 +160,6 @@ public class SitePickerActivity extends ActionBarActivity
             startSupportActionMode(new ActionModeCallback());
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -198,7 +196,7 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
-    protected SitePickerAdapter getAdapter() {
+    private SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
             mAdapter = new SitePickerAdapter(this, mCurrentLocalId);
             mAdapter.setOnSiteClickListener(this);
