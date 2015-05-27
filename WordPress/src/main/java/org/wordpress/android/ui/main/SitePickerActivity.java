@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.main;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -199,7 +198,7 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
-    private SitePickerAdapter getAdapter() {
+    protected SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
             mAdapter = new SitePickerAdapter(this, mCurrentLocalId);
             mAdapter.setOnSiteClickListener(this);
@@ -244,8 +243,7 @@ public class SitePickerActivity extends ActionBarActivity
     private void setupSearchView(Menu menu) {
         MenuItem menuSearch = menu.findItem(R.id.menu_search);
         mSearchView = (SitePickerSearchView) menuSearch.getActionView();
-        mSearchView.configure(menuSearch);
-        mSearchView.setSitePickerAdapter(getAdapter());
+        mSearchView.configure(this, menuSearch);
     }
 
     private void updateActionModeTitle() {

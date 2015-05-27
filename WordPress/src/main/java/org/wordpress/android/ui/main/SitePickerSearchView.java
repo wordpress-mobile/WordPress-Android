@@ -9,7 +9,7 @@ import android.widget.SearchView;
 
 public class SitePickerSearchView extends SearchView implements SearchView.OnQueryTextListener {
     private InputMethodManager mInputMethodManager;
-    private SitePickerAdapter mSitePickerAdapter;
+    private SitePickerActivity mSitePickerActivity;
 
     public SitePickerSearchView(Context context) {
         super(context);
@@ -24,13 +24,12 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
 
     @Override
     public boolean onQueryTextChange(String s) {
-        if (mSitePickerAdapter != null) {
-            mSitePickerAdapter.searchSites(s);
-        }
+        mSitePickerActivity.getAdapter().searchSites(s);
         return true;
     }
 
-    public void configure(MenuItem menuSearch) {
+    public void configure(SitePickerActivity sitePickerActivity, MenuItem menuSearch) {
+        mSitePickerActivity = sitePickerActivity;
         setIconifiedByDefault(false);
         setOnQueryTextListener(this);
         MenuItemCompat.setOnActionExpandListener(menuSearch, new MenuItemCompat.OnActionExpandListener() {
@@ -48,25 +47,17 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
         });
     }
 
-    public void setSitePickerAdapter(SitePickerAdapter sitePickerAdapter) {
-        mSitePickerAdapter = sitePickerAdapter;
-    }
-
     public void enableSearchMode() {
         requestFocus();
         showSoftKeyboard();
-        if (mSitePickerAdapter != null) {
-            mSitePickerAdapter.setIsInSearchMode(true);
-            mSitePickerAdapter.loadSites();
-        }
+        mSitePickerActivity.getAdapter().setIsInSearchMode(true);
+        mSitePickerActivity.getAdapter().loadSites();
     }
 
     public void disableSearchMode() {
         hideSoftKeyboard();
-        if (mSitePickerAdapter != null) {
-            mSitePickerAdapter.setIsInSearchMode(false);
-            mSitePickerAdapter.loadSites();
-        }
+        mSitePickerActivity.getAdapter().setIsInSearchMode(false);
+        mSitePickerActivity.getAdapter().loadSites();
     }
 
     private void showSoftKeyboard() {
