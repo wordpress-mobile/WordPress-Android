@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.stats;
 
-import android.animation.TypeEvaluator;
-import android.animation.ValueAnimator;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -64,17 +61,16 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
                 c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
                 break;
         }
-        DateFormat formatter ;
-        formatter = new SimpleDateFormat("EEEE");
 
-
+        DateFormat formatter = new SimpleDateFormat("EEEE");
         final TextView mostPopularDayTextView = (TextView) ll.findViewById(R.id.stats_most_popular_day);
         mostPopularDayTextView.setText(formatter.format(c.getTime()).toUpperCase());
 
-        TextView mostPopularHourValue = (TextView) ll.findViewById(R.id.stats_most_popular_hour);
-        formatter = new SimpleDateFormat("ha");
+        TextView mostPopularHourTextView = (TextView) ll.findViewById(R.id.stats_most_popular_hour);
+        DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getActivity());
         c.set(Calendar.HOUR_OF_DAY, data.getHighestHour());
-        mostPopularHourValue.setText(formatter.format(c.getTime()));
+        c.set(Calendar.MINUTE, 0);
+        mostPopularHourTextView.setText(timeFormat.format(c.getTime()));
 
         mResultContainer.addView(ll);
     }
