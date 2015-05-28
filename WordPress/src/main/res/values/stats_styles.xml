@@ -14,7 +14,7 @@
 
     <!-- Used in activity details -->
     <style name="StatsInsightsValues">
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_gravity">top</item>
         <item name="android:singleLine">true</item>

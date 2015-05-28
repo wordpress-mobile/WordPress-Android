@@ -9,6 +9,7 @@ public class InsightsPopularModel implements Serializable {
     private int mHighestHour;
     private int mHighestDayOfWeek;
     private Double mHighestDayPercent;
+    private Double mHighestHourPercent;
     private String mBlogID;
 
     public InsightsPopularModel(String blogID, JSONObject response) throws JSONException {
@@ -16,6 +17,7 @@ public class InsightsPopularModel implements Serializable {
         this.mHighestDayOfWeek = response.getInt(("highest_day_of_week"));
         this.mHighestHour = response.getInt(("highest_hour"));
         this.mHighestDayPercent = response.getDouble("highest_day_percent");
+        this.mHighestHourPercent = response.getDouble("highest_hour_percent");
     }
 
     public String getBlogID() {
@@ -36,5 +38,9 @@ public class InsightsPopularModel implements Serializable {
 
     public Double getHighestDayPercent() {
         return mHighestDayPercent;
+    }
+
+    public Double getHighestHourPercent() {
+        return mHighestHourPercent;
     }
 }

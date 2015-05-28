@@ -515,8 +515,8 @@
     <string name="stats_insights_popular">Most popular day and hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
     <string name="stats_insights_most_popular_hour">Most popular hour</string>
-    <string name="stats_insights_most_popular_percent_weekly_views">% of Weekly Views</string>
-    <string name="stats_insights_most_popular_percent_daily_views">% of Daily Views</string>
+    <string name="stats_insights_most_popular_percent_weekly_views">%1$d%% of Weekly Views</string>
+    <string name="stats_insights_most_popular_percent_daily_views">%1$d%% of Daily Views</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
 
     <!-- invalid_url -->

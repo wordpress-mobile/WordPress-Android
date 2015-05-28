@@ -69,6 +69,7 @@
 
         <org.wordpress.android.widgets.WPAutoResizeTextView
             style="@style/StatsInsightsLabel"
+            android:id="@+id/stats_most_popular_day_percent"
             android:gravity="center_vertical|center_horizontal"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -78,6 +79,7 @@
 
         <org.wordpress.android.widgets.WPAutoResizeTextView
             style="@style/StatsInsightsLabel"
+            android:id="@+id/stats_most_popular_hour_percent"
             android:gravity="center_vertical|center_horizontal"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
