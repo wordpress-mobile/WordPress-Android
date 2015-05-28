@@ -13,16 +13,17 @@
     </style>
 
     <!-- Used in activity details -->
-    <style name="StatsHeaderTotals">
-        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+    <style name="StatsInsightsValues">
+        <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_gravity">top</item>
         <item name="android:singleLine">true</item>
         <!--  item name="android:fontFamily">sans-serif-light</item -->
     </style>
 
-    <style name="StatsHeaderTotalsLabel">
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+    <style name="StatsInsightsLabel">
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:textColor">@color/grey_darken_20</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_gravity">bottom</item>
         <!--  item name="android:fontFamily">sans-serif-light</item -->

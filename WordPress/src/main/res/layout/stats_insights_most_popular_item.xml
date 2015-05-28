@@ -14,24 +14,22 @@
         android:gravity="center_vertical|center_horizontal" >
 
         <org.wordpress.android.widgets.WPAutoResizeTextView
-            style="@style/StatsHeaderTotalsLabel"
+            style="@style/StatsInsightsLabel"
             android:gravity="center_vertical|center_horizontal"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/stats_insights_most_popular_day"
-            android:textAllCaps="true"
-            android:textColor="@color/grey_darken_10" />
+            android:textAllCaps="true" />
 
         <org.wordpress.android.widgets.WPAutoResizeTextView
-            style="@style/StatsHeaderTotalsLabel"
+            style="@style/StatsInsightsLabel"
             android:gravity="center_vertical|center_horizontal"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/stats_insights_most_popular_hour"
-            android:textAllCaps="true"
-            android:textColor="@color/grey_darken_10" />
+            android:textAllCaps="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -44,7 +42,7 @@
             android:gravity="center_vertical|center_horizontal"
             android:layout_gravity="center_vertical|center_horizontal"
             android:id="@+id/stats_most_popular_day"
-            style="@style/StatsHeaderTotals"
+            style="@style/StatsInsightsValues"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -55,7 +53,7 @@
             android:gravity="center_vertical|center_horizontal"
             android:layout_gravity="center_vertical|center_horizontal"
             android:id="@+id/stats_most_popular_hour"
-            style="@style/StatsHeaderTotals"
+            style="@style/StatsInsightsValues"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -70,7 +68,7 @@
         android:gravity="center_vertical|center_horizontal" >
 
         <org.wordpress.android.widgets.WPAutoResizeTextView
-            style="@style/StatsHeaderTotalsLabel"
+            style="@style/StatsInsightsLabel"
             android:gravity="center_vertical|center_horizontal"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -79,7 +77,7 @@
             android:textColor="@color/grey_darken_10" />
 
         <org.wordpress.android.widgets.WPAutoResizeTextView
-            style="@style/StatsHeaderTotalsLabel"
+            style="@style/StatsInsightsLabel"
             android:gravity="center_vertical|center_horizontal"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
