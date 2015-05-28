@@ -43,17 +43,4 @@
         <attr name="insetForeground" format="reference|color" />
     </declare-styleable>
 
-    <!-- Gauge View used in Stats -->
-    <declare-styleable name="MarkView">
-        <attr name="mv_strokeWidth" format="dimension" />
-        <attr name="mv_strokeColors" format="reference" />
-        <attr name="mv_ringColor" format="color" />
-        <attr name="mv_ringWidth" format="dimension" />
-        <attr name="mv_textColor" format="color" />
-        <attr name="mv_textSize" format="dimension" />
-        <attr name="mv_secondLine_textColor" format="color" />
-        <attr name="mv_secondLine_textSize" format="dimension" />
-        <attr name="mv_mark" format="integer" />
-        <attr name="mv_max" format="integer" />
-    </declare-styleable>
 </resources>

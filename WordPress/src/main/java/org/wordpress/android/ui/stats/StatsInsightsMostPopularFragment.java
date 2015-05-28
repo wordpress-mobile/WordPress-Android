@@ -36,11 +36,6 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
                 .inflate(R.layout.stats_insights_most_popular_item, (ViewGroup) mResultContainer.getRootView(), false);
 
-        final MarkView markView = (MarkView) ll.findViewById(R.id.stats_most_popular_day_percent);
-
-        TextView mostPopularDayLabelText = (TextView) ll.findViewById(R.id.stats_most_popular_day_label);
-
-        Double mostPopularDayValue = data.getHighestDayPercent();
         int dayOfTheWeek = data.getHighestDayOfWeek();
 
         Calendar c = Calendar.getInstance();
@@ -73,28 +68,8 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
         formatter = new SimpleDateFormat("EEEE");
 
 
-        // Animate the value in the mark view
-        ValueAnimator animator = new ValueAnimator();
-        animator.setObjectValues(0, mostPopularDayValue.intValue());
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator animation) {
-                String sValue = String.valueOf(animation.getAnimatedValue());
-                markView.setMark(Integer.parseInt(sValue));
-            }
-        });
-        animator.setEvaluator(new TypeEvaluator<Integer>() {
-            public Integer evaluate(float fraction, Integer startValue, Integer endValue) {
-                return Math.round((endValue - startValue) * fraction);
-            }
-        });
-        animator.setDuration(1500);
-        animator.setInterpolator(new DecelerateInterpolator());
-        animator.start();
-
-
-        mostPopularDayLabelText.setText(
-                getString(R.string.stats_insights_happen_on_a, formatter.format(c.getTime()))
-        );
+        final TextView mostPopularDayTextView = (TextView) ll.findViewById(R.id.stats_most_popular_day);
+        mostPopularDayTextView.setText(formatter.format(c.getTime()).toUpperCase());
 
         TextView mostPopularHourValue = (TextView) ll.findViewById(R.id.stats_most_popular_hour);
         formatter = new SimpleDateFormat("ha");
