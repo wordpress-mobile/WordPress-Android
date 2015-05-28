@@ -327,7 +327,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         String searchTextLowerCase = searchText.toLowerCase();
 
         for (int i = 0; i < sites.size(); i++) {
-            SiteRecord record = sites.get(0);
+            SiteRecord record = sites.get(i);
             String siteNameLowerCase = record.blogName.toLowerCase();
             String hostNameLowerCase = record.hostName.toLowerCase();
 
