@@ -7,12 +7,10 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.cocosw.undobar.UndoBarController;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
@@ -25,11 +23,10 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
-import org.wordpress.android.ui.notifications.NotificationEvents.NoteVisibilityChanged;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
@@ -44,11 +41,8 @@ import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
-
-import javax.annotation.Nonnull;
 
 import de.greenrobot.event.EventBus;
 
@@ -258,7 +252,7 @@ public class WPMainActivity extends Activity
                     (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
             CommentStatus status = CommentStatus.fromString(data.getStringExtra(
                     NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
-            CommentActions.moderateCommentForNote(note, status, this);
+            NotificationsUtils.moderateCommentForNote(note, status, this);
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, e);
         }
