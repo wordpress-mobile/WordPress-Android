@@ -51,16 +51,16 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
         return mInputMethodManager;
     }
 
-    public void enableSearchMode() {
+    public void enableSearchMode(String string) {
         requestFocus();
         showSoftKeyboard();
-        mSitePickerActivity.getAdapter().setIsInSearchMode(true);
-        mSitePickerActivity.getAdapter().loadSites();
+        mSitePickerActivity.setIsInSearchMode(true);
+        mSitePickerActivity.getAdapter().loadSites(true, string);
     }
 
     public void disableSearchMode() {
         hideSoftKeyboard();
-        mSitePickerActivity.getAdapter().setIsInSearchMode(false);
+        mSitePickerActivity.setIsInSearchMode(false);
         mSitePickerActivity.getAdapter().loadSites();
     }
 
