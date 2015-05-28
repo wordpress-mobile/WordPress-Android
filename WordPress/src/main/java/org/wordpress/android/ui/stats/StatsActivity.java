@@ -33,6 +33,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -150,7 +151,8 @@ public class StatsActivity extends ActionBarActivity
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
             } else {
-                mCurrentTimeframe = StatsTimeframe.INSIGHTS;
+                // Read the value from app preferences here. Default to 0 - Insights
+                mCurrentTimeframe = AppPrefs.getStatsTimeframe();
             }
             mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
         }
@@ -198,6 +200,7 @@ public class StatsActivity extends ActionBarActivity
 
                     AppLog.d(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
                     mCurrentTimeframe = selectedTimeframe;
+                    AppPrefs.setStatsTimeframe(mCurrentTimeframe);
                     mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
                     createFragments(true); // Need to recreate fragment here, since a new timeline was selected.
                 }
