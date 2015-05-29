@@ -21,6 +21,28 @@ import org.wordpress.android.R;
 import java.lang.ref.WeakReference;
 
 public class AniUtils {
+
+    public enum Duration {
+        SHORT,
+        MEDIUM,
+        LONG;
+
+        public long toMillis(Context context) {
+            switch (this) {
+                case LONG:
+                    return context.getResources().getInteger(android.R.integer.config_longAnimTime);
+                case MEDIUM:
+                    return context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
+                default:
+                    return context.getResources().getInteger(android.R.integer.config_shortAnimTime);
+            }
+        }
+    }
+
+    public interface AnimationEndListener {
+        void onAnimationEnd();
+    }
+
     private AniUtils() {
         throw new AssertionError();
     }
@@ -171,17 +193,15 @@ public class AniUtils {
     }
 
     public static void fadeIn(final View target, Duration duration) {
-        if (target == null || duration == null) {
-            return;
+        if (target != null && duration != null) {
+            getFadeInAnim(target, duration).start();
         }
-        getFadeInAnim(target, duration).start();
     }
 
     public static void fadeOut(final View target, Duration duration) {
-        if (target == null || duration == null) {
-            return;
+        if (target != null && duration != null) {
+            getFadeOutAnim(target, duration).start();
         }
-        getFadeOutAnim(target, duration).start();
     }
 
     public static void scaleIn(final View target, Duration duration) {
@@ -232,26 +252,5 @@ public class AniUtils {
         });
 
         animator.start();
-    }
-
-    public enum Duration {
-        SHORT,
-        MEDIUM,
-        LONG;
-
-        public long toMillis(Context context) {
-            switch (this) {
-                case LONG:
-                    return context.getResources().getInteger(android.R.integer.config_longAnimTime);
-                case MEDIUM:
-                    return context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
-                default:
-                    return context.getResources().getInteger(android.R.integer.config_shortAnimTime);
-            }
-        }
-    }
-
-    public interface AnimationEndListener {
-        void onAnimationEnd();
     }
 }
