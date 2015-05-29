@@ -248,11 +248,13 @@ public class WPMainActivity extends Activity
 
     private void moderateCommentOnActivityResult(Intent data) {
         try {
-            Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
-                    (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
-            CommentStatus status = CommentStatus.fromString(data.getStringExtra(
-                    NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
-            NotificationsUtils.moderateCommentForNote(note, status, this);
+            if (SimperiumUtils.getNotesBucket() != null) {
+                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
+                        (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+                CommentStatus status = CommentStatus.fromString(data.getStringExtra(
+                        NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
+                NotificationsUtils.moderateCommentForNote(note, status, this);
+            }
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, e);
         }

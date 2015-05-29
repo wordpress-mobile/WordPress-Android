@@ -1,10 +1,9 @@
 package org.wordpress.android.ui.notifications;
 
-import org.wordpress.android.models.CommentStatus;
-
 public class NotificationEvents {
     public static class SimperiumNotAuthorized {}
     public static class NotificationsChanged {}
+    public static class NoteModerationFailed {}
     public static class NoteModerationStatusChanged {
         boolean mIsModerating;
         String mNoteId;
@@ -19,14 +18,6 @@ public class NotificationEvents {
         public NoteVisibilityChanged(String noteId, boolean isHidden) {
             mNoteId = noteId;
             mIsHidden = isHidden;
-        }
-    }
-    public static class NoteModerationFailed {
-        CommentStatus mStatus;
-        String mNoteId;
-        public NoteModerationFailed(String noteId, CommentStatus status) {
-            mNoteId = noteId;
-            mStatus = status;
         }
     }
 }

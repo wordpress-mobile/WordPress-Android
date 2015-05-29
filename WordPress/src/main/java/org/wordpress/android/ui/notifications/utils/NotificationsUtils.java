@@ -480,7 +480,7 @@ public class NotificationsUtils {
                                     public void onActionResult(boolean succeeded) {
                                         if (!succeeded) {
                                             EventBus.getDefault().post(new NoteVisibilityChanged(note.getId(), false));
-                                            EventBus.getDefault().post(new NoteModerationFailed(note.getId(), status));
+                                            EventBus.getDefault().post(new NoteModerationFailed());
                                         }
                                     }
                                 });
@@ -515,7 +515,7 @@ public class NotificationsUtils {
                             if (!succeeded) {
                                 note.setLocalStatus(null);
                                 note.save();
-                                EventBus.getDefault().post(new NoteModerationFailed(note.getId(), newStatus));
+                                EventBus.getDefault().post(new NoteModerationFailed());
                             }
                         }
                     });
