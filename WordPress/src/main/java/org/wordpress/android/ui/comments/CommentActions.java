@@ -306,8 +306,8 @@ public class CommentActions {
     /**
      * Moderate a comment from a WPCOM notification
      */
-    public static void moderateCommentForNote(Note note, CommentStatus newStatus, final CommentActionListener actionListener) {
-
+    public static void moderateCommentForNote(Note note, CommentStatus newStatus,
+                                              final CommentActionListener actionListener) {
         WordPress.getRestClientUtils().moderateComment(
                 String.valueOf(note.getSiteId()),
                 String.valueOf(note.getCommentId()),
