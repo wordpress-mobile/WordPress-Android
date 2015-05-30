@@ -35,6 +35,8 @@ public class SitePickerActivity extends ActionBarActivity
         SitePickerAdapter.OnSelectedCountChangedListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
+    public static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
+    public static final String KEY_LAST_SEARCH = "last_search";
 
     private SitePickerAdapter mAdapter;
     private RecyclerView mRecycleView;
@@ -43,6 +45,8 @@ public class SitePickerActivity extends ActionBarActivity
     private SitePickerSearchView mSearchView;
     private int mCurrentLocalId;
     private boolean mDidUserSelectSite;
+    private boolean mIsInSearchMode;
+    private String mLastSearch;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +61,12 @@ public class SitePickerActivity extends ActionBarActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        mLastSearch = new String();
+
         if (savedInstanceState != null) {
             mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);
+            mIsInSearchMode = savedInstanceState.getBoolean(KEY_IS_IN_SEARCH_MODE);
+            mLastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
         } else if (getIntent() != null) {
             mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
         }
@@ -75,6 +83,8 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(KEY_LOCAL_ID, mCurrentLocalId);
+        outState.putBoolean(KEY_IS_IN_SEARCH_MODE, mIsInSearchMode);
+        outState.putString(KEY_LAST_SEARCH, mLastSearch);
         super.onSaveInstanceState(outState);
     }
 
@@ -187,6 +197,22 @@ public class SitePickerActivity extends ActionBarActivity
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+    }
+
+    public String getLastSearch() {
+        return mLastSearch;
+    }
+
+    public void setLastSearch(String lastSearch) {
+        mLastSearch = lastSearch;
+    }
+
+    public boolean getIsInSearchMode() {
+        return mIsInSearchMode;
+    }
+
+    public void setIsInSearchMode(boolean isInSearchMode) {
+        mIsInSearchMode = isInSearchMode;
     }
 
     @SuppressWarnings("unused")
