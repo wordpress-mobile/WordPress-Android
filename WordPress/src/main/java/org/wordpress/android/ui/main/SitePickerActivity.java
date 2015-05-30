@@ -224,7 +224,7 @@ public class SitePickerActivity extends ActionBarActivity
 
     protected SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new SitePickerAdapter(this, mCurrentLocalId);
+            mAdapter = new SitePickerAdapter(this, mCurrentLocalId, mIsInSearchMode, mLastSearch);
             mAdapter.setOnSiteClickListener(this);
             mAdapter.setOnSelectedCountChangedListener(this);
         }

@@ -78,7 +78,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    public SitePickerAdapter(Context context, int currentLocalBlogId) {
+    public SitePickerAdapter(Context context, int currentLocalBlogId, boolean isInSearchMode, String lastSearch) {
         super();
 
         setHasStableIds(true);
@@ -92,7 +92,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_20));
 
-        loadSites();
+        loadSites(isInSearchMode, lastSearch);
     }
 
     @Override
