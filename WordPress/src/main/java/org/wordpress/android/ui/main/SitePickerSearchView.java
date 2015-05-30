@@ -36,7 +36,7 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
         MenuItemCompat.setOnActionExpandListener(menuSearch, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                enableSearchMode();
+                enableSearchMode(mSitePickerActivity.getLastSearch());
                 return true;
             }
 
@@ -46,6 +46,11 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
                 return true;
             }
         });
+
+        if (sitePickerActivity.getIsInSearchMode()) {
+            menuSearch.expandActionView();
+            setQuery(sitePickerActivity.getLastSearch(), false);
+        }
     }
 
     public InputMethodManager getInputMethodManager() {
