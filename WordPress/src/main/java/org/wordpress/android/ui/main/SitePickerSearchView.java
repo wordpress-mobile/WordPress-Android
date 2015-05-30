@@ -24,6 +24,7 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
 
     @Override
     public boolean onQueryTextChange(String s) {
+        mSitePickerActivity.setLastSearch(s);
         mSitePickerActivity.getAdapter().searchSites(s);
         return true;
     }
