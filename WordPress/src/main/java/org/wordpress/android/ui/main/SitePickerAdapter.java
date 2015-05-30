@@ -318,6 +318,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         if (mIsTaskRunning) {
             AppLog.w(AppLog.T.UTILS, "site picker > already loading sites");
         } else {
+            if (searchText == null) {
+                searchText = new String();
+            }
             new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, searchText);
         }
     }
@@ -343,7 +346,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
      * AsyncTask which loads sites from database and populates the adapter
      */
     private boolean mIsTaskRunning;
-    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
+    private class LoadSitesTask extends AsyncTask<String, Void, SiteList> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -357,7 +360,8 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
 
         @Override
-        protected SiteList doInBackground(Void... params) {
+        protected SiteList doInBackground(String... params) {
+            String searchText = params[0];
             List<Map<String, Object>> blogs;
             String[] extraFields = {"isHidden", "dotcomFlag"};
 
@@ -383,6 +387,10 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             }
 
             SiteList sites = new SiteList(blogs);
+
+            if (mIsInSearchMode) {
+                sites = filteredSitesByText(sites, searchText);
+            }
 
             // sort by blog/host
             Collections.sort(sites, new Comparator<SiteRecord>() {
