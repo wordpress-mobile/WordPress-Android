@@ -61,7 +61,7 @@ public class SitePickerActivity extends ActionBarActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mLastSearch = new String();
+        mLastSearch = "";
 
         if (savedInstanceState != null) {
             mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);

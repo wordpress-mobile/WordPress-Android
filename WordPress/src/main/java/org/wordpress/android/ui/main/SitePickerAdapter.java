@@ -309,7 +309,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     }
 
     public void loadSites() {
-        loadSites(false, new String());
+        loadSites(false, "");
     }
 
     public void loadSites(boolean isInSearchMode, String searchText) {
@@ -319,7 +319,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             AppLog.w(AppLog.T.UTILS, "site picker > already loading sites");
         } else {
             if (searchText == null) {
-                searchText = new String();
+                searchText = "";
             }
             new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, searchText);
         }
