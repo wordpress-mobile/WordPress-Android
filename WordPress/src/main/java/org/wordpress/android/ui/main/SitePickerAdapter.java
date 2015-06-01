@@ -42,7 +42,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     private static int mBlavatarSz;
 
-    private SiteList mSites = new SiteList();
+    protected SiteList mSites = new SiteList();
     private final int mCurrentLocalId;
 
     private final Drawable mSelectedItemBackground;
