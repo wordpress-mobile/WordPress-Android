@@ -56,7 +56,7 @@ BASE_DEPENDENCIES ={
 'simperium': {'url': 'https://repo1.maven.org/maven2/com/simperium/android/simperium/0.6.4/simperium-0.6.4.aar'},
 'slidinguppanel': {'url': 'http://wordpress-mobile.github.io/WordPress-Android/org/wordpress/slidinguppanel/1.0.0/slidinguppanel-1.0.0.aar'},
 'tagsoup': {'url': 'https://repo1.maven.org/maven2/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar'},
-'tracks': {'url': 'https://repo1.maven.org/maven2/com/automattic/tracks/1.0.0/tracks-1.0.0.aar'},
+'tracks': {'url': 'https://repo1.maven.org/maven2/com/automattic/tracks/1.0.3/tracks-1.0.3.aar'},
 'undobar': {'url': 'https://repo1.maven.org/maven2/com/cocosw/undobar/1.6/undobar-1.6.aar'},
 'volley': {'url': 'https://repo1.maven.org/maven2/com/mcxiaoke/volley/library/1.0.15/library-1.0.15.jar'},
 'floatingactionbutton': {'url': 'https://repo1.maven.org/maven2/com/getbase/floatingactionbutton/1.9.0/floatingactionbutton-1.9.0.aar'},
