@@ -223,7 +223,13 @@ public class StatsActivity extends ActionBarActivity
                         break;
                     }
                 }
-                scrollToTop();
+
+                mSpinner.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollToTop();
+                    }
+                }, 75L);
             }
         });
     }
@@ -604,7 +610,14 @@ public class StatsActivity extends ActionBarActivity
                 break;
             }
         }
-        scrollToTop();
+
+        mSpinner.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scrollToTop();
+            }
+        }, 75L);
+
     }
 
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
