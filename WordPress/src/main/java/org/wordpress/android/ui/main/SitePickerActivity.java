@@ -150,10 +150,14 @@ public class SitePickerActivity extends ActionBarActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        // don't allow editing visibility unless there are multiple wp.com blogs
+        // don't allow editing visibility unless there are multiple wp.com blogs and not in search mode
         int numSites = WordPress.wpDB.getNumDotComBlogs();
-        MenuItem mnuEdit = menu.findItem(R.id.menu_edit);
-        mnuEdit.setVisible(numSites > 1);
+        MenuItem menuEdit = menu.findItem(R.id.menu_edit);
+        if (mIsInSearchMode) {
+            menuEdit.setVisible(false);
+        } else {
+            menuEdit.setVisible(numSites > 1);
+        }
 
         return true;
     }
@@ -276,7 +280,7 @@ public class SitePickerActivity extends ActionBarActivity
     private void setupSearchView(Menu menu) {
         MenuItem menuSearch = menu.findItem(R.id.menu_search);
         mSearchView = (SitePickerSearchView) menuSearch.getActionView();
-        mSearchView.configure(this, menuSearch);
+        mSearchView.configure(this, menu);
     }
 
     private void updateActionModeTitle() {

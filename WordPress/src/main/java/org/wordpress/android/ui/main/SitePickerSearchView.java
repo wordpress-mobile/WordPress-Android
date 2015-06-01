@@ -3,17 +3,22 @@ package org.wordpress.android.ui.main;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.v4.view.MenuItemCompat;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
+import org.wordpress.android.R;
+
 public class SitePickerSearchView extends SearchView implements SearchView.OnQueryTextListener {
     private InputMethodManager mInputMethodManager;
     private SitePickerActivity mSitePickerActivity;
+    private MenuItem mMenuEdit;
 
     public SitePickerSearchView(Context context) {
         super(context);
         mInputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        mMenuEdit = null;
     }
 
     @Override
@@ -30,7 +35,9 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
         return true;
     }
 
-    public void configure(SitePickerActivity sitePickerActivity, MenuItem menuSearch) {
+    public void configure(SitePickerActivity sitePickerActivity, Menu menu) {
+        MenuItem menuSearch = menu.findItem(R.id.menu_search);
+        mMenuEdit = menu.findItem(R.id.menu_edit);
         mSitePickerActivity = sitePickerActivity;
         setIconifiedByDefault(false);
         setOnQueryTextListener(this);
@@ -59,6 +66,7 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
     }
 
     public void enableSearchMode(String string) {
+        mMenuEdit.setVisible(false);
         requestFocus();
         showSoftKeyboard();
         mSitePickerActivity.setIsInSearchMode(true);
@@ -68,6 +76,7 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
     }
 
     public void disableSearchMode() {
+        mMenuEdit.setVisible(true);
         hideSoftKeyboard();
         mSitePickerActivity.setIsInSearchMode(false);
         mSitePickerActivity.getRecycleView().swapAdapter(mSitePickerActivity.getAdapter(), true);
