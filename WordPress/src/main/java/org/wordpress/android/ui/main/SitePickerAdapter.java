@@ -43,7 +43,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private static int mBlavatarSz;
 
     private SiteList mSites = new SiteList();
-    private SiteList mAllSites = new SiteList();
     private final int mCurrentLocalId;
 
     private final Drawable mSelectedItemBackground;
@@ -51,7 +50,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private final LayoutInflater mInflater;
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
 
-    private boolean mIsInSearchMode;
     private boolean mIsMultiSelectEnabled;
     private boolean mShowHiddenSites = false;
     private boolean mShowSelfHostedSites = true;
@@ -78,7 +76,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    public SitePickerAdapter(Context context, int currentLocalBlogId, boolean isInSearchMode, String lastSearch) {
+    public SitePickerAdapter(Context context, int currentLocalBlogId) {
         super();
 
         setHasStableIds(true);
@@ -92,7 +90,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_20));
 
-        loadSites(isInSearchMode, lastSearch);
+        loadSites();
     }
 
     @Override
@@ -302,51 +300,19 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    public void searchSites(String searchText) {
-        mSites = filteredSitesByText(mAllSites, searchText);
-
-        notifyDataSetChanged();
-    }
-
-    public void loadSites() {
-        loadSites(false, "");
-    }
-
-    public void loadSites(boolean isInSearchMode, String searchText) {
-        mIsInSearchMode = isInSearchMode;
-
+    void loadSites() {
         if (mIsTaskRunning) {
             AppLog.w(AppLog.T.UTILS, "site picker > already loading sites");
         } else {
-            if (searchText == null) {
-                searchText = "";
-            }
-            new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, searchText);
+            new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-    }
-
-    private SiteList filteredSitesByText(SiteList sites, String searchText) {
-        SiteList filteredSiteList = new SiteList();
-        String searchTextLowerCase = searchText.toLowerCase();
-
-        for (int i = 0; i < sites.size(); i++) {
-            SiteRecord record = sites.get(i);
-            String siteNameLowerCase = record.blogName.toLowerCase();
-            String hostNameLowerCase = record.hostName.toLowerCase();
-
-            if (siteNameLowerCase.contains(searchTextLowerCase) || hostNameLowerCase.contains(searchTextLowerCase)) {
-                filteredSiteList.add(record);
-            }
-        }
-
-        return filteredSiteList;
     }
 
     /*
      * AsyncTask which loads sites from database and populates the adapter
      */
     private boolean mIsTaskRunning;
-    private class LoadSitesTask extends AsyncTask<String, Void, SiteList> {
+    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -360,37 +326,29 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
 
         @Override
-        protected SiteList doInBackground(String... params) {
-            String searchText = params[0];
+        protected SiteList doInBackground(Void... params) {
             List<Map<String, Object>> blogs;
             String[] extraFields = {"isHidden", "dotcomFlag"};
 
-            if (mIsInSearchMode) {
-                blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
-            } else {
-                if (mShowHiddenSites) {
-                    if (mShowSelfHostedSites) {
-                        blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
-                    } else {
-                        // only wp.com blogs
-                        blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
-                    }
+            if (mShowHiddenSites) {
+                if (mShowSelfHostedSites) {
+                    // all self-hosted blogs and all wp.com blogs
+                    blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
                 } else {
-                    if (mShowSelfHostedSites) {
-                        // all self-hosted blogs plus visible wp.com blogs
-                        blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=0 OR (isHidden=0 AND dotcomFlag=1)", extraFields);
-                    } else {
-                        // only visible wp.com blogs
-                        blogs = WordPress.wpDB.getBlogsBy("isHidden=0 AND dotcomFlag=1", extraFields);
-                    }
+                    // only wp.com blogs
+                    blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
+                }
+            } else {
+                if (mShowSelfHostedSites) {
+                    // all self-hosted blogs plus visible wp.com blogs
+                    blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=0 OR (isHidden=0 AND dotcomFlag=1) ", extraFields);
+                } else {
+                    // only visible wp.com blogs
+                    blogs = WordPress.wpDB.getBlogsBy("isHidden=0 AND dotcomFlag=1", extraFields);
                 }
             }
 
             SiteList sites = new SiteList(blogs);
-
-            if (mIsInSearchMode) {
-                sites = filteredSitesByText(sites, searchText);
-            }
 
             // sort by blog/host
             Collections.sort(sites, new Comparator<SiteRecord>() {
@@ -406,9 +364,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         protected void onPostExecute(SiteList sites) {
             if (mSites == null || !mSites.isSameList(sites)) {
                 mSites = sites;
-                if (mIsInSearchMode) {
-                    mAllSites = (SiteList) sites.clone();
-                }
                 notifyDataSetChanged();
             }
             mIsTaskRunning = false;
