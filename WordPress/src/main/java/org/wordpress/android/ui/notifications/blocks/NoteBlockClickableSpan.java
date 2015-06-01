@@ -61,15 +61,21 @@ public class NoteBlockClickableSpan extends ClickableSpan {
             mUrl = JSONUtils.queryJSON(mBlockData, "url", "");
             mIndices = NotificationsUtils.getIndicesForRange(mBlockData);
 
-            // Don't link certain range types, or unknown ones, unless we have a URL
-            mShouldLink = mShouldLink && mRangeType != NoteBlockRangeType.BLOCKQUOTE &&
-                    (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
+            mShouldLink = shouldLinkRangeType();
 
             // Apply grey color to some types
             if (mIsFooter || getRangeType() == NoteBlockRangeType.BLOCKQUOTE || getRangeType() == NoteBlockRangeType.POST) {
                 mTextColor = mLightTextColor;
             }
         }
+    }
+
+    // Don't link certain range types, or unknown ones, unless we have a URL
+    private boolean shouldLinkRangeType() {
+        return  mShouldLink &&
+                mRangeType != NoteBlockRangeType.BLOCKQUOTE &&
+                mRangeType != NoteBlockRangeType.MATCH &&
+                (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
     }
 
     @Override
@@ -94,6 +100,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
         switch (getRangeType()) {
             case USER:
+            case MATCH:
                 return Typeface.BOLD;
             case SITE:
             case POST:
