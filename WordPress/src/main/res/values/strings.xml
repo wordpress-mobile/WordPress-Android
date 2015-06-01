@@ -898,4 +898,8 @@
     <string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Disconnect from WordPress.com</string>
 
+    <!--TabBar Accessibility Labels-->
+    <string name="tabbar_accessibility_label_my_site">My Site</string>
+    <string name="tabbar_accessibility_label_me">Me</string>
+
 </resources>

@@ -94,7 +94,7 @@ public class EditPostSettingsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mPost = ((EditPostActivity) getActivity()).getPost();
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_edit_post_settings, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.edit_post_settings_fragment, container, false);
 
         if (rootView == null || mPost == null) {
             return null;
@@ -166,7 +166,7 @@ public class EditPostSettingsFragment extends Fragment
             pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mPostFormatSpinner.setAdapter(pfAdapter);
             String activePostFormat = "standard";
-            
+
             if (!TextUtils.isEmpty(mPost.getPostFormat())) {
                 activePostFormat = mPost.getPostFormat();
             }

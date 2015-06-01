@@ -70,7 +70,7 @@ public class WPMainActivity extends Activity
         setStatusBarColor();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
@@ -87,6 +87,13 @@ public class WPMainActivity extends Activity
                            R.drawable.main_tab_me,
                            R.drawable.main_tab_notifications};
         mTabs.setCustomTabView(R.layout.tab_icon, R.id.tab_icon, R.id.tab_badge, icons);
+
+        // content descriptions
+        mTabs.setContentDescription(WPMainTabAdapter.TAB_MY_SITE, getString(R.string.tabbar_accessibility_label_my_site));
+        mTabs.setContentDescription(WPMainTabAdapter.TAB_READER, getString(R.string.reader));
+        mTabs.setContentDescription(WPMainTabAdapter.TAB_ME, getString(R.string.tabbar_accessibility_label_me));
+        mTabs.setContentDescription(WPMainTabAdapter.TAB_NOTIFS, getString(R.string.notifications));
+
         mTabs.setViewPager(mViewPager);
         mTabs.setOnSingleTabClickListener(this);
 

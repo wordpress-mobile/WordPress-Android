@@ -8,9 +8,10 @@
         android:id="@+id/recycler_view_notes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/content_margin"
-        android:layout_marginRight="@dimen/content_margin"
-        android:scrollbars="vertical" />
+        android:paddingLeft="@dimen/content_margin"
+        android:paddingRight="@dimen/content_margin"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="outsideOverlay" />
 
     <LinearLayout
         android:id="@+id/empty_view"

@@ -3,6 +3,10 @@
 <string-array name="available_languages" translatable="false">
 
 <item>
+en-US
+</item>
+
+<item>
 az
 </item>
 
@@ -83,11 +87,11 @@ zh-CN
 </item>
 
 <item>
-zh-HK
+zh-TW
 </item>
 
 <item>
-zh-TW
+zh-HK
 </item>
 
 <item>
