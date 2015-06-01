@@ -48,6 +48,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
@@ -319,9 +320,21 @@ public class SlidingTabLayout extends HorizontalScrollView {
             }
 
             tabView.setOnClickListener(tabClickListener);
-            String desc = mContentDescriptions.get(i, null);
+            final String desc = mContentDescriptions.get(i, null);
             if (desc != null) {
                 tabView.setContentDescription(desc);
+                // show toast with content description on long click
+                tabView.setOnLongClickListener(new OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int offsetX = v.getLeft();
+                        int offsetY = v.getTop() + v.getHeight() + (v.getHeight() / 2);
+                        Toast toast = Toast.makeText(v.getContext(), desc, Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.LEFT | Gravity.TOP, offsetX, offsetY);
+                        toast.show();
+                        return true;
+                    }
+                });
             }
 
             mTabStrip.addView(tabView);

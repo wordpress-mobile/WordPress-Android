@@ -22,11 +22,11 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -97,6 +97,12 @@ public class PostsActivity extends ActionBarActivity
         }
 
         attemptToSelectPost();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 
     private void showPostUploadErrorAlert(String errorMessage, String infoTitle,
@@ -185,26 +191,6 @@ public class PostsActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // posts can't be shown if there aren't any visible blogs, so redirect to the reader and
-        // exit the post list in this situation
-        if (AccountHelper.isSignedIn()) {
-            // TODO:
-            /*if (showCorrectActivityForAccountIfRequired()) {
-                finish();
-            }*/
-        }
-
-        if (WordPress.postsShouldRefresh) {
-            requestPosts();
-            mPostList.setRefreshing(true);
-            WordPress.postsShouldRefresh = false;
-        }
-    }
-
     public void newPost() {
         if (WordPress.getCurrentBlog() == null) {
             if (!isFinishing())
@@ -225,7 +211,7 @@ public class PostsActivity extends ActionBarActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
             if (requestCode == RequestCodes.EDIT_POST && resultCode == RESULT_OK) {
-                if (data.getBooleanExtra("shouldRefresh", false)) {
+                if (data.getBooleanExtra(EditPostActivity.EXTRA_SHOULD_REFRESH, false)) {
                     mPostList.getPostListAdapter().loadPosts();
                 }
             }

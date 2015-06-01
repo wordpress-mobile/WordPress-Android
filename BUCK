@@ -168,6 +168,11 @@ android_prebuilt_aar(
     aar = 'extlibs/androidpinning.aar',
 )
 
+android_prebuilt_aar(
+    name = 'floatingactionbutton',
+    aar = 'extlibs/floatingactionbutton.aar',
+)
+
 ### WordPressUtils
 
 android_build_config(
@@ -315,6 +320,7 @@ r_android_library(
         ':android-support-v13',
         ':android-support-v4',
         ':recyclerview-v7',
+        ':cardview-v7',
         ':persistentedittext',
         ':wpandroid-utils',
         ':wpandroid-editor',
@@ -334,7 +340,8 @@ r_android_library(
         ':crashlytics',
         ':fabric',
         ':photoview',
-        ':androidpinning'
+        ':androidpinning',
+        ':floatingactionbutton',
     ],
 )
 

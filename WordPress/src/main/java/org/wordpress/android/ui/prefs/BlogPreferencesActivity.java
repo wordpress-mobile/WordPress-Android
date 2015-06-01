@@ -19,10 +19,16 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Activity for configuring blog specific settings.
@@ -90,6 +96,12 @@ public class BlogPreferencesActivity extends ActionBarActivity {
         }
 
         loadSettingsForBlog();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 
     @Override
@@ -265,12 +277,19 @@ public class BlogPreferencesActivity extends ActionBarActivity {
 
     private void removeBlog() {
         if (WordPress.wpDB.deleteBlog(this, blog.getLocalTableBlogId())) {
+            StatsTable.deleteStatsForBlog(this,blog.getLocalTableBlogId()); // Remove stats data
             AnalyticsUtils.refreshMetadata();
             ToastUtils.showToast(this, R.string.blog_removed_successfully);
             WordPress.wpDB.deleteLastBlogId();
             WordPress.currentBlog = null;
             mBlogDeleted = true;
             setResult(RESULT_BLOG_REMOVED);
+
+            // If the last blog is removed and the user is not signed in wpcom, broadcast a UserSignedOut event
+            if (!AccountHelper.isSignedIn()) {
+                EventBus.getDefault().post(new UserSignedOutCompletely());
+            }
+
             finish();
         } else {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);

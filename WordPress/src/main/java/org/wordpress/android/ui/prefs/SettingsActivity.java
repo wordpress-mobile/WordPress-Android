@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
 
 public class SettingsActivity extends ActionBarActivity {
@@ -78,9 +79,9 @@ public class SettingsActivity extends ActionBarActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mSettingsFragment.refreshWPComAuthCategory();
-        super.onActivityResult(requestCode, resultCode, data);
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 
     @Override

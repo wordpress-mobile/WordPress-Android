@@ -3,12 +3,15 @@ package org.wordpress.android.ui.accounts;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
@@ -16,8 +19,6 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
-
-import java.util.ArrayList;
 
 public class HelpActivity extends ActionBarActivity {
     final private static String FAQ_URL = "http://android.wordpress.org/faq/";
@@ -32,6 +33,14 @@ public class HelpActivity extends ActionBarActivity {
             initDefaultLayout();
         }
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setElevation(0); //remove shadow
+        }
+
         // Init common elements
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
         version.setText(getString(R.string.version) + " " + WordPress.versionName);
@@ -43,6 +52,21 @@ public class HelpActivity extends ActionBarActivity {
                 startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 
     private void initHelpshiftLayout() {

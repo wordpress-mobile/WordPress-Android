@@ -34,6 +34,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
@@ -120,6 +121,12 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
             // We arrived here from a share action
             uploadSharedFiles();
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 
     @Override
@@ -218,9 +225,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
                 }
 
                 mAddMediaPopup.dismiss();
-
             }
-
         });
 
         int width = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_width);
@@ -292,7 +297,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
             mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
             ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
             ft.addToBackStack(null);
-            ft.commit();
+            ft.commitAllowingStateLoss();
         }
     }
 
@@ -483,6 +488,8 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
 
         if (cursor == null || !cursor.moveToFirst()) {
             mMediaGridFragment.removeFromMultiSelect(mediaId);
+            mMediaGridFragment.refreshMediaFromDB();
+
             if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
                     && mediaId.equals(mMediaEditFragment.getMediaId())) {
                 if (mMediaEditFragment.isInLayout()) {

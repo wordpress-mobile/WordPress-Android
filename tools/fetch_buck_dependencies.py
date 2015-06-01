@@ -36,7 +36,7 @@ BASE_DEPENDENCIES ={
 'annotations': {'url': 'https://repo1.maven.org/maven2/com/google/code/findbugs/annotations/2.0.0/annotations-2.0.0.jar'},
 'support-annotations': {'url': os.path.join(ANDROID_SDK_PATH, 'extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar')},
 'appcompat-v7': {'url': os.path.join(ANDROID_SDK_PATH, 'extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar')},
-'androidasync': {'url': 'https://repo1.maven.org/maven2/com/koushikdutta/async/androidasync/1.4.1/androidasync-1.4.1.jar'},
+'androidasync': {'url': 'https://repo1.maven.org/maven2/com/koushikdutta/async/androidasync/2.1.3/androidasync-2.1.3.jar'},
 'androidpinning': {'url': 'https://repo1.maven.org/maven2/org/thoughtcrime/ssl/pinning/AndroidPinning/1.0.0/AndroidPinning-1.0.0.aar'},
 'cardview-v7': {'url': os.path.join(ANDROID_SDK_PATH, 'extras/android/m2repository/com/android/support/cardview-v7/21.0.3/cardview-v7-21.0.3.aar')},
 'commons-lang': {'url': 'https://repo1.maven.org/maven2/commons-lang/commons-lang/2.6/commons-lang-2.6.jar'},
@@ -47,18 +47,19 @@ BASE_DEPENDENCIES ={
 'fabric': {'url': 'https://maven.fabric.io/repo/io/fabric/sdk/android/fabric/1.2.0/fabric-1.2.0.aar'},
 'gcm': {'url': 'http://wordpress-mobile.github.io/WordPress-Android/org/wordpress/gcm/1.0.0/gcm-1.0.0.jar'},
 'gson': {'url': 'https://repo1.maven.org/maven2/com/google/code/gson/gson/2.2.2/gson-2.2.2.jar'},
-'helpshift': {'url': 'https://repo1.maven.org/maven2/com/helpshift/android-aar/3.7.2/android-aar-3.7.2.aar'},
-'mediapicker': {'url': 'https://repo1.maven.org/maven2/org/wordpress/mediapicker/1.2.2/mediapicker-1.2.2.aar'},
+'helpshift': {'url': 'https://repo1.maven.org/maven2/com/helpshift/android-aar/3.8.0/android-aar-3.8.0.aar'},
+'mediapicker': {'url': 'https://repo1.maven.org/maven2/org/wordpress/mediapicker/1.2.3/mediapicker-1.2.3.aar'},
 'mixpanel': {'url': 'https://repo1.maven.org/maven2/com/mixpanel/android/mixpanel-android/4.3.0/mixpanel-android-4.3.0.aar'},
 'passcodelock': {'url': 'http://wordpress-mobile.github.io/WordPress-Android/org/wordpress/android-passcodelock/0.0.6/android-passcodelock-0.0.6.aar'},
 'photoview': {'url': 'https://repo1.maven.org/maven2/com/github/chrisbanes/photoview/library/1.2.3/library-1.2.3.aar'},
 'recyclerview-v7': {'url': os.path.join(ANDROID_SDK_PATH, 'extras/android/m2repository/com/android/support/recyclerview-v7/21.0.3/recyclerview-v7-21.0.3.aar')},
-'simperium': {'url': 'https://repo1.maven.org/maven2/com/simperium/android/simperium/0.6.2/simperium-0.6.2.aar'},
+'simperium': {'url': 'https://repo1.maven.org/maven2/com/simperium/android/simperium/0.6.4/simperium-0.6.4.aar'},
 'slidinguppanel': {'url': 'http://wordpress-mobile.github.io/WordPress-Android/org/wordpress/slidinguppanel/1.0.0/slidinguppanel-1.0.0.aar'},
 'tagsoup': {'url': 'https://repo1.maven.org/maven2/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar'},
-'tracks': {'url': 'https://repo1.maven.org/maven2/com/automattic/tracks/1.0.0/tracks-1.0.0.aar'},
+'tracks': {'url': 'https://repo1.maven.org/maven2/com/automattic/tracks/1.0.3/tracks-1.0.3.aar'},
 'undobar': {'url': 'https://repo1.maven.org/maven2/com/cocosw/undobar/1.6/undobar-1.6.aar'},
-'volley': {'url': 'https://repo1.maven.org/maven2/com/mcxiaoke/volley/library/1.0.15/library-1.0.15.jar'}
+'volley': {'url': 'https://repo1.maven.org/maven2/com/mcxiaoke/volley/library/1.0.15/library-1.0.15.jar'},
+'floatingactionbutton': {'url': 'https://repo1.maven.org/maven2/com/getbase/floatingactionbutton/1.9.0/floatingactionbutton-1.9.0.aar'},
 }
 
 TEST_DEPENDENCIES = {

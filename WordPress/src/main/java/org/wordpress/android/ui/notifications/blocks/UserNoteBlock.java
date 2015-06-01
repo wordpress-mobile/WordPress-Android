@@ -88,15 +88,15 @@ public class UserNoteBlock extends NoteBlock {
             noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
-                noteBlockHolder.rootView.setBackgroundResource(R.drawable.notifications_header_selector);
+                noteBlockHolder.rootView.setEnabled(true);
                 noteBlockHolder.rootView.setOnClickListener(mOnClickListener);
             } else {
                 noteBlockHolder.avatarImageView.setOnTouchListener(null);
-                noteBlockHolder.rootView.setBackgroundColor(view.getContext().getResources().getColor(R.color.white));
+                noteBlockHolder.rootView.setEnabled(false);
                 noteBlockHolder.rootView.setOnClickListener(null);
             }
         } else {
-            noteBlockHolder.avatarImageView.setImageResource(R.drawable.gravatar_placeholder);
+            noteBlockHolder.avatarImageView.showDefaultGravatarImage();
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 

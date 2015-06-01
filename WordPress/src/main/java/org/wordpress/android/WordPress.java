@@ -26,7 +26,6 @@ import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 
-import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
@@ -44,14 +43,18 @@ import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdat
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
+import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
@@ -82,8 +85,6 @@ public class WordPress extends Application {
     public static Blog currentBlog;
     public static Post currentPost;
     public static WordPressDB wpDB;
-    public static OnPostUploadedListener onPostUploadedListener = null;
-    public static boolean postsShouldRefresh;
     public static RestClientUtils mRestClientUtils;
     public static RestClientUtils mRestClientUtilsVersion1_1;
     public static RequestQueue requestQueue;
@@ -91,6 +92,7 @@ public class WordPress extends Application {
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
+    private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
@@ -116,9 +118,26 @@ public class WordPress extends Application {
      */
     public static RateLimitedTask sUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
-            if (AccountHelper.getDefaultAccount().isWordPressComUser()) {
+            if (AccountHelper.isSignedInWordPressDotCom()) {
                 new GenericUpdateBlogListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
+            return true;
+        }
+    };
+
+    /**
+     *  Delete stats cache that is already expired
+     */
+    public static RateLimitedTask sDeleteExpiredStats = new RateLimitedTask(SECONDS_BETWEEN_DELETE_STATS) {
+        protected boolean run() {
+            // Offload to a separate thread. We don't want to slown down the app on startup/resume.
+            new Thread(new Runnable() {
+                public void run() {
+                    // subtracts to the current time the cache TTL
+                    long timeToDelete = System.currentTimeMillis() - (StatsTable.CACHE_TTL_MINUTES * 60 * 1000);
+                    StatsTable.deleteOldStats(WordPress.getContext(), timeToDelete);
+                }
+            }).start();
             return true;
         }
     };
@@ -158,6 +177,7 @@ public class WordPress extends Application {
                 .sendNoSubscriberEvent(false)
                 .throwSubscriberException(true)
                 .installDefaultEventBus();
+        EventBus.getDefault().register(this);
 
         RestClientUtils.setUserAgent(getUserAgent());
 
@@ -167,7 +187,7 @@ public class WordPress extends Application {
         setupVolleyQueue();
 
         // Refresh account informations
-        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
             AccountHelper.getDefaultAccount().fetchAccountDetails();
         }
 
@@ -199,7 +219,7 @@ public class WordPress extends Application {
 
     // Configure Simperium and start buckets if we are signed in to WP.com
     private void configureSimperium() {
-        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
             AppLog.i(T.NOTIFS, "Configuring Simperium");
             SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
         }
@@ -340,7 +360,7 @@ public class WordPress extends Application {
         String regId = gcmRegisterIfNot(context);
 
         // Register to WordPress.com notifications
-        if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+        if (AccountHelper.isSignedInWordPressDotCom()) {
             if (!TextUtils.isEmpty(regId)) {
                 // Send the token to WP.com in case it was invalidated
                 NotificationsUtils.registerDeviceForPushNotifications(context, regId);
@@ -353,42 +373,6 @@ public class WordPress extends Application {
             HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
         }
         AnalyticsTracker.registerPushNotificationToken(regId);
-    }
-
-    public interface OnPostUploadedListener {
-        public abstract void OnPostUploaded(int localBlogId, String postId, boolean isPage);
-
-        public abstract void OnPostUploadFailed(int localBlogId);
-    }
-
-    public static void setOnPostUploadedListener(OnPostUploadedListener listener) {
-        onPostUploadedListener = listener;
-    }
-
-    public static void postUploaded(int localBlogId, String postId, boolean isPage) {
-        if (onPostUploadedListener != null) {
-            try {
-                onPostUploadedListener.OnPostUploaded(localBlogId, postId, isPage);
-            } catch (Exception e) {
-                postsShouldRefresh = true;
-            }
-        } else {
-            postsShouldRefresh = true;
-        }
-
-    }
-
-    public static void postUploadFailed(int localBlogId) {
-        if (onPostUploadedListener != null) {
-            try {
-                onPostUploadedListener.OnPostUploadFailed(localBlogId);
-            } catch (Exception e) {
-                postsShouldRefresh = true;
-            }
-        } else {
-            postsShouldRefresh = true;
-        }
-
     }
 
     /**
@@ -473,32 +457,39 @@ public class WordPress extends Application {
     public static int getCurrentLocalTableBlogId() {
         return (getCurrentBlog() != null ? getCurrentBlog().getLocalTableBlogId() : -1);
     }
-    public static void signOutAsyncWithProgressBar(Context context, SignOutCallback callback) {
-        new SignOutAsync(context, callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    public static void signOutWordPressComAsyncWithProgressBar(Context context) {
+        new SignOutWordPressComAsync(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /**
-     * Sign out from all accounts by clearing out the password, which will require user to sign in
-     * again
+     * Sign out from wpcom account
      */
-    public static void signOut(Context context) {
+    public static void WordPressComSignOut(Context context) {
+        removeWpComUserRelatedData(context);
+
+        // broadcast an event: wpcom user signed out
+        EventBus.getDefault().post(new UserSignedOutWordPressCom());
+
+        // broadcast an event only if the user is completly signed out
+        if (!AccountHelper.isSignedIn()) {
+            EventBus.getDefault().post(new UserSignedOutCompletely());
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UserSignedOutCompletely event) {
         try {
-            SelfSignedSSLCertsManager.getInstance(context).emptyLocalKeyStoreFile();
+            SelfSignedSSLCertsManager.getInstance(getContext()).emptyLocalKeyStoreFile();
         } catch (GeneralSecurityException e) {
             AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
         } catch (IOException e) {
             AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
         }
 
-        // Save that this user signed out
-        AccountHelper.getDefaultAccount().setUserTappedSignedOutButton(true);
-        AccountHelper.getDefaultAccount().save();
-
-        wpDB.updateLastBlogId(-1);
-        currentBlog = null;
         flushHttpCache();
 
-        // General analytics resets
+        // Analytics resets
         AnalyticsTracker.endSession(false);
         AnalyticsTracker.clearAllData();
 
@@ -508,22 +499,16 @@ public class WordPress extends Application {
             appLock.setPassword(null);
         }
 
-        // send broadcast that user is signing out
-        EventBus.getDefault().post(new CoreEvents.UserSignedOut());
+        // dangerously delete all content!
+        wpDB.dangerouslyDeleteAllContent();
     }
 
-    public static class SignOutAsync extends AsyncTask<Void, Void, Void> {
-        public interface SignOutCallback {
-            public void onSignOut();
-        }
-
+    public static class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
         ProgressDialog mProgressDialog;
         WeakReference<Context> mWeakContext;
-        SignOutCallback mCallback;
 
-        public SignOutAsync(Context context, SignOutCallback callback) {
+        public SignOutWordPressComAsync(Context context) {
             mWeakContext = new WeakReference<Context>(context);
-            mCallback = callback;
         }
 
         @Override
@@ -539,7 +524,7 @@ public class WordPress extends Application {
         protected Void doInBackground(Void... params) {
             Context context = mWeakContext.get();
             if (context != null) {
-                signOut(context);
+                WordPressComSignOut(context);
             }
             return null;
         }
@@ -549,9 +534,6 @@ public class WordPress extends Application {
             super.onPostExecute(aVoid);
             if (mProgressDialog != null) {
                 mProgressDialog.dismiss();
-            }
-            if (mCallback != null) {
-                mCallback.onSignOut();
             }
         }
     }
@@ -569,11 +551,18 @@ public class WordPress extends Application {
             AppLog.v(T.NOTIFS, "Could not unregister for GCM: " + e.getMessage());
         }
 
+        // delete wpcom blogs
+        wpDB.deleteWordPressComBlogs(context);
+
+        // reset default account
         AccountHelper.getDefaultAccount().signout();
 
         // reset all reader-related prefs & data
         AppPrefs.reset();
         ReaderDatabase.reset();
+
+        // Reset Stats Data
+        StatsDatabaseHelper.getDatabase(context).reset();
 
         // Reset Simperium buckets (removes local data)
         SimperiumUtils.resetBucketsAndDeauthorize();
@@ -726,7 +715,7 @@ public class WordPress extends Application {
          */
         private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
-            if (isPushNotificationPingNeeded() && AccountHelper.getDefaultAccount().hasAccessToken()) {
+            if (isPushNotificationPingNeeded() && AccountHelper.isSignedInWordPressDotCom()) {
                 String token = null;
                 try {
                     // Register for Google Cloud Messaging
@@ -765,6 +754,8 @@ public class WordPress extends Application {
                 // Rate limited blog options Update
                 sUpdateCurrentBlogOption.runIfNotLimited();
             }
+
+            sDeleteExpiredStats.runIfNotLimited();
         }
 
         @Override

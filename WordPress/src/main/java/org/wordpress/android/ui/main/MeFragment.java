@@ -17,14 +17,15 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class MeFragment extends Fragment {
 
+    private ViewGroup mAvatarFrame;
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
@@ -37,31 +38,41 @@ public class MeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_me, container, false);
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.me_fragment, container, false);
+
+        mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
+        mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
 
-        TextView settingsTextView = (TextView) rootView.findViewById(R.id.me_settings_text_view);
-        settingsTextView.setOnClickListener(new View.OnClickListener() {
+        addDropShadowToAvatar();
+        refreshAccountDetails();
+
+        rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewAccountSettings(getActivity());
             }
         });
 
-        TextView supportTextView = (TextView) rootView.findViewById(R.id.me_support_text_view);
-        supportTextView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_support).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewHelpAndSupport(getActivity(), Tag.ORIGIN_ME_SCREEN_HELP);
             }
         });
 
-        mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
-
-        addDropShadow(rootView.findViewById(R.id.frame_avatar));
-        refreshAccountDetails();
+        rootView.findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AccountHelper.isSignedInWordPressDotCom()) {
+                    signOutWordPressComWithConfirmation();
+                } else {
+                    ActivityLauncher.showSignInForResult(getActivity());
+                }
+            }
+        });
 
         return rootView;
     }
@@ -70,15 +81,15 @@ public class MeFragment extends Fragment {
      * adds a circular drop shadow to the avatar's parent view (Lollipop+ only)
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void addDropShadow(View view) {
+    private void addDropShadowToAvatar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            view.setOutlineProvider(new ViewOutlineProvider() {
+            mAvatarFrame.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
                     outline.setOval(0, 0, view.getWidth(), view.getHeight());
                 }
             });
-            view.setElevation(view.getResources().getDimensionPixelSize(R.dimen.card_elevation));
+            mAvatarFrame.setElevation(mAvatarFrame.getResources().getDimensionPixelSize(R.dimen.card_elevation));
         }
     }
 
@@ -87,15 +98,16 @@ public class MeFragment extends Fragment {
         if (AccountHelper.isSignedInWordPressDotCom()) {
             Account defaultAccount = AccountHelper.getDefaultAccount();
 
-            mAvatarImageView.setVisibility(View.VISIBLE);
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
+            mAvatarFrame.setVisibility(View.VISIBLE);
 
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
             String avatarUrl = GravatarUtils.fixGravatarUrl(defaultAccount.getAvatarUrl(), avatarSz);
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
+            mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
 
             String displayName = defaultAccount.getDisplayName();
             if (!TextUtils.isEmpty(displayName)) {
@@ -103,45 +115,33 @@ public class MeFragment extends Fragment {
             } else {
                 mDisplayNameTextView.setText(defaultAccount.getUserName());
             }
-
-            mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
-            mLoginLogoutTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    signoutWithConfirmation();
-                }
-            });
         } else {
-            mAvatarImageView.setVisibility(View.GONE);
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
-
+            mAvatarFrame.setVisibility(View.GONE);
             mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
-            mLoginLogoutTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ActivityLauncher.showSignInForResult(getActivity());
-                }
-            });
         }
     }
 
-    private void signoutWithConfirmation() {
+    private void signOutWordPressComWithConfirmation() {
+        String message = String.format(getString(R.string.sign_out_wpcom_confirm), AccountHelper.getDefaultAccount()
+                .getUserName());
+
         new AlertDialog.Builder(getActivity())
-            .setMessage(getString(R.string.sign_out_confirm))
-            .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    signout();
-                }
-            })
-            .setNegativeButton(R.string.cancel, null)
-            .setCancelable(true)
-            .create().show();
+                .setMessage(message)
+                .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        signOutWordPressCom();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .setCancelable(true)
+                .create().show();
     }
 
-    private void signout() {
-        // note that signing out sends a CoreEvents.UserSignedOut() EventBus event,
+    private void signOutWordPressCom() {
+        // note that signing out sends a CoreEvents.UserSignedOutWordPressCom EventBus event,
         // which will cause the main activity to recreate this fragment
-        WordPress.signOutAsyncWithProgressBar(getActivity(), null);
+        WordPress.signOutWordPressComAsyncWithProgressBar(getActivity());
     }
 }

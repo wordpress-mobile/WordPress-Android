@@ -1,30 +1,30 @@
 package org.wordpress.android.ui.main;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.ui.reader.ReaderAnim;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
 
@@ -32,13 +32,16 @@ import de.greenrobot.event.EventBus;
 
 public class SitePickerActivity extends ActionBarActivity
         implements SitePickerAdapter.OnSiteClickListener,
-                   SitePickerAdapter.OnSelectedCountChangedListener {
+        SitePickerAdapter.OnSelectedCountChangedListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
 
     private SitePickerAdapter mAdapter;
+    private RecyclerView mRecycleView;
+    private View mFabView;
     private ActionMode mActionMode;
     private int mCurrentLocalId;
+    private boolean mDidUserSelectSite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,7 @@ public class SitePickerActivity extends ActionBarActivity
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -58,17 +62,13 @@ public class SitePickerActivity extends ActionBarActivity
             mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
         }
 
-        Button btnAddSite = (Button) findViewById(R.id.btn_add);
-        btnAddSite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addSite();
-            }
-        });
+        setupFab();
 
-        RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler_view);
-        recycler.setLayoutManager(new LinearLayoutManager(this));
-        recycler.setAdapter(getAdapter());
+        mRecycleView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        mRecycleView.setItemAnimator(null);
+        mRecycleView.setAdapter(getAdapter());
     }
 
     @Override
@@ -77,10 +77,54 @@ public class SitePickerActivity extends ActionBarActivity
         super.onSaveInstanceState(outState);
     }
 
+    /*
+     * if the user is signed into wp.com, show a fab menu which enables choosing between
+     * adding a self-hosted site and creating a new wp.com one - if they're not signed in
+     * we hide the menu and use a separate fab which directly adds a self-hosted site
+     */
+    private void setupFab() {
+        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        if (AccountHelper.isSignedInWordPressDotCom()) {
+            FloatingActionButton fabMenuItemCreateDotCom = (FloatingActionButton) findViewById(R.id.fab_item_create_dotcom);
+            fabMenuItemCreateDotCom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityLauncher.newBlogForResult(SitePickerActivity.this);
+                    fabMenu.collapse();
+                }
+            });
+
+            FloatingActionButton fabMenuItemAddDotOrg = (FloatingActionButton) findViewById(R.id.fab_item_add_dotorg);
+            fabMenuItemAddDotOrg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
+                    fabMenu.collapse();
+                }
+            });
+            mFabView = fabMenu;
+        } else {
+            FloatingActionButton fabMenuAddDotOrg = (FloatingActionButton) findViewById(R.id.fab_add_dotorg);
+            fabMenuAddDotOrg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
+                }
+            });
+            mFabView = fabMenuAddDotOrg;
+        }
+
+        // animate fab in after a delay which matches that of the activity transition
+        long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        ReaderAnim.showFabDelayed(mFabView, true, delayMs);
+    }
+
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
+        if (mDidUserSelectSite) {
+            overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
+        }
     }
 
     @Override
@@ -109,6 +153,7 @@ public class SitePickerActivity extends ActionBarActivity
             onBackPressed();
             return true;
         } else if (itemId == R.id.menu_edit) {
+            mRecycleView.setItemAnimator(new DefaultItemAnimator());
             getAdapter().setEnableEditMode(true);
             startSupportActionMode(new ActionModeCallback());
             return true;
@@ -182,6 +227,7 @@ public class SitePickerActivity extends ActionBarActivity
                     currentSiteName = site.getBlogNameOrHostName();
                 } else {
                     WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
+                    StatsTable.deleteStatsForBlog(this, site.localId); // Remove stats data for hidden sites
                 }
             }
 
@@ -198,24 +244,14 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
-    private void addSite() {
-        // if user is signed into wp.com use the dialog to enable choosing whether to
-        // create a new wp.com blog or add a self-hosted one
-        if (AccountHelper.getDefaultAccount().isWordPressComUser()) {
-            DialogFragment dialog = new AddSiteDialog();
-            dialog.show(getSupportFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
-        } else {
-            // user isn't signed into wp.com, so simply enable adding self-hosted
-            ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
-        }
-    }
-
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
-            Intent data = new Intent();
-            data.putExtra(KEY_LOCAL_ID, site.localId);
-            setResult(RESULT_OK, data);
+            ReaderAnim.showFab(mFabView, false);
+            WordPress.setCurrentBlog(site.localId);
+            WordPress.wpDB.updateLastBlogId(site.localId);
+            setResult(RESULT_OK);
+            mDidUserSelectSite = true;
             finish();
         }
     }
@@ -235,6 +271,7 @@ public class SitePickerActivity extends ActionBarActivity
             mActionMode = actionMode;
             mHasChanges = false;
             updateActionModeTitle();
+            ReaderAnim.showFab(mFabView, false);
             actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
         }
@@ -281,36 +318,8 @@ public class SitePickerActivity extends ActionBarActivity
                 saveHiddenSites();
             }
             getAdapter().setEnableEditMode(false);
+            ReaderAnim.showFab(mFabView, true);
             mActionMode = null;
-        }
-    }
-
-    /*
-     * dialog which appears after user taps "Add site" - enables choosing whether to create
-     * a new wp.com blog or add an existing self-hosted one
-     */
-    public static class AddSiteDialog extends DialogFragment {
-        static final String ADD_SITE_DIALOG_TAG = "add_site_dialog";
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            CharSequence[] items =
-                    {getString(R.string.site_picker_create_dotcom),
-                     getString(R.string.site_picker_add_self_hosted)};
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(R.string.site_picker_add_site);
-            builder.setItems(items, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (which == 0) {
-                        ActivityLauncher.newBlogForResult(getActivity());
-                    } else {
-                        ActivityLauncher.addSelfHostedSiteForResult(getActivity());
-                    }
-                }
-            });
-            return builder.create();
         }
     }
 }

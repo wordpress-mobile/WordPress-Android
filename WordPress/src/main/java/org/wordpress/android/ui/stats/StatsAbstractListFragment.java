@@ -21,7 +21,6 @@ import com.android.volley.VolleyError;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
@@ -31,52 +30,48 @@ import de.greenrobot.event.EventBus;
 
 public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
-    protected static final String ARGS_IS_SINGLE_VIEW = "ARGS_IS_SINGLE_VIEW";
-
     // Used when the fragment has 2 pages/kind of stats in it. Not meaning the bottom pagination.
-    protected static final String ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX = "ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX";
-    protected static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST = 1000;
-    protected static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST = 10;
+    static final String ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX = "ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX";
+    private static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST = 1000;
+    static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST = 10;
 
-    protected static final int NO_STRING_ID = -1;
+    private static final int NO_STRING_ID = -1;
 
-    protected TextView mModuleTitleTextView;
-    protected TextView mEmptyLabel;
-    protected TextView mTotalsLabel;
-    protected LinearLayout mListContainer;
-    protected LinearLayout mList;
-    protected Button mViewAll;
+    private TextView mModuleTitleTextView;
+    private TextView mEmptyLabel;
+    TextView mTotalsLabel;
+    private LinearLayout mListContainer;
+    LinearLayout mList;
+    private Button mViewAll;
 
-    protected LinearLayout mTopPagerContainer;
-    protected int mTopPagerSelectedButtonIndex = 0;
+    LinearLayout mTopPagerContainer;
+    int mTopPagerSelectedButtonIndex = 0;
 
     // Bottom and Top Pagination for modules that has pagination enabled.
-    protected LinearLayout mBottomPaginationContainer;
-    protected Button mBottomPaginationGoBackButton;
-    protected Button mBottomPaginationGoForwardButton;
-    protected TextView mBottomPaginationText;
-    protected LinearLayout mTopPaginationContainer;
-    protected Button mTopPaginationGoBackButton;
-    protected Button mTopPaginationGoForwardButton;
-    protected TextView mTopPaginationText;
+    LinearLayout mBottomPaginationContainer;
+    Button mBottomPaginationGoBackButton;
+    Button mBottomPaginationGoForwardButton;
+    TextView mBottomPaginationText;
+    LinearLayout mTopPaginationContainer;
+    Button mTopPaginationGoBackButton;
+    Button mTopPaginationGoForwardButton;
+    TextView mTopPaginationText;
 
-    protected LinearLayout mEmptyModulePlaceholder;
+    private LinearLayout mEmptyModulePlaceholder;
 
-    protected Serializable[] mDatamodels;
+    Serializable[] mDatamodels;
 
-    protected SparseBooleanArray mGroupIdToExpandedMap;
+    SparseBooleanArray mGroupIdToExpandedMap;
 
     protected abstract int getEntryLabelResId();
     protected abstract int getTotalsLabelResId();
     protected abstract int getEmptyLabelTitleResId();
     protected abstract int getEmptyLabelDescResId();
-    protected abstract StatsService.StatsEndpointsEnum[] getSectionsToUpdate();
     protected abstract void updateUI();
     protected abstract boolean isExpandableList();
     protected abstract boolean isViewAllOptionAvailable();
 
-
-    protected StatsResourceVars mResourceVars;
+    StatsResourceVars mResourceVars;
 
     @Override
     public void onAttach(Activity activity) {
@@ -126,11 +121,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //AppLog.d(AppLog.T.STATS, this.getTag() + " > onCreate");
         mGroupIdToExpandedMap = new SparseBooleanArray();
 
         if (savedInstanceState != null) {
-            AppLog.d(AppLog.T.STATS, this.getTag() + " > restoring instance state");
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
                 Serializable oldData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
                 if (oldData != null && oldData instanceof Serializable[]) {
@@ -142,8 +135,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        //AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
-
         // Do not serialize VolleyError, but rewrite in a simple stats Exception.
         // VolleyErrors should be serializable, but for some reason they are not.
         // FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
@@ -174,7 +165,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     @Override
     public void onResume() {
-        //AppLog.d(AppLog.T.STATS, this.getTag() + " > onResume");
         super.onResume();
 
         // Init the UI
@@ -183,11 +173,11 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         } else {
             //showHideNoResultsUI(true);
             showEmptyUI();
-            mMoreDataListener.onRefreshRequested(getSectionsToUpdate());
+            refreshStats();
         }
     }
 
-    protected void showEmptyUI() {
+    private void showEmptyUI() {
         mTopPagerContainer.setVisibility(View.GONE);
         mEmptyLabel.setVisibility(View.GONE);
         mListContainer.setVisibility(View.GONE);
@@ -198,7 +188,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mEmptyModulePlaceholder.setVisibility(View.VISIBLE);
     }
 
-    protected void showHideNoResultsUI(boolean showNoResultsUI) {
+    void showHideNoResultsUI(boolean showNoResultsUI) {
         mModuleTitleTextView.setVisibility(View.VISIBLE);
         mEmptyModulePlaceholder.setVisibility(View.GONE);
 
@@ -235,14 +225,14 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         }
     }
 
-    protected void showErrorUI() {
+    void showErrorUI() {
         if (!isAdded()) {
             return;
         }
         showErrorUI(mDatamodels[mTopPagerSelectedButtonIndex]);
     }
 
-    protected void showErrorUI(Serializable error) {
+    private void showErrorUI(Serializable error) {
         if (!isAdded()) {
             return;
         }
@@ -279,11 +269,11 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
      * Check if the current datamodel is populated and is NOT an error response.
      *
      */
-    protected boolean isDataEmpty() {
+    boolean isDataEmpty() {
         return isDataEmpty(mTopPagerSelectedButtonIndex);
     }
 
-    protected boolean isDataEmpty(int index) {
+    boolean isDataEmpty(int index) {
         return mDatamodels == null
                 || mDatamodels[index] == null
                 || isErrorResponse(index);
@@ -294,17 +284,13 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
      *
      * @return true if it is a Volley Error
      */
-    protected boolean isErrorResponse() {
+    boolean isErrorResponse() {
         return isErrorResponse(mTopPagerSelectedButtonIndex);
     }
 
-    protected boolean isErrorResponse(int index) {
+    boolean isErrorResponse(int index) {
         return mDatamodels != null && mDatamodels[index] != null
                 && (mDatamodels[index] instanceof VolleyError || mDatamodels[index] instanceof StatsError);
-    }
-
-    protected boolean isSingleView() {
-        return getArguments().getBoolean(ARGS_IS_SINGLE_VIEW, false);
     }
 
     private void configureViewAllButton() {
@@ -330,7 +316,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 viewAllIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, getTimeframe());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, getViewType());
-                viewAllIntent.putExtra(StatsAbstractFragment.ARGS_START_DATE, getStartDate());
+                viewAllIntent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, getDate());
                 viewAllIntent.putExtra(ARGS_IS_SINGLE_VIEW, true);
                 if (mTopPagerContainer.getVisibility() == View.VISIBLE) {
                     viewAllIntent.putExtra(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
@@ -341,11 +327,11 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         });
     }
 
-    protected int getMaxNumberOfItemsToShowInList() {
+    int getMaxNumberOfItemsToShowInList() {
         return isSingleView() ? MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST : MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
-    protected void setupTopModulePager(LayoutInflater inflater, ViewGroup container, View view, String[] buttonTitles) {
+    void setupTopModulePager(LayoutInflater inflater, ViewGroup container, View view, String[] buttonTitles) {
         int dp4 = DisplayUtils.dpToPx(view.getContext(), 4);
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
 
@@ -371,7 +357,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mTopPagerContainer.setVisibility(View.VISIBLE);
     }
 
-    protected View.OnClickListener TopModulePagerOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener TopModulePagerOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {
@@ -402,7 +388,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             mTopPagerSelectedButtonIndex = checkedId;
 
             TextView entryLabel = (TextView) getView().findViewById(R.id.stats_list_entry_label);
-            entryLabel.setText(getEntryLabelResId());
+            if (entryLabel != null) {
+                entryLabel.setText(getEntryLabelResId());
+            }
             updateUI();
         }
     };
@@ -410,6 +398,18 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.SectionUpdated event) {
         if (!isAdded()) {
+            return;
+        }
+
+        if (!getDate().equals(event.mDate)) {
+            return;
+        }
+
+        if (!event.mRequestBlogId.equals(StatsUtils.getBlogId(getLocalTableBlogID()))) {
+            return;
+        }
+
+        if (event.mTimeframe != getTimeframe()) {
             return;
         }
 
@@ -435,10 +435,5 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
         mDatamodels[indexOfDatamodelMatch] = event.mResponseObjectModel;
         updateUI();
-    }
-
-    @Override
-    protected void resetDataModel() {
-        mDatamodels = null;
     }
 }

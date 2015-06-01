@@ -12,6 +12,8 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -29,9 +31,11 @@ import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -63,12 +67,9 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
                 try {
                     Note note = SimperiumUtils.getNotesBucket().get(noteId);
 
-                    // mark the note as read if it's unread
-                    if (note.isUnread()) {
-                        // mark as read which syncs with simperium
-                        note.markAsRead();
-                        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-                    }
+                    Map<String, String> properties = new HashMap<>();
+                    properties.put("notification_type", note.getType());
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
 
                     Fragment detailFragment = getDetailFragmentForNote(note);
                     getFragmentManager().beginTransaction()
@@ -77,6 +78,13 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
 
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setTitle(note.getTitle());
+                    }
+
+                    // mark the note as read if it's unread
+                    if (note.isUnread()) {
+                        // mark as read which syncs with simperium
+                        note.markAsRead();
+                        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
                     }
                 } catch (BucketObjectMissingException e) {
                     showErrorToastAndFinish();
@@ -93,6 +101,12 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         }
 
         GCMIntentService.clearNotificationsMap();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 
     @Override
@@ -148,15 +162,6 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
         return fragment;
     }
 
-    public void showCommentDetailForNote(Note note) {
-        if (isFinishing() || note == null) return;
-
-        Intent intent = new Intent(this, CommentDetailActivity.class);
-        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_IS_REMOTE, true);
-        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_NOTE_ID, note.getId());
-        startActivity(intent);
-    }
-
     public void showBlogPreviewActivity(long siteId) {
         if (isFinishing()) return;
 
@@ -176,7 +181,9 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
             Intent intent = new Intent(this, StatsViewAllActivity.class);
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
             intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
+            intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
             intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableSiteId);
+            intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, getString(R.string.stats_view_followers));
             startActivity(intent);
         } else {
             ActivityLauncher.viewBlogStats(this, localTableSiteId);
@@ -186,7 +193,19 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
     public void showWebViewActivityForUrl(String url) {
         if (isFinishing() || url == null) return;
 
-        WPWebViewActivity.openURL(this, url);
+        WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, url, AccountHelper.getDefaultAccount().getUserName());
+    }
+
+    public void showReaderPostLikeUsers(long blogId, long postId) {
+        if (isFinishing()) return;
+
+        ReaderActivityLauncher.showReaderLikingUsers(this, blogId, postId);
+    }
+
+    public void showReaderCommentsList(long siteId, long postId, long commentId) {
+        if (isFinishing()) return;
+
+        ReaderActivityLauncher.showReaderComments(this, siteId, postId, commentId);
     }
 
     @Override

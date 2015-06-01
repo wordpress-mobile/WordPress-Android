@@ -79,7 +79,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 noteBlockHolder.avatarImageView.setOnTouchListener(null);
             }
         } else {
-            noteBlockHolder.avatarImageView.setImageResource(R.drawable.gravatar_placeholder);
+            noteBlockHolder.avatarImageView.showDefaultGravatarImage();
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 
@@ -87,7 +87,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 NotificationsUtils.getSpannableContentForRanges(
                         getNoteData().optJSONObject("comment_text"),
                         noteBlockHolder.commentTextView,
-                        getOnNoteBlockTextClickListener())
+                        getOnNoteBlockTextClickListener(),
+                        false)
         );
 
         // Change display based on comment status and type:

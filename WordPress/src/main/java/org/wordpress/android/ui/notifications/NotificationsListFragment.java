@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +24,7 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
-import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -35,7 +33,6 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -98,14 +95,14 @@ public class NotificationsListFragment extends Fragment
                         // open the latest version of this note just in case it has changed - this can
                         // happen if the note was tapped from the list fragment after it was updated
                         // by another fragment (such as NotificationCommentLikeFragment)
-                        openNote(getActivity(), noteId, false);
+                        openNote(getActivity(), noteId, false, true);
                     }
                 });
             }
 
             mRecyclerView.setAdapter(mNotesAdapter);
         } else {
-            if (!AccountHelper.getDefaultAccount().isWordPressComUser()) {
+            if (!AccountHelper.isSignedInWordPressDotCom()) {
                 // let user know that notifications require a wp.com account and enable sign-in
                 showEmptyView(R.string.notifications_account_required, true);
             } else {
@@ -168,7 +165,10 @@ public class NotificationsListFragment extends Fragment
     /**
      * Open a note fragment based on the type of note
      */
-    public static void openNote(Activity activity, final String noteId, boolean shouldShowKeyboard) {
+    public static void openNote(Activity activity,
+                                String noteId,
+                                boolean shouldShowKeyboard,
+                                boolean shouldSlideIn) {
         if (noteId == null || activity == null) {
             return;
         }
@@ -176,14 +176,11 @@ public class NotificationsListFragment extends Fragment
         Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
         detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
         detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard);
-
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.reader_activity_slide_in,
-                R.anim.do_nothing);
-        ActivityCompat.startActivityForResult(activity, detailIntent, RequestCodes.NOTE_DETAIL, options.toBundle());
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
+        if (shouldSlideIn) {
+            ActivityLauncher.slideInFromRightForResult(activity, detailIntent, RequestCodes.NOTE_DETAIL);
+        } else {
+            activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
+        }
     }
 
     private void setNoteIsHidden(String noteId, boolean isHidden) {

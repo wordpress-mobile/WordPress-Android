@@ -20,7 +20,8 @@ import com.google.gson.reflect.TypeToken;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.passcodelock.AppLockManager;
@@ -47,6 +48,7 @@ public class ViewSiteActivity extends ActionBarActivity {
             Toast.makeText(this, getResources().getText(R.string.blog_not_found),
                     Toast.LENGTH_SHORT).show();
             finish();
+            return;
         }
 
         setContentView(R.layout.webview);
@@ -63,8 +65,14 @@ public class ViewSiteActivity extends ActionBarActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
-        this.setTitle(mBlog.getBlogName());
+        setTitle(StringUtils.unescapeHTML(mBlog.getBlogName()));
         loadSiteURL();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 
     private void loadSiteURL() {

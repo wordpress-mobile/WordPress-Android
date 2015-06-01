@@ -13,13 +13,13 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,13 +89,12 @@ public class ApiHelper {
         public void onSuccess();
     }
 
-    public static class GetPostFormatsTask extends HelperAsyncTask<java.util.List<?>, Void, Object> {
+    public static class GetPostFormatsTask extends HelperAsyncTask<Blog, Void, Object> {
         private Blog mBlog;
 
         @Override
-        protected Object doInBackground(List<?>... args) {
-            List<?> arguments = args[0];
-            mBlog = (Blog) arguments.get(0);
+        protected Object doInBackground(Blog... blog) {
+            mBlog = blog[0];
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
             Object result = null;
@@ -184,7 +182,7 @@ public class ApiHelper {
         private GenericCallback mCallback;
 
         public RefreshBlogContentTask(Blog blog, GenericCallback callback) {
-            if ( blog == null) {
+            if (blog == null) {
                 cancel(true);
                 return;
             }
@@ -247,9 +245,7 @@ public class ApiHelper {
                 }
 
                 // get theme post formats
-                List<Object> args = new Vector<Object>();
-                args.add(mBlog);
-                new GetPostFormatsTask().execute(args);
+                new GetPostFormatsTask().execute(mBlog);
             }
 
             // Check if user is an admin
