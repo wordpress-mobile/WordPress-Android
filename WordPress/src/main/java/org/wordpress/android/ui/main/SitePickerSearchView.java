@@ -25,7 +25,8 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
     @Override
     public boolean onQueryTextChange(String s) {
         mSitePickerActivity.setLastSearch(s);
-        mSitePickerActivity.getAdapter().searchSites(s);
+        SitePickerSearchAdapter searchAdapter = (SitePickerSearchAdapter) mSitePickerActivity.getAdapter();
+        searchAdapter.searchSites(s);
         return true;
     }
 
@@ -61,13 +62,15 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
         requestFocus();
         showSoftKeyboard();
         mSitePickerActivity.setIsInSearchMode(true);
-        mSitePickerActivity.getAdapter().loadSites(true, string);
+        SitePickerSearchAdapter adapter = (SitePickerSearchAdapter) mSitePickerActivity.getAdapter();
+        mSitePickerActivity.getRecycleView().swapAdapter(adapter, true);
+        adapter.loadSites(string);
     }
 
     public void disableSearchMode() {
         hideSoftKeyboard();
         mSitePickerActivity.setIsInSearchMode(false);
-        mSitePickerActivity.getAdapter().loadSites();
+        mSitePickerActivity.getRecycleView().swapAdapter(mSitePickerActivity.getAdapter(), true);
     }
 
     public void hideSoftKeyboard() {

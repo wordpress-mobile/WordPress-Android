@@ -213,6 +213,7 @@ public class SitePickerActivity extends ActionBarActivity
 
     public void setIsInSearchMode(boolean isInSearchMode) {
         mIsInSearchMode = isInSearchMode;
+        mAdapter = null;
     }
 
     @SuppressWarnings("unused")
@@ -224,11 +225,19 @@ public class SitePickerActivity extends ActionBarActivity
 
     protected SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new SitePickerAdapter(this, mCurrentLocalId, mIsInSearchMode, mLastSearch);
+            if (mIsInSearchMode) {
+                mAdapter = new SitePickerSearchAdapter(this, mCurrentLocalId, mLastSearch);
+            } else {
+                mAdapter = new SitePickerAdapter(this, mCurrentLocalId);
+            }
             mAdapter.setOnSiteClickListener(this);
             mAdapter.setOnSelectedCountChangedListener(this);
         }
         return mAdapter;
+    }
+
+    public RecyclerView getRecycleView() {
+        return mRecycleView;
     }
 
     private void saveHiddenSites() {
