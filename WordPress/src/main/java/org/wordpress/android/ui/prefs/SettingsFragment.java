@@ -87,31 +87,11 @@ public class SettingsFragment extends PreferenceFragment {
         findPreference(resources.getString(R.string.pref_key_language)).setOnPreferenceClickListener(languagePreferenceClickListener);
         findPreference(resources.getString(R.string.pref_key_app_about)).setOnPreferenceClickListener(launchActivityClickListener);
         findPreference(resources.getString(R.string.pref_key_oss_licenses)).setOnPreferenceClickListener(launchActivityClickListener);
-        findPreference(resources.getString(R.string.pref_key_passlock)).setOnPreferenceChangeListener(passcodeCheckboxChangeListener);
         findPreference(resources.getString(R.string.pref_key_reset_shared_pref)).setOnPreferenceClickListener(resetAutoSharePreferenceClickListener);
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         initNotifications();
-
-        // Passcode Lock not supported
-        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
-            final CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(
-                    resources.getString(R.string.pref_key_passlock));
-            // disable on-click changes on the property
-            passcodeEnabledCheckBoxPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    passcodeEnabledCheckBoxPreference.setChecked(
-                            AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked());
-                    return false;
-                }
-            });
-        } else {
-            PreferenceScreen rootScreen = (PreferenceScreen) findPreference(resources.getString(R.string.pref_key_settings_root));
-            PreferenceGroup passcodeGroup = (PreferenceGroup) findPreference(resources.getString(R.string.pref_key_passlock_section));
-            rootScreen.removePreference(passcodeGroup);
-        }
         updatePostSignature();
     }
 
@@ -171,16 +151,6 @@ public class SettingsFragment extends PreferenceFragment {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.settings);
-
-        //update Passcode lock row if available
-        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
-            CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(getResources().getString(R.string.pref_key_passlock));
-            if (AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked()) {
-                passcodeEnabledCheckBoxPreference.setChecked(true);
-            } else {
-                passcodeEnabledCheckBoxPreference.setChecked(false);
-            }
-        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
