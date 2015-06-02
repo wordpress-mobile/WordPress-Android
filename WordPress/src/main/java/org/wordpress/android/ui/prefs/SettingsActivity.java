@@ -20,9 +20,11 @@ public class SettingsActivity extends ActionBarActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         setContentView(R.layout.settings_activity);
-        getFragmentManager().beginTransaction()
-                            .add(R.id.fragment_container, new SettingsFragment())
-                            .commit();
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, new SettingsFragment())
+                    .commit();
+        }
     }
 
     @Override
