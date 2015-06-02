@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main;
 
 import android.test.InstrumentationTestCase;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import static org.mockito.Mockito.mock;
@@ -8,14 +9,14 @@ import static org.mockito.Mockito.mock;
 public class SitePickerSearchViewTest extends InstrumentationTestCase {
     private SitePickerSearchView mSitePickerSearchView;
     private SitePickerActivity mMockSitePickerActivity;
-    private MenuItem mMockMenuItem;
+    private Menu mMockMenu;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         mSitePickerSearchView = new SitePickerSearchView(getInstrumentation().getContext());
         mMockSitePickerActivity = mock(SitePickerActivity.class);
-        mMockMenuItem = mock(MenuItem.class);
+        mMockMenu = mock(Menu.class);
 
     }
 
@@ -24,7 +25,7 @@ public class SitePickerSearchViewTest extends InstrumentationTestCase {
         super.tearDown();
         mSitePickerSearchView = null;
         mMockSitePickerActivity = null;
-        mMockMenuItem = null;
+        mMockMenu = null;
     }
 
     public void testConstructorSetsInputMethodManager() {
@@ -32,7 +33,7 @@ public class SitePickerSearchViewTest extends InstrumentationTestCase {
     }
 
     public void testConfigureSetsIconifiedByDefaultToFalse() {
-        mSitePickerSearchView.configure(mMockSitePickerActivity, mMockMenuItem);
+        mSitePickerSearchView.configure(mMockSitePickerActivity, mMockMenu);
 
         assertFalse(mSitePickerSearchView.isIconfiedByDefault());
     }
