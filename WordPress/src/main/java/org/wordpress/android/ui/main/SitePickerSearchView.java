@@ -69,7 +69,7 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
         mMenuEdit.setVisible(false);
         requestFocus();
         showSoftKeyboard();
-        mSitePickerActivity.setIsInSearchMode(true);
+        mSitePickerActivity.setIsInSearchModeAndNullifyAdapter(true);
         SitePickerSearchAdapter adapter = (SitePickerSearchAdapter) mSitePickerActivity.getAdapter();
         mSitePickerActivity.getRecycleView().swapAdapter(adapter, true);
         adapter.loadSites(string);
@@ -78,7 +78,7 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
     public void disableSearchMode() {
         mMenuEdit.setVisible(true);
         hideSoftKeyboard();
-        mSitePickerActivity.setIsInSearchMode(false);
+        mSitePickerActivity.setIsInSearchModeAndNullifyAdapter(false);
         mSitePickerActivity.getRecycleView().swapAdapter(mSitePickerActivity.getAdapter(), true);
     }
 

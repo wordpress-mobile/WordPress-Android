@@ -215,7 +215,7 @@ public class SitePickerActivity extends ActionBarActivity
         return mIsInSearchMode;
     }
 
-    public void setIsInSearchMode(boolean isInSearchMode) {
+    public void setIsInSearchModeAndNullifyAdapter(boolean isInSearchMode) {
         mIsInSearchMode = isInSearchMode;
         mAdapter = null;
     }
