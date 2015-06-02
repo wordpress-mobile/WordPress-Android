@@ -18,7 +18,6 @@ import org.wordpress.android.util.AnalyticsUtils;
 public class SettingsActivity extends ActionBarActivity {
     public static final String CURRENT_BLOG_CHANGED = "CURRENT_BLOG_CHANGED";
     private Blog mCurrentBlogOnCreate;
-    private SettingsFragment mSettingsFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,10 +31,11 @@ public class SettingsActivity extends ActionBarActivity {
 
         mCurrentBlogOnCreate = WordPress.getCurrentBlog();
         setContentView(R.layout.settings_activity);
-        mSettingsFragment = new SettingsFragment();
-        getFragmentManager().beginTransaction()
-                            .add(R.id.fragment_container, mSettingsFragment)
-                            .commit();
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, new SettingsFragment())
+                    .commit();
+        }
     }
 
     @Override
@@ -58,7 +58,8 @@ public class SettingsActivity extends ActionBarActivity {
                     currentBlogChanged = true;
                 }
             } else {
-                if (!WordPress.wpDB.isBlogInDatabase(mCurrentBlogOnCreate.getRemoteBlogId(), mCurrentBlogOnCreate.getUrl())) {
+                if (!WordPress.wpDB.isBlogInDatabase(mCurrentBlogOnCreate.getRemoteBlogId(),
+                        mCurrentBlogOnCreate.getUrl())) {
                     // self hosted blog has been removed
                     currentBlogChanged = true;
                 }
