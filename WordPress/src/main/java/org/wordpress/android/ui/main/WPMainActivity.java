@@ -12,12 +12,14 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.simperium.client.Bucket;
+import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -39,6 +41,7 @@ import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
@@ -273,6 +276,20 @@ public class WPMainActivity extends Activity
         }
     }
 
+    private void moderateCommentOnActivityResult(Intent data) {
+        try {
+            if (SimperiumUtils.getNotesBucket() != null) {
+                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
+                        (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+                CommentStatus status = CommentStatus.fromString(data.getStringExtra(
+                        NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
+                NotificationsUtils.moderateCommentForNote(note, status, this);
+            }
+        } catch (BucketObjectMissingException e) {
+            AppLog.e(T.NOTIFS, e);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -309,8 +326,8 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:
-                if (getNotificationListFragment() != null) {
-                    getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
+                if (resultCode == RESULT_OK && data != null) {
+                    moderateCommentOnActivityResult(data);
                 }
                 break;
             case RequestCodes.PICTURE_LIBRARY:

@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.notifications.utils;
 
 import android.app.AlertDialog;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.Layout;
 import android.text.Spannable;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.cocosw.undobar.UndoBarController;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
@@ -34,6 +37,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.comments.CommentActions;
+import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationFailed;
+import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationStatusChanged;
+import org.wordpress.android.ui.notifications.NotificationEvents.NoteVisibilityChanged;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
@@ -48,6 +57,10 @@ import org.wordpress.android.util.helpers.WPImageGetter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import de.greenrobot.event.EventBus;
 
 public class NotificationsUtils {
     public static final String ARG_PUSH_AUTH_TOKEN = "arg_push_auth_token";
@@ -468,6 +481,7 @@ public class NotificationsUtils {
         return spannable != null && index < spannable.length() && spannable.charAt(index) == character;
     }
 
+
     public static void showPushAuthAlert(Context context, final String token, String title, String message) {
         if (context == null ||
                 TextUtils.isEmpty(token) ||
@@ -488,11 +502,11 @@ public class NotificationsUtils {
                 tokenMap.put("push_token", token);
                 WordPress.getRestClientUtilsV1_1().post(PUSH_AUTH_ENDPOINT, tokenMap, null, null,
                         new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_FAILED);
-                    }
-                });
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_FAILED);
+                            }
+                        });
 
                 AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_APPROVED);
             }
@@ -507,5 +521,65 @@ public class NotificationsUtils {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private static void showUndoBarForNote(final Note note, final CommentStatus status, final Activity activity) {
+        new UndoBarController.UndoBar(activity)
+                .message(status == CommentStatus.TRASH ? R.string.comment_trashed : R.string.comment_spammed)
+                .listener(new UndoBarController.AdvancedUndoListener() {
+                    @Override
+                    public void onHide(Parcelable parcelable) {
+                        // Deleted notifications in Simperium never come back, so we won't
+                        // make the request until the undo bar fades away
+                        CommentActions.moderateCommentForNote(note, status,
+                                new CommentActions.CommentActionListener() {
+                                    @Override
+                                    public void onActionResult(boolean succeeded) {
+                                        if (!succeeded) {
+                                            EventBus.getDefault().post(new NoteVisibilityChanged(note.getId(), false));
+                                            EventBus.getDefault().post(new NoteModerationFailed());
+                                        }
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onClear(@Nonnull Parcelable[] token) {
+                        //noop
+                    }
+
+                    @Override
+                    public void onUndo(Parcelable parcelable) {
+                        EventBus.getDefault().post(new NoteVisibilityChanged(note.getId(), false));
+                    }
+                }).show();
+    }
+
+    /**
+     * Moderate a comment from a WPCOM notification.
+     * Broadcast EventBus events on update/success/failure and show an undo bar if new status is Trash or Spam
+     */
+    public static void moderateCommentForNote(final Note note, final CommentStatus newStatus, final Activity activity) {
+        if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
+            note.setLocalStatus(CommentStatus.toRESTString(newStatus));
+            note.save();
+            EventBus.getDefault().post(new NoteModerationStatusChanged(note.getId(), true));
+            CommentActions.moderateCommentForNote(note, newStatus,
+                    new CommentActions.CommentActionListener() {
+                        @Override
+                        public void onActionResult(boolean succeeded) {
+                            EventBus.getDefault().post(new NoteModerationStatusChanged(note.getId(), false));
+                            if (!succeeded) {
+                                note.setLocalStatus(null);
+                                note.save();
+                                EventBus.getDefault().post(new NoteModerationFailed());
+                            }
+                        }
+                    });
+        } else if (newStatus == CommentStatus.TRASH || newStatus == CommentStatus.SPAM) {
+            EventBus.getDefault().post(new NoteVisibilityChanged(note.getId(), true));
+            // Show undo bar for trash or spam actions
+            showUndoBarForNote(note, newStatus, activity);
+        }
     }
 }
