@@ -1,1 +1,6 @@
-repository=file:///Users/max/work/automattic/WordPress-Android-gh-pages/
+ossrhUsername=hello
+ossrhPassword=world
+
+signing.keyId=byebye
+signing.password=secret
+signing.secretKeyRingFile=/home/user/secret.gpg
