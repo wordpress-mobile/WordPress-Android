@@ -42,6 +42,7 @@ import de.greenrobot.event.EventBus;
 public class NotificationsDetailActivity extends ActionBarActivity implements
         CommentActions.OnNoteCommentActionListener {
     private static final String ARG_TITLE = "activityTitle";
+    private static final String DOMAIN_WPCOM = "wordpress.com";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -193,7 +194,11 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
     public void showWebViewActivityForUrl(String url) {
         if (isFinishing() || url == null) return;
 
-        WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, url, AccountHelper.getDefaultAccount().getUserName());
+        if (url.contains(DOMAIN_WPCOM)) {
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, url, AccountHelper.getDefaultAccount().getUserName());
+        } else {
+            WPWebViewActivity.openURL(this, url);
+        }
     }
 
     public void showReaderPostLikeUsers(long blogId, long postId) {
