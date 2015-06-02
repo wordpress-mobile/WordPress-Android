@@ -29,25 +29,31 @@ import android.graphics.Color;
 public class GraphViewStyle {
 	private int verticalLabelsColor;
 	private int horizontalLabelsColor;
+    private int horizontalBackgroundLabelsColor;
+    private IndexDependentColor horizontalLabelsIndexDependentColor;
+    private IndexDependentColor horizontalLabelsBackgroundIndexDependentColor;
 	private int gridXColor;
 	private int gridYColor;
 	private float textSize = 30f;
 	private int verticalLabelsWidth;
 	private int numVerticalLabels;
 	private int numHorizontalLabels;
+    private int maxColumnWidth; // Max width in PX a column can get on the screen
 
 	public GraphViewStyle() {
 		verticalLabelsColor = Color.WHITE;
 		horizontalLabelsColor = Color.WHITE;
+        horizontalBackgroundLabelsColor = Color.TRANSPARENT;
 		gridXColor = Color.DKGRAY;
 		gridYColor = Color.DKGRAY;
 	}
 
-	public GraphViewStyle(int vLabelsColor, int hLabelsColor, int gridXColor, int gridYColor) {
+	public GraphViewStyle(int vLabelsColor, int hLabelsColor, int hLabelsBackgroundColor, int gridXColor, int gridYColor) {
 		this.verticalLabelsColor = vLabelsColor;
 		this.horizontalLabelsColor = hLabelsColor;
 		this.gridXColor = gridXColor;
 		this.gridYColor = gridYColor;
+        this.horizontalBackgroundLabelsColor = hLabelsBackgroundColor;
 	}
 
 	public int getGridXColor() {
@@ -58,9 +64,29 @@ public class GraphViewStyle {
 		return gridYColor;
 	}
 
+    public int getHorizontalLabelsColor(int i) {
+        if (horizontalLabelsIndexDependentColor != null) {
+            return horizontalLabelsIndexDependentColor.get(i);
+        }
+
+        return getHorizontalLabelsColor();
+    }
+
 	public int getHorizontalLabelsColor() {
 		return horizontalLabelsColor;
 	}
+
+    public int getHorizontalLabelsBackgroundColor(int i) {
+        if (horizontalLabelsBackgroundIndexDependentColor != null) {
+            return horizontalLabelsBackgroundIndexDependentColor.get(i);
+        }
+
+        return getHorizontalLabelsBackgroundColor();
+    }
+
+    public int getHorizontalLabelsBackgroundColor() {
+        return horizontalBackgroundLabelsColor;
+    }
 
 	public int getNumHorizontalLabels() {
 		return numHorizontalLabels;
@@ -94,6 +120,15 @@ public class GraphViewStyle {
 		horizontalLabelsColor = c;
 	}
 
+
+    public int getMaxColumnWidth() {
+        return maxColumnWidth;
+    }
+
+    public void setMaxColumnWidth(int maxColumnWidth) {
+        this.maxColumnWidth = maxColumnWidth;
+    }
+
 	/**
 	 * @param numHorizontalLabels 0 = auto
 	 */
@@ -122,4 +157,25 @@ public class GraphViewStyle {
 	public void setVerticalLabelsWidth(int verticalLabelsWidth) {
 		this.verticalLabelsWidth = verticalLabelsWidth;
 	}
+
+    public IndexDependentColor getHorizontalLabelsIndexDependentColor() {
+        return horizontalLabelsIndexDependentColor;
+    }
+
+    /**
+     * the color depends on the index of the data in the series
+     * only possible in BarGraphView
+     * @param indexDependentColor
+     */
+    public void setHorizontalLabelsIndexDependentColor(IndexDependentColor indexDependentColor) {
+        this.horizontalLabelsIndexDependentColor = indexDependentColor;
+    }
+
+    public IndexDependentColor getHorizontalLabelsBackgroundIndexDependentColor() {
+        return horizontalLabelsBackgroundIndexDependentColor;
+    }
+
+    public void setHorizontalLabelsBackgroundIndexDependentColor(IndexDependentColor indexDependentColor) {
+        this.horizontalLabelsBackgroundIndexDependentColor = indexDependentColor;
+    }
 }

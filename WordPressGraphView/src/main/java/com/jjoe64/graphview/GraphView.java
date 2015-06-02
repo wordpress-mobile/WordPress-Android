@@ -53,7 +53,7 @@ import com.jjoe64.graphview.compatible.ScaleGestureDetector;
  */
 abstract public class GraphView extends LinearLayout {
 	static final private class GraphViewConfig {
-		static final float BORDER = 20;
+		static final float BORDER = 30;
 	}
 
 	private class GraphViewContentView extends View {
@@ -113,7 +113,7 @@ abstract public class GraphView extends LinearLayout {
 				verlabels = generateVerlabels(graphheight);
 			}
 
-			// vertical lines
+			// vertical lines (aligned with the verLabels)
 			paint.setTextAlign(Align.LEFT);
 			int vers = verlabels.length - 1;
 			for (int i = 0; i < verlabels.length; i++) {
@@ -122,25 +122,42 @@ abstract public class GraphView extends LinearLayout {
 				canvas.drawLine(horstart, y, width, y, paint);
 			}
 
-			float colWidth = graphwidth / horlabels.length;
+            float colWidth = graphwidth / horlabels.length;
+            int maxColumnSize = getGraphViewStyle().getMaxColumnWidth();
+            if (maxColumnSize > 0 && colWidth > maxColumnSize) {
+                // we need to calculate horstart here
+                colWidth = maxColumnSize;
+                float diffSingleColumn = graphwidth / horlabels.length - colWidth;
+                diffSingleColumn *= horlabels.length;
+                horstart = diffSingleColumn / 2;
+            }
 
 			// horizontal labels + lines
 			int hors = horlabels.length;
 			int horLabelsToShow = getGraphViewStyle().getNumHorizontalLabels();
 			for (int i = 0; i < horlabels.length; i++) {
 				paint.setColor(graphViewStyle.getGridXColor());
-				float x = ((graphwidth / hors) * i) + horstart + (colWidth/2);
+				float x = (colWidth * i) + horstart + (colWidth/2);
 				canvas.drawLine(x, height - border, x, border, paint);
+
+                // Draw the background of labels
+                if (graphViewStyle.getHorizontalLabelsBackgroundColor(i) != Color.TRANSPARENT) {
+                    paint.setColor(graphViewStyle.getHorizontalLabelsBackgroundColor(i));
+                    canvas.drawRect(
+                            (colWidth * i) + horstart,
+                            height - border,
+                            (colWidth * i) + horstart + colWidth,
+                            height,
+                            paint
+                    );
+                }
+
+                // Draw the label
 				paint.setTextAlign(Align.CENTER);
-				if (i==horlabels.length-1)
-					paint.setTextAlign(Align.RIGHT);
-				if (i==0)
-					paint.setTextAlign(Align.LEFT);
-				paint.setColor(graphViewStyle.getHorizontalLabelsColor());
+				paint.setColor(graphViewStyle.getHorizontalLabelsColor(i));
 				
 				if (horLabelsToShow > 0 && (hors / horLabelsToShow) > 0) {
-					if ( i % (hors / horLabelsToShow) == 1)
-						canvas.drawText(horlabels[i], x, height - 4, paint);
+			        canvas.drawText(horlabels[i], x, height - (GraphViewConfig.BORDER / 2), paint);
 				}
 			}
 
@@ -298,7 +315,7 @@ abstract public class GraphView extends LinearLayout {
 			 // measure bottom text
 			if (labelTextHeight == null || verLabelTextWidth == null) {
 				paint.setTextSize(getGraphViewStyle().getTextSize());
-				double testY = ((getMaxY()-getMinY())*0.783)+getMinY();
+				double testY = getMaxY();
 				String testLabel = formatLabel(testY, false);
 				paint.getTextBounds(testLabel, 0, testLabel.length(), textBounds);
 				labelTextHeight = (textBounds.height());
@@ -325,10 +342,11 @@ abstract public class GraphView extends LinearLayout {
 			// vertical labels
 			paint.setTextAlign(Align.LEFT);
 			int vers = verlabels.length - 1;
+            float xPosOfText = (GraphViewConfig.BORDER / 2) + (padding / 2);
 			for (int i = 0; i < verlabels.length; i++) {
 				float y = ((graphheight / vers) * i) + border;
 				paint.setColor(graphViewStyle.getVerticalLabelsColor());
-				canvas.drawText(verlabels[i], 0, y, paint);
+				canvas.drawText(verlabels[i], xPosOfText, y, paint);
 			}
 		}
 	}
@@ -388,10 +406,11 @@ abstract public class GraphView extends LinearLayout {
 		paint = new Paint();
 		graphSeries = new ArrayList<GraphViewSeries>();
 
-		viewVerLabels = new VerLabelsView(context);
-		addView(viewVerLabels);
 		graphViewContentView = new GraphViewContentView(context);
 		addView(graphViewContentView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1));
+
+        viewVerLabels = new VerLabelsView(context);
+        addView(viewVerLabels);
 	}
 
 	private GraphViewDataInterface[] _values(int idxSeries) {

@@ -3,38 +3,81 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:1.1.0'
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 android {
-    defaultPublishConfig 'debug'
+    publishNonDefault true
 
     compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
-        versionName "3.2.1"
+        versionName "3.3.0"
         versionCode 1
         minSdkVersion 8
         targetSdkVersion 19
     }
 }
 
+signing {
+    required {
+        has("release") && project.properties.containsKey("signing.keyId") && project.properties.containsKey("signing.secretKeyRingFile")
+    }
+    sign configurations.archives
+}
+
+
+version android.defaultConfig.versionName
+group = "org.wordpress"
+archivesBaseName = "graphview"
+
+// http://central.sonatype.org/pages/gradle.html
+
 uploadArchives {
     repositories {
         mavenDeployer {
-            def repo_url = ""
-            if (project.hasProperty("repository")) {
-                repo_url = project.repository
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: project.properties.ossrhUsername, password: project.properties.ossrhPassword)
             }
-            repository(url: repo_url)
-            pom.version = android.defaultConfig.versionName
-            pom.groupId = "org.wordpress"
-            pom.artifactId = "graphview"
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: project.properties.ossrhUsername, password: project.properties.ossrhPassword)
+            }
+
+            pom.project {
+                name 'GraphView'
+                packaging 'aar'
+                description 'Android Graph Library for creating zoomable and scrollable line and bar graphs.'
+                url 'https://github.com/wordpress-mobile/GraphView'
+                scm {
+                    connection 'scm:git:https://github.com/wordpress-mobile/GraphView.git'
+                    developerConnection 'scm:git:https://github.com/wordpress-mobile/GraphView.git'
+                    url 'https://github.com/wordpress-mobile/GraphView'
+                }
+
+                licenses {
+                    license {
+                        name 'The GPLv2 License'
+                        url 'https://www.gnu.org/licenses/old-licenses/gpl-2.0.html'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'daniloercoli'
+                        name 'Danilo Ercoli'
+                        email 'danilo@automattic.com'
+                    }
+                }
+            }
         }
     }
 }
