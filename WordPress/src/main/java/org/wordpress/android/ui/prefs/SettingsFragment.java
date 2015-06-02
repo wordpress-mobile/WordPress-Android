@@ -184,11 +184,7 @@ public class SettingsFragment extends PreferenceFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (getActivity() instanceof SettingsActivity) {
-                    ((SettingsActivity) getActivity()).checkForBlogChangeAndFinish();
-                } else {
-                    getActivity().finish();
-                }
+                getActivity().finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -273,11 +269,7 @@ public class SettingsFragment extends PreferenceFragment {
 
                     Intent refresh = new Intent(getActivity(), getActivity().getClass());
                     startActivity(refresh);
-                    if (getActivity() instanceof SettingsActivity) {
-                        ((SettingsActivity) getActivity()).checkForBlogChangeAndFinish();
-                    } else {
-                        getActivity().finish();
-                    }
+                    getActivity().finish();
                 }
             });
 
