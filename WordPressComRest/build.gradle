@@ -2,7 +2,9 @@ buildscript {
     repositories {
         mavenCentral()
     }
-    dependencies { classpath 'com.android.tools.build:gradle:0.12.+' }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+    }
 }
 
 apply plugin: 'com.android.library'
@@ -12,13 +14,12 @@ repositories {
 }
 
 android {
-    defaultPublishConfig 'debug'
+    publishNonDefault true
 
-    compileSdkVersion 20
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 19
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
-        applicationId "com.wordpress.rest"
         versionName "1.0.0"
         versionCode 1
         minSdkVersion 14
