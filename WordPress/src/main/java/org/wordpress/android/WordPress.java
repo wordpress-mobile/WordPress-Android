@@ -383,17 +383,16 @@ public class WordPress extends Application {
      * select the first one.
      */
     public static Blog getCurrentBlog() {
+        if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
+            attemptToRestoreLastActiveBlog();
+        }
+
+        return currentBlog;
+    }
+
+    public static Blog getCurrentBlogEvenIfNotVisible() {
         if (currentBlog == null) {
-            // attempt to restore the last active blog
-            if (setCurrentBlogToLastActive() == null) {
-                // fallback to just using the first blog
-                List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
-                if (accounts.size() > 0) {
-                    int id = Integer.valueOf(accounts.get(0).get("id").toString());
-                    setCurrentBlog(id);
-                    wpDB.updateLastBlogId(id);
-                }
-            }
+            attemptToRestoreLastActiveBlog();
         }
 
         return currentBlog;
@@ -630,6 +629,18 @@ public class WordPress extends Application {
         HttpResponseCache cache = HttpResponseCache.getInstalled();
         if (cache != null) {
             cache.flush();
+        }
+    }
+
+    private static void attemptToRestoreLastActiveBlog() {
+        if (setCurrentBlogToLastActive() == null) {
+            // fallback to just using the first blog
+            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
+            if (accounts.size() > 0) {
+                int id = Integer.valueOf(accounts.get(0).get("id").toString());
+                setCurrentBlog(id);
+                wpDB.updateLastBlogId(id);
+            }
         }
     }
 
