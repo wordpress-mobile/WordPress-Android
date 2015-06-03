@@ -159,7 +159,7 @@ public class WPMainActivity extends Activity
             long expires = extras.getLong(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, 0);
 
             long now = System.currentTimeMillis() / 1000;
-            if (now > expires) {
+            if (expires > 0 && now > expires) {
                 // Show a toast if the user took too long to open the notification
                 ToastUtils.showToast(this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
                 AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
