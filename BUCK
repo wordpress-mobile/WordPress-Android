@@ -173,6 +173,21 @@ android_prebuilt_aar(
     aar = 'extlibs/floatingactionbutton.aar',
 )
 
+android_prebuilt_aar(
+    name = 'persistentedittext',
+    aar = 'extlibs/persistentedittext.aar',
+)
+
+android_prebuilt_aar(
+    name = 'graphview',
+    aar = 'extlibs/graphview.aar',
+)
+
+android_prebuilt_aar(
+    name = 'wpcomrest',
+    aar = 'extlibs/wpcomrest.aar',
+)
+
 ### WordPressUtils
 
 android_build_config(
@@ -219,40 +234,6 @@ r_android_library(
     ]
 )
 
-### PersistentEditText
-
-android_resource(
-    name = 'persistentedittext-res',
-    package = 'org.wordpress.persistentedittext',
-    res = 'libs/persistentedittext/PersistentEditText/src/main/res',
-)
-
-r_android_library(
-    name = 'persistentedittext',
-    srcs = glob(['libs/persistentedittext/PersistentEditText/src/main/java/**/*.java']),
-    deps = [
-        ':persistentedittext-res',
-    ]
-)
-
-### WPComRest
-
-r_android_library(
-    name = 'wpcomrest',
-    srcs = glob(['libs/wpcomrest/WordPressComRest/src/main/java/**/*.java']),
-    deps = [
-        ':all-jars', # volley
-    ]
-)
-
-### WPGraphView
-
-r_android_library(
-    name = 'wpgraphview',
-    srcs = glob(['libs/graphview/WordPressGraphView/src/main/java/**/*.java']),
-)
-
-
 ### WordPressAnalytics
 
 r_android_library(
@@ -295,7 +276,6 @@ android_resource(
         ':appcompat-v7',
         ':wpandroid-utils',
         ':wpandroid-utils-res',
-        ':persistentedittext-res',
         ':wpandroid-editor-res',
         ':drag-sort-listview',
         ':mediapicker',
@@ -326,7 +306,7 @@ r_android_library(
         ':wpandroid-editor',
         ':wpcomrest',
         ':wpanalytics',
-        ':wpgraphview',
+        ':graphview',
         ':build-config',
         ':drag-sort-listview',
         ':simperium',
