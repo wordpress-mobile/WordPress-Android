@@ -15,6 +15,7 @@ public enum NoteBlockRangeType {
     FOLLOW,
     NOTICON,
     LIKE,
+    MATCH,
     UNKNOWN;
 
     public static NoteBlockRangeType fromString(String value) {
@@ -39,6 +40,8 @@ public enum NoteBlockRangeType {
                 return NOTICON;
             case "like":
                 return LIKE;
+            case "match":
+                return MATCH;
             default:
                 return UNKNOWN;
         }
