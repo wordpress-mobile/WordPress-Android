@@ -60,6 +60,9 @@ BASE_DEPENDENCIES ={
 'undobar': {'url': 'https://repo1.maven.org/maven2/com/cocosw/undobar/1.6/undobar-1.6.aar'},
 'volley': {'url': 'https://repo1.maven.org/maven2/com/mcxiaoke/volley/library/1.0.15/library-1.0.15.jar'},
 'floatingactionbutton': {'url': 'https://repo1.maven.org/maven2/com/getbase/floatingactionbutton/1.9.0/floatingactionbutton-1.9.0.aar'},
+'wpcomrest': {'url': 'https://repo1.maven.org/maven2/com/automattic/rest/1.0.1/rest-1.0.1.aar'},
+'persistentedittext': {'url': 'https://repo1.maven.org/maven2/org/wordpress/persistentedittext/1.0.1/persistentedittext-1.0.1.aar'},
+'graphview': {'url': 'https://repo1.maven.org/maven2/org/wordpress/graphview/3.3.0/graphview-3.3.0.aar'},
 }
 
 TEST_DEPENDENCIES = {
