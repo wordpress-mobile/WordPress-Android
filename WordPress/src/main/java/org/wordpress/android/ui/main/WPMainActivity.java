@@ -17,6 +17,7 @@ import com.simperium.client.BucketObjectMissingException;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
@@ -148,6 +149,24 @@ public class WPMainActivity extends Activity
      */
     private void launchWithNoteId() {
         if (isFinishing() || getIntent() == null) return;
+
+        // Check for push authorization request
+        if (getIntent().hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
+            Bundle extras = getIntent().getExtras();
+            String token = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, "");
+            String title = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TITLE, "");
+            String message = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, "");
+            long expires = extras.getLong(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, 0);
+
+            long now = System.currentTimeMillis() / 1000;
+            if (expires > 0 && now > expires) {
+                // Show a toast if the user took too long to open the notification
+                ToastUtils.showToast(this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+            } else {
+                NotificationsUtils.showPushAuthAlert(this, token, title, message);
+            }
+        }
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 

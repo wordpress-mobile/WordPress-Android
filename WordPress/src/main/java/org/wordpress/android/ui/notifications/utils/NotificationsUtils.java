@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.notifications.utils;
 
+import android.app.AlertDialog;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -32,6 +34,7 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
@@ -60,10 +63,17 @@ import javax.annotation.Nonnull;
 import de.greenrobot.event.EventBus;
 
 public class NotificationsUtils {
+    public static final String ARG_PUSH_AUTH_TOKEN = "arg_push_auth_token";
+    public static final String ARG_PUSH_AUTH_TITLE = "arg_push_auth_title";
+    public static final String ARG_PUSH_AUTH_MESSAGE = "arg_push_auth_message";
+    public static final String ARG_PUSH_AUTH_EXPIRES = "arg_push_auth_expires";
 
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
+    public static final String WPCOM_PUSH_AUTH_TOKEN = "wp_pref_push_auth_token";
+
+    private static final String PUSH_AUTH_ENDPOINT = "me/two-step/push-authentication";
 
     private static final String WPCOM_PUSH_KEY_MUTED_BLOGS = "muted_blogs";
     private static final String WPCOM_PUSH_KEY_MUTE_UNTIL = "mute_until";
@@ -469,6 +479,48 @@ public class NotificationsUtils {
 
     public static boolean spannableHasCharacterAtIndex(Spannable spannable, char character, int index) {
         return spannable != null && index < spannable.length() && spannable.charAt(index) == character;
+    }
+
+
+    public static void showPushAuthAlert(Context context, final String token, String title, String message) {
+        if (context == null ||
+                TextUtils.isEmpty(token) ||
+                TextUtils.isEmpty(title) ||
+                TextUtils.isEmpty(message)) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title).setMessage(message);
+
+        builder.setPositiveButton(R.string.mnu_comment_approve, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // ping the push auth endpoint with the token, wp.com will take care of the rest!
+                Map<String, String> tokenMap = new HashMap<>();
+                tokenMap.put("action", "authorize_login");
+                tokenMap.put("push_token", token);
+                WordPress.getRestClientUtilsV1_1().post(PUSH_AUTH_ENDPOINT, tokenMap, null, null,
+                        new RestRequest.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_FAILED);
+                            }
+                        });
+
+                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_APPROVED);
+            }
+        });
+
+        builder.setNegativeButton(R.string.ignore, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private static void showUndoBarForNote(final Note note, final CommentStatus status, final Activity activity) {
