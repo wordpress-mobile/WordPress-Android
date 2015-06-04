@@ -67,7 +67,7 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
         mostPopularDayPercentTextView.setText(
                 String.format(
                         getString(R.string.stats_insights_most_popular_percent_weekly_views),
-                        data.getHighestDayPercent().intValue()
+                        roundToInteger(data.getHighestDayPercent())
                 )
         );
 
@@ -80,11 +80,24 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
         mostPopularHourPercentTextView.setText(
                 String.format(
                         getString(R.string.stats_insights_most_popular_percent_daily_views),
-                        data.getHighestHourPercent().intValue()
+                        roundToInteger(data.getHighestHourPercent())
                 )
         );
 
         mResultContainer.addView(ll);
+    }
+
+    /*
+     * Round a double to the closest integer
+     *
+     * If the decimal part is less than 0.5, the integer part stays the same,
+     * and truncation gives the right result.
+     * If the decimal part is more that 0.5, the integer part increments,
+     * and again truncation gives what we want.
+     *
+     */
+    private int roundToInteger(double inputValue) {
+        return (int) Math.floor(inputValue + 0.5);
     }
 
     @Override
