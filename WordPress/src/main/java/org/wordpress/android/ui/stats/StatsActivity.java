@@ -213,8 +213,8 @@ public class StatsActivity extends ActionBarActivity
 
         selectCurrentTimeframeInActionBar();
 
-        TextView otherRecemtStatsMovedLabel = (TextView) findViewById(R.id.stats_other_recent_stats_moved);
-        otherRecemtStatsMovedLabel.setOnClickListener(new View.OnClickListener() {
+        TextView otherRecentStatsMovedLabel = (TextView) findViewById(R.id.stats_other_recent_stats_moved);
+        otherRecentStatsMovedLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 for (int i = 0; i < timeframes.length; i++) {
