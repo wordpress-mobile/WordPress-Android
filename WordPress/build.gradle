@@ -30,7 +30,7 @@ android {
         jumboMode = true
     }
 
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
     defaultConfig {
