@@ -14,10 +14,10 @@ public class InsightsPopularModel implements Serializable {
 
     public InsightsPopularModel(String blogID, JSONObject response) throws JSONException {
         this.setBlogID(blogID);
-        this.mHighestDayOfWeek = response.getInt(("highest_day_of_week"));
-        this.mHighestHour = response.getInt(("highest_hour"));
-        this.mHighestDayPercent = response.getDouble("highest_day_percent");
-        this.mHighestHourPercent = response.getDouble("highest_hour_percent");
+        this.mHighestDayOfWeek = response.optInt("highest_day_of_week");
+        this.mHighestHour = response.optInt("highest_hour");
+        this.mHighestDayPercent = response.optDouble("highest_day_percent");
+        this.mHighestHourPercent = response.optDouble("highest_hour_percent");
     }
 
     public String getBlogID() {

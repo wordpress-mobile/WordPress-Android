@@ -13,8 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-
-
 public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragment {
     public static final String TAG = StatsInsightsMostPopularFragment.class.getSimpleName();
 

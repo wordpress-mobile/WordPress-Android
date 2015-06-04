@@ -39,9 +39,9 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
         viewsTextView.setText(FormatUtils.formatDecimal(data.getViews()));
         visitorsTextView.setText(FormatUtils.formatDecimal(data.getVisitors()));
 
-        besteverTextView.setText(FormatUtils.formatDecimal(data.getViews_best_day_total()));
+        besteverTextView.setText(FormatUtils.formatDecimal(data.getViewsBestDayTotal()));
         besteverDateTextView.setText(
-                StatsUtils.parseDate(data.getViews_best_day(), StatsConstants.STATS_INPUT_DATE_FORMAT, "MMMM dd, yyyy")
+                StatsUtils.parseDate(data.getViewsBestDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, "MMMM dd, yyyy")
         );
 
         mResultContainer.addView(ll);

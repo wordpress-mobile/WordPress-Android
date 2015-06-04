@@ -9,22 +9,22 @@ public class InsightsAllTimeModel implements Serializable {
 
     private String mBlogID;
     private String mDate;
-    private int visitors;
-    private int views;
-    private int posts;
-    private String views_best_day;
-    private int views_best_day_total;
+    private int mVisitors;
+    private int mViews;
+    private int mPosts;
+    private String mViewsBestDay;
+    private int mViewsBestDayTotal;
 
 
     public InsightsAllTimeModel(String blogID, JSONObject response) throws JSONException {
         this.setBlogID(blogID);
         this.mDate = response.getString("date");
         JSONObject stats = response.getJSONObject("stats");
-        this.posts = stats.getInt(("posts"));
-        this.visitors = stats.getInt(("visitors"));
-        this.views = stats.getInt(("views"));
-        this.views_best_day = stats.getString(("views_best_day"));
-        this.views_best_day_total = stats.getInt("views_best_day_total");
+        this.mPosts = stats.optInt("posts");
+        this.mVisitors = stats.optInt("visitors");
+        this.mViews = stats.optInt("views");
+        this.mViewsBestDay = stats.getString("views_best_day");
+        this.mViewsBestDayTotal = stats.optInt("views_best_day_total");
     }
 
     public String getBlogID() {
@@ -44,22 +44,22 @@ public class InsightsAllTimeModel implements Serializable {
     }
 
     public int getVisitors() {
-        return visitors;
+        return mVisitors;
     }
 
     public int getViews() {
-        return views;
+        return mViews;
     }
 
     public int getPosts() {
-        return posts;
+        return mPosts;
     }
 
-    public String getViews_best_day() {
-        return views_best_day;
+    public String getViewsBestDay() {
+        return mViewsBestDay;
     }
 
-    public int getViews_best_day_total() {
-        return views_best_day_total;
+    public int getViewsBestDayTotal() {
+        return mViewsBestDayTotal;
     }
 }

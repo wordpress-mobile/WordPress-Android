@@ -111,7 +111,6 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
             }
             if (mListener == null) {
                 return;
-
             }
             StatsVisitorsAndViewsFragment.OverviewLabel tag = (StatsVisitorsAndViewsFragment.OverviewLabel) v.getTag();
             mListener.onInsightsClicked(tag);

@@ -21,12 +21,12 @@ public class InsightsTodayModel implements Serializable {
         this.setBlogID(blogID);
         this.mDate = response.getString("date");
         this.period = response.getString("period");
-        this.mViews = response.getInt(("views"));
-        this.mVisitors = response.getInt(("visitors"));
-        this.mLikes = response.getInt(("likes"));
-        this.mReblogs = response.getInt(("reblogs"));
-        this.mComments = response.getInt(("comments"));
-        this.mFollowers = response.getInt(("followers"));
+        this.mViews = response.optInt("views");
+        this.mVisitors = response.optInt("visitors");
+        this.mLikes = response.optInt("likes");
+        this.mReblogs = response.optInt("reblogs");
+        this.mComments = response.optInt("comments");
+        this.mFollowers = response.optInt("followers");
     }
 
     public String getBlogID() {
