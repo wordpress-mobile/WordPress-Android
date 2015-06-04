@@ -279,12 +279,6 @@
             android:windowSoftInputMode="stateHidden"/>
 
         <activity
-            android:name="org.wordpress.passcodelock.PasscodePreferencesActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/PreferencesActionBarTheme"
-            android:windowSoftInputMode="stateHidden"/>
-
-        <activity
             android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
             android:theme="@style/CalypsoTheme"
             android:windowSoftInputMode="stateHidden"/>

@@ -13,10 +13,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.passcodelock.PasscodePreferenceFragment;
 
 public class SettingsActivity extends ActionBarActivity {
     public static final String CURRENT_BLOG_CHANGED = "CURRENT_BLOG_CHANGED";
     private Blog mCurrentBlogOnCreate;
+    private PasscodePreferenceFragment mPasscodePreferenceFragment;
     private SettingsFragment mSettingsFragment;
 
     @Override
@@ -31,10 +33,36 @@ public class SettingsActivity extends ActionBarActivity {
 
         mCurrentBlogOnCreate = WordPress.getCurrentBlog();
         setContentView(R.layout.settings_activity);
+
+        Bundle passcodeArgs = new Bundle();
+        passcodeArgs.putBoolean(PasscodePreferenceFragment.KEY_SHOULD_INFLATE, false);
+        mPasscodePreferenceFragment = new PasscodePreferenceFragment();
+        mPasscodePreferenceFragment.setArguments(passcodeArgs);
         mSettingsFragment = new SettingsFragment();
+
         getFragmentManager().beginTransaction()
                             .add(R.id.fragment_container, mSettingsFragment)
+                            .add(R.id.fragment_container, mPasscodePreferenceFragment)
                             .commit();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mPasscodePreferenceFragment.setPreferences(
+                mSettingsFragment.findPreference(getString(R.string.pref_key_passcode_toggle)),
+                mSettingsFragment.findPreference(getString(R.string.pref_key_change_passcode)));
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -75,15 +103,5 @@ public class SettingsActivity extends ActionBarActivity {
         AnalyticsUtils.refreshMetadata();
 
         finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStack();
-        } else {
-            super.onBackPressed();
-        }
     }
 }
