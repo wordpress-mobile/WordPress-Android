@@ -2,6 +2,8 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -35,6 +37,16 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnInsightsTodayClickListener");
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        TextView moduleTitle = (TextView) view.findViewById(R.id.stats_module_title);
+        moduleTitle.setTag(StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
+        moduleTitle.setOnClickListener(ButtonsOnClickListener);
+        moduleTitle.setTextColor(getResources().getColor(R.color.stats_link_text_color));
+        return view;
     }
 
     void customizeUIWithResults() {
