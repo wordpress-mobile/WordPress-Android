@@ -12,9 +12,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -127,7 +127,7 @@ public class ReaderBlogInfoView extends FrameLayout {
                     @Override
                     public void run() {
                         if (layoutInner.getVisibility() != View.VISIBLE) {
-                            ReaderAnim.fadeIn(layoutInner, ReaderAnim.Duration.SHORT);
+                            AniUtils.fadeIn(layoutInner, AniUtils.Duration.SHORT);
                         }
                     }
                 }, 500);

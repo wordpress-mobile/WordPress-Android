@@ -27,8 +27,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.reader.ReaderAnim.AnimationEndListener;
-import org.wordpress.android.ui.reader.ReaderAnim.Duration;
+import org.wordpress.android.util.AniUtils.AnimationEndListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -36,6 +35,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -364,7 +364,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
                 blockBlogForPostCompleted(blogId, postId, blockResult);
             }
         };
-        ReaderAnim.scaleOut(fragment.getView(), View.INVISIBLE, Duration.SHORT, animEndListener);
+        AniUtils.scaleOut(fragment.getView(), View.INVISIBLE, AniUtils.Duration.SHORT, animEndListener);
     }
 
     /*
@@ -412,7 +412,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
     @Override
     public void onShowHideToolbar(boolean show) {
         if (!isFinishing()) {
-            ReaderAnim.animateTopBar(mToolbar, show);
+            AniUtils.animateTopBar(mToolbar, show);
         }
     }
 

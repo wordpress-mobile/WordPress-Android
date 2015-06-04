@@ -34,6 +34,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
@@ -55,7 +56,6 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -576,7 +576,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // make sure reply box is showing
         if (mLayoutReply.getVisibility() != View.VISIBLE && canReply()) {
-            AniUtils.flyIn(mLayoutReply);
+            AniUtils.animateBottomBar(mLayoutReply, true);
             if (mEditReply != null && mShouldFocusReplyField) {
                 mEditReply.requestFocus();
                 setShouldFocusReplyField(false);
@@ -861,7 +861,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mTxtStatus.setTextColor(statusColor);
             if (mTxtStatus.getVisibility() != View.VISIBLE) {
                 mTxtStatus.clearAnimation();
-                AniUtils.fadeIn(mTxtStatus);
+                AniUtils.fadeIn(mTxtStatus, AniUtils.Duration.LONG);
             }
         } else {
             mTxtStatus.setVisibility(View.GONE);

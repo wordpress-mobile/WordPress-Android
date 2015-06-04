@@ -23,9 +23,9 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
@@ -183,7 +183,7 @@ public class MySiteFragment extends Fragment
 
     private void showSitePicker() {
         if (isAdded()) {
-            ReaderAnim.showFab(mFabView, false);
+            AniUtils.showFab(mFabView, false);
             int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
             ActivityLauncher.showSitePickerForResult(getActivity(), localBlogId);
         }
@@ -209,7 +209,7 @@ public class MySiteFragment extends Fragment
                 }
                 // redisplay the hidden fab after a short delay
                 long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
-                ReaderAnim.showFabDelayed(mFabView, true, delayMs);
+                AniUtils.showFabDelayed(mFabView, true, delayMs);
                 break;
 
             case RequestCodes.EDIT_POST:
