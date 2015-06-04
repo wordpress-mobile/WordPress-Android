@@ -4,7 +4,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/repo' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.3'
+        classpath 'com.android.tools.build:gradle:1.2.3'
         classpath 'com.github.nrudenko:gradle-android-cq-plugin:0.1+'
         classpath 'io.fabric.tools:gradle:1.+'
     }
@@ -57,7 +57,7 @@ android {
             // Proguard is only used to fix an issue with some Samsung device
             // https://github.com/wordpress-mobile/WordPress-Android/issues/2151
             minifyEnabled true
-            proguardFile 'proguard.cfg'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
         }
 
         debug {
