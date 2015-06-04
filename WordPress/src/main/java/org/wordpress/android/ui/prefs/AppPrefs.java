@@ -135,7 +135,12 @@ public class AppPrefs {
 
     public static StatsTimeframe getStatsTimeframe() {
         int idx = getInt(PrefKey.STATS_ITEM_INDEX);
-        return StatsTimeframe.values()[idx];
+        StatsTimeframe[] timeframeValues = StatsTimeframe.values();
+        if (timeframeValues.length < idx) {
+            return timeframeValues[0];
+        } else {
+            return timeframeValues[idx];
+        }
     }
     public static void setStatsTimeframe(StatsTimeframe timeframe) {
         if (timeframe != null) {
