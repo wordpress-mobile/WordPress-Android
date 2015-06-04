@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
@@ -35,16 +34,15 @@ import java.util.HashSet;
  *  (1) fading in downloaded images
  *  (2) manipulating images before display
  *  (3) automatically retrieving the thumbnail for YouTube & Vimeo videos
- *  (4) adding a listener to determine when image request has completed or failed
- *  (5) automatically retrying mshot requests that return a 307
  */
 public class WPNetworkImageView extends ImageView {
-    public static enum ImageType {NONE,
-                                  PHOTO,
-                                  MSHOT,
-                                  VIDEO,
-                                  AVATAR,
-                                BLAVATAR}
+    public enum ImageType {
+        NONE,
+        PHOTO,
+        VIDEO,
+        AVATAR,
+        BLAVATAR
+    }
 
     private ImageType mImageType = ImageType.NONE;
     private String mUrl;
@@ -53,16 +51,7 @@ public class WPNetworkImageView extends ImageView {
     private int mDefaultImageResId;
     private int mErrorImageResId;
 
-    private int mRetryCnt;
-    private static final int MAX_RETRIES = 3;
-    private static final long RETRY_DELAY = 2500;
-
     private static final HashSet<String> mUrlSkipList = new HashSet<>();
-
-    public interface ImageListener {
-        public void onImageLoaded(boolean succeeded);
-    }
-    private ImageListener mImageListener;
 
     public WPNetworkImageView(Context context) {
         super(context);
@@ -74,18 +63,9 @@ public class WPNetworkImageView extends ImageView {
         super(context, attrs, defStyle);
     }
 
-    public String getUrl() {
-        return mUrl;
-    }
-
     public void setImageUrl(String url, ImageType imageType) {
-        setImageUrl(url, imageType, null);
-    }
-    public void setImageUrl(String url, ImageType imageType, ImageListener imageListener) {
         mUrl = url;
         mImageType = imageType;
-        mImageListener = imageListener;
-        mRetryCnt = 0;
 
         // The URL has potentially changed. See if we need to load it.
         loadImageIfNecessary(false);
@@ -123,23 +103,6 @@ public class WPNetworkImageView extends ImageView {
                 }
             });
         }
-    }
-
-    /*
-     * retry the current image request after a brief delay
-     */
-    private void retry(final boolean isInLayoutPass) {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                AppLog.d(AppLog.T.READER, String.format("retrying image request (%d)", mRetryCnt));
-                if (mImageContainer != null) {
-                    mImageContainer.cancelRequest();
-                    mImageContainer = null;
-                }
-                loadImageIfNecessary(isInLayoutPass);
-            }
-        }, RETRY_DELAY);
     }
 
     /**
@@ -200,29 +163,15 @@ public class WPNetworkImageView extends ImageView {
 
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
-        ImageLoader.ImageContainer newContainer = WordPress.imageLoader.get(mUrl,
+        mImageContainer = WordPress.imageLoader.get(mUrl,
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        showErrorImage();
+                        // keep track of URLs that 404 so we can skip them the next time
                         int statusCode = VolleyUtils.statusCodeFromVolleyError(error);
-                        // mshot requests return a 307 if the mshot has never been requested,
-                        // handle this by retrying request after a short delay to give time
-                        // for server to generate the image
-                        if (mImageType == ImageType.MSHOT
-                                && mRetryCnt < MAX_RETRIES
-                                && statusCode == 307)
-                        {
-                            mRetryCnt++;
-                            retry(isInLayoutPass);
-                        } else {
-                            showErrorImage();
-                            if (mImageListener != null) {
-                                mImageListener.onImageLoaded(false);
-                            }
-                            // keep track of URLs that 404 so we can skip them the next time
-                            if (statusCode == 404) {
-                                mUrlSkipList.add(mUrl);
-                            }
+                        if (statusCode == 404) {
+                            mUrlSkipList.add(mUrl);
                         }
                     }
 
@@ -245,15 +194,11 @@ public class WPNetworkImageView extends ImageView {
                         }
                     }
                 }, maxSize, maxSize);
-
-        // update the ImageContainer to be the new bitmap container.
-        mImageContainer = newContainer;
     }
 
     private static boolean canFadeInImageType(ImageType imageType) {
         return imageType == ImageType.PHOTO
-            || imageType == ImageType.VIDEO
-            || imageType == ImageType.MSHOT;
+            || imageType == ImageType.VIDEO;
     }
 
     private void handleResponse(ImageLoader.ImageContainer response,
@@ -271,11 +216,8 @@ public class WPNetworkImageView extends ImageView {
             setImageBitmap(bitmap);
 
             // fade in photos/videos if not cached (not used for other image types since animation can be expensive)
-            if (!isCached && allowFadeIn && canFadeInImageType(mImageType))
+            if (!isCached && allowFadeIn && canFadeInImageType(mImageType)) {
                 fadeIn();
-
-            if (mImageListener != null) {
-                mImageListener.onImageLoaded(true);
             }
         } else {
             showDefaultImage();
@@ -333,10 +275,6 @@ public class WPNetworkImageView extends ImageView {
             case NONE:
                 // do nothing
                 break;
-            case MSHOT:
-                // null default for mshots
-                setImageDrawable(null);
-                break;
             case AVATAR:
                 // Grey circle for avatars
                 setImageResource(R.drawable.shape_oval_grey_light);
@@ -348,7 +286,7 @@ public class WPNetworkImageView extends ImageView {
         }
     }
 
-    void showErrorImage() {
+    private void showErrorImage() {
         if (mErrorImageResId != 0) {
             setImageResource(mErrorImageResId);
             return;
@@ -405,10 +343,6 @@ public class WPNetworkImageView extends ImageView {
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
                 setImageBitmap(bitmap);
-
-                if (mImageListener != null) {
-                    mImageListener.onImageLoaded(true);
-                }
             }
         }
     }

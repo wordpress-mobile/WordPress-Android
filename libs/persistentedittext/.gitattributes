@@ -1,6 +1,0 @@
-* text=lf
-*.sh text eol=lf
-*.py text eol=lf
-*.bat text eol=crlf
-*.png binary
-*.jpg binary

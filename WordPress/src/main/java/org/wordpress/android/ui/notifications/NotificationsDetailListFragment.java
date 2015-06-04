@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
@@ -35,6 +36,8 @@ import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.services.ReaderCommentService;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -125,10 +128,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     @Override
     public void onPause() {
-        // remove the bucket listener
+        // Remove the simperium bucket listener
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().removeListener(this);
         }
+
+        // Stop the reader comment service if it is running
+        ReaderCommentService.stopService(getActivity());
 
         super.onPause();
     }
@@ -194,9 +200,15 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             }
 
             NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
-            if (mNote.getParentCommentId() > 0 || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
-                // show comment detail
-                detailActivity.showCommentDetailForNote(mNote);
+            if (mNote.isCommentReplyType() || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
+                long commentId = mNote.isCommentReplyType() ? mNote.getParentCommentId() : mNote.getCommentId();
+
+                // show comments list if it exists in the reader
+                if (ReaderUtils.postAndCommentExists(mNote.getSiteId(), mNote.getPostId(), commentId)) {
+                    detailActivity.showReaderCommentsList(mNote.getSiteId(), mNote.getPostId(), commentId);
+                } else {
+                    detailActivity.showWebViewActivityForUrl(mNote.getUrl());
+                }
             } else if (mNote.isFollowType()) {
                 detailActivity.showBlogPreviewActivity(mNote.getSiteId());
             } else {
@@ -247,6 +259,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         @Override
         protected List<NoteBlock> doInBackground(Void... params) {
             if (mNote == null) return null;
+
+            requestReaderContentForNote();
 
             JSONArray bodyArray = mNote.getBody();
             final List<NoteBlock> noteList = new ArrayList<>();
@@ -316,12 +330,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                     JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()),
                                     mNote.getType()
                             );
-
-                            if (mNote.isUserList() && !ReaderPostTable.postExists(mNote.getSiteId(), mNote.getPostId())) {
-                                // Request the reader post so that loading reader activities will work.
-                                ReaderPostActions.requestPost(mNote.getSiteId(), mNote.getPostId(), null);
-                            }
-
                         } else {
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }
@@ -405,6 +413,22 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                     break;
                 }
             }
+        }
+    }
+
+    // Requests Reader content for certain notification types
+    private void requestReaderContentForNote() {
+        if (mNote == null || !isAdded()) return;
+
+        // Request the reader post so that loading reader activities will work.
+        if (mNote.isUserList() && !ReaderPostTable.postExists(mNote.getSiteId(), mNote.getPostId())) {
+            ReaderPostActions.requestPost(mNote.getSiteId(), mNote.getPostId(), null);
+        }
+
+        // Request reader comments until we retrieve the comment for this note
+        if (mNote.isCommentLikeType() || mNote.isCommentReplyType() &&
+                !ReaderCommentTable.commentExists(mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId())) {
+            ReaderCommentService.startServiceForComment(getActivity(), mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId());
         }
     }
 

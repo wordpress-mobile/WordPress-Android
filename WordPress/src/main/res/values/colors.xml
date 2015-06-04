@@ -105,7 +105,6 @@
     <color name="stats_bar_graph_secondary_series">@color/blue_dark</color>
     <color name="stats_empty_placeholder_color">@color/translucent_grey_lighten_30</color>
 
-
     <!-- Reader  -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>
     <color name="reader_hyperlink">@color/blue_medium</color>

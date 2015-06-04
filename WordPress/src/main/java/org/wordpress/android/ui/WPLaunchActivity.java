@@ -37,6 +37,7 @@ public class WPLaunchActivity extends Activity {
         }
 
         Intent intent = new Intent(this, WPMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }

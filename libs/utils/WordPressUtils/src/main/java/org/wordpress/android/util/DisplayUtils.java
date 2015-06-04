@@ -38,6 +38,12 @@ public class DisplayUtils {
         return (size.y);
     }
 
+    public static float spToPx(Context context, float sp){
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        final float scale = displayMetrics.scaledDensity;
+        return sp * scale;
+    }
+
     public static int dpToPx(Context context, int dp) {
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 context.getResources().getDisplayMetrics());

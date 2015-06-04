@@ -82,7 +82,8 @@
             android:theme="@style/SignInTheme"/>
         <activity
             android:name=".ui.accounts.HelpActivity"
-            android:theme="@style/SignInTheme"/>
+            android:theme="@style/CalypsoTheme"
+            android:label=""/> <!-- empty title -->
 
         <!-- Preferences activities -->
         <activity

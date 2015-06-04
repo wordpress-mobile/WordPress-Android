@@ -24,6 +24,7 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
 
@@ -31,12 +32,13 @@ import de.greenrobot.event.EventBus;
 
 public class SitePickerActivity extends ActionBarActivity
         implements SitePickerAdapter.OnSiteClickListener,
-                   SitePickerAdapter.OnSelectedCountChangedListener {
+        SitePickerAdapter.OnSelectedCountChangedListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
 
     private SitePickerAdapter mAdapter;
     private RecyclerView mRecycleView;
+    private View mFabView;
     private ActionMode mActionMode;
     private int mCurrentLocalId;
     private boolean mDidUserSelectSite;
@@ -100,17 +102,21 @@ public class SitePickerActivity extends ActionBarActivity
                     fabMenu.collapse();
                 }
             });
+            mFabView = fabMenu;
         } else {
-            fabMenu.setVisibility(View.GONE);
             FloatingActionButton fabMenuAddDotOrg = (FloatingActionButton) findViewById(R.id.fab_add_dotorg);
-            fabMenuAddDotOrg.setVisibility(View.VISIBLE);
             fabMenuAddDotOrg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
                 }
             });
+            mFabView = fabMenuAddDotOrg;
         }
+
+        // animate fab in after a delay which matches that of the activity transition
+        long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        AniUtils.showFabDelayed(mFabView, true, delayMs);
     }
 
     @Override
@@ -241,6 +247,7 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
+            AniUtils.showFab(mFabView, false);
             WordPress.setCurrentBlog(site.localId);
             WordPress.wpDB.updateLastBlogId(site.localId);
             setResult(RESULT_OK);
@@ -264,6 +271,7 @@ public class SitePickerActivity extends ActionBarActivity
             mActionMode = actionMode;
             mHasChanges = false;
             updateActionModeTitle();
+            AniUtils.showFab(mFabView, false);
             actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
         }
@@ -310,6 +318,7 @@ public class SitePickerActivity extends ActionBarActivity
                 saveHiddenSites();
             }
             getAdapter().setEnableEditMode(false);
+            AniUtils.showFab(mFabView, true);
             mActionMode = null;
         }
     }

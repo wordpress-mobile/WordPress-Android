@@ -71,8 +71,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:visibility="gone">
+            android:layout_marginBottom="@dimen/margin_medium">
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="0dp"

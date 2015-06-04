@@ -57,6 +57,9 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -67,15 +70,12 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
-import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
-import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
+import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
@@ -100,6 +100,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
+    public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
+    public static final String EXTRA_SHOULD_REFRESH = "shouldRefresh";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
@@ -157,12 +159,13 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     private SuggestionAutoCompleteText mTags;
 
     private boolean mIsNewPost;
+    private boolean mIsPage;
     private boolean mHasSetPostContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_edit_post);
+        setContentView(R.layout.new_edit_post_activity);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -202,7 +205,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             } else if (extras != null) {
                 // Load post from the postId passed in extras
                 long localTablePostId = extras.getLong(EXTRA_POSTID, -1);
-                boolean isPage = extras.getBoolean(EXTRA_IS_PAGE);
+                mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
                 mPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
                 mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
@@ -456,7 +459,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();
-            i.putExtra("shouldRefresh", true);
+            i.putExtra(EXTRA_SHOULD_REFRESH, true);
             setResult(RESULT_OK, i);
             finish();
             return true;
@@ -630,8 +633,12 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             savePost(false);
             WordPress.currentPost = mPost;
             Intent i = new Intent();
-            i.putExtra("shouldRefresh", true);
+            i.putExtra(EXTRA_SHOULD_REFRESH, true);
+            i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
+            i.putExtra(EXTRA_IS_PAGE, mIsPage);
             setResult(RESULT_OK, i);
+
+            ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
         }
         finish();
     }
@@ -935,7 +942,13 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         SpannableStringBuilder postContent;
         if (mEditorFragment.getSpannedContent() != null) {
             // needed by the legacy editor to save local drafts
-            postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
+            try {
+                postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
+            } catch (IndexOutOfBoundsException e) {
+                // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
+                // See https://code.google.com/p/android/issues/detail?id=5164
+                postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
+            }
         } else {
             postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
         }

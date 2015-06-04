@@ -12,11 +12,14 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.simperium.client.Bucket;
+import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -24,16 +27,21 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
+import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
@@ -67,7 +75,7 @@ public class WPMainActivity extends Activity
         setStatusBarColor();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
@@ -75,12 +83,22 @@ public class WPMainActivity extends Activity
 
         mTabs = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.tab_indicator));
-        mTabs.setDistributeEvenly(true);
+
+        // tabs are left-aligned rather than evenly distributed in landscape
+        mTabs.setDistributeEvenly(!DisplayUtils.isLandscape(this));
+
         Integer icons[] = {R.drawable.main_tab_sites,
                            R.drawable.main_tab_reader,
                            R.drawable.main_tab_me,
                            R.drawable.main_tab_notifications};
         mTabs.setCustomTabView(R.layout.tab_icon, R.id.tab_icon, R.id.tab_badge, icons);
+
+        // content descriptions
+        mTabs.setContentDescription(WPMainTabAdapter.TAB_MY_SITE, getString(R.string.tabbar_accessibility_label_my_site));
+        mTabs.setContentDescription(WPMainTabAdapter.TAB_READER, getString(R.string.reader));
+        mTabs.setContentDescription(WPMainTabAdapter.TAB_ME, getString(R.string.tabbar_accessibility_label_me));
+        mTabs.setContentDescription(WPMainTabAdapter.TAB_NOTIFS, getString(R.string.notifications));
+
         mTabs.setViewPager(mViewPager);
         mTabs.setOnSingleTabClickListener(this);
 
@@ -119,7 +137,7 @@ public class WPMainActivity extends Activity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        AppLog.i(AppLog.T.MAIN, "main activity > new intent");
+        AppLog.i(T.MAIN, "main activity > new intent");
         if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
             launchWithNoteId();
         }
@@ -132,13 +150,31 @@ public class WPMainActivity extends Activity
     private void launchWithNoteId() {
         if (isFinishing() || getIntent() == null) return;
 
+        // Check for push authorization request
+        if (getIntent().hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
+            Bundle extras = getIntent().getExtras();
+            String token = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, "");
+            String title = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TITLE, "");
+            String message = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, "");
+            long expires = extras.getLong(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, 0);
+
+            long now = System.currentTimeMillis() / 1000;
+            if (expires > 0 && now > expires) {
+                // Show a toast if the user took too long to open the notification
+                ToastUtils.showToast(this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+            } else {
+                NotificationsUtils.showPushAuthAlert(this, token, title, message);
+            }
+        }
+
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
         String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
         boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
 
         if (!TextUtils.isEmpty(noteId)) {
-            NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard);
+            NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
             GCMIntentService.clearNotificationsMap();
         }
     }
@@ -165,7 +201,11 @@ public class WPMainActivity extends Activity
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        // noop
+        // fire event if the "My Site" page is being scrolled so the fragment can
+        // animate its fab to match
+        if (position == WPMainTabAdapter.TAB_MY_SITE) {
+            EventBus.getDefault().post(new MainViewPagerScrolled(positionOffset));
+        }
     }
 
     /*
@@ -211,7 +251,6 @@ public class WPMainActivity extends Activity
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().addListener(this);
         }
-
         checkNoteBadge();
     }
 
@@ -237,10 +276,32 @@ public class WPMainActivity extends Activity
         }
     }
 
+    private void moderateCommentOnActivityResult(Intent data) {
+        try {
+            if (SimperiumUtils.getNotesBucket() != null) {
+                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
+                        (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+                CommentStatus status = CommentStatus.fromString(data.getStringExtra(
+                        NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
+                NotificationsUtils.moderateCommentForNote(note, status, this);
+            }
+        } catch (BucketObjectMissingException e) {
+            AppLog.e(T.NOTIFS, e);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case RequestCodes.EDIT_POST:
+                if (resultCode == RESULT_OK) {
+                    MySiteFragment mySiteFragment = getMySiteFragment();
+                    if (mySiteFragment != null) {
+                        mySiteFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
+                break;
             case RequestCodes.READER_SUBS:
             case RequestCodes.READER_REBLOG:
                 ReaderPostListFragment readerFragment = getReaderListFragment();
@@ -265,9 +326,8 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:
-                // Pass activity result on to the notifications list fragment
-                if (getNotificationListFragment() != null) {
-                    getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
+                if (resultCode == RESULT_OK && data != null) {
+                    moderateCommentOnActivityResult(data);
                 }
                 break;
             case RequestCodes.PICTURE_LIBRARY:
@@ -279,12 +339,8 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.SITE_PICKER:
-                if (resultCode == RESULT_OK) {
-                    // site picker will have set the current blog, so make sure My Site reflects it
-                    MySiteFragment mySiteFragment = getMySiteFragment();
-                    if (mySiteFragment != null) {
-                        mySiteFragment.setBlog(WordPress.getCurrentBlog());
-                    }
+                if (getMySiteFragment() != null) {
+                    getMySiteFragment().onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.BLOG_SETTINGS:
@@ -321,7 +377,7 @@ public class WPMainActivity extends Activity
      * returns the my site fragment from the sites tab
      */
     public MySiteFragment getMySiteFragment() {
-        return getFragmentByPosition(WPMainTabAdapter.TAB_SITES, MySiteFragment.class);
+        return getFragmentByPosition(WPMainTabAdapter.TAB_MY_SITE, MySiteFragment.class);
     }
 
     private <T> T getFragmentByPosition(int position, Class<T> type) {

@@ -11,16 +11,16 @@ APPEND=\</item\>
 LANGUAGE_DEF_FILE=$RESDIR/values/available_languages.xml
 echo $HEADER > $LANGUAGE_DEF_FILE
 
-# Inject default en-rUS language
+# Inject default en-US language
 echo $PREPEND >> $LANGUAGE_DEF_FILE
-echo en-rUS >> $LANGUAGE_DEF_FILE
+echo en-US >> $LANGUAGE_DEF_FILE
 echo $APPEND >> $LANGUAGE_DEF_FILE
 
 for line in $(grep -v en-rUS $LANG_FILE) ; do
     code=$(echo $line|cut -d "," -f1|tr -d " ")
     local=$(echo $line|cut -d "," -f2|tr -d " ")
     echo $PREPEND >> $LANGUAGE_DEF_FILE
-    echo $code >> $LANGUAGE_DEF_FILE
+    echo $local | sed s/-r/-/ >> $LANGUAGE_DEF_FILE
     echo $APPEND >> $LANGUAGE_DEF_FILE
     echo updating $local - $code
     test -d $RESDIR/values-$local/ || mkdir $RESDIR/values-$local/

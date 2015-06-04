@@ -53,7 +53,7 @@
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_views_label"
-                        style="@style/StatsHeaderTotalsLabel"
+                        style="@style/StatsInsightsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
@@ -62,7 +62,7 @@
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_views_totals"
-                        style="@style/StatsHeaderTotalsLabel"
+                        style="@style/StatsInsightsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/notification_status_unapproved_dark"
