@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.wordpress.android.widgets.WPTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/text"
+    style="?android:spinnerItemStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="#ffffff"
+    android:paddingRight="0dp"
+    android:paddingLeft="0dp"
+    tools:text="spinner item"/>
