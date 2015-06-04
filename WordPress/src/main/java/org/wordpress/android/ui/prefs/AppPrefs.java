@@ -8,6 +8,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.stats.StatsTimeframe;
 
 public class AppPrefs {
     public enum PrefKey {
@@ -26,6 +27,9 @@ public class AppPrefs {
 
         // index of the last active tab in main activity
         MAIN_TAB_INDEX,
+
+        // index of the last active item in Stats activity
+        STATS_ITEM_INDEX,
     }
 
     private static SharedPreferences prefs() {
@@ -128,6 +132,26 @@ public class AppPrefs {
     public static void setReaderSubsPageTitle(String pageTitle) {
         setString(PrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
     }
+
+    public static StatsTimeframe getStatsTimeframe() {
+        int idx = getInt(PrefKey.STATS_ITEM_INDEX);
+        StatsTimeframe[] timeframeValues = StatsTimeframe.values();
+        if (timeframeValues.length < idx) {
+            return timeframeValues[0];
+        } else {
+            return timeframeValues[idx];
+        }
+    }
+    public static void setStatsTimeframe(StatsTimeframe timeframe) {
+        if (timeframe != null) {
+            setInt(PrefKey.STATS_ITEM_INDEX, timeframe.ordinal());
+        } else {
+            prefs().edit()
+                    .remove(PrefKey.STATS_ITEM_INDEX.name())
+                    .apply();
+        }
+    }
+
 
     /**
      * name of the last shown activity - used at startup to restore the previously selected

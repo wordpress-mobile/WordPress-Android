@@ -22,6 +22,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
@@ -171,13 +172,16 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         if (mDatamodels != null) {
             updateUI();
         } else {
-            //showHideNoResultsUI(true);
-            showEmptyUI();
-            refreshStats();
+            if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                showPlaceholderUI();
+                refreshStats();
+            } else {
+                showErrorUI(new NoConnectionError());
+            }
         }
     }
 
-    private void showEmptyUI() {
+    private void showPlaceholderUI() {
         mTopPagerContainer.setVisibility(View.GONE);
         mEmptyLabel.setVisibility(View.GONE);
         mListContainer.setVisibility(View.GONE);

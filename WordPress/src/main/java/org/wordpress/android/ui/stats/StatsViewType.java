@@ -18,4 +18,7 @@ public enum StatsViewType {
     PUBLICIZE,
     FOLLOWERS,
     SEARCH_TERMS,
+    INSIGHTS_MOST_POPULAR,
+    INSIGHTS_ALL_TIME,
+    INSIGHTS_TODAY,
 }
