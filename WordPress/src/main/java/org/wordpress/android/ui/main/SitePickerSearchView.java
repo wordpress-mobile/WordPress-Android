@@ -61,10 +61,6 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
         }
     }
 
-    public InputMethodManager getInputMethodManager() {
-        return mInputMethodManager;
-    }
-
     public void enableSearchMode(String string) {
         mMenuEdit.setVisible(false);
         mSitePickerActivity.setIsInSearchModeAndNullifyAdapter(true);
