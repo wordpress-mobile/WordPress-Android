@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,16 +40,9 @@ public class SitePickerSearchAdapter extends SitePickerAdapter {
     }
 
     public void loadSites(String search) {
-        if (search == null) {
-            search = "";
-        }
-
         if (mIsSearchTaskRunning) {
             AppLog.w(AppLog.T.UTILS, "site picker > already loading sites");
         } else {
-            if (search == null) {
-                search = "";
-            }
             new LoadSearchSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, search);
         }
     }
