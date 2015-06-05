@@ -36,14 +36,10 @@ public class SitePickerSearchAdapter extends SitePickerAdapter {
 
     @Override
     public void loadSites() {
-        loadSites("");
-    }
-
-    public void loadSites(String search) {
         if (mIsSearchTaskRunning) {
             AppLog.w(AppLog.T.UTILS, "site picker > already loading sites");
         } else {
-            new LoadSearchSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, search);
+            new LoadSearchSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -65,7 +61,7 @@ public class SitePickerSearchAdapter extends SitePickerAdapter {
     }
 
     private boolean mIsSearchTaskRunning;
-    private class LoadSearchSitesTask extends AsyncTask<String, Void, SiteList> {
+    private class LoadSearchSitesTask extends AsyncTask<Void, Void, SiteList> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -79,8 +75,7 @@ public class SitePickerSearchAdapter extends SitePickerAdapter {
         }
 
         @Override
-        protected SiteList doInBackground(String... params) {
-            String searchText = params[0];
+        protected SiteList doInBackground(Void... params) {
             List<Map<String, Object>> blogs = WordPress.wpDB.getAllBlogs();
 
             SiteList sites = new SiteList(blogs);
