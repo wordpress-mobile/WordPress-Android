@@ -17,13 +17,25 @@
             android:layout_marginTop="@dimen/margin_small"
             android:textSize="@dimen/text_sz_extra_large" />
 
-        <ViewStub
-            android:id="@+id/media_listitem_details_stub"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small"
-            android:inflatedId="@+id/media_listitem_details_image" />
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/media_listitem_details_progress"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ViewStub
+                android:id="@+id/media_listitem_details_stub"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:inflatedId="@+id/media_listitem_details_image" />
+
+        </RelativeLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_caption"

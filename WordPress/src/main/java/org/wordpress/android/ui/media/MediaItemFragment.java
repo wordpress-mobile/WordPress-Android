@@ -21,6 +21,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +62,7 @@ public class MediaItemFragment extends Fragment {
     private TextView mDimensionsView;
     private MediaItemFragmentCallback mCallback;
     private ImageLoader mImageLoader;
+    private ProgressBar mProgressView;
 
     private boolean mIsLocal;
 
@@ -127,6 +130,7 @@ public class MediaItemFragment extends Fragment {
         mFileTypeView = (TextView) mView.findViewById(R.id.media_listitem_details_file_type);
         mFileUrlView = (TextView) mView.findViewById(R.id.media_listitem_details_file_url);
         mDimensionsView = (TextView) mView.findViewById(R.id.media_listitem_details_dimensions);
+        mProgressView = (ProgressBar) mView.findViewById(R.id.media_listitem_details_progress);
 
         loadMedia(getMediaId());
 
@@ -267,10 +271,11 @@ public class MediaItemFragment extends Fragment {
             }
             mImageView.setVisibility(View.VISIBLE);
 
-            mImageView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
+            mImageView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
 
         } else {
             mImageView.setVisibility(View.GONE);
+            mProgressView.setVisibility(View.GONE);
             mDimensionsView.setVisibility(View.GONE);
         }
     }
@@ -288,7 +293,8 @@ public class MediaItemFragment extends Fragment {
         mImageView = (ImageView) mView.findViewById(R.id.media_listitem_details_image);
 
         // add a background color so something appears while image is downloaded
-        mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.grey_light)));
+        mProgressView.setVisibility(View.VISIBLE);
+        mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.transparent)));
     }
 
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
