@@ -67,8 +67,6 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
 
     public void enableSearchMode(String string) {
         mMenuEdit.setVisible(false);
-        requestFocus();
-        showSoftKeyboard();
         mSitePickerActivity.setIsInSearchModeAndNullifyAdapter(true);
         SitePickerSearchAdapter adapter = (SitePickerSearchAdapter) mSitePickerActivity.getAdapter();
         mSitePickerActivity.getRecycleView().swapAdapter(adapter, true);
@@ -88,7 +86,7 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
         }
     }
 
-    private void showSoftKeyboard() {
+    public void showSoftKeyboard() {
         if (!hasHardwareKeyboard()) {
             mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
         }

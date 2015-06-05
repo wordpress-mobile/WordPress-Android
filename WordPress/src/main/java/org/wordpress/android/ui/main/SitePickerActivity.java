@@ -173,6 +173,10 @@ public class SitePickerActivity extends ActionBarActivity
             getAdapter().setEnableEditMode(true);
             startSupportActionMode(new ActionModeCallback());
             return true;
+        } else if (itemId == R.id.menu_search) {
+            mSearchView.requestFocus();
+            mSearchView.showSoftKeyboard();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
