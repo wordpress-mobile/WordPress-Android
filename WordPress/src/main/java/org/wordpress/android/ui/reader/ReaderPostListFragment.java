@@ -334,10 +334,13 @@ public class ReaderPostListFragment extends Fragment
 
     private int getCurrentPosition() {
         if (mRecyclerView != null && hasPostAdapter()) {
-            return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-        } else {
-            return 0;
+            // findFirstVisibleItemPosition() returns -1 if there is no visible child under the layout
+            int position = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+            if (position != -1) {
+                return position;
+            }
         }
+        return 0;
     }
 
     @Override
