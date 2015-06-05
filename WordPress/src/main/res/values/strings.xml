@@ -388,6 +388,7 @@
     <string name="stats">Stats</string>
     <string name="stats_for">Stats for %s</string>
     <string name="stats_other_recent_stats_label">Other Recent Stats</string>
+    <string name="stats_other_recent_stats_moved_label">Looking for your Other Recent Stats? We\'ve moved them to the Insights page.</string>
     <string name="view_stats_full_site">View full site</string>
     <string name="stats_view_all">View all</string>
     <string name="stats_view">View</string>
@@ -416,7 +417,7 @@
     <string name="stats_view_countries">Countries</string>
     <string name="stats_view_top_posts_and_pages">Posts &amp; Pages</string>
     <string name="stats_view_clicks">Clicks</string>
-    <string name="stats_view_tags_and_categories">Tags &amp; categories</string>
+    <string name="stats_view_tags_and_categories">Tags &amp; Categories</string>
     <string name="stats_view_authors">Authors</string>
     <string name="stats_view_referrers">Referrers</string>
     <string name="stats_view_videos">Videos</string>
@@ -508,6 +509,17 @@
     <string name="stats_average_per_day">Average per Day</string>
     <string name="stats_recent_weeks">Recent Weeks</string>
 
+    <!-- Stats insights -->
+    <string name="stats_insights">Insights</string>
+    <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
+    <string name="stats_insights_today">Today\'s Stats</string>
+    <string name="stats_insights_popular">Most popular day and hour</string>
+    <string name="stats_insights_most_popular_day">Most popular day</string>
+    <string name="stats_insights_most_popular_hour">Most popular hour</string>
+    <string name="stats_insights_most_popular_percent_weekly_views">%1$d%% of Weekly Views</string>
+    <string name="stats_insights_most_popular_percent_daily_views">%1$d%% of Daily Views</string>
+    <string name="stats_insights_best_ever">Best Views Ever</string>
+
     <!-- invalid_url -->
     <string name="invalid_url_message">Check that the blog URL entered is valid</string>
 
@@ -558,6 +570,8 @@
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
     <string name="error_notification_open">Could not open notification</string>
+    <string name="ignore">Ignore</string>
+    <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>

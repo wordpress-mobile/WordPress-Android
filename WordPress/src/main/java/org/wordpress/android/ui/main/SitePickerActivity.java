@@ -23,8 +23,8 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
 
@@ -127,7 +127,7 @@ public class SitePickerActivity extends ActionBarActivity
 
         // animate fab in after a delay which matches that of the activity transition
         long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        ReaderAnim.showFabDelayed(mFabView, true, delayMs);
+        AniUtils.showFabDelayed(mFabView, true, delayMs);
     }
 
     @Override
@@ -306,7 +306,7 @@ public class SitePickerActivity extends ActionBarActivity
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
             mSearchView.hideSoftKeyboard();
-            ReaderAnim.showFab(mFabView, false);
+            AniUtils.showFab(mFabView, false);
             WordPress.setCurrentBlog(site.localId);
             WordPress.wpDB.updateLastBlogId(site.localId);
             setResult(RESULT_OK);
@@ -323,7 +323,7 @@ public class SitePickerActivity extends ActionBarActivity
             mActionMode = actionMode;
             mHasChanges = false;
             updateActionModeTitle();
-            ReaderAnim.showFab(mFabView, false);
+            AniUtils.showFab(mFabView, false);
             actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
         }
@@ -370,7 +370,7 @@ public class SitePickerActivity extends ActionBarActivity
                 saveHiddenSites();
             }
             getAdapter().setEnableEditMode(false);
-            ReaderAnim.showFab(mFabView, true);
+            AniUtils.showFab(mFabView, true);
             mActionMode = null;
         }
     }

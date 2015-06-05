@@ -21,6 +21,9 @@ import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
+import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
+import org.wordpress.android.ui.stats.models.InsightsPopularModel;
+import org.wordpress.android.ui.stats.models.InsightsTodayModel;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
@@ -394,6 +397,15 @@ public class StatsUtils {
                 break;
             case SEARCH_TERMS:
                 model = new SearchTermsModel(blogID, response);
+                break;
+            case INSIGHTS_ALL_TIME:
+                model = new InsightsAllTimeModel(blogID, response);
+                break;
+            case INSIGHTS_POPULAR:
+                model = new InsightsPopularModel(blogID, response);
+                break;
+            case INSIGHTS_TODAY:
+                model = new InsightsTodayModel(blogID, response);
                 break;
         }
         return model;

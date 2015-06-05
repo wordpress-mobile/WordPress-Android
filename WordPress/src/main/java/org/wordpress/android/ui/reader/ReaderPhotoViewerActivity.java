@@ -16,6 +16,7 @@ import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 
 import javax.annotation.Nonnull;
@@ -145,9 +146,9 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
 
         mTxtTitle.clearAnimation();
         if (mIsTitleVisible) {
-            ReaderAnim.fadeOut(mTxtTitle, ReaderAnim.Duration.SHORT);
+            AniUtils.fadeOut(mTxtTitle, AniUtils.Duration.SHORT);
         } else {
-            ReaderAnim.fadeIn(mTxtTitle, ReaderAnim.Duration.SHORT);
+            AniUtils.fadeIn(mTxtTitle, AniUtils.Duration.SHORT);
         }
         mIsTitleVisible = !mIsTitleVisible;
     }
