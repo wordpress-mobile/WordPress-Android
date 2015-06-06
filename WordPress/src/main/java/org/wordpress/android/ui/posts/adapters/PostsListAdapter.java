@@ -39,17 +39,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     private OnPostsLoadedListener mOnPostsLoadedListener;
     private OnPostSelectedListener mOnPostSelectedListener;
 
-    private Context mContext;
-    private boolean mIsPage;
+    private final boolean mIsPage;
+    private final LayoutInflater mLayoutInflater;
     private int mSelectedPosition = -1;
-    private LayoutInflater mLayoutInflater;
 
     private List<PostsListPost> mPosts = new ArrayList<PostsListPost>();
 
     public PostsListAdapter(Context context, boolean isPage) {
-        mContext = context;
         mIsPage = isPage;
-        mLayoutInflater = LayoutInflater.from(mContext);
+        mLayoutInflater = LayoutInflater.from(context);
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {
@@ -109,10 +107,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     @Override
     public void onBindViewHolder(PostViewHolder holder, final int position) {
         PostsListPost post = mPosts.get(position);
+        Context context = holder.itemView.getContext();
+
         String date = post.getFormattedDate();
         String titleText = post.getTitle();
         if (titleText.equals("")) {
-            titleText = "(" + mContext.getResources().getText(R.string.untitled) + ")";
+            titleText = "(" + context.getResources().getText(R.string.untitled) + ")";
         }
         holder.txtTitle.setText(titleText);
 
@@ -129,24 +129,24 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         } else {
             holder.txtStatus.setVisibility(View.VISIBLE);
             if (post.isUploading()) {
-                formattedStatus = mContext.getResources().getString(R.string.post_uploading);
+                formattedStatus = context.getResources().getString(R.string.post_uploading);
             } else if (post.isLocalDraft()) {
-                formattedStatus = mContext.getResources().getString(R.string.local_draft);
+                formattedStatus = context.getResources().getString(R.string.local_draft);
             } else if (post.hasLocalChanges()) {
-                formattedStatus = mContext.getResources().getString(R.string.local_changes);
+                formattedStatus = context.getResources().getString(R.string.local_changes);
             } else {
                 switch (post.getStatusEnum()) {
                     case DRAFT:
-                        formattedStatus = mContext.getResources().getString(R.string.draft);
+                        formattedStatus = context.getResources().getString(R.string.draft);
                         break;
                     case PRIVATE:
-                        formattedStatus = mContext.getResources().getString(R.string.post_private);
+                        formattedStatus = context.getResources().getString(R.string.post_private);
                         break;
                     case PENDING:
-                        formattedStatus = mContext.getResources().getString(R.string.pending_review);
+                        formattedStatus = context.getResources().getString(R.string.pending_review);
                         break;
                     case SCHEDULED:
-                        formattedStatus = mContext.getResources().getString(R.string.scheduled);
+                        formattedStatus = context.getResources().getString(R.string.scheduled);
                         break;
                     default:
                         break;
@@ -156,9 +156,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             // Set post status TextView color
             if (post.isLocalDraft() || post.getStatusEnum() == PostStatus.DRAFT || post.hasLocalChanges() ||
                     post.isUploading()) {
-                holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.orange_fire));
+                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.orange_fire));
             } else {
-                holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.grey_darken_10));
+                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.grey_darken_10));
             }
 
             // Make status upper-case and add line break to stack vertically
