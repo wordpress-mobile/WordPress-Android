@@ -12,7 +12,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -199,16 +198,6 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
                         mShouldSelectFirstPost = false;
                         if (mPostsListAdapter.getItemCount() > 0) {
                             PostsListPost postsListPost = mPostsListAdapter.getItem(0);
-                            if (postsListPost != null) {
-                                showPost(postsListPost.getPostId());
-                                mPostsListAdapter.setSelectedPosition(0);
-                            }
-                        }
-                    } else if (isAdded() && ((PostsActivity) getActivity()).isDualPane()) {
-                        // Reload the last selected position, if available
-                        int selectedPosition = mPostsListAdapter.getSelectedPosition();
-                        if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getItemCount()) {
-                            PostsListPost postsListPost = mPostsListAdapter.getItem(selectedPosition);
                             if (postsListPost != null) {
                                 showPost(postsListPost.getPostId());
                             }

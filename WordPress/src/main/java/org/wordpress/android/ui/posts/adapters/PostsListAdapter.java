@@ -41,7 +41,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     private final boolean mIsPage;
     private final LayoutInflater mLayoutInflater;
-    private int mSelectedPosition = -1;
 
     private List<PostsListPost> mPosts = new ArrayList<PostsListPost>();
 
@@ -81,21 +80,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     public boolean isValidPosition(int position) {
         return (position >= 0 && position < mPosts.size());
-    }
-
-    public int getSelectedPosition() {
-        return mSelectedPosition;
-    }
-    public void setSelectedPosition(int position) {
-        if (position == mSelectedPosition) return;
-        int prevSelectedPosition = mSelectedPosition;
-        mSelectedPosition = position;
-        if (isValidPosition(mSelectedPosition)) {
-            notifyItemChanged(mSelectedPosition);
-        }
-        if (isValidPosition(prevSelectedPosition)) {
-            notifyItemChanged(prevSelectedPosition);
-        }
     }
 
     @Override
@@ -183,8 +167,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 }
             }
         });
-
-        // TODO: highlight selected item
     }
 
     @Override
