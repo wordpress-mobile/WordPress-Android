@@ -2,19 +2,19 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
@@ -44,7 +44,7 @@ import java.util.Vector;
 
 import de.greenrobot.event.EventBus;
 
-public class PostsListFragment extends ListFragment implements EmptyViewAnimationHandler.OnAnimationProgressListener {
+public class PostsListFragment extends Fragment implements EmptyViewAnimationHandler.OnAnimationProgressListener {
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -54,10 +54,11 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
     private FloatingActionButton mFabButton;
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
-    private View mProgressFooterView;
 
+    private RecyclerView mRecyclerView;
     private View mEmptyView;
     private View mEmptyViewImage;
+    private ProgressBar mProgress;
     private TextView mEmptyViewTitle;
     private EmptyViewMessageType mEmptyViewMessage = EmptyViewMessageType.NO_CONTENT;
 
@@ -67,6 +68,10 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
 
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
+
+    private RecyclerView getListView() {
+        return mRecyclerView;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,10 +91,12 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.post_listview, container, false);
+        View view = inflater.inflate(R.layout.post_list, container, false);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mEmptyView = view.findViewById(R.id.empty_view);
         mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
+        mProgress = (ProgressBar) view.findViewById(R.id.progress);
         return view;
     }
 
@@ -188,17 +195,17 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
                     } else if (mShouldSelectFirstPost) {
                         // Select the first row on a tablet, if requested
                         mShouldSelectFirstPost = false;
-                        if (mPostsListAdapter.getCount() > 0) {
+                        if (mPostsListAdapter.getItemCount() > 0) {
                             PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(0);
                             if (postsListPost != null) {
                                 showPost(postsListPost.getPostId());
-                                getListView().setItemChecked(0, true);
+                                mPostsListAdapter.setItemChecked(0, true);
                             }
                         }
                     } else if (isAdded() && ((PostsActivity) getActivity()).isDualPane()) {
                         // Reload the last selected position, if available
-                        int selectedPosition = getListView().getCheckedItemPosition();
-                        if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getCount()) {
+                        int selectedPosition = mPostsListAdapter.getCheckedItemPosition();
+                        if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getItemCount()) {
                             PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(selectedPosition);
                             if (postsListPost != null) {
                                 showPost(postsListPost.getPostId());
@@ -216,19 +223,19 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
-        getListView().addFooterView(mProgressFooterView, null, false);
-        mProgressFooterView.setVisibility(View.GONE);
-        getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
-        getListView().setDividerHeight(1);
+        // TODO: add dividers to recycler
+        //getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
+        //getListView().setDividerHeight(1);
 
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // TODO: add post click listener
+        /*getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
-                if (position >= getPostListAdapter().getCount()) //out of bounds
+                if (!getPostListAdapter().isValidPosition(position) {
                     return;
-                if (v == null) //view is gone
+                }
+                if (v == null) {
                     return;
+                }
                 PostsListPost postsListPost = (PostsListPost) getPostListAdapter().getItem(position);
                 if (postsListPost == null)
                     return;
@@ -239,7 +246,7 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
                             Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
 
         initSwipeToRefreshHelper();
 
@@ -326,7 +333,7 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
     }
 
     boolean isLoadingMorePosts() {
-        return mIsFetchingPosts && (mProgressFooterView != null && mProgressFooterView.getVisibility() == View.VISIBLE);
+        return mIsFetchingPosts && (mProgress != null && mProgress.getVisibility() == View.VISIBLE);
     }
 
     public void requestPosts(boolean loadMore) {
@@ -352,9 +359,7 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
         apiArgs.add(mIsPage);
         apiArgs.add(postCount);
         apiArgs.add(loadMore);
-        if (mProgressFooterView != null && loadMore) {
-            mProgressFooterView.setVisibility(View.VISIBLE);
-        }
+        showProgress();
 
         mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
             @Override
@@ -371,9 +376,7 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
                     mSwipeToRefreshHelper.setRefreshing(false);
                 }
 
-                if (mProgressFooterView != null) {
-                    mProgressFooterView.setVisibility(View.GONE);
-                }
+                hideProgress();
 
                 if (postCount == 0) {
                     mCanLoadMorePosts = false;
@@ -391,10 +394,10 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
                 if (!isAdded()) {
                     return;
                 }
+
                 mSwipeToRefreshHelper.setRefreshing(false);
-                if (mProgressFooterView != null) {
-                    mProgressFooterView.setVisibility(View.GONE);
-                }
+                hideProgress();
+
                 if (errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
                     switch (errorType) {
                         case UNAUTHORIZED:
@@ -420,14 +423,24 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
         mCurrentFetchPostsTask.execute(apiArgs);
     }
 
+    private void showProgress() {
+        if (mProgress != null) {
+            mProgress.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideProgress() {
+        if (mProgress != null) {
+            mProgress.setVisibility(View.GONE);
+        }
+    }
+
     protected void clear() {
         if (getPostListAdapter() != null) {
             getPostListAdapter().clear();
         }
         mCanLoadMorePosts = true;
-        if (mProgressFooterView != null && mProgressFooterView.getVisibility() == View.VISIBLE) {
-            mProgressFooterView.setVisibility(View.GONE);
-        }
+        hideProgress();
         mEmptyViewAnimationHandler.clear();
     }
 
@@ -530,7 +543,7 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
     }
 
     private void updateEmptyView(final EmptyViewMessageType emptyViewMessageType) {
-        if (mPostsListAdapter != null && mPostsListAdapter.getCount() == 0) {
+        if (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0) {
             // Handle animation display
             if (mEmptyViewMessage == EmptyViewMessageType.NO_CONTENT &&
                     emptyViewMessageType == EmptyViewMessageType.LOADING) {
