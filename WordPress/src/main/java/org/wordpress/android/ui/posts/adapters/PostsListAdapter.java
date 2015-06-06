@@ -85,12 +85,19 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         return (position >= 0 && position < mPosts.size());
     }
 
-    // TODO: highlight selected item
     public int getSelectedPosition() {
         return mSelectedPosition;
     }
     public void setSelectedPosition(int position) {
+        if (position == mSelectedPosition) return;
+        int prevSelectedPosition = mSelectedPosition;
         mSelectedPosition = position;
+        if (isValidPosition(mSelectedPosition)) {
+            notifyItemChanged(mSelectedPosition);
+        }
+        if (isValidPosition(prevSelectedPosition)) {
+            notifyItemChanged(prevSelectedPosition);
+        }
     }
 
     @Override
@@ -176,6 +183,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 }
             }
         });
+
+        // TODO: highlight selected item
     }
 
     @Override

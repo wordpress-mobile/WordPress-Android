@@ -92,11 +92,13 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.post_list, container, false);
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mEmptyView = view.findViewById(R.id.empty_view);
         mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
         mProgress = (ProgressBar) view.findViewById(R.id.progress);
+
         return view;
     }
 
@@ -240,9 +242,6 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        // TODO: add dividers to recycler
-        //getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
-        //getListView().setDividerHeight(1);
 
         initSwipeToRefreshHelper();
 
