@@ -336,7 +336,7 @@ public class ReaderPostListFragment extends Fragment
         if (mRecyclerView != null && hasPostAdapter()) {
             return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         } else {
-            return 0;
+            return -1;
         }
     }
 
@@ -513,7 +513,7 @@ public class ReaderPostListFragment extends Fragment
             // the toolbar is hidden by the layout, so we need to show it here unless we know we're
             // going to restore the list position once the adapter is loaded (which will take care
             // of showing/hiding the toolbar)
-            mTagToolbar.setVisibility(mRestorePosition == 0 ? View.VISIBLE : View.GONE);
+            mTagToolbar.setVisibility(mRestorePosition > 0 ? View.GONE : View.VISIBLE);
 
             mTagToolbar.inflateMenu(R.menu.reader_list);
             mTagToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
