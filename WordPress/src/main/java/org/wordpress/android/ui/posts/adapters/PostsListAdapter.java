@@ -22,29 +22,46 @@ import java.util.Locale;
  * Adapter for Posts/Pages list
  */
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.PostViewHolder> {
+
     public static interface OnLoadMoreListener {
         public void onLoadMore();
+    }
+
+    public static interface OnPostSelectedListener {
+        public void onPostSelected(PostsListPost post);
     }
 
     public static interface OnPostsLoadedListener {
         public void onPostsLoaded(int postCount);
     }
 
-    private final OnLoadMoreListener mOnLoadMoreListener;
-    private final OnPostsLoadedListener mOnPostsLoadedListener;
+    private OnLoadMoreListener mOnLoadMoreListener;
+    private OnPostsLoadedListener mOnPostsLoadedListener;
+    private OnPostSelectedListener mOnPostSelectedListener;
+
     private Context mContext;
     private boolean mIsPage;
+    private int mSelectedPosition = -1;
     private LayoutInflater mLayoutInflater;
 
     private List<PostsListPost> mPosts = new ArrayList<PostsListPost>();
 
-
-    public PostsListAdapter(Context context, boolean isPage, OnLoadMoreListener onLoadMoreListener, OnPostsLoadedListener onPostsLoadedListener) {
+    public PostsListAdapter(Context context, boolean isPage) {
         mContext = context;
         mIsPage = isPage;
-        mOnLoadMoreListener = onLoadMoreListener;
-        mOnPostsLoadedListener = onPostsLoadedListener;
         mLayoutInflater = LayoutInflater.from(mContext);
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener listener) {
+        mOnLoadMoreListener = listener;
+    }
+
+    public void setOnPostsLoadedListener(OnPostsLoadedListener listener) {
+        mOnPostsLoadedListener = listener;
+    }
+
+    public void setOnPostSelectedListener(OnPostSelectedListener listener) {
+        mOnPostSelectedListener = listener;
     }
 
     public List<PostsListPost> getPosts() {
@@ -57,7 +74,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
     }
 
-    public Object getItem(int position) {
+    public PostsListPost getItem(int position) {
         if (isValidPosition(position)) {
             return mPosts.get(position);
         }
@@ -68,13 +85,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         return (position >= 0 && position < mPosts.size());
     }
 
-    // TODO:
-    public int getCheckedItemPosition() {
-        return -1;
+    // TODO: highlight selected item
+    public int getSelectedPosition() {
+        return mSelectedPosition;
     }
-    // TODO:
-    public void setItemChecked(int position, boolean isChecked) {
-
+    public void setSelectedPosition(int position) {
+        mSelectedPosition = position;
     }
 
     @Override
@@ -84,7 +100,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
+    public void onBindViewHolder(PostViewHolder holder, final int position) {
         PostsListPost post = mPosts.get(position);
         String date = post.getFormattedDate();
         String titleText = post.getTitle();
@@ -148,6 +164,18 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnPostSelectedListener != null) {
+                    PostsListPost selectedPost = getItem(position);
+                    if (selectedPost != null) {
+                        mOnPostSelectedListener.onPostSelected(selectedPost);
+                    }
+                }
+            }
+        });
     }
 
     @Override

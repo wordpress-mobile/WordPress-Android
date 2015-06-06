@@ -196,17 +196,17 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
                         // Select the first row on a tablet, if requested
                         mShouldSelectFirstPost = false;
                         if (mPostsListAdapter.getItemCount() > 0) {
-                            PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(0);
+                            PostsListPost postsListPost = mPostsListAdapter.getItem(0);
                             if (postsListPost != null) {
                                 showPost(postsListPost.getPostId());
-                                mPostsListAdapter.setItemChecked(0, true);
+                                mPostsListAdapter.setSelectedPosition(0);
                             }
                         }
                     } else if (isAdded() && ((PostsActivity) getActivity()).isDualPane()) {
                         // Reload the last selected position, if available
-                        int selectedPosition = mPostsListAdapter.getCheckedItemPosition();
+                        int selectedPosition = mPostsListAdapter.getSelectedPosition();
                         if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getItemCount()) {
-                            PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(selectedPosition);
+                            PostsListPost postsListPost = mPostsListAdapter.getItem(selectedPosition);
                             if (postsListPost != null) {
                                 showPost(postsListPost.getPostId());
                             }
@@ -214,7 +214,24 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
                     }
                 }
             };
-            mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage, loadMoreListener, postsLoadedListener);
+
+            PostsListAdapter.OnPostSelectedListener postSelectedListener = new PostsListAdapter.OnPostSelectedListener() {
+                @Override
+                public void onPostSelected(PostsListPost post) {
+                    if (!isAdded()) return;
+
+                    if (mIsFetchingPosts) {
+                        ToastUtils.showToast(getActivity(), mIsPage ? R.string.pages_fetching : R.string.posts_fetching);
+                    } else {
+                        showPost(post.getPostId());
+                    }
+                }
+            };
+
+            mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage);
+            mPostsListAdapter.setOnLoadMoreListener(loadMoreListener);
+            mPostsListAdapter.setOnPostsLoadedListener(postsLoadedListener);
+            mPostsListAdapter.setOnPostSelectedListener(postSelectedListener);
         }
 
         return mPostsListAdapter;
@@ -226,27 +243,6 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         // TODO: add dividers to recycler
         //getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
         //getListView().setDividerHeight(1);
-
-        // TODO: add post click listener
-        /*getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
-                if (!getPostListAdapter().isValidPosition(position) {
-                    return;
-                }
-                if (v == null) {
-                    return;
-                }
-                PostsListPost postsListPost = (PostsListPost) getPostListAdapter().getItem(position);
-                if (postsListPost == null)
-                    return;
-                if (!mIsFetchingPosts || isLoadingMorePosts()) {
-                    showPost(postsListPost.getPostId());
-                } else if (isAdded()) {
-                    Toast.makeText(getActivity(), mIsPage ? R.string.pages_fetching : R.string.posts_fetching,
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });*/
 
         initSwipeToRefreshHelper();
 
@@ -330,10 +326,6 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
                 ft.commitAllowingStateLoss();
             }
         }
-    }
-
-    boolean isLoadingMorePosts() {
-        return mIsFetchingPosts && (mProgress != null && mProgress.getVisibility() == View.VISIBLE);
     }
 
     public void requestPosts(boolean loadMore) {
