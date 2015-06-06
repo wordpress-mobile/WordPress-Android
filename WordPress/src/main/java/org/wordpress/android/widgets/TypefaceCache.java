@@ -13,17 +13,26 @@ import java.util.Hashtable;
 public class TypefaceCache {
     private static final int VARIATION_NORMAL = 0;
     private static final int VARIATION_LIGHT = 1;
+    private static final int VARIATION_DEFAULT = VARIATION_NORMAL;
+
+    private static final int FAMILY_OPEN_SANS = 0;
+    private static final int FAMILY_MERRIWEATHER = 1;
+    private static final int FAMILY_DEFAULT = FAMILY_OPEN_SANS;
 
     private static final Hashtable<String, Typeface> mTypefaceCache = new Hashtable<>();
 
     public static Typeface getTypeface(Context context) {
-        return getTypeface(context, Typeface.NORMAL, VARIATION_NORMAL);
+        return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL, VARIATION_DEFAULT);
     }
-    private static Typeface getTypeface(Context context, int fontStyle, int variation) {
+    private static Typeface getTypeface(Context context,
+                                        int family,
+                                        int fontStyle,
+                                        int variation) {
         if (context == null) {
             return null;
         }
 
+        // TODO: add Merriweather
         final String typefaceName;
         if (variation == VARIATION_LIGHT) {
             switch (fontStyle) {
@@ -74,24 +83,24 @@ public class TypefaceCache {
 
     /*
      * sets the typeface for a TextView (or TextView descendant such as EditText or Button) based on
-     * the passed attributes, defaults to normal typeface
+     * the passed attributes, defaults to normal Open Sans
      */
     protected static void setCustomTypeface(Context context, TextView view, AttributeSet attrs) {
-        if (context == null || view == null)
-            return;
+        if (context == null || view == null) return;
 
         // skip at design-time
-        if (view.isInEditMode())
-            return;
+        if (view.isInEditMode()) return;
 
-        // read custom fontVariation from attributes, default to normal
-        int variation = TypefaceCache.VARIATION_NORMAL;
+        // defaults if not set in attributes
+        int family = FAMILY_DEFAULT;
+        int variation = VARIATION_DEFAULT;
+
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.WPTextView, 0, 0);
-
             if (a != null) {
                 try {
-                    variation = a.getInteger(R.styleable.WPTextView_fontVariation, TypefaceCache.VARIATION_NORMAL);
+                    family = a.getInteger(R.styleable.WPTextView_fontFamily, FAMILY_DEFAULT);
+                    variation = a.getInteger(R.styleable.WPTextView_fontVariation, VARIATION_DEFAULT);
                 } finally {
                     a.recycle();
                 }
@@ -116,7 +125,7 @@ public class TypefaceCache {
             fontStyle = Typeface.NORMAL;
         }
 
-        Typeface typeface = getTypeface(context, fontStyle, variation);
+        Typeface typeface = getTypeface(context, family, fontStyle, variation);
         if (typeface != null) {
             view.setTypeface(typeface);
         }
