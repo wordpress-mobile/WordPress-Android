@@ -64,6 +64,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
     private EmptyViewAnimationHandler mEmptyViewAnimationHandler;
     private boolean mSwipedToRefresh;
     private boolean mKeepSwipeRefreshLayoutVisible;
+    private boolean mShowSelection;
 
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
@@ -195,6 +196,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
                         if (mPostsListAdapter.getItemCount() > 0) {
                             PostsListPost postsListPost = mPostsListAdapter.getItem(0);
                             if (postsListPost != null) {
+                                mPostsListAdapter.setSelectedPosition(0);
                                 showPost(postsListPost.getPostId());
                             }
                         }
@@ -219,6 +221,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
             mPostsListAdapter.setOnLoadMoreListener(loadMoreListener);
             mPostsListAdapter.setOnPostsLoadedListener(postsLoadedListener);
             mPostsListAdapter.setOnPostSelectedListener(postSelectedListener);
+            mPostsListAdapter.setShowSelection(mShowSelection);
         }
 
         return mPostsListAdapter;
@@ -412,6 +415,13 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
 
     public void setShouldSelectFirstPost(boolean shouldSelect) {
         mShouldSelectFirstPost = shouldSelect;
+    }
+
+    public void setShowSelection(boolean showSelection) {
+        mShowSelection = showSelection;
+        if (mPostsListAdapter != null) {
+            mPostsListAdapter.setShowSelection(showSelection);
+        }
     }
 
     @SuppressWarnings("unused")
