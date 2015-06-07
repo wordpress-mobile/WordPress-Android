@@ -68,10 +68,6 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
-    private RecyclerView getListView() {
-        return mRecyclerView;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -274,10 +270,9 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
     public void onResume() {
         super.onResume();
         if (WordPress.getCurrentBlog() != null) {
-            if (getListView().getAdapter() == null) {
-                getListView().setAdapter(getPostListAdapter());
+            if (mRecyclerView.getAdapter() == null) {
+                mRecyclerView.setAdapter(getPostListAdapter());
             }
-
             getPostListAdapter().loadPosts();
         }
     }
