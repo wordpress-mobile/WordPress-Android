@@ -414,6 +414,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         mShouldSelectFirstPost = shouldSelect;
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(PostUploadSucceed event) {
         if (!isAdded()) {
             return;
@@ -474,6 +475,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         }
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(PostUploadFailed event) {
         mSwipeToRefreshHelper.setRefreshing(true);
 
@@ -495,17 +497,6 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         mSwipeToRefreshHelper.setRefreshing(false);
         // Refresh the posts list to revert post status back to local draft or local changes
         getPostListAdapter().loadPosts();
-    }
-
-    public void onBlogChanged() {
-        if (mCurrentFetchPostsTask != null) {
-            mCurrentFetchPostsTask.cancel(true);
-        }
-        if (mCurrentFetchSinglePostTask != null) {
-            mCurrentFetchSinglePostTask.cancel(true);
-        }
-        mIsFetchingPosts = false;
-        mSwipeToRefreshHelper.setRefreshing(false);
     }
 
     private void updateEmptyView(final EmptyViewMessageType emptyViewMessageType) {
@@ -570,18 +561,6 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         }
     }
 
-    public interface OnPostSelectedListener {
-        void onPostSelected(Post post);
-    }
-
-    public interface OnPostActionListener {
-        void onPostAction(int action, Post post);
-    }
-
-    public interface OnSinglePostLoadedListener {
-        void onSinglePostLoaded();
-    }
-
     @Override
     public void onSequenceStarted(EmptyViewMessageType emptyViewMessageType) {
         mEmptyViewMessage = emptyViewMessageType;
@@ -615,5 +594,17 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    public interface OnPostSelectedListener {
+        void onPostSelected(Post post);
+    }
+
+    public interface OnPostActionListener {
+        void onPostAction(int action, Post post);
+    }
+
+    public interface OnSinglePostLoadedListener {
+        void onSinglePostLoaded();
     }
 }
