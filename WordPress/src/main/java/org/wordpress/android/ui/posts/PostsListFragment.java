@@ -337,7 +337,11 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         apiArgs.add(mIsPage);
         apiArgs.add(postCount);
         apiArgs.add(loadMore);
-        showProgress();
+
+        // show progress bar at the bottom if we're loading more posts
+        if (loadMore) {
+            showProgress();
+        }
 
         mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
             @Override
