@@ -334,7 +334,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
             mCanLoadMorePosts = true;
             postCount = POSTS_REQUEST_COUNT;
         }
-        List<Object> apiArgs = new Vector<Object>();
+        List<Object> apiArgs = new Vector<>();
         apiArgs.add(WordPress.getCurrentBlog());
         apiArgs.add(mIsPage);
         apiArgs.add(postCount);
@@ -387,13 +387,13 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
                                                 R.string.error_refresh_unauthorized_posts, Duration.LONG);
                             }
                             updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-                            return;
+                            break;
                         default:
                             ToastUtils.showToast(getActivity(),
                                     mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
                                     Duration.LONG);
                             updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                            return;
+                            break;
                     }
                 }
             }
@@ -413,15 +413,6 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         if (mProgress != null) {
             mProgress.setVisibility(View.GONE);
         }
-    }
-
-    protected void clear() {
-        if (getPostListAdapter() != null) {
-            getPostListAdapter().clear();
-        }
-        mCanLoadMorePosts = true;
-        hideProgress();
-        mEmptyViewAnimationHandler.clear();
     }
 
     public void setShouldSelectFirstPost(boolean shouldSelect) {
@@ -448,7 +439,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         // Fetch the newly uploaded post
         if (!TextUtils.isEmpty(event.mRemotePostId)) {
             final boolean reloadPosts = sameBlogId;
-            List<Object> apiArgs = new Vector<Object>();
+            List<Object> apiArgs = new Vector<>();
             apiArgs.add(WordPress.wpDB.instantiateBlogByLocalId(event.mLocalBlogId));
             apiArgs.add(event.mRemotePostId);
             apiArgs.add(event.mIsPage);
@@ -585,15 +576,15 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
     }
 
     public interface OnPostSelectedListener {
-        public void onPostSelected(Post post);
+        void onPostSelected(Post post);
     }
 
     public interface OnPostActionListener {
-        public void onPostAction(int action, Post post);
+        void onPostAction(int action, Post post);
     }
 
     public interface OnSinglePostLoadedListener {
-        public void onSinglePostLoaded();
+        void onSinglePostLoaded();
     }
 
     @Override

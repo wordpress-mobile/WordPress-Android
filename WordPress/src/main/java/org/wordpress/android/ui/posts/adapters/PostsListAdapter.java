@@ -23,16 +23,16 @@ import java.util.Locale;
  */
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.PostViewHolder> {
 
-    public static interface OnLoadMoreListener {
-        public void onLoadMore();
+    public interface OnLoadMoreListener {
+        void onLoadMore();
     }
 
-    public static interface OnPostSelectedListener {
-        public void onPostSelected(PostsListPost post);
+    public interface OnPostSelectedListener {
+        void onPostSelected(PostsListPost post);
     }
 
-    public static interface OnPostsLoadedListener {
-        public void onPostsLoaded(int postCount);
+    public interface OnPostsLoadedListener {
+        void onPostsLoaded(int postCount);
     }
 
     private OnLoadMoreListener mOnLoadMoreListener;
@@ -42,7 +42,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     private final boolean mIsPage;
     private final LayoutInflater mLayoutInflater;
 
-    private List<PostsListPost> mPosts = new ArrayList<PostsListPost>();
+    private List<PostsListPost> mPosts = new ArrayList<>();
 
     public PostsListAdapter(Context context, boolean isPage) {
         mIsPage = isPage;
@@ -61,11 +61,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         mOnPostSelectedListener = listener;
     }
 
-    public List<PostsListPost> getPosts() {
-        return mPosts;
-    }
-
-    public void setPosts(List<PostsListPost> postsList) {
+    private void setPosts(List<PostsListPost> postsList) {
         if (postsList != null) {
             this.mPosts = postsList;
         }
@@ -78,7 +74,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         return null;
     }
 
-    public boolean isValidPosition(int position) {
+    private boolean isValidPosition(int position) {
         return (position >= 0 && position < mPosts.size());
     }
 
@@ -214,11 +210,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         @Override
         protected Boolean doInBackground(Void... nada) {
             loadedPosts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), mIsPage);
-            if (postsListMatch(loadedPosts)) {
-                return false;
-            }
+            return !postsListMatch(loadedPosts);
 
-            return true;
         }
 
         @Override
@@ -234,7 +227,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
     }
 
-    public boolean postsListMatch(List<PostsListPost> newPostsList) {
+    private boolean postsListMatch(List<PostsListPost> newPostsList) {
         if (newPostsList == null || newPostsList.size() == 0 || mPosts == null || mPosts.size() != newPostsList.size()) {
             return false;
         }
