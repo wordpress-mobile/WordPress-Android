@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="me_disconnect_from_wordpress_com">Отключение от WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">Подключение к WordPress.com</string>
+	<string name="me_btn_login_logout">Вход/выход</string>
+	<string name="site_picker_cant_hide_current_site">"%s" не был скрыт, так как это текущий сайт.</string>
+	<string name="me_btn_settings">Настройки учётной записи</string>
+	<string name="me_btn_support">Помощь и техническая поддержка</string>
+	<string name="site_picker_create_dotcom">Создать сайт на WordPress.com</string>
+	<string name="site_picker_edit_visibility">Показать/скрыть веб-сайты</string>
+	<string name="site_picker_add_self_hosted">Добавить автономный веб-сайт</string>
+	<string name="site_picker_add_site">Добавить веб-сайт</string>
+	<string name="my_site_btn_switch_site">Сменить сайт</string>
+	<string name="site_picker_title">Выбрать сайт</string>
+	<string name="my_site_btn_view_site">Просмотреть веб-сайт</string>
+	<string name="my_site_btn_view_admin">Просмотреть приложение «Администратор»</string>
+	<string name="my_site_header_publish">Опубликовать</string>
+	<string name="my_site_header_look_and_feel">Вид и функции</string>
+	<string name="my_site_btn_comments">Комментарии</string>
+	<string name="my_site_btn_site_settings">Настройки</string>
+	<string name="my_site_btn_blog_posts">Записи в блоге</string>
+	<string name="my_site_header_admin">Администратор</string>
+	<string name="reader_label_new_posts_subtitle">Нажмите, чтобы показать сайты.</string>
+	<string name="my_site_header_configuration">Конфигурация</string>
+	<string name="notifications_account_required">Войти в WordPress.com для получения уведомлений</string>
+	<string name="stats_unknown_author">Неизвестный автор</string>
+	<string name="signout">Отключить</string>
+	<string name="image_added">Изображение добавлено.</string>
+	<string name="sign_out_wpcom_confirm">Отключение учётной записи приведет к удалению всех данных @%s WordPress.com с этого устройства, в том числе локальных черновиков и локальных изменений.</string>
+	<string name="select_all">Выделить все</string>
+	<string name="hide">Скрыть</string>
+	<string name="show">Показать</string>
+	<string name="deselect_all">Снять выделение</string>
 	<string name="select_from_new_picker">Множественный выбор с помощью нового диалога</string>
 	<string name="stats_generic_error">Не удалось загрузить необходимую статистику</string>
 	<string name="loading_blog_videos">Загрузка видео</string>
@@ -130,6 +161,7 @@
 	<string name="stats_other_recent_stats_label">Другая недавняя статистика</string>
 	<string name="themes_fetching">Получение тем…</string>
 	<string name="ssl_certificate_details">Подробнее</string>
+	<string name="sure_to_remove_account">Удалить этот сайт?</string>
 	<string name="delete_sure_post">Удалить запись</string>
 	<string name="delete_sure">Удалить черновик</string>
 	<string name="delete_sure_page">Удалить страницу</string>
@@ -253,6 +285,7 @@
 	<string name="error_downloading_image">Ошибка при загрузке картинки</string>
 	<string name="passcode_wrong_passcode">Неправильный PIN</string>
 	<string name="email_invalid">Введите правильный email адрес</string>
+	<string name="could_not_remove_account">Невозможно удалить сайт</string>
 	<string name="theme_fetch_failed">Ошибка выбора темы.</string>
 	<string name="auto_sharing_preference_reset">Сброс настроек общего доступа</string>
 	<string name="notifications_empty_list">Нет уведомлений</string>
@@ -293,6 +326,8 @@
 	<string name="adding_cat_success">Категория успешно добавлена</string>
 	<string name="cat_name_required">Поле "название категории" является обязательным</string>
 	<string name="category_automatically_renamed">Название категории %1$s не является правильным. Она будет переименована в %2$s.</string>
+	<string name="remove_account">Удалить сайт</string>
+	<string name="blog_removed_successfully">Сайт удачно удалён</string>
 	<string name="xmlrpc_error">Невозможно подключиться: введите полный путь к xmlrpc.php на вашем сайте и попробуйте снова.</string>
 	<string name="select_categories">Выберите категории</string>
 	<string name="account_details">Сведения об аккаунте</string>

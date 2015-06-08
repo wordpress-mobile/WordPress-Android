@@ -14,14 +14,20 @@
 	<string name="my_site_btn_view_admin">Ver Administrador</string>
 	<string name="my_site_btn_switch_site">Cambiar sitio</string>
 	<string name="site_picker_title">Elegir sitio</string>
+	<string name="my_site_header_look_and_feel">Aspecto</string>
 	<string name="my_site_btn_blog_posts">Entradas del blog</string>
 	<string name="my_site_btn_site_settings">Preferencias</string>
 	<string name="my_site_header_publish">Publicar</string>
 	<string name="my_site_btn_comments">Comentarios</string>
+	<string name="reader_label_new_posts_subtitle">Toca para mostrarlos</string>
+	<string name="my_site_header_admin">Administración</string>
 	<string name="my_site_header_configuration">Configuración</string>
+	<string name="notifications_account_required">Inicia sesión en WordPress.com para recibir notificaciones</string>
 	<string name="stats_unknown_author">Autor desconocido</string>
 	<string name="signout">Desconectar</string>
 	<string name="image_added">Imagen añadida</string>
+	<string name="deselect_all">Anular todas las selecciones</string>
+	<string name="sign_out_wpcom_confirm">Si desconectas tu cuenta, se eliminarán de este dispositivo todos los datos de WordPress.com de @%s, incluidos los borradores y los cambios locales.</string>
 	<string name="select_all">Seleccionar todo</string>
 	<string name="show">Mostrar</string>
 	<string name="hide">Ocultar</string>
@@ -41,6 +47,8 @@
 	<string name="no_media">No hay archivos multimedia</string>
 	<string name="loading_videos">Cargando vídeos</string>
 	<string name="loading_images">Cargando imágenes</string>
+	<string name="sign_in_jetpack">Inicia sesión en tu cuenta de WordPress.com para conectarte con Jetpack.</string>
+	<string name="auth_required">Inicia sesión de nuevo para continuar.</string>
 	<string name="tab_title_device_images">Imágenes del dispositivo</string>
 	<string name="tab_title_device_videos">Vídeos del dispositivo</string>
 	<string name="tab_title_site_images">Imágenes del sitio</string>
@@ -49,8 +57,6 @@
 	<string name="media_details_file_name">Nombre del archivo:</string>
 	<string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
 	<string name="verification_code">Código de verificación</string>
-	<string name="auth_required">Inicia sesión otra vez para continuar.</string>
-	<string name="sign_in_jetpack">Inicia sesión en tu cuenta de WordPress.com para conectar con Jetpack.</string>
 	<string name="two_step_sms_sent">Revisa tus mensajes de texto para el código de verificación.</string>
 	<string name="two_step_footer_button">Enviar código vía mensaje de texto</string>
 	<string name="two_step_footer_label">Introduce el código de tu app de autentificación.</string>
@@ -155,6 +161,7 @@
 	<string name="stats_for">Estadísticas del %s</string>
 	<string name="stats_other_recent_stats_label">Otras estadísticas recientes</string>
 	<string name="ssl_certificate_details">Detalles</string>
+	<string name="sure_to_remove_account">¿Deseas eliminar este sitio?</string>
 	<string name="delete_sure_post">Eliminar esta entrada</string>
 	<string name="delete_sure">Eliminar este borrador</string>
 	<string name="delete_sure_page">Eliminar esta página</string>
@@ -313,6 +320,7 @@
 	<string name="error_refresh_comments">No se pudieron actualizar los comentarios</string>
 	<string name="error_refresh_stats">No se pudieron actualizar las estadísticas</string>
 	<string name="invalid_url_message">Comprueba que la URL del blog que has puesto es válida</string>
+	<string name="could_not_remove_account">No se ha podido eliminar el sitio</string>
 	<string name="auto_sharing_preference_reset">Restablecer la configuración para compartir de forma automática</string>
 	<string name="auto_sharing_preference_reset_caused_by_error">El blog seleccionado anteriormente ya no está visible</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">La dirección solo puede contener letras minúsculas (a-z) y números.</string>
@@ -409,6 +417,8 @@
 	<string name="location_not_found">Localización desconocida</string>
 	<string name="cannot_delete_multi_media_items">Algunos elementos multimedia no pudieron ser borrados. Prueba más tarde</string>
 	<string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
+	<string name="blog_removed_successfully">El sitio se ha eliminado correctamente</string>
+	<string name="remove_account">Eliminar sitio</string>
 	<string name="post_not_published">No se ha publicado el estatus de la entrada</string>
 	<string name="page_not_published">No se ha publicado el estatus de la página</string>
 	<string name="category_parent">Categoría padre (opcional):</string>
@@ -539,9 +549,7 @@
 	<string name="media_gallery_type_slideshow">Pase de diapositivas </string>
 	<string name="media_gallery_type_tiled">Mosaico</string>
 	<string name="media_gallery_type_circles">Círculos</string>
-	<string name="media_gallery_image_order_reverse">Inverso</string>
 	<string name="media_no_video_message">Necesitas comprar VideoPress para subir videos</string>
-	<string name="stats">Estadísticas</string>
 	<string name="view_stats_full_site">Ver sitio completo </string>
 	<string name="stats_view_visitors_and_views">Visitantes y Vistas</string>
 	<string name="theme_set_success">¡Tema aplicado con exito!</string>
@@ -556,9 +564,10 @@
 	<string name="stats_view_comments">Comentarios</string>
 	<string name="stats_totals_views">Vistas</string>
 	<string name="stats_totals_comments">Comentarios</string>
+	<string name="media_gallery_image_order_reverse">Inverso</string>
+	<string name="stats">Estadísticas</string>
 	<string name="upload">Subir</string>
 	<string name="options">Opciones</string>
-	<string name="sign_in">Acceder</string>
 	<string name="notifications">Notificaciones</string>
 	<string name="enable_notifications">Habilitar notificaciones</string>
 	<string name="types">Tipos</string>
@@ -569,6 +578,7 @@
 	<string name="new_notifications">%d nuevas notificaciones</string>
 	<string name="more_notifications">y %d más.</string>
 	<string name="manage_notifications">Gestionar notificaciones</string>
+	<string name="sign_in">Acceder</string>
 	<string name="loading">Cargando...</string>
 	<string name="httpuser">Usuario HTTP</string>
 	<string name="httppassword">Contraseña HTTP</string>

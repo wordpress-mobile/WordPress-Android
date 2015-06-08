@@ -139,9 +139,9 @@ public class ActivityLauncher {
         WordPressMediaUtils.launchPictureLibrary(activity);
     }
 
-    public static void viewAccountSettings(Context context) {
-        Intent intent = new Intent(context, SettingsActivity.class);
-        slideInFromRight(context, intent);
+    public static void viewAccountSettings(Activity activity) {
+        Intent intent = new Intent(activity, SettingsActivity.class);
+        slideInFromRightForResult(activity, intent, RequestCodes.ACCOUNT_SETTINGS);
     }
 
     public static void viewHelpAndSupport(Context context, Tag origin) {
