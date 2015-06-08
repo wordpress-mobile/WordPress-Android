@@ -11,6 +11,11 @@ import org.wordpress.android.R;
 import java.util.Hashtable;
 
 public class TypefaceCache {
+    /**
+     * Cache used for all views that support custom fonts. The default is Open Sans, which
+     * supports both normal and light variations. Merriweather is also available via the
+     * "fontFamily" attribute, but it doesn't have a light variation.
+     */
     private static final int VARIATION_NORMAL = 0;
     private static final int VARIATION_LIGHT = 1;
     private static final int VARIATION_DEFAULT = VARIATION_NORMAL;
@@ -32,37 +37,54 @@ public class TypefaceCache {
             return null;
         }
 
-        // TODO: add Merriweather
         final String typefaceName;
-        if (variation == VARIATION_LIGHT) {
+        if (family == FAMILY_MERRIWEATHER) {
             switch (fontStyle) {
                 case Typeface.BOLD:
-                    typefaceName = "OpenSans-LightBold.ttf";
+                    typefaceName = "Merriweather-Bold.ttf";
                     break;
                 case Typeface.ITALIC:
-                    typefaceName = "OpenSans-LightItalic.ttf";
+                    typefaceName = "Merriweather-Italic.otf";
                     break;
                 case Typeface.BOLD_ITALIC:
-                    typefaceName = "OpenSans-LightBoldItalic.ttf";
+                    typefaceName = "Merriweather-BoldItalic.otf";
                     break;
                 default:
-                    typefaceName = "OpenSans-Light.ttf";
+                    typefaceName = "Merriweather-Regular.ttf";
                     break;
             }
         } else {
-            switch (fontStyle) {
-                case Typeface.BOLD:
-                    typefaceName = "OpenSans-Bold.ttf";
-                    break;
-                case Typeface.ITALIC:
-                    typefaceName = "OpenSans-Italic.ttf";
-                    break;
-                case Typeface.BOLD_ITALIC:
-                    typefaceName = "OpenSans-BoldItalic.ttf";
-                    break;
-                default:
-                    typefaceName = "OpenSans-Regular.ttf";
-                    break;
+            // Open Sans
+            if (variation == VARIATION_LIGHT) {
+                switch (fontStyle) {
+                    case Typeface.BOLD:
+                        typefaceName = "OpenSans-LightBold.ttf";
+                        break;
+                    case Typeface.ITALIC:
+                        typefaceName = "OpenSans-LightItalic.ttf";
+                        break;
+                    case Typeface.BOLD_ITALIC:
+                        typefaceName = "OpenSans-LightBoldItalic.ttf";
+                        break;
+                    default:
+                        typefaceName = "OpenSans-Light.ttf";
+                        break;
+                }
+            } else {
+                switch (fontStyle) {
+                    case Typeface.BOLD:
+                        typefaceName = "OpenSans-Bold.ttf";
+                        break;
+                    case Typeface.ITALIC:
+                        typefaceName = "OpenSans-Italic.ttf";
+                        break;
+                    case Typeface.BOLD_ITALIC:
+                        typefaceName = "OpenSans-BoldItalic.ttf";
+                        break;
+                    default:
+                        typefaceName = "OpenSans-Regular.ttf";
+                        break;
+                }
             }
         }
 
