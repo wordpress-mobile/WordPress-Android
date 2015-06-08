@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="me_disconnect_from_wordpress_com">中斷與 WordPress.com 的連線</string>
+	<string name="me_btn_login_logout">登入/登出</string>
+	<string name="me_connect_to_wordpress_com">連線 WordPress.com</string>
+	<string name="site_picker_cant_hide_current_site">由於「%s」是目前的網站，因此並未隱藏</string>
+	<string name="me_btn_support">說明與客戶服務</string>
+	<string name="me_btn_settings">帳號設定</string>
+	<string name="site_picker_create_dotcom">建立 WordPress.com 網站</string>
+	<string name="site_picker_edit_visibility">顯示/隱藏網站</string>
+	<string name="site_picker_add_self_hosted">新增自助託管的網站</string>
+	<string name="site_picker_add_site">新增網站</string>
+	<string name="my_site_btn_switch_site">切換網站</string>
+	<string name="site_picker_title">選擇網站</string>
+	<string name="my_site_btn_view_site">檢視網站</string>
+	<string name="my_site_btn_view_admin">檢視管理員</string>
+	<string name="my_site_header_publish">發表</string>
+	<string name="my_site_header_look_and_feel">外觀和風格</string>
+	<string name="my_site_btn_site_settings">設定</string>
+	<string name="my_site_btn_comments">留言</string>
+	<string name="my_site_btn_blog_posts">網誌文章</string>
+	<string name="my_site_header_admin">管理</string>
+	<string name="reader_label_new_posts_subtitle">點選以顯示</string>
+	<string name="my_site_header_configuration">組態</string>
+	<string name="notifications_account_required">登入 WordPress.com 以接收通知</string>
+	<string name="stats_unknown_author">不明作者</string>
+	<string name="signout">中斷連結</string>
+	<string name="image_added">已新增圖片</string>
+	<string name="select_all">全部選取</string>
+	<string name="sign_out_wpcom_confirm">中斷帳號連結將會移除此裝置上 @%s 的所有 WordPress.com 資料，包括本機草稿及變更項目。</string>
+	<string name="show">顯示</string>
+	<string name="hide">隱藏</string>
+	<string name="deselect_all">取消全選</string>
 	<string name="select_from_new_picker">使用全新挑選器一次選取多個項目</string>
 	<string name="loading_blog_videos">正在擷取影片</string>
 	<string name="no_media_sources">無法擷取媒體</string>
@@ -130,6 +161,7 @@
 	<string name="stats_other_recent_stats_label">其他近期統計資料</string>
 	<string name="themes_fetching">正在擷取佈景主題...</string>
 	<string name="ssl_certificate_details">詳細資料</string>
+	<string name="sure_to_remove_account">移除此網站？</string>
 	<string name="delete_sure_post">刪除此文章</string>
 	<string name="delete_sure">刪除此草稿</string>
 	<string name="delete_sure_page">刪除此頁面</string>
@@ -228,6 +260,7 @@
 	<string name="help_center">說明中心</string>
 	<string name="ssl_certificate_error">無效的 SSL 憑證</string>
 	<string name="ssl_certificate_ask_trust">如果你通常能夠順利連線至此網站，則此錯誤可能代表有人正嘗試冒充該網站，因此請勿繼續操作。是否仍然要信任憑證？</string>
+	<string name="could_not_remove_account">無法移除網站</string>
 	<string name="out_of_memory">裝置記憶體不足</string>
 	<string name="no_network_message">沒有可用的網路</string>
 	<string name="gallery_error">無法擷取媒體項目</string>
@@ -293,6 +326,8 @@
 	<string name="blog_name_reserved_but_may_be_available">該網站目前已被預定，但可能幾天後便可供使用</string>
 	<string name="username_or_password_incorrect">你輸入的使用者名稱或密碼不正確</string>
 	<string name="nux_cannot_log_in">我們無法將你登入</string>
+	<string name="blog_removed_successfully">已成功移除網站</string>
+	<string name="remove_account">移除網站</string>
 	<string name="xmlrpc_error">無法連線。在你的網站上輸入 xmlrpc.php 的完整路徑，然後再試一次。</string>
 	<string name="select_categories">選取類別</string>
 	<string name="account_details">帳號詳細資料</string>

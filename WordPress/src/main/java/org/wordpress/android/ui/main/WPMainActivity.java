@@ -31,6 +31,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AppLog;
@@ -354,6 +355,11 @@ public class WPMainActivity extends Activity
                             mySiteFragment.setBlog(WordPress.getCurrentBlog());
                         }
                     }
+                }
+                break;
+            case RequestCodes.ACCOUNT_SETTINGS:
+                if (resultCode == SettingsFragment.LANGUAGE_CHANGED) {
+                    resetFragments();
                 }
                 break;
         }
