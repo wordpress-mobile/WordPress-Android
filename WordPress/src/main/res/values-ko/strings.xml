@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="me_disconnect_from_wordpress_com">워드프레스닷컴 연결 해제</string>
+	<string name="me_btn_login_logout">로그인/로그아웃</string>
+	<string name="me_connect_to_wordpress_com">워드프레스닷컴 연결하기</string>
+	<string name="site_picker_cant_hide_current_site">"%s"은(는) 현재 사이트이기 때문에 숨길 수 없습니다.</string>
+	<string name="me_btn_support">도움 및 지원</string>
+	<string name="me_btn_settings">계정 설정</string>
+	<string name="site_picker_create_dotcom">워드프레스닷컴 사이트 생성</string>
+	<string name="site_picker_edit_visibility">사이트 표시/숨기기</string>
+	<string name="site_picker_add_site">사이트 추가</string>
+	<string name="site_picker_add_self_hosted">독립 호스트 사이트 추가</string>
+	<string name="site_picker_title">사이트 선택</string>
+	<string name="my_site_btn_switch_site">사이트 전환</string>
+	<string name="my_site_btn_view_site">사이트 보기</string>
+	<string name="my_site_btn_view_admin">관리자 보기</string>
+	<string name="my_site_header_publish">게시</string>
+	<string name="my_site_header_look_and_feel">모양과 느낌</string>
+	<string name="my_site_btn_site_settings">설정</string>
+	<string name="my_site_btn_comments">댓글</string>
+	<string name="my_site_btn_blog_posts">블로그 글</string>
+	<string name="my_site_header_admin">관리자</string>
+	<string name="reader_label_new_posts_subtitle">눌러서 표시</string>
+	<string name="my_site_header_configuration">설정</string>
+	<string name="notifications_account_required">알림을 보려면 워드프레스닷컴에 로그인</string>
+	<string name="stats_unknown_author">알 수 없는 글쓴이</string>
+	<string name="signout">연결 해제</string>
+	<string name="image_added">이미지 추가됨</string>
+	<string name="sign_out_wpcom_confirm">계정의 연결을 해제하면 이 장치에서 로컬 임시글 및 로컬 변경 사항을 포함한 @%s의 모든 워드프레스닷컴 데이터가 제거됩니다.</string>
+	<string name="select_all">모두 선택</string>
+	<string name="show">표시</string>
+	<string name="hide">숨기기</string>
+	<string name="deselect_all">모두 선택 해제</string>
 	<string name="select_from_new_picker">새로운 선택 도구로 복수 선택</string>
 	<string name="loading_blog_images">이미지 가져오는 중</string>
 	<string name="loading_blog_videos">비디오 가져오는 중</string>
@@ -130,6 +161,7 @@
 	<string name="stats_for">%s 통계</string>
 	<string name="stats_other_recent_stats_label">기타 최근 통계</string>
 	<string name="ssl_certificate_details">상세</string>
+	<string name="sure_to_remove_account">이 사이트를 제거할까요?</string>
 	<string name="delete_sure_post">이 글을 삭제하기</string>
 	<string name="delete_sure">이 임시 글을 삭제하기</string>
 	<string name="delete_sure_page">이 페이지를 삭제하기</string>
@@ -292,6 +324,7 @@
 	<string name="adding_cat_failed">카테고리 추가에 실패했습니다.</string>
 	<string name="error_delete_post">%s를 삭제하는 동안 에러가 발생했습니다.</string>
 	<string name="error_moderate_comment">진행중에 에러가 발생했습니다.</string>
+	<string name="could_not_remove_account">사이트를 제거할 수 없습니다.</string>
 	<string name="error_refresh_stats">통계를 다시 로드 할 수 없습니다.</string>
 	<string name="media_error_no_permission">미디어 라이브러리를 볼 수 있는 권한이 없습니다</string>
 	<string name="share_action_media">미디어 라이브러리</string>
@@ -397,6 +430,8 @@
 	<string name="hint_comment_content">코멘트</string>
 	<string name="toast_comment_unedited">코멘트를 변경할 수 없습니다.</string>
 	<string name="dlg_unapproving_comments">미승인</string>
+	<string name="blog_removed_successfully">사이트가 제거되었습니다.</string>
+	<string name="remove_account">사이트 제거</string>
 	<string name="deleting_page">페이지 삭제</string>
 	<string name="deleting_post">글 삭제</string>
 	<string name="share_url_post">글 공유</string>

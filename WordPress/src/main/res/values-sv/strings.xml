@@ -3,9 +3,11 @@
 	<string name="me_disconnect_from_wordpress_com">Koppla från WordPress.com </string>
 	<string name="me_btn_login_logout">Logga in/Logga ut</string>
 	<string name="me_connect_to_wordpress_com">Anslut till WordPress.com</string>
+	<string name="site_picker_cant_hide_current_site">"%s" kunde inte döljas eftersom den är den nuvarande webbplatsen</string>
 	<string name="me_btn_support">Hjälp &amp; support</string>
 	<string name="me_btn_settings">Kontoinställningar</string>
 	<string name="site_picker_create_dotcom">Skapa en webbplats på WordPress.com</string>
+	<string name="site_picker_add_self_hosted">Lägg till webbplats på egen server</string>
 	<string name="site_picker_add_site">Lägg till webbplats</string>
 	<string name="site_picker_edit_visibility">Visa/dölj webbplatser</string>
 	<string name="my_site_btn_view_site">Visa webbplats</string>
@@ -22,7 +24,11 @@
 	<string name="my_site_header_configuration">Konfiguration</string>
 	<string name="notifications_account_required">Logga in på WordPress.com för att få notifikationer </string>
 	<string name="stats_unknown_author">Okänd författare</string>
+	<string name="image_added">Bild tillagd</string>
 	<string name="signout">Koppla från</string>
+	<string name="show">Visa</string>
+	<string name="select_all">Välj alla</string>
+	<string name="hide">Dölj</string>
 	<string name="sign_out_wpcom_confirm">Att koppla bort ditt konto kommer att innebära att alla @%s’s WordPress.com data från denna enhet, inklusive lokala utkast och lokala förändringar kommer försvinna.</string>
 	<string name="deselect_all">Avmarkera alla </string>
 	<string name="select_from_new_picker">Flerval med den nya väljaren</string>
@@ -155,6 +161,7 @@
 	<string name="stats_for">Statistik för %s</string>
 	<string name="themes_fetching">Hämtar teman...</string>
 	<string name="ssl_certificate_details">Detaljer</string>
+	<string name="sure_to_remove_account">Ta bort den här webbplatsen?</string>
 	<string name="delete_sure_post">Radera detta inlägg</string>
 	<string name="delete_sure">Radera detta utkast</string>
 	<string name="delete_sure_page">Radera denna sida</string>
@@ -309,6 +316,7 @@
 	<string name="error_refresh_stats">Statistiken kunde inte uppdateras just nu</string>
 	<string name="error_refresh_notifications">Notifieringar kunde inte uppdateras just nu</string>
 	<string name="auto_sharing_preference_reset_caused_by_error">Tidigare vald blogg är inte längre synlig</string>
+	<string name="could_not_remove_account">Det gick inte ta bort webbplatsen</string>
 	<string name="gallery_error">Medieobjektet kunde inte hämtas</string>
 	<string name="blog_not_found">Ett fel uppstod vid anslutning till bloggen</string>
 	<string name="theme_set_failed">Kunde inte ställa in tema</string>
@@ -404,6 +412,8 @@
 	<string name="reader_toast_err_add_tag">Kunde inte lägga till etiketten</string>
 	<string name="stats_view_tags_and_categories">Etiketter &amp; kategorier</string>
 	<string name="delete_draft">Radera utkast</string>
+	<string name="remove_account">Ta bort webbplatsen</string>
+	<string name="blog_removed_successfully">Webbplatsen har tagits bort</string>
 	<string name="theme_premium_theme">Premium-tema</string>
 	<string name="xmlrpc_error">Kunde inte ansluta. Skriv in hela adressen till xmlrpc.php-filen på din webbplats och försök igen.</string>
 	<string name="scaled_image_error">Skriv en giltig bredd för skalning</string>

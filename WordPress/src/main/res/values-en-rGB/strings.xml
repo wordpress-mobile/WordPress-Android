@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="ssl_certificate_details">Details</string>
+	<string name="sure_to_remove_account">Remove this site?</string>
 	<string name="delete_sure_post">Delete this post</string>
 	<string name="delete_sure">Delete this draft</string>
 	<string name="delete_sure_page">Delete this page</string>
@@ -164,6 +165,7 @@
 	<string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
 	<string name="nux_cannot_log_in">We can\'t log you in</string>
 	<string name="out_of_memory">Device out of memory</string>
+	<string name="could_not_remove_account">Couldn\'t remove site</string>
 	<string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
 	<string name="select_categories">Select categories</string>
 	<string name="account_details">Account details</string>
@@ -268,6 +270,8 @@
 	<string name="blog_name_must_include_letters">Site address must have at least 1 letter (a-z)</string>
 	<string name="blog_name_invalid">Invalid site address</string>
 	<string name="blog_title_invalid">Invalid site title</string>
+	<string name="blog_removed_successfully">Site removed successfully</string>
+	<string name="remove_account">Remove site</string>
 	<string name="deleting_page">Deleting page</string>
 	<string name="deleting_post">Deleting post</string>
 	<string name="share_url_post">Share post</string>

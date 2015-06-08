@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="me_btn_support">Помоћ &amp; Подршка</string>
 	<string name="select_from_new_picker">Изаберите више опција помоћу новог бирача</string>
 	<string name="stats_generic_error">Тражене статистике се не могу учитати</string>
 	<string name="no_media_sources">Није могуће добавити медије</string>

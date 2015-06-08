@@ -52,6 +52,7 @@ import java.util.Map;
 @SuppressWarnings("deprecation")
 public class SettingsFragment extends PreferenceFragment {
     public static final String SETTINGS_PREFERENCES = "settings-pref";
+    public static final int LANGUAGE_CHANGED = 1000;
 
     private AlertDialog mDialog;
     private SharedPreferences mSettings;
@@ -284,6 +285,7 @@ public class SettingsFragment extends PreferenceFragment {
                     // Refresh the app
                     Intent refresh = new Intent(getActivity(), getActivity().getClass());
                     startActivity(refresh);
+                    getActivity().setResult(LANGUAGE_CHANGED);
                     getActivity().finish();
                 }
             });
