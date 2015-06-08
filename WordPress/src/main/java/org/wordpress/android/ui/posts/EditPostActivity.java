@@ -582,7 +582,13 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
         // Update post object from fragment fields
         if (mEditorFragment != null) {
-            updatePostContent(isAutosave);
+            if (mShowNewEditor) {
+                updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
+                        (String) mEditorFragment.getContent());
+            } else {
+                // TODO: Remove when legacy editor is dropped
+                updatePostContent(isAutosave);
+            }
         }
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.updatePostSettings();
@@ -613,7 +619,9 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     }
 
     private void saveAndFinish() {
+        // Fetch post title and content from editor fields and update the Post object
         savePost(true);
+
         if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
             // new and empty post? delete it
             if (mIsNewPost) {
@@ -631,8 +639,16 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             // changes have been made, save the post and ask for the post list to refresh.
             // We consider this being "manual save", it will replace some Android "spans" by an html
             // or a shortcode replacement (for instance for images and galleries)
-            savePost(false);
+            if (mShowNewEditor) {
+                // Update the post object directly, without re-fetching the fields from the EditorFragment
+                updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
+                savePostToDb();
+            } else {
+                // TODO: Remove when legacy editor is dropped
+                savePost(false);
+            }
         }
+
         WordPress.currentPost = mPost;
         Intent i = new Intent();
         i.putExtra(EXTRA_SHOULD_REFRESH, true);
