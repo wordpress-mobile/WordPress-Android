@@ -40,6 +40,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.LegacyEditorFragment;
@@ -124,6 +125,8 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 10000;
     private Timer mAutoSaveTimer;
+
+    private boolean mShowNewEditor = true;
 
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
     private Map<Long, List<String>> mPendingGalleryUploads = new HashMap<>();
@@ -657,7 +660,11 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             switch (position) {
                 case 0:
                     // TODO: switch between legacy and new editor here (AB test?)
-                    return new LegacyEditorFragment();
+                    if (mShowNewEditor) {
+                        return new EditorFragment();
+                    } else {
+                        return new LegacyEditorFragment();
+                    }
                 case 1:
                     return new EditPostSettingsFragment();
                 default:
