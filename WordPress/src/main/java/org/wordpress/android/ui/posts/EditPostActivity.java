@@ -68,6 +68,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -582,7 +583,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
 
         // Update post object from fragment fields
         if (mEditorFragment != null) {
-            if (mShowNewEditor) {
+            if (showNewEditor()) {
                 updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
                         (String) mEditorFragment.getContent());
             } else {
@@ -639,7 +640,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             // changes have been made, save the post and ask for the post list to refresh.
             // We consider this being "manual save", it will replace some Android "spans" by an html
             // or a shortcode replacement (for instance for images and galleries)
-            if (mShowNewEditor) {
+            if (showNewEditor()) {
                 // Update the post object directly, without re-fetching the fields from the EditorFragment
                 updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
                 savePostToDb();
@@ -676,7 +677,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             switch (position) {
                 case 0:
                     // TODO: switch between legacy and new editor here (AB test?)
-                    if (mShowNewEditor) {
+                    if (showNewEditor()) {
                         return new EditorFragment();
                     } else {
                         return new LegacyEditorFragment();
@@ -710,6 +711,11 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
             // Show 3 total pages.
             return 3;
         }
+    }
+
+    // TODO: Remove debug build check when new editor is moved to production
+    private boolean showNewEditor() {
+        return (mShowNewEditor && PackageUtils.isDebugBuild());
     }
 
     public boolean isEditingPostContent() {
@@ -841,7 +847,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent()) && !mHasSetPostContent) {
                 mHasSetPostContent = true;
-                if (post.isLocalDraft() && !mShowNewEditor) {
+                if (post.isLocalDraft() && !showNewEditor()) {
                     // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
