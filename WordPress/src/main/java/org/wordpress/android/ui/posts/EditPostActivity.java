@@ -825,12 +825,13 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent()) && !mHasSetPostContent) {
                 mHasSetPostContent = true;
-                if (post.isLocalDraft()) {
+                if (post.isLocalDraft() && !mShowNewEditor) {
+                    // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                             post.getContent().replaceAll("\uFFFC", ""));
-                }
-                else {
+                } else {
+                    // TODO: Might be able to drop .replaceAll() when legacy editor is removed
                     mEditorFragment.setContent(post.getContent().replaceAll("\uFFFC", ""));
                 }
             }
