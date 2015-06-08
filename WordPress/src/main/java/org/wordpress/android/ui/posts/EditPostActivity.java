@@ -936,6 +936,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         addExistingMediaToEditor(mediaId);
     }
 
+    // TODO: Replace with contents of the updatePostContentNewEditor() method when legacy editor is dropped
     /**
      * Updates post object with content of this fragment
      */
@@ -1019,6 +1020,37 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 }
             }
             content = postContent.toString();
+        }
+
+        String moreTag = "<!--more-->";
+
+        post.setTitle(title);
+        // split up the post content if there's a more tag
+        if (post.isLocalDraft() && content.contains(moreTag)) {
+            post.setDescription(content.substring(0, content.indexOf(moreTag)));
+            post.setMoreText(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
+        } else {
+            post.setDescription(content);
+            post.setMoreText("");
+        }
+
+        if (!post.isLocalDraft()) {
+            post.setLocalChange(true);
+        }
+    }
+
+    /**
+     * Updates post object with given title and content
+     */
+    public void updatePostContentNewEditor(boolean isAutoSave, String title, String content) {
+        Post post = getPost();
+
+        if (post == null) {
+            return;
+        }
+
+        if (!isAutoSave) {
+            // TODO: Shortcode handling, media handling
         }
 
         String moreTag = "<!--more-->";
