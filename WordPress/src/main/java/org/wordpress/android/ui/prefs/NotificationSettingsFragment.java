@@ -11,9 +11,14 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v4.view.MenuItemCompat;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Switch;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -39,17 +44,44 @@ public class NotificationSettingsFragment extends PreferenceFragment {
     private Map<String, Object> mNotificationSettings;
     private boolean mNotificationSettingsChanged;
 
+    private Switch mEnabledSwitch;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.notification_settings);
-        loadNotifications();
+
+        setHasOptionsMenu(true);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle(R.string.manage_notifications);
+        getActivity().setTitle(R.string.notifications);
+
+        new LoadNotificationsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.notifications_settings, menu);
+
+        MenuItem enabledMenuItem = menu.findItem(R.id.notifications_enabled);
+        if (enabledMenuItem != null && MenuItemCompat.getActionView(enabledMenuItem) != null) {
+            mEnabledSwitch = (Switch)MenuItemCompat.getActionView(enabledMenuItem).findViewById(R.id.notifications_enabled_switch);
+        }
+    }
+
+    private class LoadNotificationsTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            loadNotifications();
+
+            return null;
+        }
     }
 
     private void loadNotifications() {

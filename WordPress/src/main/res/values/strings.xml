@@ -375,6 +375,7 @@
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
+    <string name="pref_notification_other_blogs" translatable="false">wp_pref_notification_other_blogs</string>
     <string name="pref_notifications_enabled" translatable="false">wp_pref_notifications_enabled</string>
     <string name="pref_notification_types" translatable="false">wp_pref_notification_types</string>
 
@@ -555,8 +556,6 @@
     <string name="notifications">Notifications</string>
     <string name="manage_notifications">Manage notifications</string>
     <string name="enable_notifications">Enable notifications</string>
-    <string name="types">Types</string>
-    <string name="options">Options</string>
     <string name="notifications_turn_off">Turn off</string>
     <string name="notifications_turn_off_1hr">Turn off for 1 hour</string>
     <string name="notifications_turn_off_8hr">Turn off for 8 hours</string>
