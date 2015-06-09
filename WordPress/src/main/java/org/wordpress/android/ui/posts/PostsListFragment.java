@@ -57,7 +57,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
     private RecyclerView mRecyclerView;
     private View mEmptyView;
     private View mEmptyViewImage;
-    private ProgressBar mProgress;
+    private ProgressBar mProgressLoadMore;
     private TextView mEmptyViewTitle;
     private EmptyViewMessageType mEmptyViewMessage = EmptyViewMessageType.NO_CONTENT;
 
@@ -93,7 +93,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         mEmptyView = view.findViewById(R.id.empty_view);
         mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
-        mProgress = (ProgressBar) view.findViewById(R.id.progress);
+        mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
 
         return view;
     }
@@ -340,7 +340,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
 
         // show progress bar at the bottom if we're loading more posts
         if (loadMore) {
-            showProgress();
+            showLoadMoreProgress();
         }
 
         mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
@@ -358,7 +358,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
                     mSwipeToRefreshHelper.setRefreshing(false);
                 }
 
-                hideProgress();
+                hideLoadMoreProgress();
 
                 if (postCount == 0) {
                     mCanLoadMorePosts = false;
@@ -378,7 +378,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
                 }
 
                 mSwipeToRefreshHelper.setRefreshing(false);
-                hideProgress();
+                hideLoadMoreProgress();
 
                 if (errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
                     switch (errorType) {
@@ -405,16 +405,20 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         mCurrentFetchPostsTask.execute(apiArgs);
     }
 
-    private void showProgress() {
-        if (mProgress != null) {
-            mProgress.setVisibility(View.VISIBLE);
+    private void showLoadMoreProgress() {
+        if (mProgressLoadMore != null) {
+            mProgressLoadMore.setVisibility(View.VISIBLE);
         }
     }
 
-    private void hideProgress() {
-        if (mProgress != null) {
-            mProgress.setVisibility(View.GONE);
+    private void hideLoadMoreProgress() {
+        if (mProgressLoadMore != null) {
+            mProgressLoadMore.setVisibility(View.GONE);
         }
+    }
+
+    private boolean isLoadingMore() {
+        return mIsFetchingPosts && mProgressLoadMore != null && mProgressLoadMore.getVisibility() == View.VISIBLE;
     }
 
     public void setShouldSelectFirstPost(boolean shouldSelect) {
