@@ -67,6 +67,8 @@
     <color name="translucent_grey_lighten_10">#80a8bece</color>
     <color name="translucent_grey_lighten_20">#80c8d7e1</color>
     <color name="translucent_grey_lighten_30">#80e9eff3</color>
+    <color name="translucent_grey">#80888888</color>
+
     <!-- END WordPress.com Colors -->
     <!-- ======================== -->
 
