@@ -57,7 +57,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
     private RecyclerView mRecyclerView;
     private View mEmptyView;
     private View mEmptyViewImage;
-    private ProgressBar mProgressLoadMore;
+    private ProgressBar mProgress;
     private TextView mEmptyViewTitle;
     private EmptyViewMessageType mEmptyViewMessage = EmptyViewMessageType.NO_CONTENT;
 
@@ -93,7 +93,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         mEmptyView = view.findViewById(R.id.empty_view);
         mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
-        mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
+        mProgress = (ProgressBar) view.findViewById(R.id.progress);
 
         return view;
     }
@@ -207,7 +207,11 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
             PostsListAdapter.OnPostSelectedListener postSelectedListener = new PostsListAdapter.OnPostSelectedListener() {
                 @Override
                 public void onPostSelected(PostsListPost post) {
-                    if (isAdded()) {
+                    if (!isAdded()) return;
+
+                    if (mIsFetchingPosts) {
+                        ToastUtils.showToast(getActivity(), mIsPage ? R.string.pages_fetching : R.string.posts_fetching);
+                    } else {
                         showPost(post.getPostId());
                     }
                 }
@@ -336,7 +340,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
 
         // show progress bar at the bottom if we're loading more posts
         if (loadMore) {
-            showLoadMoreProgress();
+            showProgress();
         }
 
         mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
@@ -354,7 +358,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
                     mSwipeToRefreshHelper.setRefreshing(false);
                 }
 
-                hideLoadMoreProgress();
+                hideProgress();
 
                 if (postCount == 0) {
                     mCanLoadMorePosts = false;
@@ -374,7 +378,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
                 }
 
                 mSwipeToRefreshHelper.setRefreshing(false);
-                hideLoadMoreProgress();
+                hideProgress();
 
                 if (errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
                     switch (errorType) {
@@ -385,13 +389,13 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
                                                 R.string.error_refresh_unauthorized_posts, Duration.LONG);
                             }
                             updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-                            return;
+                            break;
                         default:
                             ToastUtils.showToast(getActivity(),
                                     mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
                                     Duration.LONG);
                             updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                            return;
+                            break;
                     }
                 }
             }
@@ -401,20 +405,16 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         mCurrentFetchPostsTask.execute(apiArgs);
     }
 
-    private void showLoadMoreProgress() {
-        if (mProgressLoadMore != null) {
-            mProgressLoadMore.setVisibility(View.VISIBLE);
+    private void showProgress() {
+        if (mProgress != null) {
+            mProgress.setVisibility(View.VISIBLE);
         }
     }
 
-    private void hideLoadMoreProgress() {
-        if (mProgressLoadMore != null) {
-            mProgressLoadMore.setVisibility(View.GONE);
+    private void hideProgress() {
+        if (mProgress != null) {
+            mProgress.setVisibility(View.GONE);
         }
-    }
-
-    boolean isLoadingMorePosts() {
-        return mIsFetchingPosts && (mProgressLoadMore != null && mProgressLoadMore.getVisibility() == View.VISIBLE);
     }
 
     public void setShouldSelectFirstPost(boolean shouldSelect) {
