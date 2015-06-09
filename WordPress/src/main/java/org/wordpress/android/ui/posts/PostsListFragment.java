@@ -207,11 +207,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
             PostsListAdapter.OnPostSelectedListener postSelectedListener = new PostsListAdapter.OnPostSelectedListener() {
                 @Override
                 public void onPostSelected(PostsListPost post) {
-                    if (!isAdded()) return;
-
-                    if (mIsFetchingPosts) {
-                        ToastUtils.showToast(getActivity(), mIsPage ? R.string.pages_fetching : R.string.posts_fetching);
-                    } else {
+                    if (isAdded()) {
                         showPost(post.getPostId());
                     }
                 }
@@ -417,14 +413,13 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         }
     }
 
-    private boolean isLoadingMore() {
-        return mIsFetchingPosts && mProgressLoadMore != null && mProgressLoadMore.getVisibility() == View.VISIBLE;
-    }
-
     public void setShouldSelectFirstPost(boolean shouldSelect) {
         mShouldSelectFirstPost = shouldSelect;
     }
 
+    /*
+     * determines whether the adapter highlights the selected post - used in dual-pane mode
+     */
     public void setShowSelection(boolean showSelection) {
         mShowSelection = showSelection;
         if (mPostsListAdapter != null) {
