@@ -66,7 +66,7 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
         final TextView mostPopularDayPercentTextView = (TextView) ll.findViewById(R.id.stats_most_popular_day_percent);
         mostPopularDayPercentTextView.setText(
                 String.format(
-                        getString(R.string.stats_insights_most_popular_percent_weekly_views),
+                        getString(R.string.stats_insights_most_popular_percent_views),
                         roundToInteger(data.getHighestDayPercent())
                 )
         );
@@ -79,7 +79,7 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
         final TextView mostPopularHourPercentTextView = (TextView) ll.findViewById(R.id.stats_most_popular_hour_percent);
         mostPopularHourPercentTextView.setText(
                 String.format(
-                        getString(R.string.stats_insights_most_popular_percent_daily_views),
+                        getString(R.string.stats_insights_most_popular_percent_views),
                         roundToInteger(data.getHighestHourPercent())
                 )
         );
