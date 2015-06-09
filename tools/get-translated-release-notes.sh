@@ -47,4 +47,5 @@ fi
 
 fetch
 extract_release_notes $1 $2
-open $OUTFILE
+echo Generated file:
+echo $OUTFILE
