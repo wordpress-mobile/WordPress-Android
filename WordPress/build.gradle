@@ -25,6 +25,9 @@ android {
         exclude "META-INF/LICENSE.txt"
         exclude "META-INF/NOTICE.txt"
     }
+    dexOptions {
+        jumboMode = true
+    }
 
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
