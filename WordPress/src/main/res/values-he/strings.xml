@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="me_disconnect_from_wordpress_com">התנתקות מ-WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">התחברות אל WordPress.com</string>
+	<string name="me_btn_login_logout">כניסה/יציאה</string>
+	<string name="site_picker_cant_hide_current_site">"%s" לא הוסתר מכיוון שזהו האתר הנוכחי</string>
+	<string name="me_btn_settings">הגדרות חשבון</string>
+	<string name="me_btn_support">עזרה ותמיכה</string>
+	<string name="site_picker_create_dotcom">יצירת אתר WordPress.com</string>
+	<string name="site_picker_edit_visibility">הצגת/הסתרת אתרים</string>
+	<string name="site_picker_add_self_hosted">הוספת אתר באחסון עצמי</string>
+	<string name="site_picker_add_site">הוספת אתר</string>
+	<string name="site_picker_title">בחירת אתר</string>
+	<string name="my_site_btn_switch_site">החלפת אתר</string>
+	<string name="my_site_btn_view_admin">הצגת מנהל מערכת</string>
+	<string name="my_site_btn_view_site">הצגת אתר</string>
+	<string name="my_site_header_publish">פרסום</string>
+	<string name="my_site_header_look_and_feel">סגנון</string>
+	<string name="my_site_btn_comments">תגובות</string>
+	<string name="my_site_btn_site_settings">הגדרות</string>
+	<string name="my_site_btn_blog_posts">פוסטים בבלוג</string>
+	<string name="my_site_header_admin">מנהל מערכת</string>
+	<string name="reader_label_new_posts_subtitle">יש ללחוץ כדי להציג</string>
+	<string name="my_site_header_configuration">הגדרות תצורה</string>
+	<string name="notifications_account_required">כניסה אל WordPress.com עבור הודעות</string>
+	<string name="stats_unknown_author">מחבר לא ידוע</string>
+	<string name="image_added">תמונה נוספה</string>
+	<string name="signout">התנתקות</string>
+	<string name="sign_out_wpcom_confirm">ניתוק החשבון שלך יסיר את כל נתוני WordPress.com ‏של %s ממכשיר זה, כולל טיוטות מקומיות ושינויים מקומיים.</string>
+	<string name="deselect_all">ביטול בחירה בכל האפשרויות</string>
 	<string name="hide">הסתר</string>
 	<string name="select_all">בחר הכל</string>
 	<string name="show">הצג</string>

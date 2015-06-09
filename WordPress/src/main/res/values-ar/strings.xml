@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="me_disconnect_from_wordpress_com">قطع الاتصال بموقع وردبرس.كوم</string>
+	<string name="me_btn_login_logout">تسجيل الدخول/تسجيل الخروج</string>
+	<string name="me_connect_to_wordpress_com">الاتصال بموقع وردبرس.كوم</string>
+	<string name="me_btn_support">المساعدة والدعم</string>
+	<string name="site_picker_cant_hide_current_site">"%s" لم يكن مخفيًا لأنه الموقع الحالي</string>
+	<string name="me_btn_settings">إعدادات الحساب</string>
+	<string name="site_picker_create_dotcom">إنشاء موقع وردبرس.كوم</string>
+	<string name="site_picker_add_site">إضافة موقع</string>
+	<string name="site_picker_edit_visibility">إظهار/إخفاء المواقع</string>
+	<string name="site_picker_add_self_hosted">إضافة موقع مستضاف ذاتيًا</string>
+	<string name="my_site_btn_view_site">عرض الموقع</string>
+	<string name="site_picker_title">إختر الموقع</string>
+	<string name="my_site_btn_view_admin">عرض المسؤول</string>
+	<string name="my_site_btn_switch_site">تبديل الموقع</string>
+	<string name="my_site_header_publish">نشر</string>
+	<string name="my_site_btn_blog_posts">مقالات المدونة</string>
+	<string name="my_site_btn_comments">التعليقات</string>
+	<string name="my_site_header_look_and_feel">الشكل والطابع</string>
+	<string name="my_site_btn_site_settings">الإعدادات</string>
+	<string name="my_site_header_configuration">التكوين</string>
+	<string name="reader_label_new_posts_subtitle">انقر لعرضها</string>
+	<string name="my_site_header_admin">المسؤول</string>
+	<string name="notifications_account_required">تسجيل الدخول إلى موقع وردبرس.كوم للحصول على التنبيهات</string>
+	<string name="stats_unknown_author">كاتب غير معروف</string>
+	<string name="image_added">تمت إضافة صورة</string>
+	<string name="signout">قطع الاتصال</string>
+	<string name="select_all">اختيار الكل</string>
+	<string name="sign_out_wpcom_confirm">سيؤدي قطع اتصال حسابك إلى إزالة كل بيانات وردبرس.كوم الخاصة بـ %s@ من هذا الجهاز، بما في ذلك المسودات المحلية والتغييرات المحلية.</string>
+	<string name="show">إظهار</string>
+	<string name="hide">إخفاء</string>
+	<string name="deselect_all">إلغاء تحديد الكل</string>
 	<string name="select_from_new_picker">تحديد متعدد بأداة الانتقاء الجديدة</string>
 	<string name="no_media_sources">تعذر إحضار الوسائط</string>
 	<string name="loading_blog_images">جارٍ إحضار الصور</string>
@@ -130,6 +161,7 @@
 	<string name="stats_for">إحصاءات %s</string>
 	<string name="themes_fetching">جارٍ إحضار القوالب…</string>
 	<string name="ssl_certificate_details">تفاصيل</string>
+	<string name="sure_to_remove_account">هل ترغب في إزالة هذا الموقع؟</string>
 	<string name="delete_sure_post">حذف هذه المقالة</string>
 	<string name="delete_sure">حذف هذه المسودة</string>
 	<string name="delete_sure_page">حذف هذه الصفحة</string>
@@ -228,6 +260,7 @@
 	<string name="forums">المنتديات</string>
 	<string name="ssl_certificate_error">شهادة SSL غير صالحة</string>
 	<string name="ssl_certificate_ask_trust">إذا كنت عادة تتصل بهذا الموقع بدون أي مشاكل، فربما يعني هذا الخطأ أن شخصًا ما يحاول سرقة هذا الموقع, وينبغي ألا تقوم بالاستمرار. هل ترغب في الوثوق بالشهادة على أي حال؟</string>
+	<string name="could_not_remove_account">تعذر إزالة الموقع</string>
 	<string name="no_site_error">غير قادر على الاتصال بموقع الووردبريس</string>
 	<string name="no_account">لم يتم العثور على حساب ووردبريس، أضف حسابًا وحاول من جديد</string>
 	<string name="error_generic">حدث خطأ</string>
@@ -293,6 +326,8 @@
 	<string name="blog_name_only_lowercase_letters_and_numbers">عنوان الموقع يمكنه أن يحتوي فقط على حروف صغيرة (a-z) وأرقام</string>
 	<string name="blog_name_reserved_but_may_be_available">هذا الموقع محجوز حاليًا وممكن أن يكون متوفرًا خلال بضعة أيام</string>
 	<string name="mnu_comment_unspam">ليس بريدًا مزعجًا</string>
+	<string name="blog_removed_successfully">تمت إزالة الموقع بنجاح</string>
+	<string name="remove_account">إزالة الموقع</string>
 	<string name="connection_error">خطأ في الاتصال</string>
 	<string name="theme_current_theme">القالب الحالي</string>
 	<string name="media_gallery_num_columns">عدد الاعمدة</string>

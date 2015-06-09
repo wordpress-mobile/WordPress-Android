@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="me_disconnect_from_wordpress_com">WordPress.com Bağlantısını Kes</string>
+	<string name="me_btn_login_logout">Giriş/Çıkış</string>
+	<string name="me_connect_to_wordpress_com">WordPress.com\'a bağlan</string>
+	<string name="site_picker_cant_hide_current_site">"%s" şu anki site olduğundan gizlenmedi</string>
+	<string name="me_btn_settings">Hesap Ayarları</string>
+	<string name="me_btn_support">Yardım &amp; Destek</string>
+	<string name="site_picker_create_dotcom">WordPress.com site oluştur</string>
+	<string name="site_picker_add_self_hosted">Kullanıcı tarafından barındırılan site ekle</string>
+	<string name="site_picker_edit_visibility">Siteleri göster/gizle</string>
+	<string name="site_picker_add_site">Site ekle</string>
+	<string name="my_site_btn_view_admin">Yöneticiyi Görüntüle</string>
+	<string name="my_site_btn_view_site">Siteyi Göster</string>
+	<string name="my_site_btn_switch_site">Site Değiştir</string>
+	<string name="site_picker_title">Site seç</string>
+	<string name="my_site_header_look_and_feel">Genel Görünüm</string>
+	<string name="my_site_btn_blog_posts">Blog Yazıları</string>
+	<string name="my_site_btn_site_settings">Ayarlar</string>
+	<string name="my_site_btn_comments">Yorumlar</string>
+	<string name="my_site_header_publish">Yayımla</string>
+	<string name="my_site_header_admin">Yönetici</string>
+	<string name="reader_label_new_posts_subtitle">Göstermek için dokun</string>
+	<string name="my_site_header_configuration">Yapılandırma</string>
+	<string name="notifications_account_required">Bildirimler için WordPress.com\'a giriş yap</string>
+	<string name="stats_unknown_author">Bilinmeyen Yazar</string>
+	<string name="signout">Bağlantıyı Kes</string>
+	<string name="image_added">Resim eklendi</string>
+	<string name="select_all">Tümünü seç</string>
+	<string name="sign_out_wpcom_confirm">Hesabınızın bağlantısını kestiğinizde yerel taslak ve değişiklikler dahil olmak üzere @%s kullanıcısına ait tüm WordPress.com verileri bu cihazdan kaldırılır.</string>
+	<string name="deselect_all">Tüm seçimleri kaldır</string>
+	<string name="show">Göster</string>
+	<string name="hide">Gizle</string>
 	<string name="select_from_new_picker">Yeni seçici ile birden çok öge seç</string>
 	<string name="no_media_sources">Ortam çekilemedi</string>
 	<string name="loading_blog_videos">Videolar çekiliyor</string>
@@ -130,6 +161,7 @@
 	<string name="stats_visitors">Ziyaretçiler</string>
 	<string name="stats_totals_publicize">Takipçiler</string>
 	<string name="ssl_certificate_details">Detaylar</string>
+	<string name="sure_to_remove_account">Bu site kaldırılsın mı?</string>
 	<string name="delete_sure_post">Bu yazıyı sil</string>
 	<string name="delete_sure">Bu taslağı sil</string>
 	<string name="delete_sure_page">Bu sayfayı sil</string>
@@ -268,6 +300,7 @@
 	<string name="username_or_password_incorrect">Yanlış kullanıcı adı veya şifre girdiniz</string>
 	<string name="nux_cannot_log_in">Girişinizi yapamıyoruz</string>
 	<string name="gallery_error">Ortam dosyası geri getirilemedi</string>
+	<string name="could_not_remove_account">Site kaldırılamadı</string>
 	<string name="out_of_memory">Cihaz hafızası doldu</string>
 	<string name="no_network_message">Uygun durumda şebeke yok</string>
 	<string name="blog_not_found">Bu blog\'a erişilirken hata ile karşılaşıldı</string>
@@ -372,6 +405,8 @@
 	<string name="local_changes">Yerel değişiklikler</string>
 	<string name="wordpress_blog">WordPress blog</string>
 	<string name="error_blog_hidden">Bu blog gizli ve yüklenemedi. Ayarlardan yeniden etkinleştirin ve yeniden deneyin.</string>
+	<string name="blog_removed_successfully">Site başarıyla kaldırıldı</string>
+	<string name="remove_account">Siteyi kaldır</string>
 	<string name="xmlrpc_error">Bağlanılamadı. Sitenizdeki xmlrpc.php\'nin tam yolunu girip tekrar deneyin</string>
 	<string name="edit_post">Gönderiyi düzenle</string>
 	<string name="post_not_found">Gönderi yüklenirken hata oluştu. Gönderileri yenileyin ve tekrar deneyin</string>

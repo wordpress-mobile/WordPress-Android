@@ -74,7 +74,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/stats_insights_most_popular_percent_weekly_views"
+            android:text="@string/stats_insights_most_popular_percent_views"
             android:textColor="@color/grey_darken_10" />
 
         <org.wordpress.android.widgets.WPAutoResizeTextView
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/stats_insights_most_popular_percent_daily_views"
+            android:text="@string/stats_insights_most_popular_percent_views"
             android:textColor="@color/grey_darken_10" />
     </LinearLayout>
 

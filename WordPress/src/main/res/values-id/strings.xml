@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="me_disconnect_from_wordpress_com">Putuskan koneksi WordPress.com</string>
+	<string name="me_btn_login_logout">Log masuk/keluar</string>
+	<string name="me_connect_to_wordpress_com">Koneksikan ke WordPress.com</string>
+	<string name="site_picker_cant_hide_current_site">"%s" tidak tersembunyi karena itu adalah situs saat ini</string>
+	<string name="me_btn_settings">Pengaturan Akun</string>
+	<string name="me_btn_support">Bantuan &amp; Dukungan</string>
+	<string name="site_picker_create_dotcom">Buat situs WordPress.com</string>
+	<string name="site_picker_add_self_hosted">Tambahkan situs mandiri (self-hosted)</string>
+	<string name="site_picker_edit_visibility">Tampilkan/sembunyikan situs</string>
+	<string name="site_picker_add_site">Tambahkan situs</string>
+	<string name="site_picker_title">Pilih situs</string>
+	<string name="my_site_btn_switch_site">Ganti Situs</string>
+	<string name="my_site_btn_view_admin">Tampilkan Admin</string>
+	<string name="my_site_btn_view_site">Tampilkan Situs</string>
+	<string name="my_site_header_look_and_feel">Tampilan dan Nuansa</string>
+	<string name="my_site_header_publish">Terbitkan</string>
+	<string name="my_site_btn_site_settings">Pengaturan</string>
+	<string name="my_site_btn_comments">Komentar</string>
+	<string name="my_site_btn_blog_posts">Pos Blog</string>
+	<string name="reader_label_new_posts_subtitle">Ketuk untuk menampilkannya</string>
+	<string name="my_site_header_admin">Admin</string>
+	<string name="my_site_header_configuration">Konfigurasi</string>
+	<string name="notifications_account_required">Masuk ke WordPress.com untuk notifikasi</string>
+	<string name="stats_unknown_author">Penulis Tak Dikenal</string>
+	<string name="image_added">Gambar ditambahkan</string>
+	<string name="signout">Putuskan koneksi</string>
+	<string name="sign_out_wpcom_confirm">Memutuskan koneksi akun Anda akan menghapus seluruh data WordPress.com untuk @%s dari perangkat ini, termasuk draf lokal dan perubahan lokal.</string>
+	<string name="select_all">Pilih semua</string>
+	<string name="deselect_all">Batalkan semua pilihan</string>
+	<string name="show">Tampilkan</string>
+	<string name="hide">Sembunyikan</string>
 	<string name="select_from_new_picker">Beberapa-pilihan dengan pemilih baru</string>
 	<string name="loading_blog_images">Memuat gambar</string>
 	<string name="loading_blog_videos">Memuat video</string>
@@ -130,6 +161,7 @@
 	<string name="stats_followers_a_year">Satu tahun</string>
 	<string name="stats_followers_months">%1$d bulan</string>
 	<string name="ssl_certificate_details">Rincian</string>
+	<string name="sure_to_remove_account">Hapus situs ini?</string>
 	<string name="delete_sure_post">Hapus pos ini</string>
 	<string name="delete_sure">Hapus draf ini</string>
 	<string name="delete_sure_page">Hapus laman ini</string>
@@ -293,6 +325,7 @@
 	<string name="blog_name_reserved_but_may_be_available">Situs itu sedang dicadangkan, namun bisa menjadi tersedia dalam beberapa hari</string>
 	<string name="username_or_password_incorrect">Nama pengguna atau password yang Anda masukkan tidak tepat</string>
 	<string name="nux_cannot_log_in">Kami tak bisa me-log masukkan Anda</string>
+	<string name="could_not_remove_account">Gagal menghapus situs</string>
 	<string name="edit_post">Edit tulisan</string>
 	<string name="add_comment">Tambahkan komentar</string>
 	<string name="connection_error">Galat sambungan</string>
@@ -397,6 +430,8 @@
 	<string name="blog_name_invalid">Alamat situs tidak sah</string>
 	<string name="blog_title_invalid">Judul situs tidak sah</string>
 	<string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
+	<string name="blog_removed_successfully">Situs berhasil dihapus</string>
+	<string name="remove_account">Hapus situs</string>
 	<string name="deleting_page">Menghapus laman</string>
 	<string name="deleting_post">Menghapus pos</string>
 	<string name="share_url_post">Bagikan pos</string>
