@@ -65,6 +65,12 @@ public class PostsActivity extends ActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // This should be removed when #2734 is fixed
+        if (WordPress.getCurrentBlog() == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
         ProfilingUtils.split("PostsActivity.onCreate");
         ProfilingUtils.dump();
 
