@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,6 +60,7 @@ public class SitePickerSearchAdapter extends SitePickerAdapter {
     }
 
     private boolean mIsSearchTaskRunning;
+
     private class LoadSearchSitesTask extends AsyncTask<Void, Void, SiteList> {
         @Override
         protected void onPreExecute() {
