@@ -33,6 +33,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     // Used when the fragment has 2 pages/kind of stats in it. Not meaning the bottom pagination.
     static final String ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX = "ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX";
+    private static final String ARGS_EXPANDED_ROWS = "ARGS_EXPANDED_ROWS";
     private static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST = 1000;
     static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST = 10;
 
@@ -131,6 +132,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                     mDatamodels = (Serializable[]) oldData;
                 }
             }
+            mGroupIdToExpandedMap = savedInstanceState.getParcelable(ARGS_EXPANDED_ROWS);
         }
     }
 
@@ -147,6 +149,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 }
             }
         }
+
+        outState.putParcelable(ARGS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mGroupIdToExpandedMap));
 
         outState.putSerializable(ARG_REST_RESPONSE, mDatamodels);
         super.onSaveInstanceState(outState);

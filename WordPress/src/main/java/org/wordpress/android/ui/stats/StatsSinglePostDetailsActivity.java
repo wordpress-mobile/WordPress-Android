@@ -85,6 +85,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     private SparseBooleanArray mAveragesIdToExpandedMap;
     private SparseBooleanArray mRecentWeeksIdToExpandedMap;
 
+    private static final String ARG_YEARS_EXPANDED_ROWS = "ARG_YEARS_EXPANDED_ROWS";
+    private static final String ARG_AVERAGES_EXPANDED_ROWS = "ARG_AVERAGES_EXPANDED_ROWS";
+    private static final String ARG_RECENT_EXPANDED_ROWS = "ARG_RECENT_EXPANDED_ROWS";
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,6 +154,9 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                         mOuterScrollView.scrollTo(position[0], position[1]);
                     }
                 });
+            mAveragesIdToExpandedMap = savedInstanceState.getParcelable(ARG_AVERAGES_EXPANDED_ROWS);
+            mRecentWeeksIdToExpandedMap = savedInstanceState.getParcelable(ARG_RECENT_EXPANDED_ROWS);
+            mYearsIdToExpandedMap = savedInstanceState.getParcelable(ARG_YEARS_EXPANDED_ROWS);
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mRemotePostItem = (PostModel) extras.getSerializable(ARG_REMOTE_POST_OBJECT);
@@ -177,6 +185,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                         mOuterScrollView.getScrollX(),
                         mOuterScrollView.getScrollY()
                 });
+
+        outState.putParcelable(ARG_AVERAGES_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mAveragesIdToExpandedMap));
+        outState.putParcelable(ARG_RECENT_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mRecentWeeksIdToExpandedMap));
+        outState.putParcelable(ARG_YEARS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mYearsIdToExpandedMap));
+
         super.onSaveInstanceState(outState);
     }
 

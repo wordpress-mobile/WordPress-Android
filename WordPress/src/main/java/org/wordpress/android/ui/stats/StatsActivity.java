@@ -149,11 +149,11 @@ public class StatsActivity extends ActionBarActivity
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
             final int[] position = savedInstanceState.getIntArray(SAVED_STATS_SCROLL_POSITION);
             if(position != null)
-                mOuterScrollView.post(new Runnable() {
+                mOuterScrollView.postDelayed(new Runnable() {
                     public void run() {
                         mOuterScrollView.scrollTo(position[0], position[1]);
                     }
-                });
+                }, 75L);
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
