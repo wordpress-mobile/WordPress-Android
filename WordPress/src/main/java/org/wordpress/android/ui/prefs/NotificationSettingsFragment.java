@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.Switch;
 
@@ -29,13 +30,16 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NotificationSettingsFragment extends PreferenceFragment {
@@ -78,7 +82,22 @@ public class NotificationSettingsFragment extends PreferenceFragment {
 
         @Override
         protected Void doInBackground(Void... params) {
-            loadNotifications();
+            List<Map<String, Object>> allBlogs = WordPress.wpDB.getBlogsBy(null, null, 0, false);
+
+            Context context = getActivity();
+
+            PreferenceCategory blogsCategory = (PreferenceCategory) findPreference(
+                    getString(R.string.pref_notification_blogs));
+
+            for (Map blog : allBlogs) {
+                if (context == null) return null;
+
+                Preference preference = new Preference(context);
+                preference.setTitle(MapUtils.getMapStr(blog, "blogName"));
+                preference.setSummary(UrlUtils.getDomainFromUrl(MapUtils.getMapStr(blog, "url")));
+                //preference.setIcon();
+                blogsCategory.addPreference(preference);
+            }
 
             return null;
         }
