@@ -53,16 +53,18 @@ public class ReaderUtils {
     /*
      * returns the passed string formatted for use with our API - see sanitize_title_with_dashes
      * https://github.com/WordPress/WordPress/blob/master/wp-includes/formatting.php#L1258
+     * http://stackoverflow.com/a/1612015/1673548
      */
     public static String sanitizeWithDashes(final String title) {
         if (title == null) {
             return "";
         }
+
         return title.trim()
-                .replaceAll("&[^\\s]*;", "")        // remove html entities
-                .replaceAll("[\\.\\s]+", "-")       // replace periods and whitespace with a dash
-                .replaceAll("[^A-Za-z0-9\\-]", "")  // remove remaining non-alphanum/non-dash chars
-                .replaceAll("--", "-");             // reduce double dashes potentially added above
+                .replaceAll("&[^\\s]*;", "")            // remove html entities
+                .replaceAll("[\\.\\s]+", "-")           // replace periods and whitespace with a dash
+                .replaceAll("[^\\p{L}\\p{Nd}\\-]+", "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
+                .replaceAll("--", "-");                 // reduce double dashes potentially added above
     }
 
     /*
