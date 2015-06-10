@@ -66,18 +66,17 @@ public class StatsActivity extends ActionBarActivity
                 StatsVisitorsAndViewsFragment.OnOverviewItemChangeListener,
                 StatsInsightsTodayFragment.OnInsightsTodayClickListener {
 
-    private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
-    private static final String SAVED_STATS_REQUESTED_DATE= "SAVED_STATS_REQUESTED_DATE";
+    private static final String SAVED_STATS_REQUESTED_DATE = "SAVED_STATS_REQUESTED_DATE";
+    private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
 
     private Spinner mSpinner;
+    private ScrollViewExt mOuterScrollView;
 
     private static final int REQUEST_JETPACK = 7000;
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
-    private int mNavPosition = 0;
-    private Dialog mSignInDialog;
 
     private int mResultCode = -1;
     private boolean mIsInFront;
@@ -140,12 +139,21 @@ public class StatsActivity extends ActionBarActivity
 
         setTitle(R.string.stats);
 
+        mOuterScrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
+        mOuterScrollView.setScrollViewListener(this);
+
         if (savedInstanceState != null) {
-            mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
             mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
+            final int[] position = savedInstanceState.getIntArray(SAVED_STATS_SCROLL_POSITION);
+            if(position != null)
+                mOuterScrollView.post(new Runnable() {
+                    public void run() {
+                        mOuterScrollView.scrollTo(position[0], position[1]);
+                    }
+                });
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
@@ -171,11 +179,6 @@ public class StatsActivity extends ActionBarActivity
         // be there, and ready to be displayed without making any network connections. A fragment calls the stats service
         // if its internal datamodel is empty.
         createFragments(false);
-
-        ScrollViewExt scrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
-        if (scrollView != null) {
-            scrollView.setScrollViewListener(this);
-        }
 
         if (mSpinner == null && toolbar != null) {
             View view = View.inflate(this, R.layout.toolbar_spinner, toolbar);
@@ -203,6 +206,12 @@ public class StatsActivity extends ActionBarActivity
                     AppPrefs.setStatsTimeframe(mCurrentTimeframe);
                     mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
                     createFragments(true); // Need to recreate fragment here, since a new timeline was selected.
+                    mSpinner.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollToTop();
+                        }
+                    }, 75L);
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -273,11 +282,15 @@ public class StatsActivity extends ActionBarActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(SAVED_NAV_POSITION, mNavPosition);
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
         outState.putString(SAVED_STATS_REQUESTED_DATE, mRequestedDate);
+        outState.putIntArray(SAVED_STATS_SCROLL_POSITION,
+                new int[]{
+                        mOuterScrollView.getScrollX(),
+                        mOuterScrollView.getScrollY()
+                });
         super.onSaveInstanceState(outState);
     }
 
@@ -594,10 +607,7 @@ public class StatsActivity extends ActionBarActivity
     }
 
     private void scrollToTop() {
-        ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view_stats);
-        if (scrollView != null) {
-            scrollView.fullScroll(ScrollView.FOCUS_UP);
-        }
+        mOuterScrollView.fullScroll(ScrollView.FOCUS_UP);
     }
 
     // StatsInsightsTodayFragment calls this when the user taps on a item in Today's Stats
@@ -610,14 +620,6 @@ public class StatsActivity extends ActionBarActivity
                 break;
             }
         }
-
-        mSpinner.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                scrollToTop();
-            }
-        }, 75L);
-
     }
 
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
@@ -721,9 +723,6 @@ public class StatsActivity extends ActionBarActivity
                 checkCredentials();
             }
         } else {
-            if (mSignInDialog != null && mSignInDialog.isShowing()) {
-                return;
-            }
             Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
         }
     }

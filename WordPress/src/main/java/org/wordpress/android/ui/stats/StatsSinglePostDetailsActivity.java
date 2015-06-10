@@ -53,9 +53,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     public static final String ARG_REMOTE_POST_OBJECT = "ARG_REMOTE_POST_OBJECT";
     private static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
+    private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
 
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private ScrollViewExt mOuterScrollView;
 
     private final Handler mHandler = new Handler();
 
@@ -129,10 +131,24 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mRecentWeeksList = (LinearLayout) findViewById(R.id.stats_recent_weeks_list_linearlayout);
         mRecentWeeksEmptyPlaceholder = (LinearLayout) findViewById(R.id.stats_recent_weeks_empty_module_placeholder);
 
+        mYearsIdToExpandedMap = new SparseBooleanArray();
+        mAveragesIdToExpandedMap = new SparseBooleanArray();
+        mRecentWeeksIdToExpandedMap = new SparseBooleanArray();
+
+        setTitle(R.string.stats);
+        mOuterScrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
+
         if (savedInstanceState != null) {
             mRemotePostItem = (PostModel) savedInstanceState.getSerializable(ARG_REMOTE_POST_OBJECT);
             mRestResponseParsed = (PostViewsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
+            final int[] position = savedInstanceState.getIntArray(SAVED_STATS_SCROLL_POSITION);
+            if(position != null)
+                mOuterScrollView.post(new Runnable() {
+                    public void run() {
+                        mOuterScrollView.scrollTo(position[0], position[1]);
+                    }
+                });
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mRemotePostItem = (PostModel) extras.getSerializable(ARG_REMOTE_POST_OBJECT);
@@ -149,12 +165,6 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                 StatsUtils.openPostInReaderOrInAppWebview(ctx, mRemotePostItem);
             }
         });
-
-        setTitle(R.string.stats);
-
-        mYearsIdToExpandedMap = new SparseBooleanArray();
-        mAveragesIdToExpandedMap = new SparseBooleanArray();
-        mRecentWeeksIdToExpandedMap = new SparseBooleanArray();
     }
 
     @Override
@@ -162,6 +172,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphIndex);
         outState.putSerializable(ARG_REMOTE_POST_OBJECT, mRemotePostItem);
         outState.putSerializable(ARG_REST_RESPONSE, mRestResponseParsed);
+        outState.putIntArray(SAVED_STATS_SCROLL_POSITION,
+                new int[]{
+                        mOuterScrollView.getScrollX(),
+                        mOuterScrollView.getScrollY()
+                });
         super.onSaveInstanceState(outState);
     }
 
