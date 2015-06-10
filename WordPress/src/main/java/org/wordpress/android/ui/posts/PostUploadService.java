@@ -898,13 +898,13 @@ public class PostUploadService extends Service {
             Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id)
                     : mContext.getResources().getText(R.string.post_id));
-            Intent notificationIntent = new Intent(mContext, isPage ? PagesActivity.class : PostsActivity.class);
+            Intent notificationIntent = new Intent(mContext, isPage ? PagesListActivity.class : PostsListActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, isPage);
-            notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_MSG, mErrorMessage);
+            notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
+            notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, mErrorMessage);
             if (isVideoPressError) {
-                notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_TITLE, getString(R.string.learn_more));
-                notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_LINK, Constants.videoPressURL);
+                notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_INFO_TITLE, getString(R.string.learn_more));
+                notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_INFO_LINK, Constants.videoPressURL);
             }
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
