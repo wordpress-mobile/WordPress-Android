@@ -381,20 +381,23 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields) {
-        return getBlogsBy(byString, extraFields, 0);
+        return getBlogsBy(byString, extraFields, 0, true);
     }
 
-    public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields, int limit) {
+    public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields,
+                                                int limit, boolean shouldHideJetpack) {
         if (db == null) {
             return new Vector<>();
         }
 
-        // Hide Jetpack blogs that were added in FetchBlogListWPCom
-        String hideJetpack = "NOT(dotcomFlag=0 AND wpVersion='')";
-        if (TextUtils.isEmpty(byString)) {
-            byString = hideJetpack;
-        } else {
-            byString = hideJetpack + " AND " + byString;
+        if (shouldHideJetpack) {
+            // Hide Jetpack blogs that were added in FetchBlogListWPCom
+            String hideJetpackArgs = "NOT(dotcomFlag=0 AND wpVersion='' AND blogId!=1)";
+            if (TextUtils.isEmpty(byString)) {
+                byString = hideJetpackArgs;
+            } else {
+                byString = hideJetpackArgs + " AND " + byString;
+            }
         }
 
         String limitStr = null;
