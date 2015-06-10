@@ -22,8 +22,8 @@ import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PagesActivity;
-import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.ui.posts.PagesListActivity;
+import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
@@ -65,7 +65,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPosts(Context context) {
-        Intent intent = new Intent(context, PostsActivity.class);
+        Intent intent = new Intent(context, PostsListActivity.class);
         slideInFromRight(context, intent);
     }
 
@@ -75,8 +75,8 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(Context context) {
-        Intent intent = new Intent(context, PagesActivity.class);
-        intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
+        Intent intent = new Intent(context, PagesListActivity.class);
+        intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
         slideInFromRight(context, intent);
     }
 

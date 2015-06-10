@@ -74,7 +74,7 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
         if (isAdded()) {
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras != null) {
-                mIsPage = extras.getBoolean(PostsActivity.EXTRA_VIEW_PAGES);
+                mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             }
             // If PostUploadService is not running, check for posts stuck with an uploading state
             Blog currentBlog = WordPress.getCurrentBlog();
@@ -109,12 +109,12 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
                             return;
                         }
                         mSwipedToRefresh = true;
-                        refreshPosts((PostsActivity) getActivity());
+                        refreshPosts((PostsListActivity) getActivity());
                     }
                 });
     }
 
-    private void refreshPosts(PostsActivity postsActivity) {
+    private void refreshPosts(PostsListActivity postsListActivity) {
         Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog == null) {
             ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
@@ -123,7 +123,7 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
         }
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(currentBlog.getLocalTableBlogId(), mIsPage);
         if (hasLocalChanges) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsActivity);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsListActivity);
             dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
             dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
@@ -195,7 +195,7 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
                                 getListView().setItemChecked(0, true);
                             }
                         }
-                    } else if (isAdded() && ((PostsActivity) getActivity()).isDualPane()) {
+                    } else if (isAdded() && ((PostsListActivity) getActivity()).isDualPane()) {
                         // Reload the last selected position, if available
                         int selectedPosition = getListView().getCheckedItemPosition();
                         if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getCount()) {
@@ -255,15 +255,15 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             // If we remove or throttle the following call, we should make PostUpload events sticky
-            ((PostsActivity) getActivity()).requestPosts();
+            ((PostsListActivity) getActivity()).requestPosts();
         } else {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
         }
     }
 
     private void newPost() {
-        if (getActivity() instanceof PostsActivity) {
-            ((PostsActivity)getActivity()).newPost();
+        if (getActivity() instanceof PostsListActivity) {
+            ((PostsListActivity)getActivity()).newPost();
         }
     }
 
