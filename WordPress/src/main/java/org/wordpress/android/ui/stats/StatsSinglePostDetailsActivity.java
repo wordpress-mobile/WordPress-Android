@@ -147,13 +147,14 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             mRemotePostItem = (PostModel) savedInstanceState.getSerializable(ARG_REMOTE_POST_OBJECT);
             mRestResponseParsed = (PostViewsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
-            final int[] position = savedInstanceState.getIntArray(SAVED_STATS_SCROLL_POSITION);
-            if(position != null)
-                mOuterScrollView.post(new Runnable() {
+            final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
+            if(yScrollPosition != 0) {
+                mOuterScrollView.postDelayed(new Runnable() {
                     public void run() {
-                        mOuterScrollView.scrollTo(position[0], position[1]);
+                        mOuterScrollView.scrollTo(0, yScrollPosition);
                     }
-                });
+                }, 75L);
+            }
             mAveragesIdToExpandedMap = savedInstanceState.getParcelable(ARG_AVERAGES_EXPANDED_ROWS);
             mRecentWeeksIdToExpandedMap = savedInstanceState.getParcelable(ARG_RECENT_EXPANDED_ROWS);
             mYearsIdToExpandedMap = savedInstanceState.getParcelable(ARG_YEARS_EXPANDED_ROWS);
@@ -180,11 +181,9 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphIndex);
         outState.putSerializable(ARG_REMOTE_POST_OBJECT, mRemotePostItem);
         outState.putSerializable(ARG_REST_RESPONSE, mRestResponseParsed);
-        outState.putIntArray(SAVED_STATS_SCROLL_POSITION,
-                new int[]{
-                        mOuterScrollView.getScrollX(),
-                        mOuterScrollView.getScrollY()
-                });
+        if (mOuterScrollView.getScrollY() != 0) {
+            outState.putInt(SAVED_STATS_SCROLL_POSITION, mOuterScrollView.getScrollY());
+        }
 
         outState.putParcelable(ARG_AVERAGES_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mAveragesIdToExpandedMap));
         outState.putParcelable(ARG_RECENT_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mRecentWeeksIdToExpandedMap));

@@ -147,13 +147,14 @@ public class StatsActivity extends ActionBarActivity
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
-            final int[] position = savedInstanceState.getIntArray(SAVED_STATS_SCROLL_POSITION);
-            if(position != null)
+            final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
+            if(yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
                     public void run() {
-                        mOuterScrollView.scrollTo(position[0], position[1]);
+                        mOuterScrollView.scrollTo(0, yScrollPosition);
                     }
                 }, 75L);
+            }
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
@@ -286,11 +287,9 @@ public class StatsActivity extends ActionBarActivity
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
         outState.putString(SAVED_STATS_REQUESTED_DATE, mRequestedDate);
-        outState.putIntArray(SAVED_STATS_SCROLL_POSITION,
-                new int[]{
-                        mOuterScrollView.getScrollX(),
-                        mOuterScrollView.getScrollY()
-                });
+        if (mOuterScrollView.getScrollY() != 0) {
+            outState.putInt(SAVED_STATS_SCROLL_POSITION, mOuterScrollView.getScrollY());
+        }
         super.onSaveInstanceState(outState);
     }
 
