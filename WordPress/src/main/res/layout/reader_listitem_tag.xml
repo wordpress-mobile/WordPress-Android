@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    list item which shows either a followed or popular/recommended tag - see ReaderTagAdapter
+    list item which shows a followed tag - see ReaderTagAdapter
  -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,7 +26,7 @@
         tools:text="text_topic" />
 
     <ImageButton
-        android:id="@+id/btn_add_remove"
+        android:id="@+id/btn_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
