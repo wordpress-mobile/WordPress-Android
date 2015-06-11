@@ -307,7 +307,7 @@ public class SitePickerActivity extends ActionBarActivity
         if (mActionMode == null) {
             mSearchView.hideSoftKeyboard();
             AniUtils.showFab(mFabView, false);
-            WordPress.setCurrentBlog(site.localId);
+            WordPress.setCurrentBlogAndSetVisible(site.localId);
             WordPress.wpDB.updateLastBlogId(site.localId);
             setResult(RESULT_OK);
             mDidUserSelectSite = true;

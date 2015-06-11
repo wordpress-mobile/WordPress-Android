@@ -438,6 +438,15 @@ public class WordPress extends Application {
         return currentBlog;
     }
 
+    public static Blog setCurrentBlogAndSetVisible(int id) {
+        Blog blog = getBlog(id);
+
+        if (blog != null && blog.isHidden()) {
+            wpDB.setDotComBlogsVisibility(id, true);
+        }
+        return setCurrentBlog(id);
+    }
+
     /**
      * returns the blogID of the current blog or -1 if current blog is null
      */
