@@ -139,6 +139,15 @@ public class NotificationsListFragment extends Fragment
             SimperiumUtils.startBuckets();
             AppLog.i(AppLog.T.NOTIFS, "Starting Simperium buckets");
         }
+
+        if (getActivity() instanceof WPMainActivity) {
+            WPMainActivity activity = (WPMainActivity)getActivity();
+
+            if (!TextUtils.isEmpty(activity.getRemovedNoteId())) {
+                hideNote(activity.getRemovedNoteId());
+                activity.setRemovedNoteId(null);
+            }
+        }
     }
 
     @Override
@@ -179,6 +188,10 @@ public class NotificationsListFragment extends Fragment
         } else {
             activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
         }
+    }
+
+    public void hideNote(String moderatingNoteId) {
+        setNoteIsHidden(moderatingNoteId, true);
     }
 
     private void setNoteIsHidden(String noteId, boolean isHidden) {
