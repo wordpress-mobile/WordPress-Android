@@ -431,20 +431,17 @@ public class WordPress extends Application {
      * Set the blog with the specified id as the current blog.
      *
      * @param id id of the blog to set as current
-     * @return the current blog
      */
-    public static Blog setCurrentBlog(int id) {
-        currentBlog = wpDB.instantiateBlogByLocalId(id);
-        return currentBlog;
+    public static void setCurrentBlog(int id) {
+        currentBlog = getBlog(id);
     }
 
-    public static Blog setCurrentBlogAndSetVisible(int id) {
-        Blog blog = getBlog(id);
+    public static void setCurrentBlogAndSetVisible(int id) {
+        setCurrentBlog(id);
 
-        if (blog != null && blog.isHidden()) {
+        if (currentBlog != null && currentBlog.isHidden()) {
             wpDB.setDotComBlogsVisibility(id, true);
         }
-        return setCurrentBlog(id);
     }
 
     /**
