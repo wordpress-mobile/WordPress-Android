@@ -12,6 +12,7 @@
 
     <style name="Calypso.NoActionBar" parent="CalypsoTheme">
         <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Calypso.PopupMenu" parent="@android:style/Widget.Holo.Light.PopupMenu">
