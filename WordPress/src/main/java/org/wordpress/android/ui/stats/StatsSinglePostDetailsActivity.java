@@ -155,9 +155,15 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                     }
                 }, 75L);
             }
-            mAveragesIdToExpandedMap = savedInstanceState.getParcelable(ARG_AVERAGES_EXPANDED_ROWS);
-            mRecentWeeksIdToExpandedMap = savedInstanceState.getParcelable(ARG_RECENT_EXPANDED_ROWS);
-            mYearsIdToExpandedMap = savedInstanceState.getParcelable(ARG_YEARS_EXPANDED_ROWS);
+            if (savedInstanceState.containsKey(ARG_AVERAGES_EXPANDED_ROWS)) {
+                mAveragesIdToExpandedMap = savedInstanceState.getParcelable(ARG_AVERAGES_EXPANDED_ROWS);
+            }
+            if (savedInstanceState.containsKey(ARG_RECENT_EXPANDED_ROWS)) {
+                mRecentWeeksIdToExpandedMap = savedInstanceState.getParcelable(ARG_RECENT_EXPANDED_ROWS);
+            }
+            if (savedInstanceState.containsKey(ARG_YEARS_EXPANDED_ROWS)) {
+                mYearsIdToExpandedMap = savedInstanceState.getParcelable(ARG_YEARS_EXPANDED_ROWS);
+            }
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mRemotePostItem = (PostModel) extras.getSerializable(ARG_REMOTE_POST_OBJECT);
@@ -185,9 +191,15 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             outState.putInt(SAVED_STATS_SCROLL_POSITION, mOuterScrollView.getScrollY());
         }
 
-        outState.putParcelable(ARG_AVERAGES_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mAveragesIdToExpandedMap));
-        outState.putParcelable(ARG_RECENT_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mRecentWeeksIdToExpandedMap));
-        outState.putParcelable(ARG_YEARS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mYearsIdToExpandedMap));
+        if (mAveragesIdToExpandedMap.size() > 0){
+            outState.putParcelable(ARG_AVERAGES_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mAveragesIdToExpandedMap));
+        }
+        if (mRecentWeeksIdToExpandedMap.size() > 0) {
+            outState.putParcelable(ARG_RECENT_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mRecentWeeksIdToExpandedMap));
+        }
+        if (mYearsIdToExpandedMap.size() > 0) {
+            outState.putParcelable(ARG_YEARS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mYearsIdToExpandedMap));
+        }
 
         super.onSaveInstanceState(outState);
     }

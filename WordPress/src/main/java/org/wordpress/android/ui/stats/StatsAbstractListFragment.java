@@ -132,7 +132,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                     mDatamodels = (Serializable[]) oldData;
                 }
             }
-            mGroupIdToExpandedMap = savedInstanceState.getParcelable(ARGS_EXPANDED_ROWS);
+            if (savedInstanceState.containsKey(ARGS_EXPANDED_ROWS)) {
+                mGroupIdToExpandedMap = savedInstanceState.getParcelable(ARGS_EXPANDED_ROWS);
+            }
         }
     }
 
@@ -150,7 +152,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             }
         }
 
-        outState.putParcelable(ARGS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mGroupIdToExpandedMap));
+        if (mGroupIdToExpandedMap.size() > 0) {
+            outState.putParcelable(ARGS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mGroupIdToExpandedMap));
+        }
 
         outState.putSerializable(ARG_REST_RESPONSE, mDatamodels);
         super.onSaveInstanceState(outState);
