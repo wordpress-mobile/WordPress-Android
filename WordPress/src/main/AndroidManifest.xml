@@ -133,20 +133,26 @@
             android:theme="@style/CalypsoTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.posts.PostsActivity" />
+                android:value=".ui.posts.PostsListActivity" />
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity
+        <!-- Workaround for old launcher icon pointing to .ui.posts.PostsActivity -->
+        <activity-alias
             android:name=".ui.posts.PostsActivity"
-            android:theme="@style/Calypso.NoActionBar" >
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
+        </activity-alias>
+        <activity
+            android:name=".ui.posts.PostsListActivity"
+            android:theme="@style/Calypso.NoActionBar">
         </activity>
         <activity
-            android:name=".ui.posts.PagesActivity"
+            android:name=".ui.posts.PagesListActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
