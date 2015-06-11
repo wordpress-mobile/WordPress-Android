@@ -6,18 +6,19 @@
         android:key="@string/pref_notification_blogs">
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="Other Blogs"
+        android:title="@string/notifications_other_blogs"
         android:key="@string/pref_notification_other_blogs">
-        <Preference android:title="Comments on other blogs"
-            android:summary="Control your notification settings when you comment on other blogs." />
+        <Preference android:title="@string/notifications_comments_other_blogs"
+            android:summary="@string/notifications_other_blogs_summary" />
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="Account Emails"
-        android:key="@string/pref_notification_other_blogs">
-        <Preference android:title="Updates from WordPress.com"
-            android:summary="Decide what emails you get from us regarding your accounts and sites." />
+        android:title="@string/notifications_account_emails"
+        android:key="@string/pref_notification_account_emails">
+        <Preference android:title="@string/notifications_updates_from_wordpress"
+            android:summary="@string/notifications_account_emails_summary" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Sights and Sounds">
+    <PreferenceCategory android:title="@string/notifications_sights_and_sounds"
+        android:key="@string/pref_notification_sights_sounds">
         <SwitchPreference
             android:defaultValue="false"
             android:key="wp_pref_notification_sound"

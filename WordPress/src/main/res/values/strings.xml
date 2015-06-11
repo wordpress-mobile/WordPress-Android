@@ -377,7 +377,8 @@
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_other_blogs" translatable="false">wp_pref_notification_other_blogs</string>
     <string name="pref_notifications_enabled" translatable="false">wp_pref_notifications_enabled</string>
-    <string name="pref_notification_types" translatable="false">wp_pref_notification_types</string>
+    <string name="pref_notification_account_emails" translatable="false">wp_pref_notification_account_emails</string>
+    <string name="pref_notification_sights_sounds" translatable="false">wp_pref_notification_sights_sounds</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
@@ -570,7 +571,13 @@
     <string name="older_month">Older than a month</string>
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
-    <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string>
+    <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string><string name="notifications_updates_from_wordpress">Updates from WordPress.com</string>
+    <string name="notifications_sights_and_sounds">Sights and Sounds</string>
+    <string name="notifications_account_emails_summary">Decide what emails you get from us regarding your accounts and sites.</string>
+    <string name="notifications_other_blogs_summary">Control your notification settings when you comment on other blogs.</string>
+    <string name="notifications_account_emails">Account Emails</string>
+    <string name="notifications_other_blogs">Other Blogs</string>
+    <string name="notifications_comments_other_blogs">Comments on other blogs</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>

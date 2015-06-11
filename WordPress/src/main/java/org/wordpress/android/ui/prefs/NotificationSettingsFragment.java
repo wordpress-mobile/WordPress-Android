@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.URLUtil;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.google.gson.Gson;
@@ -75,14 +76,36 @@ public class NotificationSettingsFragment extends PreferenceFragment {
         MenuItem enabledMenuItem = menu.findItem(R.id.notifications_enabled);
         if (enabledMenuItem != null && MenuItemCompat.getActionView(enabledMenuItem) != null) {
             mEnabledSwitch = (Switch)MenuItemCompat.getActionView(enabledMenuItem).findViewById(R.id.notifications_enabled_switch);
+            mEnabledSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    setAllCategoriesEnabled(isChecked);
+                }
+            });
         }
+    }
+
+    private void setAllCategoriesEnabled(boolean isEnabled) {
+        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference(
+                getString(R.string.pref_notification_blogs));
+        PreferenceCategory otherBlogsCategory = (PreferenceCategory) findPreference(
+                getString(R.string.pref_notification_other_blogs));
+        PreferenceCategory accountEmailsCategory = (PreferenceCategory) findPreference(
+                getString(R.string.pref_notification_account_emails));
+        PreferenceCategory sightsAndSoundsCategory = (PreferenceCategory) findPreference(
+                getString(R.string.pref_notification_sights_sounds));
+
+        blogsCategory.setEnabled(isEnabled);
+        otherBlogsCategory.setEnabled(isEnabled);
+        accountEmailsCategory.setEnabled(isEnabled);
+        sightsAndSoundsCategory.setEnabled(isEnabled);
     }
 
     private class LoadNotificationsTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<Map<String, Object>> allBlogs = WordPress.wpDB.getBlogsBy(null, null, 0, false);
+            List<Map<String, Object>> allBlogs = WordPress.wpDB.getBlogsBy("NOT(dotcomFlag=0 AND wpVersion!='')", null, 0, false);
 
             Context context = getActivity();
 
@@ -105,7 +128,7 @@ public class NotificationSettingsFragment extends PreferenceFragment {
 
     private void loadNotifications() {
         AppLog.d(T.NOTIFS, "Preferences > loading notification settings");
-
+/*
         // Add notifications group back in case it was previously removed from being logged out
         PreferenceCategory notificationTypesCategory = (PreferenceCategory) findPreference(
                 getString(R.string.pref_notification_types));
@@ -165,7 +188,7 @@ public class NotificationSettingsFragment extends PreferenceFragment {
 
         CheckBoxPreference notificationsEnabledCheckBox = (CheckBoxPreference) findPreference(
                 getString(R.string.pref_notifications_enabled));
-        notificationsEnabledCheckBox.setOnPreferenceChangeListener(mNotificationsEnabledChangeListener);
+        notificationsEnabledCheckBox.setOnPreferenceChangeListener(mNotificationsEnabledChangeListener);*/
     }
 
     /**
