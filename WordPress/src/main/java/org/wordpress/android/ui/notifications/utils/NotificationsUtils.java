@@ -577,7 +577,8 @@ public class NotificationsUtils {
                         }
                     });
         } else if (newStatus == CommentStatus.TRASH || newStatus == CommentStatus.SPAM) {
-            EventBus.getDefault().post(new NoteVisibilityChanged(note.getId(), true));
+            // Post as sticky, so that NotificationsListFragment can pick it up after it's created
+            EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), true));
             // Show undo bar for trash or spam actions
             showUndoBarForNote(note, newStatus, activity);
         }
