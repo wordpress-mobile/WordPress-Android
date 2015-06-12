@@ -689,7 +689,6 @@
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed tags</string>
-    <string name="reader_page_popular_tags">Popular tags</string>
     <string name="reader_page_followed_blogs">Followed blogs</string>
     <string name="reader_page_recommended_blogs">Blogs you may like</string>
 
@@ -773,7 +772,6 @@
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
-    <string name="reader_empty_popular_tags">No popular tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>

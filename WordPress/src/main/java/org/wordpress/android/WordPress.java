@@ -390,14 +390,6 @@ public class WordPress extends Application {
         return currentBlog;
     }
 
-    public static Blog getCurrentBlogEvenIfNotVisible() {
-        if (currentBlog == null) {
-            attemptToRestoreLastActiveBlog();
-        }
-
-        return currentBlog;
-    }
-
     /**
      * Get the blog with the specified ID.
      *
@@ -439,11 +431,17 @@ public class WordPress extends Application {
      * Set the blog with the specified id as the current blog.
      *
      * @param id id of the blog to set as current
-     * @return the current blog
      */
-    public static Blog setCurrentBlog(int id) {
-        currentBlog = wpDB.instantiateBlogByLocalId(id);
-        return currentBlog;
+    public static void setCurrentBlog(int id) {
+        currentBlog = getBlog(id);
+    }
+
+    public static void setCurrentBlogAndSetVisible(int id) {
+        setCurrentBlog(id);
+
+        if (currentBlog != null && currentBlog.isHidden()) {
+            wpDB.setDotComBlogsVisibility(id, true);
+        }
     }
 
     /**
